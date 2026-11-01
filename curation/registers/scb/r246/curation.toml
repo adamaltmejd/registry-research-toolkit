@@ -10,3 +10,351 @@ kind = "set"
 subject = "individer: b23"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:41910:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:41910:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk egenskap.\ncatalog:variable_text:41911:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk egenskap.\ncatalog:variable_text:41911:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "sets" = [] }
+evidence = "Klassificeringen avser anställning.\ncatalog:valueset:1027\ncatalog:variable_text:41912:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "tags" = ["employment"] }
+evidence = "Klassificeringen avser anställning.\ncatalog:valueset:1027\ncatalog:variable_text:41912:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "sets" = [] }
+evidence = "Övertidstimmar mäter arbetstid.\ncatalog:variable_text:41913:13149:13514\ncatalog:variable_text:41936:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "tags" = ["employment"] }
+evidence = "Övertidstimmar mäter arbetstid.\ncatalog:variable_text:41913:13149:13514\ncatalog:variable_text:41936:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-veckor"
+fields = { "sets" = [] }
+evidence = "Antalet veckor beskriver den period som årslöneinkomsten avser.\ncatalog:variable_text:41914:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-veckor"
+fields = { "tags" = ["income"] }
+evidence = "Antalet veckor beskriver den period som årslöneinkomsten avser.\ncatalog:variable_text:41914:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:b210"
+fields = { "sets" = [] }
+evidence = "B210 är en ogenomskinlig källkod; etiketten anger arbetsmarknadspolitisk åtgärd.\ncatalog:variable_text:41915:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:b210"
+fields = { "tags" = ["employment"] }
+evidence = "B210 är en ogenomskinlig källkod; etiketten anger arbetsmarknadspolitisk åtgärd.\ncatalog:variable_text:41915:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:b25"
+fields = { "sets" = [] }
+evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.\ncatalog:variable_text:41916:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:b25"
+fields = { "tags" = ["education"] }
+evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.\ncatalog:variable_text:41916:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman"
+fields = { "sets" = [] }
+evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman"
+fields = { "tags" = ["income"] }
+evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
+
+[[statement]]
+kind = "set"
+subject = "var:bonusar"
+fields = { "sets" = [] }
+evidence = "Bonusar är en lönekomponent.\ncatalog:variable_text:41918:13149:13514\ncatalog:variable_text:41924:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bonusar"
+fields = { "tags" = ["income"] }
+evidence = "Bonusar är en lönekomponent.\ncatalog:variable_text:41918:13149:13514\ncatalog:variable_text:41924:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "sets" = [] }
+evidence = "B36 är samtidigt mappad till scb/ses/bilforman.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "tags" = ["income"] }
+evidence = "B36 är samtidigt mappad till scb/ses/bilforman.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk egenskap.\ncatalog:variable_text:41921:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk egenskap.\ncatalog:variable_text:41921:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:koncerntillhorighet"
+fields = { "sets" = [] }
+evidence = "Koncerntillhörighet beskriver företagsstruktur.\ncatalog:variable_text:41922:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:koncerntillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Koncerntillhörighet beskriver företagsstruktur.\ncatalog:variable_text:41922:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-mm"
+fields = { "sets" = [] }
+evidence = "Kontant bruttolön är inkomst.\ncatalog:variable_text:41923:13149:13514\ncatalog:variable_text:41924:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-mm"
+fields = { "tags" = ["income"] }
+evidence = "Kontant bruttolön är inkomst.\ncatalog:variable_text:41923:13149:13514\ncatalog:variable_text:41924:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-referensmanaden"
+fields = { "sets" = [] }
+evidence = "Lön är inkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41931:13149:13514\ncatalog:variable_text:41935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-referensmanaden"
+fields = { "tags" = ["income"] }
+evidence = "Lön är inkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41931:13149:13514\ncatalog:variable_text:41935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "sets" = [] }
+evidence = "Skift- och OB-tillägg är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41925:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "tags" = ["income"] }
+evidence = "Skift- och OB-tillägg är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41925:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = [] }
+evidence = "Medborgarskap är en demografisk egenskap.\ncatalog:variable_text:41926:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap är en demografisk egenskap.\ncatalog:variable_text:41926:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren beskriver produktionsenhetens verksamhet.\ncatalog:variable_text:41927:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren beskriver produktionsenhetens verksamhet.\ncatalog:variable_text:41927:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = [] }
+evidence = "NUTS anger geografisk indelning; nivå och kodning varierar mellan perioderna.\ncatalog:variable_text:41928:11688:12053\ncatalog:variable_text:41928:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS anger geografisk indelning; nivå och kodning varierar mellan perioderna.\ncatalog:variable_text:41928:11688:12053\ncatalog:variable_text:41928:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidsersattning"
+fields = { "sets" = [] }
+evidence = "Övertidsersättning är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41931:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidsersattning"
+fields = { "tags" = ["income"] }
+evidence = "Övertidsersättning är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41931:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag-eu"
+fields = { "sets" = [] }
+evidence = "Storleksklassen beskriver företagets struktur.\ncatalog:variable_text:41933:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag-eu"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklassen beskriver företagets struktur.\ncatalog:variable_text:41933:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:timlon"
+fields = { "sets" = [] }
+evidence = "Timlön är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:timlon"
+fields = { "tags" = ["income"] }
+evidence = "Timlön är löneinkomst.\ncatalog:variable_text:41924:13149:13514\ncatalog:variable_text:41935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar"
+fields = { "sets" = [] }
+evidence = "Avlönade timmar mäter arbetstid.\ncatalog:variable_text:41913:13149:13514\ncatalog:variable_text:41936:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Avlönade timmar mäter arbetstid.\ncatalog:variable_text:41913:13149:13514\ncatalog:variable_text:41936:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = [] }
+evidence = "Tjänstgöringsomfattning mäter arbetstid i förhållande till heltid.\ncatalog:variable_text:41937:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstgöringsomfattning mäter arbetstid i förhållande till heltid.\ncatalog:variable_text:41937:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-a51"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-a51"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b42"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b42"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b52"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-b52"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:41938:11688:12053\ncatalog:variable_text:41939:13149:13514\ncatalog:variable_text:41940:11688:12053\ncatalog:variable_text:41941:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "sets" = [] }
+evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:41942:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:41942:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "individer: B43 @2006-01-01..2006-12-31 where key = 'v17357'"
+fields = { "description" = "Timlön under referensmånaden." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "individer-i-privat-sektor: B30 @2002-01-01..2002-12-31 where key = 'v17357'"
+fields = { "description" = "Timlön under referensmånaden." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"

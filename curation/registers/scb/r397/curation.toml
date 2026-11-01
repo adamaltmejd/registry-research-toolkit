@@ -82,3 +82,411 @@ kind = "set"
 subject = "studieforbund-stuv-2012: sun2000niva_old"
 fields = { "classification" = "class/niva-old/niva-oldv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder hör till åldersgruppen och är ett demografiskt mått.\ncatalog:variable_text:44747:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder hör till åldersgruppen och är ett demografiskt mått.\ncatalog:variable_text:44747:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen och är ett demografiskt mått.\ncatalog:variable_text:44748:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen och är ett demografiskt mått.\ncatalog:variable_text:44748:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersindelningen hör till åldersgruppen och är ett demografiskt mått. Gränserna varierar mellan perioderna.\ncatalog:variable_text:44749:15340:15706\ncatalog:variable_text:44749:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersindelningen hör till åldersgruppen och är ett demografiskt mått. Gränserna varierar mellan perioderna.\ncatalog:variable_text:44749:15340:15706\ncatalog:variable_text:44749:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4"
+fields = { "sets" = ["amnesomrade"] }
+evidence = "Variabeln kodar ämnesområde för folkbildning.\ncatalog:variable_text:44750:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar ämnesområde för folkbildning.\ncatalog:variable_text:44750:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4-5-unik"
+fields = { "sets" = ["amnesomrade"] }
+evidence = "Variabeln kodar ämnesområde för folkbildning.\ncatalog:variable_text:44751:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-4-5-unik"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar ämnesområde för folkbildning.\ncatalog:variable_text:44751:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arrtyp"
+fields = { "sets" = [] }
+evidence = "Arrangemangstypen beskriver folkbildningsverksamhet.\ncatalog:variable_text:44753:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arrtyp"
+fields = { "tags" = ["education"] }
+evidence = "Arrangemangstypen beskriver folkbildningsverksamhet.\ncatalog:variable_text:44753:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avd-unik"
+fields = { "sets" = [] }
+evidence = "Avdelningen hör till folkbildningsverksamheten.\ncatalog:variable_text:44754:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avd-unik"
+fields = { "tags" = ["education"] }
+evidence = "Avdelningen hör till folkbildningsverksamheten.\ncatalog:variable_text:44754:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "sets" = ["distansstudier"] }
+evidence = "Variabeln beskriver distansundervisning.\ncatalog:variable_text:44756:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver distansundervisning.\ncatalog:variable_text:44756:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt-unik"
+fields = { "sets" = [] }
+evidence = "Distriktet är en indelning av folkbildningsverksamheten.\ncatalog:variable_text:44757:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt-unik"
+fields = { "tags" = ["education"] }
+evidence = "Distriktet är en indelning av folkbildningsverksamheten.\ncatalog:variable_text:44757:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen identifierar folkbokföringsfastighetens läge.\ncatalog:variable_text:44759:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen identifierar folkbokföringsfastighetens läge.\ncatalog:variable_text:44759:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:felkod"
+fields = { "sets" = [] }
+evidence = "Koden anger kvaliteten på personnummeruppgiften.\ncatalog:valueset:7478\ncatalog:variable_text:44760:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:felkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger kvaliteten på personnummeruppgiften.\ncatalog:valueset:7478\ncatalog:variable_text:44760:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-i-sverige-utomlands"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Indelningen grupperar födelseland som Sverige eller utomlands.\ncatalog:variable_text:44762:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-i-sverige-utomlands"
+fields = { "tags" = ["demographics"] }
+evidence = "Indelningen grupperar födelseland som Sverige eller utomlands.\ncatalog:variable_text:44762:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = [] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:44763:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:44763:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger födelseland.\ncatalog:variable_text:44764:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelseland.\ncatalog:variable_text:44764:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelselandets gruppering är demografisk, men den utelämnade värdemängden för 2021 behöver kontrolleras.\ncatalog:valueset:10663\ncatalog:variable_text:44765:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselandets gruppering är demografisk, men den utelämnade värdemängden för 2021 behöver kontrolleras.\ncatalog:valueset:10663\ncatalog:variable_text:44765:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forbund"
+fields = { "sets" = [] }
+evidence = "Studieförbundet avser folkbildningsverksamhet.\ncatalog:variable_text:44766:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forbund"
+fields = { "tags" = ["education"] }
+evidence = "Studieförbundet avser folkbildningsverksamhet.\ncatalog:variable_text:44766:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funktion"
+fields = { "sets" = [] }
+evidence = "Funktionen avser deltagande eller ledarskap inom folkbildning.\ncatalog:variable_text:44767:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funktion"
+fields = { "tags" = ["education"] }
+evidence = "Funktionen avser deltagande eller ledarskap inom folkbildning.\ncatalog:variable_text:44767:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:genomfledarutb"
+fields = { "sets" = ["ledarutbildning"] }
+evidence = "Genomförandet avser ledarutbildning inom folkbildning.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:genomfledarutb"
+fields = { "tags" = ["education"] }
+evidence = "Genomförandet avser ledarutbildning inom folkbildning.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:godkandledare"
+fields = { "sets" = ["ledarkvalifikation"] }
+evidence = "Godkännandestatus är en ledarkvalifikation inom folkbildning.\ncatalog:variable_text:44769:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:godkandledare"
+fields = { "tags" = ["education"] }
+evidence = "Godkännandestatus är en ledarkvalifikation inom folkbildning.\ncatalog:variable_text:44769:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln kodar folkbokföringskommun.\ncatalog:variable_text:44773:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar folkbokföringskommun.\ncatalog:variable_text:44773:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:44774:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:44774:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-kon-pnr"
+fields = { "sets" = ["kon"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:44775:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-kon-pnr"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:44775:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar folkbokföringslän.\ncatalog:variable_text:44776:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar folkbokföringslän.\ncatalog:variable_text:44776:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln kodar verksamhetskommun, i vissa fall län.\ncatalog:variable_text:44777:15340:15706\ncatalog:variable_text:44777:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar verksamhetskommun, i vissa fall län.\ncatalog:variable_text:44777:15340:15706\ncatalog:variable_text:44777:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ledarkval"
+fields = { "sets" = ["ledarkvalifikation"] }
+evidence = "Variabeln kodar ledarkvalifikation inom folkbildning.\ncatalog:variable_text:44778:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ledarkval"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar ledarkvalifikation inom folkbildning.\ncatalog:variable_text:44778:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ledarutb"
+fields = { "sets" = ["distansstudier", "ledarutbildning"] }
+evidence = "Variabeln beskriver formen för ledarutbildning. Coordinator group membership: Variablerna anger distansundervisning, studier på distans respektive om ledarutbildning sker på distans. Ledarutbildningens distansstatus omfattas också av den fasta definitionen. Variablerna beskriver hur ledarutbildningen genomförts respektive dess distansform. Ledargodkännande och andra kvalifikationer omfattas inte.\ncatalog:valueset:1203\ncatalog:variable_text:44756:17532:17897\ncatalog:variable_text:44768:15340:20089\ncatalog:variable_text:44779:15340:20089\ncatalog:variable_text:44787:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ledarutb"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver formen för ledarutbildning. Coordinator group membership: Variablerna anger distansundervisning, studier på distans respektive om ledarutbildning sker på distans. Ledarutbildningens distansstatus omfattas också av den fasta definitionen. Variablerna beskriver hur ledarutbildningen genomförts respektive dess distansform. Ledargodkännande och andra kvalifikationer omfattas inte.\ncatalog:valueset:1203\ncatalog:variable_text:44756:17532:17897\ncatalog:variable_text:44768:15340:20089\ncatalog:variable_text:44779:15340:20089\ncatalog:variable_text:44787:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = [] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:44781:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:44781:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyborjare"
+fields = { "sets" = [] }
+evidence = "Nybörjarstatus beskriver tidigare deltagande i folkbildning.\ncatalog:variable_text:44782:15340:15706\ncatalog:variable_text:44782:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:nyborjare"
+fields = { "tags" = ["education"] }
+evidence = "Nybörjarstatus beskriver tidigare deltagande i folkbildning.\ncatalog:variable_text:44782:15340:15706\ncatalog:variable_text:44782:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-pa-distans"
+fields = { "sets" = ["distansstudier"] }
+evidence = "Variabeln beskriver studier på distans.\ncatalog:variable_text:44787:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-pa-distans"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver studier på distans.\ncatalog:variable_text:44787:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar utbildningsnivå.\ncatalog:variable_text:44788:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar utbildningsnivå.\ncatalog:variable_text:44788:15340:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["svensk-och-utlandsk-bakgrund"] }
+evidence = "Variabeln anger svensk eller utländsk bakgrund.\ncatalog:variable_text:44789:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger svensk eller utländsk bakgrund.\ncatalog:variable_text:44789:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "sets" = ["svensk-och-utlandsk-bakgrund"] }
+evidence = "Variabeln anger en alternativ indelning av svensk och utländsk bakgrund.\ncatalog:variable_text:44790:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger en alternativ indelning av svensk och utländsk bakgrund.\ncatalog:variable_text:44790:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vform"
+fields = { "sets" = [] }
+evidence = "V är en enbokstavskod för verksamhet.\ncatalog:variable_text:44791:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vform"
+fields = { "tags" = ["education"] }
+evidence = "V är en enbokstavskod för verksamhet.\ncatalog:variable_text:44791:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "deltagare: GenomfLedarUtb @2012-01-01..2024-12-31 where key = 'v49437'"
+fields = { "description" = "Anger hur ledarens ledarutbildning genomförts." }
+evidence = "Värdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "studieforbund-stuv-2020: GenomfLedarUtb @2024-01-01..2024-12-31 where key = 'v49437'"
+fields = { "description" = "Anger hur ledarens ledarutbildning genomförts." }
+evidence = "Värdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"

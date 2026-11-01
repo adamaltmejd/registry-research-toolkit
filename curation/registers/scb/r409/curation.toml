@@ -34,3 +34,267 @@ kind = "set"
 subject = "civila-samhallet: agkat"
 fields = { "classification" = "class/agarkat/agarkat2020" }
 evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver organisationsstruktur.\ncatalog:valueset:4888\ncatalog:variable_text:6874:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver organisationsstruktur.\ncatalog:valueset:4888\ncatalog:variable_text:6874:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:6875:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:6875:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvinnor-arbetsstallet"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter sysselsättning; kön är en nedbrytningsdimension.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvinnor-arbetsstallet"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter sysselsättning; kön är en nedbrytningsdimension.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-pa-arbetsstallet"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter sysselsättning; kön är en nedbrytningsdimension.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-pa-arbetsstallet"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter sysselsättning; kön är en nedbrytningsdimension.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal sysselsatta på arbetsstället.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal sysselsatta på arbetsstället.\ncatalog:variable_text:6876:18628:19723\ncatalog:variable_text:6877:18628:19723\ncatalog:variable_text:6878:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-summa"
+fields = { "sets" = [] }
+evidence = "Arbetsgivaravgifter är avgifter av skattekaraktär.\ncatalog:variable_text:6879:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-summa"
+fields = { "tags" = ["taxation"] }
+evidence = "Arbetsgivaravgifter är avgifter av skattekaraktär.\ncatalog:variable_text:6879:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ekaktiv2"
+fields = { "sets" = [] }
+evidence = "Variabeln anger ekonomisk aktivitet i organisationen.\ncatalog:variable_text:6880:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ekaktiv2"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln anger ekonomisk aktivitet i organisationen.\ncatalog:variable_text:6880:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "sets" = [] }
+evidence = "Variabeln avser fastigheters taxeringsvärde.\ncatalog:valueset:8862\ncatalog:variable_text:6881:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln avser fastigheters taxeringsvärde.\ncatalog:valueset:8862\ncatalog:variable_text:6881:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-bransch-naringsgren"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar företagets näringsgren.\ncatalog:variable_text:6882:18628:18993\ncatalog:variable_text:6882:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-bransch-naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar företagets näringsgren.\ncatalog:variable_text:6882:18628:18993\ncatalog:variable_text:6882:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:icnpo"
+fields = { "sets" = [] }
+evidence = "ICNPO klassificerar organisationens verksamhetsområde.\ncatalog:valueset:3629\ncatalog:variable_text:6884:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:icnpo"
+fields = { "tags" = ["business"] }
+evidence = "ICNPO klassificerar organisationens verksamhetsområde.\ncatalog:valueset:3629\ncatalog:variable_text:6884:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar företagets verksamhetsstatus.\ncatalog:valueset:1745\ncatalog:variable_text:6885:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar företagets verksamhetsstatus.\ncatalog:valueset:1745\ncatalog:variable_text:6885:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver organisationens populations- och registreringsstatus.\ncatalog:valueset:9611\ncatalog:variable_text:6886:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver organisationens populations- och registreringsstatus.\ncatalog:valueset:9611\ncatalog:variable_text:6886:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver organisationsstruktur.\ncatalog:variable_text:6887:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver organisationsstruktur.\ncatalog:variable_text:6887:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernniva"
+fields = { "sets" = [] }
+evidence = "Koncernnivå beskriver företagsstruktur.\ncatalog:valueset:12538\ncatalog:variable_text:6888:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernniva"
+fields = { "tags" = ["business"] }
+evidence = "Koncernnivå beskriver företagsstruktur.\ncatalog:valueset:12538\ncatalog:variable_text:6888:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-totalt"
+fields = { "sets" = [] }
+evidence = "Lönesumman är ett lönebelopp.\ncatalog:variable_text:6889:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-totalt"
+fields = { "tags" = ["income"] }
+evidence = "Lönesumman är ett lönebelopp.\ncatalog:variable_text:6889:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter omsättning.\ncatalog:variable_text:6890:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter omsättning.\ncatalog:variable_text:6890:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prelim-a-skatt-inkl-soc"
+fields = { "sets" = [] }
+evidence = "Variabeln avser preliminär skatt inklusive sociala ersättningar.\ncatalog:variable_text:6892:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prelim-a-skatt-inkl-soc"
+fields = { "tags" = ["taxation", "transfers"] }
+evidence = "Variabeln avser preliminär skatt inklusive sociala ersättningar.\ncatalog:variable_text:6892:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger organisationens säteskommun.\ncatalog:variable_text:6893:18628:19723\ncatalog:variable_text:6894:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger organisationens säteskommun.\ncatalog:variable_text:6893:18628:19723\ncatalog:variable_text:6894:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateslan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger organisationens säteslän.\ncatalog:variable_text:6893:18628:19723\ncatalog:variable_text:6894:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateslan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger organisationens säteslän.\ncatalog:variable_text:6893:18628:19723\ncatalog:variable_text:6894:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar institutionell sektor.\ncatalog:variable_text:6895:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar institutionell sektor.\ncatalog:variable_text:6895:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svb"
+fields = { "sets" = [] }
+evidence = "Variabeln anger begränsad vinstutdelning i organisationen.\ncatalog:variable_text:6896:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svb"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln anger begränsad vinstutdelning i organisationen.\ncatalog:variable_text:6896:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utforare"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om organisationen utför tjänster inom vård, skola och omsorg.\ncatalog:variable_text:6897:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utforare"
+fields = { "tags" = ["education", "healthcare", "social-care"] }
+evidence = "Variabeln anger om organisationen utför tjänster inom vård, skola och omsorg.\ncatalog:variable_text:6897:18628:19723"

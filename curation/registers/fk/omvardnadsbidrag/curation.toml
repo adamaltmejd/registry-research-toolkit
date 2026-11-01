@@ -10,3 +10,63 @@ kind = "set"
 subject = "beviljanden: diagnoskod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:2327\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "sets" = [] }
+evidence = "Antalet barn avser ärenden om omvårdnadsbidrag.\ncatalog:occurrence:444\ncatalog:register:20"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet barn avser ärenden om omvårdnadsbidrag.\ncatalog:occurrence:444\ncatalog:register:20"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Utbetalt belopp är en transferering och har närliggande belopps- och nivåvariabler.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetalt belopp är en transferering och har närliggande belopps- och nivåvariabler.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "sets" = [] }
+evidence = "Variabeln anger diagnoskod.\ncatalog:occurrence:445"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger diagnoskod.\ncatalog:occurrence:445"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "sets" = [] }
+evidence = "Nivån avser en transferering och hör samman med bidragets beloppsvariabler.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "tags" = ["transfers"] }
+evidence = "Nivån avser en transferering och hör samman med bidragets beloppsvariabler.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+[[statement]]
+kind = "set"
+subject = "var:skattat-belopp"
+fields = { "sets" = [] }
+evidence = "Det beräknade beloppet per barn är en transferering och hör samman med bidragets belopp och nivå.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+[[statement]]
+kind = "set"
+subject = "var:skattat-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Det beräknade beloppet per barn är en transferering och hör samman med bidragets belopp och nivå.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"

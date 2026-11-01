@@ -1,0 +1,60 @@
+
+[[statement]]
+kind = "set"
+subject = "var:batteri"
+fields = { "sets" = [] }
+evidence = "Batteri identifies the test battery.\ncatalog:occurrence:1146\ncatalog:variable_text:736:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:batteri"
+fields = { "tags" = ["defence"] }
+evidence = "Batteri identifies the test battery.\ncatalog:occurrence:1146\ncatalog:variable_text:736:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:g-faktor"
+fields = { "sets" = [] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:g-faktor"
+fields = { "tags" = ["defence"] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:provtyp"
+fields = { "sets" = [] }
+evidence = "Provtyp identifies the type of conscription test.\ncatalog:register:35\ncatalog:variable_text:740:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:provtyp"
+fields = { "tags" = ["defence"] }
+evidence = "Provtyp identifies the type of conscription test.\ncatalog:register:35\ncatalog:variable_text:740:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:spatial-formaga"
+fields = { "sets" = [] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:spatial-formaga"
+fields = { "tags" = ["defence"] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-formaga"
+fields = { "sets" = [] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-formaga"
+fields = { "tags" = ["defence"] }
+evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"

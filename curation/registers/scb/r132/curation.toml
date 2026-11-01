@@ -508,3 +508,723 @@ kind = "set"
 subject = "industrins-energianvandning: näringsgren2007"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-till-arbetsstallet"
+fields = { "sets" = [] }
+evidence = "Arbetsställe och redovisningsenhet anges för samma kolumn i angränsande perioder.\ncatalog:occurrence:288196\ncatalog:occurrence:288248"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-till-arbetsstallet"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställe och redovisningsenhet anges för samma kolumn i angränsande perioder.\ncatalog:occurrence:288196\ncatalog:occurrence:288248"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-pa-arbetsstallet-anst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288198\ncatalog:occurrence:288285"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-pa-arbetsstallet-anst"
+fields = { "tags" = ["employment"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288198\ncatalog:occurrence:288285"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-pa-arbetsstallet-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288199\ncatalog:occurrence:288286"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-pa-arbetsstallet-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288199\ncatalog:occurrence:288286"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-arbetsstallet-anst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288198\ncatalog:occurrence:288285"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-arbetsstallet-anst"
+fields = { "tags" = ["employment"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288198\ncatalog:occurrence:288285"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-arbetsstallet-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288199\ncatalog:occurrence:288286"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-arbetsstallet-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Samma antal anställda är uppdelat mellan perioder.\ncatalog:occurrence:288199\ncatalog:occurrence:288286"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallestatus-aestat"
+fields = { "sets" = [] }
+evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetsställestatus.\ncatalog:valueset:3054\ncatalog:valueset:8490"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallestatus-aestat"
+fields = { "tags" = ["business"] }
+evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetsställestatus.\ncatalog:valueset:3054\ncatalog:valueset:8490"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallestatus-arbetsstallestatus"
+fields = { "sets" = [] }
+evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetsställestatus.\ncatalog:valueset:3054\ncatalog:valueset:8978"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallestatus-arbetsstallestatus"
+fields = { "tags" = ["business"] }
+evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetsställestatus.\ncatalog:valueset:3054\ncatalog:valueset:8978"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "sets" = ["postnummer"] }
+evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
+
+[[statement]]
+kind = "set"
+subject = "var:bid"
+fields = { "sets" = ["bransleslag"] }
+evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bid"
+fields = { "tags" = ["energy"] }
+evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-maxpris"
+fields = { "sets" = ["branslepris"] }
+evidence = "Samma högsta pris är uppdelat mellan perioder.\ncatalog:occurrence:288226\ncatalog:occurrence:288265"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-maxpris"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Samma högsta pris är uppdelat mellan perioder.\ncatalog:occurrence:288226\ncatalog:occurrence:288265"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-maxvarde"
+fields = { "sets" = ["branslepris"] }
+evidence = "Samma högsta pris är uppdelat mellan perioder.\ncatalog:occurrence:288226\ncatalog:occurrence:288265"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-maxvarde"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Samma högsta pris är uppdelat mellan perioder.\ncatalog:occurrence:288226\ncatalog:occurrence:288265"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-for-ovrigt-forbovr"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288169\ncatalog:occurrence:288214\ncatalog:occurrence:288257"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-for-ovrigt-forbovr"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288169\ncatalog:occurrence:288214\ncatalog:occurrence:288257"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-for-transporter-forbtrans"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Mäter bränsleanvändning för transporter.\ncatalog:variable_text:32180:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-for-transporter-forbtrans"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Mäter bränsleanvändning för transporter.\ncatalog:variable_text:32180:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-ovrigt"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288205\ncatalog:occurrence:288292"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-ovrigt"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288205\ncatalog:occurrence:288292"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-transport"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Mäter bränsleanvändning för transporter.\ncatalog:variable_text:32182:12784:13149\ncatalog:variable_text:32182:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleanvandning-transport"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Mäter bränsleanvändning för transporter.\ncatalog:variable_text:32182:12784:13149\ncatalog:variable_text:32182:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbr-ovrig"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288205\ncatalog:occurrence:288292"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbr-ovrig"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288205\ncatalog:occurrence:288292"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-ovrigt-forbovr"
+fields = { "sets" = ["bransleanvandning"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288169\ncatalog:occurrence:288214\ncatalog:occurrence:288257"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-ovrigt-forbovr"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleförbrukning för övrigt är uppdelad mellan perioder.\ncatalog:occurrence:288169\ncatalog:occurrence:288214\ncatalog:occurrence:288257"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "sets" = ["bransleslag"] }
+evidence = "Samma bränsleslag i klartext är uppdelat mellan perioder.\ncatalog:occurrence:288682\ncatalog:occurrence:288714"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleslag i klartext är uppdelat mellan perioder.\ncatalog:occurrence:288682\ncatalog:occurrence:288714"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagens-varmevarden-varmevarde"
+fields = { "sets" = ["branslets-varmevarde"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288247\ncatalog:occurrence:288335"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagens-varmevarden-varmevarde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288247\ncatalog:occurrence:288335"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagens-varmevarden-vv"
+fields = { "sets" = ["branslets-varmevarde"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288246\ncatalog:occurrence:288282"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagens-varmevarden-vv"
+fields = { "tags" = ["energy"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288246\ncatalog:occurrence:288282"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "sets" = ["bransleslag"] }
+evidence = "Anger bränsleslag i klartext.\ncatalog:variable_text:32189:12784:13149\ncatalog:variable_text:32189:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "tags" = ["energy"] }
+evidence = "Anger bränsleslag i klartext.\ncatalog:variable_text:32189:12784:13149\ncatalog:variable_text:32189:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext-btext"
+fields = { "sets" = ["bransleslag"] }
+evidence = "Samma bränsleslag i klartext är uppdelat mellan perioder; en enstaka enhetsuppgift ändrar inte textfältets betydelse.\ncatalog:occurrence:288341\ncatalog:occurrence:288682\ncatalog:occurrence:288714"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext-btext"
+fields = { "tags" = ["energy"] }
+evidence = "Samma bränsleslag i klartext är uppdelat mellan perioder; en enstaka enhetsuppgift ändrar inte textfältets betydelse.\ncatalog:occurrence:288341\ncatalog:occurrence:288682\ncatalog:occurrence:288714"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagets-varmevarden-varmevarde"
+fields = { "sets" = ["branslets-varmevarde"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288247\ncatalog:occurrence:288335"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagets-varmevarden-varmevarde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288247\ncatalog:occurrence:288335"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagets-varmevarden-vv"
+fields = { "sets" = ["branslets-varmevarde"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288246\ncatalog:occurrence:288282"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslagets-varmevarden-vv"
+fields = { "tags" = ["energy"] }
+evidence = "Samma värmevärde är uppdelat mellan perioder.\ncatalog:occurrence:288246\ncatalog:occurrence:288282"
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandningen-i-kvantitet-mwh-el-mwh"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Mäter elanvändning i MWh.\ncatalog:variable_text:32195:12784:13149\ncatalog:variable_text:32195:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandningen-i-kvantitet-mwh-el-mwh"
+fields = { "tags" = ["energy"] }
+evidence = "Mäter elanvändning i MWh.\ncatalog:variable_text:32195:12784:13149\ncatalog:variable_text:32195:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandningen-i-kvantitet-mwh-mwh"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Mäter elanvändning i MWh.\ncatalog:variable_text:32196:12418:18262\ncatalog:variable_text:32196:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandningen-i-kvantitet-mwh-mwh"
+fields = { "tags" = ["energy"] }
+evidence = "Mäter elanvändning i MWh.\ncatalog:variable_text:32196:12418:18262\ncatalog:variable_text:32196:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elvarde"
+fields = { "sets" = ["varde-av-el-och-transportbransleforbrukning"] }
+evidence = "Samma kolumn har olika omfattning i angränsande observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
+
+[[statement]]
+kind = "set"
+subject = "var:elvarde"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Samma kolumn har olika omfattning i angränsande observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika värdebegrepp i observerade perioder. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288219\ncatalog:occurrence:288306\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma kolumn har olika värdebegrepp i observerade perioder. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288219\ncatalog:occurrence:288306\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-el"
+fields = { "sets" = ["inkopsvarde-av-el"] }
+evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-el"
+fields = { "tags" = ["energy"] }
+evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-el-varde"
+fields = { "sets" = ["inkopsvarde-av-el"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-el-varde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-elenergi"
+fields = { "sets" = ["inkopsvarde-av-el"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-av-elenergi"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-kvantitet"
+fields = { "sets" = ["inkopsvarde-av-inkopt-kvantitet"] }
+evidence = "Samma kolumn har olika värdebegrepp i observerade perioder.\ncatalog:occurrence:288219\ncatalog:occurrence:288306"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-kvantitet"
+fields = { "tags" = ["energy"] }
+evidence = "Samma kolumn har olika värdebegrepp i observerade perioder.\ncatalog:occurrence:288219\ncatalog:occurrence:288306"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvardet-av-den-inkopta-kvantiteten-varde"
+fields = { "sets" = ["inkopsvarde-av-inkopt-kvantitet"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvardet-av-den-inkopta-kvantiteten-varde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-kvantitet-inkopt"
+fields = { "sets" = ["inkopt-kvantitet"] }
+evidence = "Mäter inköpt bränslekvantitet.\ncatalog:variable_text:32209:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-kvantitet-inkopt"
+fields = { "tags" = ["energy"] }
+evidence = "Mäter inköpt bränslekvantitet.\ncatalog:variable_text:32209:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-kvantitet-inkoptkvantitet"
+fields = { "sets" = ["inkopt-kvantitet"] }
+evidence = "Mäter inköpt bränslekvantitet.\ncatalog:variable_text:32210:12784:13149\ncatalog:variable_text:32210:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-kvantitet-inkoptkvantitet"
+fields = { "tags" = ["energy"] }
+evidence = "Mäter inköpt bränslekvantitet.\ncatalog:variable_text:32210:12784:13149\ncatalog:variable_text:32210:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Anger arbetsställets geografiska läge.\ncatalog:variable_text:32216:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Anger arbetsställets geografiska läge.\ncatalog:variable_text:32216:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:minpris"
+fields = { "sets" = ["branslepris"] }
+evidence = "Mäter bränsleslagets lägsta pris per enhet.\ncatalog:variable_text:32223:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:minpris"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Mäter bränsleslagets lägsta pris per enhet.\ncatalog:variable_text:32223:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Anger arbetsställets näringsgren.\ncatalog:variable_text:32225:13514:13879\ncatalog:variable_text:32225:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "tags" = ["business"] }
+evidence = "Anger arbetsställets näringsgren.\ncatalog:variable_text:32225:13514:13879\ncatalog:variable_text:32225:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-aldre-standard-an-ng2002"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Anger arbetsställets näringsgren enligt en äldre standard.\ncatalog:variable_text:32226:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-aldre-standard-an-ng2002"
+fields = { "tags" = ["business"] }
+evidence = "Anger arbetsställets näringsgren enligt en äldre standard.\ncatalog:variable_text:32226:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-aldre-standard-an-ng2007"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Klassifikationsnamnet och den operativa definitionen behöver jämföras med de utelämnade koderna.\ncatalog:valueset:5966\ncatalog:valueset:8768\ncatalog:variable_text:32227:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-aldre-standard-an-ng2007"
+fields = { "tags" = ["business"] }
+evidence = "Klassifikationsnamnet och den operativa definitionen behöver jämföras med de utelämnade koderna.\ncatalog:valueset:5966\ncatalog:valueset:8768\ncatalog:variable_text:32227:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-ng2007"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Den tidiga definitionen och klassifikationsnamnet behöver jämföras med de utelämnade koderna.\ncatalog:valueset:8768\ncatalog:variable_text:32228:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-arbetsstalle-ng2007"
+fields = { "tags" = ["business"] }
+evidence = "Den tidiga definitionen och klassifikationsnamnet behöver jämföras med de utelämnade koderna.\ncatalog:valueset:8768\ncatalog:variable_text:32228:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Ng är en ogenomskinlig bokstavskod för näringsgren.\ncatalog:variable_text:32229:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en ogenomskinlig bokstavskod för näringsgren.\ncatalog:variable_text:32229:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:panneffekt-arbetsstallet"
+fields = { "sets" = ["total-panneffekt"] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288230\ncatalog:occurrence:288269"
+
+[[statement]]
+kind = "set"
+subject = "var:panneffekt-arbetsstallet"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288230\ncatalog:occurrence:288269"
+
+[[statement]]
+kind = "set"
+subject = "var:panneffekt-redovisningsenheten"
+fields = { "sets" = ["total-panneffekt"] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288230\ncatalog:occurrence:288269"
+
+[[statement]]
+kind = "set"
+subject = "var:panneffekt-redovisningsenheten"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288230\ncatalog:occurrence:288269"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr-redovisningsenheten"
+fields = { "sets" = ["postnummer"] }
+evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr-redovisningsenheten"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
+
+[[statement]]
+kind = "set"
+subject = "var:postnummer-arbetsstallet"
+fields = { "sets" = ["postnummer"] }
+evidence = "Samma källkolumner har även postortsägare och äldre postnummerägare.\ncatalog:occurrence:288234\ncatalog:occurrence:288235\ncatalog:occurrence:288272\ncatalog:occurrence:288634\ncatalog:occurrence:288666\ncatalog:occurrence:288667"
+
+[[statement]]
+kind = "set"
+subject = "var:postnummer-arbetsstallet"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumner har även postortsägare och äldre postnummerägare.\ncatalog:occurrence:288234\ncatalog:occurrence:288235\ncatalog:occurrence:288272\ncatalog:occurrence:288634\ncatalog:occurrence:288666\ncatalog:occurrence:288667"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-poanst"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika ägare och enhetsbenämningar.\ncatalog:occurrence:288233\ncatalog:occurrence:288271\ncatalog:occurrence:288634\ncatalog:occurrence:288666"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-poanst"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har olika ägare och enhetsbenämningar.\ncatalog:occurrence:288233\ncatalog:occurrence:288271\ncatalog:occurrence:288634\ncatalog:occurrence:288666"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-postnr"
+fields = { "sets" = [] }
+evidence = "Kolumnnamnet PostNr och angränsande ägare anger postnummer medan etiketten anger postort.\ncatalog:occurrence:288635\ncatalog:occurrence:288667\ncatalog:occurrence:288699"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Kolumnnamnet PostNr och angränsande ägare anger postnummer medan etiketten anger postort.\ncatalog:occurrence:288635\ncatalog:occurrence:288667\ncatalog:occurrence:288699"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-postort"
+fields = { "sets" = [] }
+evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-postort"
+fields = { "tags" = ["geography"] }
+evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-ppostort"
+fields = { "sets" = [] }
+evidence = "Anger arbetsställets postort.\ncatalog:variable_text:32240:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-ppostort"
+fields = { "tags" = ["geography"] }
+evidence = "Anger arbetsställets postort.\ncatalog:variable_text:32240:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:snittpris"
+fields = { "sets" = ["branslepris"] }
+evidence = "Mäter bränsleslagets genomsnittliga pris per enhet.\ncatalog:variable_text:32243:12418:17167\ncatalog:variable_text:32243:17167:17897\ncatalog:variable_text:32243:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:snittpris"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Mäter bränsleslagets genomsnittliga pris per enhet.\ncatalog:variable_text:32243:12418:17167\ncatalog:variable_text:32243:17167:17897\ncatalog:variable_text:32243:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-fdb"
+fields = { "sets" = [] }
+evidence = "Etikett och statuskoder ger olika beskrivningar av samma kolumn.\ncatalog:occurrence:288240\ncatalog:occurrence:288276\ncatalog:valueset:3054"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-fdb"
+fields = { "tags" = ["methods"] }
+evidence = "Etikett och statuskoder ger olika beskrivningar av samma kolumn.\ncatalog:occurrence:288240\ncatalog:occurrence:288276\ncatalog:valueset:3054"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-scb-granskning"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika statusbenämningar.\ncatalog:occurrence:288240\ncatalog:occurrence:288276"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-scb-granskning"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har olika statusbenämningar.\ncatalog:occurrence:288240\ncatalog:occurrence:288276"
+
+[[statement]]
+kind = "set"
+subject = "var:totalenergi"
+fields = { "sets" = [] }
+evidence = "Mäter arbetsställets sammanlagda energianvändning.\ncatalog:variable_text:32249:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalenergi"
+fields = { "tags" = ["energy"] }
+evidence = "Mäter arbetsställets sammanlagda energianvändning.\ncatalog:variable_text:32249:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
+fields = { "sets" = ["varde-av-el-och-transportbransleforbrukning"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281"
+
+[[statement]]
+kind = "set"
+subject = "var:vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-adress-har-redovisningsenheten-adress"
+fields = { "sets" = [] }
+evidence = "Arbetsställe och redovisningsenhet anges för samma kolumn i angränsande perioder.\ncatalog:occurrence:288196\ncatalog:occurrence:288248"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-adress-har-redovisningsenheten-adress"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställe och redovisningsenhet anges för samma kolumn i angränsande perioder.\ncatalog:occurrence:288196\ncatalog:occurrence:288248"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-adress-har-redovisningsenheten-anladr"
+fields = { "sets" = [] }
+evidence = "Anger redovisningsenhetens adress.\ncatalog:variable_text:32252:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-adress-har-redovisningsenheten-anladr"
+fields = { "tags" = ["geography"] }
+evidence = "Anger redovisningsenhetens adress.\ncatalog:variable_text:32252:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-poanst"
+fields = { "sets" = [] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288233\ncatalog:occurrence:288271"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-poanst"
+fields = { "tags" = ["geography"] }
+evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288233\ncatalog:occurrence:288271"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-postort"
+fields = { "sets" = [] }
+evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-postort"
+fields = { "tags" = ["geography"] }
+evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"

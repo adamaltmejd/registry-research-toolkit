@@ -1,0 +1,144 @@
+
+[[statement]]
+kind = "set"
+subject = "var:d1"
+fields = { "sets" = [] }
+evidence = "D1 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389950\ncatalog:variable_text:39368:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:d1"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "D1 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389950\ncatalog:variable_text:39368:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:d2"
+fields = { "sets" = [] }
+evidence = "D2 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389951\ncatalog:variable_text:39369:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:d2"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "D2 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389951\ncatalog:variable_text:39369:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:d3"
+fields = { "sets" = [] }
+evidence = "D3 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389952\ncatalog:variable_text:39370:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:d3"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "D3 is an opaque source code for a household network price; the label is shared with other consumption categories.\ncatalog:occurrence:389952\ncatalog:variable_text:39370:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:husanl"
+fields = { "sets" = [] }
+evidence = "The variable counts household installations affected by natural gas supplier changes.\ncatalog:variable_text:39371:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:husanl"
+fields = { "tags" = ["energy"] }
+evidence = "The variable counts household installations affected by natural gas supplier changes.\ncatalog:variable_text:39371:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:huskund"
+fields = { "sets" = [] }
+evidence = "The variable counts household customers changing natural gas supplier.\ncatalog:variable_text:39372:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:huskund"
+fields = { "tags" = ["energy"] }
+evidence = "The variable counts household customers changing natural gas supplier.\ncatalog:variable_text:39372:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:i1"
+fields = { "sets" = [] }
+evidence = "I1 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389953\ncatalog:variable_text:39373:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i1"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "I1 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389953\ncatalog:variable_text:39373:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i2"
+fields = { "sets" = [] }
+evidence = "I2 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389954\ncatalog:variable_text:39374:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i2"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "I2 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389954\ncatalog:variable_text:39374:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i3"
+fields = { "sets" = [] }
+evidence = "I3 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389955\ncatalog:variable_text:39375:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i3"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "I3 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389955\ncatalog:variable_text:39375:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i4"
+fields = { "sets" = [] }
+evidence = "I4 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389956\ncatalog:variable_text:39376:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i4"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "I4 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389956\ncatalog:variable_text:39376:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i5"
+fields = { "sets" = [] }
+evidence = "I5 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389957\ncatalog:variable_text:39377:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:i5"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "I5 is an opaque source code for an industrial network price; the label is shared with other consumption categories.\ncatalog:occurrence:389957\ncatalog:variable_text:39377:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:naturgas-byte-leverantor-ovranl"
+fields = { "sets" = [] }
+evidence = "The variable counts other customers' installations affected by natural gas supplier changes.\ncatalog:variable_text:39378:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:naturgas-byte-leverantor-ovranl"
+fields = { "tags" = ["energy"] }
+evidence = "The variable counts other customers' installations affected by natural gas supplier changes.\ncatalog:variable_text:39378:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:naturgas-byte-leverantor-ovrkund"
+fields = { "sets" = [] }
+evidence = "The variable counts other customers changing natural gas supplier.\ncatalog:variable_text:39379:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:naturgas-byte-leverantor-ovrkund"
+fields = { "tags" = ["energy"] }
+evidence = "The variable counts other customers changing natural gas supplier.\ncatalog:variable_text:39379:15340:17532"

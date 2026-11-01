@@ -88,3 +88,363 @@ kind = "set"
 subject = "individer: {kommun,lan} @2024"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-bostad"
+fields = { "sets" = [] }
+evidence = "Ägarkategorin beskriver fastighetsägandet.\ncatalog:variable_text:26471:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-bostad"
+fields = { "tags" = ["property"] }
+evidence = "Ägarkategorin beskriver fastighetsägandet.\ncatalog:variable_text:26471:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter ålder vid årets slut.\ncatalog:variable_text:26472:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder vid årets slut.\ncatalog:variable_text:26472:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Antalet barn hör till familjesammansättning och har åldersavgränsade motsvarigheter.\ncatalog:variable_text:26473:15340:19723\ncatalog:variable_text:26473:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet barn hör till familjesammansättning och har åldersavgränsade motsvarigheter.\ncatalog:variable_text:26473:15340:19723\ncatalog:variable_text:26473:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26474:15340:19723\ncatalog:variable_text:26474:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26474:15340:19723\ncatalog:variable_text:26474:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-6-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26475:15340:19723\ncatalog:variable_text:26475:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-6-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26475:15340:19723\ncatalog:variable_text:26475:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbarnunder25"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26476:15340:19723\ncatalog:variable_text:26476:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbarnunder25"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet barn ingår i gruppen för barnantal.\ncatalog:variable_text:26476:15340:19723\ncatalog:variable_text:26476:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "sets" = [] }
+evidence = "Antal rum är ett bostadsmått utan en passande gruppkandidat.\ncatalog:variable_text:26477:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "tags" = ["housing"] }
+evidence = "Antal rum är ett bostadsmått utan en passande gruppkandidat.\ncatalog:variable_text:26477:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Total bostadsarea och area per person är mått på bostadsarea.\ncatalog:variable_text:26478:15340:20089\ncatalog:variable_text:26479:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "tags" = ["housing"] }
+evidence = "Total bostadsarea och area per person är mått på bostadsarea.\ncatalog:variable_text:26478:15340:20089\ncatalog:variable_text:26479:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea-person"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Area per person är ett härlett mått på bostadsarea.\ncatalog:variable_text:26479:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea-person"
+fields = { "tags" = ["housing"] }
+evidence = "Area per person är ett härlett mått på bostadsarea.\ncatalog:variable_text:26479:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform"
+fields = { "sets" = ["bostadstyp", "upplatelseform"] }
+evidence = "Koderna kombinerar bostadstyp och upplåtelseform.\ncatalog:valueset:2546\ncatalog:variable_text:26480:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform"
+fields = { "tags" = ["housing"] }
+evidence = "Koderna kombinerar bostadstyp och upplåtelseform.\ncatalog:valueset:2546\ncatalog:variable_text:26480:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "sets" = ["bostadstyp"] }
+evidence = "Kategorin beskriver bostadens typ.\ncatalog:valueset:9158\ncatalog:variable_text:26481:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "tags" = ["housing"] }
+evidence = "Kategorin beskriver bostadens typ.\ncatalog:valueset:9158\ncatalog:variable_text:26481:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd hör till familjerelationer.\ncatalog:variable_text:26482:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd hör till familjerelationer.\ncatalog:variable_text:26482:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = ["bostadens-omradestillhorighet"] }
+evidence = "Distrikt är en geografisk områdestillhörighet.\ncatalog:variable_text:26483:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt är en geografisk områdestillhörighet.\ncatalog:variable_text:26483:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Beteckningen avser fastigheten där personen är folkbokförd och är en lägesnyckel.\ncatalog:variable_text:26486:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen avser fastigheten där personen är folkbokförd och är en lägesnyckel.\ncatalog:variable_text:26486:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:26488:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:26488:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["bostadens-omradestillhorighet"] }
+evidence = "Församling anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26490:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26490:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver personens ställning i hushållet.\ncatalog:variable_text:26491:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver personens ställning i hushållet.\ncatalog:variable_text:26491:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "sets" = [] }
+evidence = "Hushållsstorlek beskriver hushållets sammansättning.\ncatalog:variable_text:26492:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "tags" = ["family-household"] }
+evidence = "Hushållsstorlek beskriver hushållets sammansättning.\ncatalog:variable_text:26492:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "sets" = [] }
+evidence = "Hushållstyp beskriver hushållets sammansättning.\ncatalog:variable_text:26493:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Hushållstyp beskriver hushållets sammansättning.\ncatalog:variable_text:26493:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar imputering.\ncatalog:variable_text:26494:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar imputering.\ncatalog:variable_text:26494:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "sets" = [] }
+evidence = "Kökstyp är en egenskap hos bostaden.\ncatalog:variable_text:26495:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kökstyp är en egenskap hos bostaden.\ncatalog:variable_text:26495:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["bostadens-omradestillhorighet"] }
+evidence = "Kommun anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26496:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26496:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:26497:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:26497:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "sets" = ["bostadstyp"] }
+evidence = "Koderna kategoriserar lägenhetstyp efter rum och kök.\ncatalog:valueset:6244\ncatalog:variable_text:26499:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Koderna kategoriserar lägenhetstyp efter rum och kök.\ncatalog:valueset:6244\ncatalog:variable_text:26499:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["bostadens-omradestillhorighet"] }
+evidence = "Län anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26500:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografisk tillhörighet vid folkbokföringen.\ncatalog:variable_text:26500:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkat"
+fields = { "sets" = ["bostadstyp"] }
+evidence = "Lgh är en ogenomskinlig källförkortning för lägenhet; källan anger lägenhetskategori.\ncatalog:variable_text:26501:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkat"
+fields = { "tags" = ["housing"] }
+evidence = "Lgh är en ogenomskinlig källförkortning för lägenhet; källan anger lägenhetskategori.\ncatalog:variable_text:26501:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = [] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:26503:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:26503:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-upplatform"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Variabeln kodar bostadens upplåtelseform.\ncatalog:variable_text:26507:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-upplatform"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar bostadens upplåtelseform.\ncatalog:variable_text:26507:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Bakgrundskategorin beskriver befolkningssammansättning.\ncatalog:valueset:8386\ncatalog:variable_text:26510:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundskategorin beskriver befolkningssammansättning.\ncatalog:valueset:8386\ncatalog:variable_text:26510:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yngstabarn"
+fields = { "sets" = [] }
+evidence = "Åldern på hushållets yngsta barn beskriver hushållets sammansättning.\ncatalog:variable_text:26512:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yngstabarn"
+fields = { "tags" = ["family-household"] }
+evidence = "Åldern på hushållets yngsta barn beskriver hushållets sammansättning.\ncatalog:variable_text:26512:19723:20089"

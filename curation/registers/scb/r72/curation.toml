@@ -318,3 +318,819 @@ kind = "set"
 subject = "rivning-av-flerbostadshus: {kommun,lan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:agarekat"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Ägarkategori grupperas med övriga ägarkodningar.\ncatalog:variable_text:39580:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:agarekat"
+fields = { "tags" = ["property"] }
+evidence = "Ägarkategori grupperas med övriga ägarkodningar.\ncatalog:variable_text:39580:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Ägarkategori grupperas med övriga ägarkodningar.\ncatalog:variable_text:39581:10592:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "tags" = ["property"] }
+evidence = "Ägarkategori grupperas med övriga ägarkodningar.\ncatalog:variable_text:39581:10592:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-2187"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39582:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-2187"
+fields = { "tags" = ["property"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39582:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antlgh"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Totalt antal lägenheter.\ncatalog:variable_text:39583:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:antlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Totalt antal lägenheter.\ncatalog:variable_text:39583:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:armanfardprel"
+fields = { "sets" = ["ombyggnationens-fardigstallande"] }
+evidence = "Beräknat färdigställande hör till gruppen för färdigställandetidpunkt.\ncatalog:variable_text:39584:15340:17532\ncatalog:variable_text:39584:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:armanfardprel"
+fields = { "tags" = [] }
+evidence = "Beräknat färdigställande hör till gruppen för färdigställandetidpunkt.\ncatalog:variable_text:39584:15340:17532\ncatalog:variable_text:39584:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabprel"
+fields = { "sets" = ["ombyggnationens-paborjande"] }
+evidence = "Beräknat påbörjande hör till gruppen för påbörjandetidpunkt.\ncatalog:variable_text:39585:15340:17532\ncatalog:variable_text:39585:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabprel"
+fields = { "tags" = [] }
+evidence = "Beräknat påbörjande hör till gruppen för påbörjandetidpunkt.\ncatalog:variable_text:39585:15340:17532\ncatalog:variable_text:39585:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardkod"
+fields = { "sets" = [] }
+evidence = "Åtgärdskategorin avser ombyggnad av bostäder.\ncatalog:variable_text:39586:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardkod"
+fields = { "tags" = ["housing"] }
+evidence = "Åtgärdskategorin avser ombyggnad av bostäder.\ncatalog:variable_text:39586:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avloppled"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39587:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avloppled"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39587:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-fore"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Berörd area före ombyggnad ingår i bostadsareagruppen.\ncatalog:variable_text:39588:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-fore"
+fields = { "tags" = ["housing"] }
+evidence = "Berörd area före ombyggnad ingår i bostadsareagruppen.\ncatalog:variable_text:39588:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-tillkommande"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Tillkommande area ingår i bostadsareagruppen.\ncatalog:variable_text:39589:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-tillkommande"
+fields = { "tags" = ["housing"] }
+evidence = "Tillkommande area ingår i bostadsareagruppen.\ncatalog:variable_text:39589:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-utgaende"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Utgående area ingår i bostadsareagruppen.\ncatalog:variable_text:39590:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-utgaende"
+fields = { "tags" = ["housing"] }
+evidence = "Utgående area ingår i bostadsareagruppen.\ncatalog:variable_text:39590:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bre"
+fields = { "sets" = ["antal-rumsenheter"] }
+evidence = "Id är en bokstavskod för borttagna rumsenheter.\ncatalog:variable_text:39591:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bre"
+fields = { "tags" = ["housing"] }
+evidence = "Id är en bokstavskod för borttagna rumsenheter.\ncatalog:variable_text:39591:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:centralvarme"
+fields = { "sets" = ["varmesystem"] }
+evidence = "Förekomst av centralvärme ingår i värmesystemgruppen.\ncatalog:variable_text:39593:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:centralvarme"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Förekomst av centralvärme ingår i värmesystemgruppen.\ncatalog:variable_text:39593:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distrikt är en geografisk indelning; överlappande värdemängder behöver klarläggas.\ncatalog:valueset:10825\ncatalog:valueset:11366\ncatalog:variable_text:39596:16801:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt är en geografisk indelning; överlappande värdemängder behöver klarläggas.\ncatalog:valueset:10825\ncatalog:valueset:11366\ncatalog:variable_text:39596:16801:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:elled"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39597:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:elled"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39597:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:39599:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:39599:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:39600:10592:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:39600:10592:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fre"
+fields = { "sets" = ["antal-rumsenheter"] }
+evidence = "Id är en bokstavskod för rumsenheter före ombyggnad.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fre"
+fields = { "tags" = ["housing"] }
+evidence = "Id är en bokstavskod för rumsenheter före ombyggnad.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grund"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39603:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:grund"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39603:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hissinst"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39604:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hissinst"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39604:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "sets" = [] }
+evidence = "Hustyp beskriver bostadsbyggnadens typ.\ncatalog:variable_text:39606:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "tags" = ["housing"] }
+evidence = "Hustyp beskriver bostadsbyggnadens typ.\ncatalog:variable_text:39606:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hygbyte"
+fields = { "sets" = [] }
+evidence = "Antalet avser bostadslägenheter med åtgärd.\ncatalog:variable_text:39607:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hygbyte"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet avser bostadslägenheter med åtgärd.\ncatalog:variable_text:39607:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hygienkod"
+fields = { "sets" = [] }
+evidence = "Hygienutrymme är en bostadsegenskap.\ncatalog:variable_text:39608:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hygienkod"
+fields = { "tags" = ["housing"] }
+evidence = "Hygienutrymme är en bostadsegenskap.\ncatalog:variable_text:39608:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kokbyte"
+fields = { "sets" = [] }
+evidence = "Antalet avser bostadslägenheter med åtgärd.\ncatalog:variable_text:39609:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kokbyte"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet avser bostadslägenheter med åtgärd.\ncatalog:variable_text:39609:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39610:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39610:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet"
+fields = { "sets" = [] }
+evidence = "Kvaliteten avser bostadslägenhetens utrustning.\ncatalog:valueset:120\ncatalog:variable_text:39611:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitet"
+fields = { "tags" = ["housing"] }
+evidence = "Kvaliteten avser bostadslägenhetens utrustning.\ncatalog:valueset:120\ncatalog:variable_text:39611:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp-2299"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39612:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp-2299"
+fields = { "tags" = ["housing"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39612:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:39613:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:39613:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkod"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Kodning av lägenhetstyp.\ncatalog:variable_text:39614:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkod"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av lägenhetstyp.\ncatalog:variable_text:39614:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lghtyp"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Kodning av lägenhetstyp.\ncatalog:variable_text:39615:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lghtyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av lägenhetstyp.\ncatalog:variable_text:39615:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nettolgh"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Nettotillskott av lägenheter.\ncatalog:variable_text:39616:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nettolgh"
+fields = { "tags" = ["housing"] }
+evidence = "Nettotillskott av lägenheter.\ncatalog:variable_text:39616:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nre"
+fields = { "sets" = ["antal-rumsenheter"] }
+evidence = "Id är en bokstavskod för tillkommande rumsenheter.\ncatalog:variable_text:39617:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nre"
+fields = { "tags" = ["housing"] }
+evidence = "Id är en bokstavskod för tillkommande rumsenheter.\ncatalog:variable_text:39617:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "sets" = [] }
+evidence = "Nyckelkodsområde är en geografisk indelning.\ncatalog:variable_text:39618:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "tags" = ["geography"] }
+evidence = "Nyckelkodsområde är en geografisk indelning.\ncatalog:variable_text:39618:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnation-fardigstallande"
+fields = { "sets" = ["ombyggnationens-fardigstallande"] }
+evidence = "Redovisat färdigställande hör till gruppen för färdigställandetidpunkt.\ncatalog:variable_text:39620:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnation-fardigstallande"
+fields = { "tags" = [] }
+evidence = "Redovisat färdigställande hör till gruppen för färdigställandetidpunkt.\ncatalog:variable_text:39620:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnation-paborjande"
+fields = { "sets" = ["ombyggnationens-paborjande"] }
+evidence = "Redovisat påbörjande hör till gruppen för påbörjandetidpunkt.\ncatalog:variable_text:39621:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnation-paborjande"
+fields = { "tags" = [] }
+evidence = "Redovisat påbörjande hör till gruppen för påbörjandetidpunkt.\ncatalog:variable_text:39621:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:paborjadelgh"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Totalt antal lägenheter i påbörjad rivning.\ncatalog:variable_text:39622:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:paborjadelgh"
+fields = { "tags" = ["housing"] }
+evidence = "Totalt antal lägenheter i påbörjad rivning.\ncatalog:variable_text:39622:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodkost"
+fields = { "sets" = [] }
+evidence = "Kostnaden avser ombyggnad av bostadshus.\ncatalog:variable_text:39623:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:prodkost"
+fields = { "tags" = ["housing"] }
+evidence = "Kostnaden avser ombyggnad av bostadshus.\ncatalog:variable_text:39623:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rivning-paborjande"
+fields = { "sets" = ["rivningens-paborjande"] }
+evidence = "Redovisad tidpunkt grupperas med preliminär tidpunkt.\ncatalog:variable_text:39625:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivning-paborjande"
+fields = { "tags" = [] }
+evidence = "Redovisad tidpunkt grupperas med preliminär tidpunkt.\ncatalog:variable_text:39625:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivning-paborjande-prel"
+fields = { "sets" = ["rivningens-paborjande"] }
+evidence = "Preliminär tidpunkt grupperas med redovisad tidpunkt.\ncatalog:variable_text:39626:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivning-paborjande-prel"
+fields = { "tags" = [] }
+evidence = "Preliminär tidpunkt grupperas med redovisad tidpunkt.\ncatalog:variable_text:39626:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivningsorsak-17490"
+fields = { "sets" = ["rivningsorsak"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39628:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivningsorsak-17490"
+fields = { "tags" = ["housing"] }
+evidence = "Siffersuffixet är inte en del av källkolumnen.\ncatalog:variable_text:39628:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rivors"
+fields = { "sets" = ["rivningsorsak"] }
+evidence = "Kodningen grupperas med övrig rivningsorsak.\ncatalog:variable_text:39629:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:rivors"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen grupperas med övrig rivningsorsak.\ncatalog:variable_text:39629:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:rumsenhet"
+fields = { "sets" = ["antal-rumsenheter"] }
+evidence = "Antal rumsenheter ingår i rumsenhetsgruppen.\ncatalog:variable_text:39630:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rumsenhet"
+fields = { "tags" = ["housing"] }
+evidence = "Antal rumsenheter ingår i rumsenhetsgruppen.\ncatalog:variable_text:39630:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stodtyp"
+fields = { "sets" = [] }
+evidence = "Kodningen gäller statligt bostadsstöd.\ncatalog:valueset:12540\ncatalog:variable_text:39631:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:stodtyp"
+fields = { "tags" = ["housing", "public-finance"] }
+evidence = "Kodningen gäller statligt bostadsstöd.\ncatalog:valueset:12540\ncatalog:variable_text:39631:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:stomme"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39632:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:stomme"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39632:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:storlek"
+fields = { "sets" = [] }
+evidence = "Kommunstorlek är en geografisk områdesindelning.\ncatalog:valueset:8428\ncatalog:variable_text:39633:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:storlek"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunstorlek är en geografisk områdesindelning.\ncatalog:valueset:8428\ncatalog:variable_text:39633:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:totalbostadsarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Total area ingår i bostadsareagruppen.\ncatalog:variable_text:39634:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalbostadsarea"
+fields = { "tags" = ["housing"] }
+evidence = "Total area ingår i bostadsareagruppen.\ncatalog:variable_text:39634:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlgh"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Totalt antal lägenheter.\ncatalog:variable_text:39635:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Totalt antal lägenheter.\ncatalog:variable_text:39635:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghbort"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Antal borttagna lägenheter.\ncatalog:variable_text:39636:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghbort"
+fields = { "tags" = ["housing"] }
+evidence = "Antal borttagna lägenheter.\ncatalog:variable_text:39636:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghfore"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Antal lägenheter före ombyggnad.\ncatalog:variable_text:39637:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghfore"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter före ombyggnad.\ncatalog:variable_text:39637:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghnya"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Antal tillkommande lägenheter.\ncatalog:variable_text:39638:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantlghnya"
+fields = { "tags" = ["housing"] }
+evidence = "Antal tillkommande lägenheter.\ncatalog:variable_text:39638:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totlgh"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Etiketten anger totalantal medan senare operativa definitioner anger nettotillskott.\ncatalog:variable_text:39639:10592:16801\ncatalog:variable_text:39639:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:totlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Etiketten anger totalantal medan senare operativa definitioner anger nettotillskott.\ncatalog:variable_text:39639:10592:16801\ncatalog:variable_text:39639:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "sets" = [] }
+evidence = "Upplåtelseform beskriver boendeformen.\ncatalog:variable_text:39640:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "tags" = ["housing"] }
+evidence = "Upplåtelseform beskriver boendeformen.\ncatalog:variable_text:39640:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod"
+fields = { "sets" = ["ursprunglig-byggnadsperiod"] }
+evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39641:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39641:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod-byggnadsperiod"
+fields = { "sets" = ["ursprunglig-byggnadsperiod"] }
+evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39642:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod-byggnadsperiod"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39642:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeatgard"
+fields = { "sets" = [] }
+evidence = "Åtgärden avser bostadens värmesystem.\ncatalog:variable_text:39643:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeatgard"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Åtgärden avser bostadens värmesystem.\ncatalog:variable_text:39643:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeefter"
+fields = { "sets" = ["varmesystem"] }
+evidence = "Värmesystem efter ombyggnad ingår i värmesystemgruppen.\ncatalog:variable_text:39644:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeefter"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Värmesystem efter ombyggnad ingår i värmesystemgruppen.\ncatalog:variable_text:39644:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeror"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller utbyte av värmerör i bostadshus.\ncatalog:variable_text:39645:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeror"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller utbyte av värmerör i bostadshus.\ncatalog:variable_text:39645:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenled"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39646:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenled"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39646:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vent"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39647:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vent"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften gäller ombyggnad av bostadshus.\ncatalog:variable_text:39647:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ventefter"
+fields = { "sets" = [] }
+evidence = "Ventilationssystemet är en bostadsegenskap.\ncatalog:variable_text:39648:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ventefter"
+fields = { "tags" = ["housing"] }
+evidence = "Ventilationssystemet är en bostadsegenskap.\ncatalog:variable_text:39648:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2008-01-01..2008-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2009-01-01..2009-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2010-01-01..2010-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2011-01-01..2011-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2012-01-01..2012-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2013-01-01..2013-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2014-01-01..2014-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2015-01-01..2015-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2016-01-01..2016-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2017-01-01..2017-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2018-01-01..2018-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2019-01-01..2019-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2020-01-01..2020-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2021-01-01..2021-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2023-01-01..2023-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: FRe @2024-01-01..2024-12-31 where key = 'v18035'"
+fields = { "description" = "Antal rumsenheter före ombyggnad" }
+evidence = "Rättar enbart dubbelt blanksteg utan att ändra betydelsen.\ncatalog:variable_text:39601:19358:20089"

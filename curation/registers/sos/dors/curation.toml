@@ -74,294 +74,6 @@ evidence = "catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_
 
 [[statement]]
 kind = "set"
-subject = "var:dodsorsak-1"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-10"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-11"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-12"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-13"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-14"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-15"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-16"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-17"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-18"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-19"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-2"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-20"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-21"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-22"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-23"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-24"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-25"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-26"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-27"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-28"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-29"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-3"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-30"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-31"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-32"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-33"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-34"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-35"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-36"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-37"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-38"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-39"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-4"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-40"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-41"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-42"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-43"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-44"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-45"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-46"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-47"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-48"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-5"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-6"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-7"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-8"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
-subject = "var:dodsorsak-9"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
-
-[[statement]]
-kind = "set"
 subject = "var:dodsorsak-position-1"
 fields = { "sets" = ["dodsorsak-position"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
@@ -650,288 +362,1872 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml
 
 [[statement]]
 kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["dodsalder"] }
+evidence = "Ålder vid dödsfall.\ncatalog:variable_text:55838:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics", "mortality"] }
+evidence = "Ålder vid dödsfall.\ncatalog:variable_text:55838:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alkohol"
+fields = { "sets" = [] }
+evidence = "Alkoholrelaterad diagnos på intyget.\ncatalog:variable_text:55839:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alkohol"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Alkoholrelaterad diagnos på intyget.\ncatalog:variable_text:55839:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-kalla"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "Källa för dödsorsaksuppgifter.\ncatalog:variable_text:55840:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-kalla"
+fields = { "tags" = ["methods"] }
+evidence = "Källa för dödsorsaksuppgifter.\ncatalog:variable_text:55840:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antors"
+fields = { "sets" = ["antal-dodsorsaker"] }
+evidence = "Ogenomskinlig källförkortning.\ncatalog:variable_text:55841:-6575:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:antors"
+fields = { "tags" = ["mortality"] }
+evidence = "Ogenomskinlig källförkortning.\ncatalog:variable_text:55841:-6575:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:aolycka"
+fields = { "sets" = [] }
+evidence = "Ensam bokstav är en ogenomskinlig förkortning för arbete.\ncatalog:variable_text:55842:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:aolycka"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Ensam bokstav är en ogenomskinlig förkortning för arbete.\ncatalog:variable_text:55842:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "sets" = ["dodstidpunkt"] }
+evidence = "Dödsår är en representation av dödstidpunkt.\ncatalog:variable_text:55843:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "tags" = [] }
+evidence = "Dödsår är en representation av dödstidpunkt.\ncatalog:variable_text:55843:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dalddag"
+fields = { "sets" = ["dodsalder"] }
+evidence = "Dödsålder i dagar.\ncatalog:variable_text:55844:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dalddag"
+fields = { "tags" = ["demographics", "mortality"] }
+evidence = "Dödsålder i dagar.\ncatalog:variable_text:55844:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daldman"
+fields = { "sets" = ["dodsalder"] }
+evidence = "Dödsålder i månader.\ncatalog:variable_text:55845:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daldman"
+fields = { "tags" = ["demographics", "mortality"] }
+evidence = "Dödsålder i månader.\ncatalog:variable_text:55845:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datintervall"
+fields = { "sets" = ["effektueringsdatum"] }
+evidence = "Intervallrepresentation av effektueringsdatum.\ncatalog:variable_text:55846:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datintervall"
+fields = { "tags" = [] }
+evidence = "Intervallrepresentation av effektueringsdatum.\ncatalog:variable_text:55846:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dbavser"
+fields = { "sets" = ["dodsalder"] }
+evidence = "DB är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsålder i år, månader, dagar och åldersklasser. Dödsbevisets indelning i barn under 24 timmar, barn 1–6 dagar och äldre är också en åldersklassificering vid dödsfallet.\ncatalog:variable_text:55838:-719162:2932897\ncatalog:variable_text:55844:-3287:2932897\ncatalog:variable_text:55845:-6575:2932897\ncatalog:variable_text:55847:6209:14245\ncatalog:variable_text:55852:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dbavser"
+fields = { "tags" = ["demographics"] }
+evidence = "DB är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsålder i år, månader, dagar och åldersklasser. Dödsbevisets indelning i barn under 24 timmar, barn 1–6 dagar och äldre är också en åldersklassificering vid dödsfallet.\ncatalog:variable_text:55838:-719162:2932897\ncatalog:variable_text:55844:-3287:2932897\ncatalog:variable_text:55845:-6575:2932897\ncatalog:variable_text:55847:6209:14245\ncatalog:variable_text:55852:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dbgrund"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "DB är en ogenomskinlig bokstavskod.\ncatalog:variable_text:55848:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dbgrund"
+fields = { "tags" = ["methods"] }
+evidence = "DB är en ogenomskinlig bokstavskod.\ncatalog:variable_text:55848:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes"
+fields = { "sets" = [] }
+evidence = "Diabetes som dödsorsak.\ncatalog:variable_text:55849:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Diabetes som dödsorsak.\ncatalog:variable_text:55849:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = ["folkbokforingsomrade"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55850:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55850:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dod-kommun"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Kommun där döden inträffade.\ncatalog:variable_text:55851:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dod-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun där döden inträffade.\ncatalog:variable_text:55851:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsalder-femarsklasser"
+fields = { "sets" = ["dodsalder"] }
+evidence = "Dödsålder i klasser.\ncatalog:variable_text:55852:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsalder-femarsklasser"
+fields = { "tags" = ["demographics", "mortality"] }
+evidence = "Dödsålder i klasser.\ncatalog:variable_text:55852:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatn"
+fields = { "sets" = ["dodstidpunkt"] }
+evidence = "Id:t består av läsbara ordstammar. Variabeln hör till dödstidpunkt tillsammans med dödsdatum i annan representation.\ncatalog:variable_text:55853:-719162:2932897\ncatalog:variable_text:55854:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatn"
+fields = { "tags" = [] }
+evidence = "Id:t består av läsbara ordstammar. Variabeln hör till dödstidpunkt tillsammans med dödsdatum i annan representation.\ncatalog:variable_text:55853:-719162:2932897\ncatalog:variable_text:55854:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatum"
+fields = { "sets" = ["dodstidpunkt"] }
+evidence = "Variabeln hör till dödstidpunkt tillsammans med dödsdatum i SAS-representation.\ncatalog:variable_text:55853:-719162:2932897\ncatalog:variable_text:55854:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatum"
+fields = { "tags" = [] }
+evidence = "Variabeln hör till dödstidpunkt tillsammans med dödsdatum i SAS-representation.\ncatalog:variable_text:55853:-719162:2932897\ncatalog:variable_text:55854:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodskrit"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kriterier för fastställande av död och hör till dödlighet.\ncatalog:variable_text:55855:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:dodskrit"
+fields = { "tags" = ["mortality"] }
+evidence = "Variabeln anger kriterier för fastställande av död och hör till dödlighet.\ncatalog:variable_text:55855:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-1"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55856:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-1"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55856:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-10"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55857:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-10"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55857:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-11"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55858:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-11"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55858:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-12"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55859:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-12"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55859:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-13"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55860:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-13"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55860:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-14"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55861:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-14"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55861:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-15"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55862:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-15"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55862:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-16"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55863:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-16"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55863:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-17"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55864:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-17"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55864:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-18"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55865:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-18"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55865:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-19"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55866:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-19"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55866:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-2"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55867:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-2"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55867:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-20"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55868:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-20"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55868:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-21"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55869:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-21"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55869:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-22"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55870:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-22"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55870:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-23"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55871:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-23"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55871:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-24"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55872:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-24"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55872:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-25"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55873:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-25"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55873:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-26"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55874:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-26"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55874:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-27"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55875:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-27"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55875:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-28"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55876:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-28"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55876:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-29"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55877:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-29"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55877:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-3"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55878:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-3"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55878:-3653:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-30"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55879:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-30"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55879:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-31"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55880:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-31"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55880:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-32"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55881:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-32"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55881:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-33"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55882:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-33"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55882:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-34"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55883:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-34"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55883:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-35"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55884:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-35"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55884:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-36"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55885:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-36"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55885:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-37"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55886:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-37"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55886:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-38"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55887:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-38"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55887:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-39"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55888:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-39"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55888:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-4"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55889:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-4"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55889:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-40"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55890:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-40"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55890:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-41"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55891:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-41"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55891:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-42"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55892:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-42"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55892:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-43"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55893:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-43"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55893:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-44"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55894:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-44"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55894:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-45"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55895:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-45"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55895:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-46"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55896:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-46"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55896:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-47"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55897:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-47"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55897:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-48"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55898:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-48"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55898:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-5"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55899:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-5"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55899:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-6"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55900:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-6"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55900:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-7"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55901:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-7"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55901:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-8"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55902:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-8"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55902:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-9"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55903:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-9"
+fields = { "tags" = ["mortality"] }
+evidence = "Multipel dödsorsak.\ncatalog:variable_text:55903:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-inrapporteringssatt"
+fields = { "sets" = [] }
+evidence = "Inrapporteringssätt.\ncatalog:variable_text:55904:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-inrapporteringssatt"
+fields = { "tags" = ["methods"] }
+evidence = "Inrapporteringssätt.\ncatalog:variable_text:55904:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodspl"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Variabeln beskriver dödsplatsens typ och hör till gruppen dödsplats.\ncatalog:valueset:9873\ncatalog:variable_text:55953:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodspl"
+fields = { "tags" = ["mortality"] }
+evidence = "Variabeln beskriver dödsplatsens typ och hör till gruppen dödsplats.\ncatalog:valueset:9873\ncatalog:variable_text:55953:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsplatskommun"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Variabeln anger kommun i anslutning till dödsplats och hör till gruppen dödsplats.\ncatalog:variable_text:55954:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsplatskommun"
+fields = { "tags" = ["geography", "mortality"] }
+evidence = "Variabeln anger kommun i anslutning till dödsplats och hör till gruppen dödsplats.\ncatalog:variable_text:55954:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodutl"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Dödsplats utomlands.\ncatalog:variable_text:55955:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodutl"
+fields = { "tags" = ["geography"] }
+evidence = "Dödsplats utomlands.\ncatalog:variable_text:55955:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fastnr"
+fields = { "sets" = [] }
+evidence = "Fastighetsidentifierare för läge.\ncatalog:variable_text:55956:-3287:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fastnr"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsidentifierare för läge.\ncatalog:variable_text:55956:-3287:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Födelsedatum.\ncatalog:variable_text:55958:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum.\ncatalog:variable_text:55958:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Födelsedatum i SAS-format.\ncatalog:variable_text:55959:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum i SAS-format.\ncatalog:variable_text:55959:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = [] }
+evidence = "Födelseuppgift.\ncatalog:variable_text:55960:-365:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseuppgift.\ncatalog:variable_text:55960:-365:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fritext"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland i fritext.\ncatalog:variable_text:55961:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fritext"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland i fritext.\ncatalog:variable_text:55961:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland som kod.\ncatalog:variable_text:55962:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland som kod.\ncatalog:variable_text:55962:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd före döden.\ncatalog:variable_text:55963:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd före döden.\ncatalog:variable_text:55963:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingskod"
+fields = { "sets" = ["folkbokforingsomrade"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55964:-6575:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingskod"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55964:-6575:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskod"
+fields = { "sets" = [] }
+evidence = "Kod för maskinell granskning.\ncatalog:variable_text:55965:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskod"
+fields = { "tags" = ["methods"] }
+evidence = "Kod för maskinell granskning.\ncatalog:variable_text:55965:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:icdkoder"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "Lista över dödsorsaker.\ncatalog:variable_text:55967:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icdkoder"
+fields = { "tags" = ["mortality"] }
+evidence = "Lista över dödsorsaker.\ncatalog:variable_text:55967:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inlas-avi"
+fields = { "sets" = ["inlasningsdatum-avisering"] }
+evidence = "Inläsningsdatum för avisering.\ncatalog:variable_text:55968:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inlas-avi"
+fields = { "tags" = [] }
+evidence = "Inläsningsdatum för avisering.\ncatalog:variable_text:55968:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsdatum"
+fields = { "sets" = ["inlasningsdatum-avisering"] }
+evidence = "Inläsning av dödsfallsavisering.\ncatalog:variable_text:55969:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsdatum"
+fields = { "tags" = [] }
+evidence = "Inläsning av dödsfallsavisering.\ncatalog:variable_text:55969:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitel-17-kod-icd-9"
+fields = { "sets" = ["dodsorsak", "skada-forgiftning"] }
+evidence = "Klassifikationsdel för dödsorsak. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitel-17-kod-icd-9"
+fields = { "tags" = ["mortality"] }
+evidence = "Klassifikationsdel för dödsorsak. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:kbasic"
+fields = { "sets" = ["dodsorsak", "skada-forgiftning"] }
+evidence = "K är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:kbasic"
+fields = { "tags" = ["mortality"] }
+evidence = "K är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "sets" = [] }
+evidence = "Klinik som utfärdat dödsbevis.\ncatalog:variable_text:55972:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "tags" = ["healthcare"] }
+evidence = "Klinik som utfärdat dödsbevis.\ncatalog:variable_text:55972:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön.\ncatalog:variable_text:55973:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön.\ncatalog:variable_text:55973:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-fran-folkbokforing"
+fields = { "sets" = ["folkbokforingsomrade"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55975:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-fran-folkbokforing"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55975:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nation"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Medborgarskapsland.\ncatalog:variable_text:55976:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nation"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland.\ncatalog:variable_text:55976:-3287:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nation-fobutl"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Nationstillhörighet för ej folkbokförda.\ncatalog:variable_text:55977:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nation-fobutl"
+fields = { "tags" = ["demographics"] }
+evidence = "Nationstillhörighet för ej folkbokförda.\ncatalog:variable_text:55977:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktion"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "Obduktion. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktion"
+fields = { "tags" = ["healthcare"] }
+evidence = "Obduktion. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofullst"
+fields = { "sets" = ["antal-dodsorsaker"] }
+evidence = "Ofullständig anger inte den dokumenterade gränsen.\ncatalog:variable_text:55979:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ofullst"
+fields = { "tags" = ["mortality"] }
+evidence = "Ofullständig anger inte den dokumenterade gränsen.\ncatalog:variable_text:55979:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:opdatn"
+fields = { "sets" = ["operationsdatum"] }
+evidence = "Ensam bokstav N är en ogenomskinlig formatsuffix.\ncatalog:variable_text:55980:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:opdatn"
+fields = { "tags" = [] }
+evidence = "Ensam bokstav N är en ogenomskinlig formatsuffix.\ncatalog:variable_text:55980:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:operationsdatum"
+fields = { "sets" = ["operationsdatum"] }
+evidence = "Operationsdatum.\ncatalog:variable_text:55981:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:operationsdatum"
+fields = { "tags" = [] }
+evidence = "Operationsdatum.\ncatalog:variable_text:55981:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:opererad"
+fields = { "sets" = [] }
+evidence = "Operation före döden.\ncatalog:variable_text:55982:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:opererad"
+fields = { "tags" = ["healthcare"] }
+evidence = "Operation före döden.\ncatalog:variable_text:55982:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:oporsak"
+fields = { "sets" = [] }
+evidence = "Tillstånd som föranledde operation.\ncatalog:variable_text:55983:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:oporsak"
+fields = { "tags" = ["health"] }
+evidence = "Tillstånd som föranledde operation.\ncatalog:variable_text:55983:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55985:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55985:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "sets" = ["effektueringsdatum"] }
+evidence = "Registreringsdatum är inte effektueringsdatum enligt etiketten.\ncatalog:variable_text:55988:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "tags" = [] }
+evidence = "Registreringsdatum är inte effektueringsdatum enligt etiketten.\ncatalog:variable_text:55988:-719162:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skada-beskr"
+fields = { "sets" = ["skada-forgiftning"] }
+evidence = "Beskrivning av skada eller förgiftning.\ncatalog:variable_text:55991:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skada-beskr"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Beskrivning av skada eller förgiftning.\ncatalog:variable_text:55991:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skada-forgiftning"
+fields = { "sets" = ["skada-forgiftning"] }
+evidence = "Kategori av skada eller förgiftning.\ncatalog:variable_text:55992:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skada-forgiftning"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Kategori av skada eller förgiftning.\ncatalog:variable_text:55992:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skadans-natur-kap19"
+fields = { "sets" = ["dodsorsak", "skada-forgiftning"] }
+evidence = "Skadans natur. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:skadans-natur-kap19"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Skadans natur. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:skadans-natur-kap22"
+fields = { "sets" = ["dodsorsak", "skada-forgiftning"] }
+evidence = "Skadans natur. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:skadans-natur-kap22"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Skadans natur. Coordinator group membership: Omfattar dödsorsakskoder, samlade och förkortade listor samt särskilda klassifikationsdelar för skadans natur vid yttre dödsorsak. Diagnosindikatorerna för alkohol och diabetes är inte själva dödsorsakskoder eller listrepresentationer. Omfattar skadebeskrivning, skadekategori och klassifikationer av kroppsskada eller förgiftning, inklusive kapitel XVII och dess förkortade lista samt skadans natur enligt senare klassifikationer.\ncatalog:variable_text:55839:6209:2932897\ncatalog:variable_text:55849:6209:2932897\ncatalog:variable_text:55856:-3653:2932897\ncatalog:variable_text:55857:6209:2932897\ncatalog:variable_text:55858:6209:2932897\ncatalog:variable_text:55859:6209:2932897\ncatalog:variable_text:55860:9862:2932897\ncatalog:variable_text:55861:9862:2932897\ncatalog:variable_text:55862:9862:2932897\ncatalog:variable_text:55863:9862:2932897\ncatalog:variable_text:55864:9862:2932897\ncatalog:variable_text:55865:9862:2932897\ncatalog:variable_text:55866:9862:2932897\ncatalog:variable_text:55867:-3653:2932897\ncatalog:variable_text:55868:9862:2932897\ncatalog:variable_text:55869:9862:2932897\ncatalog:variable_text:55870:9862:2932897\ncatalog:variable_text:55871:9862:2932897\ncatalog:variable_text:55872:9862:2932897\ncatalog:variable_text:55873:9862:2932897\ncatalog:variable_text:55874:9862:2932897\ncatalog:variable_text:55875:9862:2932897\ncatalog:variable_text:55876:9862:2932897\ncatalog:variable_text:55877:9862:2932897\ncatalog:variable_text:55878:-3653:2932897\ncatalog:variable_text:55879:9862:2932897\ncatalog:variable_text:55880:9862:2932897\ncatalog:variable_text:55881:9862:2932897\ncatalog:variable_text:55882:9862:2932897\ncatalog:variable_text:55883:9862:2932897\ncatalog:variable_text:55884:9862:2932897\ncatalog:variable_text:55885:9862:2932897\ncatalog:variable_text:55886:9862:2932897\ncatalog:variable_text:55887:9862:2932897\ncatalog:variable_text:55888:9862:2932897\ncatalog:variable_text:55889:-3287:2932897\ncatalog:variable_text:55890:9862:2932897\ncatalog:variable_text:55891:9862:2932897\ncatalog:variable_text:55892:9862:2932897\ncatalog:variable_text:55893:9862:2932897\ncatalog:variable_text:55894:9862:2932897\ncatalog:variable_text:55895:9862:2932897\ncatalog:variable_text:55896:9862:2932897\ncatalog:variable_text:55897:9862:2932897\ncatalog:variable_text:55898:9862:2932897\ncatalog:variable_text:55899:-3287:2932897\ncatalog:variable_text:55900:-3287:2932897\ncatalog:variable_text:55901:6209:2932897\ncatalog:variable_text:55902:6209:2932897\ncatalog:variable_text:55903:6209:2932897\ncatalog:variable_text:55967:18262:2932897\ncatalog:variable_text:55970:-6575:9862\ncatalog:variable_text:55971:6209:9862\ncatalog:variable_text:55991:18262:2932897\ncatalog:variable_text:55992:18262:2932897\ncatalog:variable_text:55994:9862:2932897\ncatalog:variable_text:55995:20819:2932897\ncatalog:variable_text:56046:6209:9862\ncatalog:variable_text:56047:-6575:2932897\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:storstad"
+fields = { "sets" = ["folkbokforingsomrade"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55997:-3287:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:storstad"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsområde.\ncatalog:variable_text:55997:-3287:9862"
+
+[[statement]]
+kind = "set"
 subject = "var:substans-1"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:55998:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-1"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:55998:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-10"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:55999:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-10"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:55999:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-11"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56000:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-11"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56000:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-12"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56001:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-12"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56001:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-13"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56002:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-13"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56002:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-14"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56003:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-14"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56003:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-15"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56004:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-15"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56004:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-16"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56005:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-16"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56005:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-17"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56006:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-17"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56006:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-18"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56007:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-18"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56007:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-19"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56008:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-19"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56008:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-2"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56009:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-2"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56009:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-20"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56010:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-20"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56010:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-21"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56011:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-21"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56011:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-22"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56012:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-22"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56012:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-23"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56013:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-23"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56013:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-24"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56014:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-24"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56014:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-25"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56015:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-25"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56015:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-26"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56016:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-26"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56016:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-27"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56017:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-27"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56017:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-28"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56018:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-28"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56018:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-29"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56019:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-29"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56019:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-3"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56020:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-3"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56020:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-30"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56021:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-30"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56021:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-31"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56022:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-31"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56022:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-32"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56023:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-32"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56023:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-33"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56024:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-33"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56024:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-34"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56025:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-34"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56025:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-35"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56026:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-35"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56026:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-36"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56027:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-36"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56027:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-37"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56028:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-37"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56028:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-38"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56029:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-38"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56029:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-39"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56030:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-39"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56030:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-4"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56031:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-4"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56031:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-40"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56032:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-40"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56032:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-41"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56033:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-41"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56033:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-42"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56034:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-42"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56034:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-43"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56035:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-43"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56035:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-44"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56036:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-44"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56036:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-45"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56037:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-45"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56037:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-46"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56038:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-46"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56038:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-47"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56039:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-47"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56039:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-48"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56040:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-48"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56040:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-5"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56041:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-5"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56041:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-6"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56042:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-6"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56042:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-7"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56043:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-7"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56043:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-8"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56044:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-8"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56044:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:substans-9"
 fields = { "sets" = ["substans"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56045:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-9"
+fields = { "tags" = ["mortality"] }
+evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56045:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ubasic"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ubasic"
+fields = { "tags" = ["mortality"] }
+evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ulorsak"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulorsak"
+fields = { "tags" = ["mortality"] }
+evidence = "UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokning-fore-doden"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "Undersökning före döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokning-fore-doden"
+fields = { "tags" = ["healthcare"] }
+evidence = "Undersökning före döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokning-utanfor-sjukhus"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "Undersökning före döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokning-utanfor-sjukhus"
+fields = { "tags" = ["healthcare"] }
+evidence = "Undersökning före döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:unordl"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:unordl"
+fields = { "tags" = ["mortality"] }
+evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56050:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-undersokning-efter-doden"
+fields = { "sets" = ["uppgiftsgrund"] }
+evidence = "Undersökning efter döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-undersokning-efter-doden"
+fields = { "tags" = ["healthcare"] }
+evidence = "Undersökning efter döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"

@@ -94,3 +94,351 @@ kind = "set"
 subject = "utforarregistret: agkat"
 fields = { "classification" = "class/agarkat/agarkat2000" }
 evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:aetyp"
+fields = { "sets" = [] }
+evidence = "AETyp är en källkod vars bokstavsdel inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:54684:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aetyp"
+fields = { "tags" = ["business"] }
+evidence = "AETyp är en källkod vars bokstavsdel inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:54684:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:54685:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:54685:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal och storleksklass är två uttryck för antal anställda.\ncatalog:variable_text:54686:15340:20089\ncatalog:variable_text:54687:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal och storleksklass är två uttryck för antal anställda.\ncatalog:variable_text:54686:15340:20089\ncatalog:variable_text:54687:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen och antalet avser antal anställda.\ncatalog:variable_text:54686:15340:20089\ncatalog:variable_text:54687:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen och antalet avser antal anställda.\ncatalog:variable_text:54686:15340:20089\ncatalog:variable_text:54687:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstalle-status"
+fields = { "sets" = ["enhetsstatus"] }
+evidence = "Variabeln kodar arbetsställets verksamhetsstatus.\ncatalog:variable_text:54688:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstalle-status"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar arbetsställets verksamhetsstatus.\ncatalog:variable_text:54688:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Adressen och dess namngivna komponenter hör till samma begrepp.\ncatalog:variable_text:54690:15340:17897\ncatalog:variable_text:54690:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressen och dess namngivna komponenter hör till samma begrepp.\ncatalog:variable_text:54690:15340:17897\ncatalog:variable_text:54690:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Gatan är en komponent i belägenhetsadressen.\ncatalog:variable_text:54691:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "tags" = ["geography"] }
+evidence = "Gatan är en komponent i belägenhetsadressen.\ncatalog:variable_text:54691:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Postnumret är en komponent i belägenhetsadressen.\ncatalog:variable_text:54692:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret är en komponent i belägenhetsadressen.\ncatalog:variable_text:54692:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Köp av huvudverksamhet är en offentlig utgift.\ncatalog:variable_text:54693:15340:17897\ncatalog:variable_text:54693:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["public-finance"] }
+evidence = "Köp av huvudverksamhet är en offentlig utgift.\ncatalog:variable_text:54693:15340:17897\ncatalog:variable_text:54693:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Besökspostorten är en komponent i belägenhetsadressen.\ncatalog:variable_text:54695:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "tags" = ["geography"] }
+evidence = "Besökspostorten är en komponent i belägenhetsadressen.\ncatalog:variable_text:54695:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bgatunr"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Gatunummer är en komponent i belägenhetsadressen.\ncatalog:variable_text:54696:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bgatunr"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunummer är en komponent i belägenhetsadressen.\ncatalog:variable_text:54696:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bgaturest"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Den kompletterande gatudelen är en komponent i belägenhetsadressen.\ncatalog:variable_text:54697:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bgaturest"
+fields = { "tags" = ["geography"] }
+evidence = "Den kompletterande gatudelen är en komponent i belägenhetsadressen.\ncatalog:variable_text:54697:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "sets" = ["postadress"] }
+evidence = "C/O-adressen är en namngiven postadresskomponent.\ncatalog:variable_text:54698:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "tags" = ["geography"] }
+evidence = "C/O-adressen är en namngiven postadresskomponent.\ncatalog:variable_text:54698:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "sets" = ["postadress"] }
+evidence = "Gatudelen är en komponent i postadressen.\ncatalog:variable_text:54701:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "tags" = ["geography"] }
+evidence = "Gatudelen är en komponent i postadressen.\ncatalog:variable_text:54701:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "sets" = ["postadress"] }
+evidence = "Gatunummer är en komponent i postadressen.\ncatalog:variable_text:54702:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunummer är en komponent i postadressen.\ncatalog:variable_text:54702:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gaturest"
+fields = { "sets" = ["postadress"] }
+evidence = "Den kompletterande gatudelen är en komponent i postadressen.\ncatalog:variable_text:54703:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gaturest"
+fields = { "tags" = ["geography"] }
+evidence = "Den kompletterande gatudelen är en komponent i postadressen.\ncatalog:variable_text:54703:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inlamnsatt"
+fields = { "sets" = [] }
+evidence = "Inlämningssätt är en uppgift om insamlingsmetod.\ncatalog:variable_text:54704:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inlamnsatt"
+fields = { "tags" = ["methods"] }
+evidence = "Inlämningssätt är en uppgift om insamlingsmetod.\ncatalog:variable_text:54704:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "sets" = ["enhetsstatus"] }
+evidence = "Variabeln kodar den juridiska enhetens företagsstatus.\ncatalog:variable_text:54705:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar den juridiska enhetens företagsstatus.\ncatalog:variable_text:54705:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "sets" = ["enhetsstatus"] }
+evidence = "Variabeln kodar den juridiska enhetens status.\ncatalog:variable_text:54706:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar den juridiska enhetens status.\ncatalog:variable_text:54706:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:54707:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:54707:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komlandst"
+fields = { "sets" = [] }
+evidence = "Kodnumret avser kommuner och landsting.\ncatalog:variable_text:54708:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komlandst"
+fields = { "tags" = ["geography"] }
+evidence = "Kodnumret avser kommuner och landsting.\ncatalog:variable_text:54708:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-geografiska-tillhorighet"] }
+evidence = "Kommun och län anger arbetsställets geografiska tillhörighet.\ncatalog:variable_text:54710:15340:20089\ncatalog:variable_text:54711:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och län anger arbetsställets geografiska tillhörighet.\ncatalog:variable_text:54710:15340:20089\ncatalog:variable_text:54711:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-geografiska-tillhorighet"] }
+evidence = "Län och kommun anger arbetsställets geografiska tillhörighet.\ncatalog:variable_text:54710:15340:20089\ncatalog:variable_text:54711:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Län och kommun anger arbetsställets geografiska tillhörighet.\ncatalog:variable_text:54710:15340:20089\ncatalog:variable_text:54711:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "sets" = [] }
+evidence = "Ng är en källmnemonik och inte en läsbar ordstam för näringsgren; 1 är en källkolumnsposition.\ncatalog:variable_text:54713:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en källmnemonik och inte en läsbar ordstam för näringsgren; 1 är en källkolumnsposition.\ncatalog:variable_text:54713:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "sets" = ["postadress"] }
+evidence = "Postadressen och dess namngivna komponenter hör till samma begrepp.\ncatalog:variable_text:54716:15340:17897\ncatalog:variable_text:54716:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Postadressen och dess namngivna komponenter hör till samma begrepp.\ncatalog:variable_text:54716:15340:17897\ncatalog:variable_text:54716:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postadress"] }
+evidence = "Postnumret är en komponent i postadressen.\ncatalog:variable_text:54717:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret är en komponent i postadressen.\ncatalog:variable_text:54717:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["postadress"] }
+evidence = "Postorten är en komponent i postadressen.\ncatalog:variable_text:54718:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten är en komponent i postadressen.\ncatalog:variable_text:54718:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Institutionell sektortillhörighet beskriver företagsstruktur.\ncatalog:variable_text:54721:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektortillhörighet beskriver företagsstruktur.\ncatalog:variable_text:54721:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verkligtarb"
+fields = { "sets" = [] }
+evidence = "Definitionen och den senare operativa definitionen beskriver olika kodningar.\ncatalog:variable_text:54723:16071:17897\ncatalog:variable_text:54723:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verkligtarb"
+fields = { "tags" = ["business"] }
+evidence = "Definitionen och den senare operativa definitionen beskriver olika kodningar.\ncatalog:variable_text:54723:16071:17897\ncatalog:variable_text:54723:17897:20089"

@@ -1,0 +1,36 @@
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Utbetald bostadsersättning är en transferering.\ncatalog:register:7\ncatalog:variable_text:140:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetald bostadsersättning är en transferering.\ncatalog:register:7\ncatalog:variable_text:140:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalningsperiod-from"
+fields = { "sets" = [] }
+evidence = "Variabeln anger början av ersättningsperioden för en transferering.\ncatalog:register:7\ncatalog:variable_text:143:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalningsperiod-from"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger början av ersättningsperioden för en transferering.\ncatalog:register:7\ncatalog:variable_text:143:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalningsperiod-tom"
+fields = { "sets" = [] }
+evidence = "Variabeln anger slutet av ersättningsperioden för en transferering.\ncatalog:register:7\ncatalog:variable_text:144:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalningsperiod-tom"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger slutet av ersättningsperioden för en transferering.\ncatalog:register:7\ncatalog:variable_text:144:16436:2932897"

@@ -163,24 +163,204 @@ evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy ex
 
 [[statement]]
 kind = "set"
+subject = "var:ald1"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41380:19358:19723\ncatalog:variable_text:41380:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ald1"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41380:19358:19723\ncatalog:variable_text:41380:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ald2"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41381:19358:19723\ncatalog:variable_text:41381:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ald2"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41381:19358:19723\ncatalog:variable_text:41381:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ald3"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41382:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ald3"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41382:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ald4"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41383:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ald4"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgruppering och ålder tillhör samma grupp; variabeln mäter ålder.\ncatalog:occurrence-locators:variable:41384\ncatalog:variable_text:41383:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder och åldersgrupperingar tillhör samma grupp; variabeln mäter ålder.\ncatalog:variable_text:41380:19358:19723\ncatalog:variable_text:41384:14975:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder och åldersgrupperingar tillhör samma grupp; variabeln mäter ålder.\ncatalog:variable_text:41380:19358:19723\ncatalog:variable_text:41384:14975:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:41385:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:41385:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet.\ncatalog:variable_text:41386:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet.\ncatalog:variable_text:41386:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:41387:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:41387:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Folkbokföringslän är en geografisk tillhörighet.\ncatalog:variable_text:41388:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringslän är en geografisk tillhörighet.\ncatalog:variable_text:41388:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:luakod"
+fields = { "sets" = [] }
+evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln anger geografiska områden.\ncatalog:variable_text:41389:9862:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:luakod"
+fields = { "tags" = ["geography"] }
+evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln anger geografiska områden.\ncatalog:variable_text:41389:9862:18262"
+
+[[statement]]
+kind = "set"
 subject = "var:regso"
 fields = { "sets" = ["regso"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:22"
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:regso"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:regso-namn"
 fields = { "sets" = ["regso"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:22"
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41392:10227:18262\ncatalog:variable_text:41392:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:regso-namn"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41392:10227:18262\ncatalog:variable_text:41392:9862:10227"
 
 [[statement]]
 kind = "set"
 subject = "var:regso-varde"
-fields = { "sets" = ["regsokod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:13"
+fields = { "sets" = ["regso"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41393:9862:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:regso-varde"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41393:9862:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:regsokod"
-fields = { "sets" = ["regsokod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:13"
+fields = { "sets" = ["regso"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41394:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41394:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-inv"
+fields = { "sets" = [] }
+evidence = "Skäl till invandring hör till migration.\ncatalog:valueset:4829\ncatalog:variable_text:41395:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-inv"
+fields = { "tags" = ["migration"] }
+evidence = "Skäl till invandring hör till migration.\ncatalog:valueset:4829\ncatalog:variable_text:41395:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utb"
+fields = { "sets" = [] }
+evidence = "Utbildningsnivå hör till utbildning.\ncatalog:variable_text:41396:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utb"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå hör till utbildning.\ncatalog:variable_text:41396:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vistelsetid"
+fields = { "sets" = [] }
+evidence = "Vistelsetid i Sverige beskriver bosättning och hör till migration.\ncatalog:valueset:1390\ncatalog:variable_text:41397:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vistelsetid"
+fields = { "tags" = ["migration"] }
+evidence = "Vistelsetid i Sverige beskriver bosättning och hör till migration.\ncatalog:valueset:1390\ncatalog:variable_text:41397:9862:19723"

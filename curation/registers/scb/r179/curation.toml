@@ -4,3 +4,243 @@ kind = "set"
 subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: {ng1,ngs1,ngs1ng1}"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-skattedeklarationer"
+fields = { "sets" = [] }
+evidence = "Antalet avser inkomna skattedeklarationer.\ncatalog:variable_text:35289:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-skattedeklarationer"
+fields = { "tags" = ["taxation"] }
+evidence = "Antalet avser inkomna skattedeklarationer.\ncatalog:variable_text:35289:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare; arbetsgivaravgiften är ett skattebelopp.\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:variable_text:35291:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma källkolumn har överlappande ägare; arbetsgivaravgiften är ett skattebelopp.\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:variable_text:35291:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-summa"
+fields = { "sets" = [] }
+evidence = "Summan och delbeloppen mäter arbetsgivaravgifter.\ncatalog:variable_text:35292:14610:20089\ncatalog:variable_text:35295:14610:20089\ncatalog:variable_text:35296:14610:20089\ncatalog:variable_text:35297:14610:20089\ncatalog:variable_text:35298:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgift-summa"
+fields = { "tags" = ["taxation"] }
+evidence = "Summan och delbeloppen mäter arbetsgivaravgifter.\ncatalog:variable_text:35292:14610:20089\ncatalog:variable_text:35295:14610:20089\ncatalog:variable_text:35296:14610:20089\ncatalog:variable_text:35297:14610:20089\ncatalog:variable_text:35298:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "sets" = [] }
+evidence = "Variabeln avser ett avdrag.\ncatalog:variable_text:35293:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser ett avdrag.\ncatalog:variable_text:35293:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = [] }
+evidence = "Institutionell sektor klassificerar enhetens sektor.\ncatalog:variable_text:35294:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor klassificerar enhetens sektor.\ncatalog:variable_text:35294:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgaldersp"
+fields = { "sets" = [] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35295:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgaldersp"
+fields = { "tags" = ["taxation"] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35295:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgambassad"
+fields = { "sets" = [] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35296:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgambassad"
+fields = { "tags" = ["taxation"] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35296:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavghel"
+fields = { "sets" = [] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35297:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavghel"
+fields = { "tags" = ["taxation"] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35297:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgungdom"
+fields = { "sets" = [] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35298:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgungdom"
+fields = { "tags" = ["taxation"] }
+evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35298:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgusakanada"
+fields = { "sets" = [] }
+evidence = "The same source column also maps to the embassy variable, including an overlapping period. The recorded amount is a tax-related employer contribution.\ncatalog:occurrence:324010\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:occurrence:324055\ncatalog:variable_text:35299:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kavgusakanada"
+fields = { "tags" = ["taxation"] }
+evidence = "The same source column also maps to the embassy variable, including an overlapping period. The recorded amount is a tax-related employer contribution.\ncatalog:occurrence:324010\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:occurrence:324055\ncatalog:variable_text:35299:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kbruttolon"
+fields = { "sets" = [] }
+evidence = "Det inledande K är ett källkodled; etiketten anger lönesumma per kvartal.\ncatalog:variable_text:35300:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kbruttolon"
+fields = { "tags" = ["income"] }
+evidence = "Det inledande K är ett källkodled; etiketten anger lönesumma per kvartal.\ncatalog:variable_text:35300:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kforman"
+fields = { "sets" = [] }
+evidence = "Det inledande K är ett källkodled; etiketten anger avgiftspliktiga förmåner.\ncatalog:variable_text:35301:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kforman"
+fields = { "tags" = ["income"] }
+evidence = "Det inledande K är ett källkodled; etiketten anger avgiftspliktiga förmåner.\ncatalog:variable_text:35301:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "sets" = [] }
+evidence = "Variabeln avser ett kostnadsavdrag i skattedeklarationen.\ncatalog:register:194\ncatalog:variable_text:35302:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser ett kostnadsavdrag i skattedeklarationen.\ncatalog:register:194\ncatalog:variable_text:35302:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kskattlon"
+fields = { "sets" = [] }
+evidence = "Det inledande K är ett källkodled; etiketten anger avdragen skatt på lön och förmåner.\ncatalog:variable_text:35303:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kskattlon"
+fields = { "tags" = ["taxation"] }
+evidence = "Det inledande K är ett källkodled; etiketten anger avdragen skatt på lön och förmåner.\ncatalog:variable_text:35303:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ksumulag"
+fields = { "sets" = [] }
+evidence = "KSUMULAG är ett källmnemoniskt kodnamn för summa underlag.\ncatalog:variable_text:35304:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ksumulag"
+fields = { "tags" = ["taxation"] }
+evidence = "KSUMULAG är ett källmnemoniskt kodnamn för summa underlag.\ncatalog:variable_text:35304:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "sets" = [] }
+evidence = "Koden anger kommunen där företaget har sitt säte.\ncatalog:variable_text:35306:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger kommunen där företaget har sitt säte.\ncatalog:variable_text:35306:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar enhetens näringsgren för statistiska ändamål.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar enhetens näringsgren för statistiska ändamål.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1ng1"
+fields = { "sets" = [] }
+evidence = "NGS1NG1 är en ogenomskinlig kombination av källkoder; etiketten anger näringsgrenens bästa val.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1ng1"
+fields = { "tags" = ["business"] }
+evidence = "NGS1NG1 är en ogenomskinlig kombination av källkoder; etiketten anger näringsgrenens bästa val.\ncatalog:variable_text:35307:14610:20089\ncatalog:variable_text:35308:14610:20089\ncatalog:variable_text:35309:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prelim-a-skatt-inkl-soc"
+fields = { "sets" = [] }
+evidence = "Variabeln avser preliminär A-skatt.\ncatalog:variable_text:35311:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prelim-a-skatt-inkl-soc"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser preliminär A-skatt.\ncatalog:variable_text:35311:14610:20089"

@@ -1,0 +1,3336 @@
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-omv"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40738\ncatalog:occurrence:40903"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40738\ncatalog:occurrence:40903"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-stallning"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40790\ncatalog:occurrence:40960"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40790\ncatalog:occurrence:40960"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40839\ncatalog:occurrence:41016"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-noterade-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som föregående period; grupp och tagg följer aktieinnehavet.\ncatalog:occurrence:40839\ncatalog:occurrence:41016"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-koncern-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källkolumnen har olika begrepp i de observerade perioderna.\ncatalog:occurrence:39361\ncatalog:occurrence:41018"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-koncern-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har olika begrepp i de observerade perioderna.\ncatalog:occurrence:39361\ncatalog:occurrence:41018"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-omv"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40740\ncatalog:occurrence:40904"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40740\ncatalog:occurrence:40904"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-stallning"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40792\ncatalog:occurrence:40961"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40792\ncatalog:occurrence:40961"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40842\ncatalog:occurrence:41017"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-onoterade-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40842\ncatalog:occurrence:41017"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-omv"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40742\ncatalog:occurrence:40906\ncatalog:variable_text:5881:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40742\ncatalog:occurrence:40906\ncatalog:variable_text:5881:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-stallning"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40794\ncatalog:occurrence:40963\ncatalog:variable_text:5882:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40794\ncatalog:occurrence:40963\ncatalog:variable_text:5882:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-trans"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40844\ncatalog:occurrence:41019\ncatalog:variable_text:5883:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-noterade-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40844\ncatalog:occurrence:41019\ncatalog:variable_text:5883:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-omv"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40743\ncatalog:occurrence:40907\ncatalog:variable_text:5884:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40743\ncatalog:occurrence:40907\ncatalog:variable_text:5884:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-stallning"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40795\ncatalog:occurrence:40964\ncatalog:variable_text:5885:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40795\ncatalog:occurrence:40964\ncatalog:variable_text:5885:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-trans"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40845\ncatalog:occurrence:41020\ncatalog:variable_text:5886:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-onoterade-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40845\ncatalog:occurrence:41020\ncatalog:variable_text:5886:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-omv"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39252\ncatalog:occurrence:39437\ncatalog:variable_text:5887:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39252\ncatalog:occurrence:39437\ncatalog:variable_text:5887:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-stallning"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39304\ncatalog:occurrence:39489\ncatalog:variable_text:5888:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39304\ncatalog:occurrence:39489\ncatalog:variable_text:5888:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-trans"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39353\ncatalog:occurrence:39538\ncatalog:variable_text:5889:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en post för långa lån.\ncatalog:occurrence:39353\ncatalog:occurrence:39538\ncatalog:variable_text:5889:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-omv"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39253\ncatalog:occurrence:39438\ncatalog:variable_text:5890:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39253\ncatalog:occurrence:39438\ncatalog:variable_text:5890:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-stallning"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39305\ncatalog:occurrence:39490\ncatalog:variable_text:5891:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39305\ncatalog:occurrence:39490\ncatalog:variable_text:5891:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-trans"
+fields = { "sets" = ["annan-kort-och-langfristig-upplaning"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39354\ncatalog:occurrence:39539\ncatalog:variable_text:5892:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-upplaning-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har en angränsande mappning till en utlandsdel för långa lån.\ncatalog:occurrence:39354\ncatalog:occurrence:39539\ncatalog:variable_text:5892:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:anstand"
+fields = { "sets" = [] }
+evidence = "Anstånd är en uppgift om insamlingens administration.\ncatalog:valueset:7094\ncatalog:variable_text:5893:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstand"
+fields = { "tags" = ["methods"] }
+evidence = "Anstånd är en uppgift om insamlingens administration.\ncatalog:valueset:7094\ncatalog:variable_text:5893:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Antal svarande hör till undersökningens metoduppgifter.\ncatalog:variable_text:5894:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande hör till undersökningens metoduppgifter.\ncatalog:variable_text:5894:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antoutl"
+fields = { "sets" = ["outlierforekomst"] }
+evidence = "Antal outliers är en kvalitetsuppgift.\ncatalog:variable_text:5895:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antoutl"
+fields = { "tags" = ["methods"] }
+evidence = "Antal outliers är en kvalitetsuppgift.\ncatalog:variable_text:5895:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterkop-egna-aktier-trans"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Samma återköpsbegrepp som i föregående period.\ncatalog:occurrence:39170\ncatalog:occurrence:39358"
+
+[[statement]]
+kind = "set"
+subject = "var:aterkop-egna-aktier-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma återköpsbegrepp som i föregående period.\ncatalog:occurrence:39170\ncatalog:occurrence:39358"
+
+[[statement]]
+kind = "set"
+subject = "var:aterkoprad303"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Enheten skiljer sig från antalsdefinitionen under en period.\ncatalog:variable_text:5899:11323:12053\ncatalog:variable_text:5899:12053:12418\ncatalog:variable_text:5899:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:aterkoprad303"
+fields = { "tags" = ["finance"] }
+evidence = "Enheten skiljer sig från antalsdefinitionen under en period.\ncatalog:variable_text:5899:11323:12053\ncatalog:variable_text:5899:12053:12418\ncatalog:variable_text:5899:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad40"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5900:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad40"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5900:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad401"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5901:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad401"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5901:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad41"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5902:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad41"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5902:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad411"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5903:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad411"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5903:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad421"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5904:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad421"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger delposten.\ncatalog:variable_text:5904:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad43"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5905:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad43"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens radkod är opak; etiketten anger lämnade aktieägartillskott.\ncatalog:variable_text:5905:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad60"
+fields = { "sets" = ["erhallna-aktieagartillskott"] }
+evidence = "Stammen är läsbar och källans radnummer behålls. Beloppet hör till erhållna aktieägartillskott.\ncatalog:variable_text:5906:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad60"
+fields = { "tags" = ["finance"] }
+evidence = "Stammen är läsbar och källans radnummer behålls. Beloppet hör till erhållna aktieägartillskott.\ncatalog:variable_text:5906:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad601"
+fields = { "sets" = ["erhallna-aktieagartillskott"] }
+evidence = "Stammen är läsbar och källans radnummer behålls. Beloppet är utlandsdelen av erhållna aktieägartillskott.\ncatalog:variable_text:5907:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:atillskrad601"
+fields = { "tags" = ["finance"] }
+evidence = "Stammen är läsbar och källans radnummer behålls. Beloppet är utlandsdelen av erhållna aktieägartillskott.\ncatalog:variable_text:5907:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-omv"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38675\ncatalog:occurrence:38849"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38675\ncatalog:occurrence:38849"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-stallning"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38723\ncatalog:occurrence:38898"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38723\ncatalog:occurrence:38898"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-trans"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38768\ncatalog:occurrence:38944"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38768\ncatalog:occurrence:38944"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-omv"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38675\ncatalog:occurrence:38849"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38675\ncatalog:occurrence:38849"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-stallning"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38723\ncatalog:occurrence:38898"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38723\ncatalog:occurrence:38898"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-trans"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38768\ncatalog:occurrence:38944"
+
+[[statement]]
+kind = "set"
+subject = "var:banktillgodohavande-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn övergår från utlandsdel till totalpost.\ncatalog:occurrence:38768\ncatalog:occurrence:38944"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningskod"
+fields = { "sets" = [] }
+evidence = "Bearbetningsstatus är en metoduppgift.\ncatalog:variable_text:5914:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningskod"
+fields = { "tags" = ["methods"] }
+evidence = "Bearbetningsstatus är en metoduppgift.\ncatalog:variable_text:5914:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:befriad"
+fields = { "sets" = [] }
+evidence = "Kodningen avser undersökningens insamling.\ncatalog:valueset:9779\ncatalog:variable_text:5915:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:befriad"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen avser undersökningens insamling.\ncatalog:valueset:9779\ncatalog:variable_text:5915:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "sets" = [] }
+evidence = "Kodningen avser utsändning av blanketten.\ncatalog:variable_text:5916:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen avser utsändning av blanketten.\ncatalog:variable_text:5916:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-omv"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39222\ncatalog:occurrence:39407"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39222\ncatalog:occurrence:39407"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-omv"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39245\ncatalog:occurrence:39430"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39245\ncatalog:occurrence:39430"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-stallning"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39297\ncatalog:occurrence:39482"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39297\ncatalog:occurrence:39482"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-trans"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39346\ncatalog:occurrence:39531"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39346\ncatalog:occurrence:39531"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-omv"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39246\ncatalog:occurrence:39431"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39246\ncatalog:occurrence:39431"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-stallning"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39298\ncatalog:occurrence:39483"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39298\ncatalog:occurrence:39483"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-trans"
+fields = { "sets" = ["dagslaneskulder"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39347\ncatalog:occurrence:39532"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-skuld-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig upplåning.\ncatalog:occurrence:39347\ncatalog:occurrence:39532"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-stallning"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39274\ncatalog:occurrence:39459"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39274\ncatalog:occurrence:39459"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-trans"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39323\ncatalog:occurrence:39508"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39323\ncatalog:occurrence:39508"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-omv"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39223\ncatalog:occurrence:39408"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39223\ncatalog:occurrence:39408"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-stallning"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39275\ncatalog:occurrence:39460"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39275\ncatalog:occurrence:39460"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-trans"
+fields = { "sets" = ["dagslanefordringar"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39324\ncatalog:occurrence:39509"
+
+[[statement]]
+kind = "set"
+subject = "var:dagslan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för kortfristig utlåning och depositioner.\ncatalog:occurrence:39324\ncatalog:occurrence:39509"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-omv"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-stallning"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-trans"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-icke-fin-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-omv"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-stallning"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-trans"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-derivat-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgform"
+fields = { "sets" = [] }
+evidence = "Företagsform är en företagsstrukturell klassificering.\ncatalog:variable_text:5937:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgform"
+fields = { "tags" = ["business"] }
+evidence = "Företagsform är en företagsstrukturell klassificering.\ncatalog:variable_text:5937:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ib-ub-bast"
+fields = { "sets" = [] }
+evidence = "IB och UB är bokstavskoder som inte återger etiketten korrigeringsstatus.\ncatalog:variable_text:5938:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ib-ub-bast"
+fields = { "tags" = ["methods"] }
+evidence = "IB och UB är bokstavskoder som inte återger etiketten korrigeringsstatus.\ncatalog:variable_text:5938:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:impmetod"
+fields = { "sets" = ["imputering"] }
+evidence = "Imputeringssätt är en metoduppgift.\ncatalog:variable_text:5939:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:impmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringssätt är en metoduppgift.\ncatalog:variable_text:5939:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "sets" = ["imputering"] }
+evidence = "Imputeringsstatus är en metoduppgift.\ncatalog:variable_text:5940:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsstatus är en metoduppgift.\ncatalog:variable_text:5940:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommen"
+fields = { "sets" = [] }
+evidence = "Inkommenkod beskriver insamlingsstatus.\ncatalog:variable_text:5941:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommen"
+fields = { "tags" = ["methods"] }
+evidence = "Inkommenkod beskriver insamlingsstatus.\ncatalog:variable_text:5941:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad40"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5943:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad40"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5943:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad401"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5944:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad401"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5944:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad41"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5945:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad41"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5945:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad411"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5946:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad411"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5946:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad421"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5947:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad421"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5947:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad43"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5948:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad43"
+fields = { "tags" = ["finance"] }
+evidence = "Inlösen av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5948:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad60"
+fields = { "sets" = ["inlosen-pa-skuldsidan"] }
+evidence = "Id-stammen är läsbar och beloppet gäller inlösen på skuldsidan.\ncatalog:variable_text:5949:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad60"
+fields = { "tags" = ["finance"] }
+evidence = "Id-stammen är läsbar och beloppet gäller inlösen på skuldsidan.\ncatalog:variable_text:5949:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad601"
+fields = { "sets" = ["inlosen-pa-skuldsidan"] }
+evidence = "Posten mäter en del av inlösen på skuldsidan.\ncatalog:variable_text:5950:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:inlosrad601"
+fields = { "tags" = ["finance"] }
+evidence = "Posten mäter en del av inlösen på skuldsidan.\ncatalog:variable_text:5950:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:internetrapportor"
+fields = { "sets" = [] }
+evidence = "Rapporteringssättet är en insamlingsuppgift.\ncatalog:variable_text:5951:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:internetrapportor"
+fields = { "tags" = ["methods"] }
+evidence = "Rapporteringssättet är en insamlingsuppgift.\ncatalog:variable_text:5951:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-omv"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39240\ncatalog:occurrence:39425"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39240\ncatalog:occurrence:39425"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-stallning"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39292\ncatalog:occurrence:39477"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39292\ncatalog:occurrence:39477"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-trans"
+fields = { "sets" = ["lan"] }
+evidence = "Källkolumnerna har intilliggande och överlappande mappningar till andra variabler.\ncatalog:occurrence:38616\ncatalog:occurrence:38789\ncatalog:occurrence:38790\ncatalog:occurrence:38967\ncatalog:occurrence:39341\ncatalog:occurrence:39526"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnerna har intilliggande och överlappande mappningar till andra variabler.\ncatalog:occurrence:38616\ncatalog:occurrence:38789\ncatalog:occurrence:38790\ncatalog:occurrence:38967\ncatalog:occurrence:39341\ncatalog:occurrence:39526"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-omv"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39241\ncatalog:occurrence:39426"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39241\ncatalog:occurrence:39426"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-stallning"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39293\ncatalog:occurrence:39478"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn används därefter för långfristig utlåning.\ncatalog:occurrence:39293\ncatalog:occurrence:39478"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-trans"
+fields = { "sets" = ["lan"] }
+evidence = "Källkolumnen har intilliggande och överlappande mappningar till andra variabler.\ncatalog:occurrence:38616\ncatalog:occurrence:38789\ncatalog:occurrence:38790\ncatalog:occurrence:38967\ncatalog:occurrence:39342\ncatalog:occurrence:39527"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnen har intilliggande och överlappande mappningar till andra variabler.\ncatalog:occurrence:38616\ncatalog:occurrence:38789\ncatalog:occurrence:38790\ncatalog:occurrence:38967\ncatalog:occurrence:39342\ncatalog:occurrence:39527"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Urvalsstorlek är en metoduppgift.\ncatalog:variable_text:5962:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek är en metoduppgift.\ncatalog:variable_text:5962:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad40"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5964:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad40"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5964:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad401"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5965:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad401"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5965:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad41"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5966:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad41"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5966:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad411"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5967:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad411"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5967:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad421"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5968:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad421"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5968:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad43"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5969:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad43"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning av aktieinnehav är ett finansiellt mått.\ncatalog:variable_text:5969:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad60"
+fields = { "sets" = ["nyemission-pa-skuldsidan"] }
+evidence = "Nyteckning är en läsbar synonym till nyemission och beloppet hör till nyemission på skuldsidan.\ncatalog:variable_text:5970:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad60"
+fields = { "tags" = ["finance"] }
+evidence = "Nyteckning är en läsbar synonym till nyemission och beloppet hör till nyemission på skuldsidan.\ncatalog:variable_text:5970:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad601"
+fields = { "sets" = ["nyemission-pa-skuldsidan"] }
+evidence = "Posten mäter en del av nyemission på skuldsidan.\ncatalog:variable_text:5971:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:nytecknrad601"
+fields = { "tags" = ["finance"] }
+evidence = "Posten mäter en del av nyemission på skuldsidan.\ncatalog:variable_text:5971:9862:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad101"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5972:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad101"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5972:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad11"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5973:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad11"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5973:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad111"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:5974:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad111"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:5974:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad12"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5975:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad12"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5975:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad122"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:5976:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad122"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:5976:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad14"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5977:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad14"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5977:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad141"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5978:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad141"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5978:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad142"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5979:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad142"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5979:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad143"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5980:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad143"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5980:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad144"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5981:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad144"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5981:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad145"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5982:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad145"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5982:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad146"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5983:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad146"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5983:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad147"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5984:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad147"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5984:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad148"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5985:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad148"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5985:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad15"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5986:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad15"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5986:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad151"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5987:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad151"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5987:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad152"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5988:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad152"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5988:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad153"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5989:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad153"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5989:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad154"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5990:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad154"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5990:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad155"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5991:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad155"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5991:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad156"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5992:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad156"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5992:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad157"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5993:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad157"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5993:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad17"
+fields = { "sets" = ["lan-till-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5994:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad17"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5994:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad20"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5995:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad20"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5995:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad201"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5996:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad201"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5996:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad22"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5997:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad22"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5997:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad221"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5998:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad221"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5998:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad23"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5999:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad23"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5999:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad231"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6000:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad231"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6000:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad24"
+fields = { "sets" = ["personalkonvertibler"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6001:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad24"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6001:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad26"
+fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6002:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad26"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6002:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad301"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6003:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad301"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6003:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad302"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6004:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad302"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6004:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad311"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6005:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad311"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6005:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad312"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6006:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad312"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6006:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad321"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6007:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad321"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6007:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad332"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6008:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad332"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6008:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad34"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6009:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad34"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6009:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad35"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6010:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad35"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6010:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad50"
+fields = { "sets" = ["aktiekapital"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6011:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad50"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6011:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad501"
+fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad501"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad51"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6013:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad51"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6013:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad52"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6014:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad52"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6014:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "sets" = ["outlierforekomst"] }
+evidence = "Outliermarkering är en kvalitetsuppgift.\ncatalog:variable_text:6016:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "tags" = ["methods"] }
+evidence = "Outliermarkering är en kvalitetsuppgift.\ncatalog:variable_text:6016:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-sv-aktier-utlandet-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Den senare observerade användningen har en annan angiven omfattning; den tidigare utlandsdelen motsvarar scb/bast/ovriga-svenska-aktier-utlandet-trans.\ncatalog:occurrence:38633\ncatalog:occurrence:38807\ncatalog:occurrence:39361\ncatalog:occurrence:41018"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-sv-aktier-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Den senare observerade användningen har en annan angiven omfattning; den tidigare utlandsdelen motsvarar scb/bast/ovriga-svenska-aktier-utlandet-trans.\ncatalog:occurrence:38633\ncatalog:occurrence:38807\ncatalog:occurrence:39361\ncatalog:occurrence:41018"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-omv"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40740\ncatalog:occurrence:40904"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40740\ncatalog:occurrence:40904"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-stallning"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40792\ncatalog:occurrence:40961"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40792\ncatalog:occurrence:40961"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40842\ncatalog:occurrence:41017"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40842\ncatalog:occurrence:41017"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-utlandet-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma utlandsdel som scb/bast/ovriga-sv-aktier-utlandet-trans i efterföljande period.\ncatalog:occurrence:38633\ncatalog:occurrence:38807"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-svenska-aktier-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma utlandsdel som scb/bast/ovriga-sv-aktier-utlandet-trans i efterföljande period.\ncatalog:occurrence:38633\ncatalog:occurrence:38807"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-omv"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40743\ncatalog:occurrence:40907\ncatalog:variable_text:6022:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40743\ncatalog:occurrence:40907\ncatalog:variable_text:6022:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-stallning"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40795\ncatalog:occurrence:40964\ncatalog:variable_text:6023:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40795\ncatalog:occurrence:40964\ncatalog:variable_text:6023:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-trans"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40845\ncatalog:occurrence:41020\ncatalog:variable_text:6024:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-utlandska-aktier-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Den efterföljande posten avser onoterade aktier och har en snävare omfattning.\ncatalog:occurrence:40845\ncatalog:occurrence:41020\ncatalog:variable_text:6024:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer är en geografisk uppgift.\ncatalog:variable_text:6025:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer är en geografisk uppgift.\ncatalog:variable_text:6025:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort är en geografisk uppgift.\ncatalog:variable_text:6026:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort är en geografisk uppgift.\ncatalog:variable_text:6026:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:rotationsgrupp"
+fields = { "sets" = [] }
+evidence = "Rotationsgrupp avser urvalsmetoden.\ncatalog:variable_text:6030:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:rotationsgrupp"
+fields = { "tags" = ["methods"] }
+evidence = "Rotationsgrupp avser urvalsmetoden.\ncatalog:variable_text:6030:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad101"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6031:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad101"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6031:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6032:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6032:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad111"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6033:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad111"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6033:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad12"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6034:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad12"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6034:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad122"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6035:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad122"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6035:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad14"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6036:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad14"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6036:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad141"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6037:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad141"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6037:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad142"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6038:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad142"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6038:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad143"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6039:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad143"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6039:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad144"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6040:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad144"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6040:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad145"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6041:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad145"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6041:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad146"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6042:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad146"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6042:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad147"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6043:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad147"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6043:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad148"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6044:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad148"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6044:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad15"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6045:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad15"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6045:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad151"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6046:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad151"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6046:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad152"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6047:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad152"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6047:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad153"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6048:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad153"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6048:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad154"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6049:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad154"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6049:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad155"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6050:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad155"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6050:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad156"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6051:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad156"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6051:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad157"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6052:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad157"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6052:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad17"
+fields = { "sets" = ["lan-till-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6053:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad17"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6053:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6054:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6054:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6055:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6055:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad22"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6056:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad22"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6056:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad221"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6057:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad221"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6057:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad23"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6058:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad23"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6058:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad231"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6059:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad231"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6059:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad24"
+fields = { "sets" = ["personalkonvertibler"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6060:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad24"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6060:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad26"
+fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6061:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad26"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6061:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad301"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6062:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad301"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6062:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad302"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6063:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad302"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6063:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad311"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6064:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad311"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6064:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad312"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6065:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad312"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6065:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad321"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6066:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad321"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6066:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad332"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6067:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad332"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6067:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad34"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6068:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad34"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6068:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad35"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6069:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad35"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6069:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad50"
+fields = { "sets" = ["aktiekapital"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6070:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad50"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6070:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad501"
+fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad501"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad51"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6072:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad51"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6072:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad511"
+fields = { "sets" = ["obeskattade-reserver"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6073:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad511"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6073:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad512"
+fields = { "sets" = ["obeskattade-reserver"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6074:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad512"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6074:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad52"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6075:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad52"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6075:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "Populationsantal per stratum är en metoduppgift.\ncatalog:variable_text:6076:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsantal per stratum är en metoduppgift.\ncatalog:variable_text:6076:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storanpost"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "Poststratifierat populationsantal är en metoduppgift.\ncatalog:variable_text:6077:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storanpost"
+fields = { "tags" = ["methods"] }
+evidence = "Poststratifierat populationsantal är en metoduppgift.\ncatalog:variable_text:6077:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = ["stratumindelning"] }
+evidence = "Stratum är en urvalsuppgift.\ncatalog:variable_text:6078:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum är en urvalsuppgift.\ncatalog:variable_text:6078:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumpost"
+fields = { "sets" = ["stratumindelning"] }
+evidence = "Poststratifierat stratum är en urvalsuppgift.\ncatalog:variable_text:6079:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumpost"
+fields = { "tags" = ["methods"] }
+evidence = "Poststratifierat stratum är en urvalsuppgift.\ncatalog:variable_text:6079:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:svaroutl"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Justerat antal svarande är en metoduppgift.\ncatalog:variable_text:6080:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:svaroutl"
+fields = { "tags" = ["methods"] }
+evidence = "Justerat antal svarande är en metoduppgift.\ncatalog:variable_text:6080:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:svarpost"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Poststratifierat antal svarande är en metoduppgift.\ncatalog:variable_text:6081:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:svarpost"
+fields = { "tags" = ["methods"] }
+evidence = "Poststratifierat antal svarande är en metoduppgift.\ncatalog:variable_text:6081:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-aterkop-trans"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Samma återköpsbegrepp som i efterföljande period.\ncatalog:occurrence:39170\ncatalog:occurrence:39358"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-aterkop-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma återköpsbegrepp som i efterföljande period.\ncatalog:occurrence:39170\ncatalog:occurrence:39358"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-omv"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40738\ncatalog:occurrence:40903"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40738\ncatalog:occurrence:40903"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-stallning"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40790\ncatalog:occurrence:40960"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40790\ncatalog:occurrence:40960"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-trans"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40839\ncatalog:occurrence:41016"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-noterade-aktier-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40839\ncatalog:occurrence:41016"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad101"
+fields = { "sets" = ["banktillgodohavanden"] }
+evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6088:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad101"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6088:10592:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad11"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6089:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad11"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6089:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad111"
+fields = { "sets" = ["andelar-i-vardepappersfonder"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6090:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad111"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6090:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad12"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6091:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad12"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6091:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad122"
+fields = { "sets" = ["finansiella-derivattillgangar"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6092:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad122"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6092:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad14"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6093:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad14"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6093:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad141"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6094:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad141"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6094:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad142"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6095:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad142"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6095:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad143"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6096:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad143"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6096:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad144"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6097:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad144"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6097:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad145"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6098:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad145"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6098:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad146"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6099:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad146"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6099:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad147"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6100:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad147"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6100:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad148"
+fields = { "sets" = ["certifikatinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6101:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad148"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6101:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad15"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6102:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad15"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6102:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad151"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6103:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad151"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6103:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad152"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6104:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad152"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6104:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad153"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6105:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad153"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6105:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad154"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6106:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad154"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6106:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad155"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6107:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad155"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6107:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad156"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6108:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad156"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6108:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad157"
+fields = { "sets" = ["obligationsinnehav"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6109:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad157"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6109:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad16"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Katalogen visar en angränsande mappning till scb/bast/lan-trans; underlaget fastställer inte om uppdelningen är korrekt.\ncatalog:occurrence:39341\ncatalog:occurrence:39526\ncatalog:variable_text:6110:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad16"
+fields = { "tags" = ["finance"] }
+evidence = "Katalogen visar en angränsande mappning till scb/bast/lan-trans; underlaget fastställer inte om uppdelningen är korrekt.\ncatalog:occurrence:39341\ncatalog:occurrence:39526\ncatalog:variable_text:6110:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad17"
+fields = { "sets" = ["lan-till-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6111:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad17"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6111:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad20"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6112:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad20"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6112:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad201"
+fields = { "sets" = ["finansiella-derivatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6113:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad201"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6113:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad22"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6114:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad22"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6114:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad221"
+fields = { "sets" = ["certifikatskulder"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6115:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad221"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6115:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad23"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6116:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad23"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6116:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad231"
+fields = { "sets" = ["obligationslan"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6117:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad231"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6117:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad24"
+fields = { "sets" = ["personalkonvertibler"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6118:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad24"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6118:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad26"
+fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6119:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad26"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6119:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad301"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6120:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad301"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6120:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad311"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6121:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad311"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6121:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad321"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6122:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad321"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6122:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad332"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6123:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad332"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6123:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad34"
+fields = { "sets" = ["svenska-aktier-och-andelar"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6124:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad34"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6124:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad35"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6125:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad35"
+fields = { "tags" = ["finance"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6125:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad50"
+fields = { "sets" = ["aktiekapital"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6126:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad50"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6126:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad501"
+fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad501"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad51"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6128:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad51"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6128:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad52"
+fields = { "sets" = ["totalt-eget-kapital"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6129:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:transrad52"
+fields = { "tags" = ["business"] }
+evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6129:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-omv"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39245\ncatalog:occurrence:39430"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39245\ncatalog:occurrence:39430"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-stallning"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39297\ncatalog:occurrence:39482"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39297\ncatalog:occurrence:39482"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-trans"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39346\ncatalog:occurrence:39531"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39346\ncatalog:occurrence:39531"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-omv"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39246\ncatalog:occurrence:39431"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39246\ncatalog:occurrence:39431"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-stallning"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39298\ncatalog:occurrence:39483"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39298\ncatalog:occurrence:39483"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-trans"
+fields = { "sets" = ["kortfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39347\ncatalog:occurrence:39532"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-korta-lan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslåneskuld.\ncatalog:occurrence:39347\ncatalog:occurrence:39532"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-omv"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39252\ncatalog:occurrence:39437"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39252\ncatalog:occurrence:39437"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-stallning"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39304\ncatalog:occurrence:39489"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39304\ncatalog:occurrence:39489"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-trans"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39353\ncatalog:occurrence:39538"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39353\ncatalog:occurrence:39538"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-omv"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39253\ncatalog:occurrence:39438"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39253\ncatalog:occurrence:39438"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-stallning"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39305\ncatalog:occurrence:39490"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39305\ncatalog:occurrence:39490"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-trans"
+fields = { "sets" = ["langfristig-upplaning"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39354\ncatalog:occurrence:39539"
+
+[[statement]]
+kind = "set"
+subject = "var:upplaning-langa-lan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för annan upplåning.\ncatalog:occurrence:39354\ncatalog:occurrence:39539"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Uppräkningstal är en undersökningsvikt.\ncatalog:variable_text:6143:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är en undersökningsvikt.\ncatalog:variable_text:6143:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod"
+fields = { "sets" = [] }
+evidence = "Urvalskoden beskriver undersökningens urval.\ncatalog:variable_text:6144:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalskoden beskriver undersökningens urval.\ncatalog:variable_text:6144:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-aktieagartillskott"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38819\ncatalog:occurrence:38996\ncatalog:variable_text:6145:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-aktieagartillskott"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38819\ncatalog:occurrence:38996\ncatalog:variable_text:6145:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-inlosen"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38831\ncatalog:occurrence:39008\ncatalog:variable_text:6146:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-inlosen"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38831\ncatalog:occurrence:39008\ncatalog:variable_text:6146:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-nyteckning"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38845\ncatalog:occurrence:39022\ncatalog:variable_text:6147:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-nyteckning"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38845\ncatalog:occurrence:39022\ncatalog:variable_text:6147:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-omv"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38889\ncatalog:occurrence:39070\ncatalog:variable_text:6148:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38889\ncatalog:occurrence:39070\ncatalog:variable_text:6148:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-stallning"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38938\ncatalog:occurrence:39123\ncatalog:variable_text:6149:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38938\ncatalog:occurrence:39123\ncatalog:variable_text:6149:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-trans"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38985\ncatalog:occurrence:39174\ncatalog:variable_text:6150:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-aktier-och-andelar-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38985\ncatalog:occurrence:39174\ncatalog:variable_text:6150:9862:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktieagartillskott"
+fields = { "sets" = ["lamnade-aktieagartillskott"] }
+evidence = "Källkolumnens omfattning ändras från utländska aktier och andelar till noterade aktier.\ncatalog:occurrence:38819\ncatalog:occurrence:38996\ncatalog:variable_text:6151:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktieagartillskott"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras från utländska aktier och andelar till noterade aktier.\ncatalog:occurrence:38819\ncatalog:occurrence:38996\ncatalog:variable_text:6151:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-inlosen"
+fields = { "sets" = ["inlosen-av-aktieinnehav"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38831\ncatalog:occurrence:39008\ncatalog:variable_text:6152:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-inlosen"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38831\ncatalog:occurrence:39008\ncatalog:variable_text:6152:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-nyteckning"
+fields = { "sets" = ["nyteckning-av-aktieinnehav"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38845\ncatalog:occurrence:39022\ncatalog:variable_text:6153:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-nyteckning"
+fields = { "tags" = ["finance"] }
+evidence = "Källkolumnens omfattning ändras till noterade aktier.\ncatalog:occurrence:38845\ncatalog:occurrence:39022\ncatalog:variable_text:6153:10957:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-omv"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38889\ncatalog:occurrence:39070\ncatalog:occurrence:40742\ncatalog:occurrence:40906"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38889\ncatalog:occurrence:39070\ncatalog:occurrence:40742\ncatalog:occurrence:40906"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-stallning"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38938\ncatalog:occurrence:39123\ncatalog:occurrence:40794\ncatalog:occurrence:40963"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38938\ncatalog:occurrence:39123\ncatalog:occurrence:40794\ncatalog:occurrence:40963"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-trans"
+fields = { "sets" = ["utlandska-aktier-och-andelar"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38985\ncatalog:occurrence:39174\ncatalog:occurrence:40844\ncatalog:occurrence:41019"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandska-noterade-aktier-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Den tidigare posten har bredare omfattning, medan den efterföljande också avser noterade aktier.\ncatalog:occurrence:38985\ncatalog:occurrence:39174\ncatalog:occurrence:40844\ncatalog:occurrence:41019"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-omv"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39222\ncatalog:occurrence:39407"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39222\ncatalog:occurrence:39407"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-stallning"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39274\ncatalog:occurrence:39459"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39274\ncatalog:occurrence:39459"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-trans"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39323\ncatalog:occurrence:39508"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39323\ncatalog:occurrence:39508"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-omv"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39223\ncatalog:occurrence:39408"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39223\ncatalog:occurrence:39408"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-stallning"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39275\ncatalog:occurrence:39460"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39275\ncatalog:occurrence:39460"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-trans"
+fields = { "sets" = ["kortfristig-utlaning-och-depositioner"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39324\ncatalog:occurrence:39509"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-korta-lan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn användes tidigare för dagslån.\ncatalog:occurrence:39324\ncatalog:occurrence:39509"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-omv"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39240\ncatalog:occurrence:39425\ncatalog:variable_text:6163:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39240\ncatalog:occurrence:39425\ncatalog:variable_text:6163:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-stallning"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39292\ncatalog:occurrence:39477\ncatalog:variable_text:6164:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39292\ncatalog:occurrence:39477\ncatalog:variable_text:6164:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-omv"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39241\ncatalog:occurrence:39426\ncatalog:variable_text:6165:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-omv"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39241\ncatalog:occurrence:39426\ncatalog:variable_text:6165:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-stallning"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39293\ncatalog:occurrence:39478\ncatalog:variable_text:6166:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39293\ncatalog:occurrence:39478\ncatalog:variable_text:6166:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-trans"
+fields = { "sets" = ["langfristig-utlaning"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39342\ncatalog:occurrence:39527\ncatalog:variable_text:6167:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utlaning-langa-lan-utlandet-trans"
+fields = { "tags" = ["finance"] }
+evidence = "Samma källkolumn har en angränsande mappning till en bredare lånepost.\ncatalog:occurrence:39342\ncatalog:occurrence:39527\ncatalog:variable_text:6167:11688:15340"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: StallnRad501 @2010-01-01..2010-12-31 where key = 'v21301'"
+fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
+evidence = "Definitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: StallnRad501 @2011-01-01..2011-12-31 where key = 'v21301'"
+fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
+evidence = "Definitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"

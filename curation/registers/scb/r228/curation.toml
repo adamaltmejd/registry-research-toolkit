@@ -40,3 +40,2367 @@ kind = "set"
 subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2007-12-31"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerad-studieskuld"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Studieskulden är en skuldkomponent.\ncatalog:occurrence-locators:variable:12570"
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerad-studieskuld"
+fields = { "tags" = ["wealth"] }
+evidence = "Studieskulden är en skuldkomponent.\ncatalog:occurrence-locators:variable:12570"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy06"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12571:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy06"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12571:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy065"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12572:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy065"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12572:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy12"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12573:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy12"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12573:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy13"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12574:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ahy13"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12574:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-a-listan-deklarationsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131251\ncatalog:occurrence:131399"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-a-listan-deklarationsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131251\ncatalog:occurrence:131399"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-a-listan-marknadsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131219\ncatalog:occurrence:131367"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-a-listan-marknadsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131219\ncatalog:occurrence:131367"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-o-listan-deklarationsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131257\ncatalog:occurrence:131405"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-o-listan-deklarationsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131257\ncatalog:occurrence:131405"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-o-listan-marknadsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131269\ncatalog:occurrence:131417"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-o-listan-marknadsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131269\ncatalog:occurrence:131417"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder-vid-arets-slut"] }
+evidence = "Ålder vid årets slut ingår i gruppen och är demografi.\ncatalog:variable_text:12579:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årets slut ingår i gruppen och är demografi.\ncatalog:variable_text:12579:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "sets" = ["alder-vid-arets-slut"] }
+evidence = "Ålder vid årets slut ingår i gruppen och är demografi.\ncatalog:variable_text:12580:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årets slut ingår i gruppen och är demografi.\ncatalog:variable_text:12580:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-smahus-lantbruk"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Ägarandelen hör till fastighetsgruppen.\ncatalog:variable_text:12581:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-smahus-lantbruk"
+fields = { "tags" = ["property"] }
+evidence = "Ägarandelen hör till fastighetsgruppen.\ncatalog:variable_text:12581:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "sets" = [] }
+evidence = "Antal barn i hushållet beskriver hushållssammansättning.\ncatalog:variable_text:12582:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antal barn i hushållet beskriver hushållssammansättning.\ncatalog:variable_text:12582:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:asma15"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12583:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:asma15"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger underlaget.\ncatalog:variable_text:12583:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:avgift-arbetsloshetskassa"
+fields = { "sets" = [] }
+evidence = "Avgiften är en hushållsutgift.\ncatalog:variable_text:12584:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avgift-arbetsloshetskassa"
+fields = { "tags" = ["consumption"] }
+evidence = "Avgiften är en hushållsutgift.\ncatalog:variable_text:12584:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-andel-vardepappersfond"
+fields = { "sets" = [] }
+evidence = "Ersättningen avser en fondtransaktion.\ncatalog:variable_text:12585:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-andel-vardepappersfond"
+fields = { "tags" = ["finance"] }
+evidence = "Ersättningen avser en fondtransaktion.\ncatalog:variable_text:12585:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandeg1"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12586:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandeg1"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12586:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandeg2"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12587:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandeg2"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12587:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandfr1"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12588:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandfr1"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12588:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandfr2"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12589:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandfr2"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12589:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandhy1"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12590:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandhy1"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12590:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandhy2"
+fields = { "sets" = ["agarandel-i-fastighet"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12591:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bandhy2"
+fields = { "tags" = ["property"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12591:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsbar-formogenhet-skuld"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Variabeln avser redovisad skuld.\ncatalog:variable_text:12592:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsbar-formogenhet-skuld"
+fields = { "tags" = ["wealth"] }
+evidence = "Variabeln avser redovisad skuld.\ncatalog:variable_text:12592:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:betalning-avyttrade-terminskontrakt"
+fields = { "sets" = [] }
+evidence = "Beloppet avser en finansiell transaktion.\ncatalog:variable_text:12593:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:betalning-avyttrade-terminskontrakt"
+fields = { "tags" = ["finance"] }
+evidence = "Beloppet avser en finansiell transaktion.\ncatalog:variable_text:12593:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bfidtyp"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12594:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:bfidtyp"
+fields = { "tags" = ["taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12594:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:bkupos"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12597:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bkupos"
+fields = { "tags" = ["finance"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12597:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-eg1"
+fields = { "sets" = ["fastighetens-kommun"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12598:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-eg1"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12598:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-eg2"
+fields = { "sets" = ["fastighetens-kommun"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12599:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-eg2"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12599:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-egj"
+fields = { "sets" = ["fastighetens-kommun"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12600:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-egj"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12600:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-fr1"
+fields = { "sets" = ["fastighetens-kommun"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12601:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-fr1"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12601:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-fr2"
+fields = { "sets" = ["fastighetens-kommun"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12602:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blk-fr2"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12602:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-del-overlaten"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller överlåtelse av bostadsrätt.\ncatalog:variable_text:12603:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-del-overlaten"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller överlåtelse av bostadsrätt.\ncatalog:variable_text:12603:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarv-reparationsfond"
+fields = { "sets" = ["bostadsrattens-reparationsfond"] }
+evidence = "Beloppet hör till bostadsrättens reparationsfond.\ncatalog:variable_text:12604:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarv-reparationsfond"
+fields = { "tags" = ["property"] }
+evidence = "Beloppet hör till bostadsrättens reparationsfond.\ncatalog:variable_text:12604:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarvad-andel"
+fields = { "sets" = ["bostadsrattens-transaktionsandel"] }
+evidence = "Andelen avser förvärv av bostadsrätt.\ncatalog:variable_text:12605:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarvad-andel"
+fields = { "tags" = ["property"] }
+evidence = "Andelen avser förvärv av bostadsrätt.\ncatalog:variable_text:12605:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarvspris"
+fields = { "sets" = ["bostadsrattens-transaktionspris"] }
+evidence = "Priset avser förvärv av bostadsrätt.\ncatalog:variable_text:12606:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-forvarvspris"
+fields = { "tags" = ["property"] }
+evidence = "Priset avser förvärv av bostadsrätt.\ncatalog:variable_text:12606:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-marknadsvarde"
+fields = { "sets" = ["bostadsrattens-varde"] }
+evidence = "Marknadsvärdet hör till bostadsrättens värde.\ncatalog:variable_text:12607:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-marknadsvarde"
+fields = { "tags" = ["housing", "wealth"] }
+evidence = "Marknadsvärdet hör till bostadsrättens värde.\ncatalog:variable_text:12607:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlatelse-reparationsfond"
+fields = { "sets" = ["bostadsrattens-reparationsfond"] }
+evidence = "Beloppet hör till bostadsrättens reparationsfond.\ncatalog:variable_text:12608:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlatelse-reparationsfond"
+fields = { "tags" = ["property"] }
+evidence = "Beloppet hör till bostadsrättens reparationsfond.\ncatalog:variable_text:12608:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlatelsepris"
+fields = { "sets" = ["bostadsrattens-transaktionspris"] }
+evidence = "Priset avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12609:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlatelsepris"
+fields = { "tags" = ["property"] }
+evidence = "Priset avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12609:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlaten-andel"
+fields = { "sets" = ["bostadsrattens-transaktionsandel"] }
+evidence = "Andelen avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12610:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-overlaten-andel"
+fields = { "tags" = ["property"] }
+evidence = "Andelen avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12610:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-typ-av-overlatelse"
+fields = { "sets" = [] }
+evidence = "Kodningen avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12611:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsratt-typ-av-overlatelse"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen avser överlåtelse av bostadsrätt.\ncatalog:variable_text:12611:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardeg1"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12612:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardeg1"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12612:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardeg2"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12613:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardeg2"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12613:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardfr1"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12614:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardfr1"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12614:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardfr2"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12615:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardfr2"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12615:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardhy1"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12616:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardhy1"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12616:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardhy2"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12617:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvardhy2"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12617:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvaregj"
+fields = { "sets" = ["fastighetens-vardear"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12618:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bvaregj"
+fields = { "tags" = ["property"] }
+evidence = "Värdeåret är en fastighetsegenskap.\ncatalog:variable_text:12618:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ckusam"
+fields = { "sets" = ["utdelning-fran-samfallighet"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger utdelningen.\ncatalog:variable_text:12619:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ckusam"
+fields = { "tags" = ["income"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger utdelningen.\ncatalog:variable_text:12619:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "sets" = ["hushallets-disponibla-inkomst"] }
+evidence = "Variabeln mäter disponibel inkomst för hushåll.\ncatalog:variable_text:12620:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter disponibel inkomst för hushåll.\ncatalog:variable_text:12620:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-slutford-terminsaffar"
+fields = { "sets" = [] }
+evidence = "Ersättningen avser en finansiell transaktion.\ncatalog:variable_text:12621:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-slutford-terminsaffar"
+fields = { "tags" = ["finance"] }
+evidence = "Ersättningen avser en finansiell transaktion.\ncatalog:variable_text:12621:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:faalmv"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12622:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:faalmv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12622:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:faalumv"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12623:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:faalumv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12623:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fackforeningsavgift"
+fields = { "sets" = [] }
+evidence = "Avgiften är en hushållsutgift.\ncatalog:variable_text:12624:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fackforeningsavgift"
+fields = { "tags" = ["consumption"] }
+evidence = "Avgiften är en hushållsutgift.\ncatalog:variable_text:12624:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fakfmv"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12625:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fakfmv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12625:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fakfumv"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12626:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fakfumv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12626:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:faktumv"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12627:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:faktumv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12627:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver familjerelationer.\ncatalog:variable_text:12629:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver familjerelationer.\ncatalog:variable_text:12629:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver familjens sammansättning.\ncatalog:variable_text:12630:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver familjens sammansättning.\ncatalog:variable_text:12630:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-hyreshus-lokal"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Id anger skatt medan variabeln mäter underlag i alla perioder.\ncatalog:variable_text:12631:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-hyreshus-lokal"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Id anger skatt medan variabeln mäter underlag i alla perioder.\ncatalog:variable_text:12631:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-industri"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Id anger skatt medan variabeln mäter underlag i alla perioder.\ncatalog:variable_text:12632:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-industri"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Id anger skatt medan variabeln mäter underlag i alla perioder.\ncatalog:variable_text:12632:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fbfonmv"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12633:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fbfonmv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12633:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fbfoumv"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12634:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fbfoumv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12634:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fborm"
+fields = { "sets" = ["bostadsrattens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger bostadsrättsvärdet.\ncatalog:variable_text:12635:12783:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:fborm"
+fields = { "tags" = ["housing", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger bostadsrättsvärdet.\ncatalog:variable_text:12635:12783:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:fbormhny"
+fields = { "sets" = ["bostadsrattens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger familjens bostadsrättsvärde.\ncatalog:variable_text:12636:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fbormhny"
+fields = { "tags" = ["housing", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger familjens bostadsrättsvärde.\ncatalog:variable_text:12636:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffinmv"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12637:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffinmv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12637:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffors"
+fields = { "sets" = ["forsakringstillgangarnas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäkringarna.\ncatalog:variable_text:12638:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffors"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäkringarna.\ncatalog:variable_text:12638:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstegj"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12639:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstegj"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12639:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstego"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12640:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstego"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12640:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstegt"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12641:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstegt"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12641:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstejm"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger marknadsvärdet.\ncatalog:variable_text:12642:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstejm"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger marknadsvärdet.\ncatalog:variable_text:12642:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstfrt"
+fields = { "sets" = ["fritidshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12643:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstfrt"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12643:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12644:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12644:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy1"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12645:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy1"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12645:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy2"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12646:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthy2"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12646:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyb"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12647:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyb"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12647:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyl"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12648:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyl"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12648:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthym"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger marknadsvärdet.\ncatalog:variable_text:12649:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthym"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger marknadsvärdet.\ncatalog:variable_text:12649:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyo"
+fields = { "sets" = ["hyreshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12650:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffsthyo"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsvärdet.\ncatalog:variable_text:12650:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstin"
+fields = { "sets" = ["industrifastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12651:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstin"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12651:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstinm"
+fields = { "sets" = ["industrifastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12652:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstinm"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12652:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjb"
+fields = { "sets" = ["lantbruksfastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12653:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjb"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12653:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjbm"
+fields = { "sets" = ["lantbruksfastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12654:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjbm"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12654:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjbo"
+fields = { "sets" = ["lantbruksfastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12655:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjbo"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12655:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjj"
+fields = { "sets" = ["lantbruksfastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12656:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstjj"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12656:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstovr"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12657:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstovr"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12657:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstsf"
+fields = { "sets" = ["samlat-taxeringsvarde-for-fastigheter"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12658:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstsf"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12658:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstsp"
+fields = { "sets" = ["samlat-taxeringsvarde-for-fastigheter"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12659:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstsp"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12659:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstum"
+fields = { "sets" = ["utlandsfastigheternas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12660:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ffstum"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12660:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuakf"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12661:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuakf"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12661:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuakfu"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12662:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuakfu"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12662:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuaktu"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12663:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuaktu"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12663:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubank"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken innehåller en ogenomskinlig kod; etiketten anger bankkonto.\ncatalog:variable_text:12664:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubank"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken innehåller en ogenomskinlig kod; etiketten anger bankkonto.\ncatalog:variable_text:12664:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubfon"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12665:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubfon"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12665:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubfou"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12666:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubfou"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12666:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubr"
+fields = { "sets" = ["bostadsrattens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger bostadsrättsvärdet.\ncatalog:variable_text:12667:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkubr"
+fields = { "tags" = ["housing", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger bostadsrättsvärdet.\ncatalog:variable_text:12667:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuofo"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12668:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuofo"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12668:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuop"
+fields = { "sets" = ["optionsinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsvärdet.\ncatalog:variable_text:12669:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuop"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsvärdet.\ncatalog:variable_text:12669:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuormv"
+fields = { "sets" = ["obligationsinnehavets-varde"] }
+evidence = "FKUORMV är en opak källkod. Etiketten anger obligationernas marknadsvärde. Variabeln hör till obligationsinnehavets värde och mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12670\ncatalog:variable_text:12670:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuormv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "FKUORMV är en opak källkod. Etiketten anger obligationernas marknadsvärde. Variabeln hör till obligationsinnehavets värde och mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12670\ncatalog:variable_text:12670:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuotcu"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12671:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuotcu"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12671:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkurfou"
+fields = { "sets" = ["rantefondernas-varde"] }
+evidence = "FKURFOU är en opak källkod. Etiketten anger utländska räntefonder. Variabeln mäter deras innehavsvärde.\ncatalog:occurrence-locators:variable:12672\ncatalog:variable_text:12672:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkurfou"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "FKURFOU är en opak källkod. Etiketten anger utländska räntefonder. Variabeln mäter deras innehavsvärde.\ncatalog:occurrence-locators:variable:12672\ncatalog:variable_text:12672:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuskop"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsskulden.\ncatalog:variable_text:12673:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuskop"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsskulden.\ncatalog:variable_text:12673:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuutf"
+fields = { "sets" = ["forsakringstillgangarnas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäkringen.\ncatalog:variable_text:12674:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fkuutf"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäkringen.\ncatalog:variable_text:12674:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fnettmv"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12675:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fnettmv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12675:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fofomv"
+fields = { "sets" = ["aktie-och-blandfondernas-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12676:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fofomv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger fondvärdet.\ncatalog:variable_text:12676:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fopmv"
+fields = { "sets" = ["optionsinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsvärdet.\ncatalog:variable_text:12677:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fopmv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsvärdet.\ncatalog:variable_text:12677:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:12678:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:12678:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fotcumv"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12679:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fotcumv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger aktievärdet.\ncatalog:variable_text:12679:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrmv"
+fields = { "sets" = ["ovriga-vardepappers-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger värdepappersvärdet.\ncatalog:variable_text:12680:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrmv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger värdepappersvärdet.\ncatalog:variable_text:12680:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrtmv"
+fields = { "sets" = ["ovriga-tillgangars-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger tillgångsvärdet.\ncatalog:variable_text:12681:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrtmv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger tillgångsvärdet.\ncatalog:variable_text:12681:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrtsp"
+fields = { "sets" = ["ovriga-tillgangars-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger tillgångsvärdet.\ncatalog:variable_text:12682:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fovrtsp"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger tillgångsvärdet.\ncatalog:variable_text:12682:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:frealmv"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12683:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:frealmv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12683:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-marknadsvarde"
+fields = { "sets" = ["fritidshusens-varde"] }
+evidence = "Marknadsvärdet hör till fritidshusens värde.\ncatalog:variable_text:12684:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-marknadsvarde"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Marknadsvärdet hör till fritidshusens värde.\ncatalog:variable_text:12684:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-taxeringsvarde"
+fields = { "sets" = ["fritidshusens-varde"] }
+evidence = "Taxeringsvärdet hör till fritidshusens värde.\ncatalog:variable_text:12685:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus-taxeringsvarde"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Taxeringsvärdet hör till fritidshusens värde.\ncatalog:variable_text:12685:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fskulmv"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger skuldsumman.\ncatalog:variable_text:12686:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fskulmv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger skuldsumman.\ncatalog:variable_text:12686:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fskurst"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger skuldens restpost.\ncatalog:variable_text:12687:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fskurst"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger skuldens restpost.\ncatalog:variable_text:12687:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fsummv"
+fields = { "sets" = ["samlat-tillgangsvarde"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12688:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fsummv"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig; källans definitionshistorik kvarstår.\ncatalog:variable_text:12688:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxeg2"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12689:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxeg2"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12689:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxfr1"
+fields = { "sets" = ["fritidshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12690:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxfr1"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12690:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxfr2"
+fields = { "sets" = ["fritidshusens-varde"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12691:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxfr2"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger taxeringsunderlaget.\ncatalog:variable_text:12691:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftelia"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken är opak och etiketten anger Teliaaktiers deklarationsvärde.\ncatalog:variable_text:12692:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ftelia"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken är opak och etiketten anger Teliaaktiers deklarationsvärde.\ncatalog:variable_text:12692:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fteliamv"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Källmnemoniken innehåller en ogenomskinlig värdekod.\ncatalog:variable_text:12693:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fteliamv"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Källmnemoniken innehåller en ogenomskinlig värdekod.\ncatalog:variable_text:12693:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ftillg"
+fields = { "sets" = ["samlat-tillgangsvarde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12694:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ftillg"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12694:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ftillgh"
+fields = { "sets" = ["samlat-tillgangsvarde"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12695:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ftillgh"
+fields = { "tags" = ["wealth"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12695:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomt"
+fields = { "sets" = ["tomtmarkens-varde"] }
+evidence = "Källmnemoniken är opak och etiketten anger tomtmarkens taxeringsvärde.\ncatalog:variable_text:12696:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomt"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemoniken är opak och etiketten anger tomtmarkens taxeringsvärde.\ncatalog:variable_text:12696:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomte"
+fields = { "sets" = ["tomtmarkens-varde"] }
+evidence = "Källmnemonikens ensamma suffix är en bokstavskod.\ncatalog:variable_text:12697:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomte"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemonikens ensamma suffix är en bokstavskod.\ncatalog:variable_text:12697:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomtf"
+fields = { "sets" = ["tomtmarkens-varde"] }
+evidence = "Källmnemonikens ensamma suffix är en bokstavskod.\ncatalog:variable_text:12698:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomtf"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Källmnemonikens ensamma suffix är en bokstavskod.\ncatalog:variable_text:12698:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-disponibla-inkomst"
+fields = { "sets" = ["hushallets-disponibla-inkomst"] }
+evidence = "Variabeln mäter hushållets disponibla inkomst.\ncatalog:variable_text:12699:12417:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-disponibla-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter hushållets disponibla inkomst.\ncatalog:variable_text:12699:12417:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-vikt"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Vikten används vid uppräkning.\ncatalog:variable_text:12700:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Vikten används vid uppräkning.\ncatalog:variable_text:12700:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kosthushall"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver hushållssammansättning.\ncatalog:variable_text:12701:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kosthushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver hushållssammansättning.\ncatalog:variable_text:12701:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstranta"
+fields = { "sets" = ["inkomstranta"] }
+evidence = "Kontoräntan är en inkomstränta.\ncatalog:variable_text:12702:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstranta"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Kontoräntan är en inkomstränta.\ncatalog:variable_text:12702:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:inregistrerade-aktier-deklarationsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131251\ncatalog:occurrence:131399"
+
+[[statement]]
+kind = "set"
+subject = "var:inregistrerade-aktier-deklarationsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131251\ncatalog:occurrence:131399"
+
+[[statement]]
+kind = "set"
+subject = "var:inregistrerade-aktier-marknadsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131219\ncatalog:occurrence:131367"
+
+[[statement]]
+kind = "set"
+subject = "var:inregistrerade-aktier-marknadsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131219\ncatalog:occurrence:131367"
+
+[[statement]]
+kind = "set"
+subject = "var:kakurta"
+fields = { "sets" = ["utgiftsranta"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utgiftsräntan.\ncatalog:variable_text:12705:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kakurta"
+fields = { "tags" = ["finance"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utgiftsräntan.\ncatalog:variable_text:12705:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kakutot"
+fields = { "sets" = ["utgiftsranta"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utgiftsräntan.\ncatalog:variable_text:12706:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kakutot"
+fields = { "tags" = ["finance"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utgiftsräntan.\ncatalog:variable_text:12706:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-aktiefond"
+fields = { "sets" = ["kapitalforlust-pa-fonder"] }
+evidence = "Samma källkolumn har olika fondomfattning i den senare variabeln.\ncatalog:occurrence:130409\ncatalog:occurrence:130564"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-aktiefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Samma källkolumn har olika fondomfattning i den senare variabeln.\ncatalog:occurrence:130409\ncatalog:occurrence:130564"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-annan-fond-rantefond"
+fields = { "sets" = ["kapitalforlust-pa-fonder"] }
+evidence = "Samma källkolumn har olika fondomfattning i den tidigare variabeln.\ncatalog:occurrence:130409\ncatalog:occurrence:130564"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-annan-fond-rantefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Samma källkolumn har olika fondomfattning i den tidigare variabeln.\ncatalog:occurrence:130409\ncatalog:occurrence:130564"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-fonder"
+fields = { "sets" = ["kapitalforlust-pa-fonder"] }
+evidence = "Variabeln mäter realiserad fondförlust.\ncatalog:variable_text:12709:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-fonder"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Variabeln mäter realiserad fondförlust.\ncatalog:variable_text:12709:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-rantefond"
+fields = { "sets" = ["kapitalforlust-pa-fonder"] }
+evidence = "Variabeln mäter realiserad fondförlust.\ncatalog:variable_text:12710:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-rantefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Variabeln mäter realiserad fondförlust.\ncatalog:variable_text:12710:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-aktiefond"
+fields = { "sets" = ["kapitalvinst-pa-fonder"] }
+evidence = "Samma källkolumn har olika fondomfattning i den senare variabeln.\ncatalog:occurrence:130421\ncatalog:occurrence:130576"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-aktiefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Samma källkolumn har olika fondomfattning i den senare variabeln.\ncatalog:occurrence:130421\ncatalog:occurrence:130576"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-annan-fond-rantefond"
+fields = { "sets" = ["kapitalvinst-pa-fonder"] }
+evidence = "Samma källkolumn har olika fondomfattning i den tidigare variabeln.\ncatalog:occurrence:130421\ncatalog:occurrence:130576"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-annan-fond-rantefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Samma källkolumn har olika fondomfattning i den tidigare variabeln.\ncatalog:occurrence:130421\ncatalog:occurrence:130576"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-fonder"
+fields = { "sets" = ["kapitalvinst-pa-fonder"] }
+evidence = "Variabeln mäter realiserad fondvinst.\ncatalog:variable_text:12713:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-fonder"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Variabeln mäter realiserad fondvinst.\ncatalog:variable_text:12713:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-rantefond"
+fields = { "sets" = ["kapitalvinst-pa-fonder"] }
+evidence = "Variabeln mäter realiserad fondvinst.\ncatalog:variable_text:12714:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-rantefond"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Variabeln mäter realiserad fondvinst.\ncatalog:variable_text:12714:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kfkufon4"
+fields = { "sets" = ["kapitalforlust-pa-fonder"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12715:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kfkufon4"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12715:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kkueho"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsersättningen.\ncatalog:variable_text:12716:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkueho"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger optionsersättningen.\ncatalog:variable_text:12716:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkufors"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäljningsersättningen.\ncatalog:variable_text:12717:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkufors"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger försäljningsersättningen.\ncatalog:variable_text:12717:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuorta"
+fields = { "sets" = ["inkomstranta"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger inkomsträntan.\ncatalog:variable_text:12718:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuorta"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger inkomsträntan.\ncatalog:variable_text:12718:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkurbf"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger räntebidraget.\ncatalog:variable_text:12719:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kkurbf"
+fields = { "tags" = ["transfers"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger räntebidraget.\ncatalog:variable_text:12719:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kkurbo"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger räntebidraget.\ncatalog:variable_text:12720:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kkurbo"
+fields = { "tags" = ["transfers"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger räntebidraget.\ncatalog:variable_text:12720:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kkusam"
+fields = { "sets" = ["utdelning-fran-samfallighet"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12721:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkusam"
+fields = { "tags" = ["income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12721:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuutd"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12722:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuutd"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12722:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuvp"
+fields = { "sets" = ["inkomstranta"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger värdepappersräntan.\ncatalog:variable_text:12723:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kkuvp"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger värdepappersräntan.\ncatalog:variable_text:12723:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:12724:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:12724:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "sets" = ["kon"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:12725:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln kodar kön.\ncatalog:variable_text:12725:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kvkufon4"
+fields = { "sets" = ["kapitalvinst-pa-fonder"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12726:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kvkufon4"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12726:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver urvalet per stratum.\ncatalog:variable_text:12727:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver urvalet per stratum.\ncatalog:variable_text:12727:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkunar"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger näringsbidraget.\ncatalog:variable_text:12729:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkunar"
+fields = { "tags" = ["business", "transfers"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger näringsbidraget.\ncatalog:variable_text:12729:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkuroy"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger royaltybeloppet.\ncatalog:variable_text:12730:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkuroy"
+fields = { "tags" = ["income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger royaltybeloppet.\ncatalog:variable_text:12730:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkusam"
+fields = { "sets" = ["utdelning-fran-samfallighet"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12731:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkusam"
+fields = { "tags" = ["forestry-fishing", "income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utdelningen.\ncatalog:variable_text:12731:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkuskog"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utbetalt belopp.\ncatalog:variable_text:12732:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nkuskog"
+fields = { "tags" = ["income"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten anger utbetalt belopp.\ncatalog:variable_text:12732:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:noterade-aktier-deklarationsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131257\ncatalog:occurrence:131405"
+
+[[statement]]
+kind = "set"
+subject = "var:noterade-aktier-deklarationsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131257\ncatalog:occurrence:131405"
+
+[[statement]]
+kind = "set"
+subject = "var:noterade-aktier-marknadsvarde"
+fields = { "sets" = ["aktieinnehavets-varde"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131269\ncatalog:occurrence:131417"
+
+[[statement]]
+kind = "set"
+subject = "var:noterade-aktier-marknadsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Samma aktiekategori är uppdelad efter listnamnets ändring; värdet hör till aktieinnehav.\ncatalog:occurrence:131269\ncatalog:occurrence:131417"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran"
+fields = { "sets" = ["obligationsinnehavets-varde"] }
+evidence = "Id:t återger källans innebörd. Variabeln mäter värdet av obligationsinnehav.\ncatalog:occurrence-locators:variable:12735\ncatalog:variable_text:12735:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger källans innebörd. Variabeln mäter värdet av obligationsinnehav.\ncatalog:occurrence-locators:variable:12735\ncatalog:variable_text:12735:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran-fkuvp"
+fields = { "sets" = ["obligationsinnehavets-varde"] }
+evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12736\ncatalog:variable_text:12736:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran-fkuvp"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12736\ncatalog:variable_text:12736:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran-fkuvpr"
+fields = { "sets" = ["obligationsinnehavets-varde"] }
+evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12737\ncatalog:variable_text:12737:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:obligationer-fordran-fkuvpr"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12737\ncatalog:variable_text:12737:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-vardepapper-deklvarde"
+fields = { "sets" = ["ovriga-vardepappers-varde"] }
+evidence = "Deklarationsvärdet hör till övriga värdepappers värde.\ncatalog:variable_text:12738:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-vardepapper-deklvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Deklarationsvärdet hör till övriga värdepappers värde.\ncatalog:variable_text:12738:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionssparande"
+fields = { "sets" = [] }
+evidence = "Inbetalning till pensionssparande är en finansiell transaktion.\ncatalog:variable_text:12739:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionssparande"
+fields = { "tags" = ["finance"] }
+evidence = "Inbetalning till pensionssparande är en finansiell transaktion.\ncatalog:variable_text:12739:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsmarkering-hek"
+fields = { "sets" = [] }
+evidence = "Populationsmarkeringen beskriver undersökningens population.\ncatalog:variable_text:12742:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsmarkering-hek"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsmarkeringen beskriver undersökningens population.\ncatalog:variable_text:12742:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:premieobligationer"
+fields = { "sets" = ["obligationsinnehavets-varde"] }
+evidence = "Id:t återger källans innebörd. Variabeln mäter värdet av premieobligationer.\ncatalog:occurrence-locators:variable:12743\ncatalog:variable_text:12743:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:premieobligationer"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger källans innebörd. Variabeln mäter värdet av premieobligationer.\ncatalog:occurrence-locators:variable:12743\ncatalog:variable_text:12743:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag-smahus-hyresfastigheter"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Beloppet är ett räntebidrag.\ncatalog:variable_text:12744:12783:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag-smahus-hyresfastigheter"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är ett räntebidrag.\ncatalog:variable_text:12744:12783:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:rantefonder-deklarationsvarde"
+fields = { "sets" = ["rantefondernas-varde"] }
+evidence = "Id:t återger deklarationsvärdet för räntefonder. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12745\ncatalog:variable_text:12745:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rantefonder-deklarationsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger deklarationsvärdet för räntefonder. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12745\ncatalog:variable_text:12745:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rantefonder-marknadsvarde"
+fields = { "sets" = ["rantefondernas-varde"] }
+evidence = "Id:t återger marknadsvärdet för räntefonder. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12746\ncatalog:variable_text:12746:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rantefonder-marknadsvarde"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Id:t återger marknadsvärdet för räntefonder. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12746\ncatalog:variable_text:12746:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-skuld-kontrolluppgift"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Variabeln mäter sammanlagd skuld enligt kontrolluppgift.\ncatalog:variable_text:12747:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-skuld-kontrolluppgift"
+fields = { "tags" = ["wealth"] }
+evidence = "Variabeln mäter sammanlagd skuld enligt kontrolluppgift.\ncatalog:variable_text:12747:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-pa-inkomstranta"
+fields = { "sets" = ["skatt-pa-inkomstranta"] }
+evidence = "Variabeln mäter skatt på inkomstränta.\ncatalog:variable_text:12748:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-pa-inkomstranta"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatt på inkomstränta.\ncatalog:variable_text:12748:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-pa-utdelning-delagarratter"
+fields = { "sets" = ["skatt-pa-utdelning"] }
+evidence = "Variabeln mäter skatt på utdelning.\ncatalog:variable_text:12749:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-pa-utdelning-delagarratter"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatt på utdelning.\ncatalog:variable_text:12749:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skuvp"
+fields = { "sets" = ["skatt-pa-inkomstranta"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12750:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skuvp"
+fields = { "tags" = ["taxation"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:12750:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:smahus-marknadsvarde"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Marknadsvärdet hör till småhusens värde.\ncatalog:variable_text:12751:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:smahus-marknadsvarde"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Marknadsvärdet hör till småhusens värde.\ncatalog:variable_text:12751:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:smahus-taxeringsvarde"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Taxeringsvärdet hör till småhusens värde.\ncatalog:variable_text:12752:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:smahus-taxeringsvarde"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Taxeringsvärdet hör till småhusens värde.\ncatalog:variable_text:12752:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver populationen per stratum.\ncatalog:variable_text:12754:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver populationen per stratum.\ncatalog:variable_text:12754:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skuldbelopp-formogenhet"
+fields = { "sets" = ["skuldbelopp"] }
+evidence = "Variabeln anger ett skuldbelopp.\ncatalog:variable_text:12755:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skuldbelopp-formogenhet"
+fields = { "tags" = ["wealth"] }
+evidence = "Variabeln anger ett skuldbelopp.\ncatalog:variable_text:12755:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsunderlag-smahus-eget-hem"
+fields = { "sets" = ["smahusens-varde"] }
+evidence = "Taxeringsunderlaget hör till småhusens värde.\ncatalog:variable_text:12756:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsunderlag-smahus-eget-hem"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Taxeringsunderlaget hör till småhusens värde.\ncatalog:variable_text:12756:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fastighet-utland"
+fields = { "sets" = ["utlandsfastigheternas-varde"] }
+evidence = "Variabeln mäter värdet av en utländsk fastighet.\ncatalog:variable_text:12757:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-fastighet-utland"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Variabeln mäter värdet av en utländsk fastighet.\ncatalog:variable_text:12757:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomter-fritidshus-mv"
+fields = { "sets" = ["tomtmarkens-varde"] }
+evidence = "Marknadsvärdet hör till tomtmarkens värde.\ncatalog:variable_text:12758:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomter-fritidshus-mv"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Marknadsvärdet hör till tomtmarkens värde.\ncatalog:variable_text:12758:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomter-smahus-mv"
+fields = { "sets" = ["tomtmarkens-varde"] }
+evidence = "Marknadsvärdet hör till tomtmarkens värde.\ncatalog:variable_text:12759:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomter-smahus-mv"
+fields = { "tags" = ["property", "wealth"] }
+evidence = "Marknadsvärdet hör till tomtmarkens värde.\ncatalog:variable_text:12759:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald"
+fields = { "sets" = [] }
+evidence = "Tomträttsavgälden avser fastighetsupplåtelse.\ncatalog:variable_text:12760:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald"
+fields = { "tags" = ["property"] }
+evidence = "Tomträttsavgälden avser fastighetsupplåtelse.\ncatalog:variable_text:12760:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-0"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12761:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-0"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12761:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-025-2"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:12762:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-025-2"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:12762:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-05-2"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:12763:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-05-2"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:12763:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-0"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12764:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-0"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12764:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-05"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag; källans definitionshistorik kvarstår.\ncatalog:variable_text:12765:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-05"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag; källans definitionshistorik kvarstår.\ncatalog:variable_text:12765:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-075"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12766:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-075"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12766:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-10"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag; källans definitionshistorik kvarstår.\ncatalog:variable_text:12767:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-10"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag; källans definitionshistorik kvarstår.\ncatalog:variable_text:12767:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-utland"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12768:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-utland"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12768:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-utland-15"
+fields = { "sets" = ["underlag-for-fastighetsskatt"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12769:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-utland-15"
+fields = { "tags" = ["property", "taxation"] }
+evidence = "Variabeln mäter fastighetsskatteunderlag.\ncatalog:variable_text:12769:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-ordinarie"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Faktorn används vid uppräkning.\ncatalog:variable_text:12770:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-ordinarie"
+fields = { "tags" = ["methods"] }
+evidence = "Faktorn används vid uppräkning.\ncatalog:variable_text:12770:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp-obligationer-mm"
+fields = { "sets" = [] }
+evidence = "Beloppet avser utbetalningar från finansiella instrument.\ncatalog:variable_text:12771:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp-obligationer-mm"
+fields = { "tags" = ["finance"] }
+evidence = "Beloppet avser utbetalningar från finansiella instrument.\ncatalog:variable_text:12771:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-forsakring-foregaende-ar"
+fields = { "sets" = ["forsakringstillgangarnas-varde"] }
+evidence = "Värdet hör till försäkringstillgångar.\ncatalog:variable_text:12772:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-forsakring-foregaende-ar"
+fields = { "tags" = ["finance", "wealth"] }
+evidence = "Värdet hör till försäkringstillgångar.\ncatalog:variable_text:12772:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-skatt-pa-utdelning-delagare"
+fields = { "sets" = ["skatt-pa-utdelning"] }
+evidence = "Variabeln mäter skatt på utdelning.\ncatalog:variable_text:12773:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-skatt-pa-utdelning-delagare"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatt på utdelning.\ncatalog:variable_text:12773:13878:13879"

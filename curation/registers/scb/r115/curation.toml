@@ -149,3 +149,663 @@ kind = "set"
 subject = "primarkommun-region: församling @2026"
 fields = { "classification" = "class/lkf/lkf2026" }
 evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:befolkningstathet"
+fields = { "sets" = [] }
+evidence = "Befolkningstäthet är ett demografiskt mått.\ncatalog:variable_text:34307:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:befolkningstathet"
+fields = { "tags" = ["demographics"] }
+evidence = "Befolkningstäthet är ett demografiskt mått.\ncatalog:variable_text:34307:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgiftssats"
+fields = { "sets" = [] }
+evidence = "Begravningsavgiftssatsen är en avgift av skattekaraktär.\ncatalog:variable_text:34308:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:begravningsavgiftssats"
+fields = { "tags" = ["taxation"] }
+evidence = "Begravningsavgiftssatsen är en avgift av skattekaraktär.\ncatalog:variable_text:34308:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:folkgrp"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Folkmängdsgruppen kodar folkmängd.\ncatalog:valueset:6631\ncatalog:variable_text:34309:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkgrp"
+fields = { "tags" = ["demographics"] }
+evidence = "Folkmängdsgruppen kodar folkmängd.\ncatalog:valueset:6631\ncatalog:variable_text:34309:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1101-1"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Variabeln mäter folkmängd.\ncatalog:variable_text:34310:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1101-1"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter folkmängd.\ncatalog:variable_text:34310:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231-1"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Variabeln mäter folkmängd.\ncatalog:variable_text:34311:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231-1"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter folkmängd.\ncatalog:variable_text:34311:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Samma källkolumn har närliggande perioder hos andra variabler, men definitionen anger tätort.\ncatalog:occurrence:301836\ncatalog:occurrence:301848\ncatalog:occurrence:301896\ncatalog:occurrence:301908"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har närliggande perioder hos andra variabler, men definitionen anger tätort.\ncatalog:occurrence:301836\ncatalog:occurrence:301848\ncatalog:occurrence:301896\ncatalog:occurrence:301908"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-31-dec-t-2"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Den efterföljande variabelns definition visar inte säkert samma population.\ncatalog:occurrence:301836\ncatalog:occurrence:301848"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-31-dec-t-2"
+fields = { "tags" = ["demographics"] }
+evidence = "Den efterföljande variabelns definition visar inte säkert samma population.\ncatalog:occurrence:301836\ncatalog:occurrence:301848"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling anger geografisk indelning.\ncatalog:variable_text:34314:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling anger geografisk indelning.\ncatalog:variable_text:34314:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:invanare-per-kommun"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Den föregående variabelns definition visar inte säkert samma population.\ncatalog:occurrence:301896\ncatalog:occurrence:301908"
+
+[[statement]]
+kind = "set"
+subject = "var:invanare-per-kommun"
+fields = { "tags" = ["demographics"] }
+evidence = "Den föregående variabelns definition visar inte säkert samma population.\ncatalog:occurrence:301896\ncatalog:occurrence:301908"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är geografisk indelning; vissa perioders värdemängder innehåller länskoder.\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:34316:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är geografisk indelning; vissa perioders värdemängder innehåller länskoder.\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:34316:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-eller-lansnamn"
+fields = { "sets" = [] }
+evidence = "Namnet anger geografisk indelning.\ncatalog:variable_text:34317:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-eller-lansnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Namnet anger geografisk indelning.\ncatalog:variable_text:34317:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "sets" = [] }
+evidence = "Kommungrupp är en geografisk klassificering.\ncatalog:valueset:12332\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:34318:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "tags" = ["geography"] }
+evidence = "Kommungrupp är en geografisk klassificering.\ncatalog:valueset:12332\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:34318:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksats-1"
+fields = { "sets" = ["primarkommunal-skattesats"] }
+evidence = "KSk är en källförkortning och inte läsbara ordstammar för kommunal skattesats.\ncatalog:variable_text:34319:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksats-1"
+fields = { "tags" = ["taxation"] }
+evidence = "KSk är en källförkortning och inte läsbara ordstammar för kommunal skattesats.\ncatalog:variable_text:34319:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsandr"
+fields = { "sets" = ["primarkommunal-skattesats"] }
+evidence = "KSk är en ogenomskinlig källförkortning.\ncatalog:variable_text:34320:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsandr"
+fields = { "tags" = ["taxation"] }
+evidence = "KSk är en ogenomskinlig källförkortning.\ncatalog:variable_text:34320:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsh"
+fields = { "sets" = ["primarkommunal-skattesats"] }
+evidence = "KSk och H är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34321:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsh"
+fields = { "tags" = ["taxation"] }
+evidence = "KSk och H är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34321:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsl"
+fields = { "sets" = ["primarkommunal-skattesats"] }
+evidence = "KSk och L är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34322:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ksksatsl"
+fields = { "tags" = ["taxation"] }
+evidence = "KSk och L är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34322:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Länskoden anger geografisk indelning.\ncatalog:variable_text:34323:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden anger geografisk indelning.\ncatalog:variable_text:34323:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "sets" = ["region-landsting"] }
+evidence = "Landstingets namn identifierar en regional enhet.\ncatalog:variable_text:34324:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Landstingets namn identifierar en regional enhet.\ncatalog:variable_text:34324:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod"
+fields = { "sets" = ["region-landsting"] }
+evidence = "Landstingskoden identifierar en regional enhet.\ncatalog:variable_text:34325:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod"
+fields = { "tags" = ["geography"] }
+evidence = "Landstingskoden identifierar en regional enhet.\ncatalog:variable_text:34325:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lareal"
+fields = { "sets" = ["landareal"] }
+evidence = "Landareal beskriver markens egenskap.\ncatalog:variable_text:34326:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:lareal"
+fields = { "tags" = ["property"] }
+evidence = "Landareal beskriver markens egenskap.\ncatalog:variable_text:34326:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:larealavr"
+fields = { "sets" = ["landareal"] }
+evidence = "Landareal beskriver markens egenskap.\ncatalog:variable_text:34327:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:larealavr"
+fields = { "tags" = ["property"] }
+evidence = "Landareal beskriver markens egenskap.\ncatalog:variable_text:34327:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ltsksats-1"
+fields = { "sets" = ["landstingsskattesats"] }
+evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34328:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ltsksats-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34328:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ltsksatsandr"
+fields = { "sets" = ["landstingsskattesats"] }
+evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34329:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ltsksatsandr"
+fields = { "tags" = ["taxation"] }
+evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34329:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:momsavg"
+fields = { "sets" = [] }
+evidence = "Momsavgifter hör till beskattning.\ncatalog:variable_text:34330:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:momsavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Momsavgifter hör till beskattning.\ncatalog:variable_text:34330:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prel200"
+fields = { "sets" = ["preliminara-skattemedel"] }
+evidence = "Beloppet är en källa angiven komponent av preliminära skattemedel.\ncatalog:variable_text:34332:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prel200"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Beloppet är en källa angiven komponent av preliminära skattemedel.\ncatalog:variable_text:34332:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prelmedel"
+fields = { "sets" = ["preliminara-skattemedel"] }
+evidence = "Variabeln avser offentliga skattemedel.\ncatalog:variable_text:34333:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prelmedel"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Variabeln avser offentliga skattemedel.\ncatalog:variable_text:34333:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prelmedelavr"
+fields = { "sets" = ["preliminara-skattemedel"] }
+evidence = "Variabeln avser offentliga skattemedel.\ncatalog:variable_text:34334:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:prelmedelavr"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Variabeln avser offentliga skattemedel.\ncatalog:variable_text:34334:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:region-landsting"
+fields = { "sets" = ["region-landsting"] }
+evidence = "Koderna anger regioner eller landsting.\ncatalog:valueset:11965\ncatalog:variable_text:34335:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:region-landsting"
+fields = { "tags" = ["geography"] }
+evidence = "Koderna anger regioner eller landsting.\ncatalog:valueset:11965\ncatalog:variable_text:34335:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-landsting"
+fields = { "sets" = ["landstingsskattesats"] }
+evidence = "Variabeln mäter skattesats till landsting.\ncatalog:variable_text:34336:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-landsting"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skattesats till landsting.\ncatalog:variable_text:34336:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-primarkommunen"
+fields = { "sets" = ["primarkommunal-skattesats"] }
+evidence = "Variabeln mäter primärkommunal skattesats.\ncatalog:variable_text:34337:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-primarkommunen"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter primärkommunal skattesats.\ncatalog:variable_text:34337:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Källkolumnen har angränsande ägare och definitionerna ger inte säkert samma omfattning.\ncatalog:occurrence:301844\ncatalog:occurrence:301856\ncatalog:variable_text:34338:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har angränsande ägare och definitionerna ger inte säkert samma omfattning.\ncatalog:occurrence:301844\ncatalog:occurrence:301856\ncatalog:variable_text:34338:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-sv-kyrkan"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34339:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-sv-kyrkan"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34339:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-t-1"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Källkolumnen har angränsande ägare och definitionerna ger inte säkert samma omfattning.\ncatalog:occurrence:301844\ncatalog:occurrence:301856\ncatalog:variable_text:34340:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-t-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har angränsande ägare och definitionerna ger inte säkert samma omfattning.\ncatalog:occurrence:301844\ncatalog:occurrence:301856\ncatalog:variable_text:34340:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktot"
+fields = { "sets" = ["skatteinkomster"] }
+evidence = "Summan avser offentliga skatteinkomster.\ncatalog:variable_text:34341:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktot"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Summan avser offentliga skatteinkomster.\ncatalog:variable_text:34341:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktotavr"
+fields = { "sets" = ["skatteinkomster"] }
+evidence = "Summan avser offentliga skatteinkomster.\ncatalog:variable_text:34342:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktotavr"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Summan avser offentliga skatteinkomster.\ncatalog:variable_text:34342:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktotinv"
+fields = { "sets" = ["skatteinkomster"] }
+evidence = "Måttet avser offentliga skatteinkomster per invånare.\ncatalog:variable_text:34343:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skinktotinv"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Måttet avser offentliga skatteinkomster per invånare.\ncatalog:variable_text:34343:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skund"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34344:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skund"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34344:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skund-1"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34345:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skund-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34345:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundavr"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34346:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundavr"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34346:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundforandr"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter förändring i skatteunderlaget.\ncatalog:variable_text:34347:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundforandr"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter förändring i skatteunderlaget.\ncatalog:variable_text:34347:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinv"
+fields = { "sets" = ["skattekraft"] }
+evidence = "Skattekraft är skatteunderlag per invånare.\ncatalog:variable_text:34348:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinv"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattekraft är skatteunderlag per invånare.\ncatalog:variable_text:34348:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvandel"
+fields = { "sets" = ["skattekraft"] }
+evidence = "Variabeln anger skattekraft relativt riksmedelvärdet.\ncatalog:variable_text:34349:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvandel"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln anger skattekraft relativt riksmedelvärdet.\ncatalog:variable_text:34349:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvh"
+fields = { "sets" = ["skattekraft"] }
+evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34350:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvh"
+fields = { "tags" = ["taxation"] }
+evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34350:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvhtkr"
+fields = { "sets" = ["skattekraft"] }
+evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34351:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvhtkr"
+fields = { "tags" = ["taxation"] }
+evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34351:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvl"
+fields = { "sets" = ["skattekraft"] }
+evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34352:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvl"
+fields = { "tags" = ["taxation"] }
+evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34352:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvltkr"
+fields = { "sets" = ["skattekraft"] }
+evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34353:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvltkr"
+fields = { "tags" = ["taxation"] }
+evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34353:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvtkr"
+fields = { "sets" = ["skattekraft"] }
+evidence = "Skattekraft är skatteunderlag per invånare.\ncatalog:variable_text:34354:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundinvtkr"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattekraft är skatteunderlag per invånare.\ncatalog:variable_text:34354:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundmnkr"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34355:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skundmnkr"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter skatteunderlag.\ncatalog:variable_text:34355:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:slutavr"
+fields = { "sets" = ["slutavrakning"] }
+evidence = "Slutavräkningen avser offentliga skattemedel.\ncatalog:register:176\ncatalog:variable_text:34356:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:slutavr"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Slutavräkningen avser offentliga skattemedel.\ncatalog:register:176\ncatalog:variable_text:34356:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:slutavr200"
+fields = { "sets" = ["slutavrakning"] }
+evidence = "Slutavräkningen avser offentliga skattemedel.\ncatalog:register:176\ncatalog:variable_text:34357:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:slutavr200"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Slutavräkningen avser offentliga skattemedel.\ncatalog:register:176\ncatalog:variable_text:34357:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kommunal-skattesats"
+fields = { "sets" = ["total-kommunal-skattesats"] }
+evidence = "Variabeln mäter total kommunal skattesats.\ncatalog:variable_text:34358:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kommunal-skattesats"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter total kommunal skattesats.\ncatalog:variable_text:34358:16801:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksats-1"
+fields = { "sets" = ["total-kommunal-skattesats"] }
+evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34360:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksats-1"
+fields = { "tags" = ["taxation"] }
+evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34360:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsandr"
+fields = { "sets" = ["total-kommunal-skattesats"] }
+evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34361:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsandr"
+fields = { "tags" = ["taxation"] }
+evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34361:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsh"
+fields = { "sets" = ["total-kommunal-skattesats"] }
+evidence = "T, Sk och H är ogenomskinliga källkoder.\ncatalog:variable_text:34362:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsh"
+fields = { "tags" = ["taxation"] }
+evidence = "T, Sk och H är ogenomskinliga källkoder.\ncatalog:variable_text:34362:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsl"
+fields = { "sets" = ["total-kommunal-skattesats"] }
+evidence = "T, Sk och L är ogenomskinliga källkoder.\ncatalog:variable_text:34363:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:tsksatsl"
+fields = { "tags" = ["taxation"] }
+evidence = "T, Sk och L är ogenomskinliga källkoder.\ncatalog:variable_text:34363:13514:15340"

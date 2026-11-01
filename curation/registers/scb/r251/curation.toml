@@ -166,3 +166,495 @@ kind = "set"
 subject = "kursdeltagare: sunniva"
 fields = { "classification" = "class/niva-old/niva-oldv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:6824:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:6824:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs1"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal kurser på grundläggande nivå ingår i kursantal.\ncatalog:variable_text:6825:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs1"
+fields = { "tags" = ["education"] }
+evidence = "Antal kurser på grundläggande nivå ingår i kursantal.\ncatalog:variable_text:6825:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs2"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal kurser på gymnasial nivå ingår i kursantal.\ncatalog:variable_text:6826:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs2"
+fields = { "tags" = ["education"] }
+evidence = "Antal kurser på gymnasial nivå ingår i kursantal.\ncatalog:variable_text:6826:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs3"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal påbyggnadskurser ingår i kursantal.\ncatalog:variable_text:6827:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs3"
+fields = { "tags" = ["education"] }
+evidence = "Antal påbyggnadskurser ingår i kursantal.\ncatalog:variable_text:6827:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim1"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Undervisningstimmar på grundläggande nivå ingår i timmåtten.\ncatalog:variable_text:6828:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim1"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmar på grundläggande nivå ingår i timmåtten.\ncatalog:variable_text:6828:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim2"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Undervisningstimmar på gymnasial nivå ingår i timmåtten.\ncatalog:variable_text:6829:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim2"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmar på gymnasial nivå ingår i timmåtten.\ncatalog:variable_text:6829:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim3"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Undervisningstimmar på påbyggnadskurser ingår i timmåtten.\ncatalog:variable_text:6830:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim3"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmar på påbyggnadskurser ingår i timmåtten.\ncatalog:variable_text:6830:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:avb"
+fields = { "sets" = [] }
+evidence = "Kursavbrott avser utbildningsdeltagande.\ncatalog:variable_text:6832:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:avb"
+fields = { "tags" = ["education"] }
+evidence = "Kursavbrott avser utbildningsdeltagande.\ncatalog:variable_text:6832:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Avklarade timmar ingår i undervisningstimmar.\ncatalog:variable_text:6833:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Avklarade timmar ingår i undervisningstimmar.\ncatalog:variable_text:6833:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutad-kurs"
+fields = { "sets" = [] }
+evidence = "Avslutad kurs avser utbildningsdeltagande.\ncatalog:variable_text:6834:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutad-kurs"
+fields = { "tags" = ["education"] }
+evidence = "Avslutad kurs avser utbildningsdeltagande.\ncatalog:variable_text:6834:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "sets" = [] }
+evidence = "Kursbetyg är ett utbildningsresultat.\ncatalog:variable_text:6835:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "tags" = ["education"] }
+evidence = "Kursbetyg är ett utbildningsresultat.\ncatalog:variable_text:6835:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:csnpoang"
+fields = { "sets" = ["studiepoang"] }
+evidence = "CSN-poäng ingår i studiernas poängmått.\ncatalog:variable_text:6836:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:csnpoang"
+fields = { "tags" = ["education"] }
+evidence = "CSN-poäng ingår i studiernas poängmått.\ncatalog:variable_text:6836:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:distans1"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6838:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:distans1"
+fields = { "tags" = ["education"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6838:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:distans2"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6839:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:distans2"
+fields = { "tags" = ["education"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6839:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:distans3"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6840:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:distans3"
+fields = { "tags" = ["education"] }
+evidence = "Antal distanskurser är en komponent av kursantal.\ncatalog:variable_text:6840:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:6841:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:6841:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:6842:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:6842:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = [] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:6843:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:6843:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Skolans huvudman avser utbildningsorganisation.\ncatalog:variable_text:6844:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Skolans huvudman avser utbildningsorganisation.\ncatalog:variable_text:6844:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:inter1"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6845:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:inter1"
+fields = { "tags" = ["education"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6845:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:inter2"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6846:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:inter2"
+fields = { "tags" = ["education"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6846:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:inter3"
+fields = { "sets" = ["antal-kurser"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6847:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:inter3"
+fields = { "tags" = ["education"] }
+evidence = "Antal intervallkurser är en komponent av kursantal.\ncatalog:variable_text:6847:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:6848:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:6848:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod"
+fields = { "sets" = [] }
+evidence = "Kurskoden anger vilken utbildningskurs som lästs.\ncatalog:variable_text:6850:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod"
+fields = { "tags" = ["education"] }
+evidence = "Kurskoden anger vilken utbildningskurs som lästs.\ncatalog:variable_text:6850:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-cfl"
+fields = { "sets" = ["studiernas-niva"] }
+evidence = "Klassificerar de aktuella studiernas nivå.\ncatalog:variable_text:6854:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-cfl"
+fields = { "tags" = ["education"] }
+evidence = "Klassificerar de aktuella studiernas nivå.\ncatalog:variable_text:6854:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning"
+fields = { "sets" = ["studiernas-niva"] }
+evidence = "Klassificerar de aktuella studiernas nivå.\ncatalog:variable_text:6855:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Klassificerar de aktuella studiernas nivå.\ncatalog:variable_text:6855:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev"
+fields = { "sets" = [] }
+evidence = "Nyinskrivning beskriver utbildningsdeltagande.\ncatalog:variable_text:6856:12234:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev"
+fields = { "tags" = ["education"] }
+evidence = "Nyinskrivning beskriver utbildningsdeltagande.\ncatalog:variable_text:6856:12234:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "sets" = ["studiepoang"] }
+evidence = "Poängomfattning ingår i studiernas poängmått.\ncatalog:variable_text:6858:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "tags" = ["education"] }
+evidence = "Poängomfattning ingår i studiernas poängmått.\ncatalog:variable_text:6858:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:poang1"
+fields = { "sets" = ["studiepoang"] }
+evidence = "Poäng på grundläggande nivå ingår i studiernas poängmått.\ncatalog:variable_text:6859:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:poang1"
+fields = { "tags" = ["education"] }
+evidence = "Poäng på grundläggande nivå ingår i studiernas poängmått.\ncatalog:variable_text:6859:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:poang2"
+fields = { "sets" = ["studiepoang"] }
+evidence = "Poäng på gymnasial nivå ingår i studiernas poängmått.\ncatalog:variable_text:6860:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:poang2"
+fields = { "tags" = ["education"] }
+evidence = "Poäng på gymnasial nivå ingår i studiernas poängmått.\ncatalog:variable_text:6860:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:poang3"
+fields = { "sets" = ["studiepoang"] }
+evidence = "Poäng på påbyggnadsnivå ingår i studiernas poängmått.\ncatalog:variable_text:6861:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:poang3"
+fields = { "tags" = ["education"] }
+evidence = "Poäng på påbyggnadsnivå ingår i studiernas poängmått.\ncatalog:variable_text:6861:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Skolform klassificerar utbildning.\ncatalog:variable_text:6863:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Skolform klassificerar utbildning.\ncatalog:variable_text:6863:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["skolans-geografiska-lage"] }
+evidence = "Kommunen anger skolans geografiska läge.\ncatalog:variable_text:6865:12418:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger skolans geografiska läge.\ncatalog:variable_text:6865:12418:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "sets" = ["skolans-geografiska-lage"] }
+evidence = "Länet anger skolans geografiska läge.\ncatalog:variable_text:6866:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "tags" = ["geography"] }
+evidence = "Länet anger skolans geografiska läge.\ncatalog:variable_text:6866:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "sets" = [] }
+evidence = "Personens utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:6867:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "tags" = ["education"] }
+evidence = "Personens utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:6867:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "sets" = ["studiepoang"] }
+evidence = "Det inledande t är en opak bokstavskod; etiketten kolliderar och målsluggen behöver disambiguering enligt D-12.\ncatalog:variable_text:6868:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "tags" = ["education"] }
+evidence = "Det inledande t är en opak bokstavskod; etiketten kolliderar och målsluggen behöver disambiguering enligt D-12.\ncatalog:variable_text:6868:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "sets" = ["undervisningsform"] }
+evidence = "Undervisningens förläggning är en genomförandeform.\ncatalog:variable_text:6869:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningens förläggning är en genomförandeform.\ncatalog:variable_text:6869:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "sets" = [] }
+evidence = "Anordnartyp avser utbildningsorganisation.\ncatalog:variable_text:6870:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "tags" = ["education"] }
+evidence = "Anordnartyp avser utbildningsorganisation.\ncatalog:variable_text:6870:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-cfl"
+fields = { "sets" = ["utbildningsatgard"] }
+evidence = "Utbildningsåtgärd ingår i den fastställda gruppen; kodernas betydelser saknas.\ncatalog:variable_text:6871:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-cfl"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsåtgärd ingår i den fastställda gruppen; kodernas betydelser saknas.\ncatalog:variable_text:6871:11869:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-vux"
+fields = { "sets" = ["utbildningsatgard"] }
+evidence = "Utbildningsåtgärd ingår i den fastställda gruppen; kodernas betydelser inom CFL saknas.\ncatalog:variable_text:6872:13149:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-vux"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsåtgärd ingår i den fastställda gruppen; kodernas betydelser inom CFL saknas.\ncatalog:variable_text:6872:13149:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsform"
+fields = { "sets" = ["undervisningsform"] }
+evidence = "Utbildningsformen klassificerar distans eller vanlig undervisning.\ncatalog:valueset:4548\ncatalog:variable_text:6873:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsform"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsformen klassificerar distans eller vanlig undervisning.\ncatalog:valueset:4548\ncatalog:variable_text:6873:12234:12600"

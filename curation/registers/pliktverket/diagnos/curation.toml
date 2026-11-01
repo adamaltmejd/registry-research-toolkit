@@ -4,3 +4,27 @@ kind = "set"
 subject = "diagnos: sjnr"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/pliktverket.toml:793\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:grader"
+fields = { "sets" = [] }
+evidence = "Gradering av diagnos avser hälsa.\ncatalog:variable_text:634:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grader"
+fields = { "tags" = ["health"] }
+evidence = "Gradering av diagnos avser hälsa.\ncatalog:variable_text:634:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer"
+fields = { "sets" = [] }
+evidence = "Sjukdomsnumret kodar diagnosen.\ncatalog:variable_text:637:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer"
+fields = { "tags" = ["health"] }
+evidence = "Sjukdomsnumret kodar diagnosen.\ncatalog:variable_text:637:9862:14975"

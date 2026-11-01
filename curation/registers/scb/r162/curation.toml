@@ -70,3 +70,1227 @@ kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni @2000..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "sets" = [] }
+evidence = "Adressen är en geografisk uppgift.\ncatalog:variable_text:35612:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressen är en geografisk uppgift.\ncatalog:variable_text:35612:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:adrklass"
+fields = { "sets" = [] }
+evidence = "Klassning av transporterat farligt gods.\ncatalog:valueset:11415\ncatalog:variable_text:35613:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:adrklass"
+fields = { "tags" = ["transport"] }
+evidence = "Klassning av transporterat farligt gods.\ncatalog:valueset:11415\ncatalog:variable_text:35613:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:agarbyte"
+fields = { "sets" = [] }
+evidence = "Ägarbyte för lastbilen.\ncatalog:variable_text:35614:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:agarbyte"
+fields = { "tags" = ["transport"] }
+evidence = "Ägarbyte för lastbilen.\ncatalog:variable_text:35614:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-lastbil"
+fields = { "sets" = ["antal-axlar"] }
+evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-pa-slapet"
+fields = { "sets" = ["antal-axlar"] }
+evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-pa-slapet"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
+
+[[statement]]
+kind = "set"
+subject = "var:antlikakor"
+fields = { "sets" = [] }
+evidence = "Antal körningar är ett transportmått.\ncatalog:variable_text:35617:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antlikakor"
+fields = { "tags" = ["transport"] }
+evidence = "Antal körningar är ett transportmått.\ncatalog:variable_text:35617:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antlikasand"
+fields = { "sets" = [] }
+evidence = "Antal transporterade sändningar är ett transportmått.\ncatalog:variable_text:35618:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antlikasand"
+fields = { "tags" = ["transport"] }
+evidence = "Antal transporterade sändningar är ett transportmått.\ncatalog:variable_text:35618:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antpamin"
+fields = { "sets" = [] }
+evidence = "Påminnelser hör till undersökningens insamling.\ncatalog:variable_text:35619:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antpamin"
+fields = { "tags" = ["methods"] }
+evidence = "Påminnelser hör till undersökningens insamling.\ncatalog:variable_text:35619:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade-omlastning"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade-omlastning"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsort"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsort"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsort-omlastning"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsort-omlastning"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
+
+[[statement]]
+kind = "set"
+subject = "var:avomrmark"
+fields = { "sets" = ["postnummer-ort-overensstammelse"] }
+evidence = "Kvalitetsmarkering för överensstämmelse mellan postnummer och ort.\ncatalog:variable_text:35625:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avomrmark"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkering för överensstämmelse mellan postnummer och ort.\ncatalog:variable_text:35625:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avomrnuts"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Regional kod för avlastningsort.\ncatalog:variable_text:35626:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avomrnuts"
+fields = { "tags" = ["geography"] }
+evidence = "Regional kod för avlastningsort.\ncatalog:variable_text:35626:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avpostnr"
+fields = { "sets" = ["avlastningsplats"] }
+evidence = "Postnummer för lossningsort.\ncatalog:variable_text:35627:12053:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avpostnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer för lossningsort.\ncatalog:variable_text:35627:12053:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avprkod"
+fields = { "sets" = [] }
+evidence = "Koden beskriver insamlingens status och bortfall.\ncatalog:valueset:3155\ncatalog:variable_text:35629:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avprkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden beskriver insamlingens status och bortfall.\ncatalog:valueset:3155\ncatalog:variable_text:35629:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avsistaort"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Av anger avlastning men källan anger sista pålastningsorten under hela perioden.\ncatalog:variable_text:35630:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avsistaort"
+fields = { "tags" = ["geography"] }
+evidence = "Av anger avlastning men källan anger sista pålastningsorten under hela perioden.\ncatalog:variable_text:35630:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datum"
+fields = { "sets" = ["palastningsdatum"] }
+evidence = "Datumet hör till pålastningsdatum tillsammans med datum för pålastning generellt.\ncatalog:variable_text:35632:10957:14245\ncatalog:variable_text:35681:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datum"
+fields = { "tags" = [] }
+evidence = "Datumet hör till pålastningsdatum tillsammans med datum för pålastning generellt.\ncatalog:variable_text:35632:10957:14245\ncatalog:variable_text:35681:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:distrunda"
+fields = { "sets" = [] }
+evidence = "Körningens typ är ett transportmått.\ncatalog:variable_text:35633:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:distrunda"
+fields = { "tags" = ["transport"] }
+evidence = "Körningens typ är ett transportmått.\ncatalog:variable_text:35633:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ejanv"
+fields = { "sets" = ["fordonets-icke-anvandning"] }
+evidence = "Dagar som lastbilen inte användes.\ncatalog:variable_text:35635:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ejanv"
+fields = { "tags" = ["transport"] }
+evidence = "Dagar som lastbilen inte användes.\ncatalog:variable_text:35635:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ejanvtot"
+fields = { "sets" = ["fordonets-icke-anvandning"] }
+evidence = "Beräknade stilleståndsveckor för lastbilen.\ncatalog:variable_text:35636:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ejanvtot"
+fields = { "tags" = ["transport"] }
+evidence = "Beräknade stilleståndsveckor för lastbilen.\ncatalog:variable_text:35636:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:eupop"
+fields = { "sets" = [] }
+evidence = "Pop är inte en igenkännbar stam i etiketten och id:t är en källmnemonik.\ncatalog:variable_text:35638:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:eupop"
+fields = { "tags" = ["methods"] }
+evidence = "Pop är inte en igenkännbar stam i etiketten och id:t är en källmnemonik.\ncatalog:variable_text:35638:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:excelrapp"
+fields = { "sets" = [] }
+evidence = "Elektronisk inlämning är en insamlingsmetod.\ncatalog:variable_text:35639:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:excelrapp"
+fields = { "tags" = ["methods"] }
+evidence = "Elektronisk inlämning är en insamlingsmetod.\ncatalog:variable_text:35639:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:formedlare"
+fields = { "sets" = [] }
+evidence = "Transportförmedling beskriver transportens organisering.\ncatalog:variable_text:35642:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:formedlare"
+fields = { "tags" = ["transport"] }
+evidence = "Transportförmedling beskriver transportens organisering.\ncatalog:variable_text:35642:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskod"
+fields = { "sets" = [] }
+evidence = "Kod för manuell eller maskinell granskning.\ncatalog:valueset:12896"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskod"
+fields = { "tags" = ["methods"] }
+evidence = "Kod för manuell eller maskinell granskning.\ncatalog:valueset:12896"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Imputeringsmarkering.\ncatalog:variable_text:35644:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsmarkering.\ncatalog:variable_text:35644:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:internettillgang"
+fields = { "sets" = [] }
+evidence = "Uppgiftslämnarens internettillgång.\ncatalog:variable_text:35646:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:internettillgang"
+fields = { "tags" = ["digital"] }
+evidence = "Uppgiftslämnarens internettillgång.\ncatalog:variable_text:35646:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "sets" = ["karosserityp"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvmlast"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35649:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvmlast"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35649:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvtot"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35650:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvtot"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35650:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvulast"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35651:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmsvulast"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35651:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmutmlast"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmutmlast"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmuttot"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35653:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmuttot"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35653:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmutulast"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35654:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kmutulast"
+fields = { "tags" = ["transport"] }
+evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35654:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:35656:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:35656:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:korda-kilometer-sandning"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
+
+[[statement]]
+kind = "set"
+subject = "var:korda-kilometer-sandning"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
+
+[[statement]]
+kind = "set"
+subject = "var:korningskilometer"
+fields = { "sets" = ["kord-stracka"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
+
+[[statement]]
+kind = "set"
+subject = "var:korningskilometer"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
+
+[[statement]]
+kind = "set"
+subject = "var:korrapp"
+fields = { "sets" = [] }
+evidence = "Insamlingssätt via körrapport.\ncatalog:variable_text:35660:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:korrapp"
+fields = { "tags" = ["methods"] }
+evidence = "Insamlingssätt via körrapport.\ncatalog:variable_text:35660:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kortyp"
+fields = { "sets" = [] }
+evidence = "Körningens typ.\ncatalog:variable_text:35661:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kortyp"
+fields = { "tags" = ["transport"] }
+evidence = "Körningens typ.\ncatalog:variable_text:35661:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitet"
+fields = { "sets" = [] }
+evidence = "Kvantitet farligt gods i transport.\ncatalog:variable_text:35662:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitet"
+fields = { "tags" = ["transport"] }
+evidence = "Kvantitet farligt gods i transport.\ncatalog:variable_text:35662:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-i-volymmatt"
+fields = { "sets" = ["lastningsgrad-volym"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-i-volymmatt"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-volym"
+fields = { "sets" = ["lastningsgrad-volym"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-volym"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
+
+[[statement]]
+kind = "set"
+subject = "var:lasttyp"
+fields = { "sets" = [] }
+evidence = "Klassning av hur godset är lastat.\ncatalog:variable_text:35666:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lasttyp"
+fields = { "tags" = ["transport"] }
+evidence = "Klassning av hur godset är lastat.\ncatalog:variable_text:35666:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "Urvalsstorlek är ett metodmått.\ncatalog:variable_text:35668:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek är ett metodmått.\ncatalog:variable_text:35668:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lillansm"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35669:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lillansm"
+fields = { "tags" = ["methods"] }
+evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35669:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:logix"
+fields = { "sets" = [] }
+evidence = "Markering för imputering av kilometer.\ncatalog:variable_text:35671:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:logix"
+fields = { "tags" = ["methods"] }
+evidence = "Markering för imputering av kilometer.\ncatalog:variable_text:35671:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:matslut"
+fields = { "sets" = ["matveckans-period"] }
+evidence = "Mätveckans slutdatum.\ncatalog:variable_text:35672:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:matslut"
+fields = { "tags" = [] }
+evidence = "Mätveckans slutdatum.\ncatalog:variable_text:35672:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:matstart"
+fields = { "sets" = ["matveckans-period"] }
+evidence = "Mätveckans startdatum.\ncatalog:variable_text:35673:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:matstart"
+fields = { "tags" = [] }
+evidence = "Mätveckans startdatum.\ncatalog:variable_text:35673:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:maximilastvikt-lastbil"
+fields = { "sets" = ["maximilastvikt"] }
+evidence = "Samma kolumn har överlappande ägare; enheten kilometer strider mot viktmåttet.\ncatalog:occurrence:328120\ncatalog:occurrence:328121\ncatalog:occurrence:328317"
+
+[[statement]]
+kind = "set"
+subject = "var:maximilastvikt-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare; enheten kilometer strider mot viktmåttet.\ncatalog:occurrence:328120\ncatalog:occurrence:328121\ncatalog:occurrence:328317"
+
+[[statement]]
+kind = "set"
+subject = "var:mobiltelefonnummer"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Mobiltelefonnummer och telefonnummer är kontaktuppgifter av samma slag.\ncatalog:variable_text:35675:13514:14245\ncatalog:variable_text:35710:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:mobiltelefonnummer"
+fields = { "tags" = [] }
+evidence = "Mobiltelefonnummer och telefonnummer är kontaktuppgifter av samma slag.\ncatalog:variable_text:35675:13514:14245\ncatalog:variable_text:35710:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Produktionsenhetens näringsgren.\ncatalog:variable_text:35676:10957:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Produktionsenhetens näringsgren.\ncatalog:variable_text:35676:10957:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ort"
+fields = { "sets" = [] }
+evidence = "Ortsangivelse är geografisk.\ncatalog:variable_text:35678:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ort"
+fields = { "tags" = ["geography"] }
+evidence = "Ortsangivelse är geografisk.\ncatalog:variable_text:35678:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paforstaort"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Första pålastningsort.\ncatalog:variable_text:35679:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paforstaort"
+fields = { "tags" = ["geography"] }
+evidence = "Första pålastningsort.\ncatalog:variable_text:35679:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:palastade-kilo"
+fields = { "sets" = ["godsvikt"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
+
+[[statement]]
+kind = "set"
+subject = "var:palastade-kilo"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
+
+[[statement]]
+kind = "set"
+subject = "var:palastdag"
+fields = { "sets" = ["palastningsdatum"] }
+evidence = "Datumet hör till pålastningsdatum tillsammans med datum för pålastning på aktuell linje.\ncatalog:variable_text:35632:10957:14245\ncatalog:variable_text:35681:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:palastdag"
+fields = { "tags" = [] }
+evidence = "Datumet hör till pålastningsdatum tillsammans med datum för pålastning på aktuell linje.\ncatalog:variable_text:35632:10957:14245\ncatalog:variable_text:35681:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade-omlastning"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade-omlastning"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsort"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsort"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsort-omlastning"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsort-omlastning"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
+
+[[statement]]
+kind = "set"
+subject = "var:paminn1"
+fields = { "sets" = ["paminnelsedatum"] }
+evidence = "Datum för första påminnelsen.\ncatalog:variable_text:35686:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paminn1"
+fields = { "tags" = [] }
+evidence = "Datum för första påminnelsen.\ncatalog:variable_text:35686:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paminn2"
+fields = { "sets" = ["paminnelsedatum"] }
+evidence = "Datum för andra påminnelsen.\ncatalog:variable_text:35687:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paminn2"
+fields = { "tags" = [] }
+evidence = "Datum för andra påminnelsen.\ncatalog:variable_text:35687:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paomrmark"
+fields = { "sets" = ["postnummer-ort-overensstammelse"] }
+evidence = "Kvalitetsmarkering för överensstämmelse mellan postnummer och ort.\ncatalog:variable_text:35688:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:paomrmark"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkering för överensstämmelse mellan postnummer och ort.\ncatalog:variable_text:35688:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:paomrnuts"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Regional kod för pålastningsort.\ncatalog:variable_text:35689:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:paomrnuts"
+fields = { "tags" = ["geography"] }
+evidence = "Regional kod för pålastningsort.\ncatalog:variable_text:35689:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:papostnr"
+fields = { "sets" = ["palastningsplats"] }
+evidence = "Postnummer för lastningsort.\ncatalog:variable_text:35690:12053:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:papostnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer för lastningsort.\ncatalog:variable_text:35690:12053:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postadressens geografiska kod.\ncatalog:variable_text:35691:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postadressens geografiska kod.\ncatalog:variable_text:35691:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sandningens-vikt-i-kilo"
+fields = { "sets" = ["godsvikt"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
+
+[[statement]]
+kind = "set"
+subject = "var:sandningens-vikt-i-kilo"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-karosserikod"
+fields = { "sets" = ["karosserityp"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-karosserikod"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-maximilastvikt"
+fields = { "sets" = ["maximilastvikt"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328120\ncatalog:occurrence:328121"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-maximilastvikt"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328120\ncatalog:occurrence:328121"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-registreringsland"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-registreringsland"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-tjanstevikt"
+fields = { "sets" = ["tjanstevikt"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-tjanstevikt"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-totalvikt"
+fields = { "sets" = ["totalvikt"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
+
+[[statement]]
+kind = "set"
+subject = "var:slapets-totalvikt"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
+
+[[statement]]
+kind = "set"
+subject = "var:slaptyp"
+fields = { "sets" = [] }
+evidence = "Typ av släpvagn.\ncatalog:variable_text:35701:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:slaptyp"
+fields = { "tags" = ["transport"] }
+evidence = "Typ av släpvagn.\ncatalog:variable_text:35701:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:slutomr"
+fields = { "sets" = ["korningens-andpunkter"] }
+evidence = "Geografisk kod för körningens slutort.\ncatalog:variable_text:35703:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:slutomr"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk kod för körningens slutort.\ncatalog:variable_text:35703:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:snr"
+fields = { "sets" = [] }
+evidence = "S är en enbokstavskod för stratum.\ncatalog:variable_text:35704:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:snr"
+fields = { "tags" = ["methods"] }
+evidence = "S är en enbokstavskod för stratum.\ncatalog:variable_text:35704:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:startomr"
+fields = { "sets" = ["korningens-andpunkter"] }
+evidence = "Geografisk kod för körningens startort.\ncatalog:variable_text:35706:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:startomr"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk kod för körningens startort.\ncatalog:variable_text:35706:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "Populationens storlek är ett metodmått.\ncatalog:variable_text:35707:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Populationens storlek är ett metodmått.\ncatalog:variable_text:35707:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:storansm"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35708:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:storansm"
+fields = { "tags" = ["methods"] }
+evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35708:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Telefonnummer och mobiltelefonnummer är kontaktuppgifter av samma slag.\ncatalog:variable_text:35675:13514:14245\ncatalog:variable_text:35710:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "tags" = [] }
+evidence = "Telefonnummer och mobiltelefonnummer är kontaktuppgifter av samma slag.\ncatalog:variable_text:35675:13514:14245\ncatalog:variable_text:35710:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidatgang"
+fields = { "sets" = [] }
+evidence = "Tidsåtgång för att fylla i undersökningens blankett.\ncatalog:variable_text:35711:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidatgang"
+fields = { "tags" = ["methods"] }
+evidence = "Tidsåtgång för att fylla i undersökningens blankett.\ncatalog:variable_text:35711:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidkanej"
+fields = { "sets" = [] }
+evidence = "Uppgift om undersökningens svarsbörda.\ncatalog:variable_text:35712:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidkanej"
+fields = { "tags" = ["methods"] }
+evidence = "Uppgift om undersökningens svarsbörda.\ncatalog:variable_text:35712:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "sets" = ["tjanstevikt"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "sets" = ["totalvikt"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
+
+[[statement]]
+kind = "set"
+subject = "var:transit"
+fields = { "sets" = ["transitland"] }
+evidence = "Variabeln anger länder som passerats i transit och hör därför till transitland.\ncatalog:variable_text:35716:10957:14245\ncatalog:variable_text:35717:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:transit"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger länder som passerats i transit och hör därför till transitland.\ncatalog:variable_text:35716:10957:14245\ncatalog:variable_text:35717:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:transitland"
+fields = { "sets" = ["transitland"] }
+evidence = "Katalogen visar överlappande mappningar av Land till transitland och släpets registreringsland. Definitionen anger transitländer.\ncatalog:occurrence:328110\ncatalog:occurrence:328111\ncatalog:occurrence:328209\ncatalog:occurrence:328306\ncatalog:occurrence:328307\ncatalog:variable_text:35717:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:transitland"
+fields = { "tags" = ["geography"] }
+evidence = "Katalogen visar överlappande mappningar av Land till transitland och släpets registreringsland. Definitionen anger transitländer.\ncatalog:occurrence:328110\ncatalog:occurrence:328111\ncatalog:occurrence:328209\ncatalog:occurrence:328306\ncatalog:occurrence:328307\ncatalog:variable_text:35717:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:trmedel"
+fields = { "sets" = [] }
+evidence = "Transportmedel vid omlastning.\ncatalog:variable_text:35718:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:trmedel"
+fields = { "tags" = ["transport"] }
+evidence = "Transportmedel vid omlastning.\ncatalog:variable_text:35718:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:unnummer"
+fields = { "sets" = [] }
+evidence = "Identifiering av farligt gods i transport.\ncatalog:variable_text:35719:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:unnummer"
+fields = { "tags" = ["transport"] }
+evidence = "Identifiering av farligt gods i transport.\ncatalog:variable_text:35719:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:urvslut"
+fields = { "sets" = ["urvalsperiod"] }
+evidence = "Urvalsperiodens slutdatum.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:urvslut"
+fields = { "tags" = [] }
+evidence = "Urvalsperiodens slutdatum.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:urvstart"
+fields = { "sets" = ["urvalsperiod"] }
+evidence = "Urvalsperiodens startdatum.\ncatalog:variable_text:35721:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:urvstart"
+fields = { "tags" = [] }
+evidence = "Urvalsperiodens startdatum.\ncatalog:variable_text:35721:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-sandning"
+fields = { "sets" = ["varuslag"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-sandning"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
+
+[[statement]]
+kind = "set"
+subject = "var:varuslag-korning"
+fields = { "sets" = ["varuslag"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
+
+[[statement]]
+kind = "set"
+subject = "var:varuslag-korning"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
+
+[[statement]]
+kind = "set"
+subject = "var:vkodkltxt"
+fields = { "sets" = ["varuslag"] }
+evidence = "V är en enbokstavskod för vara.\ncatalog:variable_text:35724:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vkodkltxt"
+fields = { "tags" = ["transport"] }
+evidence = "V är en enbokstavskod för vara.\ncatalog:variable_text:35724:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vkodtom"
+fields = { "sets" = [] }
+evidence = "V är en källkod och etiketten beskriver tomkörningsmarkeringen.\ncatalog:variable_text:35725:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vkodtom"
+fields = { "tags" = ["transport"] }
+evidence = "V är en källkod och etiketten beskriver tomkörningsmarkeringen.\ncatalog:variable_text:35725:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkm"
+fields = { "sets" = [] }
+evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkm"
+fields = { "tags" = ["transport"] }
+evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2000-01-01..2000-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2001-01-01..2001-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2002-01-01..2002-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2003-01-01..2003-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2004-01-01..2004-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2005-01-01..2005-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2006-01-01..2006-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2007-01-01..2007-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmUtMLast @2008-01-01..2008-12-31 where key = 'v1979'"
+fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2000-01-01..2000-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2001-01-01..2001-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2002-01-01..2002-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2003-01-01..2003-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2004-01-01..2004-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2005-01-01..2005-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2006-01-01..2006-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2007-01-01..2007-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: UrvSlut @2008-01-01..2008-12-31 where key = 'v1984'"
+fields = { "description" = "Faktiskt slutdatum för urval" }
+evidence = "Mellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"

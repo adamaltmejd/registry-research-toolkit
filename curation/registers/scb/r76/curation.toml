@@ -274,3 +274,507 @@ kind = "set"
 subject = "bygglov-for-bostader: {kommun,lan} @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fritidshus"
+fields = { "sets" = [] }
+evidence = "Antalet gäller fritidshus.\ncatalog:variable_text:6774:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fritidshus"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet gäller fritidshus.\ncatalog:variable_text:6774:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Totalt antal lägenheter tillhör gruppen för lägenhetsantal.\ncatalog:variable_text:6775:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "tags" = ["housing"] }
+evidence = "Totalt antal lägenheter tillhör gruppen för lägenhetsantal.\ncatalog:variable_text:6775:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-antlghbt"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Totalt antal lägenheter tillhör gruppen för lägenhetsantal.\ncatalog:variable_text:6776:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-antlghbt"
+fields = { "tags" = ["housing"] }
+evidence = "Totalt antal lägenheter tillhör gruppen för lägenhetsantal.\ncatalog:variable_text:6776:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antlghlokal"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter i lokalhus är en delmängd av lägenhetsantal.\ncatalog:variable_text:6777:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antlghlokal"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter i lokalhus är en delmängd av lägenhetsantal.\ncatalog:variable_text:6777:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp"
+fields = { "sets" = [] }
+evidence = "Ärendetypen avser bygglov.\ncatalog:variable_text:6778:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp"
+fields = { "tags" = ["property"] }
+evidence = "Ärendetypen avser bygglov.\ncatalog:variable_text:6778:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabeg"
+fields = { "sets" = ["byggnationens-paborjandetidpunkt"] }
+evidence = "År och månad för påbörjan tillhör gruppen för påbörjandetidpunkt.\ncatalog:variable_text:6779:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabeg"
+fields = { "tags" = [] }
+evidence = "År och månad för påbörjan tillhör gruppen för påbörjandetidpunkt.\ncatalog:variable_text:6779:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabfaktisk"
+fields = { "sets" = ["byggnationens-paborjandetidpunkt"] }
+evidence = "Id anger faktisk påbörjan medan den senare operativa definitionen anger beräknad påbörjan.\ncatalog:variable_text:6780:14610:18262\ncatalog:variable_text:6780:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:armanpabfaktisk"
+fields = { "tags" = [] }
+evidence = "Id anger faktisk påbörjan medan den senare operativa definitionen anger beräknad påbörjan.\ncatalog:variable_text:6780:14610:18262\ncatalog:variable_text:6780:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea"
+fields = { "sets" = [] }
+evidence = "Bostadsarea avser bostadsutrymme och är inte uttryckligen bruttoarea.\ncatalog:variable_text:6781:11323:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarea avser bostadsutrymme och är inte uttryckligen bruttoarea.\ncatalog:variable_text:6781:11323:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:bragemans"
+fields = { "sets" = [] }
+evidence = "Id:t innehåller ogenomskinliga källförkortningar; etiketten anger gemensam area.\ncatalog:variable_text:6782:11323:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:bragemans"
+fields = { "tags" = ["housing"] }
+evidence = "Id:t innehåller ogenomskinliga källförkortningar; etiketten anger gemensam area.\ncatalog:variable_text:6782:11323:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-bostader"
+fields = { "sets" = ["bruttoarea"] }
+evidence = "Bruttoarea för bostäder är en komponent av total bruttoarea.\ncatalog:variable_text:6783:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-bostader"
+fields = { "tags" = ["housing"] }
+evidence = "Bruttoarea för bostäder är en komponent av total bruttoarea.\ncatalog:variable_text:6783:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-lokaler"
+fields = { "sets" = ["bruttoarea"] }
+evidence = "Bruttoarea för lokaler är en komponent av total bruttoarea.\ncatalog:variable_text:6784:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-lokaler"
+fields = { "tags" = ["property"] }
+evidence = "Bruttoarea för lokaler är en komponent av total bruttoarea.\ncatalog:variable_text:6784:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-totalt"
+fields = { "sets" = ["bruttoarea"] }
+evidence = "Total bruttoarea sammanför bostäder och lokaler.\ncatalog:variable_text:6785:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoarea-totalt"
+fields = { "tags" = ["property"] }
+evidence = "Total bruttoarea sammanför bostäder och lokaler.\ncatalog:variable_text:6785:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherre"
+fields = { "sets" = [] }
+evidence = "Byggherren avser den för vars räkning byggnadsarbetet bedrivs.\ncatalog:variable_text:6786:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherre"
+fields = { "tags" = ["property"] }
+evidence = "Byggherren avser den för vars räkning byggnadsarbetet bedrivs.\ncatalog:variable_text:6786:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrekategori"
+fields = { "sets" = [] }
+evidence = "Variabeln grupperar byggherrar.\ncatalog:variable_text:6787:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrekategori"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln grupperar byggherrar.\ncatalog:variable_text:6787:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-adress"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn är kopplad till byggherrens och fastighetens adress under överlappande perioder.\ncatalog:occurrence:52563\ncatalog:occurrence:52564"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-adress"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn är kopplad till byggherrens och fastighetens adress under överlappande perioder.\ncatalog:occurrence:52563\ncatalog:occurrence:52564"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-postadress"
+fields = { "sets" = [] }
+evidence = "Postadressen anger byggherrens geografiska adress.\ncatalog:variable_text:6789:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Postadressen anger byggherrens geografiska adress.\ncatalog:variable_text:6789:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-postnummer"
+fields = { "sets" = [] }
+evidence = "Postnumret anger byggherrens geografiska adress.\ncatalog:variable_text:6790:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherrens-postnummer"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret anger byggherrens geografiska adress.\ncatalog:variable_text:6790:12418:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Kodningen ingår i gruppen byggnadstyp.\ncatalog:variable_text:6791:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen ingår i gruppen byggnadstyp.\ncatalog:variable_text:6791:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datpabba"
+fields = { "sets" = ["byggnationens-paborjandetidpunkt"] }
+evidence = "Variabeln anger byggnationens påbörjandetidpunkt och hör till kandidatgruppen för detta begrepp.\ncatalog:variable_text:6792:12418:14245\ncatalog:variable_text:6793:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datpabba"
+fields = { "tags" = [] }
+evidence = "Variabeln anger byggnationens påbörjandetidpunkt och hör till kandidatgruppen för detta begrepp.\ncatalog:variable_text:6792:12418:14245\ncatalog:variable_text:6793:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datpabeg"
+fields = { "sets" = ["byggnationens-paborjandetidpunkt"] }
+evidence = "Variabeln anger byggnationens påbörjandetidpunkt och hör till kandidatgruppen för detta begrepp.\ncatalog:variable_text:6792:12418:14245\ncatalog:variable_text:6793:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datpabeg"
+fields = { "tags" = [] }
+evidence = "Variabeln anger byggnationens påbörjandetidpunkt och hör till kandidatgruppen för detta begrepp.\ncatalog:variable_text:6792:12418:14245\ncatalog:variable_text:6793:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:6797:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:6797:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear-manad"
+fields = { "sets" = ["fardigstallandetidpunkt"] }
+evidence = "År och månad för färdigställande har en justerad motsvarighet.\ncatalog:variable_text:6799:11323:20089\ncatalog:variable_text:6800:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear-manad"
+fields = { "tags" = [] }
+evidence = "År och månad för färdigställande har en justerad motsvarighet.\ncatalog:variable_text:6799:11323:20089\ncatalog:variable_text:6800:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear-manad-justerad"
+fields = { "sets" = ["fardigstallandetidpunkt"] }
+evidence = "Den justerade tidpunkten bygger på färdigställandeår och månad.\ncatalog:variable_text:6800:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear-manad-justerad"
+fields = { "tags" = [] }
+evidence = "Den justerade tidpunkten bygger på färdigställandeår och månad.\ncatalog:variable_text:6800:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-adress"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn är kopplad till fastighetens och byggherrens adress under överlappande perioder.\ncatalog:occurrence:52563\ncatalog:occurrence:52564"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-adress"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn är kopplad till fastighetens och byggherrens adress under överlappande perioder.\ncatalog:occurrence:52563\ncatalog:occurrence:52564"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:6802:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:6802:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetspostnr"
+fields = { "sets" = [] }
+evidence = "Fastighetens postnummer anger geografiskt läge.\ncatalog:variable_text:6803:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetspostnr"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetens postnummer anger geografiskt läge.\ncatalog:variable_text:6803:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fbpostadress"
+fields = { "sets" = [] }
+evidence = "Fb är en källförkortning som inte är en igenkännlig stam av fastighet.\ncatalog:variable_text:6804:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fbpostadress"
+fields = { "tags" = ["geography"] }
+evidence = "Fb är en källförkortning som inte är en igenkännlig stam av fastighet.\ncatalog:variable_text:6804:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning; senare värdesmängder kräver kontroll.\ncatalog:valueset:7128\ncatalog:variable_text:6805:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning; senare värdesmängder kräver kontroll.\ncatalog:valueset:7128\ncatalog:variable_text:6805:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppbebyggelse"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller bostädernas bebyggelseform.\ncatalog:variable_text:6806:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppbebyggelse"
+fields = { "tags" = ["housing"] }
+evidence = "Markeringen gäller bostädernas bebyggelseform.\ncatalog:variable_text:6806:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:huskat"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:12051\ncatalog:variable_text:6807:11323:12418\ncatalog:variable_text:6807:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huskat"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:12051\ncatalog:variable_text:6807:11323:12418\ncatalog:variable_text:6807:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:6301\ncatalog:variable_text:6808:11323:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:6301\ncatalog:variable_text:6808:11323:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp-5092"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Suffixet 5092 är en räknare som inte kommer från källkolumnen HusTyp.\ncatalog:variable_text:6809:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp-5092"
+fields = { "tags" = ["property"] }
+evidence = "Suffixet 5092 är en räknare som inte kommer från källkolumnen HusTyp.\ncatalog:variable_text:6809:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustypns"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:3453\ncatalog:valueset:6301\ncatalog:variable_text:6810:14245:14610\ncatalog:variable_text:6810:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustypns"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar hustyp och hör till kandidatgruppen för byggnadstyp; bostadsbyggande får taggen housing.\ncatalog:valueset:3453\ncatalog:valueset:6301\ncatalog:variable_text:6810:14245:14610\ncatalog:variable_text:6810:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-byggnadstyp"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Den huvudsakliga byggnadstypen ingår i gruppen byggnadstyp; källhistoriken bevarar ändringen av operativ definition.\ncatalog:variable_text:6811:14610:16801\ncatalog:variable_text:6811:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-byggnadstyp"
+fields = { "tags" = ["property"] }
+evidence = "Den huvudsakliga byggnadstypen ingår i gruppen byggnadstyp; källhistoriken bevarar ändringen av operativ definition.\ncatalog:variable_text:6811:14610:16801\ncatalog:variable_text:6811:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning; motstridiga värdesmängder kräver kontroll.\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:6812:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning; motstridiga värdesmängder kräver kontroll.\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:6812:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:6814:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:6814:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkod2"
+fields = { "sets" = [] }
+evidence = "Koden beskriver lägenhetens rum och kök.\ncatalog:variable_text:6815:11323:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkod2"
+fields = { "tags" = ["housing"] }
+evidence = "Koden beskriver lägenhetens rum och kök.\ncatalog:variable_text:6815:11323:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:paborjandear-manad"
+fields = { "sets" = ["byggnationens-paborjandetidpunkt"] }
+evidence = "År och månad för påbörjan tillhör gruppen för påbörjandetidpunkt.\ncatalog:variable_text:6816:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:paborjandear-manad"
+fields = { "tags" = [] }
+evidence = "År och månad för påbörjan tillhör gruppen för påbörjandetidpunkt.\ncatalog:variable_text:6816:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:speclghans"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Speciallägenheter enligt ansökan är en delmängd av lägenhetsantal.\ncatalog:variable_text:6818:11323:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:speclghans"
+fields = { "tags" = ["housing"] }
+evidence = "Speciallägenheter enligt ansökan är en delmängd av lägenhetsantal.\ncatalog:variable_text:6818:11323:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6821:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6821:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6822:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6822:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform2"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6823:11323:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform2"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen beskriver bostadens upplåtelseform.\ncatalog:variable_text:6823:11323:13879"

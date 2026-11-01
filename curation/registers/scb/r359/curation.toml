@@ -40,3 +40,231 @@ kind = "set"
 subject = "natanslutna-solcellsanlaggningar: kommunkod @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antall"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43100:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antall"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43100:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalm"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43101:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalm"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43101:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmellan"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43102:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmellan"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43102:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmer"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43103:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmer"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43103:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmindre"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43104:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalmindre"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43104:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antals"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43105:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antals"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43105:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalxl"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43106:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalxl"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43106:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalxs"
+fields = { "sets" = [] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43107:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalxs"
+fields = { "tags" = ["energy"] }
+evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln mäter inmatningspunkter från solcellsanläggningar i en effektklass.\ncatalog:register:246\ncatalog:variable_text:43107:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektl"
+fields = { "sets" = [] }
+evidence = "L är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448924\ncatalog:variable_text:43108:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektl"
+fields = { "tags" = ["energy"] }
+evidence = "L är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448924\ncatalog:variable_text:43108:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektm"
+fields = { "sets" = [] }
+evidence = "M är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448925\ncatalog:variable_text:43109:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektm"
+fields = { "tags" = ["energy"] }
+evidence = "M är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448925\ncatalog:variable_text:43109:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmellan"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43110:16801:17167\ncatalog:variable_text:43110:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmellan"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43110:16801:17167\ncatalog:variable_text:43110:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmer"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43111:16801:17167\ncatalog:variable_text:43111:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmer"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43111:16801:17167\ncatalog:variable_text:43111:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmindre"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43112:16801:17167\ncatalog:variable_text:43112:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmindre"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\ncatalog:variable_text:43112:16801:17167\ncatalog:variable_text:43112:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effekts"
+fields = { "sets" = [] }
+evidence = "S är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448926\ncatalog:variable_text:43113:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effekts"
+fields = { "tags" = ["energy"] }
+evidence = "S är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448926\ncatalog:variable_text:43113:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektxl"
+fields = { "sets" = [] }
+evidence = "XL är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448927\ncatalog:variable_text:43114:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektxl"
+fields = { "tags" = ["energy"] }
+evidence = "XL är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448927\ncatalog:variable_text:43114:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektxs"
+fields = { "sets" = [] }
+evidence = "XS är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448928\ncatalog:variable_text:43115:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:effektxs"
+fields = { "tags" = ["energy"] }
+evidence = "XS är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448928\ncatalog:variable_text:43115:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = [] }
+evidence = "Kommunkoden beskriver geografisk indelning.\ncatalog:variable_text:43119:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkoden beskriver geografisk indelning.\ncatalog:variable_text:43119:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer beskriver ett geografiskt adressområde.\ncatalog:variable_text:43123:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer beskriver ett geografiskt adressområde.\ncatalog:variable_text:43123:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort beskriver ett geografiskt adressområde.\ncatalog:variable_text:43124:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort beskriver ett geografiskt adressområde.\ncatalog:variable_text:43124:16801:20089"

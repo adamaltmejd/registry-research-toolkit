@@ -66,3 +66,81 @@ kind = "set"
 subject = "fritidshusomraden: <none> @2015 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = [] }
+evidence = "Landarealen beskriver mark inom fritidshusområdet.\ncatalog:occurrence:192357\ncatalog:variable_text:21153:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["property"] }
+evidence = "Landarealen beskriver mark inom fritidshusområdet.\ncatalog:occurrence:192357\ncatalog:variable_text:21153:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus"
+fields = { "sets" = [] }
+evidence = "Koden identifierar ett geografiskt fritidshusområde.\ncatalog:variable_text:21155:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fritidshus"
+fields = { "tags" = ["geography"] }
+evidence = "Koden identifierar ett geografiskt fritidshusområde.\ncatalog:variable_text:21155:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk kommunindelning.\ncatalog:variable_text:21156:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk kommunindelning.\ncatalog:variable_text:21156:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommun i klartext.\ncatalog:variable_text:21157:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommun i klartext.\ncatalog:variable_text:21157:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk länsindelning.\ncatalog:variable_text:21158:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk länsindelning.\ncatalog:variable_text:21158:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger län i klartext.\ncatalog:variable_text:21159:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger län i klartext.\ncatalog:variable_text:21159:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "fritidshusomraden: LANNAMN @2020-01-01..2020-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Variabeln innehåller länets namn i klartext, inte en kod.\ncatalog:variable_text:21159:18262:18628"

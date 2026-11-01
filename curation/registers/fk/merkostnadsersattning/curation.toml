@@ -22,3 +22,75 @@ kind = "set"
 subject = "mottagare: diagnoskod_vuxen"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:2157\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "sets" = [] }
+evidence = "Antalet avser barn i ärendet.\ncatalog:variable_text:258:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet avser barn i ärendet.\ncatalog:variable_text:258:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet avser en utbetalning av merkostnadsersättning.\ncatalog:register:18\ncatalog:variable_text:259:17897:2932897\ncatalog:variable_text:272:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser en utbetalning av merkostnadsersättning.\ncatalog:register:18\ncatalog:variable_text:259:17897:2932897\ncatalog:variable_text:272:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger barnets diagnoskod.\ncatalog:variable_text:261:17897:2932897\ncatalog:variable_text:262:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barn"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger barnets diagnoskod.\ncatalog:variable_text:261:17897:2932897\ncatalog:variable_text:262:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-vuxen"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den vuxnas diagnoskod.\ncatalog:variable_text:261:17897:2932897\ncatalog:variable_text:262:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-vuxen"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger den vuxnas diagnoskod.\ncatalog:variable_text:261:17897:2932897\ncatalog:variable_text:262:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "sets" = [] }
+evidence = "Variabeln anger nivån på merkostnadsersättningen.\ncatalog:variable_text:269:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger nivån på merkostnadsersättningen.\ncatalog:variable_text:269:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skattat-belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet är en beräknad fördelning av utbetalningen per barn.\ncatalog:variable_text:259:17897:2932897\ncatalog:variable_text:272:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skattat-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en beräknad fördelning av utbetalningen per barn.\ncatalog:variable_text:259:17897:2932897\ncatalog:variable_text:272:17897:2932897"

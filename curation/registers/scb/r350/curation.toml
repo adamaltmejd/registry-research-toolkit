@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "var:areascbm2"
+fields = { "sets" = [] }
+evidence = "Källans definition och enhetsuppgift för 2015 motsäger varandra; id:t anger kvadratmeter medan äldre uppgifter anger hektar.\ncatalog:occurrence:198849\ncatalog:occurrence:198855\ncatalog:variable_text:21641:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:areascbm2"
+fields = { "tags" = ["property"] }
+evidence = "Källans definition och enhetsuppgift för 2015 motsäger varandra; id:t anger kvadratmeter medan äldre uppgifter anger hektar.\ncatalog:occurrence:198849\ncatalog:occurrence:198855\ncatalog:variable_text:21641:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk tillhörighet till tätort.\ncatalog:occurrence:198857\ncatalog:variable_text:21643:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk tillhörighet till tätort.\ncatalog:occurrence:198857\ncatalog:variable_text:21643:16436:16801"

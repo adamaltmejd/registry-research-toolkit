@@ -1,0 +1,1386 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretag"
+fields = { "sets" = [] }
+evidence = "Antalet anställda är ett arbetsmarknadsmått.\ncatalog:variable_text:27534:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretag"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda är ett arbetsmarknadsmått.\ncatalog:variable_text:27534:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning"
+fields = { "sets" = [] }
+evidence = "Befattning är ett arbetsmarknadsmått.\ncatalog:variable_text:27535:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning"
+fields = { "tags" = ["employment"] }
+evidence = "Befattning är ett arbetsmarknadsmått.\ncatalog:variable_text:27535:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv101-28427"
+fields = { "sets" = [] }
+evidence = "Suffixet 28427 kommer inte från källkolumnen.\ncatalog:variable_text:27536:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv101-28427"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 28427 kommer inte från källkolumnen.\ncatalog:variable_text:27536:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv102"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27537:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv102"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27537:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv103"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27538:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv103"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27538:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv104"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27539:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv104"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27539:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv105"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27540:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv105"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27540:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv106"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27541:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv106"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27541:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv107"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27542:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv107"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27542:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv108"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27543:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv108"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27543:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv109"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27544:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv109"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27544:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv110"
+fields = { "sets" = [] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27545:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivinv110"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beskrivningen gäller företagets miljöskyddsinvestering.\ncatalog:variable_text:27545:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302a"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27546:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302a"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27546:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302l"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27547:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27547:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302o"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27548:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27548:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302v"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27549:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost302v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27549:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost303t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27550:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost303t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27550:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost304t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27551:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost304t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27551:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost305t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27552:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost305t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27552:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312a"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27553:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312a"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27553:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312l"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27554:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27554:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312o"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27555:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27555:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312v"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27556:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost312v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27556:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost313k"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27557:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost313k"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27557:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost314k"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27558:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost314k"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27558:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost315t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27559:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivkost315t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod.\ncatalog:variable_text:27559:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-adress"
+fields = { "sets" = [] }
+evidence = "Adressen anger företagets läge.\ncatalog:variable_text:27563:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-adress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressen anger företagets läge.\ncatalog:variable_text:27563:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-verksamhet"
+fields = { "sets" = [] }
+evidence = "Fältet beskriver företagets verksamhet.\ncatalog:variable_text:27564:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-verksamhet"
+fields = { "tags" = ["business"] }
+evidence = "Fältet beskriver företagets verksamhet.\ncatalog:variable_text:27564:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "sets" = [] }
+evidence = "Gatuadressen anger företagets läge.\ncatalog:variable_text:27566:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "tags" = ["geography"] }
+evidence = "Gatuadressen anger företagets läge.\ncatalog:variable_text:27566:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:gata-2"
+fields = { "sets" = [] }
+evidence = "Suffixet 2 saknas i källkolumnen GatuNr.\ncatalog:variable_text:27567:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:gata-2"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 2 saknas i källkolumnen GatuNr.\ncatalog:variable_text:27567:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113b-kontroll"
+fields = { "sets" = [] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113b-kontroll"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113e"
+fields = { "sets" = [] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113e"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113v"
+fields = { "sets" = [] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27570:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hus113v"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27570:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:husbeskr"
+fields = { "sets" = [] }
+evidence = "Källans kolumn och enhet ger olika besked om innehållstyp. Coordinator group membership: Samtliga fem skyddade medlemskap behålls enligt den fasta inkluderingen av hushållsinvesteringar och tillhörande kontrollbelopp. Innehållskonflikten för husbeskr kräver granskning.\ncatalog:variable_text:27568:15340:16071\ncatalog:variable_text:27569:14975:16071\ncatalog:variable_text:27570:14975:16071\ncatalog:variable_text:27571:13149:13514\ncatalog:variable_text:27572:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:husbeskr"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Källans kolumn och enhet ger olika besked om innehållstyp. Coordinator group membership: Samtliga fem skyddade medlemskap behålls enligt den fasta inkluderingen av hushållsinvesteringar och tillhörande kontrollbelopp. Innehållskonflikten för husbeskr kräver granskning.\ncatalog:variable_text:27568:15340:16071\ncatalog:variable_text:27569:14975:16071\ncatalog:variable_text:27570:14975:16071\ncatalog:variable_text:27571:13149:13514\ncatalog:variable_text:27572:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering"
+fields = { "sets" = [] }
+evidence = "Beloppet ingår bland hushållsinvesteringarna.\ncatalog:variable_text:27572:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Beloppet ingår bland hushållsinvesteringarna.\ncatalog:variable_text:27572:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ifyllnadstid"
+fields = { "sets" = [] }
+evidence = "Ifyllnadstid är ett mått på undersökningens genomförande.\ncatalog:variable_text:27574:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ifyllnadstid"
+fields = { "tags" = ["methods"] }
+evidence = "Ifyllnadstid är ett mått på undersökningens genomförande.\ncatalog:variable_text:27574:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111a-6332"
+fields = { "sets" = [] }
+evidence = "Suffixet 6332 kommer inte från källkolumnen.\ncatalog:variable_text:27575:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111a-6332"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 6332 kommer inte från källkolumnen.\ncatalog:variable_text:27575:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111komm"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper. Coordinator group membership: Medlemmarnas etiketter, beskrivningar och KSEK-enheter stöder investeringsbelopp, inklusive mindre och förebyggande investeringar. De äldre inv111komm och inv112komm har beloppsstöd trots identitetsfrågor; deras senare beskrivningsvariabler utesluts. Fritext, klassificeringskoder och fält med olöst innehållstyp inkluderas inte.\ncatalog:occurrence:243355\ncatalog:occurrence:243797\ncatalog:variable_text:27575:13149:14975\ncatalog:variable_text:27576:13149:13514\ncatalog:variable_text:27577:15706:16071\ncatalog:variable_text:27578:13149:14975\ncatalog:variable_text:27579:13149:14975\ncatalog:variable_text:27580:13149:14975\ncatalog:variable_text:27581:13149:14975\ncatalog:variable_text:27582:13149:14975\ncatalog:variable_text:27583:13149:14975\ncatalog:variable_text:27584:13149:13514\ncatalog:variable_text:27585:15706:16071\ncatalog:variable_text:27586:13149:14975\ncatalog:variable_text:27587:13149:14975\ncatalog:variable_text:27588:13149:14975\ncatalog:variable_text:27589:13149:14975\ncatalog:variable_text:27590:13149:14975\ncatalog:variable_text:27591:13149:13514\ncatalog:variable_text:27592:14975:16071\ncatalog:variable_text:27593:14975:16071\ncatalog:variable_text:27594:14975:16071\ncatalog:variable_text:27595:14975:16071\ncatalog:variable_text:27596:14975:16071\ncatalog:variable_text:27597:14975:16071\ncatalog:variable_text:27598:14975:16071\ncatalog:variable_text:27599:14975:16071\ncatalog:variable_text:27600:14975:16071\ncatalog:variable_text:27601:14975:16071\ncatalog:variable_text:27602:13149:14975\ncatalog:variable_text:27631:13149:14975\ncatalog:variable_text:27642:13149:14975\ncatalog:variable_text:27649:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111komm"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper. Coordinator group membership: Medlemmarnas etiketter, beskrivningar och KSEK-enheter stöder investeringsbelopp, inklusive mindre och förebyggande investeringar. De äldre inv111komm och inv112komm har beloppsstöd trots identitetsfrågor; deras senare beskrivningsvariabler utesluts. Fritext, klassificeringskoder och fält med olöst innehållstyp inkluderas inte.\ncatalog:occurrence:243355\ncatalog:occurrence:243797\ncatalog:variable_text:27575:13149:14975\ncatalog:variable_text:27576:13149:13514\ncatalog:variable_text:27577:15706:16071\ncatalog:variable_text:27578:13149:14975\ncatalog:variable_text:27579:13149:14975\ncatalog:variable_text:27580:13149:14975\ncatalog:variable_text:27581:13149:14975\ncatalog:variable_text:27582:13149:14975\ncatalog:variable_text:27583:13149:14975\ncatalog:variable_text:27584:13149:13514\ncatalog:variable_text:27585:15706:16071\ncatalog:variable_text:27586:13149:14975\ncatalog:variable_text:27587:13149:14975\ncatalog:variable_text:27588:13149:14975\ncatalog:variable_text:27589:13149:14975\ncatalog:variable_text:27590:13149:14975\ncatalog:variable_text:27591:13149:13514\ncatalog:variable_text:27592:14975:16071\ncatalog:variable_text:27593:14975:16071\ncatalog:variable_text:27594:14975:16071\ncatalog:variable_text:27595:14975:16071\ncatalog:variable_text:27596:14975:16071\ncatalog:variable_text:27597:14975:16071\ncatalog:variable_text:27598:14975:16071\ncatalog:variable_text:27599:14975:16071\ncatalog:variable_text:27600:14975:16071\ncatalog:variable_text:27601:14975:16071\ncatalog:variable_text:27602:13149:14975\ncatalog:variable_text:27631:13149:14975\ncatalog:variable_text:27642:13149:14975\ncatalog:variable_text:27649:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111komm-28430"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper.\ncatalog:occurrence:243355\ncatalog:occurrence:243797"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111komm-28430"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper.\ncatalog:occurrence:243355\ncatalog:occurrence:243797"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111l"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27578:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27578:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111o"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27579:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27579:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111q"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27580:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111q"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27580:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27581:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27581:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111v"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27582:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv111v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27582:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112a-6333"
+fields = { "sets" = [] }
+evidence = "Suffixet 6333 kommer inte från källkolumnen.\ncatalog:variable_text:27583:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112a-6333"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 6333 kommer inte från källkolumnen.\ncatalog:variable_text:27583:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112komm"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper. Coordinator group membership: Medlemmarnas etiketter, beskrivningar och KSEK-enheter stöder investeringsbelopp, inklusive mindre och förebyggande investeringar. De äldre inv111komm och inv112komm har beloppsstöd trots identitetsfrågor; deras senare beskrivningsvariabler utesluts. Fritext, klassificeringskoder och fält med olöst innehållstyp inkluderas inte.\ncatalog:occurrence:243362\ncatalog:occurrence:243798\ncatalog:variable_text:27575:13149:14975\ncatalog:variable_text:27576:13149:13514\ncatalog:variable_text:27577:15706:16071\ncatalog:variable_text:27578:13149:14975\ncatalog:variable_text:27579:13149:14975\ncatalog:variable_text:27580:13149:14975\ncatalog:variable_text:27581:13149:14975\ncatalog:variable_text:27582:13149:14975\ncatalog:variable_text:27583:13149:14975\ncatalog:variable_text:27584:13149:13514\ncatalog:variable_text:27585:15706:16071\ncatalog:variable_text:27586:13149:14975\ncatalog:variable_text:27587:13149:14975\ncatalog:variable_text:27588:13149:14975\ncatalog:variable_text:27589:13149:14975\ncatalog:variable_text:27590:13149:14975\ncatalog:variable_text:27591:13149:13514\ncatalog:variable_text:27592:14975:16071\ncatalog:variable_text:27593:14975:16071\ncatalog:variable_text:27594:14975:16071\ncatalog:variable_text:27595:14975:16071\ncatalog:variable_text:27596:14975:16071\ncatalog:variable_text:27597:14975:16071\ncatalog:variable_text:27598:14975:16071\ncatalog:variable_text:27599:14975:16071\ncatalog:variable_text:27600:14975:16071\ncatalog:variable_text:27601:14975:16071\ncatalog:variable_text:27602:13149:14975\ncatalog:variable_text:27631:13149:14975\ncatalog:variable_text:27642:13149:14975\ncatalog:variable_text:27649:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112komm"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper. Coordinator group membership: Medlemmarnas etiketter, beskrivningar och KSEK-enheter stöder investeringsbelopp, inklusive mindre och förebyggande investeringar. De äldre inv111komm och inv112komm har beloppsstöd trots identitetsfrågor; deras senare beskrivningsvariabler utesluts. Fritext, klassificeringskoder och fält med olöst innehållstyp inkluderas inte.\ncatalog:occurrence:243362\ncatalog:occurrence:243798\ncatalog:variable_text:27575:13149:14975\ncatalog:variable_text:27576:13149:13514\ncatalog:variable_text:27577:15706:16071\ncatalog:variable_text:27578:13149:14975\ncatalog:variable_text:27579:13149:14975\ncatalog:variable_text:27580:13149:14975\ncatalog:variable_text:27581:13149:14975\ncatalog:variable_text:27582:13149:14975\ncatalog:variable_text:27583:13149:14975\ncatalog:variable_text:27584:13149:13514\ncatalog:variable_text:27585:15706:16071\ncatalog:variable_text:27586:13149:14975\ncatalog:variable_text:27587:13149:14975\ncatalog:variable_text:27588:13149:14975\ncatalog:variable_text:27589:13149:14975\ncatalog:variable_text:27590:13149:14975\ncatalog:variable_text:27591:13149:13514\ncatalog:variable_text:27592:14975:16071\ncatalog:variable_text:27593:14975:16071\ncatalog:variable_text:27594:14975:16071\ncatalog:variable_text:27595:14975:16071\ncatalog:variable_text:27596:14975:16071\ncatalog:variable_text:27597:14975:16071\ncatalog:variable_text:27598:14975:16071\ncatalog:variable_text:27599:14975:16071\ncatalog:variable_text:27600:14975:16071\ncatalog:variable_text:27601:14975:16071\ncatalog:variable_text:27602:13149:14975\ncatalog:variable_text:27631:13149:14975\ncatalog:variable_text:27642:13149:14975\ncatalog:variable_text:27649:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112komm-28430"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper.\ncatalog:occurrence:243362\ncatalog:occurrence:243798"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112komm-28430"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar olika ägare och källan anger olika innehållstyper.\ncatalog:occurrence:243362\ncatalog:occurrence:243798"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112l"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27586:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27586:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112o"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27587:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27587:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112q"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27588:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112q"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27588:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112t"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27589:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27589:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112v"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27590:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inv112v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27590:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27591:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27591:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp101"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27592:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp101"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27592:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp102"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27593:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp102"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27593:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp103"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27594:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp103"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27594:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp104"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27595:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp104"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27595:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp105"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27596:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp105"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27596:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp106"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27597:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp106"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27597:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp107"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27598:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp107"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27598:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp108"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27599:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp108"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27599:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp109"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27600:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp109"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27600:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp110"
+fields = { "sets" = [] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27601:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invbelopp110"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Beloppet gäller miljöskyddsinvesteringar.\ncatalog:variable_text:27601:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp"
+fields = { "sets" = [] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27602:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27602:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp101-6253"
+fields = { "sets" = [] }
+evidence = "Suffixet 6253 kommer inte från källkolumnen.\ncatalog:variable_text:27603:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp101-6253"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 6253 kommer inte från källkolumnen.\ncatalog:variable_text:27603:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp102"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27604:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp102"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27604:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp103"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27605:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp103"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27605:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp104"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27606:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp104"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27606:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp105"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27607:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp105"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27607:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp106"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27608:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp106"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27608:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp107"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27609:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp107"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27609:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp108"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27610:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp108"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27610:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp109"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27611:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp109"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27611:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp110"
+fields = { "sets" = [] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27612:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:invtyp110"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kodningen avser investeringens typ.\ncatalog:variable_text:27612:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "sets" = [] }
+evidence = "Fältet avser undersökningens kontakt med uppgiftslämnaren.\ncatalog:variable_text:27613:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "tags" = ["methods"] }
+evidence = "Fältet avser undersökningens kontakt med uppgiftslämnaren.\ncatalog:variable_text:27613:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost301t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27614:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost301t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27614:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302a-6334"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Suffixet 6334 kommer inte från källkolumnen.\ncatalog:variable_text:27615:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302a-6334"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 6334 kommer inte från källkolumnen.\ncatalog:variable_text:27615:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302l"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27616:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27616:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302o"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27617:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27617:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302q"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27618:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302q"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27618:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302v"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27619:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost302v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27619:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost304t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "T är en källkod; beloppet avser intern miljörelaterad forskning.\ncatalog:variable_text:27620:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost304t"
+fields = { "tags" = ["business", "environment", "research"] }
+evidence = "T är en källkod; beloppet avser intern miljörelaterad forskning.\ncatalog:variable_text:27620:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost305t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "T är en källkod; beloppet avser löpande miljöskyddskostnader.\ncatalog:variable_text:27621:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost305t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "T är en källkod; beloppet avser löpande miljöskyddskostnader.\ncatalog:variable_text:27621:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost311k"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27622:13149:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kost311k"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27622:13149:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312a"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27623:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312a"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27623:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312l"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27624:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312l"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27624:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312o"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27625:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312o"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27625:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312q"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27626:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312q"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27626:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312v"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27627:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost312v"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27627:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost313k"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27628:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost313k"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27628:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost314k"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "K är en källkod; beloppet avser extern miljörelaterad forskning.\ncatalog:variable_text:27629:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost314k"
+fields = { "tags" = ["business", "environment", "research"] }
+evidence = "K är en källkod; beloppet avser extern miljörelaterad forskning.\ncatalog:variable_text:27629:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost315t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "T är en källkod; beloppet avser externa miljöskyddskostnader.\ncatalog:variable_text:27630:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kost315t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "T är en källkod; beloppet avser externa miljöskyddskostnader.\ncatalog:variable_text:27630:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra"
+fields = { "sets" = [] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27631:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27631:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra101-1682"
+fields = { "sets" = [] }
+evidence = "Suffixet 1682 kommer inte från källkolumnen.\ncatalog:variable_text:27632:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra101-1682"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Suffixet 1682 kommer inte från källkolumnen.\ncatalog:variable_text:27632:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra102"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27633:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra102"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27633:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra103"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27634:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra103"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27634:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra104"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27635:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra104"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27635:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra105"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27636:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra105"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27636:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra106"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27637:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra106"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27637:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra107"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27638:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra107"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27638:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra108"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27639:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra108"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27639:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra109"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27640:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra109"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27640:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra110"
+fields = { "sets" = [] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27641:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomra110"
+fields = { "tags" = ["environment"] }
+evidence = "Kodningen anger investeringens miljöområde.\ncatalog:valueset:1805\ncatalog:variable_text:27641:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomrb"
+fields = { "sets" = [] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27642:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomrb"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_text:27642:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoskyddskostnader-lopande-interna-generell"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoskyddskostnader-lopande-interna-generell"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
+
+[[statement]]
+kind = "set"
+subject = "var:pekost307t"
+fields = { "sets" = ["lopande-miljoskyddskostnader"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27646:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:pekost307t"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27646:13149:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade"
+fields = { "sets" = [] }
+evidence = "Postnummerområdet anger geografisk tillhörighet.\ncatalog:variable_text:27647:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummerområdet anger geografisk tillhörighet.\ncatalog:variable_text:27647:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:27648:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:27648:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: <none> @2016-01-01..2016-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: <none> @2017-01-01..2017-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: <none> @2018-01-01..2018-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2006-01-01..2006-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2007-01-01..2007-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2008-01-01..2008-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2009-01-01..2009-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2010-01-01..2010-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2011-01-01..2011-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2012-01-01..2012-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2013-01-01..2013-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2014-01-01..2014-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: Fax @2015-01-01..2015-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"

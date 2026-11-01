@@ -136,3 +136,183 @@ kind = "set"
 subject = "privat-offentlig: snia"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "var:avgkvar"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger antal lediga jobb bemannade av avgående medarbetare.\ncatalog:variable_text:35065:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avgkvar"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger antal lediga jobb bemannade av avgående medarbetare.\ncatalog:variable_text:35065:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bemforetag-4924"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Siffersuffixet finns inte i källkolumnen BemForetag.\ncatalog:occurrence-locators:variable:35066\ncatalog:variable_text:35066:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bemforetag-4924"
+fields = { "tags" = ["employment"] }
+evidence = "Siffersuffixet finns inte i källkolumnen BemForetag.\ncatalog:occurrence-locators:variable:35066\ncatalog:variable_text:35066:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bemftg"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger lediga jobb bemannade av personal från bemanningsföretag.\ncatalog:variable_text:35067:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bemftg"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger lediga jobb bemannade av personal från bemanningsföretag.\ncatalog:variable_text:35067:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är ett läsbart id för den regionala indelningen. Variabeln får geografitagg.\ncatalog:variable_text:35070:12784:18993\ncatalog:variable_text:35070:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är ett läsbart id för den regionala indelningen. Variabeln får geografitagg.\ncatalog:variable_text:35070:12784:18993\ncatalog:variable_text:35070:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komobem"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "KomOBem är en läsbar förkortning för obemannade jobb. Måttet hör till lediga jobb och arbetsmarknad.\ncatalog:register:190\ncatalog:variable_text:35071:12784:18993\ncatalog:variable_text:35071:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komobem"
+fields = { "tags" = ["employment"] }
+evidence = "KomOBem är en läsbar förkortning för obemannade jobb. Måttet hör till lediga jobb och arbetsmarknad.\ncatalog:register:190\ncatalog:variable_text:35071:12784:18993\ncatalog:variable_text:35071:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Län för arbetsställets belägenhet är geografisk tillhörighet.\ncatalog:variable_text:35073:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Län för arbetsställets belägenhet är geografisk tillhörighet.\ncatalog:variable_text:35073:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-obemannade"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter obemannade lediga jobb.\ncatalog:variable_text:35074:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-obemannade"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter obemannade lediga jobb.\ncatalog:variable_text:35074:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-vikarie"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter lediga jobb bemannade av vikarie.\ncatalog:variable_text:35075:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-vikarie"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter lediga jobb bemannade av vikarie.\ncatalog:variable_text:35075:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en ogenomskinlig källkod för näringsgren.\ncatalog:variable_text:35077:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en ogenomskinlig källkod för näringsgren.\ncatalog:variable_text:35077:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:snia"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en källkod med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35078:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:snia"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35078:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Id:t är en källförkortning med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35079:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en källförkortning med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35079:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa02"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35080:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa02"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35080:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa98"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35081:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:syssa98"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35081:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot"
+fields = { "sets" = [] }
+evidence = "Tot är en läsbar förkortning av totalt. Måttet avser lediga jobb; en grupp kan inte fastställas från enbart denna variabel. Coordinator group membership: Variablerna mäter totalt antal lediga jobb eller antal efter bemanning och önskad bemanningstidpunkt. Den tidigare osäkerheten för tot gällde avsaknad av peers i dess paket; de samlade beläggen visar nu flera stödjande peers.\ncatalog:occurrence-locators:variable:35082\ncatalog:variable_text:35065:18993:20089\ncatalog:variable_text:35066:18993:20089\ncatalog:variable_text:35067:12784:13514\ncatalog:variable_text:35071:18993:20089\ncatalog:variable_text:35074:18993:20089\ncatalog:variable_text:35075:18993:20089\ncatalog:variable_text:35082:12784:13149\ncatalog:variable_text:35082:13149:13514\ncatalog:variable_text:35083:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot"
+fields = { "tags" = ["employment"] }
+evidence = "Tot är en läsbar förkortning av totalt. Måttet avser lediga jobb; en grupp kan inte fastställas från enbart denna variabel. Coordinator group membership: Variablerna mäter totalt antal lediga jobb eller antal efter bemanning och önskad bemanningstidpunkt. Den tidigare osäkerheten för tot gällde avsaknad av peers i dess paket; de samlade beläggen visar nu flera stödjande peers.\ncatalog:occurrence-locators:variable:35082\ncatalog:variable_text:35065:18993:20089\ncatalog:variable_text:35066:18993:20089\ncatalog:variable_text:35067:12784:13514\ncatalog:variable_text:35071:18993:20089\ncatalog:variable_text:35074:18993:20089\ncatalog:variable_text:35075:18993:20089\ncatalog:variable_text:35082:12784:13149\ncatalog:variable_text:35082:13149:13514\ncatalog:variable_text:35083:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totled"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter totalt antal lediga jobb.\ncatalog:variable_text:35083:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totled"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter totalt antal lediga jobb.\ncatalog:variable_text:35083:18993:20089"

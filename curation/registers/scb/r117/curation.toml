@@ -251,3 +251,1641 @@ kind = "set"
 subject = "var:sektor"
 fields = { "classification" = "class/sektorkod/sektorkod" }
 evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\nreg_meta_build/curation/classifications/SEKTORKOD.toml:51\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:aldreoms"
+fields = { "sets" = [] }
+evidence = "Modellutfall för äldreomsorg.\ncatalog:variable_text:34182:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aldreoms"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Modellutfall för äldreomsorg.\ncatalog:variable_text:34182:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-65-79"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34183:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-65-79"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34183:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-80-89"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34184:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-80-89"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34184:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-90-w"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34185:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-g-90-w"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34185:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-65-79"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34186:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-65-79"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34186:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-80-89"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34187:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-80-89"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34187:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-90-w"
+fields = { "sets" = ["antal-aldre-efter-civilstand"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34188:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-o-90-w"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34188:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-3-29625"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Suffixet 29625 är en tillagd räknare som inte finns i källkolumnen. Variabeln ingår i gruppen för barnantal och mäter befolkningssammansättning.\ncatalog:occurrence-locators:variable:34189\ncatalog:variable_text:34189:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-3-29625"
+fields = { "tags" = ["demographics"] }
+evidence = "Suffixet 29625 är en tillagd räknare som inte finns i källkolumnen. Variabeln ingår i gruppen för barnantal och mäter befolkningssammansättning.\ncatalog:occurrence-locators:variable:34189\ncatalog:variable_text:34189:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-5-7"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Antalet barn hör till gruppen för barnantal och taggas som demografi.\ncatalog:occurrence-locators:variable:34190\ncatalog:variable_text:34190:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1-5-7"
+fields = { "tags" = ["demographics"] }
+evidence = "Antalet barn hör till gruppen för barnantal och taggas som demografi.\ncatalog:occurrence-locators:variable:34190\ncatalog:variable_text:34190:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant4-5"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Variabeln avser antal barn.\ncatalog:variable_text:34191:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant4-5"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln avser antal barn.\ncatalog:variable_text:34191:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-15"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Antal barn efter ålder.\ncatalog:variable_text:34192:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-15"
+fields = { "tags" = ["demographics"] }
+evidence = "Antal barn efter ålder.\ncatalog:variable_text:34192:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-18"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Antal barn och ungdomar efter ålder.\ncatalog:variable_text:34193:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-18"
+fields = { "tags" = ["demographics"] }
+evidence = "Antal barn och ungdomar efter ålder.\ncatalog:variable_text:34193:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-18-7"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Antalet barn och ungdomar hör till gruppen för barnantal och taggas som demografi.\ncatalog:occurrence-locators:variable:34194\ncatalog:variable_text:34194:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7-18-7"
+fields = { "tags" = ["demographics"] }
+evidence = "Antalet barn och ungdomar hör till gruppen för barnantal och taggas som demografi.\ncatalog:occurrence-locators:variable:34194\ncatalog:variable_text:34194:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Antal barn efter ålder.\ncatalog:variable_text:34195:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar"
+fields = { "tags" = ["demographics"] }
+evidence = "Antal barn efter ålder.\ncatalog:variable_text:34195:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar-ant6"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-12-ar-ant6"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-15-ar-med-utlandskbakgrund"
+fields = { "sets" = ["antal-barn-med-utlandsk-bakgrund"] }
+evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-15-ar-med-utlandskbakgrund"
+fields = { "tags" = ["demographics"] }
+evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-aldern-6-ar"
+fields = { "sets" = ["antal-barn-och-ungdomar"] }
+evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-aldern-6-ar"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utrikes-fodda-barn-715-ar"
+fields = { "sets" = ["antal-barn-med-utlandsk-bakgrund"] }
+evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utrikes-fodda-barn-715-ar"
+fields = { "tags" = ["demographics"] }
+evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:antejers"
+fields = { "sets" = [] }
+evidence = "Antal arbetslösa utan ersättning.\ncatalog:variable_text:34200:13514:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antejers"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Antal arbetslösa utan ersättning.\ncatalog:variable_text:34200:13514:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antejvtg"
+fields = { "sets" = ["antal-personer-efter-vardtyngd"] }
+evidence = "Antal personer efter vårdtyngd.\ncatalog:variable_text:34201:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antejvtg"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal personer efter vårdtyngd.\ncatalog:variable_text:34201:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antekbist-6m"
+fields = { "sets" = [] }
+evidence = "Antal med ekonomiskt bistånd.\ncatalog:variable_text:34202:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antekbist-6m"
+fields = { "tags" = ["transfers"] }
+evidence = "Antal med ekonomiskt bistånd.\ncatalog:variable_text:34202:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antflerfam65-75"
+fields = { "sets" = [] }
+evidence = "Antal boende i flerfamiljshus.\ncatalog:variable_text:34203:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antflerfam65-75"
+fields = { "tags" = ["housing"] }
+evidence = "Antal boende i flerfamiljshus.\ncatalog:variable_text:34203:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:anthivtot"
+fields = { "sets" = ["antal-personer-efter-vardtyngd"] }
+evidence = "Beräknat antal personer med HIV.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:anthivtot"
+fields = { "tags" = ["health"] }
+evidence = "Beräknat antal personer med HIV.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antsvlagutb2040"
+fields = { "sets" = [] }
+evidence = "Antal lågutbildade personer.\ncatalog:variable_text:34205:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antsvlagutb2040"
+fields = { "tags" = ["education"] }
+evidence = "Antal lågutbildade personer.\ncatalog:variable_text:34205:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antutl65-w"
+fields = { "sets" = ["sprakrelaterade-tillagg-och-avdrag"] }
+evidence = "Id anger antal utrikes födda äldre men källan anger tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34206:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antutl65-w"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Id anger antal utrikes födda äldre men källan anger tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34206:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antvtg"
+fields = { "sets" = ["antal-personer-efter-vardtyngd"] }
+evidence = "Antal personer efter vårdtyngd.\ncatalog:variable_text:34207:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antvtg"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal personer efter vårdtyngd.\ncatalog:variable_text:34207:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ba"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod; den gemensamma etiketten kolliderar och målet kräver källdisambiguering.\ncatalog:variable_text:34208:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ba"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod; den gemensamma etiketten kolliderar och målet kräver källdisambiguering.\ncatalog:variable_text:34208:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:barnoms"
+fields = { "sets" = [] }
+evidence = "Modellutfall för förskola och fritidshem.\ncatalog:variable_text:34209:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:barnoms"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Modellutfall för förskola och fritidshem.\ncatalog:variable_text:34209:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bf"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod; den gemensamma etiketten kolliderar och målet kräver källdisambiguering.\ncatalog:variable_text:34210:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bf"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod; den gemensamma etiketten kolliderar och målet kräver källdisambiguering.\ncatalog:variable_text:34210:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ee"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34212:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ee"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34212:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ek"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34213:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ek"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34213:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-forsakringskassan-assistans"
+fields = { "sets" = [] }
+evidence = "Ersättning till Försäkringskassan för personlig assistans.\ncatalog:variable_text:34214:13879:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-forsakringskassan-assistans"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Ersättning till Försäkringskassan för personlig assistans.\ncatalog:variable_text:34214:13879:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:es"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34215:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:es"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34215:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm0630l"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34216:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm0630l"
+fields = { "tags" = ["demographics"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34216:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231l"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34217:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231l"
+fields = { "tags" = ["demographics"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34217:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231l-2"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34218:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkm1231l-2"
+fields = { "tags" = ["demographics"] }
+evidence = "Länets folkmängd.\ncatalog:variable_text:34218:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-1-november-rtb"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Kommunfolkmängd enligt RTB.\ncatalog:variable_text:34219:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-1-november-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Kommunfolkmängd enligt RTB.\ncatalog:variable_text:34219:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-den-1-november-ar-t-1"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Folkmängd vid angiven referenstidpunkt.\ncatalog:variable_text:34220:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd-den-1-november-ar-t-1"
+fields = { "tags" = ["demographics"] }
+evidence = "Folkmängd vid angiven referenstidpunkt.\ncatalog:variable_text:34220:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forvdoda-29649"
+fields = { "sets" = ["tillagg-avdrag-for-ohalsa"] }
+evidence = "Etiketten anger kronor per invånare medan äldre perioder har enheten antal.\ncatalog:variable_text:34221:16071:18262\ncatalog:variable_text:34221:18262:18628\ncatalog:variable_text:34221:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvdoda-29649"
+fields = { "tags" = ["health", "public-finance"] }
+evidence = "Etiketten anger kronor per invånare medan äldre perioder har enheten antal.\ncatalog:variable_text:34221:16071:18262\ncatalog:variable_text:34221:18262:18628\ncatalog:variable_text:34221:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ft"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34222:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ft"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34222:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-standardkostnad"
+fields = { "sets" = ["standardkostnad-for-lss-insatser"] }
+evidence = "Grundläggande standardkostnad inom LSS-utjämningen.\ncatalog:variable_text:34223:13879:17532\ncatalog:variable_text:34223:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-standardkostnad"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Grundläggande standardkostnad inom LSS-utjämningen.\ncatalog:variable_text:34223:13879:17532\ncatalog:variable_text:34223:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:grundskola"
+fields = { "sets" = [] }
+evidence = "Modellutfall för förskoleklass och grundskola.\ncatalog:variable_text:34224:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:grundskola"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Modellutfall för förskoleklass och grundskola.\ncatalog:variable_text:34224:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasie"
+fields = { "sets" = [] }
+evidence = "Modellutfall för gymnasieskola.\ncatalog:variable_text:34225:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasie"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Modellutfall för gymnasieskola.\ncatalog:variable_text:34225:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gyprgvf-1"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är en ogenomskinlig bokstavskod.\ncatalog:variable_text:34226:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:gyprgvf-1"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Källmnemoniken är en ogenomskinlig bokstavskod.\ncatalog:variable_text:34226:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ha"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34227:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ha"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34227:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst10"
+fields = { "sets" = [] }
+evidence = "Tillägget eller avdraget gäller hemtjänst i den kommunalekonomiska utjämningen.\ncatalog:variable_text:34228:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst10"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Tillägget eller avdraget gäller hemtjänst i den kommunalekonomiska utjämningen.\ncatalog:variable_text:34228:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:hivkost"
+fields = { "sets" = ["beraknad-halso-och-sjukvardskostnad"] }
+evidence = "Beräknad vårdkostnad för HIV.\ncatalog:variable_text:34229:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:hivkost"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Beräknad vårdkostnad för HIV.\ncatalog:variable_text:34229:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ht"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34230:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ht"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34230:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hu"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34231:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hu"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34231:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hv"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34232:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hv"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34232:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ifo"
+fields = { "sets" = [] }
+evidence = "IFO är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:34233:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ifo"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "IFO är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:34233:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:im"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34234:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:im"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34234:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:in"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34235:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:in"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34235:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indexforsk"
+fields = { "sets" = [] }
+evidence = "Index för förskola.\ncatalog:variable_text:34236:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indexforsk"
+fields = { "tags" = ["education"] }
+evidence = "Index för förskola.\ncatalog:variable_text:34236:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indexfritids"
+fields = { "sets" = [] }
+evidence = "Index för fritidshem.\ncatalog:variable_text:34237:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indexfritids"
+fields = { "tags" = ["education"] }
+evidence = "Index för fritidshem.\ncatalog:variable_text:34237:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:infbid"
+fields = { "sets" = [] }
+evidence = "Kommunernas införandebidrag.\ncatalog:variable_text:34238:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:infbid"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kommunernas införandebidrag.\ncatalog:variable_text:34238:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:infra"
+fields = { "sets" = [] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34239:18262:19358\ncatalog:variable_text:34239:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:infra"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34239:18262:19358\ncatalog:variable_text:34239:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstutjamning-kommuner-utfall"
+fields = { "sets" = ["inkomstutjamning"] }
+evidence = "Utfall av inkomstutjämning för kommuner.\ncatalog:variable_text:34240:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstutjamning-kommuner-utfall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Utfall av inkomstutjämning för kommuner.\ncatalog:variable_text:34240:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstutjamning-regioner-utfall"
+fields = { "sets" = ["inkomstutjamning"] }
+evidence = "Utfall av inkomstutjämning för regioner.\ncatalog:variable_text:34241:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstutjamning-regioner-utfall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Utfall av inkomstutjämning för regioner.\ncatalog:variable_text:34241:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kollektivtrafik"
+fields = { "sets" = [] }
+evidence = "Modellutfall för kollektivtrafik.\ncatalog:variable_text:34242:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kollektivtrafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Modellutfall för kollektivtrafik.\ncatalog:variable_text:34242:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Samma källkolumn har ägare med olika geografisk nivå.\ncatalog:occurrence:300801\ncatalog:occurrence:300826"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har ägare med olika geografisk nivå.\ncatalog:occurrence:300801\ncatalog:occurrence:300826"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-namn"
+fields = { "sets" = ["kommun"] }
+evidence = "Samma kommunnamn som kommunnamn-namn, uppdelat på påföljande perioder.\ncatalog:occurrence:301101\ncatalog:occurrence:301117"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kommunnamn som kommunnamn-namn, uppdelat på påföljande perioder.\ncatalog:occurrence:301101\ncatalog:occurrence:301117"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunnamn i klartext.\ncatalog:variable_text:34245:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamn i klartext.\ncatalog:variable_text:34245:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn-namn"
+fields = { "sets" = ["kommun"] }
+evidence = "Samma kommunnamn som kommun-namn, uppdelat på påföljande perioder.\ncatalog:occurrence:301101\ncatalog:occurrence:301117"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kommunnamn som kommun-namn, uppdelat på påföljande perioder.\ncatalog:occurrence:301101\ncatalog:occurrence:301117"
+
+[[statement]]
+kind = "set"
+subject = "var:komvux"
+fields = { "sets" = [] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34247:18262:19358\ncatalog:variable_text:34247:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:komvux"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34247:18262:19358\ncatalog:variable_text:34247:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostejvtg"
+fields = { "sets" = ["beraknad-halso-och-sjukvardskostnad"] }
+evidence = "Beräknad sjukvårdskostnad för personer som inte är vårdtunga.\ncatalog:variable_text:34248:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kostejvtg"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Beräknad sjukvårdskostnad för personer som inte är vårdtunga.\ncatalog:variable_text:34248:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kosthelabef"
+fields = { "sets" = ["beraknad-halso-och-sjukvardskostnad"] }
+evidence = "Beräknad sjukvårdskostnad för länet.\ncatalog:variable_text:34249:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kosthelabef"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Beräknad sjukvårdskostnad för länet.\ncatalog:variable_text:34249:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kostvtg"
+fields = { "sets" = ["beraknad-halso-och-sjukvardskostnad"] }
+evidence = "Beräknad sjukvårdskostnad för vårdtunga personer.\ncatalog:variable_text:34250:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kostvtg"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Beräknad sjukvårdskostnad för vårdtunga personer.\ncatalog:variable_text:34250:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:lag1517"
+fields = { "sets" = [] }
+evidence = "Antal lagförda ungdomar.\ncatalog:variable_text:34251:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:lag1517"
+fields = { "tags" = ["crime"] }
+evidence = "Antal lagförda ungdomar.\ncatalog:variable_text:34251:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Kod för län.\ncatalog:variable_text:34252:13514:16436\ncatalog:variable_text:34252:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för län.\ncatalog:variable_text:34252:13514:16436\ncatalog:variable_text:34252:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-eller-kommuner-utanfor-landsting"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-eller-kommuner-utanfor-landsting"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "sets" = ["tillagg-avdrag-for-institutionsboende-i-glesbygd"] }
+evidence = "Id:t anger landareal men variabeln är ett tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34254:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Id:t anger landareal men variabeln är ett tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34254:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsnamn-i-kortform"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Källkolumnen övergår till region med en annan namnbeskrivning.\ncatalog:occurrence:300918\ncatalog:occurrence:300938"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsnamn-i-kortform"
+fields = { "tags" = ["geography"] }
+evidence = "Källkolumnen övergår till region med en annan namnbeskrivning.\ncatalog:occurrence:300918\ncatalog:occurrence:300938"
+
+[[statement]]
+kind = "set"
+subject = "var:lanets-folkmangd-den-1-november"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
+
+[[statement]]
+kind = "set"
+subject = "var:lanets-folkmangd-den-1-november"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod-fyrstallig"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Samma källkolumn har ägare med olika geografisk nivå.\ncatalog:occurrence:300801\ncatalog:occurrence:300826"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod-fyrstallig"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har ägare med olika geografisk nivå.\ncatalog:occurrence:300801\ncatalog:occurrence:300826"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod-med-tillagg-av-l"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod-med-tillagg-av-l"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
+
+[[statement]]
+kind = "set"
+subject = "var:loner"
+fields = { "sets" = [] }
+evidence = "Lönekomponent i landstingens kostnadsutjämning.\ncatalog:variable_text:34259:16436:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:loner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Lönekomponent i landstingens kostnadsutjämning.\ncatalog:variable_text:34259:16436:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-insatser-standardkostnad-pk-ix"
+fields = { "sets" = ["standardkostnad-for-lss-insatser"] }
+evidence = "Variabeln är en indexjusterad standardkostnad i LSS-utjämningen.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-insatser-standardkostnad-pk-ix"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Variabeln är en indexjusterad standardkostnad i LSS-utjämningen.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-utjamningsavgift-kr"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Källkolumnen Utfall delas med bidragsvariabeln under överlappande perioder och kopplas därefter till utfall; UtfallAvg kopplas också till utfallavg. Identiteten behöver utredas.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301205\ncatalog:occurrence:301220\ncatalog:occurrence:301221\ncatalog:variable_text:34261:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-utjamningsavgift-kr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Källkolumnen Utfall delas med bidragsvariabeln under överlappande perioder och kopplas därefter till utfall; UtfallAvg kopplas också till utfallavg. Identiteten behöver utredas.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301205\ncatalog:occurrence:301220\ncatalog:occurrence:301221\ncatalog:variable_text:34261:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-utjamningsbidrag-kr"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Källkolumnen Utfall delas med avgiftsvariabeln under överlappande perioder och kopplas därefter till utfall; UtfallBid kopplas också till utfallbid. Identiteten behöver utredas.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301206\ncatalog:occurrence:301220\ncatalog:occurrence:301222\ncatalog:variable_text:34262:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lss-utjamningsbidrag-kr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Källkolumnen Utfall delas med avgiftsvariabeln under överlappande perioder och kopplas därefter till utfall; UtfallBid kopplas också till utfallbid. Identiteten behöver utredas.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301206\ncatalog:occurrence:301220\ncatalog:occurrence:301222\ncatalog:variable_text:34262:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:na"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34263:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:na"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34263:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nb"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34264:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nb"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34264:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:obsdoda"
+fields = { "sets" = ["tillagg-avdrag-for-ohalsa"] }
+evidence = "Källans enhet antal strider mot etikettens kronor per invånare.\ncatalog:variable_text:34265:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:obsdoda"
+fields = { "tags" = ["health", "public-finance"] }
+evidence = "Källans enhet antal strider mot etikettens kronor per invånare.\ncatalog:variable_text:34265:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnadsindex-pk-ix"
+fields = { "sets" = [] }
+evidence = "Personalkostnadsindex inom LSS-utjämningen.\ncatalog:variable_text:34266:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnadsindex-pk-ix"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Personalkostnadsindex inom LSS-utjämningen.\ncatalog:variable_text:34266:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:region"
+fields = { "sets" = ["lan-och-region"] }
+evidence = "Källkolumnen har angränsande ägare med olika namnbeskrivning.\ncatalog:occurrence:300918\ncatalog:occurrence:300938"
+
+[[statement]]
+kind = "set"
+subject = "var:region"
+fields = { "tags" = ["geography"] }
+evidence = "Källkolumnen har angränsande ägare med olika namnbeskrivning.\ncatalog:occurrence:300918\ncatalog:occurrence:300938"
+
+[[statement]]
+kind = "set"
+subject = "var:regionens-folkmangd-1-november-t-1"
+fields = { "sets" = ["folkmangd"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
+
+[[statement]]
+kind = "set"
+subject = "var:regionens-folkmangd-1-november-t-1"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-kommuner-utfall"
+fields = { "sets" = ["regleringsbidrag-och-regleringsavgift"] }
+evidence = "Samma kommunala regleringspost som regleringsbidrag-avgift-utfall, uppdelad efter period.\ncatalog:occurrence:299919\ncatalog:occurrence:300513"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-kommuner-utfall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Samma kommunala regleringspost som regleringsbidrag-avgift-utfall, uppdelad efter period.\ncatalog:occurrence:299919\ncatalog:occurrence:300513"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-regionen"
+fields = { "sets" = ["regleringsbidrag-och-regleringsavgift"] }
+evidence = "Regionens regleringsbidrag eller avgift.\ncatalog:variable_text:34270:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-regionen"
+fields = { "tags" = ["public-finance"] }
+evidence = "Regionens regleringsbidrag eller avgift.\ncatalog:variable_text:34270:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-utfall"
+fields = { "sets" = ["regleringsbidrag-och-regleringsavgift"] }
+evidence = "Samma kommunala regleringspost som regleringsbidrag-avgift-kommuner-utfall, uppdelad efter period.\ncatalog:occurrence:299919\ncatalog:occurrence:300513"
+
+[[statement]]
+kind = "set"
+subject = "var:regleringsbidrag-avgift-utfall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Samma kommunala regleringspost som regleringsbidrag-avgift-kommuner-utfall, uppdelad efter period.\ncatalog:occurrence:299919\ncatalog:occurrence:300513"
+
+[[statement]]
+kind = "set"
+subject = "var:rl"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34272:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rl"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34272:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sa"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34273:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sa"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34273:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor"
+fields = { "sets" = [] }
+evidence = "Sektorkodningen i värdemängden och den operativa definitionen skiljer sig.\ncatalog:valueset:5778\ncatalog:variable_text:34274:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor"
+fields = { "tags" = ["public-finance"] }
+evidence = "Sektorkodningen i värdemängden och den operativa definitionen skiljer sig.\ncatalog:valueset:5778\ncatalog:variable_text:34274:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-t-1"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Skatteunderlag enligt taxeringen år t-1.\ncatalog:variable_text:34275:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteunderlag-t-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Skatteunderlag enligt taxeringen år t-1.\ncatalog:variable_text:34275:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteundl"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Länets slutliga skatteunderlag.\ncatalog:variable_text:34276:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteundl"
+fields = { "tags" = ["taxation"] }
+evidence = "Länets slutliga skatteunderlag.\ncatalog:variable_text:34276:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteundl-p"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Länets preliminära skatteunderlag.\ncatalog:variable_text:34277:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteundl-p"
+fields = { "tags" = ["taxation"] }
+evidence = "Länets preliminära skatteunderlag.\ncatalog:variable_text:34277:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-2p"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Preliminärt skatteunderlag.\ncatalog:variable_text:34278:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-2p"
+fields = { "tags" = ["taxation"] }
+evidence = "Preliminärt skatteunderlag.\ncatalog:variable_text:34278:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-3"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Skatteunderlag enligt taxeringen år t-2.\ncatalog:variable_text:34279:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-3"
+fields = { "tags" = ["taxation"] }
+evidence = "Skatteunderlag enligt taxeringen år t-2.\ncatalog:variable_text:34279:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-4"
+fields = { "sets" = ["skatteunderlag"] }
+evidence = "Skatteunderlag enligt taxeringen år t-3.\ncatalog:variable_text:34280:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattund-4"
+fields = { "tags" = ["taxation"] }
+evidence = "Skatteunderlag enligt taxeringen år t-3.\ncatalog:variable_text:34280:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skost"
+fields = { "sets" = ["standardkostnad-for-lss-insatser"] }
+evidence = "Standardkostnad för LSS-insatser.\ncatalog:variable_text:34281:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skost"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Standardkostnad för LSS-insatser.\ncatalog:variable_text:34281:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-standardkostnad-lss-insatser-kr"
+fields = { "sets" = ["standardkostnad-for-lss-insatser"] }
+evidence = "Variabeln är en slutlig standardkostnad per invånare i LSS-utjämningen.\ncatalog:variable_text:34282:13879:17532\ncatalog:variable_text:34282:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-standardkostnad-lss-insatser-kr"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Variabeln är en slutlig standardkostnad per invånare i LSS-utjämningen.\ncatalog:variable_text:34282:13879:17532\ncatalog:variable_text:34282:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-standardkostnad-lss-insatser-tkr"
+fields = { "sets" = ["standardkostnad-for-lss-insatser"] }
+evidence = "Variabeln är en slutlig standardkostnad i tusentals kronor i LSS-utjämningen.\ncatalog:variable_text:34283:13879:17532\ncatalog:variable_text:34283:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:slutlig-standardkostnad-lss-insatser-tkr"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Variabeln är en slutlig standardkostnad i tusentals kronor i LSS-utjämningen.\ncatalog:variable_text:34283:13879:17532\ncatalog:variable_text:34283:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sss09"
+fields = { "sets" = [] }
+evidence = "Tillägg eller avdrag för SSS.\ncatalog:variable_text:34284:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sss09"
+fields = { "tags" = ["public-finance"] }
+evidence = "Tillägg eller avdrag för SSS.\ncatalog:variable_text:34284:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:strbid"
+fields = { "sets" = [] }
+evidence = "Kommunernas strukturbidrag.\ncatalog:variable_text:34285:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:strbid"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kommunernas strukturbidrag.\ncatalog:variable_text:34285:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-beraknade-personalkostnader"
+fields = { "sets" = [] }
+evidence = "Beräknade personalkostnader inom LSS-utjämningen.\ncatalog:variable_text:34286:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-beraknade-personalkostnader"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Beräknade personalkostnader inom LSS-utjämningen.\ncatalog:variable_text:34286:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad10"
+fields = { "sets" = ["tillagg-avdrag-for-institutionsboende-i-glesbygd"] }
+evidence = "Tätortsgrad beskriver inte tillägget eller avdraget för institutionsboende i glesbygd under någon av de belagda perioderna. Variabeln hör till den motsvarande kandidatgruppen.\ncatalog:variable_text:34287:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad10"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Tätortsgrad beskriver inte tillägget eller avdraget för institutionsboende i glesbygd under någon av de belagda perioderna. Variabeln hör till den motsvarande kandidatgruppen.\ncatalog:variable_text:34287:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:te"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34288:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:te"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34288:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-avdrag-hemsprak-svenska2"
+fields = { "sets" = ["sprakrelaterade-tillagg-och-avdrag"] }
+evidence = "Samma källkolumn har överlappande ägare med olika enheter och betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-avdrag-hemsprak-svenska2"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Samma källkolumn har överlappande ägare med olika enheter och betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
+
+[[statement]]
+kind = "set"
+subject = "var:utbak019"
+fields = { "sets" = ["antal-barn-med-utlandsk-bakgrund"] }
+evidence = "Antal barn och ungdomar med utländsk bakgrund.\ncatalog:variable_text:34290:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:utbak019"
+fields = { "tags" = ["demographics"] }
+evidence = "Antal barn och ungdomar med utländsk bakgrund.\ncatalog:variable_text:34290:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:utfall"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln mäter LSS-utjämning per invånare.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301220\ncatalog:variable_text:34291:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utfall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln mäter LSS-utjämning per invånare.\ncatalog:occurrence:301203\ncatalog:occurrence:301204\ncatalog:occurrence:301220\ncatalog:variable_text:34291:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utfallavg"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln hör till LSS-utjämningen.\ncatalog:occurrence:301205\ncatalog:occurrence:301221\ncatalog:variable_text:34292:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utfallavg"
+fields = { "tags" = ["public-finance"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln hör till LSS-utjämningen.\ncatalog:occurrence:301205\ncatalog:occurrence:301221\ncatalog:variable_text:34292:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utfallbid"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln hör till LSS-utjämningen.\ncatalog:occurrence:301206\ncatalog:occurrence:301222\ncatalog:variable_text:34293:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utfallbid"
+fields = { "tags" = ["public-finance"] }
+evidence = "Den angränsande mappningen byter beloppsenhet; variabeln hör till LSS-utjämningen.\ncatalog:occurrence:301206\ncatalog:occurrence:301222\ncatalog:variable_text:34293:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-kr-inv"
+fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
+evidence = "Samma utfall som utjamning-utfall-kr-per-inv, uppdelat efter period.\ncatalog:occurrence:299924\ncatalog:occurrence:300516"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-kr-inv"
+fields = { "tags" = ["public-finance"] }
+evidence = "Samma utfall som utjamning-utfall-kr-per-inv, uppdelat efter period.\ncatalog:occurrence:299924\ncatalog:occurrence:300516"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-kronor"
+fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
+evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-kronor"
+fields = { "tags" = ["public-finance"] }
+evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-tkr"
+fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
+evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-kommuner-utfall-tkr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-regioner-utfall-kr-inv"
+fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
+evidence = "Samlat kommunalekonomiskt utfall för regioner.\ncatalog:variable_text:34297:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-regioner-utfall-kr-inv"
+fields = { "tags" = ["public-finance"] }
+evidence = "Samlat kommunalekonomiskt utfall för regioner.\ncatalog:variable_text:34297:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-utfall-kr-per-inv"
+fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
+evidence = "Samma utfall som utjamning-kommuner-utfall-kr-inv, uppdelat efter period.\ncatalog:occurrence:299924\ncatalog:occurrence:300516"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamning-utfall-kr-per-inv"
+fields = { "tags" = ["public-finance"] }
+evidence = "Samma utfall som utjamning-kommuner-utfall-kr-inv, uppdelat efter period.\ncatalog:occurrence:299924\ncatalog:occurrence:300516"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar"
+fields = { "sets" = ["utjamningsar"] }
+evidence = "Identitetsfakten visar samma begrepp uppdelat mellan observerade perioder; gruppen samlar utjämningsår.\ncatalog:occurrence:299912\ncatalog:occurrence:300499\ncatalog:variable_text:34299:13514:16436\ncatalog:variable_text:34300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar"
+fields = { "tags" = [] }
+evidence = "Identitetsfakten visar samma begrepp uppdelat mellan observerade perioder; gruppen samlar utjämningsår.\ncatalog:occurrence:299912\ncatalog:occurrence:300499\ncatalog:variable_text:34299:13514:16436\ncatalog:variable_text:34300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar-kommunalekonomisk-utjamning"
+fields = { "sets" = ["utjamningsar"] }
+evidence = "Identitetsfakten visar samma begrepp uppdelat mellan observerade perioder; gruppen samlar utjämningsår.\ncatalog:occurrence:299912\ncatalog:occurrence:300499\ncatalog:variable_text:34299:13514:16436\ncatalog:variable_text:34300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar-kommunalekonomisk-utjamning"
+fields = { "tags" = [] }
+evidence = "Identitetsfakten visar samma begrepp uppdelat mellan observerade perioder; gruppen samlar utjämningsår.\ncatalog:occurrence:299912\ncatalog:occurrence:300499\ncatalog:variable_text:34299:13514:16436\ncatalog:variable_text:34300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar-lss-utjamning-23685"
+fields = { "sets" = ["utjamningsar"] }
+evidence = "Siffersuffixet finns inte i källkolumnens namn och är ett räknarsuffix. LSS är läsbart i källans benämning.\ncatalog:occurrence-locators:variable:34301\ncatalog:occurrence:301255\ncatalog:variable_text:34301:20454:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utjamningsar-lss-utjamning-23685"
+fields = { "tags" = [] }
+evidence = "Siffersuffixet finns inte i källkolumnens namn och är ett räknarsuffix. LSS är läsbart i källans benämning.\ncatalog:occurrence-locators:variable:34301\ncatalog:occurrence:301255\ncatalog:variable_text:34301:20454:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utjberbidavgkrinv"
+fields = { "sets" = ["lss-utjamningsbidrag-och-avgift"] }
+evidence = "Variabeln mäter LSS-utjämningsbidrag eller avgift per invånare.\ncatalog:variable_text:34302:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:utjberbidavgkrinv"
+fields = { "tags" = ["public-finance"] }
+evidence = "Variabeln mäter LSS-utjämningsbidrag eller avgift per invånare.\ncatalog:variable_text:34302:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:verks"
+fields = { "sets" = [] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34303:18262:19358\ncatalog:variable_text:34303:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:verks"
+fields = { "tags" = ["public-finance"] }
+evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:34303:18262:19358\ncatalog:variable_text:34303:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vf"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34304:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vf"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34304:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vo"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34305:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vo"
+fields = { "tags" = ["education"] }
+evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34305:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2007-01-01..2007-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2008-01-01..2008-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2009-01-01..2009-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2010-01-01..2010-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2011-01-01..2011-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2012-01-01..2012-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2013-01-01..2013-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: anthivtot @2014-01-01..2014-12-31 where key = 'v8500'"
+fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
+evidence = "Källan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2015-01-01..2015-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2016-01-01..2016-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2017-01-01..2017-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2018-01-01..2018-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2019-01-01..2019-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2020-01-01..2020-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2021-01-01..2021-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2022-01-01..2022-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2023-01-01..2023-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2024-01-01..2024-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2025-01-01..2025-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Skost_inklPKIX @2026-01-01..2026-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2008-01-01..2008-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2009-01-01..2009-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2010-01-01..2010-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2011-01-01..2011-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2012-01-01..2012-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2013-01-01..2013-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: UtjLSSinsats @2014-01-01..2014-12-31 where key = 'v23682'"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
+evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"

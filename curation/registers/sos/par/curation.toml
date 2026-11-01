@@ -235,18 +235,6 @@ evidence = "reg_meta_build/curation/registers/sos/par.toml:426\n\nWord order onl
 
 [[statement]]
 kind = "set"
-subject = "var:anestesikod-1"
-fields = { "sets" = ["anestesikod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:30"
-
-[[statement]]
-kind = "set"
-subject = "var:anestesikod-2"
-fields = { "sets" = ["anestesikod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:30"
-
-[[statement]]
-kind = "set"
 subject = "var:atgardsdatum-1"
 fields = { "sets" = ["atgardsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
@@ -427,42 +415,888 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:
 
 [[statement]]
 kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid olika referenstidpunkter hör till åldersgruppen.\ncatalog:variable_text:57248:-2192:9862\ncatalog:variable_text:57248:14610:2932897\ncatalog:variable_text:57248:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid olika referenstidpunkter hör till åldersgruppen.\ncatalog:variable_text:57248:-2192:9862\ncatalog:variable_text:57248:14610:2932897\ncatalog:variable_text:57248:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-arets-slut"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen.\ncatalog:variable_text:57249:-2192:9862\ncatalog:variable_text:57249:19723:2932897\ncatalog:variable_text:57249:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-arets-slut"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen.\ncatalog:variable_text:57249:-2192:9862\ncatalog:variable_text:57249:19723:2932897\ncatalog:variable_text:57249:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-1"
+fields = { "sets" = ["anestesikod"] }
+evidence = "Anestesikod avser en vårdåtgärd.\ncatalog:variable_text:57250:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-1"
+fields = { "tags" = ["healthcare"] }
+evidence = "Anestesikod avser en vårdåtgärd.\ncatalog:variable_text:57250:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-2"
+fields = { "sets" = ["anestesikod"] }
+evidence = "Anestesikod avser en vårdåtgärd.\ncatalog:variable_text:57251:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-2"
+fields = { "tags" = ["healthcare"] }
+evidence = "Anestesikod avser en vårdåtgärd.\ncatalog:variable_text:57251:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-datum"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "Datum för påbörjad åtgärd ingår i gruppen.\ncatalog:variable_text:57253:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-datum"
+fields = { "tags" = [] }
+evidence = "Datum för påbörjad åtgärd ingår i gruppen.\ncatalog:variable_text:57253:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-nr"
+fields = { "sets" = ["atgardssekvensnummer"] }
+evidence = "Numret är åtgärdens sekvensnummer.\ncatalog:variable_text:57254:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-nr"
+fields = { "tags" = [] }
+evidence = "Numret är åtgärdens sekvensnummer.\ncatalog:variable_text:57254:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "Datum för påbörjad åtgärd ingår i gruppen.\ncatalog:variable_text:57255:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum"
+fields = { "tags" = [] }
+evidence = "Datum för påbörjad åtgärd ingår i gruppen.\ncatalog:variable_text:57255:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-eller-atc-kod"
+fields = { "sets" = ["atgardskod"] }
+evidence = "Fältet innehåller åtgärdskod eller ATC-kod vid läkemedelstillförsel.\ncatalog:variable_text:57286:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-eller-atc-kod"
+fields = { "tags" = ["healthcare", "medicines"] }
+evidence = "Fältet innehåller åtgärdskod eller ATC-kod vid läkemedelstillförsel.\ncatalog:variable_text:57286:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-eller-atc-kod-2"
+fields = { "sets" = ["atgardskod"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen ATGARD.\ncatalog:occurrence-locators:variable:57287\ncatalog:variable_text:57287:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-eller-atc-kod-2"
+fields = { "tags" = ["healthcare", "medicines"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen ATGARD.\ncatalog:occurrence-locators:variable:57287\ncatalog:variable_text:57287:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskoder"
+fields = { "sets" = ["atgardskod"] }
+evidence = "Fältet innehåller åtgärdskoder.\ncatalog:variable_text:57288:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskoder"
+fields = { "tags" = ["healthcare"] }
+evidence = "Fältet innehåller åtgärdskoder.\ncatalog:variable_text:57288:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "sets" = [] }
+evidence = "Avtalet reglerar vårdersättning.\ncatalog:variable_text:57289:5113:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "tags" = ["healthcare"] }
+evidence = "Avtalet reglerar vårdersättning.\ncatalog:variable_text:57289:5113:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "sets" = [] }
+evidence = "Variabeln avser civilstånd.\ncatalog:variable_text:57291:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln avser civilstånd.\ncatalog:variable_text:57291:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dia-ant"
+fields = { "sets" = [] }
+evidence = "Antalet avser diagnoskoder.\ncatalog:variable_text:57292:14975:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dia-ant"
+fields = { "tags" = ["health"] }
+evidence = "Antalet avser diagnoskoder.\ncatalog:variable_text:57292:14975:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dia-nr"
+fields = { "sets" = ["diagnossekvensnummer"] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57293:14975:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:dia-nr"
+fields = { "tags" = [] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57293:14975:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "sets" = [] }
+evidence = "Fältet innehåller diagnoskoder och under en period även ATC-kod.\ncatalog:variable_text:57294:-2192:9862\ncatalog:variable_text:57294:14610:16436\ncatalog:variable_text:57294:16436:2932897\ncatalog:variable_text:57294:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "tags" = ["health", "medicines"] }
+evidence = "Fältet innehåller diagnoskoder och under en period även ATC-kod.\ncatalog:variable_text:57294:-2192:9862\ncatalog:variable_text:57294:14610:16436\ncatalog:variable_text:57294:16436:2932897\ncatalog:variable_text:57294:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-nr"
+fields = { "sets" = ["diagnossekvensnummer"] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57295:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-nr"
+fields = { "tags" = [] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57295:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-atc-skada-forgiftning"
+fields = { "sets" = [] }
+evidence = "Fältet innehåller diagnoskod eller ATC-kod vid läkemedelsrelaterat tillstånd.\ncatalog:variable_text:57296:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-atc-skada-forgiftning"
+fields = { "tags" = ["health", "medicines"] }
+evidence = "Fältet innehåller diagnoskod eller ATC-kod vid läkemedelsrelaterat tillstånd.\ncatalog:variable_text:57296:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnosrelaterad-grupp"
+fields = { "sets" = [] }
+evidence = "Grupperingen avser vårdkontakten.\ncatalog:variable_text:57297:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnosrelaterad-grupp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Grupperingen avser vårdkontakten.\ncatalog:variable_text:57297:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fil-lt"
+fields = { "sets" = ["uppgiftslamnare"] }
+evidence = "Fil-lt är en källkod utan läsbara stammar för rapportör eller uppgiftslämnare.\ncatalog:variable_text:57300:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fil-lt"
+fields = { "tags" = ["methods"] }
+evidence = "Fil-lt är en källkod utan läsbara stammar för rapportör eller uppgiftslämnare.\ncatalog:variable_text:57300:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:foddat"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Födelsedatum ingår i födelsetid.\ncatalog:variable_text:57301:-2192:14610\ncatalog:variable_text:57301:14610:16436\ncatalog:variable_text:57301:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foddat"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum ingår i födelsetid.\ncatalog:variable_text:57301:-2192:14610\ncatalog:variable_text:57301:14610:16436\ncatalog:variable_text:57301:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Födelseår ingår i födelsetid.\ncatalog:variable_text:57302:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår ingår i födelsetid.\ncatalog:variable_text:57302:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Variabeln anger patientens födelsedatum.\ncatalog:variable_text:57303:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger patientens födelsedatum.\ncatalog:variable_text:57303:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas-m"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Variabeln anger patientens födelsedatum i båda perioderna.\ncatalog:variable_text:57304:16436:19723\ncatalog:variable_text:57304:19723:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas-m"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger patientens födelsedatum i båda perioderna.\ncatalog:variable_text:57304:16436:19723\ncatalog:variable_text:57304:19723:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = [] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:57305:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:57305:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsort-lan-kommun-forsamling"
+fields = { "sets" = ["folkbokforingsort"] }
+evidence = "Län, kommun och församling anger folkbokföringsort.\ncatalog:variable_text:57307:-2192:9862\ncatalog:variable_text:57307:9862:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsort-lan-kommun-forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Län, kommun och församling anger folkbokföringsort.\ncatalog:variable_text:57307:-2192:9862\ncatalog:variable_text:57307:9862:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foreskrift"
+fields = { "sets" = [] }
+evidence = "Föreskriften anger rapporteringens regelverk.\ncatalog:variable_text:57308:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foreskrift"
+fields = { "tags" = ["methods"] }
+evidence = "Föreskriften anger rapporteringens regelverk.\ncatalog:variable_text:57308:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:form-oppenvardskontakt"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver formen för vårdkontakten.\ncatalog:variable_text:57309:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:form-oppenvardskontakt"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln beskriver formen för vårdkontakten.\ncatalog:variable_text:57309:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:indatum"
+fields = { "sets" = ["besoksdatum"] }
+evidence = "Datumet omfattar besöksdatum samt historiska inskrivningsdatum.\ncatalog:variable_text:57312:-2192:9862\ncatalog:variable_text:57312:14610:16436\ncatalog:variable_text:57312:16436:2932897\ncatalog:variable_text:57312:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:indatum"
+fields = { "tags" = [] }
+evidence = "Datumet omfattar besöksdatum samt historiska inskrivningsdatum.\ncatalog:variable_text:57312:-2192:9862\ncatalog:variable_text:57312:14610:16436\ncatalog:variable_text:57312:16436:2932897\ncatalog:variable_text:57312:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:indatuma"
+fields = { "sets" = ["besoksdatum"] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57313:-2192:9862\ncatalog:variable_text:57313:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:indatuma"
+fields = { "tags" = [] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57313:-2192:9862\ncatalog:variable_text:57313:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insatt"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver inskrivning till vård.\ncatalog:variable_text:57314:-2192:14610\ncatalog:variable_text:57314:14610:16436\ncatalog:variable_text:57314:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insatt"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln beskriver inskrivning till vård.\ncatalog:variable_text:57314:-2192:14610\ncatalog:variable_text:57314:14610:16436\ncatalog:variable_text:57314:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatum"
+fields = { "sets" = ["inventeringsdatum"] }
+evidence = "Datumet avser inventering.\ncatalog:variable_text:57315:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatum"
+fields = { "tags" = [] }
+evidence = "Datumet avser inventering.\ncatalog:variable_text:57315:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatuma"
+fields = { "sets" = ["inventeringsdatum"] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57316:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatuma"
+fields = { "tags" = [] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57316:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatumn"
+fields = { "sets" = ["inventeringsdatum"] }
+evidence = "Den avslutande bokstaven n är en kod för datumrepresentation.\ncatalog:variable_text:57317:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:invdatumn"
+fields = { "tags" = [] }
+evidence = "Den avslutande bokstaven n är en kod för datumrepresentation.\ncatalog:variable_text:57317:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "sets" = ["klinik-och-medicinskt-verksamhetsomrade"] }
+evidence = "Variabeln anger klinikkod.\ncatalog:variable_text:57318:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger klinikkod.\ncatalog:variable_text:57318:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kliniknamn"
+fields = { "sets" = ["klinik-och-medicinskt-verksamhetsomrade"] }
+evidence = "Fältet anger klinikindelning.\ncatalog:variable_text:57319:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:kliniknamn"
+fields = { "tags" = ["healthcare"] }
+evidence = "Fältet anger klinikindelning.\ncatalog:variable_text:57319:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger patientens kön.\ncatalog:variable_text:57320:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger patientens kön.\ncatalog:variable_text:57320:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsvariabel-drg"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kvalitet i DRG-gruppering.\ncatalog:variable_text:57321:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsvariabel-drg"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger kvalitet i DRG-gruppering.\ncatalog:variable_text:57321:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakarkontakt"
+fields = { "sets" = [] }
+evidence = "Variabeln avser kontakt med läkare.\ncatalog:variable_text:57322:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakarkontakt"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln avser kontakt med läkare.\ncatalog:variable_text:57322:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lkf-in"
+fields = { "sets" = ["folkbokforingsort"] }
+evidence = "LKF och in är ogenomskinliga källförkortningar i id:t.\ncatalog:variable_text:57323:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lkf-in"
+fields = { "tags" = ["geography"] }
+evidence = "LKF och in är ogenomskinliga källförkortningar i id:t.\ncatalog:variable_text:57323:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-atc"
+fields = { "sets" = [] }
+evidence = "Variabeln anger ATC-kod vid läkemedelstillförsel.\ncatalog:variable_text:57325:20089:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-atc"
+fields = { "tags" = ["medicines"] }
+evidence = "Variabeln anger ATC-kod vid läkemedelstillförsel.\ncatalog:variable_text:57325:20089:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-klin"
+fields = { "sets" = ["klinik-och-medicinskt-verksamhetsomrade"] }
+evidence = "LT är en källkod som saknar motsvarighet i etiketten.\ncatalog:variable_text:57326:-2192:9862\ncatalog:variable_text:57326:16436:16801\ncatalog:variable_text:57326:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-klin"
+fields = { "tags" = ["healthcare"] }
+evidence = "LT är en källkod som saknar motsvarighet i etiketten.\ncatalog:variable_text:57326:-2192:9862\ncatalog:variable_text:57326:16436:16801\ncatalog:variable_text:57326:9862:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:mdc"
+fields = { "sets" = [] }
+evidence = "MDC är en bokstavskod för etikettens ord.\ncatalog:variable_text:57328:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mdc"
+fields = { "tags" = ["healthcare"] }
+evidence = "MDC är en bokstavskod för etikettens ord.\ncatalog:variable_text:57328:10227:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinskt-verksamhetsomrade"
+fields = { "sets" = ["klinik-och-medicinskt-verksamhetsomrade"] }
+evidence = "Variabeln anger klinik eller medicinskt verksamhetsområde.\ncatalog:variable_text:57329:-2192:9862\ncatalog:variable_text:57329:19723:2932897\ncatalog:variable_text:57329:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinskt-verksamhetsomrade"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger klinik eller medicinskt verksamhetsområde.\ncatalog:variable_text:57329:-2192:9862\ncatalog:variable_text:57329:19723:2932897\ncatalog:variable_text:57329:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nation"
+fields = { "sets" = [] }
+evidence = "Variabeln anger medborgarskapsland.\ncatalog:variable_text:57330:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nation"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger medborgarskapsland.\ncatalog:variable_text:57330:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:op-ant"
+fields = { "sets" = [] }
+evidence = "Antalet avser vårdåtgärder.\ncatalog:variable_text:57331:14975:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:op-ant"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antalet avser vårdåtgärder.\ncatalog:variable_text:57331:14975:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:op-datum"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "Datumet avser åtgärdens början.\ncatalog:variable_text:57332:14975:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:op-datum"
+fields = { "tags" = [] }
+evidence = "Datumet avser åtgärdens början.\ncatalog:variable_text:57332:14975:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:permission"
+fields = { "sets" = [] }
+evidence = "Permissionen gäller tvångsvård.\ncatalog:variable_text:57333:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:permission"
+fields = { "tags" = ["healthcare"] }
+evidence = "Permissionen gäller tvångsvård.\ncatalog:variable_text:57333:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln anger identifierarens kvalitet.\ncatalog:variable_text:57335:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger identifierarens kvalitet.\ncatalog:variable_text:57335:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:planerad-vardkontakt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om vårdkontakten var planerad.\ncatalog:variable_text:57336:-2192:9862\ncatalog:variable_text:57336:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:planerad-vardkontakt"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger om vårdkontakten var planerad.\ncatalog:variable_text:57336:-2192:9862\ncatalog:variable_text:57336:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:psvard"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar psykiatrisk vårdform.\ncatalog:variable_text:57338:11323:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:psvard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln kodar psykiatrisk vårdform.\ncatalog:variable_text:57338:11323:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-atg"
+fields = { "sets" = ["atgardssekvensnummer"] }
+evidence = "Numret anger åtgärdens position.\ncatalog:variable_text:57340:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-atg"
+fields = { "tags" = [] }
+evidence = "Numret anger åtgärdens position.\ncatalog:variable_text:57340:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-atgard"
+fields = { "sets" = ["atgardssekvensnummer"] }
+evidence = "Numret anger åtgärdens position.\ncatalog:variable_text:57341:14610:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-atgard"
+fields = { "tags" = [] }
+evidence = "Numret anger åtgärdens position.\ncatalog:variable_text:57341:14610:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-dia"
+fields = { "sets" = ["diagnossekvensnummer"] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57342:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvensnr-dia"
+fields = { "tags" = [] }
+evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57342:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring"
+fields = { "sets" = ["senaste-invandring"] }
+evidence = "Variabeln anger senaste invandring.\ncatalog:variable_text:57344:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger senaste invandring.\ncatalog:variable_text:57344:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring-1"
+fields = { "sets" = ["senaste-invandring"] }
+evidence = "Variabeln anger senaste invandring.\ncatalog:variable_text:57345:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring-1"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger senaste invandring.\ncatalog:variable_text:57345:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:senutv"
+fields = { "sets" = [] }
+evidence = "Variabeln anger senaste utvandring.\ncatalog:variable_text:57346:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:senutv"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger senaste utvandring.\ncatalog:variable_text:57346:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "sets" = [] }
+evidence = "Variabeln anger vårdens sjukhus.\ncatalog:variable_text:57347:-2192:9862\ncatalog:variable_text:57347:14610:2932897\ncatalog:variable_text:57347:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger vårdens sjukhus.\ncatalog:variable_text:57347:-2192:9862\ncatalog:variable_text:57347:14610:2932897\ncatalog:variable_text:57347:9862:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:slutrapporterad"
+fields = { "sets" = [] }
+evidence = "Variabeln anger rapporteringsstatus.\ncatalog:variable_text:57349:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:slutrapporterad"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger rapporteringsstatus.\ncatalog:variable_text:57349:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftslamnare"
+fields = { "sets" = ["uppgiftslamnare"] }
+evidence = "Variabeln anger rapportör.\ncatalog:variable_text:57355:14975:19723\ncatalog:variable_text:57355:19723:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftslamnare"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger rapportör.\ncatalog:variable_text:57355:14975:19723\ncatalog:variable_text:57355:19723:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utdatum"
+fields = { "sets" = ["utskrivningsdatum"] }
+evidence = "Datumet anger utskrivning.\ncatalog:variable_text:57357:-2192:14610\ncatalog:variable_text:57357:14610:16436\ncatalog:variable_text:57357:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utdatum"
+fields = { "tags" = [] }
+evidence = "Datumet anger utskrivning.\ncatalog:variable_text:57357:-2192:14610\ncatalog:variable_text:57357:14610:16436\ncatalog:variable_text:57357:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utdatuma"
+fields = { "sets" = ["utskrivningsdatum"] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57358:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utdatuma"
+fields = { "tags" = [] }
+evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57358:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utsatt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger utskrivningens utfall.\ncatalog:variable_text:57359:-2192:14610\ncatalog:variable_text:57359:14610:16436\ncatalog:variable_text:57359:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utsatt"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger utskrivningens utfall.\ncatalog:variable_text:57359:-2192:14610\ncatalog:variable_text:57359:14610:16436\ncatalog:variable_text:57359:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardtid"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter vårdtid i dagar.\ncatalog:variable_text:57360:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardtid"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln mäter vårdtid i dagar.\ncatalog:variable_text:57360:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verks-akut"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av akutverksamhet.\ncatalog:variable_text:57361:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verks-akut"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger typ av akutverksamhet.\ncatalog:variable_text:57361:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "sets" = [] }
+evidence = "Variabeln anger vårdpersonalens yrkeskategori.\ncatalog:variable_text:57362:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "tags" = ["employment", "healthcare"] }
+evidence = "Variabeln anger vårdpersonalens yrkeskategori.\ncatalog:variable_text:57362:16436:2932897"
+
+[[statement]]
+kind = "set"
 subject = "var:yttre-orsakskod-1"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57363:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-1"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57363:-2192:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-2"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57364:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-2"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57364:9862:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-3"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57365:14245:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-3"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57365:14245:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-4"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57366:14245:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-4"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57366:14245:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-5"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57367:14245:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-5"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57367:14245:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-6"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57368:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-6"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57368:14245:14975"
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-7"
 fields = { "sets" = ["yttre-orsakskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57369:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-7"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger yttre orsak till skada eller förgiftning.\ncatalog:variable_text:57369:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-eller-atc"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "Fältet innehåller yttre orsakskod eller ATC-kod vid läkemedelsrelaterat tillstånd.\ncatalog:variable_text:57370:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-eller-atc"
+fields = { "tags" = ["health", "medicines"] }
+evidence = "Fältet innehåller yttre orsakskod eller ATC-kod vid läkemedelsrelaterat tillstånd.\ncatalog:variable_text:57370:16436:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskoder"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "Fältet innehåller yttre orsakskoder och tidigare även ATC-kod.\ncatalog:variable_text:57371:14610:15706\ncatalog:variable_text:57371:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskoder"
+fields = { "tags" = ["health", "medicines"] }
+evidence = "Fältet innehåller yttre orsakskoder och tidigare även ATC-kod.\ncatalog:variable_text:57371:14610:15706\ncatalog:variable_text:57371:15706:2932897"

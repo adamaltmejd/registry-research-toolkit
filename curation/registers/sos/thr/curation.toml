@@ -94,3 +94,291 @@ kind = "set"
 subject = "thr-besok: arendeid"
 fields = { "description" = "Ärende ID\n10-siffrig kod" }
 evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:57437:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:57437:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard"
+fields = { "sets" = [] }
+evidence = "Åtgärden avser tandvård.\ncatalog:register:289\ncatalog:variable_text:57440:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Åtgärden avser tandvård.\ncatalog:register:289\ncatalog:variable_text:57440:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:besoksalder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:57442:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:besoksalder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:57442:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "sets" = [] }
+evidence = "Civilstånd beskriver familjerättslig ställning.\ncatalog:variable_text:57444:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd beskriver familjerättslig ställning.\ncatalog:variable_text:57444:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-patient"
+fields = { "sets" = [] }
+evidence = "Markören beskriver patientens tillhörighet till EU/EES eller Schweiz i vården.\ncatalog:variable_text:57446:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-patient"
+fields = { "tags" = ["healthcare"] }
+evidence = "Markören beskriver patientens tillhörighet till EU/EES eller Schweiz i vården.\ncatalog:variable_text:57446:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = [] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:57447:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:57447:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunamn"
+fields = { "sets" = [] }
+evidence = "Gatunamnet anger mottagningens geografiska läge.\ncatalog:variable_text:57448:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunamn"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunamnet anger mottagningens geografiska läge.\ncatalog:variable_text:57448:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "sets" = [] }
+evidence = "Gatunummer anger mottagningens geografiska läge.\ncatalog:variable_text:57449:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunummer anger mottagningens geografiska läge.\ncatalog:variable_text:57449:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-till-vard"
+fields = { "sets" = [] }
+evidence = "Grunden avser rätt till tandvårdsstöd och vård.\ncatalog:valueset:10900\ncatalog:valueset:9650\ncatalog:variable_text:57450:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-till-vard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Grunden avser rätt till tandvårdsstöd och vård.\ncatalog:valueset:10900\ncatalog:valueset:9650\ncatalog:variable_text:57450:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:intakta"
+fields = { "sets" = [] }
+evidence = "Antalet intakta tänder är ett tandhälsomått.\ncatalog:variable_text:57453:15706:20089\ncatalog:variable_text:57457:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:intakta"
+fields = { "tags" = ["health"] }
+evidence = "Antalet intakta tänder är ett tandhälsomått.\ncatalog:variable_text:57453:15706:20089\ncatalog:variable_text:57457:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "sets" = [] }
+evidence = "Vårdgivarkategori beskriver vårdens utförare.\ncatalog:variable_text:57454:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "tags" = ["healthcare"] }
+evidence = "Vårdgivarkategori beskriver vårdens utförare.\ncatalog:variable_text:57454:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:57455:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:57455:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-anledning"
+fields = { "sets" = [] }
+evidence = "Korrigeringsanledningen är en kvalitetsmarkör.\ncatalog:valueset:2932\ncatalog:variable_text:57456:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-anledning"
+fields = { "tags" = ["methods"] }
+evidence = "Korrigeringsanledningen är en kvalitetsmarkör.\ncatalog:valueset:2932\ncatalog:variable_text:57456:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande"
+fields = { "sets" = [] }
+evidence = "Antalet kvarvarande tänder är ett tandhälsomått.\ncatalog:variable_text:57453:15706:20089\ncatalog:variable_text:57457:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvarvarande"
+fields = { "tags" = ["health"] }
+evidence = "Antalet kvarvarande tänder är ett tandhälsomått.\ncatalog:variable_text:57453:15706:20089\ncatalog:variable_text:57457:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lkf"
+fields = { "sets" = [] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:variable_text:57458:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lkf"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:variable_text:57458:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = [] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:57459:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:57459:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mot-lan"
+fields = { "sets" = [] }
+evidence = "Län anger mottagningens geografiska läge.\ncatalog:variable_text:57460:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mot-lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger mottagningens geografiska läge.\ncatalog:variable_text:57460:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kvaliteten på personnummer.\ncatalog:variable_text:57464:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger kvaliteten på personnummer.\ncatalog:variable_text:57464:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postkod"
+fields = { "sets" = [] }
+evidence = "Postkoden anger mottagningens geografiska läge.\ncatalog:variable_text:57466:14061:14245\ncatalog:variable_text:57466:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postkod"
+fields = { "tags" = ["geography"] }
+evidence = "Postkoden anger mottagningens geografiska läge.\ncatalog:variable_text:57466:14061:14245\ncatalog:variable_text:57466:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postorten anger mottagningens geografiska läge.\ncatalog:variable_text:57467:14061:14245\ncatalog:variable_text:57467:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten anger mottagningens geografiska läge.\ncatalog:variable_text:57467:14061:14245\ncatalog:variable_text:57467:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tandnummer"
+fields = { "sets" = [] }
+evidence = "Tandnummer anger en tand i tandvården.\ncatalog:register:289\ncatalog:variable_text:57470:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tandnummer"
+fields = { "tags" = ["healthcare"] }
+evidence = "Tandnummer anger en tand i tandvården.\ncatalog:register:289\ncatalog:variable_text:57470:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tandposition"
+fields = { "sets" = [] }
+evidence = "Tandposition anger position på en tand i tandvården.\ncatalog:register:289\ncatalog:variable_text:57471:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tandposition"
+fields = { "tags" = ["healthcare"] }
+evidence = "Tandposition anger position på en tand i tandvården.\ncatalog:register:289\ncatalog:variable_text:57471:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstand"
+fields = { "sets" = [] }
+evidence = "Tillståndet är en diagnos eller ett hälsotillstånd.\ncatalog:variable_text:57472:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstand"
+fields = { "tags" = ["health"] }
+evidence = "Tillståndet är en diagnos eller ett hälsotillstånd.\ncatalog:variable_text:57472:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:transtyp"
+fields = { "sets" = [] }
+evidence = "Transaktionstyperna beskriver olika slags tandvårdsbesök och ärenden.\ncatalog:variable_text:57473:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:transtyp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Transaktionstyperna beskriver olika slags tandvårdsbesök och ärenden.\ncatalog:variable_text:57473:15706:20089"

@@ -10,3 +10,111 @@ kind = "set"
 subject = "miljosektorn: nr_agg_2007"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:36\n\nLegacy exact value-set label: SNI 2007 MIR"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-fv-miljo"
+fields = { "sets" = [] }
+evidence = "AE och FV är källkoder som inte är läsbara ordstammar i etiketten.\ncatalog:variable_text:39264:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-fv-miljo"
+fields = { "tags" = ["business", "environment"] }
+evidence = "AE och FV är källkoder som inte är läsbara ordstammar i etiketten.\ncatalog:variable_text:39264:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-nettooms-miljo"
+fields = { "sets" = [] }
+evidence = "AE är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:39265:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-nettooms-miljo"
+fields = { "tags" = ["business", "environment"] }
+evidence = "AE är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:39265:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-pv-miljo"
+fields = { "sets" = [] }
+evidence = "AE och PV är källkoder som inte är läsbara ordstammar i etiketten.\ncatalog:variable_text:39266:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-pv-miljo"
+fields = { "tags" = ["business", "environment"] }
+evidence = "AE och PV är källkoder som inte är läsbara ordstammar i etiketten.\ncatalog:variable_text:39266:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:exp-mikro-miljo"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter värdet av export av miljövänliga varor och tjänster.\ncatalog:variable_text:39269:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:exp-mikro-miljo"
+fields = { "tags" = ["environment", "trade"] }
+evidence = "Variabeln mäter värdet av export av miljövänliga varor och tjänster.\ncatalog:variable_text:39269:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk indelning i län.\ncatalog:variable_text:39270:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk indelning i län.\ncatalog:variable_text:39270:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomrade"
+fields = { "sets" = [] }
+evidence = "Variabeln anger miljöområdet för produktionen.\ncatalog:variable_text:39271:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoomrade"
+fields = { "tags" = ["environment"] }
+evidence = "Variabeln anger miljöområdet för produktionen.\ncatalog:variable_text:39271:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:nr-agg-2007"
+fields = { "sets" = [] }
+evidence = "NR och agg är källmnemonik utan läsbara motsvarigheter i etiketten.\ncatalog:variable_text:39272:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:nr-agg-2007"
+fields = { "tags" = ["business"] }
+evidence = "NR och agg är källmnemonik utan läsbara motsvarigheter i etiketten.\ncatalog:variable_text:39272:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar institutionella enheter efter sektor.\ncatalog:variable_text:39274:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar institutionella enheter efter sektor.\ncatalog:variable_text:39274:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:syss-mikro-miljo"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter sysselsättning i produktion av miljövänliga varor och tjänster.\ncatalog:variable_text:39275:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:syss-mikro-miljo"
+fields = { "tags" = ["employment", "environment"] }
+evidence = "Variabeln mäter sysselsättning i produktion av miljövänliga varor och tjänster.\ncatalog:variable_text:39275:12053:18262"

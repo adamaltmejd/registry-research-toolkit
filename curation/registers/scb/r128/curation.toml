@@ -820,3 +820,1833 @@ kind = "set"
 subject = "foretag-kuagg: ftgsni92"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll är en företagsklassificering.\ncatalog:variable_text:39006:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll är en företagsklassificering.\ncatalog:variable_text:39006:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:39007:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:39007:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ambassad-anstalld-sverige"
+fields = { "sets" = ["skatt-i-beskickningslandet"] }
+evidence = "Kodningen hör till skatt i beskickningslandet.\ncatalog:variable_text:39008:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ambassad-anstalld-sverige"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen hör till skatt i beskickningslandet.\ncatalog:variable_text:39008:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ambassadanstsv-fel"
+fields = { "sets" = ["skatt-i-beskickningslandet"] }
+evidence = "Kodningen hör till skatt i beskickningslandet.\ncatalog:variable_text:39009:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ambassadanstsv-fel"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen hör till skatt i beskickningslandet.\ncatalog:variable_text:39009:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:annanforman"
+fields = { "sets" = ["annan-forman", "formaner"] }
+evidence = "Förekomst av annan förmån ingår i kandidatgruppen och förmåner.\ncatalog:variable_text:39010:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:annanforman"
+fields = { "tags" = ["income"] }
+evidence = "Förekomst av annan förmån ingår i kandidatgruppen och förmåner.\ncatalog:variable_text:39010:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-fran-manad"
+fields = { "sets" = [] }
+evidence = "Anställningsmånad mäter anställning.\ncatalog:variable_text:39011:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-fran-manad"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsmånad mäter anställning.\ncatalog:variable_text:39011:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-till-manad"
+fields = { "sets" = [] }
+evidence = "Anställningsmånad mäter anställning.\ncatalog:variable_text:39012:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-till-manad"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsmånad mäter anställning.\ncatalog:variable_text:39012:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agi-ku"
+fields = { "sets" = ["antal-agi-och-kontrolluppgifter"] }
+evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39013:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agi-ku"
+fields = { "tags" = [] }
+evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39013:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-sjoinkomst"
+fields = { "sets" = [] }
+evidence = "Antalet dagar med sjöinkomst beskriver arbete.\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-sjoinkomst"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet dagar med sjöinkomst beskriver arbete.\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-km-milersattning"
+fields = { "sets" = ["bilersattning"] }
+evidence = "Körsträckan hör till bilersättning.\ncatalog:variable_text:39015:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-km-milersattning"
+fields = { "tags" = ["transport"] }
+evidence = "Körsträckan hör till bilersättning.\ncatalog:variable_text:39015:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter-per-foretag"
+fields = { "sets" = ["antal-agi-och-kontrolluppgifter"] }
+evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter-per-foretag"
+fields = { "tags" = [] }
+evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-med-bilforman"
+fields = { "sets" = ["bilforman"] }
+evidence = "Antalet månader hör till bilförmån.\ncatalog:variable_text:39017:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-med-bilforman"
+fields = { "tags" = ["income"] }
+evidence = "Antalet månader hör till bilförmån.\ncatalog:variable_text:39017:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-vid-arbetsstallet"
+fields = { "sets" = [] }
+evidence = "Antalet personer med kontrolluppgift från arbetsstället avser arbetsmarknad.\ncatalog:variable_text:39018:9496:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-vid-arbetsstallet"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet personer med kontrolluppgift från arbetsstället avser arbetsmarknad.\ncatalog:variable_text:39018:9496:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv"
+fields = { "sets" = ["skatt-i-beskickningslandet"] }
+evidence = "Antalet hör till skatt i beskickningslandet.\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv"
+fields = { "tags" = ["taxation"] }
+evidence = "Antalet hör till skatt i beskickningslandet.\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv-fel"
+fields = { "sets" = ["skatt-i-beskickningslandet"] }
+evidence = "Enheten anger antal kontrolluppgifter och källan markerar felaktiga värden.\ncatalog:variable_text:39020:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antambassadanstsv-fel"
+fields = { "tags" = ["taxation"] }
+evidence = "Enheten anger antal kontrolluppgifter och källan markerar felaktiga värden.\ncatalog:variable_text:39020:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antannanforman"
+fields = { "sets" = ["annan-forman"] }
+evidence = "Antalet mottagare hör till annan förmån.\ncatalog:variable_text:39021:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antannanforman"
+fields = { "tags" = ["income"] }
+evidence = "Antalet mottagare hör till annan förmån.\ncatalog:variable_text:39021:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antbilers"
+fields = { "sets" = ["bilersattning"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39022:14610:17532\ncatalog:variable_text:39022:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbilers"
+fields = { "tags" = ["transport"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39022:14610:17532\ncatalog:variable_text:39022:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbilers-fel"
+fields = { "sets" = ["bilersattning"] }
+evidence = "Antalet uppgifter med bilersättning hör till kandidatgruppen.\ncatalog:variable_text:39023:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antbilers-fel"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet uppgifter med bilersättning hör till kandidatgruppen.\ncatalog:variable_text:39023:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostforman"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39024:14610:17532\ncatalog:variable_text:39024:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostforman"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39024:14610:17532\ncatalog:variable_text:39024:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostforman-fel"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Antalet uppgifter hör till bostadsförmån.\ncatalog:variable_text:39025:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostforman-fel"
+fields = { "tags" = ["income"] }
+evidence = "Antalet uppgifter hör till bostadsförmån.\ncatalog:variable_text:39025:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostsmaforman"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39026:14610:17532\ncatalog:variable_text:39026:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostsmaforman"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39026:14610:17532\ncatalog:variable_text:39026:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostsmaforman-fel"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "Antalet uppgifter hör till bostadsförmånens småhuskomponent.\ncatalog:variable_text:39027:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antbostsmaforman-fel"
+fields = { "tags" = ["income"] }
+evidence = "Antalet uppgifter hör till bostadsförmånens småhuskomponent.\ncatalog:variable_text:39027:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antdelagare"
+fields = { "sets" = ["delagare-i-famansbolag"] }
+evidence = "Antalet och delägarkodningen mäter samma koncept.\ncatalog:variable_text:39028:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antdelagare"
+fields = { "tags" = ["business"] }
+evidence = "Antalet och delägarkodningen mäter samma koncept.\ncatalog:variable_text:39028:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antinrikes"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antinrikes"
+fields = { "tags" = ["transport"] }
+evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antkostforman"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39096:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antkostforman"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39096:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antlogiers"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39101:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antlogiers"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39101:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antparkering"
+fields = { "sets" = ["fri-parkering"] }
+evidence = "Antalet personer hör till fri parkering.\ncatalog:variable_text:39032:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antparkering"
+fields = { "tags" = ["income"] }
+evidence = "Antalet personer hör till fri parkering.\ncatalog:variable_text:39032:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antpensforman"
+fields = { "sets" = ["forman-som-pension"] }
+evidence = "Antalet uppgifter hör till förmån som pension.\ncatalog:variable_text:39033:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antpensforman"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet uppgifter hör till förmån som pension.\ncatalog:variable_text:39033:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antpensforman-fel"
+fields = { "sets" = ["forman-som-pension"] }
+evidence = "Antalet uppgifter hör till förmån som pension.\ncatalog:variable_text:39034:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antpensforman-fel"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet uppgifter hör till förmån som pension.\ncatalog:variable_text:39034:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antperslon"
+fields = { "sets" = ["kontant-bruttolon"] }
+evidence = "Personantalet hör till kontant bruttolön.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antperslon"
+fields = { "tags" = ["income"] }
+evidence = "Personantalet hör till kontant bruttolön.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antranteforman"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antranteforman"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antreprers"
+fields = { "sets" = ["representationsersattning"] }
+evidence = "Antalet hör till representationsersättning.\ncatalog:variable_text:39037:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:antreprers"
+fields = { "tags" = ["income"] }
+evidence = "Antalet hör till representationsersättning.\ncatalog:variable_text:39037:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:antreseers"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Förekomstkodningen och den uttryckligen inkluderade ersättningen för utomlands bosatta stöds. Antreseers mäter kontrolluppgifter snarare än belagt mottagarantal.\ncatalog:variable_text:39038:14610:17532\ncatalog:variable_text:39038:17532:17897\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39120:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antreseers"
+fields = { "tags" = ["transport"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Förekomstkodningen och den uttryckligen inkluderade ersättningen för utomlands bosatta stöds. Antreseers mäter kontrolluppgifter snarare än belagt mottagarantal.\ncatalog:variable_text:39038:14610:17532\ncatalog:variable_text:39038:17532:17897\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39120:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antsocavtal"
+fields = { "sets" = ["socialavgiftsavtal"] }
+evidence = "Antalet och kodningen hör till socialavgiftsavtal.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antsocavtal"
+fields = { "tags" = ["taxation"] }
+evidence = "Antalet och kodningen hör till socialavgiftsavtal.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktamente"
+fields = { "sets" = ["traktamente"] }
+evidence = "Antalet uppgifter hör till traktamente.\ncatalog:variable_text:39040:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktamente"
+fields = { "tags" = ["income"] }
+evidence = "Antalet uppgifter hör till traktamente.\ncatalog:variable_text:39040:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktamente-fel"
+fields = { "sets" = ["traktamente"] }
+evidence = "Antalet uppgifter hör till traktamente.\ncatalog:variable_text:39041:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktamente-fel"
+fields = { "tags" = ["income"] }
+evidence = "Antalet uppgifter hör till traktamente.\ncatalog:variable_text:39041:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktinr"
+fields = { "sets" = ["traktamente"] }
+evidence = "Enheten ändras och källbeskrivningen specificerar inte inrikes traktamente.\ncatalog:variable_text:39042:14610:17532\ncatalog:variable_text:39042:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktinr"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras och källbeskrivningen specificerar inte inrikes traktamente.\ncatalog:variable_text:39042:14610:17532\ncatalog:variable_text:39042:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktutr"
+fields = { "sets" = ["traktamente"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39043:14610:17532\ncatalog:variable_text:39043:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:anttraktutr"
+fields = { "tags" = ["income"] }
+evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:variable_text:39043:14610:17532\ncatalog:variable_text:39043:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antutrikes"
+fields = { "sets" = [] }
+evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antutrikes"
+fields = { "tags" = ["transport"] }
+evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni200"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385478\ncatalog:occurrence:385492\ncatalog:variable_text:39046:11688:14975\ncatalog:variable_text:39047:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni200"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385478\ncatalog:occurrence:385492\ncatalog:variable_text:39046:11688:14975\ncatalog:variable_text:39047:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2002"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385478\ncatalog:occurrence:385492\ncatalog:variable_text:39046:11688:14975\ncatalog:variable_text:39047:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2002"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385478\ncatalog:occurrence:385492\ncatalog:variable_text:39046:11688:14975\ncatalog:variable_text:39047:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385479\ncatalog:occurrence:385493\ncatalog:variable_text:39048:13514:20089\ncatalog:variable_text:39049:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385479\ncatalog:occurrence:385493\ncatalog:variable_text:39048:13514:20089\ncatalog:variable_text:39049:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007-1641"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385479\ncatalog:occurrence:385493\ncatalog:variable_text:39048:13514:20089\ncatalog:variable_text:39049:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni2007-1641"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet anger en närliggande mappning till en annan variabel och variablernas perioder överlappar.\ncatalog:occurrence:385479\ncatalog:occurrence:385493\ncatalog:variable_text:39048:13514:20089\ncatalog:variable_text:39049:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni92"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "SNI-kodningen hör till arbetsställets näringsgren.\ncatalog:variable_text:39050:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni92"
+fields = { "tags" = ["business"] }
+evidence = "SNI-kodningen hör till arbetsställets näringsgren.\ncatalog:variable_text:39050:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg"
+fields = { "sets" = [] }
+evidence = "Källorna anger både kronor och hektar för samma begrepp.\ncatalog:variable_text:39051:16071:17167\ncatalog:variable_text:39051:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg"
+fields = { "tags" = ["taxation"] }
+evidence = "Källorna anger både kronor och hektar för samma begrepp.\ncatalog:variable_text:39051:16071:17167\ncatalog:variable_text:39051:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avgift"
+fields = { "sets" = [] }
+evidence = "Pensions- och sjukförsäkringsavgift är en avgift av skattekaraktär.\ncatalog:variable_text:39052:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:avgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Pensions- och sjukförsäkringsavgift är en avgift av skattekaraktär.\ncatalog:variable_text:39052:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:beters"
+fields = { "sets" = ["bilforman"] }
+evidence = "BetErs är en ogenomskinlig källmnemonik för betald bilförmån.\ncatalog:variable_text:39053:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:beters"
+fields = { "tags" = ["income"] }
+evidence = "BetErs är en ogenomskinlig källmnemonik för betald bilförmån.\ncatalog:variable_text:39053:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning"
+fields = { "sets" = ["bilersattning", "kostnadsersattningar"] }
+evidence = "Förekomst av bilersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39054:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning"
+fields = { "tags" = ["transport"] }
+evidence = "Förekomst av bilersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39054:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning-fel"
+fields = { "sets" = ["bilersattning", "kostnadsersattningar"] }
+evidence = "Felkolumnen gäller bilersättning.\ncatalog:variable_text:39055:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning-fel"
+fields = { "tags" = ["transport"] }
+evidence = "Felkolumnen gäller bilersättning.\ncatalog:variable_text:39055:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman"
+fields = { "sets" = ["bilforman", "formaner"] }
+evidence = "Bilförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39056:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman"
+fields = { "tags" = ["income"] }
+evidence = "Bilförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39056:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bilkod"
+fields = { "sets" = [] }
+evidence = "Bilkoden avser förmånsbil.\ncatalog:variable_text:39057:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bilkod"
+fields = { "tags" = ["transport"] }
+evidence = "Bilkoden avser förmånsbil.\ncatalog:variable_text:39057:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman"
+fields = { "sets" = ["bostadsforman", "formaner"] }
+evidence = "Bostadsförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39058:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman"
+fields = { "tags" = ["income"] }
+evidence = "Bostadsförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39058:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-fel"
+fields = { "sets" = ["bostadsforman", "formaner"] }
+evidence = "Felkolumnen gäller bostadsförmån.\ncatalog:variable_text:39059:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-fel"
+fields = { "tags" = ["income"] }
+evidence = "Felkolumnen gäller bostadsförmån.\ncatalog:variable_text:39059:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bostsmaforman"
+fields = { "sets" = ["bostadsforman", "formaner"] }
+evidence = "Småhuskomponenten hör till bostadsförmån och förmåner.\ncatalog:variable_text:39060:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostsmaforman"
+fields = { "tags" = ["income"] }
+evidence = "Småhuskomponenten hör till bostadsförmån och förmåner.\ncatalog:variable_text:39060:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostsmaforman-fel"
+fields = { "sets" = ["bostadsforman", "formaner"] }
+evidence = "Felkolumnen gäller bostadsförmån för småhus.\ncatalog:variable_text:39061:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bostsmaforman-fel"
+fields = { "tags" = ["income"] }
+evidence = "Felkolumnen gäller bostadsförmån för småhus.\ncatalog:variable_text:39061:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforman"
+fields = { "sets" = ["formaner"] }
+evidence = "Bränsleförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39062:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforman"
+fields = { "tags" = ["income"] }
+evidence = "Bränsleförmån är en namngiven förmånskomponent.\ncatalog:variable_text:39062:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:delagare-i-famansbolag"
+fields = { "sets" = ["delagare-i-famansbolag"] }
+evidence = "Kodningen och antalet delägare hör till samma koncept.\ncatalog:variable_text:39064:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:delagare-i-famansbolag"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen och antalet delägare hör till samma koncept.\ncatalog:variable_text:39064:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag"
+fields = { "sets" = ["ej-skatteavdrag"] }
+evidence = "Kodningen hör till uppgifter utan skatteavdrag.\ncatalog:variable_text:39066:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen hör till uppgifter utan skatteavdrag.\ncatalog:variable_text:39066:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag-antejskattejbeskatt"
+fields = { "sets" = ["ej-skatteavdrag"] }
+evidence = "Antalet hör till uppgifter utan skatteavdrag.\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag-antejskattejbeskatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Antalet hör till uppgifter utan skatteavdrag.\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter"
+fields = { "sets" = [] }
+evidence = "Ersättningen är en inkomstkomponent.\ncatalog:variable_text:39068:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter"
+fields = { "tags" = ["income"] }
+evidence = "Ersättningen är en inkomstkomponent.\ncatalog:variable_text:39068:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "sets" = [] }
+evidence = "Ersättningen är en namngiven rese- och kostnadsersättningskomponent.\ncatalog:variable_text:39069:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "tags" = ["transport"] }
+evidence = "Ersättningen är en namngiven rese- och kostnadsersättningskomponent.\ncatalog:variable_text:39069:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Beloppet avser utbetald social ersättning.\ncatalog:variable_text:39070:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser utbetald social ersättning.\ncatalog:variable_text:39070:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Koden anger typ av social ersättning.\ncatalog:variable_text:39071:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger typ av social ersättning.\ncatalog:variable_text:39071:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter familjeställning; ingen kandidatgrupp passar.\ncatalog:variable_text:39072:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln mäter familjeställning; ingen kandidatgrupp passar.\ncatalog:variable_text:39072:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter familjetyp; ingen kandidatgrupp passar.\ncatalog:variable_text:39073:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln mäter familjetyp; ingen kandidatgrupp passar.\ncatalog:variable_text:39073:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = [] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:39074:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:39074:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:39075:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:39075:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-som-pension"
+fields = { "sets" = ["forman-som-pension", "formaner"] }
+evidence = "Förmån som pension är en namngiven förmånskomponent.\ncatalog:variable_text:39076:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-som-pension"
+fields = { "tags" = ["transfers"] }
+evidence = "Förmån som pension är en namngiven förmånskomponent.\ncatalog:variable_text:39076:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "sets" = ["formaner"] }
+evidence = "Variabeln avser samlade förmåner.\ncatalog:variable_text:39077:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln avser samlade förmåner.\ncatalog:variable_text:39077:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-forman"
+fields = { "sets" = ["formaner"] }
+evidence = "Variabeln avser samlade förmåner.\ncatalog:variable_text:39078:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-forman"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln avser samlade förmåner.\ncatalog:variable_text:39078:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fri-parkering"
+fields = { "sets" = ["formaner", "fri-parkering"] }
+evidence = "Fri parkering är en namngiven förmån.\ncatalog:variable_text:39079:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fri-parkering"
+fields = { "tags" = ["income"] }
+evidence = "Fri parkering är en namngiven förmån.\ncatalog:variable_text:39079:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni200"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39080:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni200"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39080:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2002"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39081:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2002"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39081:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39082:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39082:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007-16323"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Suffixet 16323 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:39083:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni2007-16323"
+fields = { "tags" = ["business"] }
+evidence = "Suffixet 16323 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:39083:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39084:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni92"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39084:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "sets" = [] }
+evidence = "Ersättning för uthyrd lokal är en inkomst.\ncatalog:variable_text:39085:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för uthyrd lokal är en inkomst.\ncatalog:variable_text:39085:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes"
+fields = { "sets" = [] }
+evidence = "Kodningen avser inrikes tjänsteresa.\ncatalog:variable_text:39086:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen avser inrikes tjänsteresa.\ncatalog:variable_text:39086:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Klassificeringen hör till institutionell sektor.\ncatalog:variable_text:39087:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Klassificeringen hör till institutionell sektor.\ncatalog:variable_text:39087:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-i-lsum-instkod7"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Koden hör till institutionell sektor.\ncatalog:variable_text:39088:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-i-lsum-instkod7"
+fields = { "tags" = ["business"] }
+evidence = "Koden hör till institutionell sektor.\ncatalog:variable_text:39088:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-lsum"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Koden hör till institutionell sektor.\ncatalog:variable_text:39089:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod-lsum"
+fields = { "tags" = ["business"] }
+evidence = "Koden hör till institutionell sektor.\ncatalog:variable_text:39089:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:39090:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:39090:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:justering-fel"
+fields = { "sets" = ["rattad-post"] }
+evidence = "Markeringen hör till rättad post.\ncatalog:variable_text:39091:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:justering-fel"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen hör till rättad post.\ncatalog:variable_text:39091:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "sets" = [] }
+evidence = "Källmarkören beskriver uppgiftens ursprung.\ncatalog:variable_text:39092:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "tags" = ["methods"] }
+evidence = "Källmarkören beskriver uppgiftens ursprung.\ncatalog:variable_text:39092:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39093:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39093:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Arbetsställets kommun anger geografiskt läge.\ncatalog:variable_text:39094:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställets kommun anger geografiskt läge.\ncatalog:variable_text:39094:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:39095:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:39095:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostforman"
+fields = { "sets" = [] }
+evidence = "Kostförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostforman"
+fields = { "tags" = ["income"] }
+evidence = "Kostförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "sets" = [] }
+evidence = "Avdrag för utgifter i arbetet saknar passande kandidatgrupp.\ncatalog:variable_text:39097:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdrag för utgifter i arbetet saknar passande kandidatgrupp.\ncatalog:variable_text:39097:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "Identitetsfaktorn visar en ändrad mappning till en variabel med snävare definition.\ncatalog:occurrence:385049\ncatalog:occurrence:385098"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktorn visar en ändrad mappning till en variabel med snävare definition.\ncatalog:occurrence:385049\ncatalog:occurrence:385098"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:39099:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:39099:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Arbetsställets län anger geografiskt läge.\ncatalog:variable_text:39100:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställets län anger geografiskt läge.\ncatalog:variable_text:39100:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiersattning"
+fields = { "sets" = [] }
+evidence = "Logiersättning är en namngiven kostnadsersättningskomponent. Coordinator group membership: Samtliga avser samlade kostnadsersättningar eller namngivna komponenter. Mappningsosäkerheten mellan samlade och övriga kostnadsersättningar ändrar inte denna tillhörighet. Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39054:15340:20089\ncatalog:variable_text:39055:18262:19723\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39098:18262:20089\ncatalog:variable_text:39101:15340:17897\ncatalog:variable_text:39107:17897:20089\ncatalog:variable_text:39119:9496:11688\ncatalog:variable_text:39120:15340:17897\ncatalog:variable_text:39133:17897:20089\ncatalog:variable_text:39134:18262:19723\ncatalog:variable_text:39135:15340:17897\ncatalog:variable_text:39136:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:logiersattning"
+fields = { "tags" = ["income"] }
+evidence = "Logiersättning är en namngiven kostnadsersättningskomponent. Coordinator group membership: Samtliga avser samlade kostnadsersättningar eller namngivna komponenter. Mappningsosäkerheten mellan samlade och övriga kostnadsersättningar ändrar inte denna tillhörighet. Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39054:15340:20089\ncatalog:variable_text:39055:18262:19723\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39098:18262:20089\ncatalog:variable_text:39101:15340:17897\ncatalog:variable_text:39107:17897:20089\ncatalog:variable_text:39119:9496:11688\ncatalog:variable_text:39120:15340:17897\ncatalog:variable_text:39133:17897:20089\ncatalog:variable_text:39134:18262:19723\ncatalog:variable_text:39135:15340:17897\ncatalog:variable_text:39136:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:loneink"
+fields = { "sets" = ["kontant-bruttolon"] }
+evidence = "Variabeln avser kontant bruttolön.\ncatalog:variable_text:39102:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:loneink"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln avser kontant bruttolön.\ncatalog:variable_text:39102:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = [] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:39103:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:39103:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvudsaklig"
+fields = { "sets" = ["foretagets-naringsgren"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39104:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvudsaklig"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text:39104:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrersforskskatt"
+fields = { "sets" = [] }
+evidence = "Skattefria ersättningar och förmåner är inkomstrelaterade.\ncatalog:variable_text:39105:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrersforskskatt"
+fields = { "tags" = ["income"] }
+evidence = "Skattefria ersättningar och förmåner är inkomstrelaterade.\ncatalog:variable_text:39105:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar"
+fields = { "sets" = [] }
+evidence = "Ersättningarna är inkomstrelaterade.\ncatalog:variable_text:39106:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar"
+fields = { "tags" = ["income"] }
+evidence = "Ersättningarna är inkomstrelaterade.\ncatalog:variable_text:39106:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "Identitetsfaktorn visar en ändrad mappning från en bredare benämnd variabel.\ncatalog:occurrence:385049\ncatalog:occurrence:385098"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktorn visar en ändrad mappning från en bredare benämnd variabel.\ncatalog:occurrence:385049\ncatalog:occurrence:385098"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar"
+fields = { "sets" = [] }
+evidence = "Skattepliktiga ersättningar är inkomstrelaterade.\ncatalog:variable_text:39108:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar"
+fields = { "tags" = ["income"] }
+evidence = "Skattepliktiga ersättningar är inkomstrelaterade.\ncatalog:variable_text:39108:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt"
+fields = { "sets" = [] }
+evidence = "Beloppet avser samlade förmåner och andra skattepliktiga ersättningar.\ncatalog:variable_text:39109:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet avser samlade förmåner och andra skattepliktiga ersättningar.\ncatalog:variable_text:39109:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:pensforman-fel"
+fields = { "sets" = ["forman-som-pension", "formaner"] }
+evidence = "Felkolumnen gäller förmån som pension.\ncatalog:variable_text:39110:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:pensforman-fel"
+fields = { "tags" = ["transfers"] }
+evidence = "Felkolumnen gäller förmån som pension.\ncatalog:variable_text:39110:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalning"
+fields = { "sets" = ["pensionsutbetalningar"] }
+evidence = "Variabeln avser pensionsutbetalning.\ncatalog:variable_text:39111:9496:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalning"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln avser pensionsutbetalning.\ncatalog:variable_text:39111:9496:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:penskod"
+fields = { "sets" = ["pensionsutbetalningar"] }
+evidence = "Pensionskoden hör till kandidatgruppen.\ncatalog:valueset:6607\ncatalog:variable_text:39112:9496:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:penskod"
+fields = { "tags" = ["transfers"] }
+evidence = "Pensionskoden hör till kandidatgruppen.\ncatalog:valueset:6607\ncatalog:variable_text:39112:9496:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ranta"
+fields = { "sets" = [] }
+evidence = "Betald ränta saknar passande kandidatgrupp.\ncatalog:variable_text:39115:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ranta"
+fields = { "tags" = ["finance"] }
+evidence = "Betald ränta saknar passande kandidatgrupp.\ncatalog:variable_text:39115:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteforman"
+fields = { "sets" = [] }
+evidence = "Ränteförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteforman"
+fields = { "tags" = ["finance", "income"] }
+evidence = "Ränteförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rattad-post"
+fields = { "sets" = ["rattad-post"] }
+evidence = "Markeringen hör till rättad post.\ncatalog:variable_text:39117:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rattad-post"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen hör till rättad post.\ncatalog:variable_text:39117:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:reprers"
+fields = { "sets" = ["kostnadsersattningar", "representationsersattning"] }
+evidence = "Representationsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39119:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:reprers"
+fields = { "tags" = ["income"] }
+evidence = "Representationsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39119:9496:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:reseers"
+fields = { "sets" = [] }
+evidence = "Resekostnadsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39120:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:reseers"
+fields = { "tags" = ["transport"] }
+evidence = "Resekostnadsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39120:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:rotulag"
+fields = { "sets" = ["rotunderlag"] }
+evidence = "Beloppet avser ROT-underlag.\ncatalog:variable_text:39121:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rotulag"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet avser ROT-underlag.\ncatalog:variable_text:39121:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rotunderlag"
+fields = { "sets" = ["rotunderlag"] }
+evidence = "Beloppet avser ROT-underlag.\ncatalog:variable_text:39122:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rotunderlag"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet avser ROT-underlag.\ncatalog:variable_text:39122:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rutunderlag"
+fields = { "sets" = [] }
+evidence = "RUT-underlag avser skattereduktion.\ncatalog:variable_text:39123:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rutunderlag"
+fields = { "tags" = ["taxation"] }
+evidence = "RUT-underlag avser skattereduktion.\ncatalog:variable_text:39123:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Sektorkoden hör till institutionell sektor.\ncatalog:variable_text:39124:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "tags" = ["business"] }
+evidence = "Sektorkoden hör till institutionell sektor.\ncatalog:variable_text:39124:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoman"
+fields = { "sets" = [] }
+evidence = "Markeringen avser kontrolluppgift för sjöman.\ncatalog:variable_text:39126:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoman"
+fields = { "tags" = ["employment"] }
+evidence = "Markeringen avser kontrolluppgift för sjöman.\ncatalog:variable_text:39126:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter preliminär skatt.\ncatalog:variable_text:39127:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter preliminär skatt.\ncatalog:variable_text:39127:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "sets" = [] }
+evidence = "Skattepliktiga ersättningar är inkomstrelaterade.\ncatalog:variable_text:39128:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "tags" = ["income"] }
+evidence = "Skattepliktiga ersättningar är inkomstrelaterade.\ncatalog:variable_text:39128:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:socavtal"
+fields = { "sets" = ["socialavgiftsavtal"] }
+evidence = "Kodningen och antalet hör till socialavgiftsavtal.\ncatalog:variable_text:39129:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:socavtal"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen och antalet hör till socialavgiftsavtal.\ncatalog:variable_text:39129:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrarvode"
+fields = { "sets" = [] }
+evidence = "Styrelsearvode är en inkomstkomponent.\ncatalog:variable_text:39130:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:styrarvode"
+fields = { "tags" = ["income"] }
+evidence = "Styrelsearvode är en inkomstkomponent.\ncatalog:variable_text:39130:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summerade-formaner"
+fields = { "sets" = ["formaner"] }
+evidence = "Variabeln avser samlade förmåner på arbetsstället.\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summerade-formaner"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln avser samlade förmåner på arbetsstället.\ncatalog:variable_text:39131:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension"
+fields = { "sets" = ["pensionsutbetalningar"] }
+evidence = "Beloppet avser tjänstepension.\ncatalog:variable_text:39132:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser tjänstepension.\ncatalog:variable_text:39132:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente"
+fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
+evidence = "Traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39133:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente"
+fields = { "tags" = ["income"] }
+evidence = "Traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39133:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-fel"
+fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
+evidence = "Felkolumnen gäller traktamente.\ncatalog:variable_text:39134:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-fel"
+fields = { "tags" = ["income"] }
+evidence = "Felkolumnen gäller traktamente.\ncatalog:variable_text:39134:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-inom-riket"
+fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
+evidence = "Inrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39135:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-inom-riket"
+fields = { "tags" = ["income"] }
+evidence = "Inrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39135:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-utom-riket"
+fields = { "sets" = ["kostnadsersattningar", "traktamente"] }
+evidence = "Utrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39136:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-utom-riket"
+fields = { "tags" = ["income"] }
+evidence = "Utrikes traktamente är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39136:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncatalog:valueset:8386\ncatalog:variable_text:39138:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncatalog:valueset:8386\ncatalog:variable_text:39138:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikes"
+fields = { "sets" = [] }
+evidence = "Kodningen avser utrikes tjänsteresa.\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikes"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen avser utrikes tjänsteresa.\ncatalog:variable_text:39139:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2019-01-01..2019-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2020-01-01..2020-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2021-01-01..2021-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2022-01-01..2022-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2023-01-01..2023-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: AntDagSjo @2024-01-01..2024-12-31 where key = 'v41336'"
+fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
+evidence = "Definitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2019-01-01..2019-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2020-01-01..2020-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2021-01-01..2021-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2022-01-01..2022-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2023-01-01..2023-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntAmbassadAnstSv @2024-01-01..2024-12-31 where key = 'v41328'"
+fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
+evidence = "Definitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @1996-01-01..1996-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @1997-01-01..1997-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @1998-01-01..1998-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @1999-01-01..1999-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2000-01-01..2000-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2001-01-01..2001-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2002-01-01..2002-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2003-01-01..2003-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2004-01-01..2004-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2005-01-01..2005-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2006-01-01..2006-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2007-01-01..2007-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2008-01-01..2008-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2009-01-01..2009-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2010-01-01..2010-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2011-01-01..2011-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2012-01-01..2012-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2013-01-01..2013-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2014-01-01..2014-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2015-01-01..2015-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2016-01-01..2016-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2017-01-01..2017-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2018-01-01..2018-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2019-01-01..2019-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2020-01-01..2020-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2021-01-01..2021-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2022-01-01..2022-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2023-01-01..2023-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntPersLon @2024-01-01..2024-12-31 where key = 'v6116'"
+fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
+evidence = "Rätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2013-01-01..2013-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2014-01-01..2014-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2015-01-01..2015-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2016-01-01..2016-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2017-01-01..2017-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntSocAvtal @2018-01-01..2018-12-31 where key = 'v30678'"
+fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
+evidence = "Definitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2019-01-01..2019-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2020-01-01..2020-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2021-01-01..2021-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2022-01-01..2022-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2023-01-01..2023-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntEjSkattEjBeskatt @2024-01-01..2024-12-31 where key = 'v41337'"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
+evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"

@@ -1,223 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:antal-varderingsenheter-skogsimpediment"
-fields = { "sets" = ["legacy-antal-varderingsenheter-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:148\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:731\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-varderingsenheter-skogsmark"
-fields = { "sets" = ["legacy-antal-varderingsenheter-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:142\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:744\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antveaker"
-fields = { "sets" = ["legacy-antveaker"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:124\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:770\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antvebete"
-fields = { "sets" = ["legacy-antvebete"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:130\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:692\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antveekbygg"
-fields = { "sets" = ["legacy-antveekbygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:136\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:705\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antvesmabyggl"
-fields = { "sets" = ["legacy-antvesmabyggl"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:154\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:757\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:antvesmamarkl"
-fields = { "sets" = ["legacy-antvesmamarkl"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:160\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:718\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:areal-akermark"
-fields = { "sets" = ["legacy-areal-akermark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:106\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:393\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:areal-betesmark"
-fields = { "sets" = ["legacy-areal-betesmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:575\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:94\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:areal-ovrig-mark"
-fields = { "sets" = ["legacy-areal-ovrig-mark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:112\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:406\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:areal-skogsimpediment"
-fields = { "sets" = ["legacy-areal-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:262\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:367\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:areal-skogsmark"
-fields = { "sets" = ["legacy-areal-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:100\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:380\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:biutrymmesyta-i-smahus"
-fields = { "sets" = ["legacy-biutrymmesyta-i-smahus"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:238\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:861\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:bruksar-eller-vardear"
-fields = { "sets" = ["legacy-bruksar-eller-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:214\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:809\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:byggnadsar"
-fields = { "sets" = ["legacy-byggnadsar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:208\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:783\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:796\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:glesbygd"
-fields = { "sets" = ["legacy-glesbygd"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:280\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:588\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:kodubygg"
-fields = { "sets" = ["legacy-kodubygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:274\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:627\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:640\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:653\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:om-eller-tillbyggnar"
-fields = { "sets" = ["legacy-om-eller-tillbyggnar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:220\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:822\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:835\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:prodomr"
-fields = { "sets" = ["legacy-prodomr"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:226\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:848\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-standardpoang"
-fields = { "sets" = ["legacy-summa-standardpoang"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:256\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:679\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-byggnader"
-fields = { "sets" = ["legacy-taxeringsvarde-byggnader"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:178\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:458\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-akermark"
-fields = { "sets" = ["legacy-taxeringsvarde-for-akermark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:166\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:536\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:549\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-skogsimpediment"
-fields = { "sets" = ["legacy-taxeringsvarde-for-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:202\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:510\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-skogsmark"
-fields = { "sets" = ["legacy-taxeringsvarde-for-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:196\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:523\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-mark"
-fields = { "sets" = ["legacy-taxeringsvarde-mark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:190\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:484\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:497\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:total-bostadsyta"
-fields = { "sets" = ["legacy-total-bostadsyta"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:232\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:419\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-smahusbebyggelse"
-fields = { "sets" = ["legacy-typ-av-smahusbebyggelse"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:268\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:666\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardear"
-fields = { "sets" = ["legacy-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:250\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:562\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardebete"
-fields = { "sets" = ["legacy-vardebete"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:172\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:445\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardeekbygg"
-fields = { "sets" = ["legacy-vardeekbygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:184\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:471\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardegrundande-yta-i-smahus"
-fields = { "sets" = ["legacy-vardegrundande-yta-i-smahus"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:244\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:432\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
 subject = "fastighetspriser: {forsamling,kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -380,245 +163,1416 @@ evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:antal-varderingsenheter-med-antveskogsimplant"
-fields = { "sets" = ["legacy-antal-varderingsenheter-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:148\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:731\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:andkod"
+fields = { "sets" = [] }
+evidence = "Ändamålet gäller fastighetsförvärv.\ncatalog:variable_text:10013:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-varderingsenheter-med-skogsmark-antveskoglant"
-fields = { "sets" = ["legacy-antal-varderingsenheter-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:142\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:744\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:andkod"
+fields = { "tags" = ["property"] }
+evidence = "Ändamålet gäller fastighetsförvärv.\ncatalog:variable_text:10013:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fastigheter"
+fields = { "sets" = [] }
+evidence = "Antalet avser fastigheter.\ncatalog:variable_text:10014:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fastigheter"
+fields = { "tags" = ["property"] }
+evidence = "Antalet avser fastigheter.\ncatalog:variable_text:10014:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-taxeringsenheter"
+fields = { "sets" = [] }
+evidence = "Antalet avser fastighetens taxeringsenheter.\ncatalog:variable_text:10015:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-taxeringsenheter"
+fields = { "tags" = ["property"] }
+evidence = "Antalet avser fastighetens taxeringsenheter.\ncatalog:variable_text:10015:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-akermark-antveakerlant"
-fields = { "sets" = ["legacy-antveaker"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:124\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:770\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med åkermark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10016:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-akermark-antveakerlant"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med åkermark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10016:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-antveskogsimplant"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antalet avser värderingsenheter med skogsimpediment.\ncatalog:variable_text:10017:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-antveskogsimplant"
+fields = { "tags" = ["property"] }
+evidence = "Antalet avser värderingsenheter med skogsimpediment.\ncatalog:variable_text:10017:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-betesmark-antvebetelant"
-fields = { "sets" = ["legacy-antvebete"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:130\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:692\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med betesmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10018:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-betesmark-antvebetelant"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med betesmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10018:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-ekonomibyggnad-antveekbygglant"
-fields = { "sets" = ["legacy-antveekbygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:136\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:705\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med ekonomibyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10019:13879:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-varderingsenheter-med-smahusbyggnad-antvesmabyggllant"
-fields = { "sets" = ["legacy-antvesmabyggl"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:154\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:757\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:antal-varderingsenheter-med-ekonomibyggnad-antveekbygglant"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med ekonomibyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10019:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-mark-for-antvesmamarkllant"
-fields = { "sets" = ["legacy-antvesmamarkl"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:160\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:718\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter för småhusmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10020:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-mark-for-antvesmamarkllant"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter för småhusmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10020:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-skogsmark-antveskoglant"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med skogsmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10021:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-skogsmark-antveskoglant"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med skogsmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10021:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-smahusbyggnad-antvesmabyggllant"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:10022:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-med-smahusbyggnad-antvesmabyggllant"
+fields = { "tags" = ["property"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:10022:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsimpediment"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med skogsimpediment hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10023:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsimpediment"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med skogsimpediment hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10023:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsmark"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med skogsmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10024:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsmark"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med skogsmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10024:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antveaker"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med åkermark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10025:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antveaker"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med åkermark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10025:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebete"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med betesmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10026:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebete"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med betesmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10026:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebygg"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter för byggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10027:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebygg"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter för byggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10027:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antveekbygg"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med ekonomibyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10028:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antveekbygg"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter med ekonomibyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10028:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvemark"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter för mark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10029:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvemark"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter för mark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10029:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabyggl"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter för småhusbyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10030:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabyggl"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter för småhusbyggnad hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10030:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamarkl"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter för småhusmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10031:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamarkl"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter för småhusmark hör till gruppen och beskriver fastighet.\ncatalog:variable_text:10031:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:anv"
+fields = { "sets" = [] }
+evidence = "Avser användning av tomtmark.\ncatalog:variable_text:10032:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:anv"
+fields = { "tags" = ["property"] }
+evidence = "Avser användning av tomtmark.\ncatalog:variable_text:10032:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10033:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10033:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:areal-akermark-arealakerlant"
-fields = { "sets" = ["legacy-areal-akermark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:106\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:393\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10034:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark-arealakerlant"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10034:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10035:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10035:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:areal-betesmark-arealbetelant"
-fields = { "sets" = ["legacy-areal-betesmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:575\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:94\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10036:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark-arealbetelant"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10036:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10037:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10037:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:areal-ovrig-mark-arealomarklant"
-fields = { "sets" = ["legacy-areal-ovrig-mark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:112\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:406\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10038:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark-arealomarklant"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10038:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsimpediment"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10039:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsimpediment"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10039:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:areal-skogsimpediment-arealskogsimp"
-fields = { "sets" = ["legacy-areal-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:262\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:367\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10040:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsimpediment-arealskogsimp"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10040:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10041:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10041:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:areal-skogsmark-arealskoglant"
-fields = { "sets" = ["legacy-areal-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:100\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:380\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["markareal"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10042:13879:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:biutrymmesyta-i-smahus-ytabisma"
-fields = { "sets" = ["legacy-biutrymmesyta-i-smahus"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:238\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:861\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:areal-skogsmark-arealskoglant"
+fields = { "tags" = ["property"] }
+evidence = "Areal för ett markslag ingår i markarealgruppen.\ncatalog:variable_text:10042:13879:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
-fields = { "sets" = ["legacy-bruksar-eller-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:214\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:809\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:areal-total"
+fields = { "sets" = ["markareal"] }
+evidence = "Total markareal ingår med markslagens arealer; källan anger olika enheter över tid.\ncatalog:variable_text:10043:10592:12053\ncatalog:variable_text:10043:13879:14610\ncatalog:variable_text:10043:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-total"
+fields = { "tags" = ["property"] }
+evidence = "Total markareal ingår med markslagens arealer; källan anger olika enheter över tid.\ncatalog:variable_text:10043:10592:12053\ncatalog:variable_text:10043:13879:14610\ncatalog:variable_text:10043:14610:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:aret-da-byggnaden-togs-i-bruk-arbygghyr"
-fields = { "sets" = ["legacy-byggnadsar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:208\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:783\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["byggnadsar"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10044:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:aret-da-byggnaden-togs-i-bruk-arbygghyr"
+fields = { "tags" = ["property"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10044:18262:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:aret-da-byggnaden-togs-i-bruk-arbyggsma"
-fields = { "sets" = ["legacy-byggnadsar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:208\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:783\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:796\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["byggnadsar"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10045:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:glesbygd-glesbygdlant"
-fields = { "sets" = ["legacy-glesbygd"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:280\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:588\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:aret-da-byggnaden-togs-i-bruk-arbyggsma"
+fields = { "tags" = ["property"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10045:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:byggnad-under-uppforande-kodubygghyr"
-fields = { "sets" = ["legacy-kodubygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:274\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:640\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:653\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
+fields = { "sets" = ["bruksar-eller-vardear"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
 
 [[statement]]
 kind = "set"
-subject = "var:byggnad-under-uppforande-kodubyggsma"
-fields = { "sets" = ["legacy-kodubygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:274\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:640\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
 
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbhyr"
-fields = { "sets" = ["legacy-om-eller-tillbyggnar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:220\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:822\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["om-eller-tillbyggnadsar"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10050:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbhyr"
+fields = { "tags" = ["property"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10050:18262:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbsma"
-fields = { "sets" = ["legacy-om-eller-tillbyggnar"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:220\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:822\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:835\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["om-eller-tillbyggnadsar"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10051:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbsma"
+fields = { "tags" = ["property"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10051:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "sets" = [] }
+evidence = "Avser avstyckning av tomt.\ncatalog:variable_text:10052:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "tags" = ["property"] }
+evidence = "Avser avstyckning av tomt.\ncatalog:variable_text:10052:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-totalt"
+fields = { "sets" = ["basvarde"] }
+evidence = "Totalt basvärde hör ihop med uppskattat basvärde.\ncatalog:variable_text:10053:10592:20819\ncatalog:variable_text:10135:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-totalt"
+fields = { "tags" = ["property"] }
+evidence = "Totalt basvärde hör ihop med uppskattat basvärde.\ncatalog:variable_text:10053:10592:20819\ncatalog:variable_text:10135:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "sets" = ["biutrymmesyta-i-smahus"] }
+evidence = "Biutrymmesytorna utgör en grupp; enheten ändras i källhistoriken.\ncatalog:variable_text:10054:10592:17532\ncatalog:variable_text:10054:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Biutrymmesytorna utgör en grupp; enheten ändras i källhistoriken.\ncatalog:variable_text:10054:10592:17532\ncatalog:variable_text:10054:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus-ytabisma"
+fields = { "sets" = ["biutrymmesyta-i-smahus"] }
+evidence = "Biutrymmesytorna utgör en grupp; enheten ändras i källhistoriken.\ncatalog:variable_text:10055:13879:17532\ncatalog:variable_text:10055:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus-ytabisma"
+fields = { "tags" = ["housing"] }
+evidence = "Biutrymmesytorna utgör en grupp; enheten ändras i källhistoriken.\ncatalog:variable_text:10055:13879:17532\ncatalog:variable_text:10055:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-hyreshusenhet"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77873\ncatalog:occurrence:77874"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-hyreshusenhet"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77873\ncatalog:occurrence:77874"
+
+[[statement]]
+kind = "set"
+subject = "var:bruksar-eller-vardear"
+fields = { "sets" = ["bruksar-eller-vardear"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
+
+[[statement]]
+kind = "set"
+subject = "var:bruksar-eller-vardear"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
+
+[[statement]]
+kind = "set"
+subject = "var:byggklar"
+fields = { "sets" = [] }
+evidence = "Byggklarhet är en fastighetsegenskap.\ncatalog:variable_text:10058:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:byggklar"
+fields = { "tags" = ["property"] }
+evidence = "Byggklarhet är en fastighetsegenskap.\ncatalog:variable_text:10058:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-under-uppforande-kodubygghyr"
+fields = { "sets" = ["byggnad-under-uppforande"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10059:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-under-uppforande-kodubygghyr"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10059:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-under-uppforande-kodubyggsma"
+fields = { "sets" = ["byggnad-under-uppforande"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10060:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-under-uppforande-kodubyggsma"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10060:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsar"
+fields = { "sets" = ["byggnadsar"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10061:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsar"
+fields = { "tags" = ["property"] }
+evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:variable_text:10061:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsvarde"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika beskrivningar; taxeringsvärde är inte säkert fastställt för denna variabel.\ncatalog:occurrence:77865\ncatalog:occurrence:77866\ncatalog:variable_text:10062:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsvarde"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika beskrivningar; taxeringsvärde är inte säkert fastställt för denna variabel.\ncatalog:occurrence:77865\ncatalog:occurrence:77866\ncatalog:variable_text:10062:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dplan"
+fields = { "sets" = [] }
+evidence = "D är en ensam bokstav i källmnemoniken för detaljplan.\ncatalog:variable_text:10064:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:dplan"
+fields = { "tags" = ["property"] }
+evidence = "D är en ensam bokstav i källmnemoniken för detaljplan.\ncatalog:variable_text:10064:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fangeskod"
+fields = { "sets" = [] }
+evidence = "Koden anger hur fastigheten förvärvats.\ncatalog:variable_text:10065:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:fangeskod"
+fields = { "tags" = ["property"] }
+evidence = "Koden anger hur fastigheten förvärvats.\ncatalog:variable_text:10065:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:10066:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:variable_text:10066:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:10068:10592:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:10068:10592:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:glesbygd"
+fields = { "sets" = ["glesbygdstillhorighet"] }
+evidence = "Båda variablerna kodar glesbygdstillhörighet.\ncatalog:variable_text:10071:10592:20819\ncatalog:variable_text:10072:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:glesbygd"
+fields = { "tags" = ["geography"] }
+evidence = "Båda variablerna kodar glesbygdstillhörighet.\ncatalog:variable_text:10071:10592:20819\ncatalog:variable_text:10072:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:glesbygd-glesbygdlant"
+fields = { "sets" = ["glesbygdstillhorighet"] }
+evidence = "Båda variablerna kodar glesbygdstillhörighet.\ncatalog:variable_text:10072:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:glesbygd-glesbygdlant"
+fields = { "tags" = ["geography"] }
+evidence = "Båda variablerna kodar glesbygdstillhörighet.\ncatalog:variable_text:10072:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:hyrabost"
+fields = { "sets" = ["hyresintakter"] }
+evidence = "Hyresintäkter för bostäder hör till gruppen och avser bostäder.\ncatalog:variable_text:10073:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hyrabost"
+fields = { "tags" = ["housing"] }
+evidence = "Hyresintäkter för bostäder hör till gruppen och avser bostäder.\ncatalog:variable_text:10073:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hyralok"
+fields = { "sets" = ["hyresintakter"] }
+evidence = "Hyresintäkter för lokaler hör till gruppen och avser fastigheter; enhetsändringen framgår av källhistoriken.\ncatalog:variable_text:10074:10592:17532\ncatalog:variable_text:10074:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hyralok"
+fields = { "tags" = ["property"] }
+evidence = "Hyresintäkter för lokaler hör till gruppen och avser fastigheter; enhetsändringen framgår av källhistoriken.\ncatalog:variable_text:10074:10592:17532\ncatalog:variable_text:10074:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:jmfbar"
+fields = { "sets" = [] }
+evidence = "Koden bedömer jämförbarhet mellan förvärv och taxeringsvärde.\ncatalog:variable_text:10078:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:jmfbar"
+fields = { "tags" = ["property"] }
+evidence = "Koden bedömer jämförbarhet mellan förvärv och taxeringsvärde.\ncatalog:variable_text:10078:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form klassificerar juridiska enheter.\ncatalog:variable_text:10079:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form klassificerar juridiska enheter.\ncatalog:variable_text:10079:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kodbelag"
+fields = { "sets" = [] }
+evidence = "Strandläge är en egenskap hos tomtmark.\ncatalog:valueset:5716\ncatalog:variable_text:10080:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kodbelag"
+fields = { "tags" = ["property"] }
+evidence = "Strandläge är en egenskap hos tomtmark.\ncatalog:valueset:5716\ncatalog:variable_text:10080:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kodubygg"
+fields = { "sets" = ["byggnad-under-uppforande"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10081:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kodubygg"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen hör till byggnad under uppförande och beskriver en byggnad.\ncatalog:variable_text:10081:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:koeffgam"
+fields = { "sets" = ["kopeskillingskoefficient"] }
+evidence = "Den gamla köpeskillingskoefficienten hör till gruppen och avser fastighetsvärdering.\ncatalog:variable_text:10082:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:koeffgam"
+fields = { "tags" = ["property"] }
+evidence = "Den gamla köpeskillingskoefficienten hör till gruppen och avser fastighetsvärdering.\ncatalog:variable_text:10082:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:koeffny"
+fields = { "sets" = ["kopeskillingskoefficient"] }
+evidence = "Den aktuella köpeskillingskoefficienten hör till gruppen och avser fastighetsvärdering.\ncatalog:variable_text:10083:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:koeffny"
+fields = { "tags" = ["property"] }
+evidence = "Den aktuella köpeskillingskoefficienten hör till gruppen och avser fastighetsvärdering.\ncatalog:variable_text:10083:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kombkod"
+fields = { "sets" = [] }
+evidence = "Koden anger geografisk indelning efter produktionsområde och glesbygd.\ncatalog:valueset:4604\ncatalog:variable_text:10084:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kombkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger geografisk indelning efter produktionsområde och glesbygd.\ncatalog:valueset:4604\ncatalog:variable_text:10084:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:10085:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:10085:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-nord"
+fields = { "sets" = ["fastighetskoordinater"] }
+evidence = "Samma källkolumn har olika koordinatriktning i angränsande perioder.\ncatalog:occurrence:77935\ncatalog:occurrence:78024\ncatalog:occurrence:78113"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-nord"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har olika koordinatriktning i angränsande perioder.\ncatalog:occurrence:77935\ncatalog:occurrence:78024\ncatalog:occurrence:78113"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-ost"
+fields = { "sets" = ["fastighetskoordinater"] }
+evidence = "Samma källkolumn har olika koordinatriktning i angränsande perioder.\ncatalog:occurrence:77935\ncatalog:occurrence:78024\ncatalog:occurrence:78113"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-ost"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har olika koordinatriktning i angränsande perioder.\ncatalog:occurrence:77935\ncatalog:occurrence:78024\ncatalog:occurrence:78113"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskill"
+fields = { "sets" = [] }
+evidence = "Köpeskillingen avser fastighetsköpet.\ncatalog:variable_text:10088:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskill"
+fields = { "tags" = ["property"] }
+evidence = "Köpeskillingen avser fastighetsköpet.\ncatalog:variable_text:10088:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:10090:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:10090:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:markvarde"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika beskrivningar; taxeringsvärde är inte säkert fastställt för denna variabel.\ncatalog:occurrence:77868\ncatalog:occurrence:77869\ncatalog:variable_text:10091:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:markvarde"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika beskrivningar; taxeringsvärde är inte säkert fastställt för denna variabel.\ncatalog:occurrence:77868\ncatalog:occurrence:77869\ncatalog:variable_text:10091:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:nordkoordinat"
+fields = { "sets" = ["fastighetskoordinater"] }
+evidence = "Nord- och östkoordinater ingår i samma koordinatgrupp.\ncatalog:variable_text:10093:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:nordkoordinat"
+fields = { "tags" = ["geography"] }
+evidence = "Nord- och östkoordinater ingår i samma koordinatgrupp.\ncatalog:variable_text:10093:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:oltform"
+fields = { "sets" = [] }
+evidence = "Överlåtelseformen avser fastighet.\ncatalog:valueset:11009\ncatalog:variable_text:10095:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:oltform"
+fields = { "tags" = ["property"] }
+evidence = "Överlåtelseformen avser fastighet.\ncatalog:valueset:11009\ncatalog:variable_text:10095:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:om-eller-tillbyggnar"
+fields = { "sets" = ["om-eller-tillbyggnadsar"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10097:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:om-eller-tillbyggnar"
+fields = { "tags" = ["property"] }
+evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10097:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:omf"
+fields = { "sets" = [] }
+evidence = "Avser fastighetsförvärvets omfattning.\ncatalog:variable_text:10098:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:omf"
+fields = { "tags" = ["property"] }
+evidence = "Avser fastighetsförvärvets omfattning.\ncatalog:variable_text:10098:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt"
+fields = { "sets" = [] }
+evidence = "Avser faktorer som påverkar tomtmarkens värde.\ncatalog:variable_text:10099:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt"
+fields = { "tags" = ["property"] }
+evidence = "Avser faktorer som påverkar tomtmarkens värde.\ncatalog:variable_text:10099:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:10101:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:10101:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["postort"] }
+evidence = "Postort och postort-fullstandig beskriver samma ortsuppgift i på varandra följande perioder i förvärvartabellen. Postort hör till den geografiska gruppen.\ncatalog:occurrence:80577\ncatalog:occurrence:80585\ncatalog:variable_text:10102:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort och postort-fullstandig beskriver samma ortsuppgift i på varandra följande perioder i förvärvartabellen. Postort hör till den geografiska gruppen.\ncatalog:occurrence:80577\ncatalog:occurrence:80585\ncatalog:variable_text:10102:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-fullstandig"
+fields = { "sets" = ["postort"] }
+evidence = "Postort-fullstandig och postort beskriver samma ortsuppgift i på varandra följande perioder i förvärvartabellen. Postort hör till den geografiska gruppen.\ncatalog:occurrence:80577\ncatalog:occurrence:80585\ncatalog:variable_text:10103:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-fullstandig"
+fields = { "tags" = ["geography"] }
+evidence = "Postort-fullstandig och postort beskriver samma ortsuppgift i på varandra följande perioder i förvärvartabellen. Postort hör till den geografiska gruppen.\ncatalog:occurrence:80577\ncatalog:occurrence:80585\ncatalog:variable_text:10103:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:prodomr"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Båda variablerna kodar produktionsområde.\ncatalog:variable_text:10104:10592:20819\ncatalog:variable_text:10105:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:prodomr"
+fields = { "tags" = ["geography"] }
+evidence = "Båda variablerna kodar produktionsområde.\ncatalog:variable_text:10104:10592:20819\ncatalog:variable_text:10105:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:produktionsomrade-prodomrlant"
-fields = { "sets" = ["legacy-prodomr"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:226\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:848\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Båda variablerna kodar produktionsområde.\ncatalog:variable_text:10105:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-prodomrlant"
+fields = { "tags" = ["geography"] }
+evidence = "Båda variablerna kodar produktionsområde.\ncatalog:variable_text:10105:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade"
+fields = { "sets" = [] }
+evidence = "Riksområde är en geografisk indelning.\ncatalog:variable_text:10106:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Riksområde är en geografisk indelning.\ncatalog:variable_text:10106:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattekontor"
+fields = { "sets" = [] }
+evidence = "Kodningen anger skattekontor.\ncatalog:variable_text:10107:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skattekontor"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen anger skattekontor.\ncatalog:variable_text:10107:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skm"
+fields = { "sets" = [] }
+evidence = "Skm är en ogenomskinlig källmnemonik för skattemyndighet.\ncatalog:variable_text:10108:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:skm"
+fields = { "tags" = ["taxation"] }
+evidence = "Skm är en ogenomskinlig källmnemonik för skattemyndighet.\ncatalog:variable_text:10108:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-standardpoang"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Summerade standardpoäng ingår i samma grupp.\ncatalog:variable_text:10109:18628:20819\ncatalog:variable_text:10110:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-standardpoang"
+fields = { "tags" = ["property"] }
+evidence = "Summerade standardpoäng ingår i samma grupp.\ncatalog:variable_text:10109:18628:20819\ncatalog:variable_text:10110:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:summa-standardpoang-stdsumsma"
-fields = { "sets" = ["legacy-summa-standardpoang"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:256\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:679\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["standardpoang"] }
+evidence = "Summerade standardpoäng ingår i samma grupp.\ncatalog:variable_text:10110:13879:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsvarde-for-byggnader-vardebygg"
-fields = { "sets" = ["legacy-taxeringsvarde-byggnader"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:178\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:458\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:summa-standardpoang-stdsumsma"
+fields = { "tags" = ["property"] }
+evidence = "Summerade standardpoäng ingår i samma grupp.\ncatalog:variable_text:10110:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "sets" = [] }
+evidence = "Tätort är en geografisk indelning.\ncatalog:variable_text:10111:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "tags" = ["geography"] }
+evidence = "Tätort är en geografisk indelning.\ncatalog:variable_text:10111:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "sets" = [] }
+evidence = "Byggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10113:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "tags" = ["property"] }
+evidence = "Byggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10113:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-akermark"
+fields = { "sets" = [] }
+evidence = "Åkermarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10114:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-akermark"
+fields = { "tags" = ["property"] }
+evidence = "Åkermarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10114:10592:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-akermark-vardeakerlant"
-fields = { "sets" = ["legacy-taxeringsvarde-for-akermark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:166\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:536\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:549\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = [] }
+evidence = "Åkermarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10115:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsvarde-for-skogsimpediment-vardeskogsimp"
-fields = { "sets" = ["legacy-taxeringsvarde-for-skogsimpediment"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:202\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:510\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-skogsmark-vardeskoglant"
-fields = { "sets" = ["legacy-taxeringsvarde-for-skogsmark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:196\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:523\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-mark-vardemark"
-fields = { "sets" = ["legacy-taxeringsvarde-mark"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:190\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:484\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:497\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:total-bostadsyta-ytabost"
-fields = { "sets" = ["legacy-total-bostadsyta"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:232\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:419\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-smahusbebyggelse-typbebyggnsma"
-fields = { "sets" = ["legacy-typ-av-smahusbebyggelse"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:268\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:666\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardear-arvarde"
-fields = { "sets" = ["legacy-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:250\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:562\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
-
-[[statement]]
-kind = "set"
-subject = "var:vardear-arvardesma"
-fields = { "sets" = ["legacy-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:250\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:562\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+subject = "var:taxeringsvarde-for-akermark-vardeakerlant"
+fields = { "tags" = ["property"] }
+evidence = "Åkermarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10115:17532:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-betesmark-vardebetelant"
-fields = { "sets" = ["legacy-vardebete"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:172\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:445\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = [] }
+evidence = "Betesmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10116:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-betesmark-vardebetelant"
+fields = { "tags" = ["property"] }
+evidence = "Betesmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10116:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-byggnader-vardebygg"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare. Etiketten anger taxeringsvärde för byggnader.\ncatalog:occurrence:77865\ncatalog:occurrence:77866\ncatalog:variable_text:10117:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-byggnader-vardebygg"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare. Etiketten anger taxeringsvärde för byggnader.\ncatalog:occurrence:77865\ncatalog:occurrence:77866\ncatalog:variable_text:10117:18262:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-ekonomibyggnader-vardeekbygglant"
-fields = { "sets" = ["legacy-vardeekbygg"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:184\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:471\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = [] }
+evidence = "Ekonomibyggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10118:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-ekonomibyggnader-vardeekbygglant"
+fields = { "tags" = ["property"] }
+evidence = "Ekonomibyggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10118:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-mark-vardemark"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare. Etiketten anger taxeringsvärde för mark.\ncatalog:occurrence:77868\ncatalog:occurrence:77869\ncatalog:variable_text:10119:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-mark-vardemark"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare. Etiketten anger taxeringsvärde för mark.\ncatalog:occurrence:77868\ncatalog:occurrence:77869\ncatalog:variable_text:10119:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment"
+fields = { "sets" = [] }
+evidence = "Skogsimpedimentets taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10120:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment"
+fields = { "tags" = ["property"] }
+evidence = "Skogsimpedimentets taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10120:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment-vardeskogsimp"
+fields = { "sets" = [] }
+evidence = "Skogsimpedimentets taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10121:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment-vardeskogsimp"
+fields = { "tags" = ["property"] }
+evidence = "Skogsimpedimentets taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10121:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark"
+fields = { "sets" = [] }
+evidence = "Skogsmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10122:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark"
+fields = { "tags" = ["property"] }
+evidence = "Skogsmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10122:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark-vardeskoglant"
+fields = { "sets" = [] }
+evidence = "Skogsmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10123:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark-vardeskoglant"
+fields = { "tags" = ["property"] }
+evidence = "Skogsmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10123:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-mark"
+fields = { "sets" = [] }
+evidence = "Markens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10124:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-mark"
+fields = { "tags" = ["property"] }
+evidence = "Markens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10124:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxvgam"
+fields = { "sets" = [] }
+evidence = "Det äldre taxeringsvärdet hör till gruppen och avser fastighet.\ncatalog:variable_text:10125:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:taxvgam"
+fields = { "tags" = ["property"] }
+evidence = "Det äldre taxeringsvärdet hör till gruppen och avser fastighet.\ncatalog:variable_text:10125:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Total bostadsyta ingår i bostadsytegruppen.\ncatalog:variable_text:10126:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Total bostadsyta ingår i bostadsytegruppen.\ncatalog:variable_text:10126:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-ytabost"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77873\ncatalog:occurrence:77874"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-ytabost"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77873\ncatalog:occurrence:77874"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-bebyggelse"
+fields = { "sets" = ["bebyggelsetyp"] }
+evidence = "Kodning av befintlig bebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10128:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-bebyggelse"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av befintlig bebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10128:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse"
+fields = { "sets" = ["bebyggelsetyp"] }
+evidence = "Typ av befintlig småhusbebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10129:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse"
+fields = { "tags" = ["housing"] }
+evidence = "Typ av befintlig småhusbebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10129:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse-typbebyggnsma"
+fields = { "sets" = ["bebyggelsetyp"] }
+evidence = "Typ av befintlig småhusbebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10130:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse-typbebyggnsma"
+fields = { "tags" = ["housing"] }
+evidence = "Typ av befintlig småhusbebyggelse ingår i bebyggelsetypgruppen.\ncatalog:variable_text:10130:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "sets" = [] }
+evidence = "Avser förväntad bebyggelse på obebyggd mark.\ncatalog:variable_text:10131:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "tags" = ["property"] }
+evidence = "Avser förväntad bebyggelse på obebyggd mark.\ncatalog:variable_text:10131:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:typdel"
+fields = { "sets" = [] }
+evidence = "Koden avser taxeringsdelens omfattning.\ncatalog:variable_text:10132:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typdel"
+fields = { "tags" = ["property"] }
+evidence = "Koden avser taxeringsdelens omfattning.\ncatalog:variable_text:10132:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "sets" = [] }
+evidence = "Koden anger typ av taxeringsenhet.\ncatalog:variable_text:10133:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "tags" = ["property"] }
+evidence = "Koden anger typ av taxeringsenhet.\ncatalog:variable_text:10133:17532:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ukoeff"
+fields = { "sets" = ["kopeskillingskoefficient"] }
+evidence = "Det inledande u är en otydlig bokstavskod för uppskattad.\ncatalog:variable_text:10134:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ukoeff"
+fields = { "tags" = ["property"] }
+evidence = "Det inledande u är en otydlig bokstavskod för uppskattad.\ncatalog:variable_text:10134:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utax"
+fields = { "sets" = ["basvarde"] }
+evidence = "UTax är en ogenomskinlig källmnemonik för uppskattat basvärde.\ncatalog:variable_text:10135:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utax"
+fields = { "tags" = ["property"] }
+evidence = "UTax är en ogenomskinlig källmnemonik för uppskattat basvärde.\ncatalog:variable_text:10135:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:va"
+fields = { "sets" = [] }
+evidence = "VA är en bokstavskod för vatten och avlopp.\ncatalog:variable_text:10136:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:va"
+fields = { "tags" = ["housing"] }
+evidence = "VA är en bokstavskod för vatten och avlopp.\ncatalog:variable_text:10136:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = ["vardear"] }
+evidence = "Värdeår ingår i gruppen för värdeår.\ncatalog:variable_text:10137:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Värdeår ingår i gruppen för värdeår.\ncatalog:variable_text:10137:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-arvarde"
+fields = { "sets" = ["vardear"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-arvarde"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-arvardesma"
+fields = { "sets" = ["vardear"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-arvardesma"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebete"
+fields = { "sets" = [] }
+evidence = "Betesmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10140:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebete"
+fields = { "tags" = ["property"] }
+evidence = "Betesmarkens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10140:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbygg"
+fields = { "sets" = [] }
+evidence = "Ekonomibyggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10141:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbygg"
+fields = { "tags" = ["property"] }
+evidence = "Ekonomibyggnadens taxeringsvärde hör till gruppen och avser fastighet.\ncatalog:variable_text:10141:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:vardegrundande-yta-i-smahus"
+fields = { "sets" = ["vardegrundande-yta-i-smahus"] }
+evidence = "Båda variablerna mäter värdegrundande småhusyta.\ncatalog:variable_text:10142:10592:20819\ncatalog:variable_text:10143:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vardegrundande-yta-i-smahus"
+fields = { "tags" = ["housing", "property"] }
+evidence = "Båda variablerna mäter värdegrundande småhusyta.\ncatalog:variable_text:10142:10592:20819\ncatalog:variable_text:10143:13879:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:vardegrundande-yta-i-smahus-ytavardesma"
-fields = { "sets" = ["legacy-vardegrundande-yta-i-smahus"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:244\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:432\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+fields = { "sets" = ["vardegrundande-yta-i-smahus"] }
+evidence = "Båda variablerna mäter värdegrundande småhusyta.\ncatalog:variable_text:10143:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vardegrundande-yta-i-smahus-ytavardesma"
+fields = { "tags" = ["housing", "property"] }
+evidence = "Båda variablerna mäter värdegrundande småhusyta.\ncatalog:variable_text:10143:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabyggrbost"
+fields = { "sets" = ["byggrattsyta"] }
+evidence = "Byggrättens bostadsyta hör till gruppen och avser fastighet.\ncatalog:variable_text:10144:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabyggrbost"
+fields = { "tags" = ["property"] }
+evidence = "Byggrättens bostadsyta hör till gruppen och avser fastighet.\ncatalog:variable_text:10144:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabyggrlok"
+fields = { "sets" = ["byggrattsyta"] }
+evidence = "Byggrättens lokalyta hör till gruppen och avser fastighet.\ncatalog:variable_text:10145:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabyggrlok"
+fields = { "tags" = ["property"] }
+evidence = "Byggrättens lokalyta hör till gruppen och avser fastighet.\ncatalog:variable_text:10145:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ytalok"
+fields = { "sets" = [] }
+evidence = "Avser affärslokalyta i hyreshus.\ncatalog:variable_text:10146:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ytalok"
+fields = { "tags" = ["property"] }
+evidence = "Avser affärslokalyta i hyreshus.\ncatalog:variable_text:10146:10592:20819"

@@ -1,0 +1,630 @@
+
+[[statement]]
+kind = "set"
+subject = "var:ai-extjanst"
+fields = { "sets" = ["ai-baserade-andelar-av-it-utgifter"] }
+evidence = "Andelen av externa it-tjänster avser AI-baserade lösningar.\ncatalog:variable_text:11968:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ai-extjanst"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Andelen av externa it-tjänster avser AI-baserade lösningar.\ncatalog:variable_text:11968:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ai-intjanst"
+fields = { "sets" = ["ai-baserade-andelar-av-it-utgifter"] }
+evidence = "Andelen avser AI-baserade utgifter inom koncernen.\ncatalog:variable_text:11969:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ai-intjanst"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Andelen avser AI-baserade utgifter inom koncernen.\ncatalog:variable_text:11969:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ai-utmju"
+fields = { "sets" = ["ai-baserade-andelar-av-it-utgifter"] }
+evidence = "Andelen av it-utgifter avser AI-baserad mjuk- eller hårdvara.\ncatalog:variable_text:11970:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ai-utmju"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Andelen av it-utgifter avser AI-baserad mjuk- eller hårdvara.\ncatalog:variable_text:11970:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter företagets antal anställda.\ncatalog:variable_text:11971:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter företagets antal anställda.\ncatalog:variable_text:11971:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arsverk"
+fields = { "sets" = [] }
+evidence = "Årsverken för marknadsföring hör till arbete, men källans enhet motsäger mängdbeskrivningen.\ncatalog:variable_text:11972:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arsverk"
+fields = { "tags" = ["employment"] }
+evidence = "Årsverken för marknadsföring hör till arbete, men källans enhet motsäger mängdbeskrivningen.\ncatalog:variable_text:11972:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-programvaruutv-ovriga"
+fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
+evidence = "Variabeln avser andelen årsverken för relaterade arbetsuppgifter.\ncatalog:variable_text:11973:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arsverken-programvaruutv-ovriga"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Variabeln avser andelen årsverken för relaterade arbetsuppgifter.\ncatalog:variable_text:11973:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:data-invest"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser investeringar i datautrustning.\ncatalog:variable_text:11974:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:data-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser investeringar i datautrustning.\ncatalog:variable_text:11974:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:dataandel"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser datautrustningens andel av utgifterna för data- och teleutrustning.\ncatalog:variable_text:11975:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:dataandel"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser datautrustningens andel av utgifterna för data- och teleutrustning.\ncatalog:variable_text:11975:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:dataleasing"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Identitetsfaktet kopplar variabeln till finansiell-leasing, men beskrivningarna skiljer sig i omfattning.\ncatalog:occurrence:122277\ncatalog:occurrence:122290\ncatalog:variable_text:11976:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:dataleasing"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Identitetsfaktet kopplar variabeln till finansiell-leasing, men beskrivningarna skiljer sig i omfattning.\ncatalog:occurrence:122277\ncatalog:occurrence:122290\ncatalog:variable_text:11976:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datatele-invest"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser investeringar i data- och telekommunikation.\ncatalog:variable_text:11977:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datatele-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser investeringar i data- och telekommunikation.\ncatalog:variable_text:11977:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datatele-kostn"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser kostnadsbokförda utgifter för data- och teleutrustning.\ncatalog:variable_text:11978:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datatele-kostn"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser kostnadsbokförda utgifter för data- och teleutrustning.\ncatalog:variable_text:11978:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:datateletrafik"
+fields = { "sets" = [] }
+evidence = "Trafikkostnader ingår inte i utrustningsgruppen.\ncatalog:variable_text:11979:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:datateletrafik"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Trafikkostnader ingår inte i utrustningsgruppen.\ncatalog:variable_text:11979:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:datautrustning-utg"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser utgifter för datautrustning.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:datautrustning-utg"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser utgifter för datautrustning.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fin-leas"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser finansiell leasing av data- och teleutrustning.\ncatalog:variable_text:11981:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fin-leas"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser finansiell leasing av data- och teleutrustning.\ncatalog:variable_text:11981:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiell-leasing"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Identitetsfaktet kopplar variabeln till dataleasing, men beskrivningarna skiljer sig i omfattning.\ncatalog:occurrence:122277\ncatalog:occurrence:122290\ncatalog:variable_text:11982:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiell-leasing"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Identitetsfaktet kopplar variabeln till dataleasing, men beskrivningarna skiljer sig i omfattning.\ncatalog:occurrence:122277\ncatalog:occurrence:122290\ncatalog:variable_text:11982:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "sets" = [] }
+evidence = "Förädlingsvärde är ett företagsproduktionsmått.\ncatalog:variable_text:11983:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Förädlingsvärde är ett företagsproduktionsmått.\ncatalog:variable_text:11983:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanst-ex"
+fields = { "sets" = ["utgifter-for-it-tjanster"] }
+evidence = "Variabeln avser köp av it-tjänster från extern leverantör.\ncatalog:variable_text:11986:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanst-ex"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser köp av it-tjänster från extern leverantör.\ncatalog:variable_text:11986:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanst-in"
+fields = { "sets" = ["utgifter-for-it-tjanster"] }
+evidence = "Variabeln avser köp av it-tjänster inom koncernen.\ncatalog:variable_text:11987:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanst-in"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser köp av it-tjänster inom koncernen.\ncatalog:variable_text:11987:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanster-ext"
+fields = { "sets" = ["utgifter-for-it-tjanster"] }
+evidence = "Variabeln avser kostnader för externa it-tjänster.\ncatalog:variable_text:11988:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanster-ext"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser kostnader för externa it-tjänster.\ncatalog:variable_text:11988:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanster-konc"
+fields = { "sets" = ["utgifter-for-it-tjanster"] }
+evidence = "Variabeln avser kostnader för it-tjänster inom koncernen.\ncatalog:variable_text:11989:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ittjanster-konc"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser kostnader för it-tjänster inom koncernen.\ncatalog:variable_text:11989:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kons-invest"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Variabeln avser konsultutgifter för programvaruutveckling som investering.\ncatalog:variable_text:11991:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kons-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser konsultutgifter för programvaruutveckling som investering.\ncatalog:variable_text:11991:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kons-utg"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Variabeln avser konsultutgifter för utveckling eller förbättring av mjukvara.\ncatalog:variable_text:11992:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kons-utg"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser konsultutgifter för utveckling eller förbättring av mjukvara.\ncatalog:variable_text:11992:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kopprog-invest"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Variabeln avser investering i köpt programvara.\ncatalog:variable_text:11993:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kopprog-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser investering i köpt programvara.\ncatalog:variable_text:11993:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kopprog-kostn"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Variabeln avser kostnadsbokförda utgifter för köpt programvara.\ncatalog:variable_text:11994:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kopprog-kostn"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser kostnadsbokförda utgifter för köpt programvara.\ncatalog:variable_text:11994:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:mark-invest"
+fields = { "sets" = ["marknadsforingsutgifter"] }
+evidence = "Variabeln avser investeringar i marknadsföring.\ncatalog:variable_text:11995:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mark-invest"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser investeringar i marknadsföring.\ncatalog:variable_text:11995:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mark-utg"
+fields = { "sets" = ["marknadsforingsutgifter"] }
+evidence = "Variabeln avser marknadsföringsutgifter.\ncatalog:variable_text:11996:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mark-utg"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser marknadsföringsutgifter.\ncatalog:variable_text:11996:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mjuk-utg"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Källorna beskriver utgifter för inköpt mjukvara i angränsande perioder för mjukvara-utg och mjuk-utg.\ncatalog:occurrence:122487\ncatalog:occurrence:122513"
+
+[[statement]]
+kind = "set"
+subject = "var:mjuk-utg"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Källorna beskriver utgifter för inköpt mjukvara i angränsande perioder för mjukvara-utg och mjuk-utg.\ncatalog:occurrence:122487\ncatalog:occurrence:122513"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-inkop-invest"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Källorna beskriver investeringar i inköpt mjukvara i angränsande perioder för mjukvara-invest och mjukvara-inkop-invest.\ncatalog:occurrence:122486\ncatalog:occurrence:122512"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-inkop-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Källorna beskriver investeringar i inköpt mjukvara i angränsande perioder för mjukvara-invest och mjukvara-inkop-invest.\ncatalog:occurrence:122486\ncatalog:occurrence:122512"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-invest"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Källorna beskriver investeringar i inköpt mjukvara i angränsande perioder för mjukvara-invest och mjukvara-inkop-invest.\ncatalog:occurrence:122486\ncatalog:occurrence:122512"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Källorna beskriver investeringar i inköpt mjukvara i angränsande perioder för mjukvara-invest och mjukvara-inkop-invest.\ncatalog:occurrence:122486\ncatalog:occurrence:122512"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-utg"
+fields = { "sets" = ["utgifter-for-programvara"] }
+evidence = "Källorna beskriver utgifter för inköpt mjukvara i angränsande perioder för mjukvara-utg och mjuk-utg.\ncatalog:occurrence:122487\ncatalog:occurrence:122513"
+
+[[statement]]
+kind = "set"
+subject = "var:mjukvara-utg"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Källorna beskriver utgifter för inköpt mjukvara i angränsande perioder för mjukvara-utg och mjuk-utg.\ncatalog:occurrence:122487\ncatalog:occurrence:122513"
+
+[[statement]]
+kind = "set"
+subject = "var:molnkr-ex"
+fields = { "sets" = ["kop-av-molntjanster"] }
+evidence = "Variabeln avser köpbelopp för externa molntjänster, men etikett och enhet skiljer sig.\ncatalog:variable_text:12001:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnkr-ex"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser köpbelopp för externa molntjänster, men etikett och enhet skiljer sig.\ncatalog:variable_text:12001:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnkr-konc"
+fields = { "sets" = ["kop-av-molntjanster"] }
+evidence = "Variabeln avser köpbelopp för molntjänster inom koncernen, men etikett och enhet skiljer sig.\ncatalog:variable_text:12002:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnkr-konc"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser köpbelopp för molntjänster inom koncernen, men etikett och enhet skiljer sig.\ncatalog:variable_text:12002:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnpr-e"
+fields = { "sets" = ["kop-av-molntjanster"] }
+evidence = "E är en enbokstavskod för extern leverantör och omfattas av R1(a).\ncatalog:variable_text:12003:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnpr-e"
+fields = { "tags" = ["business", "digital"] }
+evidence = "E är en enbokstavskod för extern leverantör och omfattas av R1(a).\ncatalog:variable_text:12003:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnpr-konc"
+fields = { "sets" = ["kop-av-molntjanster"] }
+evidence = "Variabeln avser molntjänsternas andel av it-tjänsteutgifter inom koncernen.\ncatalog:variable_text:12004:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:molnpr-konc"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser molntjänsternas andel av it-tjänsteutgifter inom koncernen.\ncatalog:variable_text:12004:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren är en klassificering av företagets verksamhet.\ncatalog:variable_text:12005:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren är en klassificering av företagets verksamhet.\ncatalog:variable_text:12005:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:op-leas"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser hyra och operationell leasing av data- och teleutrustning.\ncatalog:variable_text:12006:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:op-leas"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser hyra och operationell leasing av data- och teleutrustning.\ncatalog:variable_text:12006:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:tele-invest"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser investeringar i telekommunikationsutrustning.\ncatalog:variable_text:12010:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:tele-invest"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser investeringar i telekommunikationsutrustning.\ncatalog:variable_text:12010:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:teleandel"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser teleutrustningens andel av utgifterna för data- och teleutrustning.\ncatalog:variable_text:12011:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:teleandel"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser teleutrustningens andel av utgifterna för data- och teleutrustning.\ncatalog:variable_text:12011:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:teleleasing"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser hyra och leasing av telekommunikationsutrustning.\ncatalog:variable_text:12012:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:teleleasing"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser hyra och leasing av telekommunikationsutrustning.\ncatalog:variable_text:12012:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:teleutrustning-utg"
+fields = { "sets" = ["utgifter-for-data-och-telekommunikationsutrustning"] }
+evidence = "Variabeln avser utgifter för telekommunikationsutrustning.\ncatalog:variable_text:12013:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:teleutrustning-utg"
+fields = { "tags" = ["business", "digital"] }
+evidence = "Variabeln avser utgifter för telekommunikationsutrustning.\ncatalog:variable_text:12013:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvantp"
+fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
+evidence = "UTVANTP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger antal årsverken för egen personals programvaruutveckling.\ncatalog:occurrence:122520\ncatalog:variable_text:12014:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvantp"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "UTVANTP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger antal årsverken för egen personals programvaruutveckling.\ncatalog:occurrence:122520\ncatalog:variable_text:12014:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utveganv2"
+fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
+evidence = "UTVEGANV2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för utveckling med investeringskaraktär.\ncatalog:occurrence:122521\ncatalog:variable_text:12015:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utveganv2"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "UTVEGANV2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för utveckling med investeringskaraktär.\ncatalog:occurrence:122521\ncatalog:variable_text:12015:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvexf2"
+fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
+evidence = "UTVEXF2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för extern försäljning.\ncatalog:occurrence:122522\ncatalog:variable_text:12016:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvexf2"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "UTVEXF2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för extern försäljning.\ncatalog:occurrence:122522\ncatalog:variable_text:12016:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvp"
+fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
+evidence = "UTVP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten och svarsalternativen anger förekomst av egen personal som arbetar med programvaruutveckling.\ncatalog:valueset:7898\ncatalog:variable_text:12017:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utvp"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "UTVP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten och svarsalternativen anger förekomst av egen personal som arbetar med programvaruutveckling.\ncatalog:valueset:7898\ncatalog:variable_text:12017:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:varaktandel"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter en andel för marknadsföringens varaktighet, som uttryckligen ligger utanför kandidatgruppen.\ncatalog:variable_text:12018:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varaktandel"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter en andel för marknadsföringens varaktighet, som uttryckligen ligger utanför kandidatgruppen.\ncatalog:variable_text:12018:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-ht"
+fields = { "sets" = [] }
+evidence = "Variabeln är en uppräkningsvikt för skattning.\ncatalog:variable_text:12019:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-ht"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt för skattning.\ncatalog:variable_text:12019:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_TOT @2012-01-01..2012-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_TOT @2013-01-01..2013-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2014-01-01..2014-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2015-01-01..2015-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2016-01-01..2016-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2017-01-01..2017-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2018-01-01..2018-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2019-01-01..2019-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2020-01-01..2020-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: DATA_UTG @2021-01-01..2021-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: Data_tot @2010-01-01..2010-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: Data_tot @2011-01-01..2011-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: data_tot @2009-01-01..2009-12-31 where key = 'v21895'"
+fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
+evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"

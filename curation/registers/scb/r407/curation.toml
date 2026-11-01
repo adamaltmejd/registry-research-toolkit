@@ -10,3 +10,1227 @@ kind = "set"
 subject = "innovation-juridiska: indu_main_act"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-inga-innovationsakt"
+fields = { "sets" = ["anledningar-till-begransade-innovationsaktiviteter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter anledning till utebliven innovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248721"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-inga-innovationsakt"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter anledning till utebliven innovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248721"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-inte-fler-innovationsakt"
+fields = { "sets" = ["anledningar-till-begransade-innovationsaktiviteter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter anledning till begränsade innovationsaktiviteter.\ncatalog:occurrence:248720\ncatalog:occurrence:248721"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-inte-fler-innovationsakt"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter anledning till begränsade innovationsaktiviteter.\ncatalog:occurrence:248720\ncatalog:occurrence:248721"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["personalstorlek"] }
+evidence = "Antal anställda mäter personalstorlek.\ncatalog:occurrence:248669"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda mäter personalstorlek.\ncatalog:occurrence:248669"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rampopulation-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antal i urvalsramen är ett urvalsmått.\ncatalog:occurrence:248666"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rampopulation-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal i urvalsramen är ett urvalsmått.\ncatalog:occurrence:248666"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antal svarande per stratum är ett undersökningsmått.\ncatalog:occurrence:248667"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande per stratum är ett undersökningsmått.\ncatalog:occurrence:248667"
+
+[[statement]]
+kind = "set"
+subject = "var:besparingar"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; besparingarna är en effekt av innovation.\ncatalog:occurrence:248677\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:besparingar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; besparingarna är en effekt av innovation.\ncatalog:occurrence:248677\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "sets" = [] }
+evidence = "Objektsbortfall är ett undersökningsmått.\ncatalog:occurrence:248665"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Objektsbortfall är ett undersökningsmått.\ncatalog:occurrence:248665"
+
+[[statement]]
+kind = "set"
+subject = "var:central-funktion-innovationsarbete"
+fields = { "sets" = [] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet gäller innovationsarbete.\ncatalog:occurrence:248767\ncatalog:occurrence:248768"
+
+[[statement]]
+kind = "set"
+subject = "var:central-funktion-innovationsarbete"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet gäller innovationsarbete.\ncatalog:occurrence:248767\ncatalog:occurrence:248768"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-anvandarbehov"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; användarbehov är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248782"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-anvandarbehov"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; användarbehov är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248782"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-effektiviseringar"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; effektivisering är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248781"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-effektiviseringar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; effektivisering är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248781"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-kvalitet"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; kvalitet är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248780"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-kvalitet"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; kvalitet är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248780"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-lagefterlevnad"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; lagefterlevnad är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248778"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-lagefterlevnad"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; lagefterlevnad är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248778"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-ny-teknik"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; ny teknik är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248777"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-ny-teknik"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; ny teknik är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248777"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-samhallsutmaningar"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; samhällsutmaningar är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248779"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-samhallsutmaningar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; samhällsutmaningar är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248779"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-vara-attraktiv"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; attraktiv arbetsgivare är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248783"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovarbete-vara-attraktiv"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; attraktiv arbetsgivare är en innovationsdrivkraft.\ncatalog:occurrence:248768\ncatalog:occurrence:248783"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-anvandarbehov"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; användarbehov är en innovationsdrivkraft.\ncatalog:occurrence:248702\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-anvandarbehov"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; användarbehov är en innovationsdrivkraft.\ncatalog:occurrence:248702\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-effektiviseringar"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; effektivisering är en innovationsdrivkraft.\ncatalog:occurrence:248701\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-effektiviseringar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; effektivisering är en innovationsdrivkraft.\ncatalog:occurrence:248701\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-ny-lagstiftning"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; lagstiftning är en innovationsdrivkraft.\ncatalog:occurrence:248699\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-ny-lagstiftning"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; lagstiftning är en innovationsdrivkraft.\ncatalog:occurrence:248699\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-ny-teknik"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; ny teknik är en innovationsdrivkraft.\ncatalog:occurrence:248698\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-ny-teknik"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; ny teknik är en innovationsdrivkraft.\ncatalog:occurrence:248698\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-samhallsutmaningar"
+fields = { "sets" = ["drivkrafter-bakom-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; samhällsutmaningar är en innovationsdrivkraft.\ncatalog:occurrence:248700\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:drivkraft-innovation-samhallsutmaningar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; samhällsutmaningar är en innovationsdrivkraft.\ncatalog:occurrence:248700\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-andra"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248678\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-andra"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248678\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-effektivitet"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248682\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-effektivitet"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248682\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-lagefterlevnad"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248679\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-lagefterlevnad"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248679\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-nojdare-anvandare"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248684\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-nojdare-anvandare"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248684\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-nojdare-medarbetare"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248683\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-nojdare-medarbetare"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248683\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-okad-kvalitet"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248681\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-okad-kvalitet"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248681\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-samhallsutmaningar"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248680\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:effekter-innovation-samhallsutmaningar"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; variabeln mäter innovationseffekter.\ncatalog:occurrence:248680\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-processinnovativ"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248675\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-processinnovativ"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248675\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-produktinnovativ"
+fields = { "sets" = ["produktinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248674\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-produktinnovativ"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248674\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiv"
+fields = { "sets" = ["innovationsaktivitetens-status"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovationsaktivitet.\ncatalog:occurrence:248670\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiv"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovationsaktivitet.\ncatalog:occurrence:248670\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-avbrutna"
+fields = { "sets" = ["innovationsaktivitetens-status"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248728"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-avbrutna"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248728"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-bedriva-fou"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. FoU är ett innovationsmoment.\ncatalog:occurrence:248693\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-bedriva-fou"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. FoU är ett innovationsmoment.\ncatalog:occurrence:248693\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-efterfraga-inkop"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Innovationsinköp är ett innovationsmoment.\ncatalog:occurrence:248693\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-efterfraga-inkop"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Innovationsinköp är ett innovationsmoment.\ncatalog:occurrence:248693\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-finansiering"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Finansiering är ett innovationsmoment.\ncatalog:occurrence:248775\ncatalog:occurrence:248776"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-finansiering"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Finansiering är ett innovationsmoment.\ncatalog:occurrence:248775\ncatalog:occurrence:248776"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-folja-upp"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Uppföljning är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248696"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-folja-upp"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Uppföljning är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248696"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-ideer"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Idéutveckling är ett innovationsmoment.\ncatalog:occurrence:248687\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-ideer"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Idéutveckling är ett innovationsmoment.\ncatalog:occurrence:248687\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-immateriella"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Arbete med immateriella tillgångar är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248697"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-immateriella"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Arbete med immateriella tillgångar är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248697"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-infrastruktur"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Infrastrukturinvestering för innovation är ett innovationsmoment.\ncatalog:occurrence:248691\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-infrastruktur"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Infrastrukturinvestering för innovation är ett innovationsmoment.\ncatalog:occurrence:248691\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-pagaende"
+fields = { "sets" = ["innovationsaktivitetens-status"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248729"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-pagaende"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248729"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-prototyper"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Prototyparbete är ett innovationsmoment.\ncatalog:occurrence:248692\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-prototyper"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Prototyparbete är ett innovationsmoment.\ncatalog:occurrence:248692\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-samarbete"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment", "innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser både ett innovationsmoment och samarbete.\ncatalog:occurrence:248690\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-samarbete"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser både ett innovationsmoment och samarbete.\ncatalog:occurrence:248690\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-slutforda"
+fields = { "sets" = ["innovationsaktivitetens-status"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248727"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-slutforda"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser aktiviteternas status.\ncatalog:occurrence:248720\ncatalog:occurrence:248727"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-sprida-resultat"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Resultatspridning är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248695"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-sprida-resultat"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Resultatspridning är ett innovationsmoment.\ncatalog:occurrence:248694\ncatalog:occurrence:248695"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-starka-ledarskap"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Ledarskap och kompetens är ett innovationsmoment.\ncatalog:occurrence:248689\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-starka-ledarskap"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Ledarskap och kompetens är ett innovationsmoment.\ncatalog:occurrence:248689\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-underlag"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Framtagning av underlag är ett innovationsmoment.\ncatalog:occurrence:248688\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-underlag"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Framtagning av underlag är ett innovationsmoment.\ncatalog:occurrence:248688\ncatalog:occurrence:248694"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-upphandling"
+fields = { "sets" = ["innovationsaktiviteternas-arbetsmoment"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Upphandling som innovationsverktyg är ett innovationsmoment.\ncatalog:occurrence:248775\ncatalog:occurrence:248776"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsaktiviteter-upphandling"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Upphandling som innovationsverktyg är ett innovationsmoment.\ncatalog:occurrence:248775\ncatalog:occurrence:248776"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-andra-inom-org"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med en angiven partnerkategori.\ncatalog:occurrence:248713\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-andra-inom-org"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med en angiven partnerkategori.\ncatalog:occurrence:248713\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med företag.\ncatalog:occurrence:248713\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med företag.\ncatalog:occurrence:248713\ncatalog:occurrence:248719"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag-i-utlandet"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med företag i utlandet.\ncatalog:occurrence:248706\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag-i-utlandet"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med företag i utlandet.\ncatalog:occurrence:248706\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag-upphandling"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet anger uttryckligen samarbete genom upphandling.\ncatalog:occurrence:248712\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-foretag-upphandling"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet anger uttryckligen samarbete genom upphandling.\ncatalog:occurrence:248712\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-hogskolor"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med universitet och högskolor.\ncatalog:occurrence:248713\ncatalog:occurrence:248716"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-hogskolor"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med universitet och högskolor.\ncatalog:occurrence:248713\ncatalog:occurrence:248716"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-hogskolor-utlandet"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med utländska lärosäten.\ncatalog:occurrence:248709\ncatalog:occurrence:248716"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-hogskolor-utlandet"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med utländska lärosäten.\ncatalog:occurrence:248709\ncatalog:occurrence:248716"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-ideella-utlandet"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med ideella organisationer i utlandet.\ncatalog:occurrence:248705\ncatalog:occurrence:248711"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-ideella-utlandet"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med ideella organisationer i utlandet.\ncatalog:occurrence:248705\ncatalog:occurrence:248711"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-internationella-org"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med internationella organisationer.\ncatalog:occurrence:248704\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-internationella-org"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med internationella organisationer.\ncatalog:occurrence:248704\ncatalog:occurrence:248713"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-kommuner-regioner"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med kommuner och regioner.\ncatalog:occurrence:248713\ncatalog:occurrence:248718"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-kommuner-regioner"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med kommuner och regioner.\ncatalog:occurrence:248713\ncatalog:occurrence:248718"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-priv-inst"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata forskningsinstitut.\ncatalog:occurrence:248714\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-priv-inst"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata forskningsinstitut.\ncatalog:occurrence:248714\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-priv-inst-utlandet"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata forskningsinstitut i utlandet.\ncatalog:occurrence:248707\ncatalog:occurrence:248714"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-priv-inst-utlandet"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata forskningsinstitut i utlandet.\ncatalog:occurrence:248707\ncatalog:occurrence:248714"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-privata-ideella"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata ideella organisationer.\ncatalog:occurrence:248705\ncatalog:occurrence:248711"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-privata-ideella"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med privata ideella organisationer.\ncatalog:occurrence:248705\ncatalog:occurrence:248711"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-enheter-utl"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga enheter i utlandet.\ncatalog:occurrence:248710\ncatalog:occurrence:248717"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-enheter-utl"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga enheter i utlandet.\ncatalog:occurrence:248710\ncatalog:occurrence:248717"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-inst"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga eller offentliga forskningsinstitut.\ncatalog:occurrence:248714\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-inst"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga eller offentliga forskningsinstitut.\ncatalog:occurrence:248714\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-inst-utlandet"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga eller offentliga forskningsinstitut i utlandet.\ncatalog:occurrence:248708\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-inst-utlandet"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga eller offentliga forskningsinstitut i utlandet.\ncatalog:occurrence:248708\ncatalog:occurrence:248715"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-myndigheter"
+fields = { "sets" = ["innovationssamarbete"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga myndigheter.\ncatalog:occurrence:248710\ncatalog:occurrence:248717"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-statl-myndigheter"
+fields = { "tags" = ["research"] }
+evidence = "Samma källkolumn är mappad till flera olika variabler under samma period. Måttet avser innovationssamarbete med statliga myndigheter.\ncatalog:occurrence:248710\ncatalog:occurrence:248717"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-egen-personal"
+fields = { "sets" = ["innovationsutgifter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248722"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-egen-personal"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248722"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-kapitalvaror"
+fields = { "sets" = ["innovationsutgifter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248725"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-kapitalvaror"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248725"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-ovriga-utgifter"
+fields = { "sets" = ["innovationsutgifter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248724"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-ovriga-utgifter"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248724"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-tjanster-material"
+fields = { "sets" = ["innovationsutgifter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248726"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-tjanster-material"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är en innovationsutgift.\ncatalog:occurrence:248720\ncatalog:occurrence:248726"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-totala-utgifter"
+fields = { "sets" = ["innovationsutgifter"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är totala innovationsutgifter.\ncatalog:occurrence:248720\ncatalog:occurrence:248723"
+
+[[statement]]
+kind = "set"
+subject = "var:innovationsutgifter-totala-utgifter"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; beloppet är totala innovationsutgifter.\ncatalog:occurrence:248720\ncatalog:occurrence:248723"
+
+[[statement]]
+kind = "set"
+subject = "var:innovativ"
+fields = { "sets" = [] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovation.\ncatalog:occurrence:248671\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:innovativ"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovation.\ncatalog:occurrence:248671\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län anger geografisk placering.\ncatalog:occurrence:248750"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografisk placering.\ncatalog:occurrence:248750"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-atervunnit-avfall"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och återvinning. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248745\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-atervunnit-avfall"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och återvinning. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248745\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-biologisk-mangfald"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och biologisk mångfald. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248746\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-biologisk-mangfald"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och biologisk mångfald. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248746\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-ersatt-fossila-branslen"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och energikällor. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248744\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-ersatt-fossila-branslen"
+fields = { "tags" = ["energy", "environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och energikällor. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248744\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-ersatt-substitut"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och mindre förorenande material. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248743\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-ersatt-substitut"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och mindre förorenande material. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248743\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-genom-upphandling"
+fields = { "sets" = ["miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation genom upphandling.\ncatalog:occurrence:248703\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-genom-upphandling"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation genom upphandling.\ncatalog:occurrence:248703\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-energi"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation med minskad energi eller utsläpp. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248741\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-energi"
+fields = { "tags" = ["energy", "environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation med minskad energi eller utsläpp. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248741\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-fororening"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och föroreningar. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248742\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-fororening"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och föroreningar. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248742\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-material"
+fields = { "sets" = ["effekter-av-innovation", "miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och resursanvändning. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248740\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-reducerad-material"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation och resursanvändning. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt. Variablerna anger miljöinnovativitet, namngivna miljöförbättringar eller efterfrågan på innovation med miljöfördelar genom upphandling.\ncatalog:occurrence:248720\ncatalog:occurrence:248740\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovativ"
+fields = { "sets" = ["miljoinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation.\ncatalog:occurrence:248676\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovativ"
+fields = { "tags" = ["environment", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser miljöinnovation.\ncatalog:occurrence:248676\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodningen hör till gruppen för näringsgren.\ncatalog:occurrence:248661"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen hör till gruppen för näringsgren.\ncatalog:occurrence:248661"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrensgruppering"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Grupperingen kodar näringsgren för redovisning.\ncatalog:occurrence:248662"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrensgruppering"
+fields = { "tags" = ["business"] }
+evidence = "Grupperingen kodar näringsgren för redovisning.\ncatalog:occurrence:248662"
+
+[[statement]]
+kind = "set"
+subject = "var:nsamp"
+fields = { "sets" = [] }
+evidence = "NSAMP är en opak källkod; etiketten anger antal i urvalet per stratum.\ncatalog:variable_text:29282:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nsamp"
+fields = { "tags" = ["methods"] }
+evidence = "NSAMP är en opak källkod; etiketten anger antal i urvalet per stratum.\ncatalog:variable_text:29282:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag"
+fields = { "sets" = ["innovationens-nyhetsslag"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248685\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248685\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag-identisk"
+fields = { "sets" = ["innovationens-nyhetsslag"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248720\ncatalog:occurrence:248738"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag-identisk"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248720\ncatalog:occurrence:248738"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag-originell"
+fields = { "sets" = ["innovationens-nyhetsslag"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248720\ncatalog:occurrence:248737"
+
+[[statement]]
+kind = "set"
+subject = "var:nyhetsslag-originell"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar innovationens nyhetsslag.\ncatalog:occurrence:248720\ncatalog:occurrence:248737"
+
+[[statement]]
+kind = "set"
+subject = "var:ovcovfl"
+fields = { "sets" = [] }
+evidence = "OVCOVFL är en opak källkod; etiketten anger övertäckning.\ncatalog:variable_text:29287:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovcovfl"
+fields = { "tags" = ["methods"] }
+evidence = "OVCOVFL är en opak källkod; etiketten anger övertäckning.\ncatalog:variable_text:29287:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-administration-org"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248732"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-administration-org"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248732"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-it-system"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation i it-system.\ncatalog:occurrence:248720\ncatalog:occurrence:248733"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-it-system"
+fields = { "tags" = ["digital", "research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation i it-system.\ncatalog:occurrence:248720\ncatalog:occurrence:248733"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-leveranser-logistik"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248735"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-leveranser-logistik"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248735"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-marknadsforing-extern"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248734"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-marknadsforing-extern"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248734"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-produktion-tjanster"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248730"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-produktion-tjanster"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248730"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-upphandling"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248731"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovation-upphandling"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248731"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovativ"
+fields = { "sets" = ["processinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248673\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:processinnovativ"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser processinnovation.\ncatalog:occurrence:248673\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-tjanster"
+fields = { "sets" = ["produktinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248739"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-tjanster"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248739"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-varor"
+fields = { "sets" = ["produktinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248736"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-varor"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248720\ncatalog:occurrence:248736"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovativ"
+fields = { "sets" = ["produktinnovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248672\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovativ"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser produktinnovation.\ncatalog:occurrence:248672\ncatalog:occurrence:248720"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-antal-anstallda"
+fields = { "sets" = ["personalstorlek"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:occurrence:248787"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:occurrence:248787"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-arbetsstallet"
+fields = { "sets" = ["personalstorlek"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:occurrence:248751"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-arbetsstallet"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:occurrence:248751"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum beskriver stratifierat urval.\ncatalog:occurrence:248752"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum beskriver stratifierat urval.\ncatalog:occurrence:248752"
+
+[[statement]]
+kind = "set"
+subject = "var:systematiskt-innovationsarbete"
+fields = { "sets" = [] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovationsarbete.\ncatalog:occurrence:248767\ncatalog:occurrence:248768"
+
+[[statement]]
+kind = "set"
+subject = "var:systematiskt-innovationsarbete"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser innovationsarbete.\ncatalog:occurrence:248767\ncatalog:occurrence:248768"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-forandring"
+fields = { "sets" = ["effekter-av-innovation"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser förändring till följd av innovation. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt.\ncatalog:occurrence:248686\ncatalog:occurrence:248720\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-forandring"
+fields = { "tags" = ["research"] }
+evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet avser förändring till följd av innovation. Coordinator group membership: Definitionen omfattar rapporterade konsekvenser av innovation: uttryckliga effektmått, besparingar, namngivna uppnådda miljöfördelar och förändring till följd av innovation. Miljöupphandling och allmän miljöinnovativitet anger däremot ingen specificerad effekt.\ncatalog:occurrence:248686\ncatalog:occurrence:248720\ncatalog:variable_text:29200:18628:19358\ncatalog:variable_text:29217:18628:19358\ncatalog:variable_text:29218:18628:19358\ncatalog:variable_text:29219:18628:19358\ncatalog:variable_text:29220:18628:19358\ncatalog:variable_text:29221:18628:19358\ncatalog:variable_text:29222:18628:19358\ncatalog:variable_text:29223:18628:19358\ncatalog:variable_text:29269:18628:19358\ncatalog:variable_text:29270:18628:19358\ncatalog:variable_text:29271:18628:19358\ncatalog:variable_text:29272:18628:19358\ncatalog:variable_text:29273:18628:19358\ncatalog:variable_text:29274:18628:19358\ncatalog:variable_text:29275:18628:19358\ncatalog:variable_text:29276:18628:19358\ncatalog:variable_text:29277:18628:19358\ncatalog:variable_text:29304:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsvikt"
+fields = { "sets" = [] }
+evidence = "Uppräkningsvikten är ett undersökningsmått.\ncatalog:occurrence:248792"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsvikten är ett undersökningsmått.\ncatalog:occurrence:248792"
+
+[[statement]]
+kind = "set"
+subject = "innovation-arbetsstalleenheter: OBS_VALUE @2021-01-01..2022-12-31 where key = 'v46536'"
+fields = { "description" = "Objektet designade, tog fram prototyper av eller testade nya eller väsentligt förbättrade produkter eller processer." }
+evidence = "Rättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248692\ncatalog:variable_text:29237:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "innovation-arbetsstalleenheter: OBS_VALUE @2021-01-01..2022-12-31 where key = 'v46551'"
+fields = { "description" = "Objektet samarbetade med privata forskningsinstitut i utlandet i innovationsarbetet." }
+evidence = "Rättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358"

@@ -46,3 +46,543 @@ kind = "set"
 subject = "skord-av-slattervall-fr-o-m-2016: ordlan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-ho"
+fields = { "sets" = [] }
+evidence = "Andelen avser skörd av slåttervall.\ncatalog:variable_text:42158:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-ho"
+fields = { "tags" = ["agriculture"] }
+evidence = "Andelen avser skörd av slåttervall.\ncatalog:variable_text:42158:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-hektarskord-andra-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42159:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-hektarskord-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42159:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-totalskord-andra-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42160:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andraskord-slattervall-totalskord-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42160:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-andra-skorden"
+fields = { "sets" = ["betesareal"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42161:16801:19358\ncatalog:variable_text:42161:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42161:16801:19358\ncatalog:variable_text:42161:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-fjarde-skorden"
+fields = { "sets" = ["betesareal"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42162:16801:19358\ncatalog:variable_text:42162:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42162:16801:19358\ncatalog:variable_text:42162:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-tredje-skorden"
+fields = { "sets" = ["betesareal"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42163:16801:19358\ncatalog:variable_text:42163:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördenumret i den operationella definitionen ändras mellan perioderna.\ncatalog:variable_text:42163:16801:19358\ncatalog:variable_text:42163:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-franandra"
+fields = { "sets" = [] }
+evidence = "Arealen avser skördad vall utanför slåttervall.\ncatalog:variable_text:42164:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-franandra"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arealen avser skördad vall utanför slåttervall.\ncatalog:variable_text:42164:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-andra-skorden"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42165:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42165:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-fjarde-skorden"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42166:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42166:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-forsta-skorden"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42167:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-forsta-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42167:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-tredje-skorden"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42168:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-slattervall-delskord-arealslattervall-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arealen ingår i slåttervallareal.\ncatalog:variable_text:42168:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam"
+fields = { "sets" = ["total-vallareal"] }
+evidence = "SAM-arealen är en total vallareal.\ncatalog:variable_text:42169:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arealenlsam"
+fields = { "tags" = ["agriculture"] }
+evidence = "SAM-arealen är en total vallareal.\ncatalog:variable_text:42169:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-andra-skorden"
+fields = { "sets" = ["outnyttjad-vallareal"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42170:16801:19358\ncatalog:variable_text:42170:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42170:16801:19358\ncatalog:variable_text:42170:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-fjarde-skorden"
+fields = { "sets" = ["outnyttjad-vallareal"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42171:16801:19358\ncatalog:variable_text:42171:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42171:16801:19358\ncatalog:variable_text:42171:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-tredje-skorden"
+fields = { "sets" = ["outnyttjad-vallareal"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42172:16801:19358\ncatalog:variable_text:42172:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atervaxt-tillvaratas-ej-ejutnyttjadareal-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den operativa definitionens skördeordning ändras mellan perioderna.\ncatalog:variable_text:42172:16801:19358\ncatalog:variable_text:42172:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvallekologisk"
+fields = { "sets" = ["betesareal"] }
+evidence = "Ekologisk betesvallareal ingår i betesareal.\ncatalog:variable_text:42173:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvallekologisk"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ekologisk betesvallareal ingår i betesareal.\ncatalog:variable_text:42173:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvallkonventionell"
+fields = { "sets" = ["betesareal"] }
+evidence = "Konventionell betesvallareal ingår i betesareal.\ncatalog:variable_text:42174:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvallkonventionell"
+fields = { "tags" = ["agriculture"] }
+evidence = "Konventionell betesvallareal ingår i betesareal.\ncatalog:variable_text:42174:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "sets" = [] }
+evidence = "Koden avser undersökningens bortfall och övertäckning.\ncatalog:valueset:10509\ncatalog:variable_text:42175:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden avser undersökningens bortfall och övertäckning.\ncatalog:valueset:10509\ncatalog:variable_text:42175:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-vallareal"
+fields = { "sets" = ["outnyttjad-vallareal"] }
+evidence = "Variabeln mäter outnyttjad vallareal.\ncatalog:variable_text:42176:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-vallareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter outnyttjad vallareal.\ncatalog:variable_text:42176:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal"
+fields = { "sets" = ["total-vallareal"] }
+evidence = "Lantbrukarens uppgift avser total vallareal.\ncatalog:variable_text:42177:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:evandradareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Lantbrukarens uppgift avser total vallareal.\ncatalog:variable_text:42177:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-hektarskord-fjarde-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42178:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-hektarskord-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42178:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-totalskord-fjarde-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42179:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fjardeskord-slattervall-totalskord-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42179:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-hektarskord-forsta-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42180:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-hektarskord-forsta-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42180:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-totalskord-forsta-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42181:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forstaskord-slattervall-totalskord-forsta-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42181:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hektarskord-franandra"
+fields = { "sets" = ["vallskord-fran-andra-akerarealer"] }
+evidence = "Hektarskörden avser vall från andra arealer än slåttervall.\ncatalog:variable_text:42182:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hektarskord-franandra"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektarskörden avser vall från andra arealer än slåttervall.\ncatalog:variable_text:42182:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Koden anger odlingens län.\ncatalog:variable_text:42183:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger odlingens län.\ncatalog:variable_text:42183:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver urvalet i företagets stratum.\ncatalog:variable_text:42184:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver urvalet i företagets stratum.\ncatalog:variable_text:42184:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "OrdPo8 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42185:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "tags" = ["geography"] }
+evidence = "OrdPo8 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42185:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Po18 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42187:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "tags" = ["geography"] }
+evidence = "Po18 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42187:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Po8 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42188:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "tags" = ["geography"] }
+evidence = "Po8 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42188:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:skattaseko"
+fields = { "sets" = ["odlingsform-vid-skattning"] }
+evidence = "Indikatorn anger ekologisk odlingsform vid skattning.\ncatalog:variable_text:42189:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattaseko"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn anger ekologisk odlingsform vid skattning.\ncatalog:variable_text:42189:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattaskonv"
+fields = { "sets" = ["odlingsform-vid-skattning"] }
+evidence = "Indikatorn anger konventionell odlingsform vid skattning.\ncatalog:variable_text:42190:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattaskonv"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn anger konventionell odlingsform vid skattning.\ncatalog:variable_text:42190:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "sets" = [] }
+evidence = "Koden anger geografiskt skördeområde.\ncatalog:variable_text:42191:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger geografiskt skördeområde.\ncatalog:variable_text:42191:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slattervallekologisk"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Ekologisk slåttervallareal ingår i slåttervallareal.\ncatalog:variable_text:42192:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slattervallekologisk"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ekologisk slåttervallareal ingår i slåttervallareal.\ncatalog:variable_text:42192:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slattervallkonventionell"
+fields = { "sets" = ["slattervallareal"] }
+evidence = "Konventionell slåttervallareal ingår i slåttervallareal.\ncatalog:variable_text:42193:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slattervallkonventionell"
+fields = { "tags" = ["agriculture"] }
+evidence = "Konventionell slåttervallareal ingår i slåttervallareal.\ncatalog:variable_text:42193:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver populationen i företagets urvalsstratum.\ncatalog:variable_text:42194:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver populationen i företagets urvalsstratum.\ncatalog:variable_text:42194:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum anger tillhörighet vid stratifierat urval.\ncatalog:variable_text:42195:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum anger tillhörighet vid stratifierat urval.\ncatalog:variable_text:42195:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-andra-skorden"
+fields = { "sets" = ["torrsubstanshalt"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42198:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-andra-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42198:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-fjarde-skorden"
+fields = { "sets" = ["torrsubstanshalt"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42199:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-fjarde-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42199:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-forsta-skorden"
+fields = { "sets" = ["torrsubstanshalt"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42200:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-forsta-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42200:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-tredje-skorden"
+fields = { "sets" = ["torrsubstanshalt"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42201:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:torrsubstanshalt-tshalt-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter skördens torrsubstanshalt.\ncatalog:variable_text:42201:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalskord-franandra"
+fields = { "sets" = ["vallskord-fran-andra-akerarealer"] }
+evidence = "Totalskörden avser vall från andra arealer än slåttervall.\ncatalog:variable_text:42202:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:totalskord-franandra"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalskörden avser vall från andra arealer än slåttervall.\ncatalog:variable_text:42202:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-hektarskord-tredje-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42203:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-hektarskord-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektarskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42203:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-totalskord-tredje-skorden"
+fields = { "sets" = ["skord-av-slattervall"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42204:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjeskord-slattervall-totalskord-tredje-skorden"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalskörd av slåttervall ingår i skördegruppen.\ncatalog:variable_text:42204:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tshalt-franandra"
+fields = { "sets" = ["torrsubstanshalt"] }
+evidence = "Variabeln mäter torrsubstanshalt i skörd från andra arealer.\ncatalog:variable_text:42205:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tshalt-franandra"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln mäter torrsubstanshalt i skörd från andra arealer.\ncatalog:variable_text:42205:17532:17897"

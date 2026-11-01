@@ -10,3 +10,183 @@ kind = "set"
 subject = "tjansteforetagens-forbrukning: jurform"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter företagets storleksklass efter antal anställda.\ncatalog:variable_text:45766:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter företagets storleksklass efter antal anställda.\ncatalog:variable_text:45766:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = [] }
+evidence = "Variabeln anger antal anställda.\ncatalog:variable_text:45768:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger antal anställda.\ncatalog:variable_text:45768:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bokslut"
+fields = { "sets" = [] }
+evidence = "Antalet månader beskriver företagets bokslut.\ncatalog:variable_text:45769:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bokslut"
+fields = { "tags" = ["business"] }
+evidence = "Antalet månader beskriver företagets bokslut.\ncatalog:variable_text:45769:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "sets" = [] }
+evidence = "Antalet avser företagets verksamma verksamhetsenheter.\ncatalog:variable_text:45770:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "tags" = ["business"] }
+evidence = "Antalet avser företagets verksamma verksamhetsenheter.\ncatalog:variable_text:45770:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettnr"
+fields = { "sets" = [] }
+evidence = "Blankettvarianten är metadata för insamlingen.\ncatalog:variable_text:45771:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettnr"
+fields = { "tags" = ["methods"] }
+evidence = "Blankettvarianten är metadata för insamlingen.\ncatalog:variable_text:45771:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fek"
+fields = { "sets" = [] }
+evidence = "FEK är en ogenomskinlig bokstavskod; etiketten beskriver undersökningsdeltagandet.\ncatalog:variable_text:45773:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fek"
+fields = { "tags" = ["methods"] }
+evidence = "FEK är en ogenomskinlig bokstavskod; etiketten beskriver undersökningsdeltagandet.\ncatalog:variable_text:45773:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fetyp"
+fields = { "sets" = [] }
+evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:45775:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fetyp"
+fields = { "tags" = ["business"] }
+evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:45775:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "sets" = [] }
+evidence = "Gatuadressen anger företagets läge.\ncatalog:variable_text:45776:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "tags" = ["geography"] }
+evidence = "Gatuadressen anger företagets läge.\ncatalog:variable_text:45776:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstrukturen.\ncatalog:variable_text:45778:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstrukturen.\ncatalog:variable_text:45778:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = [] }
+evidence = "Näringsgren är en företagsklassificering.\ncatalog:variable_text:45781:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren är en företagsklassificering.\ncatalog:variable_text:45781:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnumret anger postadressens geografiska tillhörighet.\ncatalog:variable_text:45783:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret anger postadressens geografiska tillhörighet.\ncatalog:variable_text:45783:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postorten anger den juridiska enhetens geografiska tillhörighet.\ncatalog:variable_text:45784:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten anger den juridiska enhetens geografiska tillhörighet.\ncatalog:variable_text:45784:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:registerstatus"
+fields = { "sets" = [] }
+evidence = "Statuskoden beskriver rapporteringsobjektets läge i produktionsprocessen.\ncatalog:variable_text:45787:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:registerstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Statuskoden beskriver rapporteringsobjektets läge i produktionsprocessen.\ncatalog:variable_text:45787:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum används vid stratifierat urval.\ncatalog:variable_text:45789:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum används vid stratifierat urval.\ncatalog:variable_text:45789:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "sets" = [] }
+evidence = "Statuskoden beskriver produktionsprocessen.\ncatalog:variable_text:45792:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Statuskoden beskriver produktionsprocessen.\ncatalog:variable_text:45792:14610:16436"

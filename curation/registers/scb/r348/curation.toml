@@ -1,0 +1,288 @@
+
+[[statement]]
+kind = "set"
+subject = "var:civilandring"
+fields = { "sets" = [] }
+evidence = "Civilståndsändring hör till familj och hushåll.\ncatalog:variable_text:23595:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilandring"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilståndsändring hör till familj och hushåll.\ncatalog:variable_text:23595:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd hör till familj och hushåll.\ncatalog:variable_text:23596:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd hör till familj och hushåll.\ncatalog:variable_text:23596:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Händelsen gäller införande av en geografisk indelning.\ncatalog:variable_text:23597:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Händelsen gäller införande av en geografisk indelning.\ncatalog:variable_text:23597:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = [] }
+evidence = "Distriktskoden anger folkbokföringens geografiska område.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktskoden anger folkbokföringens geografiska område.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodg"
+fields = { "sets" = [] }
+evidence = "G är en bokstavskod från källkolumnen; etiketten anger tidigare distrikt.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodg"
+fields = { "tags" = ["geography"] }
+evidence = "G är en bokstavskod från källkolumnen; etiketten anger tidigare distrikt.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dod"
+fields = { "sets" = [] }
+evidence = "Markeringen avser dödsfall.\ncatalog:variable_text:23600:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dod"
+fields = { "tags" = ["mortality"] }
+evidence = "Markeringen avser dödsfall.\ncatalog:variable_text:23600:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:emigration"
+fields = { "sets" = [] }
+evidence = "Markeringen avser utvandring.\ncatalog:variable_text:23601:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:emigration"
+fields = { "tags" = ["migration"] }
+evidence = "Markeringen avser utvandring.\ncatalog:variable_text:23601:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för folkbokföringen.\ncatalog:variable_text:23602:-366:20454\ncatalog:variable_text:23603:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för folkbokföringen.\ncatalog:variable_text:23602:-366:20454\ncatalog:variable_text:23603:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning-tidigare"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för tidigare folkbokföring.\ncatalog:variable_text:23602:-366:20454\ncatalog:variable_text:23603:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för tidigare folkbokföring.\ncatalog:variable_text:23602:-366:20454\ncatalog:variable_text:23603:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:felkod"
+fields = { "sets" = [] }
+evidence = "Koden markerar logiska fel och är en kvalitetsmarkör.\ncatalog:variable_text:23604:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:felkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden markerar logiska fel och är en kvalitetsmarkör.\ncatalog:variable_text:23604:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd"
+fields = { "sets" = [] }
+evidence = "Markeringen avser födelse.\ncatalog:variable_text:23605:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd"
+fields = { "tags" = ["demographics"] }
+evidence = "Markeringen avser födelse.\ncatalog:variable_text:23605:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:23606:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:23606:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församlingen anger folkbokföringens geografiska område.\ncatalog:variable_text:23607:-366:20454\ncatalog:variable_text:23608:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingen anger folkbokföringens geografiska område.\ncatalog:variable_text:23607:-366:20454\ncatalog:variable_text:23608:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-tidigare"
+fields = { "sets" = [] }
+evidence = "Församlingen anger tidigare folkbokföringsområde.\ncatalog:variable_text:23607:-366:20454\ncatalog:variable_text:23608:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingen anger tidigare folkbokföringsområde.\ncatalog:variable_text:23607:-366:20454\ncatalog:variable_text:23608:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:immigration"
+fields = { "sets" = [] }
+evidence = "Markeringen avser invandring.\ncatalog:variable_text:23609:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:immigration"
+fields = { "tags" = ["migration"] }
+evidence = "Markeringen avser invandring.\ncatalog:variable_text:23609:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indelandr"
+fields = { "sets" = [] }
+evidence = "Markeringen avser ändring i geografisk församlingsindelning.\ncatalog:variable_text:23610:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indelandr"
+fields = { "tags" = ["geography"] }
+evidence = "Markeringen avser ändring i geografisk församlingsindelning.\ncatalog:variable_text:23610:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:infllandnamn"
+fields = { "sets" = [] }
+evidence = "Landet avser en invandringsrörelse.\ncatalog:variable_text:23611:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:infllandnamn"
+fields = { "tags" = ["migration"] }
+evidence = "Landet avser en invandringsrörelse.\ncatalog:variable_text:23611:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikesflytt"
+fields = { "sets" = [] }
+evidence = "Markeringen avser inrikes flytt.\ncatalog:variable_text:23612:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikesflytt"
+fields = { "tags" = ["migration"] }
+evidence = "Markeringen avser inrikes flytt.\ncatalog:variable_text:23612:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunen anger folkbokföringens geografiska område.\ncatalog:variable_text:23613:-366:20454\ncatalog:variable_text:23614:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger folkbokföringens geografiska område.\ncatalog:variable_text:23613:-366:20454\ncatalog:variable_text:23614:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-tidigare"
+fields = { "sets" = [] }
+evidence = "Kommunen anger tidigare folkbokföringsområde.\ncatalog:variable_text:23613:-366:20454\ncatalog:variable_text:23614:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger tidigare folkbokföringsområde.\ncatalog:variable_text:23613:-366:20454\ncatalog:variable_text:23614:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:23615:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:23615:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarbyte"
+fields = { "sets" = [] }
+evidence = "Markeringen avser ändrat medborgarskap.\ncatalog:variable_text:23616:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarbyte"
+fields = { "tags" = ["demographics"] }
+evidence = "Markeringen avser ändrat medborgarskap.\ncatalog:variable_text:23616:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = [] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:23617:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland är en demografisk uppgift.\ncatalog:variable_text:23617:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "sets" = [] }
+evidence = "Landet avser en utvandringsrörelse.\ncatalog:variable_text:23622:-366:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "tags" = ["migration"] }
+evidence = "Landet avser en utvandringsrörelse.\ncatalog:variable_text:23622:-366:20454"

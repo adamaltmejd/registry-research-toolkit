@@ -175,408 +175,2700 @@ evidence = "reg_meta_build/curation/registers/sos/mfr.toml:483\n\nTerminal punct
 
 [[statement]]
 kind = "set"
+subject = "var:acidos"
+fields = { "sets" = ["upplivningsatgarder"] }
+evidence = "Åtgärd för nyfött barn.\ncatalog:variable_text:57004:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:acidos"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärd för nyfött barn.\ncatalog:variable_text:57004:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:akupunkt"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57005:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:akupunkt"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57005:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:amnioanm"
+fields = { "sets" = ["amniocentes"] }
+evidence = "Anmärkning vid amniocentes.\ncatalog:variable_text:57006:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:amnioanm"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Anmärkning vid amniocentes.\ncatalog:variable_text:57006:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:amniodat"
+fields = { "sets" = ["amniocentes"] }
+evidence = "Datum för amniocentes.\ncatalog:variable_text:57007:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:amniodat"
+fields = { "tags" = [] }
+evidence = "Datum för amniocentes.\ncatalog:variable_text:57007:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annansml"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Avser annan smärtlindring.\ncatalog:variable_text:57008:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annansml"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Avser annan smärtlindring.\ncatalog:variable_text:57008:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-modrahalsovardsbesok"
+fields = { "sets" = [] }
+evidence = "Antal vårdbesök.\ncatalog:variable_text:57009:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-modrahalsovardsbesok"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Antal vårdbesök.\ncatalog:variable_text:57009:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-1-minut"
+fields = { "sets" = ["apgarpoang"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57010:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-1-minut"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57010:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-10-minuter"
+fields = { "sets" = ["apgarpoang"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57011:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-10-minuter"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57011:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-5-minut"
+fields = { "sets" = ["apgarpoang"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57012:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:apgar-5-minut"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Apgarbedömning av nyfött barn.\ncatalog:variable_text:57012:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "sets" = ["barnets-fodelsetidpunkt"] }
+evidence = "Barnets födelseår.\ncatalog:variable_text:57013:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets födelseår.\ncatalog:variable_text:57013:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete"
+fields = { "sets" = [] }
+evidence = "Arbetstid vid inskrivning.\ncatalog:variable_text:57014:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetstid vid inskrivning.\ncatalog:variable_text:57014:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:astma"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57015:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:astma"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57015:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atc"
+fields = { "sets" = [] }
+evidence = "Preparatets läkemedelsklassifikation.\ncatalog:variable_text:57016:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atc"
+fields = { "tags" = ["medicines"] }
+evidence = "Preparatets läkemedelsklassifikation.\ncatalog:variable_text:57016:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "Den samlade koden hör till barnets åtgärdskoder och beskriver vårdåtgärder för nyfödda.\ncatalog:var_set:237\ncatalog:variable_text:57017:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Den samlade koden hör till barnets åtgärdskoder och beskriver vårdåtgärder för nyfödda.\ncatalog:var_set:237\ncatalog:variable_text:57017:1096:2932897"
+
+[[statement]]
+kind = "set"
 subject = "var:atgardskod-barnet-1"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57018:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-1"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57018:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-10"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57019:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-10"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57019:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-11"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57020:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-11"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57020:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-12"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57021:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-12"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57021:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-2"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57022:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-2"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57022:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-3"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57023:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-3"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57023:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-4"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57024:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-4"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57024:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-5"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57025:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-5"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57025:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-6"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57026:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-6"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57026:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-7"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57027:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-7"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57027:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-8"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57028:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-8"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57028:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-9"
 fields = { "sets" = ["atgardskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57029:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-9"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod för barnet.\ncatalog:variable_text:57029:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "Den samlade koden hör till den förlöstas åtgärdskoder.\ncatalog:var_set:238\ncatalog:variable_text:57030:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Den samlade koden hör till den förlöstas åtgärdskoder.\ncatalog:var_set:238\ncatalog:variable_text:57030:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-1"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57031:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-1"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57031:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-10"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57032:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-10"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57032:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-11"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57033:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-11"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57033:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-12"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57034:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-12"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57034:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-2"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57035:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-2"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57035:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-3"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57036:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-3"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57036:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-4"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57037:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-4"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57037:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-5"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57038:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-5"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57038:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-6"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57039:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-6"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57039:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-7"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57040:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-7"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57040:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-8"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57041:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-8"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57041:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-9"
 fields = { "sets" = ["atgardskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57042:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-9"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Åtgärdskod under och efter förlossning.\ncatalog:variable_text:57042:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-doda-0-6-dygn-antal"
+fields = { "sets" = ["tidigare-avlidna-barn"] }
+evidence = "Tidigare barns död.\ncatalog:variable_text:57043:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-doda-0-6-dygn-antal"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "Tidigare barns död.\ncatalog:variable_text:57043:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-1"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57044:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-1"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57044:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-2"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57045:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-2"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57045:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-3"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57046:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-3"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57046:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-4"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57047:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-4"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57047:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-5"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57048:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-5"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57048:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-6"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57049:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-6"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57049:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-7"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57050:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-7"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57050:-1826:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-8"
 fields = { "sets" = ["barnets-diagnoskod-bk"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57051:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-8"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod enligt Källéns klassificering.\ncatalog:variable_text:57051:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelselangd"
+fields = { "sets" = ["barnets-fodelselangd"] }
+evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelselangd"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelselangd-2"
+fields = { "sets" = ["barnets-fodelselangd"] }
+evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelselangd-2"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsevikt"
+fields = { "sets" = [] }
+evidence = "Barnets födelsevikt.\ncatalog:variable_text:57054:-1826:1096\ncatalog:variable_text:57054:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsevikt"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Barnets födelsevikt.\ncatalog:variable_text:57054:-1826:1096\ncatalog:variable_text:57054:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-huvudomfang"
+fields = { "sets" = [] }
+evidence = "Barnets huvudomfång.\ncatalog:variable_text:57055:10592:2932897\ncatalog:variable_text:57055:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-huvudomfang"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Barnets huvudomfång.\ncatalog:variable_text:57055:10592:2932897\ncatalog:variable_text:57055:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:bdiagnos"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "Den samlade diagnoskoden hör till barnets diagnoskoder.\ncatalog:var_set:240\ncatalog:variable_text:57056:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bdiagnos"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Den samlade diagnoskoden hör till barnets diagnoskoder.\ncatalog:var_set:240\ncatalog:variable_text:57056:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlingsmetod"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Kodlistan anger metoder för assisterad befruktning.\ncatalog:valueset:9941\ncatalog:variable_text:57057:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlingsmetod"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Kodlistan anger metoder för assisterad befruktning.\ncatalog:valueset:9941\ncatalog:variable_text:57057:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bfoddat"
+fields = { "sets" = ["barnets-fodelsetidpunkt"] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57058:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bfoddat"
+fields = { "tags" = ["demographics"] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57058:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bfoddatn"
+fields = { "sets" = ["barnets-fodelsetidpunkt"] }
+evidence = "B och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57059:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bfoddatn"
+fields = { "tags" = ["demographics"] }
+evidence = "B och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57059:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bjudning"
+fields = { "sets" = [] }
+evidence = "Fosterläge vid förlossning.\ncatalog:variable_text:57060:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bjudning"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Fosterläge vid förlossning.\ncatalog:variable_text:57060:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "sets" = [] }
+evidence = "Källa för uppgiften.\ncatalog:variable_text:57061:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Källa för uppgiften.\ncatalog:variable_text:57061:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:blastocyst"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Blastocystöverföring är en behandling vid assisterad befruktning.\ncatalog:valueset:9941\ncatalog:variable_text:57062:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:blastocyst"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Blastocystöverföring är en behandling vid assisterad befruktning.\ncatalog:valueset:9941\ncatalog:variable_text:57062:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bordordning"
+fields = { "sets" = ["bordordning"] }
+evidence = "Bördordning vid flerbörd.\ncatalog:variable_text:57063:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bordordning"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Bördordning vid flerbörd.\ncatalog:variable_text:57063:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bordordning-f2"
+fields = { "sets" = ["bordordning"] }
+evidence = "Bördordning vid flerbörd.\ncatalog:variable_text:57064:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bordordning-f2"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Bördordning vid flerbörd.\ncatalog:variable_text:57064:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:borduppgift"
+fields = { "sets" = ["borduppgift"] }
+evidence = "Börduppgift.\ncatalog:variable_text:57065:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:borduppgift"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Börduppgift.\ncatalog:variable_text:57065:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:borduppgift-f2"
+fields = { "sets" = ["borduppgift"] }
+evidence = "Börduppgift.\ncatalog:variable_text:57066:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:borduppgift-f2"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Börduppgift.\ncatalog:variable_text:57066:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpnrq-fb"
+fields = { "sets" = ["personnummerkvalitet"] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57067:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpnrq-fb"
+fields = { "tags" = ["methods"] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57067:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpsmdat"
+fields = { "sets" = ["beraknat-forlossningsdatum"] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57069:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpsmdat"
+fields = { "tags" = [] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57069:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpuldat"
+fields = { "sets" = ["beraknat-forlossningsdatum"] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57070:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bpuldat"
+fields = { "tags" = [] }
+evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57070:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:butdat"
+fields = { "sets" = ["utskrivningsdatum"] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57071:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:butdat"
+fields = { "tags" = [] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57071:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:butsatt"
+fields = { "sets" = ["utskrivningssatt"] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57072:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:butsatt"
+fields = { "tags" = ["healthcare"] }
+evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57072:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:cervix"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57073:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:cervix"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57073:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "sets" = [] }
+evidence = "Civilstånd.\ncatalog:variable_text:57074:1096:4383"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd.\ncatalog:variable_text:57074:1096:4383"
+
+[[statement]]
+kind = "set"
+subject = "var:cvbanm"
+fields = { "sets" = ["chorionvillibiopsi"] }
+evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57076:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:cvbanm"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57076:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:cvbdat"
+fields = { "sets" = ["chorionvillibiopsi"] }
+evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57077:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:cvbdat"
+fields = { "tags" = [] }
+evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57077:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ddagar"
+fields = { "sets" = [] }
+evidence = "D är en opak bokstavskod för dödsålder.\ncatalog:variable_text:57078:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ddagar"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "D är en opak bokstavskod för dödsålder.\ncatalog:variable_text:57078:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57079:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57079:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-1"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57080:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-1"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57080:-1826:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-10"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57081:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-10"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57081:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-11"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57082:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-11"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57082:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-12"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57083:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-12"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57083:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-13"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57084:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-13"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57084:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-14"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57085:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-14"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57085:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-15"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57086:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-15"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57086:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-16"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57087:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-16"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57087:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-17"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57088:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-17"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57088:16801:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-18"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57089:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-18"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57089:16801:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-19"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57090:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-19"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57090:16801:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-2"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57091:-1826:1096\ncatalog:variable_text:57091:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-2"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57091:-1826:1096\ncatalog:variable_text:57091:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-20"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57092:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-20"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57092:16801:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-3"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57093:-1826:1096\ncatalog:variable_text:57093:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-3"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57093:-1826:1096\ncatalog:variable_text:57093:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-4"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57094:-1826:1096\ncatalog:variable_text:57094:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-4"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57094:-1826:1096\ncatalog:variable_text:57094:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-5"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57095:-1826:4383\ncatalog:variable_text:57095:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-5"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57095:-1826:4383\ncatalog:variable_text:57095:4383:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-6"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57096:-1826:4383\ncatalog:variable_text:57096:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-6"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57096:-1826:4383\ncatalog:variable_text:57096:4383:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-7"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57097:-1826:4383\ncatalog:variable_text:57097:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-7"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57097:-1826:4383\ncatalog:variable_text:57097:4383:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-8"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57098:-1826:10592\ncatalog:variable_text:57098:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-8"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod; den daterade beskrivningshistoriken behålls.\ncatalog:variable_text:57098:-1826:10592\ncatalog:variable_text:57098:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-9"
 fields = { "sets" = ["diagnoskod-barnet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57099:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-9"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Barnets diagnoskod.\ncatalog:variable_text:57099:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-1"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57100:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-1"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57100:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-10"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57101:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-10"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57101:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-11"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57102:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-11"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57102:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-12"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57103:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-12"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57103:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-2"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57104:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-2"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57104:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-3"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57105:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-3"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57105:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-4"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57106:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-4"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57106:1096:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-5"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57107:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-5"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57107:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-6"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57108:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-6"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57108:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-7"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57109:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-7"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57109:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-8"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57110:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-8"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57110:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-9"
 fields = { "sets" = ["diagnoskod-forlosta"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57111:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-9"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under och efter förlossning.\ncatalog:variable_text:57111:10592:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-1"
 fields = { "sets" = ["diagnoskod-graviditet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57112:1096:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-1"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57112:1096:7305"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-2"
 fields = { "sets" = ["diagnoskod-graviditet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57113:1096:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-2"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57113:1096:7305"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-3"
 fields = { "sets" = ["diagnoskod-graviditet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57114:1096:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-3"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57114:1096:7305"
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-4"
 fields = { "sets" = ["diagnoskod-graviditet"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57115:1096:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-4"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskod under graviditet.\ncatalog:variable_text:57115:1096:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Geografisk distriktskod.\ncatalog:variable_text:57116:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk distriktskod.\ncatalog:variable_text:57116:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dklass"
+fields = { "sets" = ["barnets-overlevnad"] }
+evidence = "D är en opak bokstavskod och klass anger inte begreppet.\ncatalog:variable_text:57117:-1826:1096\ncatalog:variable_text:57117:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dklass"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "D är en opak bokstavskod och klass anger inte begreppet.\ncatalog:variable_text:57117:-1826:1096\ncatalog:variable_text:57117:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodfod"
+fields = { "sets" = ["barnets-overlevnad"] }
+evidence = "Kodning av dödfödsel.\ncatalog:variable_text:57118:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodfod"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "Kodning av dödfödsel.\ncatalog:variable_text:57118:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:elekakut"
+fields = { "sets" = ["kejsarsnittets-planeringsgrad"] }
+evidence = "Planeringsgrad för kejsarsnitt.\ncatalog:valueset:12059\ncatalog:variable_text:57120:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:elekakut"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Planeringsgrad för kejsarsnitt.\ncatalog:valueset:12059\ncatalog:variable_text:57120:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:embryon"
+fields = { "sets" = [] }
+evidence = "Antal överförda embryon.\ncatalog:variable_text:57121:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:embryon"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Antal överförda embryon.\ncatalog:variable_text:57121:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:epilepsi"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57122:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:epilepsi"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57122:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:famsit"
+fields = { "sets" = [] }
+evidence = "Familjesituation vid inskrivning.\ncatalog:valueset:5722\ncatalog:variable_text:57124:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:famsit"
+fields = { "tags" = ["family-household"] }
+evidence = "Familjesituation vid inskrivning.\ncatalog:valueset:5722\ncatalog:variable_text:57124:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:flindukt"
+fields = { "sets" = ["forlossningsstart"] }
+evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57125:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:flindukt"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57125:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:flspont"
+fields = { "sets" = ["forlossningsstart"] }
+evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57126:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:flspont"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57126:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseklockslag"
+fields = { "sets" = ["barnets-fodelsetidpunkt"] }
+evidence = "Födelsetidpunkt.\ncatalog:variable_text:57127:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseklockslag"
+fields = { "tags" = [] }
+evidence = "Födelsetidpunkt.\ncatalog:variable_text:57127:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forlossningsavslut-tang"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Instrumentellt förlossningsavslut.\ncatalog:variable_text:57128:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forlossningsavslut-tang"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Instrumentellt förlossningsavslut.\ncatalog:variable_text:57128:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forlossningsoperation"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Förlossningsoperation.\ncatalog:variable_text:57129:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forlossningsoperation"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Förlossningsoperation.\ncatalog:variable_text:57129:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-uppmatta-vikt-gravida"
+fields = { "sets" = ["gravidas-vikt"] }
+evidence = "Den gravidas vikt.\ncatalog:variable_text:57130:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-uppmatta-vikt-gravida"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Den gravidas vikt.\ncatalog:variable_text:57130:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterdiagnostik-amniocentes"
+fields = { "sets" = ["amniocentes"] }
+evidence = "Fosterdiagnostisk provtagning.\ncatalog:variable_text:57131:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterdiagnostik-amniocentes"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Fosterdiagnostisk provtagning.\ncatalog:variable_text:57131:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterdiagnostik-chorionvillibiopsi"
+fields = { "sets" = ["chorionvillibiopsi"] }
+evidence = "Fosterdiagnostisk provtagning.\ncatalog:variable_text:57132:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterdiagnostik-chorionvillibiopsi"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Fosterdiagnostisk provtagning.\ncatalog:variable_text:57132:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterskada-kromosomavvikelse"
+fields = { "sets" = [] }
+evidence = "Diagnos för fosterskada eller kromosomavvikelse.\ncatalog:variable_text:57133:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fosterskada-kromosomavvikelse"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnos för fosterskada eller kromosomavvikelse.\ncatalog:variable_text:57133:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:friskt-barn"
+fields = { "sets" = [] }
+evidence = "Diagnoskategori för barnet.\ncatalog:valueset:11478\ncatalog:variable_text:57134:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:friskt-barn"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Diagnoskategori för barnet.\ncatalog:valueset:11478\ncatalog:variable_text:57134:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-basta-skattning"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Skattad graviditetslängd; behåll daterad definitionshistorik.\ncatalog:variable_text:57135:10592:2932897\ncatalog:variable_text:57135:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-basta-skattning"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Skattad graviditetslängd; behåll daterad definitionshistorik.\ncatalog:variable_text:57135:10592:2932897\ncatalog:variable_text:57135:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd i resterande dagar.\ncatalog:variable_text:57136:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd i resterande dagar.\ncatalog:variable_text:57136:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-sm"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd enligt sista mens.\ncatalog:variable_text:57137:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-sm"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd enligt sista mens.\ncatalog:variable_text:57137:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-ul"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd enligt ultraljud.\ncatalog:variable_text:57138:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-dagar-utover-veckor-ul"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd enligt ultraljud.\ncatalog:variable_text:57138:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-fullbordade-veckor"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd i veckor.\ncatalog:variable_text:57139:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-fullbordade-veckor"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd i veckor.\ncatalog:variable_text:57139:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-basta-skattning"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Skattad graviditetslängd; behåll daterad definitionshistorik.\ncatalog:variable_text:57140:10592:2932897\ncatalog:variable_text:57140:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-basta-skattning"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Skattad graviditetslängd; behåll daterad definitionshistorik.\ncatalog:variable_text:57140:10592:2932897\ncatalog:variable_text:57140:1096:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-sista-mens"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd enligt sista mens.\ncatalog:variable_text:57141:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-sista-mens"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd enligt sista mens.\ncatalog:variable_text:57141:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-ultraljud"
+fields = { "sets" = ["graviditetslangd"] }
+evidence = "Graviditetslängd enligt ultraljud.\ncatalog:variable_text:57142:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:graviditetslangd-veckor-ultraljud"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Graviditetslängd enligt ultraljud.\ncatalog:variable_text:57142:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:grmetod"
+fields = { "sets" = [] }
+evidence = "GR är en opak bokstavskod för graviditetslängd.\ncatalog:variable_text:57143:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:grmetod"
+fields = { "tags" = ["methods"] }
+evidence = "GR är en opak bokstavskod för graviditetslängd.\ncatalog:variable_text:57143:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hinnant"
+fields = { "sets" = [] }
+evidence = "Hinnor vid tvillingbörd.\ncatalog:variable_text:57144:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hinnant"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Hinnor vid tvillingbörd.\ncatalog:variable_text:57144:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hinnsack"
+fields = { "sets" = [] }
+evidence = "Antal hinnsäckar.\ncatalog:variable_text:57145:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hinnsack"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Antal hinnsäckar.\ncatalog:variable_text:57145:11323:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hjmass"
+fields = { "sets" = ["upplivningsatgarder"] }
+evidence = "Upplivningsåtgärd.\ncatalog:variable_text:57146:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjmass"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Upplivningsåtgärd.\ncatalog:variable_text:57146:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hyperton"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57147:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hyperton"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57147:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hypnos"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57148:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hypnos"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57148:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:infilt"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57152:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:infilt"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57152:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ivf-klinik"
+fields = { "sets" = ["klinikkod"] }
+evidence = "Klinikkod för IVF.\ncatalog:variable_text:57153:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ivf-klinik"
+fields = { "tags" = ["healthcare"] }
+evidence = "Klinikkod för IVF.\ncatalog:variable_text:57153:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "sets" = ["klinikkod"] }
+evidence = "Klinikkod.\ncatalog:variable_text:57154:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "tags" = ["healthcare"] }
+evidence = "Klinikkod.\ncatalog:variable_text:57154:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klitoris"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57155:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klitoris"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57155:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = [] }
+evidence = "Geografisk kommunkod.\ncatalog:variable_text:57156:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk kommunkod.\ncatalog:variable_text:57156:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Barnets kön.\ncatalog:variable_text:57157:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets kön.\ncatalog:variable_text:57157:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaddlar"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57158:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaddlar"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57158:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvitamin"
+fields = { "sets" = [] }
+evidence = "K-vitamintillskott till barnet.\ncatalog:variable_text:57159:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvitamin"
+fields = { "tags" = ["medicines", "pregnancy-birth"] }
+evidence = "K-vitamintillskott till barnet.\ncatalog:variable_text:57159:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamlingskod"
+fields = { "sets" = [] }
+evidence = "Geografisk områdeskod.\ncatalog:variable_text:57160:1096:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamlingskod"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk områdeskod.\ncatalog:variable_text:57160:1096:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:latt-for-tiden-sga"
+fields = { "sets" = ["fodelsestorlek-for-graviditetslangd"] }
+evidence = "Födelsestorlek relativt graviditetslängd.\ncatalog:variable_text:57161:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:latt-for-tiden-sga"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Födelsestorlek relativt graviditetslängd.\ncatalog:variable_text:57161:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lustgas"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57163:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lustgas"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57163:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:malder"
+fields = { "sets" = [] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57164:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:malder"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57164:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mdiagnos"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "M är en ensam bokstavskod för den förlösta; etiketten anger den samlade diagnoskoden.\ncatalog:variable_text:57165:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mdiagnos"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "M är en ensam bokstavskod för den förlösta; etiketten anger den samlade diagnoskoden.\ncatalog:variable_text:57165:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-fader"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Faderns medborgarskap.\ncatalog:variable_text:57166:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-fader"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns medborgarskap.\ncatalog:variable_text:57166:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-forlosta"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Den förlöstas medborgarskap.\ncatalog:variable_text:57167:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-forlosta"
+fields = { "tags" = ["demographics"] }
+evidence = "Den förlöstas medborgarskap.\ncatalog:variable_text:57167:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfoddat"
+fields = { "sets" = ["moderns-fodelsedatum"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57168:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfoddat"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57168:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfoddatn"
+fields = { "sets" = ["moderns-fodelsedatum"] }
+evidence = "M och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57169:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfoddatn"
+fields = { "tags" = ["demographics"] }
+evidence = "M och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57169:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "sets" = [] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57170:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57170:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mlangd"
+fields = { "sets" = [] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57171:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mlangd"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57171:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mutdat"
+fields = { "sets" = ["utskrivningsdatum"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57173:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mutdat"
+fields = { "tags" = [] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57173:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mutsatt"
+fields = { "sets" = ["utskrivningssatt"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57174:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mutsatt"
+fields = { "tags" = ["healthcare"] }
+evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57174:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mviktfv"
+fields = { "sets" = ["gravidas-vikt"] }
+evidence = "M och FV är opaka bokstavskoder.\ncatalog:variable_text:57175:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mviktfv"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "M och FV är opaka bokstavskoder.\ncatalog:variable_text:57175:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:narkos"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57176:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:narkos"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57176:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:njursjuk"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57177:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:njursjuk"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57177:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obdukt"
+fields = { "sets" = [] }
+evidence = "Obduktion av avlidet barn.\ncatalog:variable_text:57178:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obdukt"
+fields = { "tags" = ["healthcare", "mortality"] }
+evidence = "Obduktion av avlidet barn.\ncatalog:variable_text:57178:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriabef"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Assisterad befruktning är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57179:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriabef"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Assisterad befruktning är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57179:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriann"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Annan åtgärd mot ofrivillig barnlöshet.\ncatalog:variable_text:57180:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriann"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Annan åtgärd mot ofrivillig barnlöshet.\ncatalog:variable_text:57180:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofribarn"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter barnlöshetens varaktighet, inte en behandlingsmetod.\ncatalog:variable_text:57181:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofribarn"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Variabeln mäter barnlöshetens varaktighet, inte en behandlingsmetod.\ncatalog:variable_text:57181:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriiatg"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Uttrycklig avsaknad av behandling ingår i kandidatgruppen.\ncatalog:variable_text:57182:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriiatg"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Uttrycklig avsaknad av behandling ingår i kandidatgruppen.\ncatalog:variable_text:57182:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriicsi"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "ICSI är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57183:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriicsi"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "ICSI är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57183:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofrikiru"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Kirurgi som åtgärd mot ofrivillig barnlöshet.\ncatalog:variable_text:57184:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofrikiru"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Kirurgi som åtgärd mot ofrivillig barnlöshet.\ncatalog:variable_text:57184:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofristim"
+fields = { "sets" = ["behandling-mot-ofrivillig-barnloshet"] }
+evidence = "Ovulationsstimulering är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57185:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ofristim"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Ovulationsstimulering är en behandling mot ofrivillig barnlöshet.\ncatalog:variable_text:57185:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:parabl"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57186:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:parabl"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57186:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:penthran"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57189:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:penthran"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57189:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:perinealklipp"
+fields = { "sets" = [] }
+evidence = "Ingrepp vid förlossning.\ncatalog:variable_text:57190:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:perinealklipp"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Ingrepp vid förlossning.\ncatalog:variable_text:57190:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:perineum"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57191:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:perineum"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57191:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet-barnet"
+fields = { "sets" = ["personnummerkvalitet"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:57194:-1826:1096\ncatalog:variable_text:57194:1096:4383\ncatalog:variable_text:57194:13514:2932897\ncatalog:variable_text:57194:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet-barnet"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:57194:-1826:1096\ncatalog:variable_text:57194:1096:4383\ncatalog:variable_text:57194:13514:2932897\ncatalog:variable_text:57194:4383:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet-gravida"
+fields = { "sets" = ["personnummerkvalitet"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:57195:-1826:1096\ncatalog:variable_text:57195:1096:15706\ncatalog:variable_text:57195:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet-gravida"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:57195:-1826:1096\ncatalog:variable_text:57195:1096:15706\ncatalog:variable_text:57195:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:petidin"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57196:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:petidin"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57196:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placenta"
+fields = { "sets" = [] }
+evidence = "Placentavikt.\ncatalog:variable_text:57197:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:placenta"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Placentavikt.\ncatalog:variable_text:57197:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:rektum"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57200:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rektum"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57200:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-fore-graviditet"
+fields = { "sets" = ["rokning"] }
+evidence = "Rökning före graviditet.\ncatalog:variable_text:57201:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-fore-graviditet"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Rökning före graviditet.\ncatalog:variable_text:57201:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-inskrivning-mhv"
+fields = { "sets" = ["rokning"] }
+evidence = "Rökning vid inskrivning.\ncatalog:variable_text:57202:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-inskrivning-mhv"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Rökning vid inskrivning.\ncatalog:variable_text:57202:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-senare-graviditet"
+fields = { "sets" = ["rokning"] }
+evidence = "Rökning under graviditet.\ncatalog:variable_text:57203:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rokning-senare-graviditet"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Rökning under graviditet.\ncatalog:variable_text:57203:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secavsl"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "SECAVSL är en opak källförkortning. Variabeln anger förlossningsavslut med kejsarsnitt.\ncatalog:variable_text:57204:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secavsl"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "SECAVSL är en opak källförkortning. Variabeln anger förlossningsavslut med kejsarsnitt.\ncatalog:variable_text:57204:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secfore"
+fields = { "sets" = ["forlossningsstart"] }
+evidence = "SECFORE är en opak källförkortning. Variabeln anger förlossningsstart med kejsarsnitt före värkdebut.\ncatalog:variable_text:57205:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secfore"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "SECFORE är en opak källförkortning. Variabeln anger förlossningsstart med kejsarsnitt före värkdebut.\ncatalog:variable_text:57205:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secmark"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "SECMARK är en opak källförkortning. Markeringen avser förlossning avslutad med kejsarsnitt.\ncatalog:variable_text:57206:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:secmark"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "SECMARK är en opak källförkortning. Markeringen avser förlossning avslutad med kejsarsnitt.\ncatalog:variable_text:57206:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sectio"
+fields = { "sets" = ["kejsarsnittets-planeringsgrad"] }
+evidence = "SECTIO är en opak källbeteckning för kejsarsnittets planeringsgrad.\ncatalog:variable_text:57207:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:sectio"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "SECTIO är en opak källbeteckning för kejsarsnittets planeringsgrad.\ncatalog:variable_text:57207:4383:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:sedativa"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57208:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sedativa"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57208:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sfinkter"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57210:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sfinkter"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57210:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "sets" = ["sjukhuskod"] }
+evidence = "Sjukhuskod.\ncatalog:variable_text:57211:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "tags" = ["healthcare"] }
+evidence = "Sjukhuskod.\ncatalog:variable_text:57211:-1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus-s"
+fields = { "sets" = ["sjukhuskod"] }
+evidence = "S är en opak bokstavskod från källkolumnen.\ncatalog:variable_text:57212:-1826:1096\ncatalog:variable_text:57212:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus-s"
+fields = { "tags" = ["healthcare"] }
+evidence = "S är en opak bokstavskod från källkolumnen.\ncatalog:variable_text:57212:-1826:1096\ncatalog:variable_text:57212:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sle"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57213:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sle"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57213:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:slut-vecka"
+fields = { "sets" = ["graviditetsperiod-for-lakemedel"] }
+evidence = "Slutvecka för läkemedelsbehandling.\ncatalog:variable_text:57214:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:slut-vecka"
+fields = { "tags" = ["medicines", "pregnancy-birth"] }
+evidence = "Slutvecka för läkemedelsbehandling.\ncatalog:variable_text:57214:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-bad"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57215:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-bad"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57215:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-ej-farmakologisk"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Uppgift om smärtlindring.\ncatalog:variable_text:57216:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-ej-farmakologisk"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Uppgift om smärtlindring.\ncatalog:variable_text:57216:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-epidural"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57217:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-epidural"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57217:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-ingen"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Uppgift om smärtlindring.\ncatalog:variable_text:57218:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-ingen"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Uppgift om smärtlindring.\ncatalog:variable_text:57218:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-pudendus"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57219:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-pudendus"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57219:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-tens"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57220:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smartlindring-tens"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57220:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-3-manader-fore-graviditet"
+fields = { "sets" = ["snusning"] }
+evidence = "Snusning före graviditet.\ncatalog:variable_text:57221:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-3-manader-fore-graviditet"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Snusning före graviditet.\ncatalog:variable_text:57221:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-senare-graviditet"
+fields = { "sets" = ["snusning"] }
+evidence = "Snusning under graviditet.\ncatalog:variable_text:57222:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-senare-graviditet"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Snusning under graviditet.\ncatalog:variable_text:57222:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-vid-inskrivning-mhv"
+fields = { "sets" = ["snusning"] }
+evidence = "Snusning vid inskrivning.\ncatalog:variable_text:57223:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snusning-vid-inskrivning-mhv"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Snusning vid inskrivning.\ncatalog:variable_text:57223:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:spgrav"
+fields = { "sets" = [] }
+evidence = "Spiral kvar under graviditet.\ncatalog:variable_text:57224:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:spgrav"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Spiral kvar under graviditet.\ncatalog:variable_text:57224:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:spinal"
+fields = { "sets" = ["smartlindring"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57225:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:spinal"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57225:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:start-vecka"
+fields = { "sets" = ["graviditetsperiod-for-lakemedel"] }
+evidence = "Startvecka för läkemedelsbehandling.\ncatalog:variable_text:57227:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:start-vecka"
+fields = { "tags" = ["medicines", "pregnancy-birth"] }
+evidence = "Startvecka för läkemedelsbehandling.\ncatalog:variable_text:57227:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sugklock"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Instrumentellt förlossningsavslut.\ncatalog:variable_text:57228:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sugklock"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Instrumentellt förlossningsavslut.\ncatalog:variable_text:57228:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sugmark"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Markering av instrumentell förlossning.\ncatalog:variable_text:57229:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sugmark"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Markering av instrumentell förlossning.\ncatalog:variable_text:57229:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tangmark"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Markering av instrumentell förlossning.\ncatalog:variable_text:57230:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tangmark"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Markering av instrumentell förlossning.\ncatalog:variable_text:57230:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tiddodf"
+fields = { "sets" = ["tidigare-avlidna-barn"] }
+evidence = "Tidigare dödfödda barn.\ncatalog:variable_text:57231:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tiddodf"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "Tidigare dödfödda barn.\ncatalog:variable_text:57231:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidlevf"
+fields = { "sets" = [] }
+evidence = "Tidigare levande födda barn.\ncatalog:variable_text:57232:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidlevf"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Tidigare levande födda barn.\ncatalog:variable_text:57232:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsdod"
+fields = { "sets" = ["tidigare-avlidna-barn"] }
+evidence = "Tidigare barn som avlidit efter första veckan.\ncatalog:variable_text:57233:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsdod"
+fields = { "tags" = ["mortality", "pregnancy-birth"] }
+evidence = "Tidigare barn som avlidit efter första veckan.\ncatalog:variable_text:57233:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidspoab"
+fields = { "sets" = [] }
+evidence = "Tidigare spontanaborter.\ncatalog:variable_text:57234:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidspoab"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Tidigare spontanaborter.\ncatalog:variable_text:57234:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidxgrav"
+fields = { "sets" = [] }
+evidence = "Tidigare extrauterina graviditeter.\ncatalog:variable_text:57235:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tidxgrav"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Tidigare extrauterina graviditeter.\ncatalog:variable_text:57235:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tsecar"
+fields = { "sets" = ["tidigare-kejsarsnitt"] }
+evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57236:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tsecar"
+fields = { "tags" = [] }
+evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57236:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tsectio"
+fields = { "sets" = ["tidigare-kejsarsnitt"] }
+evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57237:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tsectio"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57237:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tung-for-tiden-lga"
+fields = { "sets" = ["fodelsestorlek-for-graviditetslangd"] }
+evidence = "Födelsestorlek relativt graviditetslängd.\ncatalog:variable_text:57238:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tung-for-tiden-lga"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Födelsestorlek relativt graviditetslängd.\ncatalog:variable_text:57238:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulcolit"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57239:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulcolit"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57239:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:upplivningsatgarder-intubation"
+fields = { "sets" = ["upplivningsatgarder"] }
+evidence = "Upplivningsåtgärd för nyfött barn.\ncatalog:variable_text:57242:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:upplivningsatgarder-intubation"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Upplivningsåtgärd för nyfött barn.\ncatalog:variable_text:57242:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:upplivningsatgarder-ventilation-pa-mask"
+fields = { "sets" = ["upplivningsatgarder"] }
+evidence = "Upplivningsåtgärd för nyfött barn.\ncatalog:variable_text:57243:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:upplivningsatgarder-ventilation-pa-mask"
+fields = { "tags" = ["healthcare", "pregnancy-birth"] }
+evidence = "Upplivningsåtgärd för nyfött barn.\ncatalog:variable_text:57243:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:urinvinf"
+fields = { "sets" = [] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57244:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:urinvinf"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Sjukdom hos den gravida.\ncatalog:variable_text:57244:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vagina"
+fields = { "sets" = ["forlossningsbristningar"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57245:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vagina"
+fields = { "tags" = ["health", "pregnancy-birth"] }
+evidence = "Förlossningsbristning.\ncatalog:variable_text:57245:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaginal"
+fields = { "sets" = ["forlossningsavslut"] }
+evidence = "Vaginalt förlossningsavslut.\ncatalog:variable_text:57246:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaginal"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Vaginalt förlossningsavslut.\ncatalog:variable_text:57246:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "sets" = [] }
+evidence = "Yrke vid inskrivning.\ncatalog:variable_text:57247:4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke vid inskrivning.\ncatalog:variable_text:57247:4383:2932897"

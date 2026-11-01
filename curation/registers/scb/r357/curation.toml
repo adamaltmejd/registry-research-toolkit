@@ -34,3 +34,1179 @@ kind = "set"
 subject = "individer: kommun"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersmått.\ncatalog:variable_text:6664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersmått.\ncatalog:variable_text:6664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersmått.\ncatalog:variable_text:6665:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bald"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersmått.\ncatalog:variable_text:6665:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar"
+fields = { "sets" = ["hushallsstorlek"] }
+evidence = "Barnantal är en komponent av hushållsstorlek.\ncatalog:variable_text:6666:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-19-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Barnantal är en komponent av hushållsstorlek.\ncatalog:variable_text:6666:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rum"
+fields = { "sets" = [] }
+evidence = "Antal rum beskriver bostadens utrymme.\ncatalog:variable_text:6667:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rum"
+fields = { "tags" = ["housing"] }
+evidence = "Antal rum beskriver bostadens utrymme.\ncatalog:variable_text:6667:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver undersökningens svar.\ncatalog:variable_text:6668:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver undersökningens svar.\ncatalog:variable_text:6668:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arshyra"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Årshyra är en boendeutgift.\ncatalog:variable_text:6669:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arshyra"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Årshyra är en boendeutgift.\ncatalog:variable_text:6669:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bandboz"
+fields = { "sets" = [] }
+evidence = "Källkoden är opak och etiketten beskriver hushållets andel av bostaden.\ncatalog:variable_text:6670:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bandboz"
+fields = { "tags" = ["property"] }
+evidence = "Källkoden är opak och etiketten beskriver hushållets andel av bostaden.\ncatalog:variable_text:6670:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:banduboz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkoden är opak; måttet är boendeutgiftens andel av inkomsten.\ncatalog:variable_text:6671:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:banduboz"
+fields = { "tags" = ["housing", "income"] }
+evidence = "Källkoden är opak; måttet är boendeutgiftens andel av inkomsten.\ncatalog:variable_text:6671:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:banthusmedz"
+fields = { "sets" = ["hushallsstorlek"] }
+evidence = "Källkoden är opak och variabeln anger antal personer i hushållet.\ncatalog:variable_text:6672:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:banthusmedz"
+fields = { "tags" = ["family-household"] }
+evidence = "Källkoden är opak och variabeln anger antal personer i hushållet.\ncatalog:variable_text:6672:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbolanz"
+fields = { "sets" = ["bostadslan"] }
+evidence = "Källkoden är opak; etiketten delas med lånebeloppet och kräver disambiguering.\ncatalog:variable_text:6673:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbolanz"
+fields = { "tags" = ["finance", "housing"] }
+evidence = "Källkoden är opak; etiketten delas med lånebeloppet och kräver disambiguering.\ncatalog:variable_text:6673:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbut"
+fields = { "sets" = [] }
+evidence = "BBUT är en opak källkod; etiketten anger redovisningsgruppering.\ncatalog:variable_text:6674:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbut"
+fields = { "tags" = ["methods"] }
+evidence = "BBUT är en opak källkod; etiketten anger redovisningsgruppering.\ncatalog:variable_text:6674:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:begsz"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "BEGSZ är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6675:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:begsz"
+fields = { "tags" = ["family-household"] }
+evidence = "BEGSZ är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6675:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bht9z"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "BHT9Z är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6676:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bht9z"
+fields = { "tags" = ["family-household"] }
+evidence = "BHT9Z är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6676:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "sets" = [] }
+evidence = "Bostadens area.\ncatalog:variable_text:6677:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadens area.\ncatalog:variable_text:6677:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform"
+fields = { "sets" = ["boendeform"] }
+evidence = "Kodning av boendeform.\ncatalog:variable_text:6678:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av boendeform.\ncatalog:variable_text:6678:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-och-bostadstillagg"
+fields = { "sets" = [] }
+evidence = "Bidrag och tillägg för bostad.\ncatalog:variable_text:6680:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-och-bostadstillagg"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "Bidrag och tillägg för bostad.\ncatalog:variable_text:6680:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "sets" = [] }
+evidence = "Bostadskategori beskriver bostadens typ.\ncatalog:variable_text:6681:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadskategori beskriver bostadens typ.\ncatalog:variable_text:6681:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brelkbo"
+fields = { "sets" = ["hushallsrelation"] }
+evidence = "Relation till hushållsföreståndaren.\ncatalog:variable_text:6682:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brelkbo"
+fields = { "tags" = ["family-household"] }
+evidence = "Relation till hushållsföreståndaren.\ncatalog:variable_text:6682:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bsmedv"
+fields = { "sets" = ["hushallsvikt"] }
+evidence = "BSMEDV är en opak källkod.\ncatalog:variable_text:6683:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bsmedv"
+fields = { "tags" = ["methods"] }
+evidence = "BSMEDV är en opak källkod.\ncatalog:variable_text:6683:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bvxbarn"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersbaserad kodning som barn eller vuxen.\ncatalog:variable_text:6684:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bvxbarn"
+fields = { "tags" = ["family-household"] }
+evidence = "Åldersbaserad kodning som barn eller vuxen.\ncatalog:variable_text:6684:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp3kz"
+fields = { "sets" = ["konsumtionsutrymme"] }
+evidence = "CDISP3KZ är en opak källkod.\ncatalog:variable_text:6685:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp3kz"
+fields = { "tags" = ["consumption", "income"] }
+evidence = "CDISP3KZ är en opak källkod.\ncatalog:variable_text:6685:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp3z"
+fields = { "sets" = ["konsumtionsutrymme"] }
+evidence = "CDISP3Z är en opak källkod.\ncatalog:variable_text:6686:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp3z"
+fields = { "tags" = ["consumption", "income"] }
+evidence = "CDISP3Z är en opak källkod.\ncatalog:variable_text:6686:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdispbokez"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "CDISPBOKEZ är en opak källkod.\ncatalog:variable_text:6687:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cdispbokez"
+fields = { "tags" = ["income"] }
+evidence = "CDISPBOKEZ är en opak källkod.\ncatalog:variable_text:6687:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "Disponibel hushållsinkomst.\ncatalog:variable_text:6688:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "Disponibel hushållsinkomst.\ncatalog:variable_text:6688:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "Disponibel inkomst enligt 2004 års definition.\ncatalog:variable_text:6689:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "tags" = ["income"] }
+evidence = "Disponibel inkomst enligt 2004 års definition.\ncatalog:variable_text:6689:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fbolanz"
+fields = { "sets" = ["bostadslan"] }
+evidence = "Källkoden är opak; etiketten delas med en indikator för bostadslån.\ncatalog:variable_text:6691:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fbolanz"
+fields = { "tags" = ["finance", "housing"] }
+evidence = "Källkoden är opak; etiketten delas med en indikator för bostadslån.\ncatalog:variable_text:6691:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxboz"
+fields = { "sets" = [] }
+evidence = "Källkoden är opak och etiketten anger bostadens totala taxeringsvärde.\ncatalog:variable_text:6692:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ftaxboz"
+fields = { "tags" = ["property"] }
+evidence = "Källkoden är opak och etiketten anger bostadens totala taxeringsvärde.\ncatalog:variable_text:6692:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:helarsboende"
+fields = { "sets" = [] }
+evidence = "Helårsboende beskriver boendet.\ncatalog:variable_text:6693:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:helarsboende"
+fields = { "tags" = ["housing"] }
+evidence = "Helårsboende beskriver boendet.\ncatalog:variable_text:6693:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandaren"
+fields = { "sets" = ["hushallsrelation"] }
+evidence = "Kodning som hushållsföreståndare.\ncatalog:variable_text:6694:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandaren"
+fields = { "tags" = ["family-household"] }
+evidence = "Kodning som hushållsföreståndare.\ncatalog:variable_text:6694:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-kalibrerad"
+fields = { "sets" = ["hushallsvikt"] }
+evidence = "Kalibrerad hushållsvikt.\ncatalog:variable_text:6696:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-kalibrerad"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad hushållsvikt.\ncatalog:variable_text:6696:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-okalibrerad"
+fields = { "sets" = ["hushallsvikt"] }
+evidence = "Okalibrerad hushållsvikt.\ncatalog:variable_text:6697:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-okalibrerad"
+fields = { "tags" = ["methods"] }
+evidence = "Okalibrerad hushållsvikt.\ncatalog:variable_text:6697:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskontrakt"
+fields = { "sets" = [] }
+evidence = "Typ av hyreskontrakt.\ncatalog:variable_text:6698:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskontrakt"
+fields = { "tags" = ["housing"] }
+evidence = "Typ av hyreskontrakt.\ncatalog:variable_text:6698:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inneboende-finns"
+fields = { "sets" = [] }
+evidence = "Förekomst av inneboende.\ncatalog:variable_text:6700:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inneboende-finns"
+fields = { "tags" = ["family-household", "housing"] }
+evidence = "Förekomst av inneboende.\ncatalog:variable_text:6700:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:katomboz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkoden är opak och etiketten anger tomträttsavgäld.\ncatalog:variable_text:6701:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:katomboz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Källkoden är opak och etiketten anger tomträttsavgäld.\ncatalog:variable_text:6701:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "sets" = [] }
+evidence = "Kökstyp beskriver bostaden.\ncatalog:variable_text:6702:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kökstyp beskriver bostaden.\ncatalog:variable_text:6702:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:6703:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:6703:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon"] }
+evidence = "Könskodning.\ncatalog:variable_text:6704:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Könskodning.\ncatalog:variable_text:6704:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "sets" = ["kon"] }
+evidence = "Könskodning.\ncatalog:variable_text:6705:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bkon"
+fields = { "tags" = ["demographics"] }
+evidence = "Könskodning.\ncatalog:variable_text:6705:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt"
+fields = { "sets" = ["konsumtionsenhetsvikt"] }
+evidence = "Konsumtionsenhetsvikt enligt norm 1,16.\ncatalog:variable_text:6706:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt"
+fields = { "tags" = ["family-household"] }
+evidence = "Konsumtionsenhetsvikt enligt norm 1,16.\ncatalog:variable_text:6706:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt-2004"
+fields = { "sets" = ["konsumtionsenhetsvikt"] }
+evidence = "Konsumtionsenhetsvikt enligt 2004 års norm.\ncatalog:variable_text:6707:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt-2004"
+fields = { "tags" = ["family-household"] }
+evidence = "Konsumtionsenhetsvikt enligt 2004 års norm.\ncatalog:variable_text:6707:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar"
+fields = { "sets" = [] }
+evidence = "Kvarboende hos förälder.\ncatalog:variable_text:6708:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Kvarboende hos förälder.\ncatalog:variable_text:6708:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "sets" = [] }
+evidence = "Lägenhetstyp beskriver bostadens utrymme.\ncatalog:variable_text:6709:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Lägenhetstyp beskriver bostadens utrymme.\ncatalog:variable_text:6709:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbantrumz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6710:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbantrumz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6710:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbbohelarz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6711:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mbbohelarz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6711:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mbbolanz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6712:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbbolanz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6712:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbboytaz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6713:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbboytaz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6713:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbkokz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6714:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbkokz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6714:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbkontrz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6715:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbkontrz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6715:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbohelarz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6716:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mbohelarz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6716:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mfbolanz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6717:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mfbolanz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6717:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muamorteringz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6718:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muamorteringz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6718:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muarhyraz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6719:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muarhyraz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6719:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muhuselz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6720:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:muhuselz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6720:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:muombyinstz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6721:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muombyinstz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6721:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murantaz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6722:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murantaz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6722:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murepz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6723:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murepz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6723:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murotomz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6724:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murotomz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6724:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murotrepz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6725:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:murotrepz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6725:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musopz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6726:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musopz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6726:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musotz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6727:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musotz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6727:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvanz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6728:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvanz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6728:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvelz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6729:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvelz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6729:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvfjz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6730:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvfjz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6730:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvoljz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6731:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvoljz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6731:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvvedz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6732:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muuppvvedz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6732:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvagundz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6733:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvagundz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6733:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvaz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6734:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvaz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6734:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvforsz"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6735:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:muvforsz"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6735:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteutgifter"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Ränta på bostadslån ingår i boendeutgiften.\ncatalog:variable_text:6737:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteutgifter"
+fields = { "tags" = ["consumption", "finance", "housing"] }
+evidence = "Ränta på bostadslån ingår i boendeutgiften.\ncatalog:variable_text:6737:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:region-fyra-delar"
+fields = { "sets" = [] }
+evidence = "Geografisk regionindelning.\ncatalog:variable_text:6738:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:region-fyra-delar"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk regionindelning.\ncatalog:variable_text:6738:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson"
+fields = { "sets" = ["hushallsrelation"] }
+evidence = "Relation till urvalspersonen. Coordinator group membership: Variablerna kodar relation till hushållets referensperson, inklusive urvalspersonen, eller ställning som hushållsföreståndare.\ncatalog:variable_text:6682:19723:20089\ncatalog:variable_text:6694:19723:20089\ncatalog:variable_text:6739:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson"
+fields = { "tags" = ["family-household"] }
+evidence = "Relation till urvalspersonen. Coordinator group membership: Variablerna kodar relation till hushållets referensperson, inklusive urvalspersonen, eller ställning som hushållsföreståndare.\ncatalog:variable_text:6682:19723:20089\ncatalog:variable_text:6694:19723:20089\ncatalog:variable_text:6739:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:seffboz"
+fields = { "sets" = ["skatteeffekt-av-boendet"] }
+evidence = "Källkoden är opak och etiketten anger boendets skatteeffekt.\ncatalog:variable_text:6740:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:seffboz"
+fields = { "tags" = ["housing", "taxation"] }
+evidence = "Källkoden är opak och etiketten anger boendets skatteeffekt.\ncatalog:variable_text:6740:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:seffz"
+fields = { "sets" = ["skatteeffekt-av-boendet"] }
+evidence = "Källkoden är opak och etiketten anger skattereduktion för ränteutgift.\ncatalog:variable_text:6741:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:seffz"
+fields = { "tags" = ["housing", "taxation"] }
+evidence = "Källkoden är opak och etiketten anger skattereduktion för ränteutgift.\ncatalog:variable_text:6741:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sfavgboz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkoden är opak och etiketten anger fastighetsavgift.\ncatalog:variable_text:6742:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sfavgboz"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkoden är opak och etiketten anger fastighetsavgift.\ncatalog:variable_text:6742:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underhall-reparation"
+fields = { "sets" = ["skatteeffekt-av-boendet"] }
+evidence = "Skattereduktion för bostadens underhåll och reparation.\ncatalog:variable_text:6743:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underhall-reparation"
+fields = { "tags" = ["housing", "taxation"] }
+evidence = "Skattereduktion för bostadens underhåll och reparation.\ncatalog:variable_text:6743:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srotomz"
+fields = { "sets" = ["skatteeffekt-av-boendet"] }
+evidence = "SROTOMZ är en opak källkod.\ncatalog:variable_text:6744:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srotomz"
+fields = { "tags" = ["housing", "taxation"] }
+evidence = "SROTOMZ är en opak källkod.\ncatalog:variable_text:6744:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Populationsstorlek per urvalsstratum.\ncatalog:variable_text:6745:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek per urvalsstratum.\ncatalog:variable_text:6745:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstratum.\ncatalog:variable_text:6746:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstratum.\ncatalog:variable_text:6746:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:suppskboz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkoden är opak och etiketten anger skatt på uppskovsbelopp.\ncatalog:variable_text:6747:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:suppskboz"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkoden är opak och etiketten anger skatt på uppskovsbelopp.\ncatalog:variable_text:6747:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uamorteringz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Amortering ingår i boendeutgiften.\ncatalog:variable_text:6748:19723:20089\ncatalog:variable_text:6750:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uamorteringz"
+fields = { "tags" = ["consumption", "finance", "housing"] }
+evidence = "Amortering ingår i boendeutgiften.\ncatalog:variable_text:6748:19723:20089\ncatalog:variable_text:6750:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uandrautgz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Summa andra bostadsutgifter.\ncatalog:variable_text:6749:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uandrautgz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Summa andra bostadsutgifter.\ncatalog:variable_text:6749:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uboz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkoden är opak och etiketten anger boendeutgift.\ncatalog:variable_text:6750:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uboz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Källkoden är opak och etiketten anger boendeutgift.\ncatalog:variable_text:6750:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uhuselz"
+fields = { "sets" = [] }
+evidence = "Utgift för hushållsel ingår inte i den definierade boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6751:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:uhuselz"
+fields = { "tags" = ["consumption", "energy"] }
+evidence = "Utgift för hushållsel ingår inte i den definierade boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6751:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:underhall-och-reparation"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Utgift för underhåll och reparation ingår i boendeutgiften.\ncatalog:variable_text:6752:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:underhall-och-reparation"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Utgift för underhåll och reparation ingår i boendeutgiften.\ncatalog:variable_text:6752:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uombyinstz"
+fields = { "sets" = [] }
+evidence = "Utgiften ingår inte i boendeutgiften.\ncatalog:variable_text:6753:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uombyinstz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Utgiften ingår inte i boendeutgiften.\ncatalog:variable_text:6753:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "sets" = ["boendeform"] }
+evidence = "Kodning av upplåtelseform.\ncatalog:variable_text:6754:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av upplåtelseform.\ncatalog:variable_text:6754:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-annat-bransle"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6755:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-annat-bransle"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6755:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-biobransle"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6756:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-biobransle"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6756:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-el"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6757:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-el"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6757:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-fjarrvarme"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6758:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-fjarrvarme"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6758:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-olja"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6759:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-olja"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Uppvärmningsutgift är en komponent av boendeutgiften.\ncatalog:variable_text:6759:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-totalt"
+fields = { "sets" = ["boendeutgift", "uppvarmningsutgift"] }
+evidence = "Total uppvärmningsutgift ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningsutgift-totalt"
+fields = { "tags" = ["consumption", "energy", "housing"] }
+evidence = "Total uppvärmningsutgift ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6760:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:usopz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Utgift för sophämtning ingår i boendeutgiften.\ncatalog:variable_text:6762:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:usopz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Utgift för sophämtning ingår i boendeutgiften.\ncatalog:variable_text:6762:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:usotz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Utgift för sotning ingår i boendeutgiften.\ncatalog:variable_text:6763:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:usotz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Utgift för sotning ingår i boendeutgiften.\ncatalog:variable_text:6763:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvagundz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6764:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvagundz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6764:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvaz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6765:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvaz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6765:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvforsz"
+fields = { "sets" = ["boendeutgift"] }
+evidence = "Villaförsäkring ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6766:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvforsz"
+fields = { "tags" = ["consumption", "housing"] }
+evidence = "Villaförsäkring ingår i boendeutgiften.\ncatalog:variable_text:6750:19723:20089\ncatalog:variable_text:6766:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = [] }
+evidence = "Värdeår är en fastighetsegenskap.\ncatalog:variable_text:6767:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Värdeår är en fastighetsegenskap.\ncatalog:variable_text:6767:19723:20089"

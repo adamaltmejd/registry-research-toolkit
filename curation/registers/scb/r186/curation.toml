@@ -262,3 +262,399 @@ kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: {ssyk12_3,ssyk12_4} where key = 'v120'"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:42771:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:42771:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver anställningsform.\ncatalog:variable_text:42772:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstyp"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln beskriver anställningsform.\ncatalog:variable_text:42772:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grlon"
+fields = { "sets" = ["lon"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42776:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grlon"
+fields = { "tags" = ["income"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42776:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger arbetsgivarens kommun.\ncatalog:variable_text:42777:12784:18262\ncatalog:variable_text:42777:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger arbetsgivarens kommun.\ncatalog:variable_text:42777:12784:18262\ncatalog:variable_text:42777:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön är ett demografiskt mått.\ncatalog:variable_text:42778:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön är ett demografiskt mått.\ncatalog:variable_text:42778:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger arbetsgivarens län.\ncatalog:variable_text:42779:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger arbetsgivarens län.\ncatalog:variable_text:42779:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manl"
+fields = { "sets" = ["lon"] }
+evidence = "Månadslön är ett lönebelopp.\ncatalog:variable_text:42781:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manl"
+fields = { "tags" = ["income"] }
+evidence = "Månadslön är ett lönebelopp.\ncatalog:variable_text:42781:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:42782:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:42782:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvar"
+fields = { "sets" = [] }
+evidence = "Nsvar är en källmnemonik och etiketten saknar en utläst benämning; definitionen anger antalet svarande företag i urvalet.\ncatalog:variable_text:42783:12784:17167\ncatalog:variable_text:42783:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvar"
+fields = { "tags" = ["methods"] }
+evidence = "Nsvar är en källmnemonik och etiketten saknar en utläst benämning; definitionen anger antalet svarande företag i urvalet.\ncatalog:variable_text:42783:12784:17167\ncatalog:variable_text:42783:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2"
+fields = { "sets" = [] }
+evidence = "NUTS anger arbetsgivarens geografiska region.\ncatalog:variable_text:42784:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS anger arbetsgivarens geografiska region.\ncatalog:variable_text:42784:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg-uppraknade"
+fields = { "sets" = ["lon"] }
+evidence = "Rörliga lönetillägg är lönebelopp.\ncatalog:variable_text:42787:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg-uppraknade"
+fields = { "tags" = ["income"] }
+evidence = "Rörliga lönetillägg är lönebelopp.\ncatalog:variable_text:42787:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sekt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger sektorn där personen arbetar.\ncatalog:variable_text:42788:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sekt"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger sektorn där personen arbetar.\ncatalog:variable_text:42788:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-3"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkeskodning som scb/slh/ssyk3 är uppdelad mellan perioder.\ncatalog:occurrence:443168\ncatalog:occurrence:443195"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-3"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkeskodning som scb/slh/ssyk3 är uppdelad mellan perioder.\ncatalog:occurrence:443168\ncatalog:occurrence:443195"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-4"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkeskodning som scb/slh/ssyk4-huvud är uppdelad mellan perioder.\ncatalog:occurrence:443169\ncatalog:occurrence:443196"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk12-4"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkeskodning som scb/slh/ssyk4-huvud är uppdelad mellan perioder.\ncatalog:occurrence:443169\ncatalog:occurrence:443196"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkeskodning som scb/slh/ssyk12-3 är uppdelad mellan perioder.\ncatalog:occurrence:443168\ncatalog:occurrence:443195"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkeskodning som scb/slh/ssyk12-3 är uppdelad mellan perioder.\ncatalog:occurrence:443168\ncatalog:occurrence:443195"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkeskodning som scb/slh/ssyk12-4 är uppdelad mellan perioder.\ncatalog:occurrence:443169\ncatalog:occurrence:443196"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkeskodning som scb/slh/ssyk12-4 är uppdelad mellan perioder.\ncatalog:occurrence:443169\ncatalog:occurrence:443196"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Antalet företag i urvalsramens stratum är ett undersökningsmått.\ncatalog:variable_text:42793:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet företag i urvalsramens stratum är ett undersökningsmått.\ncatalog:variable_text:42793:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver urvalsstratum.\ncatalog:variable_text:42794:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver urvalsstratum.\ncatalog:variable_text:42794:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000grp"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källan beskriver en aggregerad utbildningsnivå; den perioddelade kopplingen till utbildningsgrupp behöver granskas.\ncatalog:occurrence:442899\ncatalog:occurrence:442981\ncatalog:valueset:9143\ncatalog:variable_text:42795:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000grp"
+fields = { "tags" = ["education"] }
+evidence = "Källan beskriver en aggregerad utbildningsnivå; den perioddelade kopplingen till utbildningsgrupp behöver granskas.\ncatalog:occurrence:442899\ncatalog:occurrence:442981\ncatalog:valueset:9143\ncatalog:variable_text:42795:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Den angränsande variabeln scb/slh/utbildningsinriktning-4-positioner beskriver samma fyrpositioners inriktningskod, korrekt uppdelad per period.\ncatalog:occurrence:443173\ncatalog:occurrence:443200\ncatalog:variable_text:42796:16801:17897\ncatalog:variable_text:42806:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "Den angränsande variabeln scb/slh/utbildningsinriktning-4-positioner beskriver samma fyrpositioners inriktningskod, korrekt uppdelad per period.\ncatalog:occurrence:443173\ncatalog:occurrence:443200\ncatalog:variable_text:42796:16801:17897\ncatalog:variable_text:42806:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Den angränsande variabeln scb/slh/utbildningsniva-3-positioner beskriver samma trepositioners nivåkod, korrekt uppdelad per period.\ncatalog:occurrence:443174\ncatalog:occurrence:443201\ncatalog:variable_text:42797:16801:17897\ncatalog:variable_text:42809:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Den angränsande variabeln scb/slh/utbildningsniva-3-positioner beskriver samma trepositioners nivåkod, korrekt uppdelad per period.\ncatalog:occurrence:443174\ncatalog:occurrence:443201\ncatalog:variable_text:42797:16801:17897\ncatalog:variable_text:42809:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma äldre nivåkodning som scb/slh/sun2000niva-old-774 är uppdelad mellan perioder.\ncatalog:occurrence:443175\ncatalog:occurrence:443202\ncatalog:valueset:2694"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "tags" = ["education"] }
+evidence = "Samma äldre nivåkodning som scb/slh/sun2000niva-old-774 är uppdelad mellan perioder.\ncatalog:occurrence:443175\ncatalog:occurrence:443202\ncatalog:valueset:2694"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-774"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma äldre nivåkodning som scb/slh/sun2000niva-old-66 är uppdelad mellan perioder.\ncatalog:occurrence:443175\ncatalog:occurrence:443202\ncatalog:valueset:11389"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-774"
+fields = { "tags" = ["education"] }
+evidence = "Samma äldre nivåkodning som scb/slh/sun2000niva-old-66 är uppdelad mellan perioder.\ncatalog:occurrence:443175\ncatalog:occurrence:443202\ncatalog:valueset:11389"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln mäter utbildningsnivå enligt SUN 2020; variationen i den operativa kodlängden ändrar inte detta.\ncatalog:occurrence:443352\ncatalog:occurrence:443376\ncatalog:valueset:11004\ncatalog:variable_text:42800:18262:18993\ncatalog:variable_text:42800:18993:19358\ncatalog:variable_text:42800:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter utbildningsnivå enligt SUN 2020; variationen i den operativa kodlängden ändrar inte detta.\ncatalog:occurrence:443352\ncatalog:occurrence:443376\ncatalog:valueset:11004\ncatalog:variable_text:42800:18262:18993\ncatalog:variable_text:42800:18993:19358\ncatalog:variable_text:42800:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter tjänstgöringstid i förhållande till heltid.\ncatalog:variable_text:42801:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter tjänstgöringstid i förhållande till heltid.\ncatalog:variable_text:42801:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "sets" = ["utbildningsgrupp"] }
+evidence = "Samma utbildningsgrupp som scb/slh/utbildningsgrupp-enl-sun-2000 är uppdelad mellan perioder.\ncatalog:occurrence:443172\ncatalog:occurrence:443199"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "Samma utbildningsgrupp som scb/slh/utbildningsgrupp-enl-sun-2000 är uppdelad mellan perioder.\ncatalog:occurrence:443172\ncatalog:occurrence:443199"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-enl-sun-2000"
+fields = { "sets" = ["utbildningsgrupp"] }
+evidence = "Källkolumnen har olika dokumenterade betydelser hos en av motparterna.\ncatalog:occurrence:442899\ncatalog:occurrence:442981"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-enl-sun-2000"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har olika dokumenterade betydelser hos en av motparterna.\ncatalog:occurrence:442899\ncatalog:occurrence:442981"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Samma ensiffriga inriktning som scb/slh/utbildningsinriktning-1-position är uppdelad mellan perioder.\ncatalog:occurrence:443177\ncatalog:occurrence:443204"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "tags" = ["education"] }
+evidence = "Samma ensiffriga inriktning som scb/slh/utbildningsinriktning-1-position är uppdelad mellan perioder.\ncatalog:occurrence:443177\ncatalog:occurrence:443204"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-1-position"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Samma ensiffriga inriktning som scb/slh/utbildningsinriktning är uppdelad mellan perioder.\ncatalog:occurrence:443177\ncatalog:occurrence:443204"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-1-position"
+fields = { "tags" = ["education"] }
+evidence = "Samma ensiffriga inriktning som scb/slh/utbildningsinriktning är uppdelad mellan perioder.\ncatalog:occurrence:443177\ncatalog:occurrence:443204"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Samma fyrsiffriga inriktning som scb/slh/sun2000inr är uppdelad mellan perioder.\ncatalog:occurrence:443173\ncatalog:occurrence:443200"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Samma fyrsiffriga inriktning som scb/slh/sun2000inr är uppdelad mellan perioder.\ncatalog:occurrence:443173\ncatalog:occurrence:443200"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Den intilliggande perioden med utbildningsniva-1-position avser samma ensiffriga nivå.\ncatalog:occurrence:443178\ncatalog:occurrence:443205\ncatalog:variable_text:42807:16801:18628\ncatalog:variable_text:42807:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Den intilliggande perioden med utbildningsniva-1-position avser samma ensiffriga nivå.\ncatalog:occurrence:443178\ncatalog:occurrence:443205\ncatalog:variable_text:42807:16801:18628\ncatalog:variable_text:42807:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-1-position"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Den intilliggande perioden med utbildningsniva avser samma ensiffriga nivå.\ncatalog:occurrence:443178\ncatalog:occurrence:443205\ncatalog:variable_text:42808:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-1-position"
+fields = { "tags" = ["education"] }
+evidence = "Den intilliggande perioden med utbildningsniva avser samma ensiffriga nivå.\ncatalog:occurrence:443178\ncatalog:occurrence:443205\ncatalog:variable_text:42808:12784:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma tresiffriga nivå som scb/slh/sun2000niva är uppdelad mellan perioder.\ncatalog:occurrence:443174\ncatalog:occurrence:443201"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Samma tresiffriga nivå som scb/slh/sun2000niva är uppdelad mellan perioder.\ncatalog:occurrence:443174\ncatalog:occurrence:443201"

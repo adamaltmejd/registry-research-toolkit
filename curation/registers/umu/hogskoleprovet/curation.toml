@@ -1,0 +1,216 @@
+
+[[statement]]
+kind = "set"
+subject = "var:allman-orientering"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57474:2557:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:allman-orientering"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57474:2557:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:diagram-tabeller-kartor"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57476:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagram-tabeller-kartor"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57476:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:engelsk-lasforstelse"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57477:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:engelsk-lasforstelse"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57477:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativ-delsumma"
+fields = { "sets" = [] }
+evidence = "Delsumman hör till utbildningsresultat.\ncatalog:variable_text:57478:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativ-delsumma"
+fields = { "tags" = ["education"] }
+evidence = "Delsumman hör till utbildningsresultat.\ncatalog:variable_text:57478:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativa-jamforelser"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57479:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativa-jamforelser"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57479:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativa-resonemang"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57480:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantitativa-resonemang"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57480:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvnorm"
+fields = { "sets" = [] }
+evidence = "Det normerade delresultatet hör till utbildningsresultat.\ncatalog:variable_text:57481:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kvnorm"
+fields = { "tags" = ["education"] }
+evidence = "Det normerade delresultatet hör till utbildningsresultat.\ncatalog:variable_text:57481:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger provortens län.\ncatalog:variable_text:57482:2557:5113"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger provortens län.\ncatalog:variable_text:57482:2557:5113"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate"
+fields = { "sets" = [] }
+evidence = "Variabeln anger lärosätet där provet skrevs.\ncatalog:variable_text:57483:5113:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger lärosätet där provet skrevs.\ncatalog:variable_text:57483:5113:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lasforstelse"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57484:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lasforstelse"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57484:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:matematisk-problemlosning"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57486:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:matematisk-problemlosning"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57486:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:meningskomplettering"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57487:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:meningskomplettering"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57487:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:normerat-resultat"
+fields = { "sets" = [] }
+evidence = "Det normerade provresultatet hör till utbildningsresultat.\ncatalog:variable_text:57488:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:normerat-resultat"
+fields = { "tags" = ["education"] }
+evidence = "Det normerade provresultatet hör till utbildningsresultat.\ncatalog:variable_text:57488:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordforstelse"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57489:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordforstelse"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57489:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:studietekniska-fardigheter"
+fields = { "sets" = [] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57490:2557:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:studietekniska-fardigheter"
+fields = { "tags" = ["education"] }
+evidence = "Delprovsresultatet hör till utbildningsresultat.\ncatalog:variable_text:57490:2557:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:total"
+fields = { "sets" = [] }
+evidence = "Den totala råpoängen hör till utbildningsresultat.\ncatalog:variable_text:57492:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:total"
+fields = { "tags" = ["education"] }
+evidence = "Den totala råpoängen hör till utbildningsresultat.\ncatalog:variable_text:57492:2557:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:venorm"
+fields = { "sets" = [] }
+evidence = "Det normerade delresultatet hör till utbildningsresultat.\ncatalog:variable_text:57493:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:venorm"
+fields = { "tags" = ["education"] }
+evidence = "Det normerade delresultatet hör till utbildningsresultat.\ncatalog:variable_text:57493:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-delsumma"
+fields = { "sets" = [] }
+evidence = "Delsumman hör till utbildningsresultat.\ncatalog:variable_text:57494:15156:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-delsumma"
+fields = { "tags" = ["education"] }
+evidence = "Delsumman hör till utbildningsresultat.\ncatalog:variable_text:57494:15156:2932897"

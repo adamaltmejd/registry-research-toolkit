@@ -54,3 +54,291 @@ kind = "set"
 subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: lk"
 fields = { "variable" = "placerande-kommun" }
 evidence = "LK records the placing municipality in applications and discharges, but the person's municipality in custody decisions."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56962:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56962:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "sets" = [] }
+evidence = "Variabeln avser avslut av LVM-vård.\ncatalog:valueset:7943\ncatalog:variable_text:56967:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser avslut av LVM-vård.\ncatalog:valueset:7943\ncatalog:variable_text:56967:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikdgr"
+fields = { "sets" = [] }
+evidence = "Antalet dagar och förekomsten av avvikelse mäter samma företeelse under LVM-vård.\ncatalog:variable_text:56968:8766:2932897\ncatalog:variable_text:56969:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikdgr"
+fields = { "tags" = ["social-care"] }
+evidence = "Antalet dagar och förekomsten av avvikelse mäter samma företeelse under LVM-vård.\ncatalog:variable_text:56968:8766:2932897\ncatalog:variable_text:56969:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avviken"
+fields = { "sets" = [] }
+evidence = "Förekomsten och antalet dagar av avvikelse mäter samma företeelse under LVM-vård.\ncatalog:variable_text:56968:8766:2932897\ncatalog:variable_text:56969:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avviken"
+fields = { "tags" = ["social-care"] }
+evidence = "Förekomsten och antalet dagar av avvikelse mäter samma företeelse under LVM-vård.\ncatalog:variable_text:56968:8766:2932897\ncatalog:variable_text:56969:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlingshem"
+fields = { "sets" = [] }
+evidence = "Koden identifierar ett behandlingshem.\ncatalog:variable_text:56970:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlingshem"
+fields = { "tags" = ["social-care"] }
+evidence = "Koden identifierar ett behandlingshem.\ncatalog:variable_text:56970:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besfatt"
+fields = { "sets" = [] }
+evidence = "Beslutsfattaren avser omedelbart omhändertagande enligt LVM.\ncatalog:valueset:2231\ncatalog:variable_text:56972:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besfatt"
+fields = { "tags" = ["social-care"] }
+evidence = "Beslutsfattaren avser omedelbart omhändertagande enligt LVM.\ncatalog:valueset:2231\ncatalog:variable_text:56972:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "sets" = [] }
+evidence = "Beslutet gäller vård enligt LVM.\ncatalog:valueset:1741\ncatalog:variable_text:56973:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Beslutet gäller vård enligt LVM.\ncatalog:valueset:1741\ncatalog:variable_text:56973:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:den-omhandertagnas-kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk tillhörighet.\ncatalog:variable_text:56977:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:den-omhandertagnas-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk tillhörighet.\ncatalog:variable_text:56977:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foddatn"
+fields = { "sets" = [] }
+evidence = "Slutbokstaven N är en formatkod; födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56978:8766:8768\ncatalog:variable_text:56978:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foddatn"
+fields = { "tags" = ["demographics"] }
+evidence = "Slutbokstaven N är en formatkod; födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56978:8766:8768\ncatalog:variable_text:56978:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift; källhistoriken bevarar delregistrens populationer.\ncatalog:variable_text:56979:12784:2932897\ncatalog:variable_text:56979:8766:8768\ncatalog:variable_text:56979:8768:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift; källhistoriken bevarar delregistrens populationer.\ncatalog:variable_text:56979:12784:2932897\ncatalog:variable_text:56979:8766:8768\ncatalog:variable_text:56979:8768:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:franhem"
+fields = { "sets" = [] }
+evidence = "Koden anger ett tidigare LVM-hem vid överflyttning.\ncatalog:variable_text:56980:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:franhem"
+fields = { "tags" = ["social-care"] }
+evidence = "Koden anger ett tidigare LVM-hem vid överflyttning.\ncatalog:variable_text:56980:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:frivillig-vard"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver frivillig vård efter LVM-vård.\ncatalog:valueset:7212\ncatalog:variable_text:56981:8766:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:frivillig-vard"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln beskriver frivillig vård efter LVM-vård.\ncatalog:valueset:7212\ncatalog:variable_text:56981:8766:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:indikat"
+fields = { "sets" = [] }
+evidence = "Indikationen avser grunder för LVM-vård.\ncatalog:valueset:7464\ncatalog:variable_text:56982:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:indikat"
+fields = { "tags" = ["social-care"] }
+evidence = "Indikationen avser grunder för LVM-vård.\ncatalog:valueset:7464\ncatalog:variable_text:56982:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift; källhistoriken bevarar delregistrens populationer.\ncatalog:variable_text:56983:8766:8768\ncatalog:variable_text:56983:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift; källhistoriken bevarar delregistrens populationer.\ncatalog:variable_text:56983:8766:8768\ncatalog:variable_text:56983:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:missbm"
+fields = { "sets" = [] }
+evidence = "Missbruksmedel beskriver levnadsvanor och missbruk.\ncatalog:valueset:5587\ncatalog:valueset:5779\ncatalog:valueset:7428\ncatalog:variable_text:56984:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:missbm"
+fields = { "tags" = ["health"] }
+evidence = "Missbruksmedel beskriver levnadsvanor och missbruk.\ncatalog:valueset:5587\ncatalog:valueset:5779\ncatalog:valueset:7428\ncatalog:variable_text:56984:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:overflyt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger överflyttning mellan LVM-hem.\ncatalog:variable_text:56985:8766:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:overflyt"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln anger överflyttning mellan LVM-hem.\ncatalog:variable_text:56985:8766:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:56987:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:56987:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placerande-kommun"
+fields = { "sets" = [] }
+evidence = "Kommunen är en geografisk tillhörighet.\ncatalog:variable_text:56988:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placerande-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen är en geografisk tillhörighet.\ncatalog:variable_text:56988:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provningsbeslut"
+fields = { "sets" = [] }
+evidence = "Prövningen gäller om ett LVM-omhändertagande ska bestå.\ncatalog:valueset:1994\ncatalog:variable_text:56991:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provningsbeslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Prövningen gäller om ett LVM-omhändertagande ska bestå.\ncatalog:valueset:1994\ncatalog:variable_text:56991:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdgr"
+fields = { "sets" = [] }
+evidence = "Antal sjukhusdagar och sjukhusvård mäter samma vårdform.\ncatalog:variable_text:56993:8766:2932897\ncatalog:variable_text:56994:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdgr"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal sjukhusdagar och sjukhusvård mäter samma vårdform.\ncatalog:variable_text:56993:8766:2932897\ncatalog:variable_text:56994:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvrd"
+fields = { "sets" = [] }
+evidence = "Sjukhusvård och antal sjukhusdagar mäter samma vårdform.\ncatalog:variable_text:56993:8766:2932897\ncatalog:variable_text:56994:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvrd"
+fields = { "tags" = ["healthcare"] }
+evidence = "Sjukhusvård och antal sjukhusdagar mäter samma vårdform.\ncatalog:variable_text:56993:8766:2932897\ncatalog:variable_text:56994:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:syndgr"
+fields = { "sets" = [] }
+evidence = "Tillsyn och dess antal dagar är mått på samma insats.\ncatalog:variable_text:56997:8766:2932897\ncatalog:variable_text:56999:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syndgr"
+fields = { "tags" = ["social-care"] }
+evidence = "Tillsyn och dess antal dagar är mått på samma insats.\ncatalog:variable_text:56997:8766:2932897\ncatalog:variable_text:56999:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsyn"
+fields = { "sets" = [] }
+evidence = "Tillsyn och dess antal dagar är mått på samma insats.\ncatalog:variable_text:56997:8766:2932897\ncatalog:variable_text:56999:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsyn"
+fields = { "tags" = ["social-care"] }
+evidence = "Tillsyn och dess antal dagar är mått på samma insats.\ncatalog:variable_text:56997:8766:2932897\ncatalog:variable_text:56999:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:utskrivtill"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver destination eller situation vid utskrivning från LVM-vård.\ncatalog:valueset:3150\ncatalog:variable_text:57003:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utskrivtill"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln beskriver destination eller situation vid utskrivning från LVM-vård.\ncatalog:valueset:3150\ncatalog:variable_text:57003:12784:2932897"

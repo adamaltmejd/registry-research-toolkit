@@ -76,3 +76,183 @@ kind = "set"
 subject = "tradbransle-torv-och-avfallspriser: kommun @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "sets" = [] }
+evidence = "Adress beskriver arbetsställets läge.\ncatalog:variable_text:45831:16071:18993\ncatalog:variable_text:45831:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "tags" = ["geography"] }
+evidence = "Adress beskriver arbetsställets läge.\ncatalog:variable_text:45831:16071:18993\ncatalog:variable_text:45831:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallsmangd"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter förbrukat avfall som bränsle.\ncatalog:variable_text:45835:18628:19723\ncatalog:variable_text:45835:19723:20454\ncatalog:variable_text:45837:16071:18628\ncatalog:variable_text:45837:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallsmangd"
+fields = { "tags" = ["energy", "environment"] }
+evidence = "Variabeln mäter förbrukat avfall som bränsle.\ncatalog:variable_text:45835:18628:19723\ncatalog:variable_text:45835:19723:20454\ncatalog:variable_text:45837:16071:18628\ncatalog:variable_text:45837:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallstyp"
+fields = { "sets" = [] }
+evidence = "Värdena klassificerar avfall som används som bränsle.\ncatalog:valueset:809\ncatalog:valueset:8855\ncatalog:variable_text:45836:18628:20454\ncatalog:variable_text:45838:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallstyp"
+fields = { "tags" = ["energy", "environment"] }
+evidence = "Värdena klassificerar avfall som används som bränsle.\ncatalog:valueset:809\ncatalog:valueset:8855\ncatalog:variable_text:45836:18628:20454\ncatalog:variable_text:45838:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter förbrukat bränsle.\ncatalog:variable_text:45835:18628:19723\ncatalog:variable_text:45835:19723:20454\ncatalog:variable_text:45837:16071:18628\ncatalog:variable_text:45837:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter förbrukat bränsle.\ncatalog:variable_text:45835:18628:19723\ncatalog:variable_text:45835:19723:20454\ncatalog:variable_text:45837:16071:18628\ncatalog:variable_text:45837:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "sets" = [] }
+evidence = "Värdena anger slag av trädbränsle eller torv.\ncatalog:valueset:809\ncatalog:valueset:8855\ncatalog:variable_text:45838:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "tags" = ["energy"] }
+evidence = "Värdena anger slag av trädbränsle eller torv.\ncatalog:valueset:809\ncatalog:valueset:8855\ncatalog:variable_text:45838:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter kostnad för förbrukat bränsle.\ncatalog:variable_text:45841:18628:18993\ncatalog:variable_text:45841:19723:20454\ncatalog:variable_text:45844:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopskostnad"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter kostnad för förbrukat bränsle.\ncatalog:variable_text:45841:18628:18993\ncatalog:variable_text:45841:19723:20454\ncatalog:variable_text:45844:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:intakt"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter intäkter för förbrukat bränsle.\ncatalog:variable_text:45842:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:intakt"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter intäkter för förbrukat bränsle.\ncatalog:variable_text:45842:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:45843:16071:17532\ncatalog:variable_text:45843:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:45843:16071:17532\ncatalog:variable_text:45843:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnad"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter kostnad för förbrukat bränsle.\ncatalog:variable_text:45841:18628:18993\ncatalog:variable_text:45841:19723:20454\ncatalog:variable_text:45844:16071:18628\ncatalog:variable_text:45844:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnad"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter kostnad för förbrukat bränsle.\ncatalog:variable_text:45841:18628:18993\ncatalog:variable_text:45841:19723:20454\ncatalog:variable_text:45844:16071:18628\ncatalog:variable_text:45844:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lansregion"
+fields = { "sets" = [] }
+evidence = "Länsregion är en geografisk gruppering.\ncatalog:valueset:10593\ncatalog:variable_text:45846:16071:17532\ncatalog:variable_text:45846:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lansregion"
+fields = { "tags" = ["geography"] }
+evidence = "Länsregion är en geografisk gruppering.\ncatalog:valueset:10593\ncatalog:variable_text:45846:16071:17532\ncatalog:variable_text:45846:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-anst"
+fields = { "sets" = [] }
+evidence = "Adress och postort är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-anst"
+fields = { "tags" = ["geography"] }
+evidence = "Adress och postort är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet för postadressen.\ncatalog:variable_text:45850:16071:18993\ncatalog:variable_text:45850:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet för postadressen.\ncatalog:variable_text:45850:16071:18993\ncatalog:variable_text:45850:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort och adress är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort och adress är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-for-forbrukat-bransle"
+fields = { "sets" = [] }
+evidence = "Variabeln anger pris per energienhet för förbrukat bränsle.\ncatalog:variable_text:45852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-for-forbrukat-bransle"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Variabeln anger pris per energienhet för förbrukat bränsle.\ncatalog:variable_text:45852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger stratum vid urval.\ncatalog:variable_text:45853:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger stratum vid urval.\ncatalog:variable_text:45853:16071:18262"

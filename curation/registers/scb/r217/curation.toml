@@ -114,3 +114,303 @@ kind = "set"
 subject = "bebyggd-mark: <none> @2010..2014 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-i-tatort"
+fields = { "sets" = ["lage-i-tatort"] }
+evidence = "Tätortsläge grupperas med strandlinjens tätortsläge.\ncatalog:variable_text:6168:19358:19723\ncatalog:variable_text:6192:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-i-tatort"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortsläge grupperas med strandlinjens tätortsläge.\ncatalog:variable_text:6168:19358:19723\ncatalog:variable_text:6192:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-inom-formellt-skyddad-natur"
+fields = { "sets" = ["lage-inom-skyddad-natur"] }
+evidence = "Skyddsläge grupperas med strandlinjens skyddsläge.\ncatalog:variable_text:6169:19358:19723\ncatalog:variable_text:6193:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnad-inom-formellt-skyddad-natur"
+fields = { "tags" = ["environment"] }
+evidence = "Skyddsläge grupperas med strandlinjens skyddsläge.\ncatalog:variable_text:6169:19358:19723\ncatalog:variable_text:6193:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "sets" = [] }
+evidence = "Byggnadstyp avser bebyggelsens egenskaper.\ncatalog:variable_text:6170:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "tags" = ["property"] }
+evidence = "Byggnadstyp avser bebyggelsens egenskaper.\ncatalog:variable_text:6170:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e20"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E20 är en ogenomskinlig källkod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:variable_text:6172:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e20"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E20 är en ogenomskinlig källkod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:variable_text:6172:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2015"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2015 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6173:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2015"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2015 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6173:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2016"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2016 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6174:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2016"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2016 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6174:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2017"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2017 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6175:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2017"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2017 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6175:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2018"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2018 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6176:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2018"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2018 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6176:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2019"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2019 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6177:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2019"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2019 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6177:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2020"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6178:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2020"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6178:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:e2021"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2021 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6179:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e2021"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2021 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6179:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e2022"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2022 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6180:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e2022"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2022 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6180:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e2023"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "E2023 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6181:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:e2023"
+fields = { "tags" = ["environment", "property"] }
+evidence = "E2023 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6181:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:etom20"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "ETOM20 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6182:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:etom20"
+fields = { "tags" = ["environment", "property"] }
+evidence = "ETOM20 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6182:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:etom2020"
+fields = { "sets" = ["exploaterad-strand"] }
+evidence = "ETOM2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6183:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:etom2020"
+fields = { "tags" = ["environment", "property"] }
+evidence = "ETOM2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6183:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hstrand"
+fields = { "sets" = ["strandtyp"] }
+evidence = "Havsstrand och inlandsstrand är kodningar av strandtyp.\ncatalog:variable_text:6184:18993:19723\ncatalog:variable_text:6185:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hstrand"
+fields = { "tags" = ["environment"] }
+evidence = "Havsstrand och inlandsstrand är kodningar av strandtyp.\ncatalog:variable_text:6184:18993:19723\ncatalog:variable_text:6185:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:istrand"
+fields = { "sets" = ["strandtyp"] }
+evidence = "Inlandsstrand och havsstrand är kodningar av strandtyp.\ncatalog:variable_text:6184:18993:19723\ncatalog:variable_text:6185:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:istrand"
+fields = { "tags" = ["environment"] }
+evidence = "Inlandsstrand och havsstrand är kodningar av strandtyp.\ncatalog:variable_text:6184:18993:19723\ncatalog:variable_text:6185:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunkod och kommunnamn är angivelser av kommun.\ncatalog:variable_text:6186:19358:19723\ncatalog:variable_text:6187:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkod och kommunnamn är angivelser av kommun.\ncatalog:variable_text:6186:19358:19723\ncatalog:variable_text:6187:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunnamn och kommunkod är angivelser av kommun.\ncatalog:variable_text:6186:19358:19723\ncatalog:variable_text:6187:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamn och kommunkod är angivelser av kommun.\ncatalog:variable_text:6186:19358:19723\ncatalog:variable_text:6187:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Länskod och länsnamn är angivelser av län.\ncatalog:variable_text:6188:19358:19723\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskod och länsnamn är angivelser av län.\ncatalog:variable_text:6188:19358:19723\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:langdm"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kust- och strandlängd.\ncatalog:variable_text:6189:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:langdm"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kust- och strandlängd.\ncatalog:variable_text:6189:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "sets" = ["lan"] }
+evidence = "Länsnamn och länskod är angivelser av län.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6188:19358:19723\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "tags" = ["geography"] }
+evidence = "Länsnamn och länskod är angivelser av län.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6188:19358:19723\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:strandlinje-i-tatort"
+fields = { "sets" = ["lage-i-tatort"] }
+evidence = "Tätortsläge grupperas med byggnadens tätortsläge.\ncatalog:variable_text:6168:19358:19723\ncatalog:variable_text:6192:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:strandlinje-i-tatort"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortsläge grupperas med byggnadens tätortsläge.\ncatalog:variable_text:6168:19358:19723\ncatalog:variable_text:6192:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:strandlinje-inom-skyddad-natur"
+fields = { "sets" = ["lage-inom-skyddad-natur"] }
+evidence = "Skyddsläge grupperas med byggnadens skyddsläge.\ncatalog:variable_text:6169:19358:19723\ncatalog:variable_text:6193:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:strandlinje-inom-skyddad-natur"
+fields = { "tags" = ["environment"] }
+evidence = "Skyddsläge grupperas med byggnadens skyddsläge.\ncatalog:variable_text:6169:19358:19723\ncatalog:variable_text:6193:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "bebyggelsepaverkad-kust: LANNAMN @2022-01-01..2022-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "bebyggelsepaverkad-kust: LANNAMN @2023-01-01..2023-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn; beskrivningen anger en kod trots att variabeln avser namn.\ncatalog:occurrence-locators:variable:6190\ncatalog:variable_text:6190:19358:19723"

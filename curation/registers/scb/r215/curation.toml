@@ -10,3 +10,4641 @@ kind = "set"
 subject = "vattenbruk: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:a-nation"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden är en förkortning som inte kan utläsas ur etiketten.\ncatalog:variable_text:54913:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:a-nation"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är en förkortning som inte kan utläsas ur etiketten.\ncatalog:variable_text:54913:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-avlonade"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-avlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avlonade-pa-foretaget"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avlonade-pa-foretaget"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513239\ncatalog:occurrence:513279"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan1"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan2"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan2"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan3"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-odlingar-lan3"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-foretaget"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-foretaget"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513237\ncatalog:occurrence:513277"
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54922:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54922:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb-m"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54923:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:av-arb-m"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54923:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avlon-m"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54924:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avlon-m"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54924:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bottenodling-musslor-antal-enheter"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn är samtidigt knuten till olika mått.\ncatalog:occurrence:515352\ncatalog:occurrence:515353"
+
+[[statement]]
+kind = "set"
+subject = "var:bottenodling-musslor-antal-enheter"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma källkolumn är samtidigt knuten till olika mått.\ncatalog:occurrence:515352\ncatalog:occurrence:515353"
+
+[[statement]]
+kind = "set"
+subject = "var:bottenodling-musslor-vattenareal"
+fields = { "sets" = ["musselodlingens-vattenareal"] }
+evidence = "Vattenarealen hör till gruppen för musselodlingens vattenareal.\ncatalog:variable_text:54926:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bottenodling-musslor-vattenareal"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Vattenarealen hör till gruppen för musselodlingens vattenareal.\ncatalog:variable_text:54926:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt"
+fields = { "sets" = [] }
+evidence = "Företagets driftskostnader är ett företagsmått.\ncatalog:variable_text:54927:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt"
+fields = { "tags" = ["business"] }
+evidence = "Företagets driftskostnader är ett företagsmått.\ncatalog:variable_text:54927:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ees"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54928:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ees"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54928:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:energikostnader"
+fields = { "sets" = [] }
+evidence = "Måttet gäller företagens energikostnader.\ncatalog:variable_text:54929:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:energikostnader"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Måttet gäller företagens energikostnader.\ncatalog:variable_text:54929:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eu"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54930:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:eu"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54930:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-ees"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54931:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-ees"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återfinns inte i etiketten.\ncatalog:variable_text:54931:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter"
+fields = { "sets" = [] }
+evidence = "Intäkter är ett företagsmått.\ncatalog:variable_text:54932:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Intäkter är ett företagsmått.\ncatalog:variable_text:54932:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader"
+fields = { "sets" = [] }
+evidence = "Kostnader är ett företagsmått.\ncatalog:variable_text:54933:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Kostnader är ett företagsmått.\ncatalog:variable_text:54933:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:for-k"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54934:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:for-k"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54934:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:for-m"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54935:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:for-m"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:54935:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:for-tot"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54936:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:for-tot"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54936:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:forag"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Antal företagare är en personalgrupp.\ncatalog:variable_text:54937:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forag"
+fields = { "tags" = ["employment"] }
+evidence = "Antal företagare är en personalgrupp.\ncatalog:variable_text:54937:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-musslor"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Måttet avser försäljningsbelopp för musslor.\ncatalog:variable_text:54939:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-musslor"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Måttet avser försäljningsbelopp för musslor.\ncatalog:variable_text:54939:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-eller-yngel"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-eller-yngel"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-yngel-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-oring-rom-yngel-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-ostron"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Måttet avser försäljningsbelopp för ostron.\ncatalog:variable_text:54942:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-ostron"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Måttet avser försäljningsbelopp för ostron.\ncatalog:variable_text:54942:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-regnbage-for-utsattning"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till försäljning och produktion under samma perioder.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-regnbage-for-utsattning"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till försäljning och produktion under samma perioder.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-regnbage-utsattning-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till försäljning och produktion under samma perioder.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-regnbage-utsattning-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till försäljning och produktion under samma perioder.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-rom-yngel-ovrig-art-1"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-rom-yngel-ovrig-art-1"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-signalkraftor-utsattning"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källkolumnerna har motstridiga ägare och betydelser.\ncatalog:occurrence:513659\ncatalog:occurrence:513805\ncatalog:occurrence:513806\ncatalog:occurrence:513807"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-signalkraftor-utsattning"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källkolumnerna har motstridiga ägare och betydelser.\ncatalog:occurrence:513659\ncatalog:occurrence:513805\ncatalog:occurrence:513806\ncatalog:occurrence:513807"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-rom-yngel-ovrig-art-1-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-rom-yngel-ovrig-art-1-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
+
+[[statement]]
+kind = "set"
+subject = "var:grund"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:54948:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grund"
+fields = { "tags" = ["employment"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:54948:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gym"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:54949:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gym"
+fields = { "tags" = ["employment"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:54949:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "sets" = [] }
+evidence = "Variabeln anger imputering.\ncatalog:variable_text:54950:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger imputering.\ncatalog:variable_text:54950:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-foder-kg"
+fields = { "sets" = ["inkop-av-fiskfoder"] }
+evidence = "Mängd och kostnad är mått på inköp av fiskfoder.\ncatalog:variable_text:54951:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-foder-kg"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Mängd och kostnad är mått på inköp av fiskfoder.\ncatalog:variable_text:54951:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-foder-kr"
+fields = { "sets" = ["inkop-av-fiskfoder"] }
+evidence = "Mängd och kostnad är mått på inköp av fiskfoder.\ncatalog:variable_text:54952:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-foder-kr"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Mängd och kostnad är mått på inköp av fiskfoder.\ncatalog:variable_text:54952:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-vattenbruksorganismer-kostnad"
+fields = { "sets" = ["inkop-av-levande-vattenbruksorganismer"] }
+evidence = "Kolumnerna för kilogram och kronor har bytt ägare mellan perioderna.\ncatalog:occurrence:513213\ncatalog:occurrence:513214\ncatalog:occurrence:513253\ncatalog:occurrence:513254\ncatalog:occurrence:513292\ncatalog:occurrence:513293"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-vattenbruksorganismer-kostnad"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Kolumnerna för kilogram och kronor har bytt ägare mellan perioderna.\ncatalog:occurrence:513213\ncatalog:occurrence:513214\ncatalog:occurrence:513253\ncatalog:occurrence:513254\ncatalog:occurrence:513292\ncatalog:occurrence:513293"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-vattenbruksorganismer-mangd"
+fields = { "sets" = ["inkop-av-levande-vattenbruksorganismer"] }
+evidence = "Kolumnerna för kilogram och kronor har bytt ägare mellan perioderna.\ncatalog:occurrence:513213\ncatalog:occurrence:513214\ncatalog:occurrence:513253\ncatalog:occurrence:513254\ncatalog:occurrence:513292\ncatalog:occurrence:513293"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-vattenbruksorganismer-mangd"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Kolumnerna för kilogram och kronor har bytt ägare mellan perioderna.\ncatalog:occurrence:513213\ncatalog:occurrence:513214\ncatalog:occurrence:513253\ncatalog:occurrence:513254\ncatalog:occurrence:513292\ncatalog:occurrence:513293"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54956:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54956:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan2"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
+
+[[statement]]
+kind = "set"
+subject = "var:lan2"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
+
+[[statement]]
+kind = "set"
+subject = "var:lan3"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
+
+[[statement]]
+kind = "set"
+subject = "var:lan3"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
+
+[[statement]]
+kind = "set"
+subject = "var:lan3-49"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
+
+[[statement]]
+kind = "set"
+subject = "var:lan3-49"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser; län är en geografisk uppgift.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
+
+[[statement]]
+kind = "set"
+subject = "var:lan4"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54960:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan4"
+fields = { "tags" = ["geography"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54960:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan5"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54961:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan5"
+fields = { "tags" = ["geography"] }
+evidence = "Länsangivelse för verksamheten är en geografisk uppgift.\ncatalog:variable_text:54961:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m15-24"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54962:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m15-24"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54962:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m25-39"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54963:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m25-39"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54963:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m40-64"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54964:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:m40-64"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:54964:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mald"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:54965:17167:17532\ncatalog:variable_text:54965:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mald"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:54965:17167:17532\ncatalog:variable_text:54965:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mald-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54966:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mald-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54966:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig; etiketten anger försäljning av ål.\ncatalog:variable_text:54967:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig; etiketten anger försäljning av ål.\ncatalog:variable_text:54967:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:variable_text:54968:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:variable_text:54968:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malger"
+fields = { "sets" = ["forekomst-av-artvis-odling"] }
+evidence = "M är en källkod för produktionsdel och ingår inte som läsbar ordstam i etiketten. Uppgiften gäller förekomst av algodling.\ncatalog:variable_text:54969:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malger"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "M är en källkod för produktionsdel och ingår inte som läsbar ordstam i etiketten. Uppgiften gäller förekomst av algodling.\ncatalog:variable_text:54969:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malger-salt"
+fields = { "sets" = ["forekomst-av-artvis-odling"] }
+evidence = "M är en källkod för produktionsdel och etiketten anger förekomst av algodling. Etiketten delas med en annan variabel och målnamnet behöver disambiguering.\ncatalog:variable_text:54970:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malger-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "M är en källkod för produktionsdel och etiketten anger förekomst av algodling. Etiketten delas med en annan variabel och målnamnet behöver disambiguering.\ncatalog:variable_text:54970:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54971:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54971:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54972:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54972:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54973:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54973:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54974:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malgp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54974:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54975:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54975:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54976:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54976:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:54977:16436:16801\ncatalog:variable_text:54977:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:54977:16436:16801\ncatalog:variable_text:54977:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källmnemoniken MAlR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:malr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken MAlR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassa"
+fields = { "sets" = ["antal-odlingsbassanger"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54979:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassa"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54979:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassa-salt"
+fields = { "sets" = ["antal-odlingsbassanger"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54980:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassa-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54980:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassv"
+fields = { "sets" = ["odlingsbassangers-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54981:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54981:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassv-salt"
+fields = { "sets" = ["odlingsbassangers-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54982:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mbassv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54982:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:54983:17167:17532\ncatalog:variable_text:54983:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:54983:17167:17532\ncatalog:variable_text:54983:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54985:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54985:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54986:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54986:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54987:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54987:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54988:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:54988:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:54989:16436:16801\ncatalog:variable_text:54989:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:54989:16436:16801\ncatalog:variable_text:54989:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källmnemoniken MFlodR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken MFlodR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mhavet"
+fields = { "sets" = ["produktionens-vattenmiljo"] }
+evidence = "Inledande M är en källkod; etiketten kolliderar och kräver särskiljning.\ncatalog:variable_text:54991:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mhavet"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande M är en källkod; etiketten kolliderar och kräver särskiljning.\ncatalog:variable_text:54991:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:minvest"
+fields = { "sets" = ["investeringar"] }
+evidence = "M är en källkod och etiketten delas av flera investeringsvariabler.\ncatalog:variable_text:54992:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:minvest"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "M är en källkod och etiketten delas av flera investeringsvariabler.\ncatalog:variable_text:54992:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mjorda"
+fields = { "sets" = ["antal-odlingsdammar"] }
+evidence = "MJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:54993:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjorda"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:54993:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjorda-salt"
+fields = { "sets" = ["antal-odlingsdammar"] }
+evidence = "MJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:54994:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjorda-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:54994:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordv"
+fields = { "sets" = ["odlingsdammars-volym"] }
+evidence = "MJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:54995:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:54995:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordv-salt"
+fields = { "sets" = ["odlingsdammars-volym"] }
+evidence = "MJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:54996:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:54996:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordy"
+fields = { "sets" = ["odlingsdammars-yta"] }
+evidence = "MJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:54997:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordy"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:54997:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordy-salt"
+fields = { "sets" = ["odlingsdammars-yta"] }
+evidence = "MJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:54998:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjordy-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:54998:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassa"
+fields = { "sets" = ["antal-odlingskassar"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54999:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassa"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:54999:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassa-salt"
+fields = { "sets" = ["antal-odlingskassar"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55000:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassa-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55000:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassv"
+fields = { "sets" = ["odlingskassars-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55001:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55001:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassv-salt"
+fields = { "sets" = ["odlingskassars-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55002:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mkassv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55002:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlannamn"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "M är en källkod som inte återges i etiketten. Länetiketten delas av flera variabler.\ncatalog:variable_text:55003:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mlannamn"
+fields = { "tags" = ["geography"] }
+evidence = "M är en källkod som inte återges i etiketten. Länetiketten delas av flera variabler.\ncatalog:variable_text:55003:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55004:17167:17532\ncatalog:variable_text:55004:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55004:17167:17532\ncatalog:variable_text:55004:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55005:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55005:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55006:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55006:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55007:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55007:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55008:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55008:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55009:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55009:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55010:16436:16801\ncatalog:variable_text:55010:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55010:16436:16801\ncatalog:variable_text:55010:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källmnemoniken MLaxR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken MLaxR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55012:17167:17532\ncatalog:variable_text:55012:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55012:17167:17532\ncatalog:variable_text:55012:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55013:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55013:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55014:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55014:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55015:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55015:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55016:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55016:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55017:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55017:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55018:16436:16801\ncatalog:variable_text:55018:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55018:16436:16801\ncatalog:variable_text:55018:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källmnemoniken MOringR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moringr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken MOringR är en opak kod. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1d"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55020:17167:17532\ncatalog:variable_text:55020:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1d"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55020:17167:17532\ncatalog:variable_text:55020:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1d-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55021:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1d-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55021:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Beskrivningen anger andel, medan den äldre perioden har enheten antal.\ncatalog:variable_text:55022:17167:17532\ncatalog:variable_text:55022:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Beskrivningen anger andel, medan den äldre perioden har enheten antal.\ncatalog:variable_text:55022:17167:17532\ncatalog:variable_text:55022:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "MOvr1R är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55023:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MOvr1R är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55023:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55024:17167:17532\ncatalog:variable_text:55024:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55024:17167:17532\ncatalog:variable_text:55024:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55025:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55025:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55026:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55026:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55027:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55027:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf1"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55028:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf1"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55028:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf1-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55029:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrf1-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55029:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55030:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55030:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55031:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55031:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp1"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55032:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55032:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp1-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55033:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrp1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55033:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55034:16436:16801\ncatalog:variable_text:55034:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55034:16436:16801\ncatalog:variable_text:55034:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "MOvrR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MOvrR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55036:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55036:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55037:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55037:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext1"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55038:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55038:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext1-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55039:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:movrtext1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55039:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrbld"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55040:17167:17532\ncatalog:variable_text:55040:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrbld"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55040:17167:17532\ncatalog:variable_text:55040:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrbld-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55041:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrbld-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55041:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55042:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55042:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55043:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55043:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55044:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55044:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55045:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55045:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55046:16436:16801\ncatalog:variable_text:55046:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55046:16436:16801\ncatalog:variable_text:55046:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "MRblR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MRblR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirka"
+fields = { "sets" = ["antal-recirkulerande-odlingssystem"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55048:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirka"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55048:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirka-salt"
+fields = { "sets" = ["antal-recirkulerande-odlingssystem"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55049:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirka-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55049:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirkv"
+fields = { "sets" = ["recirkulerande-odlingssystems-volym"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55050:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirkv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55050:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirkv-salt"
+fields = { "sets" = ["recirkulerande-odlingssystems-volym"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55051:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrecirkv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55051:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55052:17167:17532\ncatalog:variable_text:55052:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55052:17167:17532\ncatalog:variable_text:55052:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55053:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55053:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55054:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55054:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55055:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55055:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55056:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55056:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55057:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55057:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55058:16436:16801\ncatalog:variable_text:55058:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55058:16436:16801\ncatalog:variable_text:55058:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "MRodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MRodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:msakv"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55060:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msakv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55060:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msaman"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55061:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msaman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55061:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignald"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55062:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignald"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55062:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignalf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Enheten ändras från kronor till kronor per MWh utan förklaring.\ncatalog:variable_text:55063:16436:17167\ncatalog:variable_text:55063:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignalf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Enheten ändras från kronor till kronor per MWh utan förklaring.\ncatalog:variable_text:55063:16436:17167\ncatalog:variable_text:55063:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignalr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "MSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55064:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msignalr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "MSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55064:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msot"
+fields = { "sets" = ["produktionens-vattenmiljo"] }
+evidence = "Inledande M är en källkod och etiketten kolliderar.\ncatalog:variable_text:55065:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:msot"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande M är en källkod och etiketten kolliderar.\ncatalog:variable_text:55065:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mstimkv"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55066:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mstimkv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55066:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mstimman"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55067:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mstimman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55067:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:muppfod"
+fields = { "sets" = ["produktion-under-referensaret"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55068:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:muppfod"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55068:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-band-nat-vattenareal"
+fields = { "sets" = ["musselodlingens-vattenareal"] }
+evidence = "Måttet ingår i musselodlingens vattenareal.\ncatalog:variable_text:55069:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-band-nat-vattenareal"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Måttet ingår i musselodlingens vattenareal.\ncatalog:variable_text:55069:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-flottar-vattenareal"
+fields = { "sets" = ["musselodlingens-vattenareal"] }
+evidence = "Samma källkolumn är samtidigt knuten till olika mått.\ncatalog:occurrence:515352\ncatalog:occurrence:515353"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-flottar-vattenareal"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma källkolumn är samtidigt knuten till olika mått.\ncatalog:occurrence:515352\ncatalog:occurrence:515353"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-pa-band-nat-langd"
+fields = { "sets" = ["musselodlingens-langd"] }
+evidence = "Måttet ingår i musselodlingens längd.\ncatalog:variable_text:55071:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-pa-band-nat-langd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Måttet ingår i musselodlingens längd.\ncatalog:variable_text:55071:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-pa-flottar-langd"
+fields = { "sets" = ["musselodlingens-langd"] }
+evidence = "Måttet ingår i musselodlingens längd.\ncatalog:variable_text:55072:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:musselodling-pa-flottar-langd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Måttet ingår i musselodlingens längd.\ncatalog:variable_text:55072:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:o65"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55073:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:o65"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55073:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55074:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55074:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-k"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55075:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-k"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55075:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-m"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55076:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oav-arb-m"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55076:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oavlon-k"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55077:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oavlon-k"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55077:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oavlon-m"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55078:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oavlon-m"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55078:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-av-ostron"
+fields = { "sets" = ["forekomst-av-artvis-odling"] }
+evidence = "Variabeln anger förekomst av ostronodling.\ncatalog:variable_text:55080:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-av-ostron"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln anger förekomst av ostronodling.\ncatalog:variable_text:55080:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55081:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55081:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan2"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55082:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan2"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55082:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan3"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55083:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan3"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55083:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan4"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55084:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan4"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55084:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan5"
+fields = { "sets" = ["antal-odlingar"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55085:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-lan5"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln mäter antal odlingar i en länspost.\ncatalog:variable_text:55085:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-syss"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Övriga sysselsatta är en personalgrupp.\ncatalog:variable_text:55088:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-syss"
+fields = { "tags" = ["employment"] }
+evidence = "Övriga sysselsatta är en personalgrupp.\ncatalog:variable_text:55088:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:55089:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:55089:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:55090:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:55090:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-musslor"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Produktion av musslor är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55091:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-musslor"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Produktion av musslor är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55091:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-oring-for-utsattning"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-oring-for-utsattning"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-ostron"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Produktion av ostron är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55093:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-ostron"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Produktion av ostron är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55093:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-for-utsattning"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-for-utsattning"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-utsattning-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-regnbage-utsattning-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-roding-for-utsattning"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-roding-for-utsattning"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn har olika arter i angränsande perioder.\ncatalog:occurrence:514034\ncatalog:occurrence:514271"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-signalkraftor-konsumtion"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513659\ncatalog:occurrence:513805"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-av-signalkraftor-konsumtion"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn har olika mått i angränsande perioder.\ncatalog:occurrence:513659\ncatalog:occurrence:513805"
+
+[[statement]]
+kind = "set"
+subject = "var:r1"
+fields = { "sets" = ["produktion-under-referensaret"] }
+evidence = "R1 är en ogenomskinlig källkod och etiketten kolliderar.\ncatalog:variable_text:55098:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:r1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "R1 är en ogenomskinlig källkod och etiketten kolliderar.\ncatalog:variable_text:55098:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rep-under"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets kostnader.\ncatalog:variable_text:55099:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rep-under"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets kostnader.\ncatalog:variable_text:55099:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryakv"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55100:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryakv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55100:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryaman"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55101:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryaman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55101:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryinvest"
+fields = { "sets" = ["investeringar"] }
+evidence = "RY är en opak källkod för rom och yngel. Variabeln mäter investeringar i vattenbruk.\ncatalog:variable_text:55102:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryinvest"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "RY är en opak källkod för rom och yngel. Variabeln mäter investeringar i vattenbruk.\ncatalog:variable_text:55102:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rylannamn"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "RY är en opak källkod för rom och yngel. Variabeln anger län för verksamheten.\ncatalog:variable_text:55103:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:rylannamn"
+fields = { "tags" = ["geography"] }
+evidence = "RY är en opak källkod för rom och yngel. Variabeln anger län för verksamheten.\ncatalog:variable_text:55103:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55104:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55104:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55105:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55105:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55106:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55106:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55107:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rylaxp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55107:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55108:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55108:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55109:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55109:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55110:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55110:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55111:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryoringp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55111:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1f"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55112:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1f"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55112:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1f-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55113:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1f-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55113:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1p"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55114:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1p"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55114:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1p-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55115:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovr1p-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55115:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55116:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55116:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55117:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55117:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp1text"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55118:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp1text"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55118:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp1text-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55119:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrp1text-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55119:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrptext"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55120:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrptext"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55120:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrptext-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55121:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrptext-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55121:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrtext"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55122:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ryovrtext"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55122:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55123:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55123:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55124:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55124:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55125:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55125:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55126:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrblp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55126:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55127:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55127:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55128:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55128:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55129:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55129:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55130:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ryrodingp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55130:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rytimkv"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55131:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rytimkv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55131:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rytimman"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55132:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rytimman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55132:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ryuppfod"
+fields = { "sets" = ["produktion-under-referensaret"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55133:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ryuppfod"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55133:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sald"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55134:17167:17532\ncatalog:variable_text:55134:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sald"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55134:17167:17532\ncatalog:variable_text:55134:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sald-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55135:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sald-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55135:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55136:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55136:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55137:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55137:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55138:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55138:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55139:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55139:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55140:16436:16801\ncatalog:variable_text:55140:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55140:16436:16801\ncatalog:variable_text:55140:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SAlR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:salr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SAlR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassa"
+fields = { "sets" = ["antal-odlingsbassanger"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55142:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassa"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55142:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassa-salt"
+fields = { "sets" = ["antal-odlingsbassanger"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55143:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassa-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55143:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassv"
+fields = { "sets" = ["odlingsbassangers-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55144:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55144:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassv-salt"
+fields = { "sets" = ["odlingsbassangers-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55145:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sbassv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55145:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55146:17167:17532\ncatalog:variable_text:55146:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55146:17167:17532\ncatalog:variable_text:55146:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55147:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55147:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55148:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55148:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55149:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55149:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55150:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55150:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55151:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55151:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55152:16436:16801\ncatalog:variable_text:55152:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55152:16436:16801\ncatalog:variable_text:55152:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SFlodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SFlodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sfortsatt"
+fields = { "sets" = ["sattfiskens-anvandningsandamal"] }
+evidence = "Inledande S är en källkod.\ncatalog:variable_text:55154:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sfortsatt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande S är en källkod.\ncatalog:variable_text:55154:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:shavet"
+fields = { "sets" = ["produktionens-vattenmiljo"] }
+evidence = "Inledande S är en källkod och etiketten kolliderar.\ncatalog:variable_text:55155:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:shavet"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande S är en källkod och etiketten kolliderar.\ncatalog:variable_text:55155:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sinvest"
+fields = { "sets" = ["investeringar"] }
+evidence = "S är en källkod och etiketten delas av flera investeringsvariabler.\ncatalog:variable_text:55156:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sinvest"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "S är en källkod och etiketten delas av flera investeringsvariabler.\ncatalog:variable_text:55156:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sjorda"
+fields = { "sets" = ["antal-odlingsdammar"] }
+evidence = "SJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:55157:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjorda"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:55157:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjorda-salt"
+fields = { "sets" = ["antal-odlingsdammar"] }
+evidence = "SJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:55158:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjorda-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJorda är en opak källmnemonik. Variabeln mäter antal odlingsdammar.\ncatalog:variable_text:55158:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordv"
+fields = { "sets" = ["odlingsdammars-volym"] }
+evidence = "SJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:55159:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:55159:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordv-salt"
+fields = { "sets" = ["odlingsdammars-volym"] }
+evidence = "SJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:55160:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJordv är en opak källmnemonik. Variabeln mäter odlingsdammars volym.\ncatalog:variable_text:55160:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy"
+fields = { "sets" = ["odlingsdammars-yta"] }
+evidence = "SJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy-salt"
+fields = { "sets" = ["odlingsdammars-yta"] }
+evidence = "SJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SJordy är en opak källmnemonik. Variabeln mäter odlingsdammars yta.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassa"
+fields = { "sets" = ["antal-odlingskassar"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55163:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassa"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55163:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassa-salt"
+fields = { "sets" = ["antal-odlingskassar"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55164:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassa-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55164:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassv"
+fields = { "sets" = ["odlingskassars-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55165:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55165:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassv-salt"
+fields = { "sets" = ["odlingskassars-volym"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55166:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skassv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55166:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slannamn"
+fields = { "sets" = ["verksamhetens-lan"] }
+evidence = "S är en källkod som inte återges i etiketten. Länetiketten delas av flera variabler.\ncatalog:variable_text:55167:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:slannamn"
+fields = { "tags" = ["geography"] }
+evidence = "S är en källkod som inte återges i etiketten. Länetiketten delas av flera variabler.\ncatalog:variable_text:55167:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55168:17167:17532\ncatalog:variable_text:55168:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55168:17167:17532\ncatalog:variable_text:55168:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55169:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55169:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55170:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55170:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55171:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55171:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55172:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55172:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55173:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55173:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55174:16436:16801\ncatalog:variable_text:55174:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55174:16436:16801\ncatalog:variable_text:55174:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SLaxR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SLaxR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55176:17167:17532\ncatalog:variable_text:55176:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55176:17167:17532\ncatalog:variable_text:55176:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55177:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55177:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55178:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55178:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55179:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55179:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55180:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55180:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55181:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55181:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55182:16436:16801\ncatalog:variable_text:55182:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55182:16436:16801\ncatalog:variable_text:55182:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SOringR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:soringr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SOringR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55184:17167:17532\ncatalog:variable_text:55184:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55184:17167:17532\ncatalog:variable_text:55184:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55185:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55185:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd1"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55186:17167:17532\ncatalog:variable_text:55186:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55186:17167:17532\ncatalog:variable_text:55186:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd1-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55187:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrd1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55187:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55188:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55188:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55189:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55189:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf1"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55190:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf1"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55190:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf1-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55191:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrf1-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55191:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55192:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55192:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55193:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55193:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp1"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55194:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55194:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp1-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55195:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrp1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55195:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55196:16436:16801\ncatalog:variable_text:55196:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55196:16436:16801\ncatalog:variable_text:55196:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SOvrR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SOvrR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr1"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SOvrR1 är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55198:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SOvrR1 är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55198:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr1-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SOvrR1 är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55199:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SOvrR1 är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55199:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55200:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55200:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55201:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55201:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext1"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55202:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext1"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55202:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext1-salt"
+fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55203:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sovrtext1-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller en bokstavskod som inte återfinns i etiketten.\ncatalog:variable_text:55203:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srbld"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55204:17167:17532\ncatalog:variable_text:55204:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srbld"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55204:17167:17532\ncatalog:variable_text:55204:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srbld-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55205:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srbld-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55205:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55206:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55206:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblp-salt"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55207:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblp-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55207:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55208:16436:16801\ncatalog:variable_text:55208:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55208:16436:16801\ncatalog:variable_text:55208:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SRblR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srblr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SRblR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirka"
+fields = { "sets" = ["antal-recirkulerande-odlingssystem"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55210:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirka"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55210:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirka-salt"
+fields = { "sets" = ["antal-recirkulerande-odlingssystem"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55211:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirka-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55211:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirkv"
+fields = { "sets" = ["recirkulerande-odlingssystems-volym"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55212:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirkv"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55212:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirkv-salt"
+fields = { "sets" = ["recirkulerande-odlingssystems-volym"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55213:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srecirkv-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55213:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodd"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55214:17167:17532\ncatalog:variable_text:55214:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodd"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Enheten ändras mellan antal och procent.\ncatalog:variable_text:55214:17167:17532\ncatalog:variable_text:55214:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodd-salt"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55215:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodd-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55215:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodf"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55216:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodf"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55216:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodf-salt"
+fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55217:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodf-salt"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55217:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55218:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källkodens bokstäver är inte läsbara ordstammar i etiketten.\ncatalog:variable_text:55218:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55219:16436:16801\ncatalog:variable_text:55219:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källan redovisar antal respektive procent under olika perioder.\ncatalog:variable_text:55219:16436:16801\ncatalog:variable_text:55219:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodr-salt"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SRodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:srodr-salt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SRodR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssakv"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55221:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssakv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55221:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssaman"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55222:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssaman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55222:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignald"
+fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
+evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55223:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignald"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55223:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignalp"
+fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:513806\ncatalog:occurrence:513807"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignalp"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:513806\ncatalog:occurrence:513807"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignalr"
+fields = { "sets" = ["rymlingar-fran-odling"] }
+evidence = "SSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55225:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssignalr"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "SSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55225:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssot"
+fields = { "sets" = ["produktionens-vattenmiljo"] }
+evidence = "Inledande S är en källkod och etiketten kolliderar.\ncatalog:variable_text:55226:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ssot"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande S är en källkod och etiketten kolliderar.\ncatalog:variable_text:55226:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sstimkv"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55227:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sstimkv"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55227:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sstimman"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55228:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sstimman"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55228:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-k"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55229:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-k"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55229:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-m"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55230:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-arb-m"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55230:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-k"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55231:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-k"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55231:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-m"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55232:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sum-tot-tim-m"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:55232:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:suppfod"
+fields = { "sets" = ["produktion-under-referensaret"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55233:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:suppfod"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55233:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sutsatt"
+fields = { "sets" = ["sattfiskens-anvandningsandamal"] }
+evidence = "Inledande S är en källkod.\ncatalog:variable_text:55234:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sutsatt"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Inledande S är en källkod.\ncatalog:variable_text:55234:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:svensk"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Antal sysselsatta efter nationalitet är en personalgrupp.\ncatalog:variable_text:55235:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:svensk"
+fields = { "tags" = ["employment"] }
+evidence = "Antal sysselsatta efter nationalitet är en personalgrupp.\ncatalog:variable_text:55235:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-av"
+fields = { "sets" = ["arbetskostnader"] }
+evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55236:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-av"
+fields = { "tags" = ["business"] }
+evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55236:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-avlon"
+fields = { "sets" = ["arbetskostnader"] }
+evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55237:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-avlon"
+fields = { "tags" = ["business"] }
+evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55237:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-for"
+fields = { "sets" = ["arbetskostnader"] }
+evidence = "Etiketten och den operativa definitionen anger olika personalgrupper.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tk-for"
+fields = { "tags" = ["business"] }
+evidence = "Etiketten och den operativa definitionen anger olika personalgrupper.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-invest"
+fields = { "sets" = ["investeringar"] }
+evidence = "Tot och invest är läsbara ordstammar. Gruppen och taggarna följer företagets investeringar i vattenbruksverksamheten.\ncatalog:register:273\ncatalog:variable_text:55239:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-invest"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Tot och invest är läsbara ordstammar. Gruppen och taggarna följer företagets investeringar i vattenbruksverksamheten.\ncatalog:register:273\ncatalog:variable_text:55239:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-k"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Id:t använder en läsbar stam. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55240:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-k"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder en läsbar stam. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55240:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-m"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Id:t använder en läsbar stam. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55241:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-m"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t använder en läsbar stam. Måttet ingår i gruppen antal sysselsatta och avser sysselsättning.\ncatalog:variable_text:55241:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:u15"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55242:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:u15"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_text:55242:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uni"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:55243:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uni"
+fields = { "tags" = ["employment"] }
+evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:variable_text:55243:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2018-01-01..2018-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2019-01-01..2019-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2020-01-01..2020-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2021-01-01..2021-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2022-01-01..2022-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2023-01-01..2023-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MAlR_salt @2024-01-01..2024-12-31 where key = 'v39976'"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2018-01-01..2018-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2019-01-01..2019-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2020-01-01..2020-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2021-01-01..2021-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2022-01-01..2022-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2023-01-01..2023-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MFlodR_salt @2024-01-01..2024-12-31 where key = 'v39978'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2018-01-01..2018-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2019-01-01..2019-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2020-01-01..2020-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2021-01-01..2021-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2022-01-01..2022-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2023-01-01..2023-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MLaxR_salt @2024-01-01..2024-12-31 where key = 'v39970'"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2018-01-01..2018-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2019-01-01..2019-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2020-01-01..2020-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2021-01-01..2021-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2022-01-01..2022-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2023-01-01..2023-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOringR_salt @2024-01-01..2024-12-31 where key = 'v39972'"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2018-01-01..2018-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2019-01-01..2019-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2020-01-01..2020-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2021-01-01..2021-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2022-01-01..2022-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2023-01-01..2023-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvrR_salt @2024-01-01..2024-12-31 where key = 'v40003'"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2018-01-01..2018-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2019-01-01..2019-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2020-01-01..2020-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2021-01-01..2021-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2022-01-01..2022-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2023-01-01..2023-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRblR_salt @2024-01-01..2024-12-31 where key = 'v39968'"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2018-01-01..2018-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2019-01-01..2019-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2020-01-01..2020-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2021-01-01..2021-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2022-01-01..2022-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2023-01-01..2023-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MRodR_salt @2024-01-01..2024-12-31 where key = 'v39974'"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2018-01-01..2018-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2019-01-01..2019-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2020-01-01..2020-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2021-01-01..2021-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2022-01-01..2022-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2023-01-01..2023-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SAlR_salt @2024-01-01..2024-12-31 where key = 'v39989'"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2018-01-01..2018-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2019-01-01..2019-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2020-01-01..2020-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2021-01-01..2021-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2022-01-01..2022-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2023-01-01..2023-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SFlodR_salt @2024-01-01..2024-12-31 where key = 'v39991'"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2015-01-01..2015-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2016-01-01..2016-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2017-01-01..2017-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2018-01-01..2018-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2019-01-01..2019-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2020-01-01..2020-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2021-01-01..2021-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2022-01-01..2022-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2023-01-01..2023-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy @2024-01-01..2024-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2018-01-01..2018-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2019-01-01..2019-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2020-01-01..2020-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2021-01-01..2021-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2022-01-01..2022-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2023-01-01..2023-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SJordy_salt @2024-01-01..2024-12-31 where key = 'v39904'"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2018-01-01..2018-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2019-01-01..2019-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2020-01-01..2020-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2021-01-01..2021-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2022-01-01..2022-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2023-01-01..2023-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SLaxR_salt @2024-01-01..2024-12-31 where key = 'v39983'"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2018-01-01..2018-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2019-01-01..2019-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2020-01-01..2020-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2021-01-01..2021-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2022-01-01..2022-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2023-01-01..2023-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOringR_salt @2024-01-01..2024-12-31 where key = 'v39985'"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2018-01-01..2018-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2019-01-01..2019-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2020-01-01..2020-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2021-01-01..2021-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2022-01-01..2022-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2023-01-01..2023-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SOvrR_salt @2024-01-01..2024-12-31 where key = 'v40011'"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2018-01-01..2018-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2019-01-01..2019-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2020-01-01..2020-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2021-01-01..2021-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2022-01-01..2022-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2023-01-01..2023-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRblR_salt @2024-01-01..2024-12-31 where key = 'v39981'"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2018-01-01..2018-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2019-01-01..2019-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2020-01-01..2020-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2021-01-01..2021-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2022-01-01..2022-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2023-01-01..2023-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: SRodR_salt @2024-01-01..2024-12-31 where key = 'v39987'"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: TK_for @2016-01-01..2016-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2018-01-01..2018-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2019-01-01..2019-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2020-01-01..2020-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2021-01-01..2021-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2022-01-01..2022-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2023-01-01..2023-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_for @2024-01-01..2024-12-31 where key = 'v16988'"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
