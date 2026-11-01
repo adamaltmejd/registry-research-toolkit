@@ -196,7 +196,7 @@ fn references(
                     object.clone(),
                     vec![reg_resolve::curation::SourcePremise {
                         locator: class.locator.clone(),
-                        fields,
+                        fields: fields.into(),
                     }],
                 );
             }
@@ -776,9 +776,26 @@ fn field_application(
         .map(|i| records[*i].clone())
         .collect::<Vec<_>>();
     let at = statement_locator(root, statement)?;
-    let applied =
+    let mut applied =
         reg_resolve::curation::apply::apply(&source, ledger, &statement.statement, &at, premise)?;
-    Ok((indices, source, applied))
+    // Unchanged dependency records need no merge; retaining them repeats source text
+    // once per setter. Keep metadata and provenance even when no record changed.
+    let mut changed_indices = Vec::new();
+    let mut before_records = Vec::new();
+    let mut after_records = Vec::new();
+    for ((index, before), after) in indices
+        .into_iter()
+        .zip(source)
+        .zip(std::mem::take(&mut applied.records))
+    {
+        if before != after {
+            changed_indices.push(index);
+            before_records.push(before);
+            after_records.push(after);
+        }
+    }
+    applied.records = after_records;
+    Ok((changed_indices, before_records, applied))
 }
 
 /// Independent fields merge as patches, never as whole-record replacements.
