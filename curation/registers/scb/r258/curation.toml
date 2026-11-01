@@ -3282,18 +3282,6 @@ evidence = "Samma begrepp är perioduppdelat mot scb/it-anvandning/antal-svarand
 
 [[statement]]
 kind = "set"
-subject = "var:antal-svarande-stratum-referensmanad-2"
-fields = { "sets" = ["antal-svarande"] }
-evidence = "Den tillagda räknarsuffixen kommer inte från källkolumnen; samma begrepp är perioduppdelat mot scb/it-anvandning/antal-svarande-stratum-referensmanad.\ncatalog:occurrence:289455\ncatalog:occurrence:289649\ncatalog:variable_text:32364:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svarande-stratum-referensmanad-2"
-fields = { "tags" = ["methods"] }
-evidence = "Den tillagda räknarsuffixen kommer inte från källkolumnen; samma begrepp är perioduppdelat mot scb/it-anvandning/antal-svarande-stratum-referensmanad.\ncatalog:occurrence:289455\ncatalog:occurrence:289649\ncatalog:variable_text:32364:14610:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-svarsobjekt-nresp"
 fields = { "sets" = ["antal-svarande"] }
 evidence = "Antal svarsobjekt ingår i kandidatgruppen.\ncatalog:variable_text:32365:14245:14975"
@@ -4230,18 +4218,6 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32443:17167:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:awseu"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare och geografiska betydelser.\ncatalog:occurrence:292053\ncatalog:occurrence:292269\ncatalog:occurrence:292387"
-
-[[statement]]
-kind = "set"
-subject = "var:awseu"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika ägare och geografiska betydelser.\ncatalog:occurrence:292053\ncatalog:occurrence:292269\ncatalog:occurrence:292387"
-
-[[statement]]
-kind = "set"
 subject = "var:awshm"
 fields = { "sets" = [] }
 evidence = "Källkolumnerna har olika ägare och geografiska betydelser.\ncatalog:occurrence:292009\ncatalog:occurrence:292054\ncatalog:occurrence:292269\ncatalog:occurrence:292270\ncatalog:occurrence:292387"
@@ -4311,18 +4287,6 @@ kind = "set"
 subject = "var:b3a"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:290358\ncatalog:occurrence:290621\ncatalog:occurrence:290779"
-
-[[statement]]
-kind = "set"
-subject = "var:b3b"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:290359\ncatalog:occurrence:290622\ncatalog:occurrence:290780"
-
-[[statement]]
-kind = "set"
-subject = "var:b3b"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:290359\ncatalog:occurrence:290622\ncatalog:occurrence:290780"
 
 [[statement]]
 kind = "set"
@@ -5235,18 +5199,6 @@ kind = "set"
 subject = "var:c2ftxt"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod; textfältet delar etikett med andra variabler.\ncatalog:variable_text:32536:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:c2g"
-fields = { "sets" = ["skal-till-utebliven-elektronisk-uppgiftslamning"] }
-evidence = "Källkolumnen har en annan ägare i en senare period.\ncatalog:occurrence:290400\ncatalog:occurrence:290944"
-
-[[statement]]
-kind = "set"
-subject = "var:c2g"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har en annan ägare i en senare period.\ncatalog:occurrence:290400\ncatalog:occurrence:290944"
 
 [[statement]]
 kind = "set"
@@ -9558,18 +9510,6 @@ evidence = "Kolumnerna har andra periodägare.\ncatalog:occurrence:290696\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:e-sakerhet-data-smartphone"
-fields = { "sets" = [] }
-evidence = "F4 har andra periodägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda skyddsfrågor mäter inte inträffad dataförlust. membership-0329: Ingen vald variabel mäter dataförlust. membership-0330: Ingen vald variabel mäter dataförlust. membership-0331: Molnproblemen avser åtkomst, teknik och informationshantering utan uttryckligt mått på dataförlust eller dataskada. membership-0332: Frågan omfattar datavirus som orsakat dataförlust, sammansatt med tidsförlust. membership-0333: Valda säkerhetsfrågor mäter oro eller spam, inte inträffad dataförlust. membership-0334: Valda incidenter avser infektion, informationsmissbruk och ekonomisk förlust; ingen mäter uttryckligen dataförlust. membership-0335: Variabeln mäter förlorade smartphonedata på grund av virus eller fientliga program. membership-0336: Ekonomisk förlust och säkerhetskopiering mäter inte förlust av digitala data. membership-0337: Inget valt sektionsmått avser dataförlust. membership-0338: Frågan mäter förlust av digitala data genom datorinfektion. membership-0339: De valda IoT-problemen anger inte dataförlust. membership-0340: Inga valda variabler mäter dataförlust. membership-0341: Inga valda variabler mäter dataförlust. membership-0342: Säkerhetskopiering mäter förebyggande aktivitet, inte dataförlust. membership-0343: Mäter förlust av smartphonedata genom virus eller andra fientliga program. membership-0344: Ingen vald variabel mäter digital dataförlust. membership-0345: Inget valt sektionsid mäter inträffad dataförlust. membership-0346: Ingen vald variabel mäter förlust eller förvanskning av digitala data. membership-0347: Inga valda variabler mäter digital dataförlust. membership-0348: Utförare av säkerhetsarbete mäter inte inträffad dataförlust. membership-0349: Den dokumenterade beskrivningen avser förstörda data genom skadlig programvara eller intrång och omfattas av kandidaten. Överlappande kolumnägande behöver klarläggas. membership-0350: Båda mäter inträffad förstöring, förlust eller förvanskning av data, med specificerad orsak respektive samlat mått. membership-0351: Inga valda variabler mäter digital dataförlust. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda säkerhetsfrågor gäller skydd eller inställningar, inte inträffade incidenter. membership-0329: Ingen vald variabel mäter inträffade säkerhetsincidenter. membership-0330: c7c avser avstående av säkerhetsskäl, inte inträffad incident. membership-0331: Utlämnad information till tredje man och information använd utan tillåtelse är inträffade integritetsincidenter vid internettjänstanvändning. membership-0332: Frågan mäter inträffad virusinfektion med data- eller tidsförlust. membership-0333: Frågorna mäter inträffat internetköpsbedrägeri respektive mottagen spam; båda omfattas av incidentdefinitionen. membership-0334: Måtten avser inträffad phishing/pharming, olämpligt barninnehåll, kortbedrägeri, informationsmissbruk och datorinfektion. membership-0335: Virusorsakad dataförlust och bedrägeri vid internetköp är inträffade säkerhetsincidenter enligt definitionen. membership-0336: Frågan mäter inträffad ekonomisk förlust genom identitetsstöld, bedragarmeddelanden eller falska webbplatser, alltså säkerhetsincidenters utfall. membership-0337: Säkerhetsskäl för saknad tillgång mäter inte inträffade incidenter. membership-0338: Samtliga frågor mäter inträffade säkerhetsproblem vid privat internetanvändning, inklusive dataförlust genom datorinfektion. membership-0339: Mäter inträffade integritets- eller säkerhetsproblem med uppkopplade enheter, inklusive hackning och otillräckligt informationsskydd. membership-0340: Inga valda variabler mäter inträffade säkerhetsincidenter. membership-0341: Säkerhetsskäl till utebliven användning mäter inte inträffade incidenter. membership-0342: Exponering för hotfulla inlägg och allmänna köp- eller kontoraderingsproblem avgränsar inte säkerhetsincidenter enligt kandidaten. membership-0343: Det valda dataförlustmåttet avser smartphonevirus utan uttrycklig internetanknytning och hör till den särskilda dataförlustkandidaten. membership-0344: AI-säkerhetsändamål och farhågor om dataskydd mäter inte inträffade incidenter. membership-0345: De valda säkerhetsuppgifterna gäller hinder, inte inträffade incidenter. membership-0346: Ingen vald variabel mäter inträffade internetsäkerhetsincidenter. membership-0347: Inga valda variabler mäter inträffade internetsäkerhetsincidenter. membership-0348: Säkerhetsutförarfrågorna mäter vem som arbetar med säkerhet, inte inträffade incidenter. membership-0349: Sektionens incidentmått avser dataskador och röjda konfidentiella data, inte belagda internetincidenter enligt denna kandidats avgränsning. membership-0350: De belagda incidenterna avser dataförstörelse, konfidentialitetsröjande och tjänsteotillgänglighet; ingen anger kandidatens internetincidenter som virus, bedrägeri eller personinformationsmissbruk. membership-0351: Säkerhetspolicyns tidpunkt och webbplatsens policy mäter inte inträffade incidenter.\ncatalog:occurrence:290891\ncatalog:occurrence:291016\ncatalog:occurrence:291179\ncatalog:occurrence:293003\ncatalog:occurrence:293200\ncatalog:occurrence:293201\ncatalog:variable_text:32294:19358:20454\ncatalog:variable_text:32299:19358:20454\ncatalog:variable_text:32306:18628:18993\ncatalog:variable_text:32337:15706:16071\ncatalog:variable_text:32371:14610:14975\ncatalog:variable_text:32381:14610:14975\ncatalog:variable_text:32386:14610:14975\ncatalog:variable_text:32441:16801:17167\ncatalog:variable_text:32551:18993:20454\ncatalog:variable_text:32570:16071:16436\ncatalog:variable_text:32572:16071:16436\ncatalog:variable_text:32573:16071:16436\ncatalog:variable_text:32574:16071:16436\ncatalog:variable_text:32575:16071:16436\ncatalog:variable_text:32576:16071:16436\ncatalog:variable_text:32577:16071:16436\ncatalog:variable_text:32578:16071:16436\ncatalog:variable_text:32601:16071:16436\ncatalog:variable_text:32668:13514:13879\ncatalog:variable_text:32759:16436:17167\ncatalog:variable_text:32762:14610:14975\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32764:14610:14975\ncatalog:variable_text:32765:14610:14975\ncatalog:variable_text:32766:14610:14975\ncatalog:variable_text:32767:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32832:16436:16801\ncatalog:variable_text:32833:16436:16801\ncatalog:variable_text:32834:16436:16801\ncatalog:variable_text:32835:16436:16801\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32929:20089:20454\ncatalog:variable_text:32994:17897:18262\ncatalog:variable_text:33036:16436:16801\ncatalog:variable_text:33153:15340:15706\ncatalog:variable_text:33183:17897:18262\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33186:17897:18262\ncatalog:variable_text:33188:17897:18262\ncatalog:variable_text:33191:17897:18262\ncatalog:variable_text:33192:17897:18262\ncatalog:variable_text:33193:17897:18262\ncatalog:variable_text:33234:19723:20089\ncatalog:variable_text:33235:19723:20089\ncatalog:variable_text:33237:19723:20089\ncatalog:variable_text:33255:17167:17897\ncatalog:variable_text:33261:18993:19358\ncatalog:variable_text:33262:18993:19358\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33470:20089:20454\ncatalog:variable_text:33500:20089:20454\ncatalog:variable_text:33501:20089:20454\ncatalog:variable_text:33502:19723:20454\ncatalog:variable_text:33503:20089:20454\ncatalog:variable_text:33586:19723:20089\ncatalog:variable_text:33587:19723:20089\ncatalog:variable_text:33588:19723:20089\ncatalog:variable_text:33589:18993:19358\ncatalog:variable_text:33590:17897:18262\ncatalog:variable_text:33592:19723:20089\ncatalog:variable_text:33593:19723:20089\ncatalog:variable_text:33594:19723:20089\ncatalog:variable_text:33595:19723:20089\ncatalog:variable_text:33601:17897:18262\ncatalog:variable_text:33603:17897:18262\ncatalog:variable_text:33608:17897:18262\ncatalog:variable_text:33636:20089:20454\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33734:16436:16801\ncatalog:variable_text:33806:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:e-sakerhet-data-smartphone"
-fields = { "tags" = ["digital"] }
-evidence = "F4 har andra periodägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda skyddsfrågor mäter inte inträffad dataförlust. membership-0329: Ingen vald variabel mäter dataförlust. membership-0330: Ingen vald variabel mäter dataförlust. membership-0331: Molnproblemen avser åtkomst, teknik och informationshantering utan uttryckligt mått på dataförlust eller dataskada. membership-0332: Frågan omfattar datavirus som orsakat dataförlust, sammansatt med tidsförlust. membership-0333: Valda säkerhetsfrågor mäter oro eller spam, inte inträffad dataförlust. membership-0334: Valda incidenter avser infektion, informationsmissbruk och ekonomisk förlust; ingen mäter uttryckligen dataförlust. membership-0335: Variabeln mäter förlorade smartphonedata på grund av virus eller fientliga program. membership-0336: Ekonomisk förlust och säkerhetskopiering mäter inte förlust av digitala data. membership-0337: Inget valt sektionsmått avser dataförlust. membership-0338: Frågan mäter förlust av digitala data genom datorinfektion. membership-0339: De valda IoT-problemen anger inte dataförlust. membership-0340: Inga valda variabler mäter dataförlust. membership-0341: Inga valda variabler mäter dataförlust. membership-0342: Säkerhetskopiering mäter förebyggande aktivitet, inte dataförlust. membership-0343: Mäter förlust av smartphonedata genom virus eller andra fientliga program. membership-0344: Ingen vald variabel mäter digital dataförlust. membership-0345: Inget valt sektionsid mäter inträffad dataförlust. membership-0346: Ingen vald variabel mäter förlust eller förvanskning av digitala data. membership-0347: Inga valda variabler mäter digital dataförlust. membership-0348: Utförare av säkerhetsarbete mäter inte inträffad dataförlust. membership-0349: Den dokumenterade beskrivningen avser förstörda data genom skadlig programvara eller intrång och omfattas av kandidaten. Överlappande kolumnägande behöver klarläggas. membership-0350: Båda mäter inträffad förstöring, förlust eller förvanskning av data, med specificerad orsak respektive samlat mått. membership-0351: Inga valda variabler mäter digital dataförlust. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda säkerhetsfrågor gäller skydd eller inställningar, inte inträffade incidenter. membership-0329: Ingen vald variabel mäter inträffade säkerhetsincidenter. membership-0330: c7c avser avstående av säkerhetsskäl, inte inträffad incident. membership-0331: Utlämnad information till tredje man och information använd utan tillåtelse är inträffade integritetsincidenter vid internettjänstanvändning. membership-0332: Frågan mäter inträffad virusinfektion med data- eller tidsförlust. membership-0333: Frågorna mäter inträffat internetköpsbedrägeri respektive mottagen spam; båda omfattas av incidentdefinitionen. membership-0334: Måtten avser inträffad phishing/pharming, olämpligt barninnehåll, kortbedrägeri, informationsmissbruk och datorinfektion. membership-0335: Virusorsakad dataförlust och bedrägeri vid internetköp är inträffade säkerhetsincidenter enligt definitionen. membership-0336: Frågan mäter inträffad ekonomisk förlust genom identitetsstöld, bedragarmeddelanden eller falska webbplatser, alltså säkerhetsincidenters utfall. membership-0337: Säkerhetsskäl för saknad tillgång mäter inte inträffade incidenter. membership-0338: Samtliga frågor mäter inträffade säkerhetsproblem vid privat internetanvändning, inklusive dataförlust genom datorinfektion. membership-0339: Mäter inträffade integritets- eller säkerhetsproblem med uppkopplade enheter, inklusive hackning och otillräckligt informationsskydd. membership-0340: Inga valda variabler mäter inträffade säkerhetsincidenter. membership-0341: Säkerhetsskäl till utebliven användning mäter inte inträffade incidenter. membership-0342: Exponering för hotfulla inlägg och allmänna köp- eller kontoraderingsproblem avgränsar inte säkerhetsincidenter enligt kandidaten. membership-0343: Det valda dataförlustmåttet avser smartphonevirus utan uttrycklig internetanknytning och hör till den särskilda dataförlustkandidaten. membership-0344: AI-säkerhetsändamål och farhågor om dataskydd mäter inte inträffade incidenter. membership-0345: De valda säkerhetsuppgifterna gäller hinder, inte inträffade incidenter. membership-0346: Ingen vald variabel mäter inträffade internetsäkerhetsincidenter. membership-0347: Inga valda variabler mäter inträffade internetsäkerhetsincidenter. membership-0348: Säkerhetsutförarfrågorna mäter vem som arbetar med säkerhet, inte inträffade incidenter. membership-0349: Sektionens incidentmått avser dataskador och röjda konfidentiella data, inte belagda internetincidenter enligt denna kandidats avgränsning. membership-0350: De belagda incidenterna avser dataförstörelse, konfidentialitetsröjande och tjänsteotillgänglighet; ingen anger kandidatens internetincidenter som virus, bedrägeri eller personinformationsmissbruk. membership-0351: Säkerhetspolicyns tidpunkt och webbplatsens policy mäter inte inträffade incidenter.\ncatalog:occurrence:290891\ncatalog:occurrence:291016\ncatalog:occurrence:291179\ncatalog:occurrence:293003\ncatalog:occurrence:293200\ncatalog:occurrence:293201\ncatalog:variable_text:32294:19358:20454\ncatalog:variable_text:32299:19358:20454\ncatalog:variable_text:32306:18628:18993\ncatalog:variable_text:32337:15706:16071\ncatalog:variable_text:32371:14610:14975\ncatalog:variable_text:32381:14610:14975\ncatalog:variable_text:32386:14610:14975\ncatalog:variable_text:32441:16801:17167\ncatalog:variable_text:32551:18993:20454\ncatalog:variable_text:32570:16071:16436\ncatalog:variable_text:32572:16071:16436\ncatalog:variable_text:32573:16071:16436\ncatalog:variable_text:32574:16071:16436\ncatalog:variable_text:32575:16071:16436\ncatalog:variable_text:32576:16071:16436\ncatalog:variable_text:32577:16071:16436\ncatalog:variable_text:32578:16071:16436\ncatalog:variable_text:32601:16071:16436\ncatalog:variable_text:32668:13514:13879\ncatalog:variable_text:32759:16436:17167\ncatalog:variable_text:32762:14610:14975\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32764:14610:14975\ncatalog:variable_text:32765:14610:14975\ncatalog:variable_text:32766:14610:14975\ncatalog:variable_text:32767:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32832:16436:16801\ncatalog:variable_text:32833:16436:16801\ncatalog:variable_text:32834:16436:16801\ncatalog:variable_text:32835:16436:16801\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32929:20089:20454\ncatalog:variable_text:32994:17897:18262\ncatalog:variable_text:33036:16436:16801\ncatalog:variable_text:33153:15340:15706\ncatalog:variable_text:33183:17897:18262\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33186:17897:18262\ncatalog:variable_text:33188:17897:18262\ncatalog:variable_text:33191:17897:18262\ncatalog:variable_text:33192:17897:18262\ncatalog:variable_text:33193:17897:18262\ncatalog:variable_text:33234:19723:20089\ncatalog:variable_text:33235:19723:20089\ncatalog:variable_text:33237:19723:20089\ncatalog:variable_text:33255:17167:17897\ncatalog:variable_text:33261:18993:19358\ncatalog:variable_text:33262:18993:19358\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33470:20089:20454\ncatalog:variable_text:33500:20089:20454\ncatalog:variable_text:33501:20089:20454\ncatalog:variable_text:33502:19723:20454\ncatalog:variable_text:33503:20089:20454\ncatalog:variable_text:33586:19723:20089\ncatalog:variable_text:33587:19723:20089\ncatalog:variable_text:33588:19723:20089\ncatalog:variable_text:33589:18993:19358\ncatalog:variable_text:33590:17897:18262\ncatalog:variable_text:33592:19723:20089\ncatalog:variable_text:33593:19723:20089\ncatalog:variable_text:33594:19723:20089\ncatalog:variable_text:33595:19723:20089\ncatalog:variable_text:33601:17897:18262\ncatalog:variable_text:33603:17897:18262\ncatalog:variable_text:33608:17897:18262\ncatalog:variable_text:33636:20089:20454\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33734:16436:16801\ncatalog:variable_text:33806:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:e-sakerhet-geografisk-plats"
 fields = { "sets" = ["skyddsatgarder-for-personuppgifter"] }
 evidence = "Kolumnerna har andra periodägare.\ncatalog:occurrence:290312\ncatalog:occurrence:290867\ncatalog:occurrence:290995\ncatalog:occurrence:291005\ncatalog:occurrence:291155\ncatalog:occurrence:291172\ncatalog:occurrence:291322\ncatalog:occurrence:291481\ncatalog:variable_text:32905:20089:20454"
@@ -9891,42 +9831,6 @@ kind = "set"
 subject = "var:ordervardet-av-foretagets-elektroniska-inkop-var-minst-en"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:32931:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-ovriga-eu"
-fields = { "sets" = [] }
-evidence = "AXSEU har flera ägare i observerade perioder; etiketten gäller mottagna EDI-beställningar.\ncatalog:occurrence:292011\ncatalog:occurrence:292060\ncatalog:occurrence:292276\ncatalog:variable_text:32932:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-ovriga-eu"
-fields = { "tags" = ["digital", "trade"] }
-evidence = "AXSEU har flera ägare i observerade perioder; etiketten gäller mottagna EDI-beställningar.\ncatalog:occurrence:292011\ncatalog:occurrence:292060\ncatalog:occurrence:292276\ncatalog:variable_text:32932:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-resten-varlden"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktumet omfattar en tidigare ägare vars innebörd inte visas.\ncatalog:occurrence:292013\ncatalog:occurrence:292063\ncatalog:occurrence:292279"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-resten-varlden"
-fields = { "tags" = ["business", "digital"] }
-evidence = "Identitetsfaktumet omfattar en tidigare ägare vars innebörd inte visas.\ncatalog:occurrence:292013\ncatalog:occurrence:292063\ncatalog:occurrence:292279"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-sverige"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktumet omfattar en tidigare ägare vars innebörd inte visas.\ncatalog:occurrence:292012\ncatalog:occurrence:292061\ncatalog:occurrence:292277"
-
-[[statement]]
-kind = "set"
-subject = "var:edi-bestallningar-fran-sverige"
-fields = { "tags" = ["business", "digital"] }
-evidence = "Identitetsfaktumet omfattar en tidigare ägare vars innebörd inte visas.\ncatalog:occurrence:292012\ncatalog:occurrence:292061\ncatalog:occurrence:292277"
 
 [[statement]]
 kind = "set"
@@ -10935,18 +10839,6 @@ kind = "set"
 subject = "var:foraldrakontroll-webbfiltrering"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:289043\ncatalog:occurrence:289609"
-
-[[statement]]
-kind = "set"
-subject = "var:foretaget-anvander-erp-system"
-fields = { "sets" = [] }
-evidence = "Samma ERP-begrepp är uppdelat efter period med anvander-erp-affarssystem.\ncatalog:occurrence:292907\ncatalog:occurrence:293101"
-
-[[statement]]
-kind = "set"
-subject = "var:foretaget-anvander-erp-system"
-fields = { "tags" = ["digital"] }
-evidence = "Samma ERP-begrepp är uppdelat efter period med anvander-erp-affarssystem.\ncatalog:occurrence:292907\ncatalog:occurrence:293101"
 
 [[statement]]
 kind = "set"
@@ -12114,18 +12006,6 @@ evidence = "Samma säkerhetsskäl är perioddelat med ej-internet-hemma-sakerhet
 
 [[statement]]
 kind = "set"
-subject = "var:inte-internet-pga-vill-inte-ha"
-fields = { "sets" = ["skal-till-saknad-internettillgang"] }
-evidence = "Källkolumnen har olika skäl i angränsande perioder.\ncatalog:occurrence:289306\ncatalog:occurrence:289508"
-
-[[statement]]
-kind = "set"
-subject = "var:inte-internet-pga-vill-inte-ha"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika skäl i angränsande perioder.\ncatalog:occurrence:289306\ncatalog:occurrence:289508"
-
-[[statement]]
-kind = "set"
 subject = "var:inte-internet-saknar-kunskaper"
 fields = { "sets" = ["skal-till-saknad-internettillgang"] }
 evidence = "Källkolumnen återanvänds för en annan betydelse.\ncatalog:occurrence:289304\ncatalog:occurrence:289690"
@@ -12591,18 +12471,6 @@ kind = "set"
 subject = "var:internetsakerhet-phishing"
 fields = { "tags" = ["crime", "digital"] }
 evidence = "Källkolumnen har en annan ägare.\ncatalog:occurrence:290881\ncatalog:occurrence:291009"
-
-[[statement]]
-kind = "set"
-subject = "var:internetsakerhet-skraddarsydd-reklam"
-fields = { "sets" = ["oro-for-internetsakerhet-och-integritet"] }
-evidence = "F4 har en annan periodägare.\ncatalog:occurrence:290450\ncatalog:occurrence:290891\ncatalog:variable_text:33194:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:internetsakerhet-skraddarsydd-reklam"
-fields = { "tags" = ["digital"] }
-evidence = "F4 har en annan periodägare.\ncatalog:occurrence:290450\ncatalog:occurrence:290891\ncatalog:variable_text:33194:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -15075,18 +14943,6 @@ kind = "set"
 subject = "var:max-hastighet-internet"
 fields = { "tags" = ["digital"] }
 evidence = "Hastigheten hör till kandidatgruppen.\ncatalog:variable_text:33416:17167:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:miljopolicy-energi-it"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare i angränsande perioder. Variabeln gäller miljöpolicy för minskad energianvändning i it.\ncatalog:occurrence:292362\ncatalog:occurrence:292440\ncatalog:variable_text:33418:17167:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:miljopolicy-energi-it"
-fields = { "tags" = ["digital", "energy", "environment"] }
-evidence = "Källkolumnen har olika ägare i angränsande perioder. Variabeln gäller miljöpolicy för minskad energianvändning i it.\ncatalog:occurrence:292362\ncatalog:occurrence:292440\ncatalog:variable_text:33418:17167:18628"
 
 [[statement]]
 kind = "set"
@@ -17586,18 +17442,6 @@ evidence = "Källkolumnerna har olika ägare.\ncatalog:occurrence:290924\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:spelat-eller-laddat-ner-spel"
-fields = { "sets" = ["spelande-och-spelnedladdning-pa-internet"] }
-evidence = "Källkolumnerna har olika ägare.\ncatalog:occurrence:289894\ncatalog:occurrence:290186\ncatalog:occurrence:291212\ncatalog:occurrence:291514"
-
-[[statement]]
-kind = "set"
-subject = "var:spelat-eller-laddat-ner-spel"
-fields = { "tags" = ["culture", "digital"] }
-evidence = "Källkolumnerna har olika ägare.\ncatalog:occurrence:289894\ncatalog:occurrence:290186\ncatalog:occurrence:291212\ncatalog:occurrence:291514"
-
-[[statement]]
-kind = "set"
 subject = "var:ssyk4-huvud"
 fields = { "sets" = ["yrke-i-huvudsysslan"] }
 evidence = "Måttet kodar yrke i huvudsysslan.\ncatalog:variable_text:33691:14245:14975"
@@ -18498,30 +18342,6 @@ evidence = "WEB är en källkod och etiketten anger måttet.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:webb-bestallningar-fran-sverige"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare och geografiska betydelser.\ncatalog:occurrence:292054\ncatalog:occurrence:292270\ncatalog:occurrence:292388"
-
-[[statement]]
-kind = "set"
-subject = "var:webb-bestallningar-fran-sverige"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika ägare och geografiska betydelser.\ncatalog:occurrence:292054\ncatalog:occurrence:292270\ncatalog:occurrence:292388"
-
-[[statement]]
-kind = "set"
-subject = "var:webb-bestallningar-fran-varlden"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare i olika perioder.\ncatalog:occurrence:292058\ncatalog:occurrence:292274\ncatalog:occurrence:292392"
-
-[[statement]]
-kind = "set"
-subject = "var:webb-bestallningar-fran-varlden"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika ägare i olika perioder.\ncatalog:occurrence:292058\ncatalog:occurrence:292274\ncatalog:occurrence:292392"
-
-[[statement]]
-kind = "set"
 subject = "var:webbplats-anpassat-innehall"
 fields = { "sets" = [] }
 evidence = "En leveransperiod har oklar betydelse och senare etikett omfattar kundigenkänning.\ncatalog:occurrence:291976\ncatalog:occurrence:292119\ncatalog:occurrence:292339\ncatalog:occurrence:292380\ncatalog:occurrence:292504\ncatalog:occurrence:292928\ncatalog:occurrence:293123"
@@ -18543,18 +18363,6 @@ kind = "set"
 subject = "var:webbplats-avgransa-sokning"
 fields = { "tags" = ["digital"] }
 evidence = "Samma kolumn avser olika webbplatsfunktioner.\ncatalog:occurrence:292925\ncatalog:occurrence:293119\ncatalog:occurrence:293298"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-bestalla-online"
-fields = { "sets" = [] }
-evidence = "Webbplats-bestallning-bokning avser samma funktion i tidigare perioder.\ncatalog:occurrence:292926\ncatalog:occurrence:293121"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-bestalla-online"
-fields = { "tags" = ["digital"] }
-evidence = "Webbplats-bestallning-bokning avser samma funktion i tidigare perioder.\ncatalog:occurrence:292926\ncatalog:occurrence:293121"
 
 [[statement]]
 kind = "set"
@@ -18603,18 +18411,6 @@ kind = "set"
 subject = "var:webbplats-produktkatalog"
 fields = { "tags" = ["digital"] }
 evidence = "En leveransperiod är oklar och senare etikett har annan omfattning.\ncatalog:occurrence:291971\ncatalog:occurrence:292115\ncatalog:occurrence:292335\ncatalog:occurrence:292377\ncatalog:occurrence:292500\ncatalog:occurrence:292924\ncatalog:occurrence:293117"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-varubeskrivning-pris"
-fields = { "sets" = [] }
-evidence = "Etiketterna har olika omfattning.\ncatalog:occurrence:292924\ncatalog:occurrence:293117"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-varubeskrivning-pris"
-fields = { "tags" = ["digital"] }
-evidence = "Etiketterna har olika omfattning.\ncatalog:occurrence:292924\ncatalog:occurrence:293117"
 
 [[statement]]
 kind = "set"
@@ -18885,3 +18681,177 @@ kind = "set"
 subject = "befolkningens-it-anvandning: IUWIKI @2013-01-01..2013-12-31 where key = 'v27985'"
 fields = { "description" = "Sökt på Wikipedia eller andra wiki-webbplatser" }
 evidence = "Tar bort en överflödig avslutande parentes.\ncatalog:variable_text:33688:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: b3b @2018-01-01..2018-12-31 where key = 'v38257'"
+fields = { "variable" = "data4c5" }
+evidence = "Both specify laptop internet connection with the same equipment-use definition and preceding-three-month window in the population IT-use table. Observations do not overlap: [17532,17897) versus [14610,15706), [18628,18993) and [19358,19723). Shared code 1 is affirmative, with no conflicting shared-code meaning."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: b3m @2024-01-01..2024-12-31 where key = 'v35525'"
+fields = { "variable" = "spela-ladda-ner-spel" }
+evidence = "Both definitions ask exactly whether games were played or downloaded. Their observed periods do not overlap in the population IT use table. Shared codes consistently mean yes, no and, where present, don't know. The survivor has three occurrences versus two."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: c2g @2016-01-01..2016-12-31 where key = 'v28018'"
+fields = { "variable" = "d2g" }
+evidence = "Both use selector v28018 and the same definition: another reason for not submitting government forms online during the last 12 months. Their periods [16436,16801), [16801,17167) and [17167,17532) do not overlap, and all occurrences use value set 11035."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: data5b @2010-01-01..2010-12-31 where key = 'v23388'"
+fields = { "variable" = "ej-internet-hemma-vill-inte-ha" }
+evidence = "Both ask whether home internet is absent because it is not wanted. They use the identical complete five-code value set 11035 in non-overlapping periods [13879,14245) and [14610,14975); the gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: f4 @2016-01-01..2016-12-31 where key = 'v30734'"
+fields = { "variable" = "e-sakerhet-orolig-reklam" }
+evidence = "Both ask about concern that online activities are recorded for tailored advertising. The periods do not overlap, and codes 1, 2 and 3 express high concern, some concern and no concern."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: f4 @2020-01-01..2020-12-31 where key = 'v41812'"
+fields = { "variable" = "smartphone-forlorat-data" }
+evidence = "Both ask whether smartphone data have ever been lost because of viruses or other hostile software. Periods [17532,17897) and [18262,18628) do not overlap; both lists mean 1 Yes, 2 No and 3 Unknown."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: iugm @2014-01-01..2014-12-31 where key = 'v35525'"
+fields = { "variable" = "spela-ladda-ner-spel" }
+evidence = "Both definitions ask exactly whether games were played or downloaded. Their observed periods do not overlap in the population IT use table. Shared codes consistently mean yes, no and, where present, don't know. The survivor has three occurrences versus two."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: lills @2010-01-01..2010-12-31 where key = 'v23406'"
+fields = { "variable" = "antal-svarande-stratum-referensmanad" }
+evidence = "Both count respondents per estimation stratum for a reference month, in persons. The integer Lills observations occupy adjacent, nonoverlapping periods in the population IT-use table."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: personnr @2008-01-01..2008-12-31 where key = 'v57'"
+fields = { "variable" = "uppgiftslamnarens-personnr" }
+evidence = "Both identify the respondent by personal identity number: both explicitly use the operational definition 'respondent personal identity number'. Character-valued PersonNr observations are adjacent at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: personnr @2009-01-01..2009-12-31 where key = 'v57'"
+fields = { "variable" = "uppgiftslamnarens-personnr" }
+evidence = "Both identify the respondent by personal identity number: both explicitly use the operational definition 'respondent personal identity number'. Character-valued PersonNr observations are adjacent at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: personnr @2010-01-01..2010-12-31 where key = 'v57'"
+fields = { "variable" = "uppgiftslamnarens-personnr" }
+evidence = "Both identify the respondent by personal identity number: both explicitly use the operational definition 'respondent personal identity number'. Character-valued PersonNr observations are adjacent at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: personnr @2011-01-01..2011-12-31 where key = 'v57'"
+fields = { "variable" = "uppgiftslamnarens-personnr" }
+evidence = "Both identify the respondent by personal identity number: both explicitly use the operational definition 'respondent personal identity number'. Character-valued PersonNr observations are adjacent at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: personnr @2013-01-01..2013-12-31 where key = 'v57'"
+fields = { "variable" = "uppgiftslamnarens-personnr" }
+evidence = "Both identify the respondent by personal identity number: both explicitly use the operational definition 'respondent personal identity number'. Character-valued PersonNr observations are adjacent at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: awseu @2015-01-01..2015-12-31 where key = 'v34111'"
+fields = { "variable" = "awshm" }
+evidence = "Both measure receipt of website or app orders from customers in other EU countries. The first has [16436,16801), which does not overlap the second's supplied periods. Both use complete value set 7898; the 2013 AWSHM spelling does not change its documented EU population."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: awshm @2015-01-01..2015-12-31 where key = 'v34106'"
+fields = { "variable" = "awsww" }
+evidence = "Both measure receipt of website or app orders from customers in Sweden, with non-overlapping supplied periods and identical complete value set 7898. The 2013 AWSWW occurrence explicitly documents the Swedish customer population."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: awsww @2015-01-01..2015-12-31 where key = 'v34110'"
+fields = { "variable" = "ehandel-bestallningar-webb-varlden" }
+evidence = "Both measure receipt of website or app orders from customers in the rest of the world, with non-overlapping supplied periods and identical complete value set 7898. The 2013 AWSEU occurrence explicitly documents this world population."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: axseu @2013-01-01..2013-12-31 where key = 'v26893'"
+fields = { "variable" = "tog-emot-edi-bestallningar-eu" }
+evidence = "Both measure receipt of EDI orders from customers in other EU countries. Their enterprise-table periods do not overlap, and both use the identical complete four-code value set 7898. The later definition explicitly excludes website and app orders."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: axshm @2013-01-01..2013-12-31 where key = 'v26892'"
+fields = { "variable" = "tog-emot-edi-bestallningar-sverige" }
+evidence = "Both measure receiving EDI orders from customers in Sweden. The later definition explicitly excludes website and app orders, consistent with EDI ordering. Their complete four-code lists match, and their used periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: axsww @2013-01-01..2013-12-31 where key = 'v26894'"
+fields = { "variable" = "tog-emot-edi-bestallningar-varlden" }
+evidence = "Both measure receipt of EDI orders from customers in the rest of the world. Their enterprise-table periods do not overlap, and both use the identical complete four-code value set 7898. The later definition explicitly excludes website and app orders."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: gusenrg @2017-01-01..2017-12-31 where key = 'v38331'"
+fields = { "variable" = "miljopolicy-it-energianvandning" }
+evidence = "Both measure whether a company has an environmental policy requiring reduced energy consumption from IT use. The later definition adds implementation examples. Their complete four-code lists match, and used periods [15706,16801) and [17167,18628) do not overlap; the intervening gap remains."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: gusenrg @2018-01-01..2018-12-31 where key = 'v38331'"
+fields = { "variable" = "miljopolicy-it-energianvandning" }
+evidence = "Both measure whether a company has an environmental policy requiring reduced energy consumption from IT use. The later definition adds implementation examples. Their complete four-code lists match, and used periods [15706,16801) and [17167,18628) do not overlap; the intervening gap remains."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: gusenrg @2019-01-01..2019-12-31 where key = 'v38331'"
+fields = { "variable" = "miljopolicy-it-energianvandning" }
+evidence = "Both measure whether a company has an environmental policy requiring reduced energy consumption from IT use. The later definition adds implementation examples. Their complete four-code lists match, and used periods [15706,16801) and [17167,18628) do not overlap; the intervening gap remains."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: gusenrg @2020-01-01..2020-12-31 where key = 'v38331'"
+fields = { "variable" = "miljopolicy-it-energianvandning" }
+evidence = "Both measure whether a company has an environmental policy requiring reduced energy consumption from IT use. The later definition adds implementation examples. Their complete four-code lists match, and used periods [15706,16801) and [17167,18628) do not overlap; the intervening gap remains."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: iterp1 @2023-01-01..2023-12-31 where key = 'v46790'"
+fields = { "variable" = "anvander-erp-affarssystem" }
+evidence = "Both define ERP use as electronic information sharing between company functions, including linked applications, shared databases and automatically processable exchanges. Their complete four-code lists match, and their used periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: iterp1 @2025-01-01..2025-12-31 where key = 'v46790'"
+fields = { "variable" = "anvander-erp-affarssystem" }
+evidence = "Both define ERP use as electronic information sharing between company functions, including linked applications, shared databases and automatically processable exchanges. Their complete four-code lists match, and their used periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: webacc @2023-01-01..2023-12-31 where key = 'v46822'"
+fields = { "variable" = "webbplats-produktkatalog" }
+evidence = "Both definitions describe a company website function providing descriptions of goods or services and price information. They use the same complete four-code set 7898 and have non-overlapping observed periods. The product-catalogue variable has seven occurrences versus two."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: webacc @2025-01-01..2025-12-31 where key = 'v46822'"
+fields = { "variable" = "webbplats-produktkatalog" }
+evidence = "Both definitions describe a company website function providing descriptions of goods or services and price information. They use the same complete four-code set 7898 and have non-overlapping observed periods. The product-catalogue variable has seven occurrences versus two."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: webord @2023-01-01..2023-12-31 where key = 'v16917'"
+fields = { "variable" = "webbplats-bestallning-bokning" }
+evidence = "Both measure whether the enterprise website permits online orders, reservations or bookings. Their observed periods do not overlap in the enterprise table, and both use the complete four-code value set 7898."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: webord @2025-01-01..2025-12-31 where key = 'v16917'"
+fields = { "variable" = "webbplats-bestallning-bokning" }
+evidence = "Both measure whether the enterprise website permits online orders, reservations or bookings. Their observed periods do not overlap in the enterprise table, and both use the complete four-code value set 7898."

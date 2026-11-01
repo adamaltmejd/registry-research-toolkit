@@ -7801,18 +7801,6 @@ evidence = "Mäter arbetsplatsens antal anställda.\ncatalog:variable_text:3404:
 
 [[statement]]
 kind = "set"
-subject = "var:antal-understallda"
-fields = { "sets" = ["antal-understallda"] }
-evidence = "Samma antal underställda mäts i efterföljande perioder.\ncatalog:occurrence:24859\ncatalog:occurrence:25066\ncatalog:occurrence:25269"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-understallda"
-fields = { "tags" = ["employment"] }
-evidence = "Samma antal underställda mäts i efterföljande perioder.\ncatalog:occurrence:24859\ncatalog:occurrence:25066\ncatalog:occurrence:25269"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-understallda-direkt"
 fields = { "sets" = ["antal-understallda"] }
 evidence = "Identiteten anger direkt underställda men källfrågan omfattar även indirekt underställda.\ncatalog:occurrence:25066\ncatalog:occurrence:25269"
@@ -8050,18 +8038,6 @@ kind = "set"
 subject = "var:arbetsmiljobrister-atgardats"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter åtgärdande av arbetsmiljöbrister.\ncatalog:variable_text:3426:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsrorelser-per-minut"
-fields = { "sets" = ["ensidigt-upprepade-arbetsrorelser"] }
-evidence = "Samma källkolumn har en annan ägare i föregående period och frågorna skiljer sig.\ncatalog:occurrence:24338\ncatalog:occurrence:24488"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsrorelser-per-minut"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i föregående period och frågorna skiljer sig.\ncatalog:occurrence:24338\ncatalog:occurrence:24488"
 
 [[statement]]
 kind = "set"
@@ -14296,3 +14272,15 @@ kind = "set"
 subject = "arbetsmiljoundersokningen-2015: hussyk4 @2019-01-01..2019-12-31 where key = 'v511'"
 fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
 evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: understl @2005-01-01..2005-12-31 where key = 'v3835'"
+fields = { "variable" = "understallda-chef-intervall" }
+evidence = "Both derive intervals of direct and indirect subordinates, assigning zero to respondents without a supervisory role. Their observed periods [12053,12418) and [12784,13149) do not overlap in the same table."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: uppminut @1999-01-01..1999-12-31 where key = 'v41606'"
+fields = { "variable" = "samma-moment-per-2-minuter" }
+evidence = "Both definitions ask whether work requires exclusively repeating the same task or movement at least twice per minute. They share the complete seven-code time-proportion scale and UPPMINUT column, with nonoverlapping periods [9862,10227) and [10592,10957)."

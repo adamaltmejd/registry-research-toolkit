@@ -711,7 +711,7 @@ evidence = "Källan anger län med kod.\ncatalog:occurrence:21692"
 [[statement]]
 kind = "set"
 subject = "var:lt-valkretsnamn"
-fields = { "sets" = ["landstingsvalkretsnamn"] }
+fields = { "sets" = ["landstingsvalkretsnamn", "regionvalkretsnamn"] }
 evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot regionvalkrets-valkretsnamn följer namnbytet.\ncatalog:occurrence:21118\ncatalog:occurrence:21163\ncatalog:variable_text:2988:17532:17897"
 
 [[statement]]
@@ -971,18 +971,6 @@ kind = "set"
 subject = "var:regionvalkrets-namn"
 fields = { "tags" = ["geography"] }
 evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21097\ncatalog:occurrence:21142"
-
-[[statement]]
-kind = "set"
-subject = "var:regionvalkrets-valkretsnamn"
-fields = { "sets" = ["regionvalkretsnamn"] }
-evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21118\ncatalog:occurrence:21163"
-
-[[statement]]
-kind = "set"
-subject = "var:regionvalkrets-valkretsnamn"
-fields = { "tags" = ["geography"] }
-evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21118\ncatalog:occurrence:21163"
 
 [[statement]]
 kind = "set"
@@ -1547,3 +1535,9 @@ kind = "set"
 subject = "rostberattigade: Lansnamn @2014-01-01..2014-12-31 where key = 'v49'"
 fields = { "description" = "Regional indelning i län, angiven som namn." }
 evidence = "Definitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: valkretsnamn @2022-01-01..2022-12-31 where key = 'v22871'"
+fields = { "variable" = "lt-valkretsnamn" }
+evidence = "Both define constituency names for seats awarded in the regional council election table, using character column valkretsnamn. County council constituency becomes regional constituency with the same operational meaning. The last earlier observation is [17532,17897), followed by [18993,19358); coverage of the gap is not asserted."

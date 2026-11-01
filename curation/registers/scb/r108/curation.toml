@@ -2524,3 +2524,27 @@ kind = "set"
 subject = "gymnasieungdomars-studieintresse: personnr @2011-07-01..2012-06-30 where key = 'v7020'"
 fields = { "description" = "Urvalspersonens personnummer." }
 evidence = "Källans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: lopnr @2005-07-01..2006-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: lopnr @2007-07-01..2008-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: uenr @2009-07-01..2010-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: uenr @2011-07-01..2012-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."

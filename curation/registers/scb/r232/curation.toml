@@ -3318,18 +3318,6 @@ evidence = "Källans bokstavskod är ogenomskinlig; etiketten anger prioriterad 
 
 [[statement]]
 kind = "set"
-subject = "var:prtjledig"
-fields = { "sets" = ["tjanstledighet"] }
-evidence = "Katalogen visar en angränsande mappning till en annan variabel för samma källkolumn.\ncatalog:occurrence:324482\ncatalog:occurrence:324498\ncatalog:variable_text:35493:14791:20270\ncatalog:variable_text:35554:9312:14791"
-
-[[statement]]
-kind = "set"
-subject = "var:prtjledig"
-fields = { "tags" = ["employment"] }
-evidence = "Katalogen visar en angränsande mappning till en annan variabel för samma källkolumn.\ncatalog:occurrence:324482\ncatalog:occurrence:324498\ncatalog:variable_text:35493:14791:20270\ncatalog:variable_text:35554:9312:14791"
-
-[[statement]]
-kind = "set"
 subject = "var:prutbanord"
 fields = { "sets" = ["typ-av-utbildningsanordnare"] }
 evidence = "Kodningar av anordnartyp hör samman.\ncatalog:variable_text:35494:14426:20270\ncatalog:variable_text:35601:18444:20270"
@@ -10101,3 +10089,93 @@ kind = "set"
 subject = "tjansteregistret: Hemtim8 @1993-07-01..1994-06-30 where key = 'v30583'"
 fields = { "description" = "Antal timmar med hemspråksundervisning inom personens åttonde tjänst." }
 evidence = "Variabeln mäter timmar, inte enbart förekomst av undervisning.\ncatalog:variable_text:35596:4199:8947"
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2010-07-01..2011-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2011-07-01..2012-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2012-07-01..2013-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2013-07-01..2014-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2014-07-01..2015-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2015-07-01..2016-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2016-07-01..2017-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2017-07-01..2018-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2018-07-01..2019-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2019-07-01..2020-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2020-07-01..2021-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2021-07-01..2022-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2022-07-01..2023-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2023-07-01..2024-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: prtjledig @2024-07-01..2025-06-30 where key = 'v13671'"
+fields = { "variable" = "tjanstledig-hosttermin" }
+evidence = "Both specify full leave for all or most of the autumn term, with identical complete codes J (fully on leave) and N (working). Their periods are adjacent at day 14791 in the same register's person table and column PrTjLedig. Both have 15 occurrences; the survivor occurs earlier."

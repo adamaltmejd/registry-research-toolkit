@@ -4027,18 +4027,6 @@ evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-old-66
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-old-66"
-fields = { "sets" = [] }
-evidence = "Suffixet 66 är en räknare som inte finns i källkolumnen. Samma sjunivåbegrepp är uppdelat per period med sun2000niva-old.\ncatalog:occurrence:459183\ncatalog:occurrence:459417\ncatalog:variable_text:44503:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old-66"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 66 är en räknare som inte finns i källkolumnen. Samma sjunivåbegrepp är uppdelat per period med sun2000niva-old.\ncatalog:occurrence:459183\ncatalog:occurrence:459417\ncatalog:variable_text:44503:16801:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:sun2000niva-oldfar"
 fields = { "sets" = [] }
 evidence = "Samma sjunivåbegrepp är uppdelat per period med faderns-utbildningsniva.\ncatalog:occurrence:458952\ncatalog:occurrence:459184"
@@ -4816,3 +4804,21 @@ kind = "set"
 subject = "stativ: RehabErs @2023-01-01..2023-12-31 where key = 'v1613'"
 fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
 evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "stativ: sun2000niva_old @2016-01-01..2016-12-31 where key = 'v66'"
+fields = { "variable" = "sun2000niva-old" }
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "stativ: sun2000niva_old @2017-01-01..2017-12-31 where key = 'v66'"
+fields = { "variable" = "sun2000niva-old" }
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "stativ: sun2000niva_old @2018-01-01..2018-12-31 where key = 'v66'"
+fields = { "variable" = "sun2000niva-old" }
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."

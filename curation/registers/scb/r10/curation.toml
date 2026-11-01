@@ -743,18 +743,6 @@ evidence = "Måttet avser areal av andra växtslag.\ncatalog:variable_text:35739
 
 [[statement]]
 kind = "set"
-subject = "var:andravaxtslag"
-fields = { "sets" = ["ovriga-vaxtslag-areal"] }
-evidence = "Samma arealbegrepp är uppdelat mellan perioder med andra-vaxtslag-andravaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:variable_text:35742:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:andravaxtslag"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma arealbegrepp är uppdelat mellan perioder med andra-vaxtslag-andravaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:variable_text:35742:13514:13879"
-
-[[statement]]
-kind = "set"
 subject = "var:annan"
 fields = { "sets" = ["ovrig-markareal"] }
 evidence = "Annan areal hör till mått för övrig mark.\ncatalog:variable_text:35743:10227:10957\ncatalog:variable_text:35777:14610:14975"
@@ -4079,18 +4067,6 @@ evidence = "Måttet avser total areal.\ncatalog:variable_text:35780:7305:10227\n
 
 [[statement]]
 kind = "set"
-subject = "var:totala-betesareal"
-fields = { "sets" = ["betesmarksareal"] }
-evidence = "Källorna visar samma begrepp som scb/lbr/total-betesmark i angränsande perioder.\ncatalog:occurrence:332325\ncatalog:occurrence:332407\ncatalog:variable_text:36033:12053:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-betesareal"
-fields = { "tags" = ["agriculture"] }
-evidence = "Källorna visar samma begrepp som scb/lbr/total-betesmark i angränsande perioder.\ncatalog:occurrence:332325\ncatalog:occurrence:332407\ncatalog:variable_text:36033:12053:15706"
-
-[[statement]]
-kind = "set"
 subject = "var:totala-betesareal-i-hektar-bete-tot"
 fields = { "sets" = ["betesmarksareal"] }
 evidence = "Total betesareal ingår i kandidatgruppen.\ncatalog:variable_text:36034:15340:15706"
@@ -4622,3 +4598,87 @@ kind = "set"
 subject = "uppdragsregistret: Tkod @1998-01-01..1998-12-31 where key = 'v44427'"
 fields = { "description" = "Kod för typ av trädgårdsodling." }
 evidence = "Värdena anger odlingstyp och inte areal i hektar.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2003-01-01..2003-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2004-01-01..2004-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2005-01-01..2005-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2006-01-01..2006-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2007-01-01..2007-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2008-01-01..2008-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2009-01-01..2009-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2010-01-01..2010-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2011-01-01..2011-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "foretag: bete @2012-01-01..2012-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: andravaxtslag @2007-01-01..2007-12-31 where key = 'v44426'"
+fields = { "variable" = "andra-vaxtslag-andravaxtslag" }
+evidence = "Both describe other-crop area in hectares. In the commission register table, the same column changes ownership at day 13514 and returns at day 13879 without overlap; the intervening label and definition retain the crop-area measure."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: bete @2006-01-01..2006-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: bete @2007-01-01..2007-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: bete @2008-01-01..2008-12-31 where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."

@@ -1,14 +1,14 @@
 
 [[statement]]
 kind = "link"
-subject = "var:glyfosat-namn"
+subject = "var:vaxtskyddsmedelsnamn"
 relation = "label_of"
 object = "scb/vaxtskyddsmedel/glyfosat-id"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:6\n\nLegacy code_label_pair declaration"
 
 [[statement]]
 kind = "link"
-subject = "var:glyfosat-namn"
+subject = "var:vaxtskyddsmedelsnamn"
 relation = "label_of"
 object = "scb/vaxtskyddsmedel/glyfosat-id-2006"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:10\n\nLegacy code_label_pair declaration"
@@ -571,18 +571,6 @@ evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:glyfosat-behandlad-areal"
-fields = { "sets" = ["behandlad-areal"] }
-evidence = "Samma glyfosatbehandlade areal som behandlad-areal och glyfosat-behandlad-areal-2 i olika perioder.\ncatalog:occurrence:515498\ncatalog:occurrence:515608\ncatalog:occurrence:515694"
-
-[[statement]]
-kind = "set"
-subject = "var:glyfosat-behandlad-areal"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma glyfosatbehandlade areal som behandlad-areal och glyfosat-behandlad-areal-2 i olika perioder.\ncatalog:occurrence:515498\ncatalog:occurrence:515608\ncatalog:occurrence:515694"
-
-[[statement]]
-kind = "set"
 subject = "var:glyfosat-behandlad-areal-2"
 fields = { "sets" = ["behandlad-areal"] }
 evidence = "Sifferändelsen är en tillagd räknare; samma begrepp som glyfosat-behandlad-areal i senare period.\ncatalog:occurrence:515498\ncatalog:occurrence:515608\ncatalog:variable_text:55288:13149:13514"
@@ -640,18 +628,6 @@ kind = "set"
 subject = "var:glyfosat-id-2006"
 fields = { "tags" = ["agriculture"] }
 evidence = "Senare ägare av samma kolumn överlappar.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680"
-
-[[statement]]
-kind = "set"
-subject = "var:glyfosat-namn"
-fields = { "sets" = ["vaxtskyddspreparat"] }
-evidence = "Källkolumnen har olika ägare med olika angiven omfattning.\ncatalog:occurrence:515590\ncatalog:occurrence:515681\ncatalog:occurrence:515725"
-
-[[statement]]
-kind = "set"
-subject = "var:glyfosat-namn"
-fields = { "tags" = ["agriculture"] }
-evidence = "Källkolumnen har olika ägare med olika angiven omfattning.\ncatalog:occurrence:515590\ncatalog:occurrence:515681\ncatalog:occurrence:515725"
 
 [[statement]]
 kind = "set"
@@ -2080,3 +2056,15 @@ kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: TotalMangd @2021-01-01..2021-12-31 where key = 'v42779'"
 fields = { "description" = "Total mängd glyfosatmedel." }
 evidence = "Rättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: behandladareal @2010-01-01..2010-12-31 where key = 'v48824'"
+fields = { "variable" = "glyfosat-behandlad-areal-2" }
+evidence = "Both explicitly define area treated with glyphosate products, measured in hectares in BehandladAreal. Their observations occupy nonoverlapping periods [13149,13514] and [14610,14975]; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: vaxtskyddsmedelnamn @2010-01-01..2010-12-31 where key = 'v48830'"
+fields = { "variable" = "vaxtskyddsmedelsnamn" }
+evidence = "Both describe glyphosate product names: one explicitly defines glyphosate names, and the other specifies glyphosate products operationally. Both are character fields in VaxtskyddsmedelNamn, observed in nonoverlapping periods [13149,13514] and [14610,14975]."

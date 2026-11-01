@@ -12468,3 +12468,9 @@ kind = "set"
 subject = "elproduktion-elhandel: rok_prod @2024-01-01..2024-12-31 where key = 'v35396'"
 fields = { "description" = "Producerad värme" }
 evidence = "Källans enhet och etikett anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4912:14245:17532\ncatalog:variable_text:4912:17532:17897\ncatalog:variable_text:4912:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: knr @2022-01-01..2022-12-31 where key = 'v16728'"
+fields = { "variable" = "foretagets-id-nummer" }
+evidence = "Both define the company's ID number with identical operational text and selector v16728. In the network companies table, the first ends at 18993 and the second covers [18993,19358), preserving both KNr decimal and knr integer mappings without overlap between members."

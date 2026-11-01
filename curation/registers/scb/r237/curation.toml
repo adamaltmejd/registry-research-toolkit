@@ -30776,18 +30776,6 @@ evidence = "Katalogen visar en perioddelning för samma källkolumn.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:antal-med-kod-14-i-hushallet"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.\ncatalog:occurrence:497446\ncatalog:occurrence:498563\ncatalog:variable_text:46216:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-14-i-hushallet"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.\ncatalog:occurrence:497446\ncatalog:occurrence:498563\ncatalog:variable_text:46216:13149:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-med-kod-14-i-tablan"
 fields = { "sets" = [] }
 evidence = "Katalogen visar en perioddelning för samma källkolumn.\ncatalog:occurrence:497446\ncatalog:occurrence:498563"
@@ -30833,30 +30821,6 @@ kind = "set"
 subject = "var:antal-med-kod-16-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Relationskod beskriver hushållssammansättning.\ncatalog:variable_text:46220:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-2-i-hushallet"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i på varandra följande observerade perioder.\ncatalog:occurrence:497434\ncatalog:occurrence:498551"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-2-i-hushallet"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn har olika ägare i på varandra följande observerade perioder.\ncatalog:occurrence:497434\ncatalog:occurrence:498551"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-3-i-hushallet"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i på varandra följande observerade perioder.\ncatalog:occurrence:497435\ncatalog:occurrence:498552"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-3-i-hushallet"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn har olika ägare i på varandra följande observerade perioder.\ncatalog:occurrence:497435\ncatalog:occurrence:498552"
 
 [[statement]]
 kind = "set"
@@ -33425,18 +33389,6 @@ kind = "set"
 subject = "var:ba0069"
 fields = { "tags" = ["demographics"] }
 evidence = "Katalogen anger en perioduppdelad identitet med scb/ulf/ursprung-bakgrund.\ncatalog:occurrence:497344\ncatalog:occurrence:498473"
-
-[[statement]]
-kind = "set"
-subject = "var:ba0070"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i observerade perioder.\ncatalog:occurrence:497345\ncatalog:occurrence:498474"
-
-[[statement]]
-kind = "set"
-subject = "var:ba0070"
-fields = { "tags" = ["demographics"] }
-evidence = "Samma källkolumn har olika ägare i observerade perioder.\ncatalog:occurrence:497345\ncatalog:occurrence:498474"
 
 [[statement]]
 kind = "set"
@@ -37076,18 +37028,6 @@ evidence = "The source column has another owner in an earlier release.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:bildskarm-dator-timmar"
-fields = { "sets" = [] }
-evidence = "The source column has another owner in an earlier release.\ncatalog:occurrence:496108\ncatalog:occurrence:498445"
-
-[[statement]]
-kind = "set"
-subject = "var:bildskarm-dator-timmar"
-fields = { "tags" = ["digital", "employment"] }
-evidence = "The source column has another owner in an earlier release.\ncatalog:occurrence:496108\ncatalog:occurrence:498445"
-
-[[statement]]
-kind = "set"
 subject = "var:bildskarmsarbete"
 fields = { "sets" = [] }
 evidence = "The counterpart measures the same screen work in a separate period.\ncatalog:occurrence:496107\ncatalog:occurrence:498444\ncatalog:variable_text:46812:13149:13514"
@@ -39920,18 +39860,6 @@ evidence = "The legacy group dissolves; the period-specific measures are related
 
 [[statement]]
 kind = "set"
-subject = "var:bostadshushall"
-fields = { "sets" = [] }
-evidence = "The source column has another owner in an earlier release.\ncatalog:occurrence:497510\ncatalog:occurrence:498665"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadshushall"
-fields = { "tags" = ["family-household"] }
-evidence = "The source column has another owner in an earlier release.\ncatalog:occurrence:497510\ncatalog:occurrence:498665"
-
-[[statement]]
-kind = "set"
 subject = "var:bostadshushallsvikt"
 fields = { "sets" = [] }
 evidence = "The source column has another owner in a later release.\ncatalog:occurrence:497334\ncatalog:occurrence:499105"
@@ -39944,18 +39872,6 @@ evidence = "The source column has another owner in a later release.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:bostadshushallsvikt-1980-2008"
-fields = { "sets" = [] }
-evidence = "Samma bostadshushållsvikt är uppdelad mellan perioder med scb/ulf/bostadshushallsvikt.\ncatalog:occurrence:497334\ncatalog:occurrence:499105"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadshushallsvikt-1980-2008"
-fields = { "tags" = ["methods"] }
-evidence = "Samma bostadshushållsvikt är uppdelad mellan perioder med scb/ulf/bostadshushallsvikt.\ncatalog:occurrence:497334\ncatalog:occurrence:499105"
-
-[[statement]]
-kind = "set"
 subject = "var:bostadshushallsvikt-1996-2008"
 fields = { "sets" = [] }
 evidence = "Identitetsuppdelningen och motstridiga årtal kräver granskning.\ncatalog:occurrence:497336\ncatalog:occurrence:499107"
@@ -39965,18 +39881,6 @@ kind = "set"
 subject = "var:bostadshushallsvikt-1996-2008"
 fields = { "tags" = ["methods"] }
 evidence = "Identitetsuppdelningen och motstridiga årtal kräver granskning.\ncatalog:occurrence:497336\ncatalog:occurrence:499107"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadshushallsvikt-1998-2008"
-fields = { "sets" = [] }
-evidence = "Samma bostadshushållsvikt är uppdelad mellan perioder med scb/ulf/ny-ny-bostadshushallsvikt.\ncatalog:occurrence:497331\ncatalog:occurrence:499102"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadshushallsvikt-1998-2008"
-fields = { "tags" = ["methods"] }
-evidence = "Samma bostadshushållsvikt är uppdelad mellan perioder med scb/ulf/ny-ny-bostadshushallsvikt.\ncatalog:occurrence:497331\ncatalog:occurrence:499102"
 
 [[statement]]
 kind = "set"
@@ -40133,18 +40037,6 @@ kind = "set"
 subject = "var:civilstand-ba0170"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln beskriver civilstånd.\ncatalog:variable_text:47079:8401:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand-enligt-rtb"
-fields = { "sets" = [] }
-evidence = "Identitetsfakten avser samma civilståndsbegrepp uppdelat mellan perioder.\ncatalog:occurrence:476728\ncatalog:occurrence:477600\ncatalog:occurrence:480581\ncatalog:occurrence:481350"
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand-enligt-rtb"
-fields = { "tags" = ["family-household"] }
-evidence = "Identitetsfakten avser samma civilståndsbegrepp uppdelat mellan perioder.\ncatalog:occurrence:476728\ncatalog:occurrence:477600\ncatalog:occurrence:480581\ncatalog:occurrence:481350"
 
 [[statement]]
 kind = "set"
@@ -42620,18 +42512,6 @@ evidence = "The source column has another owner in a later release.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:familjehushallsvikt-1980-2008"
-fields = { "sets" = [] }
-evidence = "Samma familjehushållsvikt är uppdelad mellan perioder med scb/ulf/familjehushallsvikt.\ncatalog:occurrence:497335\ncatalog:occurrence:499106"
-
-[[statement]]
-kind = "set"
-subject = "var:familjehushallsvikt-1980-2008"
-fields = { "tags" = ["methods"] }
-evidence = "Samma familjehushållsvikt är uppdelad mellan perioder med scb/ulf/familjehushallsvikt.\ncatalog:occurrence:497335\ncatalog:occurrence:499106"
-
-[[statement]]
-kind = "set"
 subject = "var:familjehushallsvikt-1996-2008"
 fields = { "sets" = [] }
 evidence = "Identitetsuppdelningen och motstridiga årtal kräver granskning.\ncatalog:occurrence:497337\ncatalog:occurrence:499108"
@@ -42641,18 +42521,6 @@ kind = "set"
 subject = "var:familjehushallsvikt-1996-2008"
 fields = { "tags" = ["methods"] }
 evidence = "Identitetsuppdelningen och motstridiga årtal kräver granskning.\ncatalog:occurrence:497337\ncatalog:occurrence:499108"
-
-[[statement]]
-kind = "set"
-subject = "var:familjehushallsvikt-1998-2008"
-fields = { "sets" = [] }
-evidence = "Samma familjehushållsvikt är uppdelad mellan perioder med scb/ulf/ny-ny-familjehushallsvikt.\ncatalog:occurrence:497332\ncatalog:occurrence:499103"
-
-[[statement]]
-kind = "set"
-subject = "var:familjehushallsvikt-1998-2008"
-fields = { "tags" = ["methods"] }
-evidence = "Samma familjehushållsvikt är uppdelad mellan perioder med scb/ulf/ny-ny-familjehushallsvikt.\ncatalog:occurrence:497332\ncatalog:occurrence:499103"
 
 [[statement]]
 kind = "set"
@@ -42953,30 +42821,6 @@ kind = "set"
 subject = "var:fodelsear-barn-6"
 fields = { "tags" = ["demographics"] }
 evidence = "Källkolumnen har flera periodägare och deras jämförbarhet är inte visad.\ncatalog:occurrence:497664\ncatalog:occurrence:498810\ncatalog:occurrence:505125\ncatalog:occurrence:505767"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-barn-6-2"
-fields = { "sets" = [] }
-evidence = "Slutsiffran 2 är en tilldelad räknare; samma barnplats är perioddelad med scb/ulf/fodelsear-barn-6.\ncatalog:occurrence:505125\ncatalog:occurrence:505767\ncatalog:variable_text:47354:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-barn-6-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Slutsiffran 2 är en tilldelad räknare; samma barnplats är perioddelad med scb/ulf/fodelsear-barn-6.\ncatalog:occurrence:505125\ncatalog:occurrence:505767\ncatalog:variable_text:47354:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-barn-7"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika periodägare och deras jämförbarhet är inte visad.\ncatalog:occurrence:496626\ncatalog:occurrence:504138"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-barn-7"
-fields = { "tags" = ["demographics"] }
-evidence = "Källkolumnen har olika periodägare och deras jämförbarhet är inte visad.\ncatalog:occurrence:496626\ncatalog:occurrence:504138"
 
 [[statement]]
 kind = "set"
@@ -69224,30 +69068,6 @@ evidence = "Katalogen anger en perioduppdelning mot scb/ulf/hade-ingen-mamma-fos
 
 [[statement]]
 kind = "set"
-subject = "var:hade-ingen-mamma-fostermamma"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktet kräver jämförelse med föregående variabel.\ncatalog:occurrence:497409\ncatalog:occurrence:498540"
-
-[[statement]]
-kind = "set"
-subject = "var:hade-ingen-mamma-fostermamma"
-fields = { "tags" = ["family-household"] }
-evidence = "Identitetsfaktet kräver jämförelse med föregående variabel.\ncatalog:occurrence:497409\ncatalog:occurrence:498540"
-
-[[statement]]
-kind = "set"
-subject = "var:hade-ingen-pappa-fosterpappa"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktet kräver jämförelse med föregående variabel.\ncatalog:occurrence:497405\ncatalog:occurrence:498535"
-
-[[statement]]
-kind = "set"
-subject = "var:hade-ingen-pappa-fosterpappa"
-fields = { "tags" = ["family-household"] }
-evidence = "Identitetsfaktet kräver jämförelse med föregående variabel.\ncatalog:occurrence:497405\ncatalog:occurrence:498535"
-
-[[statement]]
-kind = "set"
 subject = "var:halsotillstand-allmant"
 fields = { "sets" = [] }
 evidence = "Allmänt hälsotillstånd hör till hälsa och har en dokumenterad aggregerad variant.\ncatalog:variable_text:49686:15340:16071\ncatalog:variable_text:49687:13879:16071"
@@ -72812,18 +72632,6 @@ evidence = "Identitetsfaktumet behöver bedömas mot den efterföljande variabel
 
 [[statement]]
 kind = "set"
-subject = "var:intervjumetod"
-fields = { "sets" = [] }
-evidence = "Samma insamlingsmetod är uppdelad mellan perioder med scb/ulf/insamlingsmetod.\ncatalog:occurrence:506242\ncatalog:occurrence:506628\ncatalog:occurrence:507379"
-
-[[statement]]
-kind = "set"
-subject = "var:intervjumetod"
-fields = { "tags" = ["methods"] }
-evidence = "Samma insamlingsmetod är uppdelad mellan perioder med scb/ulf/insamlingsmetod.\ncatalog:occurrence:506242\ncatalog:occurrence:506628\ncatalog:occurrence:507379"
-
-[[statement]]
-kind = "set"
 subject = "var:intervjumetod-2"
 fields = { "sets" = [] }
 evidence = "Källan anger samma insamlingsmetod med namnbyte efter 2021.\ncatalog:occurrence:506357\ncatalog:occurrence:506729"
@@ -73721,18 +73529,6 @@ kind = "set"
 subject = "var:kommunstorlek-1-jan"
 fields = { "tags" = ["geography"] }
 evidence = "Referensdatum skiljer sig mellan ägarna.\ncatalog:occurrence:497350\ncatalog:occurrence:498479"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunstorlek-31-dec"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare och de utelämnade koderna behövs för att bekräfta jämförbarheten.\ncatalog:occurrence:497349\ncatalog:occurrence:498478\ncatalog:valueset:9436"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunstorlek-31-dec"
-fields = { "tags" = ["geography"] }
-evidence = "Samma källkolumn har olika ägare och de utelämnade koderna behövs för att bekräfta jämförbarheten.\ncatalog:occurrence:497349\ncatalog:occurrence:498478\ncatalog:valueset:9436"
 
 [[statement]]
 kind = "set"
@@ -80540,18 +80336,6 @@ evidence = "Näringsgrenskoderna mäter samma begrepp på olika detaljnivåer.\n
 
 [[statement]]
 kind = "set"
-subject = "var:nationalitet-enligt-rtb"
-fields = { "sets" = [] }
-evidence = "Värdemängden visar samma medborgarskapsbegrepp som motparten, uppdelat mellan perioder.\ncatalog:occurrence:494885\ncatalog:occurrence:496163\ncatalog:occurrence:497327\ncatalog:valueset:8186"
-
-[[statement]]
-kind = "set"
-subject = "var:nationalitet-enligt-rtb"
-fields = { "tags" = ["demographics"] }
-evidence = "Värdemängden visar samma medborgarskapsbegrepp som motparten, uppdelat mellan perioder.\ncatalog:occurrence:494885\ncatalog:occurrence:496163\ncatalog:occurrence:497327\ncatalog:valueset:8186"
-
-[[statement]]
-kind = "set"
 subject = "var:nattarbete"
 fields = { "sets" = [] }
 evidence = "Nattarbete är ett arbetsmått.\ncatalog:variable_text:50692:14610:15340"
@@ -83789,18 +83573,6 @@ kind = "set"
 subject = "var:politiska-diskussioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Samma kolumn har en annan ägare i föregående observerade utgåva.\ncatalog:occurrence:498087\ncatalog:occurrence:499522"
-
-[[statement]]
-kind = "set"
-subject = "var:poststratum"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har en annan ägare i senare utgåva.\ncatalog:occurrence:494490\ncatalog:occurrence:499582"
-
-[[statement]]
-kind = "set"
-subject = "var:poststratum"
-fields = { "tags" = ["methods"] }
-evidence = "Samma kolumn har en annan ägare i senare utgåva.\ncatalog:occurrence:494490\ncatalog:occurrence:499582"
 
 [[statement]]
 kind = "set"
@@ -91028,18 +90800,6 @@ evidence = "Måttet gäller utsatthet för stöld eller skadegörelse i förvari
 
 [[statement]]
 kind = "set"
-subject = "var:stora-n"
-fields = { "sets" = [] }
-evidence = "Identitetsfakten kräver jämförelse med den senare variabeln.\ncatalog:occurrence:494545\ncatalog:occurrence:499608"
-
-[[statement]]
-kind = "set"
-subject = "var:stora-n"
-fields = { "tags" = ["methods"] }
-evidence = "Identitetsfakten kräver jämförelse med den senare variabeln.\ncatalog:occurrence:494545\ncatalog:occurrence:499608"
-
-[[statement]]
-kind = "set"
 subject = "var:stratum"
 fields = { "sets" = [] }
 evidence = "Variabeln beskriver urvalsstratum.\ncatalog:variable_text:51789:4018:4383"
@@ -96819,7 +96579,7 @@ evidence = "Identitetsfaktet behöver granskas mot motparten.\ncatalog:occurrenc
 [[statement]]
 kind = "set"
 subject = "var:timmar-bildskarmsarbete"
-fields = { "tags" = ["employment"] }
+fields = { "tags" = ["digital", "employment"] }
 evidence = "Identitetsfaktet behöver granskas mot motparten.\ncatalog:occurrence:496108\ncatalog:occurrence:498445"
 
 [[statement]]
@@ -102620,18 +102380,6 @@ evidence = "Samma källkolumn har olika ägare och motpartens definition saknas.
 
 [[statement]]
 kind = "set"
-subject = "var:trangbodd-enligt-norm-3"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare och motpartens definition saknas.\ncatalog:occurrence:497513\ncatalog:occurrence:498668"
-
-[[statement]]
-kind = "set"
-subject = "var:trangbodd-enligt-norm-3"
-fields = { "tags" = ["housing"] }
-evidence = "Samma källkolumn har olika ägare och motpartens definition saknas.\ncatalog:occurrence:497513\ncatalog:occurrence:498668"
-
-[[statement]]
-kind = "set"
 subject = "var:trott"
 fields = { "sets" = [] }
 evidence = "Samma fråga om ofta förekommande trötthet är perioduppdelad mot scb/ulf/trott-ofta.\ncatalog:occurrence:497792\ncatalog:occurrence:499383"
@@ -108227,3 +107975,807 @@ kind = "set"
 subject = "individer-16plus-ulf: ISCOup_2 @2019-01-01..2019-12-31 where key = 'v45243'"
 fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
 evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0021 @1984-01-01..1984-12-31 where key = 'v42991'"
+fields = { "variable" = "civilstand-ba0021" }
+evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0021 @1985-01-01..1985-12-31 where key = 'v42991'"
+fields = { "variable" = "civilstand-ba0021" }
+evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0021 @1986-01-01..1986-12-31 where key = 'v42991'"
+fields = { "variable" = "civilstand-ba0021" }
+evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0021 @1987-01-01..1987-12-31 where key = 'v42991'"
+fields = { "variable" = "civilstand-ba0021" }
+evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba3539 @1999-01-01..1999-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba3539 @2000-01-01..2000-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba3539 @2001-01-01..2001-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1980-01-01..1980-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1981-01-01..1981-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1982-01-01..1982-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1983-01-01..1983-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1984-01-01..1984-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1985-01-01..1985-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1986-01-01..1986-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: poststratum @1987-01-01..1987-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1980-01-01..1980-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1981-01-01..1981-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1982-01-01..1982-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1983-01-01..1983-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1984-01-01..1984-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1985-01-01..1985-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1986-01-01..1986-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: stora_n @1987-01-01..1987-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: am0912 @2006-01-01..2006-12-31 where key = 'v49731'"
+fields = { "variable" = "timmar-bildskarmsarbete" }
+evidence = "Both measure daily screen-work duration through AM0912 and the identical five-code list. The newer documentation explicitly identifies the earlier screen-work-hours label as the same variable and content."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0021 @1989-01-01..1989-12-31 where key = 'v42991'"
+fields = { "variable" = "civilstand-ba0021" }
+evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0022 @2003-01-01..2003-12-31 where key = 'v12269'"
+fields = { "variable" = "medborgarskap-enligt-rtb" }
+evidence = "Both use BA0022 for the same citizenship grouping, including code 2 'Swedish with year' and code 10 'Finnish', with the identical complete 13-code list. Their observed occurrence periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0028 @2008-01-01..2008-12-31 where key = 'v49664'"
+fields = { "variable" = "ny-ny-bostadshushallsvikt" }
+evidence = "Both identify the dwelling-household weight introduced in 1998, use BA0028 and expansion-factor units, and have nonoverlapping observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0029 @2008-01-01..2008-12-31 where key = 'v49670'"
+fields = { "variable" = "ny-ny-familjehushallsvikt" }
+evidence = "The later documentation explicitly identifies BA0029 as the additional new family-household weight introduced in 1998, matching the earlier 'new new family-household weight'. Both use expansion-factor units and disjoint occurrences; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0032 @2008-01-01..2008-12-31 where key = 'v49671'"
+fields = { "variable" = "bostadshushallsvikt" }
+evidence = "Both concern BA0032's original household expansion weight, with expansion-factor units. The later documentation identifies this first version and separately names newer weight methods. Observed periods do not overlap; intervening gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0033 @2008-01-01..2008-12-31 where key = 'v49672'"
+fields = { "variable" = "familjehushallsvikt" }
+evidence = "Both identify the original family-household weight BA0033, beginning in 1980 and retained through 2008, in expansion-factor units. The later documentation distinguishes this version from newer weights; observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @2006-01-01..2006-12-31 where key = 'v49128'"
+fields = { "variable" = "medborgarskap-individ-ba0070" }
+evidence = "Both define the same seven citizenship groups using citizenship and the respondent's and parents' birthplaces. Both use the identical complete eight-code list, including nonresponse. BA0070 has nonoverlapping observed periods; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @2008-01-01..2008-12-31 where key = 'v49128'"
+fields = { "variable" = "medborgarskap-individ-ba0070" }
+evidence = "Both define the same seven citizenship groups using citizenship and the respondent's and parents' birthplaces. Both use the identical complete eight-code list, including nonresponse. BA0070 has nonoverlapping observed periods; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @2009-01-01..2009-12-31 where key = 'v49128'"
+fields = { "variable" = "medborgarskap-individ-ba0070" }
+evidence = "Both define the same seven citizenship groups using citizenship and the respondent's and parents' birthplaces. Both use the identical complete eight-code list, including nonresponse. BA0070 has nonoverlapping observed periods; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @2010-01-01..2010-12-31 where key = 'v49128'"
+fields = { "variable" = "medborgarskap-individ-ba0070" }
+evidence = "Both define the same seven citizenship groups using citizenship and the respondent's and parents' birthplaces. Both use the identical complete eight-code list, including nonresponse. BA0070 has nonoverlapping observed periods; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @2011-01-01..2011-12-31 where key = 'v49128'"
+fields = { "variable" = "medborgarskap-individ-ba0070" }
+evidence = "Both define the same seven citizenship groups using citizenship and the respondent's and parents' birthplaces. Both use the identical complete eight-code list, including nonresponse. BA0070 has nonoverlapping observed periods; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0082 @2006-01-01..2006-12-31 where key = 'v49676'"
+fields = { "variable" = "kommunstorlek-ulf" }
+evidence = "Both describe the same municipality grouping: the three largest cities, their metropolitan areas, and population bands elsewhere. Both use the identical 60-code list and hash. BA0082 occurrences do not overlap; the observed gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0082 @2008-01-01..2008-12-31 where key = 'v49676'"
+fields = { "variable" = "kommunstorlek-ulf" }
+evidence = "Both describe the same municipality grouping: the three largest cities, their metropolitan areas, and population bands elsewhere. Both use the identical 60-code list and hash. BA0082 occurrences do not overlap; the observed gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2006-01-01..2006-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2008-01-01..2008-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2009-01-01..2009-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2010-01-01..2010-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2011-01-01..2011-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2012-01-01..2012-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0250 @2013-01-01..2013-12-31 where key = 'v47942'"
+fields = { "variable" = "hade-ej-far-fosterfar" }
+evidence = "Both identify having no father or foster father during upbringing using BA0250. Documentation explicitly preserves the variable and code 1 when other codes are removed from 2008. The different code 1 labels are synonymous, and occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2006-01-01..2006-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2008-01-01..2008-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2009-01-01..2009-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2010-01-01..2010-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2011-01-01..2011-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2012-01-01..2012-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0260 @2013-01-01..2013-12-31 where key = 'v47943'"
+fields = { "variable" = "hade-ej-mor-fostermor" }
+evidence = "Both use BA0260 and code 1 for having had no mother or foster mother. The later documentation explicitly states that code 1 and the variable remain unchanged, while other codes disappear from 2008. Both use the same five-code list before that change, and their observed periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2006-01-01..2006-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2008-01-01..2008-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2009-01-01..2009-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2010-01-01..2010-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2011-01-01..2011-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2012-01-01..2012-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2013-01-01..2013-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3002 @2014-01-01..2014-12-31 where key = 'v47861'"
+fields = { "variable" = "antal-med-kod-02-i-tablan" }
+evidence = "Both count household members whose relationship code 02 or 2 means cohabiting partner, in persons. BA3002 has disjoint observed ownership periods, and the later definition confirms derivation from household relationships."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2006-01-01..2006-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2008-01-01..2008-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2009-01-01..2009-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2010-01-01..2010-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2011-01-01..2011-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2012-01-01..2012-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2013-01-01..2013-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3003 @2014-01-01..2014-12-31 where key = 'v47862'"
+fields = { "variable" = "antal-med-kod-03-i-tablan" }
+evidence = "Both count household members with relationship code 3, defined as the respondent's or partner's children, in persons. The later definition explicitly includes adopted children. BA3003 has disjoint observed periods, ending at 12784 for the earlier ledger and beginning at 13149 for the later ledger."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3014 @2006-01-01..2006-12-31 where key = 'v49740'"
+fields = { "variable" = "antal-med-kod-14-i-tablan" }
+evidence = "Both count household members with relationship code 14 in persons. Their definitions agree on foster children in 1992-1993 and other members in 1994-1995; the later definition extends the latter meaning through 2007. BA3014 observations do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3539 @2002-01-01..2002-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3539 @2003-01-01..2003-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3539 @2004-01-01..2004-12-31 where key = 'v14429'"
+fields = { "variable" = "artal-sedan-up-bott-med-person-9" }
+evidence = "Both record the calendar year since the respondent began living with household person 9. Both use BA3539 and calendar-year units in nonoverlapping observed periods. The later ledger has seven occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2006-01-01..2006-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2008-01-01..2008-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2009-01-01..2009-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2010-01-01..2010-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2011-01-01..2011-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2012-01-01..2012-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2013-01-01..2013-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2014-01-01..2014-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2015-01-01..2015-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2016-01-01..2016-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2017-01-01..2017-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2018-01-01..2018-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2019-01-01..2019-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0942 @2020-01-01..2020-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2006-01-01..2006-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2008-01-01..2008-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2009-01-01..2009-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2010-01-01..2010-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2011-01-01..2011-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2012-01-01..2012-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2013-01-01..2013-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2014-01-01..2014-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2015-01-01..2015-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2016-01-01..2016-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2017-01-01..2017-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2018-01-01..2018-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2019-01-01..2019-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: bo0990 @2020-01-01..2020-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0601 @2019-01-01..2019-12-31 where key = 'v42855'"
+fields = { "variable" = "fodelsear-barn-6" }
+evidence = "Both record the birth year of household child 6 in the childcare block for ages 0-12, measured in calendar years using GO0601. Their supplied occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0601 @2020-01-01..2020-12-31 where key = 'v42855'"
+fields = { "variable" = "fodelsear-barn-6" }
+evidence = "Both record the birth year of household child 6 in the childcare block for ages 0-12, measured in calendar years using GO0601. Their supplied occurrence periods are disjoint."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0701 @2014-01-01..2014-12-31 where key = 'v47376'"
+fields = { "variable" = "fodelsear-for-barn-nummer-7" }
+evidence = "Both record child 7's birth year through GO0701 in calendar-year units, with nonoverlapping observations. The newer documentation places this child identifier in the childcare question block."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0701 @2015-01-01..2015-12-31 where key = 'v47376'"
+fields = { "variable" = "fodelsear-for-barn-nummer-7" }
+evidence = "Both record child 7's birth year through GO0701 in calendar-year units, with nonoverlapping observations. The newer documentation places this child identifier in the childcare question block."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0701 @2017-01-01..2017-12-31 where key = 'v47376'"
+fields = { "variable" = "fodelsear-for-barn-nummer-7" }
+evidence = "Both record child 7's birth year through GO0701 in calendar-year units, with nonoverlapping observations. The newer documentation places this child identifier in the childcare question block."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: poststratum @1989-01-01..1989-12-31 where key = 'v41458'"
+fields = { "variable" = "stratum-tidsjamforelse" }
+evidence = "Both define the sampling stratum adapted for comparisons across years. The later operational definition explicitly identifies it as continuing the earlier poststratum or poststratification variable. Both are integer fields with disjoint observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: stora_n @1989-01-01..1989-12-31 where key = 'v41455'"
+fields = { "variable" = "bakgrund-berakning-antal-individer" }
+evidence = "Both measure the number of people in the sampling frame for the current stratum, in persons. Both explicitly describe population size per stratum and use stora_n in nonoverlapping observed periods. No coverage across the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut0542 @2008-01-01..2008-12-31 where key = 'v49620'"
+fields = { "variable" = "artal-examen-hogskola" }
+evidence = "Both measure the calendar year of a university or college degree, conditional on having that degree. Both use UT0542, year units and the 16+ table, with nonoverlapping observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut0542 @2009-01-01..2009-12-31 where key = 'v49620'"
+fields = { "variable" = "artal-examen-hogskola" }
+evidence = "Both measure the calendar year of a university or college degree, conditional on having that degree. Both use UT0542, year units and the 16+ table, with nonoverlapping observed periods."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2006-01-01..2006-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2008-01-01..2008-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2009-01-01..2009-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2010-01-01..2010-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2011-01-01..2011-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2012-01-01..2012-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2013-01-01..2013-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2014-01-01..2014-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2015-01-01..2015-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2016-01-01..2016-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2017-01-01..2017-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2018-01-01..2018-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2019-01-01..2019-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: zp0010 @2020-01-01..2020-12-31 where key = 'v31041'"
+fields = { "variable" = "artal-pof" }
+evidence = "Both define ZP0010 as the year in which survey information is collected, measured as a calendar year. Observations do not overlap: the earlier ledger ends at 12784 and the later first appears at 13149. No coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hb130 @2021-01-01..2021-12-31 where key = 'v11460'"
+fields = { "variable" = "insamlingsmetod" }
+evidence = "Documentation explicitly identifies 'Collection method' as the renamed 'Interview method', with HB130 and PB270 unchanged. Both use the identical complete five-code list, and HB130 occurrence periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hb130 @2024-01-01..2024-12-31 where key = 'v11460'"
+fields = { "variable" = "insamlingsmetod" }
+evidence = "Documentation explicitly identifies 'Collection method' as the renamed 'Interview method', with HB130 and PB270 unchanged. Both use the identical complete five-code list, and HB130 occurrence periods do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0942 @2021-01-01..2021-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0942 @2022-01-01..2022-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0942 @2023-01-01..2023-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0942 @2024-01-01..2024-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0942 @2025-01-01..2025-12-31 where key = 'v35773'"
+fields = { "variable" = "bo0942" }
+evidence = "Both classify whom the respondent lives with using household-roster relationships. They share the complete identical 12-code list, including parents, siblings, partners, children, and living alone. BO0942 occurrences are disjoint, with no coverage inferred across gaps."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0990 @2021-01-01..2021-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0990 @2022-01-01..2022-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0990 @2023-01-01..2023-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0990 @2024-01-01..2024-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: hhbo0990 @2025-01-01..2025-12-31 where key = 'v35767'"
+fields = { "variable" = "bo0990" }
+evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."

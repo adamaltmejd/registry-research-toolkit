@@ -1873,12 +1873,6 @@ evidence = "Källan anger värdeår för fastighetstaxering.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:y20"
-fields = { "sets" = ["lokalyta"] }
-evidence = "Periodsplitten mot total-lokalyta-y20 avser lokalarea i olika perioder; id är en ogenomskinlig källkod.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112\ncatalog:variable_text:27533:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:y20"
-fields = { "tags" = ["property"] }
-evidence = "Periodsplitten mot total-lokalyta-y20 avser lokalarea i olika perioder; id är en ogenomskinlig källkod.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112\ncatalog:variable_text:27533:13879:14245"
+subject = "privatagda-flerbostadshus: y20 @2008-01-01..2008-12-31 where key = 'v16477'"
+fields = { "variable" = "total-lokalyta-y20" }
+evidence = "Both define premises floor area in square metres. In the privately owned apartment building table, Y20 has consecutive observations [13514,13879), [13879,14245) and [14245,14610), with no overlap between these ledgers."

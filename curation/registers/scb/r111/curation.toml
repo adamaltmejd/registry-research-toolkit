@@ -973,18 +973,6 @@ evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurren
 
 [[statement]]
 kind = "set"
-subject = "var:antal-manader-som-arbetslos-f17"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:249647\ncatalog:occurrence:249716"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f17"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:249647\ncatalog:occurrence:249716"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-manader-som-arbetslos-f19"
 fields = { "sets" = ["arbetsloshetens-langd"] }
 evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249568\ncatalog:occurrence:249649\ncatalog:occurrence:249718"
@@ -8137,18 +8125,6 @@ evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-arbete-7"
-fields = { "sets" = ["nojdhet-med-arbetet"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:250193\ncatalog:occurrence:250279"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-7"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:250193\ncatalog:occurrence:250279"
-
-[[statement]]
-kind = "set"
 subject = "var:nojdhet-med-arbete-alternativ"
 fields = { "sets" = ["nojdhet-med-arbetet"] }
 evidence = "Variabeln gäller nöjdhet med arbetet.\ncatalog:variable_text:29952:17167:17348"
@@ -10021,18 +9997,6 @@ evidence = "F18 har olika ägare i observerade perioder.\ncatalog:occurrence:249
 
 [[statement]]
 kind = "set"
-subject = "var:studier-istallet-for-arbete-f20"
-fields = { "sets" = ["studier-istallet-for-arbete"] }
-evidence = "F20 har olika ägare i observerade perioder.\ncatalog:occurrence:249570\ncatalog:occurrence:249652\ncatalog:occurrence:249721"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-f20"
-fields = { "tags" = ["education", "employment"] }
-evidence = "F20 har olika ägare i observerade perioder.\ncatalog:occurrence:249570\ncatalog:occurrence:249652\ncatalog:occurrence:249721"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-istallet-for-arbete-f23"
 fields = { "sets" = ["studier-istallet-for-arbete"] }
 evidence = "F23 har olika ägare i observerade perioder.\ncatalog:occurrence:249410\ncatalog:occurrence:249573\ncatalog:occurrence:249655"
@@ -11089,18 +11053,6 @@ evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30203:12
 
 [[statement]]
 kind = "set"
-subject = "var:viljan-att-arbeta-mer-f13"
-fields = { "sets" = ["vilja-att-arbeta-mer"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:249474\ncatalog:occurrence:249500\ncatalog:occurrence:249552"
-
-[[statement]]
-kind = "set"
-subject = "var:viljan-att-arbeta-mer-f13"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:249474\ncatalog:occurrence:249500\ncatalog:occurrence:249552"
-
-[[statement]]
-kind = "set"
 subject = "var:viljan-att-arbeta-mer-f15"
 fields = { "sets" = ["vilja-att-arbeta-mer"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:249385\ncatalog:occurrence:249502"
@@ -11302,3 +11254,27 @@ kind = "set"
 subject = "hogskolestuderande: F20 @2021-01-01..2021-06-30 where key = 'v5242'"
 fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
 evidence = "Frågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f13 @2014-04-01..2014-04-30 where key = 'v5120'"
+fields = { "variable" = "viljan-att-arbeta-mer-f15" }
+evidence = "Both measure desired working hours under selector v5120 in nonoverlapping periods. Every complete historical list agrees on substantive codes: 1 more hours, 2 current hours appropriate, 3 fewer hours. List differences concern additional nonresponse categories."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f17 @2023-01-01..2023-06-30 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Both measure total unemployment since leaving upper-secondary school in nonoverlapping periods [17167,17348) and [19358,19539). Both use the same complete code list: at most one month, 2–6 months, 7–12 months and over one year."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f20 @2020-01-01..2020-06-30 where key = 'v5046'"
+fields = { "variable" = "studier-istallet-for-arbete-f17" }
+evidence = "Both ask whether the respondent ever chose study because they could not obtain work after leaving upper-secondary school. Periods [16161,16191) and [18262,18444) do not overlap, and both use the identical complete code list with codes 0, 1, 2 and 88."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: f31 @2010-03-01..2010-03-31 where key = 'v5215'"
+fields = { "variable" = "nojdhet-med-arbete-6" }
+evidence = "Both measure job satisfaction in the higher-education-graduate table during nonoverlapping periods [13208,13239) and [14669,14700). Codes 1–4 retain very satisfied through very dissatisfied; differences concern skip and nonresponse entries."

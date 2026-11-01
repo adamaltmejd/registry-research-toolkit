@@ -145,18 +145,6 @@ evidence = "F07b_txt är en ogenomskinlig källkod; samma etikett förekommer f�
 
 [[statement]]
 kind = "set"
-subject = "var:f07c"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54581\ncatalog:occurrence:54594"
-
-[[statement]]
-kind = "set"
-subject = "var:f07c"
-fields = { "tags" = ["energy"] }
-evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54581\ncatalog:occurrence:54594"
-
-[[statement]]
-kind = "set"
 subject = "var:f09a"
 fields = { "sets" = [] }
 evidence = "F09a är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7337:14975:16071"
@@ -262,3 +250,9 @@ kind = "set"
 subject = "var:minst-tre-manader-pa-adress"
 fields = { "tags" = ["housing"] }
 evidence = "Variabeln beskriver boendetid på nuvarande adress.\ncatalog:variable_text:7345:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "elavtal-omforhandling-byten: f07c @2013-01-01..2013-12-31 where key = 'v16775'"
+fields = { "variable" = "f07b" }
+evidence = "Both define 'Reason for switching electricity supplier' and use selector v16775 in the same register and table. Their periods [14975,15706) and [15706,16071) are adjacent without overlap. Codes 1–3 mean lower price, environmental reasons, and another reason. Both use the identical complete code list 3401 immediately across the column change from F07b to F07c."

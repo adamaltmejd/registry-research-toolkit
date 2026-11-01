@@ -3049,18 +3049,6 @@ evidence = "Årshyra och årsavgift är bostadsutgifter.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:inflyttningsar"
-fields = { "sets" = ["invandringsar"] }
-evidence = "Samma källkolumn har olika ägare mellan perioder och motpartens definition saknas i packet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0125: Ingen vald variabel anger invandringsår. membership-0126: Båda beskrivningarna anger senaste inflyttning eller invandring till Sverige. Den uttryckliga Sverigekopplingen stöder medlemskap även om id-relationen är olöst. membership-0127: Senaste invandringsår för referensperson och sammanboende omfattas.\ncatalog:occurrence:97070\ncatalog:occurrence:97215\ncatalog:variable_text:11217:7305:7670\ncatalog:variable_text:11273:0:365\ncatalog:variable_text:11344:7305:7670\ncatalog:variable_text:11352:7305:7670\ncatalog:variable_text:11360:7305:7670\ncatalog:variable_text:11370:7305:7670\ncatalog:variable_text:11387:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:inflyttningsar"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har olika ägare mellan perioder och motpartens definition saknas i packet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0125: Ingen vald variabel anger invandringsår. membership-0126: Båda beskrivningarna anger senaste inflyttning eller invandring till Sverige. Den uttryckliga Sverigekopplingen stöder medlemskap även om id-relationen är olöst. membership-0127: Senaste invandringsår för referensperson och sammanboende omfattas.\ncatalog:occurrence:97070\ncatalog:occurrence:97215\ncatalog:variable_text:11217:7305:7670\ncatalog:variable_text:11273:0:365\ncatalog:variable_text:11344:7305:7670\ncatalog:variable_text:11352:7305:7670\ncatalog:variable_text:11360:7305:7670\ncatalog:variable_text:11370:7305:7670\ncatalog:variable_text:11387:7305:7670"
-
-[[statement]]
-kind = "set"
 subject = "var:isolering"
 fields = { "sets" = [] }
 evidence = "Isolering är en byggnadsegenskap.\ncatalog:variable_text:11274:3652:4018"
@@ -5188,3 +5176,21 @@ kind = "set"
 subject = "lagenhet-och-hushall: UppvEl @1985-01-01..1985-12-31 where key = 'v42514'"
 fields = { "description" = "Anger om el används för uppvärmning i huset." }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:97342\ncatalog:variable_text:11438:5479:5844"
+
+[[statement]]
+kind = "set"
+subject = "individ: husnr @1980-01-01..1980-12-31 where key = 'v42532'"
+fields = { "variable" = "husnr" }
+evidence = "Both definitions specify sequential numbering of buildings or houses within a property. Both use character column HusNr in the individual and dwelling-and-household tables. Building number occurs in [3652,4018), between nonoverlapping house-number observations in [1826,2191) and [5479,5844)."
+
+[[statement]]
+kind = "set"
+subject = "individ: seninvar @1970-01-01..1970-12-31 where key = 'v41508'"
+fields = { "variable" = "senaste-invandringsar" }
+evidence = "Both definitions specify the year of most recent immigration to Sweden. Both use the character column SenInvAr in the individual table, with nonoverlapping observations in [0,365) and [3652,4018), [5479,5844), [7305,7670)."
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: husnr @1980-01-01..1980-12-31 where key = 'v42532'"
+fields = { "variable" = "husnr" }
+evidence = "Both definitions specify sequential numbering of buildings or houses within a property. Both use character column HusNr in the individual and dwelling-and-household tables. Building number occurs in [3652,4018), between nonoverlapping house-number observations in [1826,2191) and [5479,5844)."

@@ -85,42 +85,6 @@ evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har ol
 
 [[statement]]
 kind = "set"
-subject = "var:aktier-utlandska-noterade-omv"
-fields = { "sets" = ["utlandska-aktier-och-andelar"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40742\ncatalog:occurrence:40906\ncatalog:variable_text:5881:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-noterade-omv"
-fields = { "tags" = ["finance"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40742\ncatalog:occurrence:40906\ncatalog:variable_text:5881:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-noterade-stallning"
-fields = { "sets" = ["utlandska-aktier-och-andelar"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40794\ncatalog:occurrence:40963\ncatalog:variable_text:5882:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-noterade-stallning"
-fields = { "tags" = ["finance"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40794\ncatalog:occurrence:40963\ncatalog:variable_text:5882:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-noterade-trans"
-fields = { "sets" = ["utlandska-aktier-och-andelar"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40844\ncatalog:occurrence:41019\ncatalog:variable_text:5883:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-noterade-trans"
-fields = { "tags" = ["finance"] }
-evidence = "Samma noterade aktier är uppdelade mellan perioder; grupp och tagg beskriver innehavet.\ncatalog:occurrence:40844\ncatalog:occurrence:41019\ncatalog:variable_text:5883:14610:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:aktier-utlandska-onoterade-omv"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Den tidigare posten omfattar övriga utländska aktier och andelar, medan denna avser onoterade aktier.\ncatalog:occurrence:40743\ncatalog:occurrence:40907\ncatalog:variable_text:5884:14610:15340"
@@ -1630,18 +1594,6 @@ kind = "set"
 subject = "var:ovriga-svenska-aktier-trans"
 fields = { "tags" = ["finance"] }
 evidence = "Äldre övriga aktier och andelar och senare onoterade aktier har olika angiven omfattning.\ncatalog:occurrence:40842\ncatalog:occurrence:41017"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-svenska-aktier-utlandet-trans"
-fields = { "sets" = ["svenska-aktier-och-andelar"] }
-evidence = "Samma utlandsdel som scb/bast/ovriga-sv-aktier-utlandet-trans i efterföljande period.\ncatalog:occurrence:38633\ncatalog:occurrence:38807"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-svenska-aktier-utlandet-trans"
-fields = { "tags" = ["finance"] }
-evidence = "Samma utlandsdel som scb/bast/ovriga-sv-aktier-utlandet-trans i efterföljande period.\ncatalog:occurrence:38633\ncatalog:occurrence:38807"
 
 [[statement]]
 kind = "set"
@@ -3334,3 +3286,45 @@ kind = "set"
 subject = "foretagens-kortperiodiska-tillgangar-och-skulder: StallnRad501 @2011-01-01..2011-12-31 where key = 'v21301'"
 fields = { "description" = "Aktiekapital, därav återköp av egna aktier, ställning aktuellt kvartal." }
 evidence = "Definitionen beskriver förändringar men etiketten anger ställningen för aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: omvrad32 @2010-01-01..2010-12-31 where key = 'v21288'"
+fields = { "variable" = "utlandska-noterade-aktier-omv" }
+evidence = "Both measure quarterly revaluation of foreign listed-share holdings in KSEK. The market-value definition agrees with price and currency changes. OmvRad32 has adjacent periods [10957,14610) and [14610,15340)."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: omvrad32 @2011-01-01..2011-12-31 where key = 'v21288'"
+fields = { "variable" = "utlandska-noterade-aktier-omv" }
+evidence = "Both measure quarterly revaluation of foreign listed-share holdings in KSEK. The market-value definition agrees with price and currency changes. OmvRad32 has adjacent periods [10957,14610) and [14610,15340)."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: stallnrad32 @2010-01-01..2010-12-31 where key = 'v21286'"
+fields = { "variable" = "utlandska-noterade-aktier-stallning" }
+evidence = "Both measure current-quarter holdings of foreign listed shares in KSEK. The later definition specifies companies domiciled outside Sweden and listed on Swedish or foreign markets. StallnRad32 has adjacent periods [10957,14610) and [14610,15340)."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: stallnrad32 @2011-01-01..2011-12-31 where key = 'v21286'"
+fields = { "variable" = "utlandska-noterade-aktier-stallning" }
+evidence = "Both measure current-quarter holdings of foreign listed shares in KSEK. The later definition specifies companies domiciled outside Sweden and listed on Swedish or foreign markets. StallnRad32 has adjacent periods [10957,14610) and [14610,15340)."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: transrad312 @1997-01-01..1997-12-31 where key = 'v24752'"
+fields = { "variable" = "ovriga-sv-aktier-utlandet-trans" }
+evidence = "Both describe transactions in other Swedish shares and participations where the counterparty has a foreign address, in KSEK. TransRad312 has adjacent nonoverlapping periods [9862,10227) and [10227,11688); the label difference abbreviates Swedish."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: transrad32 @2010-01-01..2010-12-31 where key = 'v21287'"
+fields = { "variable" = "utlandska-noterade-aktier-trans" }
+evidence = "Both measure quarterly transactions in foreign listed shares, in thousands of SEK, on TransRad32. Their periods [10957,14610) and [14610,15340) are adjacent and nonoverlapping. The earlier definition specifies market value; the later definition describes net purchases and sales, including subscriptions, redemptions and shareholder contributions."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: transrad32 @2011-01-01..2011-12-31 where key = 'v21287'"
+fields = { "variable" = "utlandska-noterade-aktier-trans" }
+evidence = "Both measure quarterly transactions in foreign listed shares, in thousands of SEK, on TransRad32. Their periods [10957,14610) and [14610,15340) are adjacent and nonoverlapping. The earlier definition specifies market value; the later definition describes net purchases and sales, including subscriptions, redemptions and shareholder contributions."

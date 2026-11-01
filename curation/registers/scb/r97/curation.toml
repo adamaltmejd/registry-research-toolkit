@@ -1633,18 +1633,6 @@ evidence = "Samlingsbeloppet omfattar båda avdragsbegreppen.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:allmanna-avdrag-samt-forlustavdrag-aallmfl"
-fields = { "sets" = [] }
-evidence = "Samma samlade avdragsbegrepp är uppdelat mellan perioder.\ncatalog:occurrence:218895\ncatalog:occurrence:219306"
-
-[[statement]]
-kind = "set"
-subject = "var:allmanna-avdrag-samt-forlustavdrag-aallmfl"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma samlade avdragsbegrepp är uppdelat mellan perioder.\ncatalog:occurrence:218895\ncatalog:occurrence:219306"
-
-[[statement]]
-kind = "set"
 subject = "var:allmanna-avdrag-statligt"
 fields = { "sets" = ["allmanna-avdrag"] }
 evidence = "Statliga allmänna avdrag är en avdragsvariant.\ncatalog:variable_text:23699:1826:2191"
@@ -2173,18 +2161,6 @@ evidence = "Samma källkolumn har överlappande ägare med olika åldersavgräns
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-under-22"
-fields = { "sets" = ["antal-barn"] }
-evidence = "Perioddelad kolumn med osäker populationsavgränsning.\ncatalog:occurrence:227352\ncatalog:occurrence:228059"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-under-22"
-fields = { "tags" = ["family-household"] }
-evidence = "Perioddelad kolumn med osäker populationsavgränsning.\ncatalog:occurrence:227352\ncatalog:occurrence:228059"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-barn-under-22-ar"
 fields = { "sets" = ["antal-barn"] }
 evidence = "Perioddelad kolumn med osäker populationsavgränsning.\ncatalog:occurrence:227352\ncatalog:occurrence:228059"
@@ -2326,30 +2302,6 @@ kind = "set"
 subject = "var:antal-manader-med-socialbidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Mottagningsmånader ingår i ekonomiskt bistånd.\ncatalog:variable_text:23755:12418:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-objekt-i-ram"
-fields = { "sets" = ["populationsstorlek"] }
-evidence = "Samma ramsizebegrepp är uppdelat i icke överlappande perioder med scb/hek/stora-n-per-stratum.\ncatalog:occurrence:220903\ncatalog:occurrence:221476"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-objekt-i-ram"
-fields = { "tags" = ["methods"] }
-evidence = "Samma ramsizebegrepp är uppdelat i icke överlappande perioder med scb/hek/stora-n-per-stratum.\ncatalog:occurrence:220903\ncatalog:occurrence:221476"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-objekt-i-urval"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:219360\ncatalog:occurrence:219361\ncatalog:occurrence:221417\ncatalog:occurrence:221418"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-objekt-i-urval"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:219360\ncatalog:occurrence:219361\ncatalog:occurrence:221417\ncatalog:occurrence:221418"
 
 [[statement]]
 kind = "set"
@@ -7210,18 +7162,6 @@ kind = "set"
 subject = "var:bostadsratt-overlaten-del"
 fields = { "tags" = ["property"] }
 evidence = "Variabeln avser överlåtelse av bostadsrätt.\ncatalog:variable_text:24173:12418:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsratt-typ-av-overlatelse"
-fields = { "sets" = [] }
-evidence = "Katalogen visar en perioddelning mot en annan variabel med samma källkolumn.\ncatalog:occurrence:219323\ncatalog:occurrence:221316"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsratt-typ-av-overlatelse"
-fields = { "tags" = ["property"] }
-evidence = "Katalogen visar en perioddelning mot en annan variabel med samma källkolumn.\ncatalog:occurrence:219323\ncatalog:occurrence:221316"
 
 [[statement]]
 kind = "set"
@@ -16606,18 +16546,6 @@ kind = "set"
 subject = "var:langvarigt-sjuk-utvecklingsstorning"
 fields = { "tags" = ["disability"] }
 evidence = "Typ av funktionsnedsättning.\ncatalog:variable_text:24970:14245:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:227470\ncatalog:occurrence:227471\ncatalog:occurrence:228168\ncatalog:occurrence:228169"
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:227470\ncatalog:occurrence:227471\ncatalog:occurrence:228168\ncatalog:occurrence:228169"
 
 [[statement]]
 kind = "set"
@@ -27250,3 +27178,195 @@ kind = "set"
 subject = "individregister: WIVARDNADU @2010-01-01..2010-12-31 where key = 'v25720'"
 fields = { "description" = "Årsbeloppet för hushållets vårdnadsbidrag, lika uppdelat mellan föräldrarna under undersökningsåret." }
 evidence = "Den operativa definitionen anger en lika uppdelning, inte observerat mottagande per förälder.\ncatalog:variable_text:25704:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "individregister: aallmfl @1996-01-01..1996-12-31 where key = 'v43182'"
+fields = { "variable" = "aallmfl" }
+evidence = "The earlier operational definition and later label both specify general deductions plus loss deductions. Both use AALLMFL in the individual table and SEK; their supplied observations are disjoint, with the intervening gap retained."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bant22 @2012-01-01..2012-12-31 where key = 'v4632'"
+fields = { "variable" = "antal-barn-under-22-ar" }
+evidence = "Both measure the number of children under 22; the earlier definition specifies resident children aged 0-21. BANT22 changes mapping at day 15340 in the individual table, with child-count units on both sides and no overlap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bant22 @2013-01-01..2013-12-31 where key = 'v4632'"
+fields = { "variable" = "antal-barn-under-22-ar" }
+evidence = "Both measure the number of children under 22; the earlier definition specifies resident children aged 0-21. BANT22 changes mapping at day 15340 in the individual table, with child-count units on both sides and no overlap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bbstyp @1996-01-01..1996-12-31 where key = 'v3212'"
+fields = { "variable" = "typ-overlatelse-arv-gava" }
+evidence = "Both describe transfer type in individual-table column BBSTYP and use the identical complete two-code list: 0 for other cases and 1 for inheritance, gift, property division and similar transfers. Observed periods [9496,9862) and [12418,16071) do not overlap; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @1996-01-01..1996-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @1997-01-01..1997-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @1998-01-01..1998-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @1999-01-01..1999-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @2000-01-01..2000-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @2003-01-01..2003-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @2011-01-01..2011-12-31 where key = 'v3573'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @2012-01-01..2012-12-31 where key = 'v3573'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blillan @2013-01-01..2013-12-31 where key = 'v3573'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @1975-01-01..1975-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @1996-01-01..1996-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @1997-01-01..1997-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @1998-01-01..1998-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @1999-01-01..1999-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @2000-01-01..2000-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bstoran @2003-01-01..2003-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @1996-01-01..1996-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @1997-01-01..1997-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @1998-01-01..1998-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @1999-01-01..1999-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @2000-01-01..2000-12-31 where key = 'v24445'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @2012-01-01..2012-12-31 where key = 'v3573'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blillan @2013-01-01..2013-12-31 where key = 'v3573'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: bstoran @1996-01-01..1996-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: bstoran @1997-01-01..1997-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: bstoran @1998-01-01..1998-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: bstoran @1999-01-01..1999-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: bstoran @2000-01-01..2000-12-31 where key = 'v24444'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."

@@ -859,18 +859,6 @@ evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:inkopsvarde-av-el-varde"
-fields = { "sets" = ["inkopsvarde-av-el"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopsvarde-av-el-varde"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
-
-[[statement]]
-kind = "set"
 subject = "var:inkopsvarde-av-elenergi"
 fields = { "sets" = ["inkopsvarde-av-el"] }
 evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
@@ -1228,3 +1216,51 @@ kind = "set"
 subject = "var:vilken-postort-har-redovisningsenheten-postort"
 fields = { "tags" = ["geography"] }
 evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: komm @2006-01-01..2006-12-31 where key = 'v16420'"
+fields = { "variable" = "kommentar-uppgiftslamnare" }
+evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: komm @2007-01-01..2007-12-31 where key = 'v16420'"
+fields = { "variable" = "kommentar-uppgiftslamnare" }
+evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: komm @2008-01-01..2008-12-31 where key = 'v16420'"
+fields = { "variable" = "kommentar-uppgiftslamnare" }
+evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: komm @2009-01-01..2009-12-31 where key = 'v16420'"
+fields = { "variable" = "kommentar-uppgiftslamnare" }
+evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: komm @2010-01-01..2010-12-31 where key = 'v16420'"
+fields = { "variable" = "kommentar-uppgiftslamnare" }
+evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde @2006-01-01..2006-12-31 where key = 'v16432'"
+fields = { "variable" = "inkopsvarde-av-elenergi" }
+evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde @2007-01-01..2007-12-31 where key = 'v16432'"
+fields = { "variable" = "inkopsvarde-av-elenergi" }
+evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde @2008-01-01..2008-12-31 where key = 'v16432'"
+fields = { "variable" = "inkopsvarde-av-elenergi" }
+evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."

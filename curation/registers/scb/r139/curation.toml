@@ -850,18 +850,6 @@ evidence = "Samma detaljerade bränslebeskrivning som scb/branslestatistik/text1
 
 [[statement]]
 kind = "set"
-subject = "var:text1-2581"
-fields = { "sets" = ["bransleslag"] }
-evidence = "Suffixet 2581 finns inte i källkolumnen Text1; samma detaljerade bränslebeskrivning som motparten är uppdelad i observerade icke överlappande perioder.\ncatalog:occurrence:44585\ncatalog:occurrence:44778\ncatalog:variable_text:6379:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:text1-2581"
-fields = { "tags" = ["energy"] }
-evidence = "Suffixet 2581 finns inte i källkolumnen Text1; samma detaljerade bränslebeskrivning som motparten är uppdelad i observerade icke överlappande perioder.\ncatalog:occurrence:44585\ncatalog:occurrence:44778\ncatalog:variable_text:6379:18262:20454"
-
-[[statement]]
-kind = "set"
 subject = "var:upprakningsfaktor"
 fields = { "sets" = [] }
 evidence = "Uppräkningsfaktor för statistiska totalsummor.\ncatalog:variable_text:6380:16071:20454"
@@ -1141,3 +1129,45 @@ kind = "set"
 subject = "varmeverkens-energi: Lagerin @2025-01-01..2025-12-31 where key = 'v2936'"
 fields = { "description" = "Mängd av respektive bränsle i lager vid kvartalets ingång." }
 evidence = "Definitionen anger lagervärde, men källan mäter bränslemängd vid kvartalets ingång.\ncatalog:variable_text:6351:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: text1 @2012-01-01..2012-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2020-01-01..2020-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2021-01-01..2021-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2022-01-01..2022-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2023-01-01..2023-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2024-01-01..2024-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text1 @2025-01-01..2025-12-31 where key = 'v2581'"
+fields = { "variable" = "text1" }
+evidence = "Both describe detailed fuel names in the same register: the earlier definition specifies a detailed fuel name, and the later definition specifies a more detailed fuel description. Industrial fuel consumption assigns Text1 to the earlier ledger during [15340,15706) and the later ledger from 17167, without overlap. The intervening gap remains unobserved."

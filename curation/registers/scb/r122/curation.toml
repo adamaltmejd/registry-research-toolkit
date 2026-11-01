@@ -2006,7 +2006,7 @@ evidence = "Identitetsfaktumet kopplar samma källkolumn till två andra variabl
 [[statement]]
 kind = "set"
 subject = "var:alsni92"
-fields = { "tags" = ["employment"] }
+fields = { "tags" = ["business", "employment"] }
 evidence = "Identitetsfaktumet kopplar samma källkolumn till två andra variabler. Näringsgren hör till kandidatgruppen.\ncatalog:occurrence:2876\ncatalog:occurrence:3021\ncatalog:occurrence:4258\ncatalog:occurrence:4422\ncatalog:variable_text:1481:7670:10957"
 
 [[statement]]
@@ -2584,18 +2584,6 @@ kind = "set"
 subject = "var:arbenamn"
 fields = { "tags" = ["employment"] }
 evidence = "Uppgiften avser arbetsplatsens namn; ingen kandidatgrupp omfattar namn.\ncatalog:variable_text:1529:13514:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetar-lordagar-i-huvudsysslan"
-fields = { "sets" = ["lordagsarbete"] }
-evidence = "Samma kolumn har angränsande ägare med olika etiketter.\ncatalog:occurrence:5589\ncatalog:occurrence:6114"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetar-lordagar-i-huvudsysslan"
-fields = { "tags" = ["employment"] }
-evidence = "Samma kolumn har angränsande ägare med olika etiketter.\ncatalog:occurrence:5589\ncatalog:occurrence:6114"
 
 [[statement]]
 kind = "set"
@@ -11875,18 +11863,6 @@ evidence = "Källan anger samma näringsgrensbegrepp med en efterföljande perio
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-i-senaste-arbete-sni92"
-fields = { "sets" = [] }
-evidence = "Källan anger samma näringsgrensbegrepp med en efterföljande period hos scb/aku/alsni92.\ncatalog:occurrence:2876\ncatalog:occurrence:3021\ncatalog:variable_text:2325:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-i-senaste-arbete-sni92"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger samma näringsgrensbegrepp med en efterföljande period hos scb/aku/alsni92.\ncatalog:occurrence:2876\ncatalog:occurrence:3021\ncatalog:variable_text:2325:7305:7670"
-
-[[statement]]
-kind = "set"
 subject = "var:nattarbete-huvudsysslan"
 fields = { "sets" = ["nattarbete"] }
 evidence = "Frågan gäller nattarbete.\ncatalog:variable_text:2326:12874:18628"
@@ -16936,3 +16912,33 @@ kind = "set"
 subject = "var:yrkesstallning-senaste-uarb"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:2761:12874:18628\ncatalog:variable_text:2761:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: alsni92 @1987-01-01..1987-12-31 where key = 'v19441'"
+fields = { "variable" = "alsni92" }
+evidence = "Both measure last-job industry under SNI92, using responses coded to SNI69 and probabilistically linked to SNI92. They share the identical complete code-list hash and occupy adjacent periods [6209,7670) and [7670,10957)."
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: alsni92 @1988-01-01..1988-12-31 where key = 'v19441'"
+fields = { "variable" = "alsni92" }
+evidence = "Both measure last-job industry under SNI92, using responses coded to SNI69 and probabilistically linked to SNI92. They share the identical complete code-list hash and occupy adjacent periods [6209,7670) and [7670,10957)."
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: alsni92 @1989-01-01..1989-12-31 where key = 'v19441'"
+fields = { "variable" = "alsni92" }
+evidence = "Both measure last-job industry under SNI92, using responses coded to SNI69 and probabilistically linked to SNI92. They share the identical complete code-list hash and occupy adjacent periods [6209,7670) and [7670,10957)."
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: alsni92 @1990-01-01..1990-12-31 where key = 'v19441'"
+fields = { "variable" = "alsni92" }
+evidence = "Both measure last-job industry under SNI92, using responses coded to SNI69 and probabilistically linked to SNI92. They share the identical complete code-list hash and occupy adjacent periods [6209,7670) and [7670,10957)."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: huarblorok @2005-04-01..2005-12-31 where key = 'v31238'"
+fields = { "variable" = "huarblorok" }
+evidence = "Both definitions ask about an agreement with the employer to work certain Saturdays in the main job. They use the identical complete yes/no code list and occupy adjacent periods [12874,13149) and [13149,13879)."
