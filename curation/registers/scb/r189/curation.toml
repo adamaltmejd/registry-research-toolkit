@@ -471,25 +471,25 @@ evidence = "Årskurs anger utbildningsnivå.\ncatalog:variable_text:21651:10043:
 
 [[statement]]
 kind = "set"
-subject = "var:beh-ehs"
+subject = "var:behorighet-ekonomi-humanistiska-samhallsvetenskapsprogram"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Förkortningen EHS är en bokstavskod. Källkolumnen behövs för att skilja den från andra variabler med samma etikett.\ncatalog:occurrence-locators:variable:21652\ncatalog:variable_text:21652:18078:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-ehs"
+subject = "var:behorighet-ekonomi-humanistiska-samhallsvetenskapsprogram"
 fields = { "tags" = ["education"] }
 evidence = "Förkortningen EHS är en bokstavskod. Källkolumnen behövs för att skilja den från andra variabler med samma etikett.\ncatalog:occurrence-locators:variable:21652\ncatalog:variable_text:21652:18078:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-est"
+subject = "var:behorighet-estetiska-program"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21653\ncatalog:variable_text:21653:18078:20270\nregisters/scb/r189/curation.toml:106"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-est"
+subject = "var:behorighet-estetiska-program"
 fields = { "tags" = ["education"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21653\ncatalog:variable_text:21653:18078:20270\nregisters/scb/r189/curation.toml:106"
 
@@ -507,25 +507,25 @@ evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömni
 
 [[statement]]
 kind = "set"
-subject = "var:beh-impro"
+subject = "var:behorighet-programinriktade-individuella-val"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21655\ncatalog:variable_text:21655:18078:20270\nregisters/scb/r189/curation.toml:136"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-impro"
+subject = "var:behorighet-programinriktade-individuella-val"
 fields = { "tags" = ["education"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21655\ncatalog:variable_text:21655:18078:20270\nregisters/scb/r189/curation.toml:136"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-nt"
+subject = "var:behorighet-naturvetenskapsprogram-teknikprogram"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "NT är en bokstavskod. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21656\ncatalog:variable_text:21656:18078:20270\nregisters/scb/r189/curation.toml:112"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-nt"
+subject = "var:behorighet-naturvetenskapsprogram-teknikprogram"
 fields = { "tags" = ["education"] }
 evidence = "NT är en bokstavskod. Källkolumnen behövs för att skilja etiketten från andra variabler.\ncatalog:occurrence-locators:variable:21656\ncatalog:variable_text:21656:18078:20270\nregisters/scb/r189/curation.toml:112"
 
@@ -783,25 +783,25 @@ evidence = "Variabeln är ett ämnesbetyg.\ncatalog:variable_text:21677:10043:20
 
 [[statement]]
 kind = "set"
-subject = "var:ena"
+subject = "var:betyg-allman-engelska"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Ena är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21678:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:ena"
+subject = "var:betyg-allman-engelska"
 fields = { "tags" = ["education"] }
 evidence = "Ena är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21678:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:ens"
+subject = "var:betyg-sarskild-engelska"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Ens är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21679:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:ens"
+subject = "var:betyg-sarskild-engelska"
 fields = { "tags" = ["education"] }
 evidence = "Ens är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21679:6390:10043"
 
@@ -1107,25 +1107,25 @@ evidence = "Variabeln är ett ämnesbetyg.\ncatalog:variable_text:21706:10043:20
 
 [[statement]]
 kind = "set"
-subject = "var:maa"
+subject = "var:betyg-allman-matematik"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Maa är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21707:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:maa"
+subject = "var:betyg-allman-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Maa är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21707:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:mas"
+subject = "var:betyg-sarskild-matematik"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Mas är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21708:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:mas"
+subject = "var:betyg-sarskild-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Mas är en källkod med en enbokstavsvariant; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21708:6390:10043"
 
@@ -1191,25 +1191,25 @@ evidence = "Suffixet 2 är en tillagd räknare och finns inte i källkolumnen; e
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:betyg-modersmal"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Ml är en opak källkod för modersmål.\ncatalog:variable_text:21714:10043:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:betyg-modersmal"
 fields = { "tags" = ["education"] }
 evidence = "Ml är en opak källkod för modersmål.\ncatalog:variable_text:21714:10043:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:sprak-modersmal"
 fields = { "sets" = ["sprakamne"] }
 evidence = "ML är en källmnemonik som saknas i etiketten.\ncatalog:variable_text:21715:10043:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:sprak-modersmal"
 fields = { "tags" = ["education"] }
 evidence = "ML är en källmnemonik som saknas i etiketten.\ncatalog:variable_text:21715:10043:20270"
 

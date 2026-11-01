@@ -481,37 +481,37 @@ evidence = "P och SG är opaka bokstavskoder.\ncatalog:variable_text:21620:18809
 
 [[statement]]
 kind = "set"
-subject = "var:po"
+subject = "var:produktionsomrade-8-2007-2013"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21621:15522:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:po"
+subject = "var:produktionsomrade-8-2007-2013"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21621:15522:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21622:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21622:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-fran-2016"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21623:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-fran-2016"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21623:18809:19174"
 

@@ -495,49 +495,49 @@ evidence = "Ma och PR är koder; etiketten anger provresultatet.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f1-poang"
+subject = "var:poang-delprov-matematik-positionssystemet"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer F1 från andra delprov med samma etikett.\ncatalog:variable_text:21972:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f1-poang"
+subject = "var:poang-delprov-matematik-positionssystemet"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer F1 från andra delprov med samma etikett.\ncatalog:variable_text:21972:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f1-pr"
+subject = "var:resultat-delprov-matematik-positionssystemet"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer F1 från andra delprov med samma etikett.\ncatalog:variable_text:21973:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f1-pr"
+subject = "var:resultat-delprov-matematik-positionssystemet"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer F1 från andra delprov med samma etikett.\ncatalog:variable_text:21973:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f2-poang"
+subject = "var:poang-delprov-matematik-skriftliga-raknemetoder"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer F2 från andra delprov med samma etikett.\ncatalog:variable_text:21974:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f2-poang"
+subject = "var:poang-delprov-matematik-skriftliga-raknemetoder"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer F2 från andra delprov med samma etikett.\ncatalog:variable_text:21974:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f2-pr"
+subject = "var:resultat-delprov-matematik-skriftliga-raknemetoder"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer F2 från andra delprov med samma etikett.\ncatalog:variable_text:21975:17897:18078"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-f2-pr"
+subject = "var:resultat-delprov-matematik-skriftliga-raknemetoder"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer F2 från andra delprov med samma etikett.\ncatalog:variable_text:21975:17897:18078"
 
@@ -567,49 +567,49 @@ evidence = "Ma och PR är koder; etiketten anger provresultatet.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g1-poang"
+subject = "var:poang-delprov-matematik-tal-brakform"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer G1 från andra delprov med samma etikett.\ncatalog:variable_text:21978:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g1-poang"
+subject = "var:poang-delprov-matematik-tal-brakform"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer G1 från andra delprov med samma etikett.\ncatalog:variable_text:21978:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g1-pr"
+subject = "var:resultat-delprov-matematik-tal-brakform"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer G1 från andra delprov med samma etikett.\ncatalog:variable_text:21979:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g1-pr"
+subject = "var:resultat-delprov-matematik-tal-brakform"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer G1 från andra delprov med samma etikett.\ncatalog:variable_text:21979:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g2-poang"
+subject = "var:poang-delprov-matematik-enkla-problem"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer G2 från andra delprov med samma etikett.\ncatalog:variable_text:21980:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g2-poang"
+subject = "var:poang-delprov-matematik-enkla-problem"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod; källkolumnen skiljer G2 från andra delprov med samma etikett.\ncatalog:variable_text:21980:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g2-pr"
+subject = "var:resultat-delprov-matematik-huvudrakning"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer G2 från andra delprov med samma etikett.\ncatalog:variable_text:21981:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g2-pr"
+subject = "var:resultat-delprov-matematik-huvudrakning"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PR är koder; källkolumnen skiljer G2 från andra delprov med samma etikett.\ncatalog:variable_text:21981:20089:20270"
 

@@ -2130,13 +2130,13 @@ evidence = "Tillfällig legitimationsperiods slut.\ncatalog:variable_text:56885:
 
 [[statement]]
 kind = "set"
-subject = "var:tmgrpnamn"
+subject = "var:examen-grov-gruppering-klartext"
 fields = { "sets" = ["examen"] }
 evidence = "TMGRP är en ogenomskinlig källkod.\ncatalog:variable_text:56886:9131:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:tmgrpnamn"
+subject = "var:examen-grov-gruppering-klartext"
 fields = { "tags" = ["education"] }
 evidence = "TMGRP är en ogenomskinlig källkod.\ncatalog:variable_text:56886:9131:2932897"
 

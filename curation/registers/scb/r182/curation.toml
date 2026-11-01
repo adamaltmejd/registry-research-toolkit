@@ -10468,13 +10468,13 @@ evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:136777\nc
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-administration-vid-sidan-av-egen-forskning-undervisning-f35upp"
+subject = "var:uppraknad-andel-administrationstid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13129:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-administration-vid-sidan-av-egen-forskning-undervisning-f35upp"
+subject = "var:uppraknad-andel-administrationstid-av-arbetstid"
 fields = { "tags" = ["employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13129:17167:17532"
 
@@ -10552,13 +10552,13 @@ evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:136440\n
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-expert-och-fortroendeuppdrag-inom-ramen-for-anstallningen-befattningen-f36upp"
+subject = "var:uppraknad-andel-expert-fortroendeuppdragstid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13136:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-expert-och-fortroendeuppdrag-inom-ramen-for-anstallningen-befattningen-f36upp"
+subject = "var:uppraknad-andel-expert-fortroendeuppdragstid-av-arbetstid"
 fields = { "tags" = ["employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13136:17167:17532"
 
@@ -10636,13 +10636,13 @@ evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:136440\n
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-utbildning-kurser-inom-den-egna-forskarutbildningen-f34upp"
+subject = "var:uppraknad-andel-egen-forskarutbildningstid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13143:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-arbetstid-som-agnades-at-utbildning-kurser-inom-den-egna-forskarutbildningen-f34upp"
+subject = "var:uppraknad-andel-egen-forskarutbildningstid-av-arbetstid"
 fields = { "tags" = ["employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:13143:17167:17532"
 
@@ -11116,13 +11116,13 @@ evidence = "Samma källkolumn har olika mängd och enhet i den senare perioden.\
 
 [[statement]]
 kind = "set"
-subject = "var:ef4"
+subject = "var:lokalisering-anpassa-produkt-process-kund-marknadsbehov"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger lokaliseringsfaktorn.\ncatalog:variable_text:13188:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ef4"
+subject = "var:lokalisering-anpassa-produkt-process-kund-marknadsbehov"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger lokaliseringsfaktorn.\ncatalog:variable_text:13188:19358:19723"
 
@@ -11248,37 +11248,37 @@ evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:13212:1278
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:individandel-fou-tid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "F31 är en ogenomskinlig källkod; etiketten anger arbetstidens FoU-andel.\ncatalog:variable_text:13213:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:individandel-fou-tid-av-arbetstid"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F31 är en ogenomskinlig källkod; etiketten anger arbetstidens FoU-andel.\ncatalog:variable_text:13213:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f31upp"
+subject = "var:uppraknad-andel-fou-tid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "F31upp är en ogenomskinlig källkod; etiketten anger arbetstidens FoU-andel.\ncatalog:variable_text:13214:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f31upp"
+subject = "var:uppraknad-andel-fou-tid-av-arbetstid"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F31upp är en ogenomskinlig källkod; etiketten anger arbetstidens FoU-andel.\ncatalog:variable_text:13214:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f37"
+subject = "var:individandel-annan-verksamhetstid-av-arbetstid"
 fields = { "sets" = [] }
 evidence = "F37 är en opak frågekod.\ncatalog:variable_text:13215:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f37"
+subject = "var:individandel-annan-verksamhetstid-av-arbetstid"
 fields = { "tags" = ["employment"] }
 evidence = "F37 är en opak frågekod.\ncatalog:variable_text:13215:17167:17532"
 
@@ -14224,13 +14224,13 @@ evidence = "Källkolumnen är en opak kod; etiketten anger antal kvinnor med for
 
 [[statement]]
 kind = "set"
-subject = "var:v012"
+subject = "var:antal-man-med-forskarutbildning"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en opak kod; etiketten anger antal män med forskarutbildning.\ncatalog:variable_text:13799:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:v012"
+subject = "var:antal-man-med-forskarutbildning"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnen är en opak kod; etiketten anger antal män med forskarutbildning.\ncatalog:variable_text:13799:17167:17532"
 
@@ -14464,13 +14464,13 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:13818:12053
 
 [[statement]]
 kind = "set"
-subject = "var:v028"
+subject = "var:arsverken-fou-akadem-utb-minst-3-ar-uppskattning-2004"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:13819:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v028"
+subject = "var:arsverken-fou-akadem-utb-minst-3-ar-uppskattning-2004"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:13819:12053:12418"
 
@@ -14488,13 +14488,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger investeri
 
 [[statement]]
 kind = "set"
-subject = "var:v0302"
+subject = "var:uppskattade-investeringar-byggnader-mark-fastigheter-2004"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13821:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v0302"
+subject = "var:uppskattade-investeringar-byggnader-mark-fastigheter-2004"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13821:12053:12418"
 
@@ -14524,13 +14524,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger investeri
 
 [[statement]]
 kind = "set"
-subject = "var:v0312"
+subject = "var:uppskattade-investeringar-maskiner-inventarier-2004"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13824:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v0312"
+subject = "var:uppskattade-investeringar-maskiner-inventarier-2004"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13824:12053:12418"
 
@@ -14560,13 +14560,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger investeri
 
 [[statement]]
 kind = "set"
-subject = "var:v0322"
+subject = "var:summa-uppskattade-investeringar-2004"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13827:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v0322"
+subject = "var:summa-uppskattade-investeringar-2004"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnen är en ogenomskinlig kod och etiketten anger budgeterade investeringar.\ncatalog:variable_text:13827:12053:12418"
 
@@ -14716,13 +14716,13 @@ evidence = "V041x är en ogenomskinlig källkod.\ncatalog:variable_text:13867:12
 
 [[statement]]
 kind = "set"
-subject = "var:v042"
+subject = "var:antal-man-gymnasial-utbildning"
 fields = { "sets" = [] }
 evidence = "V042 är en ogenomskinlig källkod.\ncatalog:variable_text:13868:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v042"
+subject = "var:antal-man-gymnasial-utbildning"
 fields = { "tags" = ["research"] }
 evidence = "V042 är en ogenomskinlig källkod.\ncatalog:variable_text:13868:12784:13149"
 
@@ -15016,13 +15016,13 @@ evidence = "Id är en opak källkod; etiketten anger en uppskattning av FoU-års
 
 [[statement]]
 kind = "set"
-subject = "var:v0506"
+subject = "var:summa-driftkostnader-eget-foretags-utveckling"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak. Variabeln mäter en delsumma av driftkostnader för egen FoU.\ncatalog:variable_text:13905:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v0506"
+subject = "var:summa-driftkostnader-eget-foretags-utveckling"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens kod är opak. Variabeln mäter en delsumma av driftkostnader för egen FoU.\ncatalog:variable_text:13905:12053:12418"
 
@@ -15340,13 +15340,13 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:13935:12784
 
 [[statement]]
 kind = "set"
-subject = "var:v0541"
+subject = "var:finansiering-branschorganisationer-forskningsinstitut"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en opak kod.\ncatalog:variable_text:13937:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v0541"
+subject = "var:finansiering-branschorganisationer-forskningsinstitut"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnen är en opak kod.\ncatalog:variable_text:13937:12053:12418"
 
@@ -15676,13 +15676,13 @@ evidence = "Källkoden är opak och etiketten anger den regionala utgiftsfördel
 
 [[statement]]
 kind = "set"
-subject = "var:v062"
+subject = "var:antal-man-totalt"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger personantalet.\ncatalog:variable_text:13982:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v062"
+subject = "var:antal-man-totalt"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak och etiketten anger personantalet.\ncatalog:variable_text:13982:12784:13149"
 
@@ -16492,25 +16492,25 @@ evidence = "Id är en opak källkod; etiketten anger understöd till andra svens
 
 [[statement]]
 kind = "set"
-subject = "var:v1071"
+subject = "var:uppdrag-branschorganisationer-forskningsinstitut"
 fields = { "sets" = [] }
 evidence = "Id är en opak källkod; etiketten anger uppdrag till branschorganisationer eller forskningsinstitut.\ncatalog:variable_text:14080:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1071"
+subject = "var:uppdrag-branschorganisationer-forskningsinstitut"
 fields = { "tags" = ["research"] }
 evidence = "Id är en opak källkod; etiketten anger uppdrag till branschorganisationer eller forskningsinstitut.\ncatalog:variable_text:14080:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1072"
+subject = "var:understod-branschorganisationer-forskningsinstitut"
 fields = { "sets" = [] }
 evidence = "Id är en opak källkod; etiketten anger understöd till branschorganisationer eller forskningsinstitut.\ncatalog:variable_text:14081:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1072"
+subject = "var:understod-branschorganisationer-forskningsinstitut"
 fields = { "tags" = ["research"] }
 evidence = "Id är en opak källkod; etiketten anger understöd till branschorganisationer eller forskningsinstitut.\ncatalog:variable_text:14081:12053:12418"
 

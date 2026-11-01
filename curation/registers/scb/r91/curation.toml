@@ -373,25 +373,25 @@ evidence = "RE är en opak bokstavskod för redovisningsenhet. Variabeln beskriv
 
 [[statement]]
 kind = "set"
-subject = "var:resni-2007"
+subject = "var:naringsgren-sni-2007"
 fields = { "sets" = ["naringsgren"] }
 evidence = "RE är en ogenomskinlig bokstavskod; variabeln kodar näringsgren.\ncatalog:variable_text:34085:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:resni-2007"
+subject = "var:naringsgren-sni-2007"
 fields = { "tags" = ["business"] }
 evidence = "RE är en ogenomskinlig bokstavskod; variabeln kodar näringsgren.\ncatalog:variable_text:34085:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:resni92"
+subject = "var:naringsgren-sni-92"
 fields = { "sets" = ["naringsgren"] }
 evidence = "RE är en ogenomskinlig bokstavskod; variabeln kodar näringsgren.\ncatalog:variable_text:34086:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:resni92"
+subject = "var:naringsgren-sni-92"
 fields = { "tags" = ["business"] }
 evidence = "RE är en ogenomskinlig bokstavskod; variabeln kodar näringsgren.\ncatalog:variable_text:34086:10957:15340"
 
@@ -409,25 +409,25 @@ evidence = "Källkolumnens bokstavskod för urvalet är opak. Variabeln summerar
 
 [[statement]]
 kind = "set"
-subject = "var:sbfallas"
+subject = "var:anstallda-foretag-helt-bortfall-stratum-arbetare"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln summerar antal anställda i bortfallsföretag.\ncatalog:variable_text:34088:16801:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sbfallas"
+subject = "var:anstallda-foretag-helt-bortfall-stratum-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln summerar antal anställda i bortfallsföretag.\ncatalog:variable_text:34088:16801:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sbfallts"
+subject = "var:anstallda-foretag-helt-bortfall-stratum-tjansteman"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln summerar antal anställda i bortfallsföretag.\ncatalog:variable_text:34089:16801:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sbfallts"
+subject = "var:anstallda-foretag-helt-bortfall-stratum-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln summerar antal anställda i bortfallsföretag.\ncatalog:variable_text:34089:16801:20454"
 

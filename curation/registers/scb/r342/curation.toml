@@ -428,61 +428,61 @@ evidence = "Läroplan är en utbildningsuppgift.\ncatalog:variable_text:23095:15
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:matematik-poang-betygsniva-a-totalt"
 fields = { "sets" = ["poang-per-betygsniva"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23097:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:matematik-poang-betygsniva-a-totalt"
 fields = { "tags" = ["education"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23097:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:matematik-poang-betygsniva-c-muntlig-del"
 fields = { "sets" = ["poang-per-betygsniva"] }
 evidence = "POM är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23098:15887:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:matematik-poang-betygsniva-c-muntlig-del"
 fields = { "tags" = ["education"] }
 evidence = "POM är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23098:15887:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:matematik-poang-betygsniva-c-totalt"
 fields = { "sets" = ["poang-per-betygsniva"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23099:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:matematik-poang-betygsniva-c-totalt"
 fields = { "tags" = ["education"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23099:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:matematik-poang-betygsniva-e-muntlig-del"
 fields = { "sets" = ["poang-per-betygsniva"] }
 evidence = "POM är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23100:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:matematik-poang-betygsniva-e-muntlig-del"
 fields = { "tags" = ["education"] }
 evidence = "POM är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23100:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:matematik-poang-betygsniva-e-totalt"
 fields = { "sets" = ["poang-per-betygsniva"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23101:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:matematik-poang-betygsniva-e-totalt"
 fields = { "tags" = ["education"] }
 evidence = "POT är en ogenomskinlig källkod; etiketten kolliderar med andra poängvariabler och mål kräver särskiljning.\ncatalog:variable_text:23101:16071:16252"
 
@@ -524,25 +524,25 @@ evidence = "Uppnådda poäng i muntligt delprov är ett utbildningsresultat.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:poangrl"
+subject = "var:delprov-poang-lasa-lyssna"
 fields = { "sets" = ["nationella-prov-resultatpoang"] }
 evidence = "RL är en ogenomskinlig bokstavskod för delprovet; den generella etiketten kolliderar med andra variabler.\ncatalog:variable_text:23109:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:poangrl"
+subject = "var:delprov-poang-lasa-lyssna"
 fields = { "tags" = ["education"] }
 evidence = "RL är en ogenomskinlig bokstavskod för delprovet; den generella etiketten kolliderar med andra variabler.\ncatalog:variable_text:23109:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:poangs"
+subject = "var:delprov-poang-skriva"
 fields = { "sets" = ["nationella-prov-resultatpoang"] }
 evidence = "S är en ogenomskinlig bokstavskod för delprovet; den generella etiketten kolliderar med andra variabler.\ncatalog:variable_text:23110:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:poangs"
+subject = "var:delprov-poang-skriva"
 fields = { "tags" = ["education"] }
 evidence = "S är en ogenomskinlig bokstavskod för delprovet; den generella etiketten kolliderar med andra variabler.\ncatalog:variable_text:23110:20089:20270"
 
@@ -560,61 +560,61 @@ evidence = "Värdena kodar versionen av det genomförda provet och hör till gru
 
 [[statement]]
 kind = "set"
-subject = "var:prov-ma"
+subject = "var:provversion-matematik"
 fields = { "sets" = ["provversion"] }
 evidence = "MA är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23112\ncatalog:variable_text:23112:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-ma"
+subject = "var:provversion-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23112\ncatalog:variable_text:23112:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-mu"
+subject = "var:provversion-engelska-muntligt"
 fields = { "sets" = ["provversion"] }
 evidence = "MU är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23113\ncatalog:variable_text:23113:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-mu"
+subject = "var:provversion-engelska-muntligt"
 fields = { "tags" = ["education"] }
 evidence = "MU är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23113\ncatalog:variable_text:23113:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-pb"
+subject = "var:provversion-sammanlagt"
 fields = { "sets" = ["provversion"] }
 evidence = "PB är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23114\ncatalog:variable_text:23114:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-pb"
+subject = "var:provversion-sammanlagt"
 fields = { "tags" = ["education"] }
 evidence = "PB är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23114\ncatalog:variable_text:23114:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-rl"
+subject = "var:provversion-engelska-lasa-lyssna"
 fields = { "sets" = ["provversion"] }
 evidence = "RL är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23115\ncatalog:variable_text:23115:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-rl"
+subject = "var:provversion-engelska-lasa-lyssna"
 fields = { "tags" = ["education"] }
 evidence = "RL är en ogenomskinlig kodattributdel. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23115\ncatalog:variable_text:23115:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-s"
+subject = "var:provversion-delprov-skriva"
 fields = { "sets" = ["provversion"] }
 evidence = "S är en ogenomskinlig bokstavskod. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23116\ncatalog:variable_text:23116:15156:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:prov-s"
+subject = "var:provversion-delprov-skriva"
 fields = { "tags" = ["education"] }
 evidence = "S är en ogenomskinlig bokstavskod. Etiketten delas med andra variabler och målsluggen behöver därför kälkolumnen för åtskillnad.\ncatalog:occurrence-locators:variable:23116\ncatalog:variable_text:23116:15156:15887"
 

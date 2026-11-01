@@ -61,13 +61,13 @@ evidence = "Familjeförhållande hör till familj och hushåll.\ncatalog:valuese
 
 [[statement]]
 kind = "set"
-subject = "var:f10"
+subject = "var:huvudsaklig-finansiering-komvuxstudier"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F10 är en frågekod; etiketten anger finansieringskällor.\ncatalog:variable_text:39386:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f10"
+subject = "var:huvudsaklig-finansiering-komvuxstudier"
 fields = { "tags" = ["education"] }
 evidence = "F10 är en frågekod; etiketten anger finansieringskällor.\ncatalog:variable_text:39386:12053:12418"
 
@@ -217,145 +217,145 @@ evidence = "F13d är en frågekod med en beskrivande etikett.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:f16a"
+subject = "var:huvudsaklig-sysselsattning-varen-2000"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16a är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39399:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16a"
+subject = "var:huvudsaklig-sysselsattning-varen-2000"
 fields = { "tags" = ["employment"] }
 evidence = "F16a är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39399:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16b"
+subject = "var:huvudsaklig-sysselsattning-hosten-2000"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16b är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39400:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16b"
+subject = "var:huvudsaklig-sysselsattning-hosten-2000"
 fields = { "tags" = ["employment"] }
 evidence = "F16b är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39400:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16c"
+subject = "var:huvudsaklig-sysselsattning-varen-2001"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16c är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39401:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16c"
+subject = "var:huvudsaklig-sysselsattning-varen-2001"
 fields = { "tags" = ["employment"] }
 evidence = "F16c är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39401:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16d"
+subject = "var:huvudsaklig-sysselsattning-hosten-2001"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16d är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39402:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16d"
+subject = "var:huvudsaklig-sysselsattning-hosten-2001"
 fields = { "tags" = ["employment"] }
 evidence = "F16d är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39402:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16e"
+subject = "var:huvudsaklig-sysselsattning-varen-2002"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16e är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39403:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16e"
+subject = "var:huvudsaklig-sysselsattning-varen-2002"
 fields = { "tags" = ["employment"] }
 evidence = "F16e är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39403:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16f"
+subject = "var:huvudsaklig-sysselsattning-hosten-2002"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F16f är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39404:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16f"
+subject = "var:huvudsaklig-sysselsattning-hosten-2002"
 fields = { "tags" = ["employment"] }
 evidence = "F16f är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39404:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:huvudsaklig-sysselsattning-7-13-april-2003"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "F17 är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39405:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:huvudsaklig-sysselsattning-7-13-april-2003"
 fields = { "tags" = ["employment"] }
 evidence = "F17 är en frågekod; den gemensamma etiketten behöver källkolumnen för åtskillnad.\ncatalog:variable_text:39405:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3"
+subject = "var:hemmavarande-barn-under-20-ar-nej-hosten-2000"
 fields = { "sets" = ["antal-hemmavarande-barn"] }
 evidence = "F3 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39406:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3"
+subject = "var:hemmavarande-barn-under-20-ar-nej-hosten-2000"
 fields = { "tags" = ["family-household"] }
 evidence = "F3 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39406:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-2"
+subject = "var:hemmavarande-barn-0-5-ar-hosten-2000"
 fields = { "sets" = ["antal-hemmavarande-barn"] }
 evidence = "F3-2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39407:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-2"
+subject = "var:hemmavarande-barn-0-5-ar-hosten-2000"
 fields = { "tags" = ["family-household"] }
 evidence = "F3-2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39407:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-3"
+subject = "var:hemmavarande-barn-6-12-ar-hosten-2000"
 fields = { "sets" = ["antal-hemmavarande-barn"] }
 evidence = "F3-3 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39408:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-3"
+subject = "var:hemmavarande-barn-6-12-ar-hosten-2000"
 fields = { "tags" = ["family-household"] }
 evidence = "F3-3 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39408:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-4"
+subject = "var:hemmavarande-barn-13-16-ar-hosten-2000"
 fields = { "sets" = ["antal-hemmavarande-barn"] }
 evidence = "F3-4 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39409:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-4"
+subject = "var:hemmavarande-barn-13-16-ar-hosten-2000"
 fields = { "tags" = ["family-household"] }
 evidence = "F3-4 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39409:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-5"
+subject = "var:hemmavarande-barn-17-19-ar-hosten-2000"
 fields = { "sets" = ["antal-hemmavarande-barn"] }
 evidence = "F3-5 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39410:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-5"
+subject = "var:hemmavarande-barn-17-19-ar-hosten-2000"
 fields = { "tags" = ["family-household"] }
 evidence = "F3-5 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39410:12053:12418"
 
@@ -409,409 +409,409 @@ evidence = "F3d är en frågekod; den delade etiketten kräver åtskillnad med k
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:motiv-komvux-komplettera-gymnasieutbildning-kurser"
 fields = { "sets" = ["motiv-till-komvuxstudier"] }
 evidence = "F4a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39415:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:motiv-komvux-komplettera-gymnasieutbildning-kurser"
 fields = { "tags" = ["education"] }
 evidence = "F4a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39415:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:motiv-komvux-fullstandigt-slutbetyg-trearig-gymnasieskola"
 fields = { "sets" = ["motiv-till-komvuxstudier"] }
 evidence = "F4b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39416:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:motiv-komvux-fullstandigt-slutbetyg-trearig-gymnasieskola"
 fields = { "tags" = ["education"] }
 evidence = "F4b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39416:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:motiv-komvux-komplettera-ej-godkanda-gymnasiebetyg"
 fields = { "sets" = ["motiv-till-komvuxstudier"] }
 evidence = "F4c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39417:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:motiv-komvux-komplettera-ej-godkanda-gymnasiebetyg"
 fields = { "tags" = ["education"] }
 evidence = "F4c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39417:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:motiv-komvux-hoja-gymnasiebetyg-godkand-val-godkand"
 fields = { "sets" = ["motiv-till-komvuxstudier"] }
 evidence = "F4d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39418:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:motiv-komvux-hoja-gymnasiebetyg-godkand-val-godkand"
 fields = { "tags" = ["education"] }
 evidence = "F4d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39418:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4e"
+subject = "var:annat-motiv-mal-komvux"
 fields = { "sets" = ["motiv-till-komvuxstudier"] }
 evidence = "F4e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39419:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f4e"
+subject = "var:annat-motiv-mal-komvux"
 fields = { "tags" = ["education"] }
 evidence = "F4e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39419:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a2"
+subject = "var:kurs-komvux-svenska-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5a2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39420:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a2"
+subject = "var:kurs-komvux-svenska-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5a2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39420:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b2"
+subject = "var:kurs-komvux-engelska-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5b2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39421:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b2"
+subject = "var:kurs-komvux-engelska-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5b2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39421:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5c2"
+subject = "var:kurs-komvux-matematik-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5c2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39422:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5c2"
+subject = "var:kurs-komvux-matematik-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5c2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39422:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5d2"
+subject = "var:kurs-komvux-samhallskunskap-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5d2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39423:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5d2"
+subject = "var:kurs-komvux-samhallskunskap-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5d2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39423:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5e2"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5e2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39424:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5e2"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5e2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39424:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5f2"
+subject = "var:kurs-komvux-estetiska-amnen-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5f2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39425:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5f2"
+subject = "var:kurs-komvux-estetiska-amnen-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5f2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39425:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5g2"
+subject = "var:kurs-komvux-ovriga-amnen-varen-2001"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "F5g2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39426:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5g2"
+subject = "var:kurs-komvux-ovriga-amnen-varen-2001"
 fields = { "tags" = ["education"] }
 evidence = "F5g2 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39426:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7a"
+subject = "var:studieavbrott-for-hog-studietakt"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39427:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7a"
+subject = "var:studieavbrott-for-hog-studietakt"
 fields = { "tags" = ["education"] }
 evidence = "F7a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39427:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7b"
+subject = "var:studieavbrott-svart-kombinera-studier-arbete"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39428:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7b"
+subject = "var:studieavbrott-svart-kombinera-studier-arbete"
 fields = { "tags" = ["education"] }
 evidence = "F7b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39428:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7c"
+subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39429:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7c"
+subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
 fields = { "tags" = ["education"] }
 evidence = "F7c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39429:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7d"
+subject = "var:studieavbrott-innehall-motsvarade-inte-forvantningar"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39430:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7d"
+subject = "var:studieavbrott-innehall-motsvarade-inte-forvantningar"
 fields = { "tags" = ["education"] }
 evidence = "F7d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39430:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7e"
+subject = "var:studieavbrott-inte-fa-efterstravat-betyg"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39431:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7e"
+subject = "var:studieavbrott-inte-fa-efterstravat-betyg"
 fields = { "tags" = ["education"] }
 evidence = "F7e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39431:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7f"
+subject = "var:studieavbrott-borjade-annan-kurs-komvux"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7f är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39432:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7f"
+subject = "var:studieavbrott-borjade-annan-kurs-komvux"
 fields = { "tags" = ["education"] }
 evidence = "F7f är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39432:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7g"
+subject = "var:studieavbrott-borjade-annan-utbildning"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7g är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39433:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7g"
+subject = "var:studieavbrott-borjade-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "F7g är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39433:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7h"
+subject = "var:studieavbrott-studietrott"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7h är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39434:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7h"
+subject = "var:studieavbrott-studietrott"
 fields = { "tags" = ["education"] }
 evidence = "F7h är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39434:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7i"
+subject = "var:studieavbrott-halsoskal"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7i är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39435:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7i"
+subject = "var:studieavbrott-halsoskal"
 fields = { "tags" = ["education", "health"] }
 evidence = "F7i är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39435:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7j"
+subject = "var:studieavbrott-annat-skal"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F7j är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39436:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f7j"
+subject = "var:studieavbrott-annat-skal"
 fields = { "tags" = ["education"] }
 evidence = "F7j är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39436:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f8"
+subject = "var:huvudsakligt-skal-studieavbrott"
 fields = { "sets" = ["skal-till-studieavbrott"] }
 evidence = "F8 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39437:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f8"
+subject = "var:huvudsakligt-skal-studieavbrott"
 fields = { "tags" = ["education"] }
 evidence = "F8 är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39437:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9a"
+subject = "var:finansiering-heltidsarbete-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39438:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9a"
+subject = "var:finansiering-heltidsarbete-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "F9a är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39438:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9b"
+subject = "var:finansiering-deltidsarbete-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39439:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9b"
+subject = "var:finansiering-deltidsarbete-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "F9b är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39439:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9c"
+subject = "var:finansiering-studiemedel-lan-bidrag-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39440:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9c"
+subject = "var:finansiering-studiemedel-lan-bidrag-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9c är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39440:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9d"
+subject = "var:finansiering-studiemedel-enbart-bidrag-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39441:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9d"
+subject = "var:finansiering-studiemedel-enbart-bidrag-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9d är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39441:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9e"
+subject = "var:finansiering-sarskilt-utbildningsbidrag-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39442:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9e"
+subject = "var:finansiering-sarskilt-utbildningsbidrag-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9e är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39442:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9f"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9f är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39443:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9f"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9f är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39443:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9g"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-arbetslosa-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9g är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39444:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9g"
+subject = "var:finansiering-sarskilt-vuxenstudiestod-arbetslosa-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9g är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39444:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9h"
+subject = "var:finansiering-a-kassa-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9h är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39445:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9h"
+subject = "var:finansiering-a-kassa-hosten-2000"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F9h är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39445:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9i"
+subject = "var:finansiering-bidrag-foraldrar-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9i är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39446:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9i"
+subject = "var:finansiering-bidrag-foraldrar-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "F9i är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39446:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9j"
+subject = "var:finansiering-makas-makes-sambos-inkomster-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9j är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39447:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9j"
+subject = "var:finansiering-makas-makes-sambos-inkomster-hosten-2000"
 fields = { "tags" = ["education", "income"] }
 evidence = "F9j är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39447:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9k"
+subject = "var:finansiering-annat-hosten-2000"
 fields = { "sets" = ["finansieringskallor-for-komvuxstudier"] }
 evidence = "F9k är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39448:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9k"
+subject = "var:finansiering-annat-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "F9k är en frågekod; den delade etiketten kräver åtskillnad med källkolumnen.\ncatalog:variable_text:39448:12053:12418"
 
@@ -841,85 +841,85 @@ evidence = "Kön är en demografisk variabel.\ncatalog:variable_text:39450:12053
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-1"
+subject = "var:kurs-komvux-svenska-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39451\ncatalog:variable_text:39451:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-1"
+subject = "var:kurs-komvux-svenska-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39451\ncatalog:variable_text:39451:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-2"
+subject = "var:kurs-komvux-engelska-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39452\ncatalog:variable_text:39452:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-2"
+subject = "var:kurs-komvux-engelska-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39452\ncatalog:variable_text:39452:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-3"
+subject = "var:kurs-komvux-matematik-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39453\ncatalog:variable_text:39453:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-3"
+subject = "var:kurs-komvux-matematik-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39453\ncatalog:variable_text:39453:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-4"
+subject = "var:kurs-komvux-samhallskunskap-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39454\ncatalog:variable_text:39454:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-4"
+subject = "var:kurs-komvux-samhallskunskap-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39454\ncatalog:variable_text:39454:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-5"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39455\ncatalog:variable_text:39455:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-5"
+subject = "var:kurs-komvux-yrkesinriktade-amnen-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39455\ncatalog:variable_text:39455:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-6"
+subject = "var:kurs-komvux-estetiska-amnen-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39456\ncatalog:variable_text:39456:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-6"
+subject = "var:kurs-komvux-estetiska-amnen-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39456\ncatalog:variable_text:39456:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-7"
+subject = "var:kurs-komvux-ovriga-amnen-hosten-2000"
 fields = { "sets" = ["kurser-i-komvux"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39457\ncatalog:variable_text:39457:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-i-komvux-7"
+subject = "var:kurs-komvux-ovriga-amnen-hosten-2000"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen skiljer variablerna åt och är inte hämtad från källkolumnen. Kurskodningarna hör till samma grupp och gäller utbildning.\ncatalog:occurrence-locators:variable:39457\ncatalog:variable_text:39457:12053:12418"
 

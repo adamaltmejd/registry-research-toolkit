@@ -1108,25 +1108,25 @@ evidence = "Kodning av studieväg i gymnasieskolan.\ncatalog:occurrence-locators
 
 [[statement]]
 kind = "set"
-subject = "var:stvkod-start"
+subject = "var:studievag-gymnasieskolan-utbildningsstart"
 fields = { "sets" = ["studievag"] }
 evidence = "Stv är en ogenomskinlig källkodförkortning för studieväg.\ncatalog:occurrence-locators:variable:23038"
 
 [[statement]]
 kind = "set"
-subject = "var:stvkod-start"
+subject = "var:studievag-gymnasieskolan-utbildningsstart"
 fields = { "tags" = ["education"] }
 evidence = "Stv är en ogenomskinlig källkodförkortning för studieväg.\ncatalog:occurrence-locators:variable:23038"
 
 [[statement]]
 kind = "set"
-subject = "var:stvkod2"
+subject = "var:studievag-gymnasieskolan-lpf94"
 fields = { "sets" = ["studievag"] }
 evidence = "Stv är en ogenomskinlig källkodförkortning för studieväg; 2 kommer från källkolumnen.\ncatalog:occurrence-locators:variable:23039"
 
 [[statement]]
 kind = "set"
-subject = "var:stvkod2"
+subject = "var:studievag-gymnasieskolan-lpf94"
 fields = { "tags" = ["education"] }
 evidence = "Stv är en ogenomskinlig källkodförkortning för studieväg; 2 kommer från källkolumnen.\ncatalog:occurrence-locators:variable:23039"
 
@@ -1156,37 +1156,37 @@ evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter mode
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:moderns-utbildningsniva-sun-2020"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen; variabeln mäter moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:23042\ncatalog:variable_text:23042:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:moderns-utbildningsniva-sun-2020"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen; variabeln mäter moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:23042\ncatalog:variable_text:23042:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad"
+subject = "var:moderns-utbildningsniva-sun-2000-grupperad"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter grupperad utbildningsnivå för modern.\ncatalog:occurrence-locators:variable:23043\ncatalog:variable_text:23043:18184:18185"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad"
+subject = "var:moderns-utbildningsniva-sun-2000-grupperad"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter grupperad utbildningsnivå för modern.\ncatalog:occurrence-locators:variable:23043\ncatalog:variable_text:23043:18184:18185"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad-2"
+subject = "var:moderns-utbildningsniva-sun-2020-grupperad"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen; variabeln mäter grupperad utbildningsnivå för modern.\ncatalog:occurrence-locators:variable:23044\ncatalog:variable_text:23044:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad-2"
+subject = "var:moderns-utbildningsniva-sun-2020-grupperad"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen; variabeln mäter grupperad utbildningsnivå för modern.\ncatalog:occurrence-locators:variable:23044\ncatalog:variable_text:23044:20011:20012"
 

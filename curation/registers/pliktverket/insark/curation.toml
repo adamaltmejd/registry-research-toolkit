@@ -589,13 +589,13 @@ evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:mofvfri"
+subject = "var:vapenfri-efter-monstring"
 fields = { "sets" = ["vapenfrihet"] }
 evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:690:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:mofvfri"
+subject = "var:vapenfri-efter-monstring"
 fields = { "tags" = ["defence"] }
 evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:690:9862:14975"
 

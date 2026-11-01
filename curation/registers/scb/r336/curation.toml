@@ -1261,13 +1261,13 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54771:15706:16
 
 [[statement]]
 kind = "set"
-subject = "var:f8-01"
+subject = "var:maka-make-sambo-flyttat-till-sverige"
 fields = { "sets" = ["familjemedlemmars-flyttning-till-sverige"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54772:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-01"
+subject = "var:maka-make-sambo-flyttat-till-sverige"
 fields = { "tags" = ["family-household", "migration"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54772:15706:16071"
 

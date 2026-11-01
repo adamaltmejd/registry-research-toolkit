@@ -73,13 +73,13 @@ evidence = "Variabeln avser ägg från frigående höns.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ags-uppr"
+subject = "var:upprakningstal-ags"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "AGS är en källkod och etiketten kolliderar; kolumnen behövs för att skilja variabeln.\ncatalog:occurrence:381008\ncatalog:variable_text:38210:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:ags-uppr"
+subject = "var:upprakningstal-ags"
 fields = { "tags" = ["methods"] }
 evidence = "AGS är en källkod och etiketten kolliderar; kolumnen behövs för att skilja variabeln.\ncatalog:occurrence:381008\ncatalog:variable_text:38210:12418:12784"
 
@@ -205,13 +205,13 @@ evidence = "Branschkoden ingår i näringsgrensgruppen.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:cgs-uppr"
+subject = "var:upprakningstal-cgs"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "CGS är en källkod och etiketten kolliderar; kolumnen behövs för att skilja variabeln.\ncatalog:occurrence:381010\ncatalog:variable_text:38222:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:cgs-uppr"
+subject = "var:upprakningstal-cgs"
 fields = { "tags" = ["methods"] }
 evidence = "CGS är en källkod och etiketten kolliderar; kolumnen behövs för att skilja variabeln.\ncatalog:occurrence:381010\ncatalog:variable_text:38222:12418:12784"
 
@@ -361,13 +361,13 @@ evidence = "Samma årsbestämda kolumn förekommer som aktuell och föregående 
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-agss"
+subject = "var:forsaljning-inklusive-moms-ags"
 fields = { "sets" = [] }
 evidence = "FSG och AGSS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38242:12784:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-agss"
+subject = "var:forsaljning-inklusive-moms-ags"
 fields = { "tags" = ["business"] }
 evidence = "FSG och AGSS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38242:12784:14610"
 
@@ -481,13 +481,13 @@ evidence = "FSG och PBS är opaka källkoder.\ncatalog:variable_text:38251:13879
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-pxs"
+subject = "var:forsaljning-inklusive-moms-prisextra"
 fields = { "sets" = [] }
 evidence = "FSG och PXS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38252:14245:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-pxs"
+subject = "var:forsaljning-inklusive-moms-prisextra"
 fields = { "tags" = ["business"] }
 evidence = "FSG och PXS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38252:14245:15340"
 
@@ -541,13 +541,13 @@ evidence = "FSG_TOT är en källkod. Variabeln mäter försäljningsbelopp.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-vis"
+subject = "var:forsaljning-inklusive-moms-vi"
 fields = { "sets" = [] }
 evidence = "FSG och VIS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38257:12784:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-vis"
+subject = "var:forsaljning-inklusive-moms-vi"
 fields = { "tags" = ["business"] }
 evidence = "FSG och VIS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38257:12784:14975"
 
@@ -577,13 +577,13 @@ evidence = "FSG och WILS är opaka källkoder.\ncatalog:variable_text:38259:1278
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-agss"
+subject = "var:forsaljning-exklusive-moms-ags"
 fields = { "sets" = [] }
 evidence = "FSGE och AGSS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38260:12784:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-agss"
+subject = "var:forsaljning-exklusive-moms-ags"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och AGSS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38260:12784:14610"
 
@@ -697,13 +697,13 @@ evidence = "FSGE och PBS är opaka källkoder.\ncatalog:variable_text:38269:1387
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-pxs"
+subject = "var:forsaljning-exklusive-moms-prisextra"
 fields = { "sets" = [] }
 evidence = "FSGE och PXS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38270:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-pxs"
+subject = "var:forsaljning-exklusive-moms-prisextra"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och PXS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38270:15706:16436"
 
@@ -769,13 +769,13 @@ evidence = "FSGE_TOT är en källkod. Variabeln mäter försäljningsbelopp exkl
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-vis"
+subject = "var:forsaljning-exklusive-moms-vi"
 fields = { "sets" = [] }
 evidence = "FSGE och VIS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38276:12784:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-vis"
+subject = "var:forsaljning-exklusive-moms-vi"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och VIS är opaka källkoder; etiketten kolliderar med en annan försäljningsvariabel.\ncatalog:variable_text:38276:12784:14975"
 
@@ -829,25 +829,25 @@ evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:occurrence:381027
 
 [[statement]]
 kind = "set"
-subject = "var:icab-uppr"
+subject = "var:upprakningstal-ica-butiker"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "ICAB är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381028\ncatalog:variable_text:38281:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:icab-uppr"
+subject = "var:upprakningstal-ica-butiker"
 fields = { "tags" = ["methods"] }
 evidence = "ICAB är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381028\ncatalog:variable_text:38281:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:icas-uppr"
+subject = "var:upprakningstal-ica-stormarknad"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "ICAS är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381029\ncatalog:variable_text:38282:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:icas-uppr"
+subject = "var:upprakningstal-ica-stormarknad"
 fields = { "tags" = ["methods"] }
 evidence = "ICAS är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381029\ncatalog:variable_text:38282:12418:12784"
 
@@ -889,25 +889,25 @@ evidence = "Variabeln beskriver företagets kedjetillhörighet.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:kfb-uppr"
+subject = "var:upprakningstal-coop-butiker"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "KFB är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381030\ncatalog:variable_text:38287:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:kfb-uppr"
+subject = "var:upprakningstal-coop-butiker"
 fields = { "tags" = ["methods"] }
 evidence = "KFB är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381030\ncatalog:variable_text:38287:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:kfs-uppr"
+subject = "var:upprakningstal-coop-stormarknad"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "KFS är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381031\ncatalog:variable_text:38288:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:kfs-uppr"
+subject = "var:upprakningstal-coop-stormarknad"
 fields = { "tags" = ["methods"] }
 evidence = "KFS är en källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381031\ncatalog:variable_text:38288:12418:12784"
 
@@ -1021,61 +1021,61 @@ evidence = "Nettoomsättningen består av försäljning och tillhör försäljni
 
 [[statement]]
 kind = "set"
-subject = "var:ng1moms"
+subject = "var:naringsgren-momsregistret"
 fields = { "sets" = ["naringsgren"] }
 evidence = "NG är en källmnemonik som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38304:17897:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1moms"
+subject = "var:naringsgren-momsregistret"
 fields = { "tags" = ["business"] }
 evidence = "NG är en källmnemonik som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38304:17897:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1sammanslag"
+subject = "var:naringsgren-sammanslag"
 fields = { "sets" = ["naringsgren"] }
 evidence = "NG är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:38305:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1sammanslag"
+subject = "var:naringsgren-sammanslag"
 fields = { "tags" = ["business"] }
 evidence = "NG är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:38305:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1samu"
+subject = "var:naringsgren-foretagsregistret"
 fields = { "sets" = ["naringsgren"] }
 evidence = "NG och SAMU är källmnemoniker som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38306:17897:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1samu"
+subject = "var:naringsgren-foretagsregistret"
 fields = { "tags" = ["business"] }
 evidence = "NG och SAMU är källmnemoniker som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38306:17897:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs"
+subject = "var:naringsgren-statistiken-fe"
 fields = { "sets" = ["naringsgren"] }
 evidence = "NGS är en källmnemonik som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38307:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs"
+subject = "var:naringsgren-statistiken-fe"
 fields = { "tags" = ["business"] }
 evidence = "NGS är en källmnemonik som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38307:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1je"
+subject = "var:naringsgren-statistiken-je"
 fields = { "sets" = ["naringsgren"] }
 evidence = "NGS och JE är källmnemoniker som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38308:17897:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1je"
+subject = "var:naringsgren-statistiken-je"
 fields = { "tags" = ["business"] }
 evidence = "NGS och JE är källmnemoniker som inte förekommer i etiketten; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:38308:17897:19723"
 
@@ -1381,13 +1381,13 @@ evidence = "Värde är ett läsbart ord; källan anger försäljningsvärde för
 
 [[statement]]
 kind = "set"
-subject = "var:wh-uppr"
+subject = "var:upprakningstal-willys-hemma"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "WH är en opak källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381038\ncatalog:variable_text:38340:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:wh-uppr"
+subject = "var:upprakningstal-willys-hemma"
 fields = { "tags" = ["methods"] }
 evidence = "WH är en opak källkod och etiketten kolliderar med andra uppräkningstal.\ncatalog:occurrence:381038\ncatalog:variable_text:38340:12418:12784"
 

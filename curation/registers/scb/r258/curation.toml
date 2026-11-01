@@ -4146,13 +4146,13 @@ evidence = "Källkolumnerna har olika ägare.\ncatalog:occurrence:292495\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:aws-ocost"
+subject = "var:webbforsaljning-kostnad-for-hog-jamfort-med-nytta"
 fields = { "sets" = ["hinder-for-webbforsaljning"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32437:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:aws-ocost"
+subject = "var:webbforsaljning-kostnad-for-hog-jamfort-med-nytta"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32437:16801:17167"
 
@@ -4254,13 +4254,13 @@ evidence = "Källkolumnerna har olika ägare och geografiska betydelser.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-omsattning-fran-bestallningar-via-webbsida"
+subject = "var:andel-omsattning-webbsida-eller-app-av-total-omsattning"
 fields = { "sets" = ["omsattningsandel-fran-webbforsaljning"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32448:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-omsattning-fran-bestallningar-via-webbsida"
+subject = "var:andel-omsattning-webbsida-eller-app-av-total-omsattning"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32448:19723:20089"
 
@@ -4626,13 +4626,13 @@ evidence = "Ogenomskinlig frågekod.\ncatalog:variable_text:32482:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:b8-1b"
+subject = "var:skaffat-tillfalligt-jobb-lon-extra-inkomstkalla"
 fields = { "sets" = ["tillfalliga-jobb-via-digitala-plattformar"] }
 evidence = "Ogenomskinlig frågekod.\ncatalog:variable_text:32483:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:b8-1b"
+subject = "var:skaffat-tillfalligt-jobb-lon-extra-inkomstkalla"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Ogenomskinlig frågekod.\ncatalog:variable_text:32483:17532:17897"
 
@@ -4842,13 +4842,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:32500:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:analyserade-big-data-fran-data-fran-smarta-enheter"
+subject = "var:analyserade-big-data-smarta-enheter-eller-sensorer"
 fields = { "sets" = ["datakallor-for-big-data-analys"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32501:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:analyserade-big-data-fran-data-fran-smarta-enheter"
+subject = "var:analyserade-big-data-smarta-enheter-eller-sensorer"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32501:18262:18628"
 
@@ -5934,25 +5934,25 @@ evidence = "Källkodens bokstavsdelar är opaka; etiketten anger digital dokumen
 
 [[statement]]
 kind = "set"
-subject = "var:ccs-em"
+subject = "var:delat-dokument-bilder-e-postbilaga-senaste-3-man"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Vald e-postfråga anger bilagor utan dokument- eller bildavgränsning; mediefildelningen avser filmer och musik. membership-0329: E-postmåtten avser allmän e-post, inte särskilt dokument- eller bilddelning. membership-0330: Ingen vald variabel mäter dokument- eller bilddelning. membership-0331: Variablerna mäter faktisk dokument- eller bilddelning efter kanal, inklusive moln, e-post och andra digitala överföringssätt. membership-0332: Studiekommunikation och medienedladdning anger inte dokument- eller bilddelning. membership-0333: De valda uppladdningsfrågorna gäller publicering av eget material, som definitionen utesluter. membership-0334: Filkopiering och mediefildelningsprogram mäter inte den definierade dokument- och bilddelningen. membership-0335: Åtkomstbegränsning till profiler eller lagring mäter skydd, inte delningskanal. membership-0336: Filflyttning mellan egna enheter och säkerhetskopiering mäter inte delning med andra. membership-0337: Filkopiering mäter inte delning med andra. membership-0338: Lämnade personuppgifter mäter uppgiftskategorier, inte dokumentdelning efter kanal. membership-0339: Filflyttning och publicering mäts, inte separat delning efter kanal. membership-0340: Digitala leveranser av köpt innehåll mäter inte delning med andra. membership-0341: Mobilfrågan mäter digital bildöverföring. Molnfrågan kodar utebliven delning eller alternativa delningskanaler; den fasta definitionen omfattar dessa komponenter. membership-0342: Filskapande och säkerhetskopiering mäter inte delning med andra. membership-0343: E-postfrågan mäter skickade bilagor utan särskild kodning av dokument- eller bilddelning efter kanal. membership-0344: Ingen vald variabel mäter dokument- eller bilddelning. membership-0345: Multimedieplattformvariabeln mäter användning av en social medietyp, inte dokument- eller bilddelning efter kanal. membership-0346: De valda delningsfrågorna avser information i distributionskedjan, inte dokument- eller bilddelning efter kanal. membership-0347: Inga valda variabler mäter digital delning av dokument eller bilder. membership-0348: Lagerinformationens elektroniska utbyte mäter inte delning av dokument eller bilder efter kanal. membership-0349: Fjärråtkomst till företagets dokument är inte belagd delning av dokument eller bilder. membership-0350: Extern informationsdelning mäter inte särskilt dokument- eller bilddelning. membership-0351: Inga valda variabler mäter digital dokument- eller bilddelning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan mäter e-postanvändning med bilagor. membership-0329: Båda beskriver sändning och mottagning av e-post. membership-0330: c4 utesluter uttryckligen e-post; ingen vald variabel mäter e-postanvändning. membership-0331: Delning via e-postbilaga är uttrycklig e-postanvändning och ingår i definitionen. membership-0332: Vald chatt- och studiekommunikation anger inte e-postanvändning. membership-0333: E-postfrågorna gäller ersättning med internetsamtal eller spam, inte e-postanvändning. membership-0334: Bedrägliga e-postmeddelanden mäts som incident, inte e-postanvändning. membership-0335: Inga valda variabler mäter e-postanvändning. membership-0336: Inga valda sektionsvariabler mäter e-postanvändning. membership-0337: Den valda e-postfrågan är särskilt avgränsad myndighetskontakt och därmed undantagen. membership-0338: Kontohackning och lämnad e-postadress mäter inte e-postanvändning. membership-0339: Mäter att skicka eller ta emot e-post med mobil utrustning. membership-0340: Inga valda variabler mäter e-postanvändning. membership-0341: Frågan mäter e-postläsning med mobiltelefon. membership-0342: Frågan omfattar uttryckligen att skicka och ta emot e-post, tillsammans med databasregistrering. membership-0343: Mäter skickad e-post med bilagor, uttryckligen inkluderat i definitionen. membership-0344: E-post nämns endast som exempel på it-system vid distansarbete. membership-0345: Köp av e-post som molntjänst mäter inte e-postanvändning enligt kandidaten. membership-0346: De valda e-postfrågorna mäter pandemiförändrad fjärråtkomst, inte faktisk e-postanvändning. membership-0347: EMRA-MPCT mäter fjärråtkomst till e-post, inte faktisk e-postanvändning. membership-0348: E-post som exempel på fakturadistribution är inte ett mått på e-postanvändning. membership-0349: RA-M mäter möjlig fjärråtkomst till företagets e-post, inte faktisk e-postanvändning. membership-0350: Kryptering av möjlig e-post är en säkerhetsåtgärd, inte ett e-postanvändningsmått. membership-0351: Inga valda variabler mäter e-postanvändning.\ncatalog:occurrence:290114\ncatalog:occurrence:290115\ncatalog:variable_text:32351:17167:18628\ncatalog:variable_text:32387:19358:19723\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32394:15706:16071\ncatalog:variable_text:32401:16801:17167\ncatalog:variable_text:32422:17167:20454\ncatalog:variable_text:32541:18993:20454\ncatalog:variable_text:32567:16071:16436\ncatalog:variable_text:32582:20089:20454\ncatalog:variable_text:32594:16071:16436\ncatalog:variable_text:32595:16071:16436\ncatalog:variable_text:32596:16071:16436\ncatalog:variable_text:32597:16071:16436\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32677:14245:14975\ncatalog:variable_text:32683:13514:13879\ncatalog:variable_text:32727:13879:14245\ncatalog:variable_text:32738:13879:14245\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32781:13514:13879\ncatalog:variable_text:32816:16436:17532\ncatalog:variable_text:32817:16071:16436\ncatalog:variable_text:32819:19358:19723\ncatalog:variable_text:32820:17167:17532\ncatalog:variable_text:32870:18628:18993\ncatalog:variable_text:32871:18628:18993\ncatalog:variable_text:32872:18628:18993\ncatalog:variable_text:32879:18628:18993\ncatalog:variable_text:32910:20089:20454\ncatalog:variable_text:32980:18993:19358\ncatalog:variable_text:33024:17897:18262\ncatalog:variable_text:33036:16436:16801\ncatalog:variable_text:33071:17897:18262\ncatalog:variable_text:33097:15706:16071\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33187:16801:17167\ncatalog:variable_text:33189:16801:17167\ncatalog:variable_text:33190:16801:17167\ncatalog:variable_text:33202:17167:17532\ncatalog:variable_text:33206:17532:17897\ncatalog:variable_text:33277:15340:15706\ncatalog:variable_text:33302:16801:17167\ncatalog:variable_text:33322:20089:20454\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33344:17897:18262\ncatalog:variable_text:33374:15706:16436\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33404:16436:16801\ncatalog:variable_text:33429:13879:14245\ncatalog:variable_text:33431:13879:14245\ncatalog:variable_text:33439:16071:16436\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33590:17897:18262\ncatalog:variable_text:33610:19723:20089\ncatalog:variable_text:33649:17167:17532\ncatalog:variable_text:33650:17167:17532\ncatalog:variable_text:33658:20089:20454\ncatalog:variable_text:33663:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ccs-em"
+subject = "var:delat-dokument-bilder-e-postbilaga-senaste-3-man"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Vald e-postfråga anger bilagor utan dokument- eller bildavgränsning; mediefildelningen avser filmer och musik. membership-0329: E-postmåtten avser allmän e-post, inte särskilt dokument- eller bilddelning. membership-0330: Ingen vald variabel mäter dokument- eller bilddelning. membership-0331: Variablerna mäter faktisk dokument- eller bilddelning efter kanal, inklusive moln, e-post och andra digitala överföringssätt. membership-0332: Studiekommunikation och medienedladdning anger inte dokument- eller bilddelning. membership-0333: De valda uppladdningsfrågorna gäller publicering av eget material, som definitionen utesluter. membership-0334: Filkopiering och mediefildelningsprogram mäter inte den definierade dokument- och bilddelningen. membership-0335: Åtkomstbegränsning till profiler eller lagring mäter skydd, inte delningskanal. membership-0336: Filflyttning mellan egna enheter och säkerhetskopiering mäter inte delning med andra. membership-0337: Filkopiering mäter inte delning med andra. membership-0338: Lämnade personuppgifter mäter uppgiftskategorier, inte dokumentdelning efter kanal. membership-0339: Filflyttning och publicering mäts, inte separat delning efter kanal. membership-0340: Digitala leveranser av köpt innehåll mäter inte delning med andra. membership-0341: Mobilfrågan mäter digital bildöverföring. Molnfrågan kodar utebliven delning eller alternativa delningskanaler; den fasta definitionen omfattar dessa komponenter. membership-0342: Filskapande och säkerhetskopiering mäter inte delning med andra. membership-0343: E-postfrågan mäter skickade bilagor utan särskild kodning av dokument- eller bilddelning efter kanal. membership-0344: Ingen vald variabel mäter dokument- eller bilddelning. membership-0345: Multimedieplattformvariabeln mäter användning av en social medietyp, inte dokument- eller bilddelning efter kanal. membership-0346: De valda delningsfrågorna avser information i distributionskedjan, inte dokument- eller bilddelning efter kanal. membership-0347: Inga valda variabler mäter digital delning av dokument eller bilder. membership-0348: Lagerinformationens elektroniska utbyte mäter inte delning av dokument eller bilder efter kanal. membership-0349: Fjärråtkomst till företagets dokument är inte belagd delning av dokument eller bilder. membership-0350: Extern informationsdelning mäter inte särskilt dokument- eller bilddelning. membership-0351: Inga valda variabler mäter digital dokument- eller bilddelning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan mäter e-postanvändning med bilagor. membership-0329: Båda beskriver sändning och mottagning av e-post. membership-0330: c4 utesluter uttryckligen e-post; ingen vald variabel mäter e-postanvändning. membership-0331: Delning via e-postbilaga är uttrycklig e-postanvändning och ingår i definitionen. membership-0332: Vald chatt- och studiekommunikation anger inte e-postanvändning. membership-0333: E-postfrågorna gäller ersättning med internetsamtal eller spam, inte e-postanvändning. membership-0334: Bedrägliga e-postmeddelanden mäts som incident, inte e-postanvändning. membership-0335: Inga valda variabler mäter e-postanvändning. membership-0336: Inga valda sektionsvariabler mäter e-postanvändning. membership-0337: Den valda e-postfrågan är särskilt avgränsad myndighetskontakt och därmed undantagen. membership-0338: Kontohackning och lämnad e-postadress mäter inte e-postanvändning. membership-0339: Mäter att skicka eller ta emot e-post med mobil utrustning. membership-0340: Inga valda variabler mäter e-postanvändning. membership-0341: Frågan mäter e-postläsning med mobiltelefon. membership-0342: Frågan omfattar uttryckligen att skicka och ta emot e-post, tillsammans med databasregistrering. membership-0343: Mäter skickad e-post med bilagor, uttryckligen inkluderat i definitionen. membership-0344: E-post nämns endast som exempel på it-system vid distansarbete. membership-0345: Köp av e-post som molntjänst mäter inte e-postanvändning enligt kandidaten. membership-0346: De valda e-postfrågorna mäter pandemiförändrad fjärråtkomst, inte faktisk e-postanvändning. membership-0347: EMRA-MPCT mäter fjärråtkomst till e-post, inte faktisk e-postanvändning. membership-0348: E-post som exempel på fakturadistribution är inte ett mått på e-postanvändning. membership-0349: RA-M mäter möjlig fjärråtkomst till företagets e-post, inte faktisk e-postanvändning. membership-0350: Kryptering av möjlig e-post är en säkerhetsåtgärd, inte ett e-postanvändningsmått. membership-0351: Inga valda variabler mäter e-postanvändning.\ncatalog:occurrence:290114\ncatalog:occurrence:290115\ncatalog:variable_text:32351:17167:18628\ncatalog:variable_text:32387:19358:19723\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32394:15706:16071\ncatalog:variable_text:32401:16801:17167\ncatalog:variable_text:32422:17167:20454\ncatalog:variable_text:32541:18993:20454\ncatalog:variable_text:32567:16071:16436\ncatalog:variable_text:32582:20089:20454\ncatalog:variable_text:32594:16071:16436\ncatalog:variable_text:32595:16071:16436\ncatalog:variable_text:32596:16071:16436\ncatalog:variable_text:32597:16071:16436\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32677:14245:14975\ncatalog:variable_text:32683:13514:13879\ncatalog:variable_text:32727:13879:14245\ncatalog:variable_text:32738:13879:14245\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32781:13514:13879\ncatalog:variable_text:32816:16436:17532\ncatalog:variable_text:32817:16071:16436\ncatalog:variable_text:32819:19358:19723\ncatalog:variable_text:32820:17167:17532\ncatalog:variable_text:32870:18628:18993\ncatalog:variable_text:32871:18628:18993\ncatalog:variable_text:32872:18628:18993\ncatalog:variable_text:32879:18628:18993\ncatalog:variable_text:32910:20089:20454\ncatalog:variable_text:32980:18993:19358\ncatalog:variable_text:33024:17897:18262\ncatalog:variable_text:33036:16436:16801\ncatalog:variable_text:33071:17897:18262\ncatalog:variable_text:33097:15706:16071\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33187:16801:17167\ncatalog:variable_text:33189:16801:17167\ncatalog:variable_text:33190:16801:17167\ncatalog:variable_text:33202:17167:17532\ncatalog:variable_text:33206:17532:17897\ncatalog:variable_text:33277:15340:15706\ncatalog:variable_text:33302:16801:17167\ncatalog:variable_text:33322:20089:20454\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33344:17897:18262\ncatalog:variable_text:33374:15706:16436\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33404:16436:16801\ncatalog:variable_text:33429:13879:14245\ncatalog:variable_text:33431:13879:14245\ncatalog:variable_text:33439:16071:16436\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33590:17897:18262\ncatalog:variable_text:33610:19723:20089\ncatalog:variable_text:33649:17167:17532\ncatalog:variable_text:33650:17167:17532\ncatalog:variable_text:33658:20089:20454\ncatalog:variable_text:33663:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ccs-oth"
+subject = "var:delat-dokument-bilder-annat-satt-senaste-3-man"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32596:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccs-oth"
+subject = "var:delat-dokument-bilder-annat-satt-senaste-3-man"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32596:16071:16436"
 
@@ -5970,13 +5970,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32597:16071:164
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-ochg"
+subject = "var:svarigheter-avsluta-byta-leverantor-hindrar-kop-molntjanster"
 fields = { "sets" = ["hinder-for-kop-av-molntjanster"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32598:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-ochg"
+subject = "var:svarigheter-avsluta-byta-leverantor-hindrar-kop-molntjanster"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32598:16071:16436"
 
@@ -6042,25 +6042,25 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32603:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-sec"
+subject = "var:inte-anvant-molntjanster-integritets-eller-sakerhetsskal"
 fields = { "sets" = ["skal-att-avsta-fran-molntjanster"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32604:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-sec"
+subject = "var:inte-anvant-molntjanster-integritets-eller-sakerhetsskal"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32604:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-skl"
+subject = "var:inte-anvant-molntjanster-vet-inte-hur-eller-for-krangligt"
 fields = { "sets" = ["skal-att-avsta-fran-molntjanster"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32605:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ccx-skl"
+subject = "var:inte-anvant-molntjanster-vet-inte-hur-eller-for-krangligt"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32605:16071:16436"
 
@@ -6126,25 +6126,25 @@ evidence = "Id:t innehåller en källkod med siffra och etiketten ger en läsbar
 
 [[statement]]
 kind = "set"
-subject = "var:crman"
+subject = "var:crm-analyserar-kundinformation-marknadsforing"
 fields = { "sets" = ["anvandning-av-crm-system"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:32611:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:crman"
+subject = "var:crm-analyserar-kundinformation-marknadsforing"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:32611:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:crmstr"
+subject = "var:crm-samlar-lagrar-delar-kundinformation-internt"
 fields = { "sets" = ["anvandning-av-crm-system"] }
 evidence = "CRMSTR är en opak källkod.\ncatalog:variable_text:32612:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:crmstr"
+subject = "var:crm-samlar-lagrar-delar-kundinformation-internt"
 fields = { "tags" = ["business", "digital"] }
 evidence = "CRMSTR är en opak källkod.\ncatalog:variable_text:32612:18628:18993"
 
@@ -6186,13 +6186,13 @@ evidence = "D12 är en frågekod; etiketten beskriver köpbeloppet.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:d15f"
+subject = "var:ej-internetkop-oro-returer-klagomal-aterbetalning"
 fields = { "sets" = ["skal-till-uteblivna-internetkop"] }
 evidence = "Frågekoden är opak; etiketten anger skälet till uteblivet köp.\ncatalog:variable_text:32616:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:d15f"
+subject = "var:ej-internetkop-oro-returer-klagomal-aterbetalning"
 fields = { "tags" = ["consumption", "digital"] }
 evidence = "Frågekoden är opak; etiketten anger skälet till uteblivet köp.\ncatalog:variable_text:32616:18628:18993"
 
@@ -6462,13 +6462,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:32638:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:dasgov"
+subject = "var:foretaget-dataanalys-offentliga-oppna-data"
 fields = { "sets" = ["datakallor-for-dataanalys"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32639:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:dasgov"
+subject = "var:foretaget-dataanalys-offentliga-oppna-data"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32639:20089:20454"
 
@@ -6738,61 +6738,61 @@ evidence = "Identitetsfakta visar angränsande och perioduppdelade mappningar ti
 
 [[statement]]
 kind = "set"
-subject = "var:datb3a"
+subject = "var:anvant-dator-hemma-3-manader"
 fields = { "sets" = ["plats-for-datoranvandning"] }
 evidence = "DatB3A är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32662:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3a"
+subject = "var:anvant-dator-hemma-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "DatB3A är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32662:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3b"
+subject = "var:anvant-dator-arbetsplats-3-manader"
 fields = { "sets" = ["plats-for-datoranvandning"] }
 evidence = "DatB3B är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32663:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3b"
+subject = "var:anvant-dator-arbetsplats-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "DatB3B är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32663:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3c"
+subject = "var:anvant-dator-skolan-3-manader"
 fields = { "sets" = ["plats-for-datoranvandning"] }
 evidence = "DatB3C är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32664:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3c"
+subject = "var:anvant-dator-skolan-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "DatB3C är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32664:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3d"
+subject = "var:anvant-dator-hemma-hos-annan-3-manader"
 fields = { "sets" = ["plats-for-datoranvandning"] }
 evidence = "DatB3D är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32665:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3d"
+subject = "var:anvant-dator-hemma-hos-annan-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "DatB3D är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32665:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3e"
+subject = "var:anvant-dator-annan-plats-3-manader"
 fields = { "sets" = ["plats-for-datoranvandning"] }
 evidence = "DatB3E är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32666:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datb3e"
+subject = "var:anvant-dator-annan-plats-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "DatB3E är en opak källmnemonik; etiketten anger platsen för datoranvändning.\ncatalog:variable_text:32666:13514:15340"
 
@@ -7038,13 +7038,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:32686:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:datc9a"
+subject = "var:hinder-mer-internet-otillrackliga-utlandska-sprakkunskaper"
 fields = { "sets" = ["hinder-for-okad-internetanvandning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32687:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:datc9a"
+subject = "var:hinder-mer-internet-otillrackliga-utlandska-sprakkunskaper"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32687:13514:13879"
 
@@ -7110,13 +7110,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32692:13
 
 [[statement]]
 kind = "set"
-subject = "var:datc9g"
+subject = "var:hinder-mer-internet-otillrackliga-kunskaper-vissa-hemsidor"
 fields = { "sets" = ["hinder-for-okad-internetanvandning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32693:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:datc9g"
+subject = "var:hinder-mer-internet-otillrackliga-kunskaper-vissa-hemsidor"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32693:13514:13879"
 
@@ -7206,13 +7206,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32700:14245:146
 
 [[statement]]
 kind = "set"
-subject = "var:datd10g"
+subject = "var:betydelse-betyg-asikter-anvandare-internetbestallning"
 fields = { "sets" = ["betydelse-av-egenskaper-vid-internetkop"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32701:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd10g"
+subject = "var:betydelse-betyg-asikter-anvandare-internetbestallning"
 fields = { "tags" = ["consumption", "digital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32701:14245:14610"
 
@@ -7230,13 +7230,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32702:14245:146
 
 [[statement]]
 kind = "set"
-subject = "var:datd11"
+subject = "var:laser-forsaljningsvillkor-internetkop"
 fields = { "sets" = [] }
 evidence = "DatD11 är en frågekod.\ncatalog:variable_text:32703:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd11"
+subject = "var:laser-forsaljningsvillkor-internetkop"
 fields = { "tags" = ["consumption", "digital"] }
 evidence = "DatD11 är en frågekod.\ncatalog:variable_text:32703:14245:14610"
 
@@ -7314,25 +7314,25 @@ evidence = "DatD12F är en frågekod. Coordinator group membership: Union of com
 
 [[statement]]
 kind = "set"
-subject = "var:datd12i"
+subject = "var:ej-internetkop-inte-kreditkort-betalkort-internetbetalning"
 fields = { "sets" = ["skal-till-uteblivna-internetkop"] }
 evidence = "DatD12I är en frågekod.\ncatalog:variable_text:32710:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd12i"
+subject = "var:ej-internetkop-inte-kreditkort-betalkort-internetbetalning"
 fields = { "tags" = ["consumption", "digital"] }
 evidence = "DatD12I är en frågekod.\ncatalog:variable_text:32710:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd12j"
+subject = "var:ej-internetkop-for-langsam-internetanslutning"
 fields = { "sets" = ["skal-till-uteblivna-internetkop"] }
 evidence = "DatD12J är en frågekod.\ncatalog:variable_text:32711:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd12j"
+subject = "var:ej-internetkop-for-langsam-internetanslutning"
 fields = { "tags" = ["consumption", "digital"] }
 evidence = "DatD12J är en frågekod.\ncatalog:variable_text:32711:14245:14610"
 
@@ -7530,13 +7530,13 @@ evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:289003\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:datd2c1"
+subject = "var:kopt-bestallt-receptbelagda-lakemedel-internet"
 fields = { "sets" = ["internetkop-av-lakemedel"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32728:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datd2c1"
+subject = "var:kopt-bestallt-receptbelagda-lakemedel-internet"
 fields = { "tags" = ["consumption", "digital", "medicines"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32728:14245:14610"
 
@@ -7938,13 +7938,13 @@ evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:289211\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:date1a"
+subject = "var:oro-virus-datorinfektion"
 fields = { "sets" = ["oro-for-internetsakerhet-och-integritet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32762:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:date1a"
+subject = "var:oro-virus-datorinfektion"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32762:14610:14975"
 
@@ -7974,25 +7974,25 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32764:14
 
 [[statement]]
 kind = "set"
-subject = "var:date1d"
+subject = "var:oro-forlora-pengar-phishing-pharming"
 fields = { "sets" = ["oro-for-internetsakerhet-och-integritet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32765:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:date1d"
+subject = "var:oro-forlora-pengar-phishing-pharming"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32765:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:date1e"
+subject = "var:oro-forlora-pengar-kredit-kontokortsuppgifter-bedragare"
 fields = { "sets" = ["oro-for-internetsakerhet-och-integritet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32766:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:date1e"
+subject = "var:oro-forlora-pengar-kredit-kontokortsuppgifter-bedragare"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:32766:14610:14975"
 
@@ -8478,13 +8478,13 @@ evidence = "Id:t är en källkod. Etiketten delas med fritextvariabeln och måle
 
 [[statement]]
 kind = "set"
-subject = "var:datf5gtxt"
+subject = "var:lart-datorer-internet-annat-satt-klartext"
 fields = { "sets" = ["satt-att-forvarva-it-kunskaper"] }
 evidence = "Id:t är en källkod. Etiketten delas med svarsalternativet och målet behöver disambigueras.\ncatalog:variable_text:32807:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:datf5gtxt"
+subject = "var:lart-datorer-internet-annat-satt-klartext"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod. Etiketten delas med svarsalternativet och målet behöver disambigueras.\ncatalog:variable_text:32807:14975:15340"
 
@@ -8514,25 +8514,25 @@ evidence = "Uppläsning av undersökningsintroduktionen är insamlingsmetodik.\n
 
 [[statement]]
 kind = "set"
-subject = "var:datn1a1"
+subject = "var:eget-domannamn-primar-doman-se"
 fields = { "sets" = [] }
 evidence = "DatN1A1 är en frågekod.\ncatalog:variable_text:32811:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datn1a1"
+subject = "var:eget-domannamn-primar-doman-se"
 fields = { "tags" = ["digital"] }
 evidence = "DatN1A1 är en frågekod.\ncatalog:variable_text:32811:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datn1a2"
+subject = "var:eget-domannamn-primar-toppdoman-net"
 fields = { "sets" = [] }
 evidence = "DatN1A2 är en frågekod.\ncatalog:variable_text:32812:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:datn1a2"
+subject = "var:eget-domannamn-primar-toppdoman-net"
 fields = { "tags" = ["digital"] }
 evidence = "DatN1A2 är en frågekod.\ncatalog:variable_text:32812:14245:14610"
 
@@ -9006,25 +9006,25 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger en AI-teknik.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:tog-emot-bestallningar-fran-en-marknadsplats-for-e-handel"
+subject = "var:tog-emot-bestallningar-marknadsplats-app-flera-foretag"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32858:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tog-emot-bestallningar-fran-en-marknadsplats-for-e-handel"
+subject = "var:tog-emot-bestallningar-marknadsplats-app-flera-foretag"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32858:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tog-emot-bestallningar-via-foretagets-egen-webbplats"
+subject = "var:tog-emot-bestallningar-egen-webbplats-eller-app"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32859:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tog-emot-bestallningar-via-foretagets-egen-webbplats"
+subject = "var:tog-emot-bestallningar-egen-webbplats-eller-app"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32859:17167:20454"
 
@@ -9042,13 +9042,13 @@ evidence = "E_AWSEU_DVAT är en källkod.\ncatalog:variable_text:32860:18628:193
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-omsattning-fran-en-marknadsplats-for-e-handel"
+subject = "var:andel-omsattning-marknadsplats-av-webb-app-omsattning"
 fields = { "sets" = ["omsattningsandel-fran-webbforsaljning"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32861:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-av-omsattning-fran-en-marknadsplats-for-e-handel"
+subject = "var:andel-omsattning-marknadsplats-av-webb-app-omsattning"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32861:19723:20089"
 
@@ -9078,25 +9078,25 @@ evidence = "E_AWSVAL_EU är en ogenomskinlig källkod; etiketten anger omsättni
 
 [[statement]]
 kind = "set"
-subject = "var:e-awsval-hm"
+subject = "var:andel-webbomsattning-sverige-av-foretagsomsattning"
 fields = { "sets" = ["omsattningsandel-fran-webbforsaljning"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32864:18628:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:e-awsval-hm"
+subject = "var:andel-webbomsattning-sverige-av-foretagsomsattning"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32864:18628:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:e-awsval-ww"
+subject = "var:andel-webbomsattning-ovriga-varlden-av-foretagsomsattning"
 fields = { "sets" = ["omsattningsandel-fran-webbforsaljning"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32865:18628:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:e-awsval-ww"
+subject = "var:andel-webbomsattning-ovriga-varlden-av-foretagsomsattning"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:32865:18628:19358"
 
@@ -9150,97 +9150,97 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger typen av molntjänstk�
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemf"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-helt-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-epost"] }
 evidence = "E_CVD_CEMF är en ogenomskinlig källkod.\ncatalog:variable_text:32870:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemf"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-helt-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CEMF är en ogenomskinlig källkod.\ncatalog:variable_text:32870:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemp"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-delvis-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-epost"] }
 evidence = "E_CVD_CEMP är en ogenomskinlig källkod.\ncatalog:variable_text:32871:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemp"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-delvis-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CEMP är en ogenomskinlig källkod.\ncatalog:variable_text:32871:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemx"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-inte-alls-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-epost"] }
 evidence = "E_CVD_CEMX är en ogenomskinlig källkod.\ncatalog:variable_text:32872:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-cemx"
+subject = "var:okad-anstalldandel-fjarratkomst-epost-inte-alls-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CEMX är en ogenomskinlig källkod.\ncatalog:variable_text:32872:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-craf"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-helt-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-it-system"] }
 evidence = "E_CVD_CRAF är en ogenomskinlig källkod.\ncatalog:variable_text:32873:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-craf"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-helt-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CRAF är en ogenomskinlig källkod.\ncatalog:variable_text:32873:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-crap"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-delvis-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-it-system"] }
 evidence = "E_CVD_CRAP är en ogenomskinlig källkod.\ncatalog:variable_text:32874:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-crap"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-delvis-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CRAP är en ogenomskinlig källkod.\ncatalog:variable_text:32874:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-crax"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-inte-alls-covid19"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-it-system"] }
 evidence = "E_CVD_CRAX är en ogenomskinlig källkod.\ncatalog:variable_text:32875:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-cvd-crax"
+subject = "var:okad-anstalldandel-fjarratkomst-utom-epost-inte-alls-covid19"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_CRAX är en ogenomskinlig källkod.\ncatalog:variable_text:32875:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-helt-pa-grund"
+subject = "var:antal-distansmoten-internet-okade-helt-covid-19"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0329: Ingen vald variabel mäter pandemiförändrade distansmöten. membership-0330: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0331: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0332: Internettelefoni mäter förekomst utan pandemiförändring. membership-0333: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0334: Inget valt mått avser pandemiförändrade möten. membership-0335: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0336: Inga valda sektionsvariabler mäter pandemiförändring av distansmöten. membership-0337: Internetsamtalsfrågan anger ingen pandemiförändring. membership-0338: Samtalsfrågan anger ingen pandemiförändring. membership-0339: Inget valt mått avser pandemiförändrade distansmöten. membership-0340: Inga valda variabler mäter pandemiförändrade möten. membership-0341: Inga valda variabler mäter pandemiförändrade distansmöten. membership-0342: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0343: Valda samtalsmått saknar pandemiförändring och covid-19-koppling. membership-0344: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0345: Inget valt sektionsid mäter pandemiförändring av distansmöten. membership-0346: Etiketterna mäter förändrat antal distansmöten under 2020 och covid-19-koppling. Dessa stöder den fasta kandidatens medlemskap trots motstridiga beskrivningar och tidigare bedömningar. membership-0347: GMEET gäller mötesriktlinjer, inte pandemiförändring. membership-0348: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0349: RM mäter mötesförekomst utan belagd förändring under 2020 eller covid-19-koppling. membership-0350: SKP anger samtalsanvändning utan pandemiförändring. membership-0351: Inga valda variabler mäter pandemiförändring av distansmöten.\ncatalog:occurrence:292889\ncatalog:occurrence:292890\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:valueset:7895\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32876:18628:18993\ncatalog:variable_text:32877:18628:18993\ncatalog:variable_text:32878:18628:18993\ncatalog:variable_text:32882:18628:18993\ncatalog:variable_text:33045:17167:18628\ncatalog:variable_text:33069:14610:15340\ncatalog:variable_text:33168:14245:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33579:19723:20089\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33713:15706:20454\ncatalog:variable_text:33714:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-helt-pa-grund"
+subject = "var:antal-distansmoten-internet-okade-helt-covid-19"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0329: Ingen vald variabel mäter pandemiförändrade distansmöten. membership-0330: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0331: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0332: Internettelefoni mäter förekomst utan pandemiförändring. membership-0333: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0334: Inget valt mått avser pandemiförändrade möten. membership-0335: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0336: Inga valda sektionsvariabler mäter pandemiförändring av distansmöten. membership-0337: Internetsamtalsfrågan anger ingen pandemiförändring. membership-0338: Samtalsfrågan anger ingen pandemiförändring. membership-0339: Inget valt mått avser pandemiförändrade distansmöten. membership-0340: Inga valda variabler mäter pandemiförändrade möten. membership-0341: Inga valda variabler mäter pandemiförändrade distansmöten. membership-0342: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0343: Valda samtalsmått saknar pandemiförändring och covid-19-koppling. membership-0344: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0345: Inget valt sektionsid mäter pandemiförändring av distansmöten. membership-0346: Etiketterna mäter förändrat antal distansmöten under 2020 och covid-19-koppling. Dessa stöder den fasta kandidatens medlemskap trots motstridiga beskrivningar och tidigare bedömningar. membership-0347: GMEET gäller mötesriktlinjer, inte pandemiförändring. membership-0348: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0349: RM mäter mötesförekomst utan belagd förändring under 2020 eller covid-19-koppling. membership-0350: SKP anger samtalsanvändning utan pandemiförändring. membership-0351: Inga valda variabler mäter pandemiförändring av distansmöten.\ncatalog:occurrence:292889\ncatalog:occurrence:292890\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:valueset:7895\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32876:18628:18993\ncatalog:variable_text:32877:18628:18993\ncatalog:variable_text:32878:18628:18993\ncatalog:variable_text:32882:18628:18993\ncatalog:variable_text:33045:17167:18628\ncatalog:variable_text:33069:14610:15340\ncatalog:variable_text:33168:14245:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33579:19723:20089\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33713:15706:20454\ncatalog:variable_text:33714:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-delvis-pa-grund"
+subject = "var:antal-distansmoten-internet-okade-delvis-covid-19"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0329: Ingen vald variabel mäter pandemiförändrade distansmöten. membership-0330: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0331: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0332: Internettelefoni mäter förekomst utan pandemiförändring. membership-0333: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0334: Inget valt mått avser pandemiförändrade möten. membership-0335: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0336: Inga valda sektionsvariabler mäter pandemiförändring av distansmöten. membership-0337: Internetsamtalsfrågan anger ingen pandemiförändring. membership-0338: Samtalsfrågan anger ingen pandemiförändring. membership-0339: Inget valt mått avser pandemiförändrade distansmöten. membership-0340: Inga valda variabler mäter pandemiförändrade möten. membership-0341: Inga valda variabler mäter pandemiförändrade distansmöten. membership-0342: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0343: Valda samtalsmått saknar pandemiförändring och covid-19-koppling. membership-0344: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0345: Inget valt sektionsid mäter pandemiförändring av distansmöten. membership-0346: Etiketterna mäter förändrat antal distansmöten under 2020 och covid-19-koppling. Dessa stöder den fasta kandidatens medlemskap trots motstridiga beskrivningar och tidigare bedömningar. membership-0347: GMEET gäller mötesriktlinjer, inte pandemiförändring. membership-0348: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0349: RM mäter mötesförekomst utan belagd förändring under 2020 eller covid-19-koppling. membership-0350: SKP anger samtalsanvändning utan pandemiförändring. membership-0351: Inga valda variabler mäter pandemiförändring av distansmöten. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter riktlinjer som främjar digitala möten. membership-0329: Ingen vald variabel mäter mötesriktlinjer. membership-0330: Ingen vald variabel mäter mötesriktlinjer. membership-0331: Ingen vald variabel mäter riktlinjer för digitala möten. membership-0332: Förekomst av videokonferens mäter inte mötesriktlinjer. membership-0333: Ingen vald variabel mäter mötesriktlinjer. membership-0334: Inget valt mått avser mötesriktlinjer. membership-0335: Inga valda variabler mäter digitala mötesriktlinjer. membership-0336: Inga valda sektionsvariabler mäter riktlinjer för digitala möten. membership-0337: Internetsamtalsfrågan mäter inte mötesriktlinjer. membership-0338: Inga valda variabler mäter mötesriktlinjer. membership-0339: Inget valt mått avser mötesriktlinjer. membership-0340: Inga valda variabler mäter mötesriktlinjer. membership-0341: Inga valda variabler mäter mötesriktlinjer. membership-0342: Inga valda variabler mäter riktlinjer för digitala möten. membership-0343: Valda samtalsmått mäter användning, inte mötesriktlinjer. membership-0344: Ingen vald variabel mäter riktlinjer för digitala möten. membership-0345: Inget valt sektionsid mäter riktlinjer för digitala möten. membership-0346: Beskrivningen anger uttryckligen riktlinjer som främjar digitala möten framför tjänsteresor och stöder medlemskap enligt den fasta definitionen. Etiketten anger ett annat mått. membership-0347: GMEET mäter miljöpolicy som föreskriver distansmöten i stället för fysiska möten med resor. membership-0348: Fjärranslutningsvariabeln avser säkerhetsriktlinjer, inte främjande av digitala möten. membership-0349: RM-EG mäter uttryckligen riktlinjer som främjar digitala möten framför tjänsteresor. Säkerhetsriktlinjer för möten omfattas inte. membership-0350: Samtalsanvändning anger inga riktlinjer som främjar digitala möten. membership-0351: Inga valda variabler mäter riktlinjer för digitala möten.\ncatalog:occurrence:292889\ncatalog:occurrence:292890\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:valueset:7895\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32876:18628:18993\ncatalog:variable_text:32877:18628:18993\ncatalog:variable_text:32878:18628:18993\ncatalog:variable_text:32882:18628:18993\ncatalog:variable_text:33045:17167:18628\ncatalog:variable_text:33069:14610:15340\ncatalog:variable_text:33168:14245:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33441:16071:16436\ncatalog:variable_text:33579:19723:20089\ncatalog:variable_text:33580:18993:19358\ncatalog:variable_text:33581:18993:19358\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33713:15706:20454\ncatalog:variable_text:33714:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-delvis-pa-grund"
+subject = "var:antal-distansmoten-internet-okade-delvis-covid-19"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0329: Ingen vald variabel mäter pandemiförändrade distansmöten. membership-0330: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0331: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0332: Internettelefoni mäter förekomst utan pandemiförändring. membership-0333: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0334: Inget valt mått avser pandemiförändrade möten. membership-0335: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0336: Inga valda sektionsvariabler mäter pandemiförändring av distansmöten. membership-0337: Internetsamtalsfrågan anger ingen pandemiförändring. membership-0338: Samtalsfrågan anger ingen pandemiförändring. membership-0339: Inget valt mått avser pandemiförändrade distansmöten. membership-0340: Inga valda variabler mäter pandemiförändrade möten. membership-0341: Inga valda variabler mäter pandemiförändrade distansmöten. membership-0342: Inga valda variabler mäter pandemiförändring av distansmöten. membership-0343: Valda samtalsmått saknar pandemiförändring och covid-19-koppling. membership-0344: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0345: Inget valt sektionsid mäter pandemiförändring av distansmöten. membership-0346: Etiketterna mäter förändrat antal distansmöten under 2020 och covid-19-koppling. Dessa stöder den fasta kandidatens medlemskap trots motstridiga beskrivningar och tidigare bedömningar. membership-0347: GMEET gäller mötesriktlinjer, inte pandemiförändring. membership-0348: Ingen vald variabel mäter pandemiförändring av distansmöten. membership-0349: RM mäter mötesförekomst utan belagd förändring under 2020 eller covid-19-koppling. membership-0350: SKP anger samtalsanvändning utan pandemiförändring. membership-0351: Inga valda variabler mäter pandemiförändring av distansmöten. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter riktlinjer som främjar digitala möten. membership-0329: Ingen vald variabel mäter mötesriktlinjer. membership-0330: Ingen vald variabel mäter mötesriktlinjer. membership-0331: Ingen vald variabel mäter riktlinjer för digitala möten. membership-0332: Förekomst av videokonferens mäter inte mötesriktlinjer. membership-0333: Ingen vald variabel mäter mötesriktlinjer. membership-0334: Inget valt mått avser mötesriktlinjer. membership-0335: Inga valda variabler mäter digitala mötesriktlinjer. membership-0336: Inga valda sektionsvariabler mäter riktlinjer för digitala möten. membership-0337: Internetsamtalsfrågan mäter inte mötesriktlinjer. membership-0338: Inga valda variabler mäter mötesriktlinjer. membership-0339: Inget valt mått avser mötesriktlinjer. membership-0340: Inga valda variabler mäter mötesriktlinjer. membership-0341: Inga valda variabler mäter mötesriktlinjer. membership-0342: Inga valda variabler mäter riktlinjer för digitala möten. membership-0343: Valda samtalsmått mäter användning, inte mötesriktlinjer. membership-0344: Ingen vald variabel mäter riktlinjer för digitala möten. membership-0345: Inget valt sektionsid mäter riktlinjer för digitala möten. membership-0346: Beskrivningen anger uttryckligen riktlinjer som främjar digitala möten framför tjänsteresor och stöder medlemskap enligt den fasta definitionen. Etiketten anger ett annat mått. membership-0347: GMEET mäter miljöpolicy som föreskriver distansmöten i stället för fysiska möten med resor. membership-0348: Fjärranslutningsvariabeln avser säkerhetsriktlinjer, inte främjande av digitala möten. membership-0349: RM-EG mäter uttryckligen riktlinjer som främjar digitala möten framför tjänsteresor. Säkerhetsriktlinjer för möten omfattas inte. membership-0350: Samtalsanvändning anger inga riktlinjer som främjar digitala möten. membership-0351: Inga valda variabler mäter riktlinjer för digitala möten.\ncatalog:occurrence:292889\ncatalog:occurrence:292890\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:valueset:7895\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32876:18628:18993\ncatalog:variable_text:32877:18628:18993\ncatalog:variable_text:32878:18628:18993\ncatalog:variable_text:32882:18628:18993\ncatalog:variable_text:33045:17167:18628\ncatalog:variable_text:33069:14610:15340\ncatalog:variable_text:33168:14245:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33441:16071:16436\ncatalog:variable_text:33579:19723:20089\ncatalog:variable_text:33580:18993:19358\ncatalog:variable_text:33581:18993:19358\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33713:15706:20454\ncatalog:variable_text:33714:15706:16071"
 
@@ -9258,13 +9258,13 @@ evidence = "Id:t är en opak källkod. Coordinator group membership: Union of co
 
 [[statement]]
 kind = "set"
-subject = "var:andelen-anstallda-som-har-fjarratkomst-till-e-postsystem-har"
+subject = "var:okad-andel-anstallda-fjarratkomst-e-post-av-anstallda-2020"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-epost"] }
 evidence = "E_CVD_IEM är en ogenomskinlig källkod.\ncatalog:variable_text:32879:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:andelen-anstallda-som-har-fjarratkomst-till-e-postsystem-har"
+subject = "var:okad-andel-anstallda-fjarratkomst-e-post-av-anstallda-2020"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_IEM är en ogenomskinlig källkod.\ncatalog:variable_text:32879:18628:18993"
 
@@ -9282,13 +9282,13 @@ evidence = "E_CVD_IESI är en ogenomskinlig källkod.\ncatalog:variable_text:328
 
 [[statement]]
 kind = "set"
-subject = "var:andelen-anstallda-som-har-fjarratkomst-till-nagon-del"
+subject = "var:okad-andel-anst-fjarratkomst-it-annat-an-e-post-av-anst-2020"
 fields = { "sets" = ["pandemiforandring-av-fjarratkomst-till-it-system"] }
 evidence = "E_CVD_IRA är en ogenomskinlig källkod.\ncatalog:variable_text:32881:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:andelen-anstallda-som-har-fjarratkomst-till-nagon-del"
+subject = "var:okad-andel-anst-fjarratkomst-it-annat-an-e-post-av-anst-2020"
 fields = { "tags" = ["digital"] }
 evidence = "E_CVD_IRA är en ogenomskinlig källkod.\ncatalog:variable_text:32881:18628:18993"
 
@@ -9330,25 +9330,25 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32884
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdlog"
+subject = "var:iot-logistikhantering"
 fields = { "sets" = ["anvandning-av-uppkopplade-smarta-enheter"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32885:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdlog"
+subject = "var:iot-logistikhantering"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32885:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdmtn1"
+subject = "var:iot-skickbaserat-underhall-maskiner-fordon"
 fields = { "sets" = ["anvandning-av-uppkopplade-smarta-enheter"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32886:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdmtn1"
+subject = "var:iot-skickbaserat-underhall-maskiner-fordon"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32886:18628:18993"
 
@@ -9378,13 +9378,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32888
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdsec"
+subject = "var:iot-lokalernas-sakerhet"
 fields = { "sets" = ["anvandning-av-uppkopplade-smarta-enheter"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32889:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e-iotdsec"
+subject = "var:iot-lokalernas-sakerhet"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:32889:18628:18993"
 
@@ -10482,49 +10482,49 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:32984:18993:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-ictim1"
+subject = "var:overvakar-kvantifierar-it-effekt-minska-energiforbrukning"
 fields = { "sets" = ["uppfoljning-av-it-losningars-resursbesparing"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32985:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-ictim1"
+subject = "var:overvakar-kvantifierar-it-effekt-minska-energiforbrukning"
 fields = { "tags" = ["digital", "energy"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32985:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-ictim2"
+subject = "var:overvakar-kvantifierar-it-effekt-minska-materialforbrukning"
 fields = { "sets" = ["uppfoljning-av-it-losningars-resursbesparing"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32986:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-ictim2"
+subject = "var:overvakar-kvantifierar-it-effekt-minska-materialforbrukning"
 fields = { "tags" = ["digital", "environment"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:32986:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-mres"
+subject = "var:it-minska-material-eller-forbattra-atervunnet-material"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32987:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:env-mres"
+subject = "var:it-minska-material-eller-forbattra-atervunnet-material"
 fields = { "tags" = ["digital", "environment"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32987:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:envcei"
+subject = "var:miljohansyn-val-it-tjanster-utrustning"
 fields = { "sets" = ["miljohansyn-vid-it-upphandling"] }
 evidence = "ENVCEI är en opak källkod.\ncatalog:variable_text:32988:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:envcei"
+subject = "var:miljohansyn-val-it-tjanster-utrustning"
 fields = { "tags" = ["business", "digital", "environment"] }
 evidence = "ENVCEI är en opak källkod.\ncatalog:variable_text:32988:18993:20089"
 
@@ -10722,25 +10722,25 @@ evidence = "Id:t är en källkod.\ncatalog:variable_text:33005:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8a"
+subject = "var:sett-hotfulla-nedvarderande-politik-samhallsengagemang"
 fields = { "sets" = ["exponering-for-hotfulla-och-nedvarderande-inlagg"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33006:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8a"
+subject = "var:sett-hotfulla-nedvarderande-politik-samhallsengagemang"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33006:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:sett-hotfulla-nedvarderande-inlagg-sexuell-laggning"
 fields = { "sets" = ["exponering-for-hotfulla-och-nedvarderande-inlagg"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33007:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:sett-hotfulla-nedvarderande-inlagg-sexuell-laggning"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33007:20089:20454"
 
@@ -10758,25 +10758,25 @@ evidence = "Id:t är en källkod.\ncatalog:variable_text:33008:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8d"
+subject = "var:sett-hot-nedvarderande-utlandsk-bakgrund-hudfarg-etnicitet"
 fields = { "sets" = ["exponering-for-hotfulla-och-nedvarderande-inlagg"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33009:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8d"
+subject = "var:sett-hot-nedvarderande-utlandsk-bakgrund-hudfarg-etnicitet"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33009:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8e"
+subject = "var:sett-hotfulla-nedvarderande-inlagg-religion"
 fields = { "sets" = ["exponering-for-hotfulla-och-nedvarderande-inlagg"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33010:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:f8e"
+subject = "var:sett-hotfulla-nedvarderande-inlagg-religion"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33010:20089:20454"
 
@@ -11106,13 +11106,13 @@ evidence = "B6b har olika ägare i observerade perioder. Frågan gäller syftet 
 
 [[statement]]
 kind = "set"
-subject = "var:gmeet"
+subject = "var:miljopolicy-telefon-video-webbmoten"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33045:17167:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:gmeet"
+subject = "var:miljopolicy-telefon-video-webbmoten"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33045:17167:18628"
 
@@ -11634,13 +11634,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33094
 
 [[statement]]
 kind = "set"
-subject = "var:ifumc"
+subject = "var:internet-dator-surfplatta-utanfor-hemmet-hur-ofta"
 fields = { "sets" = ["internetanvandningens-frekvens-och-aktualitet"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33095:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:ifumc"
+subject = "var:internet-dator-surfplatta-utanfor-hemmet-hur-ofta"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33095:15340:15706"
 
@@ -11742,13 +11742,13 @@ evidence = "IGOV_IFP är en ogenomskinlig källkod.\ncatalog:variable_text:33103
 
 [[statement]]
 kind = "set"
-subject = "var:igov-use"
+subject = "var:myndighetswebb-information-anvandbarhet-nojdhet"
 fields = { "sets" = ["bedomning-av-myndigheters-digitala-tjanster"] }
 evidence = "IGOV_USE är en ogenomskinlig källkod.\ncatalog:variable_text:33104:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:igov-use"
+subject = "var:myndighetswebb-information-anvandbarhet-nojdhet"
 fields = { "tags" = ["digital"] }
 evidence = "IGOV_USE är en ogenomskinlig källkod.\ncatalog:variable_text:33104:15706:16071"
 
@@ -11874,13 +11874,13 @@ evidence = "Källkolumnen är även knuten till en annan variabel. Den dokumente
 
 [[statement]]
 kind = "set"
-subject = "var:igov2prhm"
+subject = "var:erbjuda-varor-tjanster-myndighetsupphandling-sverige"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33117:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:igov2prhm"
+subject = "var:erbjuda-varor-tjanster-myndighetsupphandling-sverige"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33117:17167:17897"
 
@@ -12030,13 +12030,13 @@ evidence = "Källkolumnen har olika skäl i angränsande perioder.\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:inkomstkvintiler-andel"
+subject = "var:disponibel-inkomst-per-konsumtionsenhet-kvintil"
 fields = { "sets" = [] }
 evidence = "Id:t anger andel men värdena anger inkomstkvintil, inte en andel.\ncatalog:valueset:11258\ncatalog:variable_text:33147:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:inkomstkvintiler-andel"
+subject = "var:disponibel-inkomst-per-konsumtionsenhet-kvintil"
 fields = { "tags" = ["income"] }
 evidence = "Id:t anger andel men värdena anger inkomstkvintil, inte en andel.\ncatalog:valueset:11258\ncatalog:variable_text:33147:18628:20454"
 
@@ -12654,13 +12654,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:33200:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-skickade-fakturor-som-skickades-som-e-fakturor"
+subject = "var:andel-e-fakturor-inte-autoprocessbara-av-skickade-fakturor"
 fields = { "sets" = [] }
 evidence = "INV3SBG_PEMP är en källkod.\ncatalog:variable_text:33202:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-skickade-fakturor-som-skickades-som-e-fakturor"
+subject = "var:andel-e-fakturor-inte-autoprocessbara-av-skickade-fakturor"
 fields = { "tags" = ["business", "digital"] }
 evidence = "INV3SBG_PEMP är en källkod.\ncatalog:variable_text:33202:17167:17532"
 
@@ -12702,13 +12702,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:33205:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:tar-emot-elektroniska-fakturor-som-inte-kan-processas"
+subject = "var:tar-emot-e-fakturor-inte-processas-automatiskt"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33206:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:tar-emot-elektroniska-fakturor-som-inte-kan-processas"
+subject = "var:tar-emot-e-fakturor-inte-processas-automatiskt"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33206:17532:17897"
 
@@ -13074,37 +13074,37 @@ evidence = "Källkolumnen återanvänds för en annan aktivitet.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:iotdcus"
+subject = "var:iot-sensorer-kundservice-kundaktivitet"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter RFID-ändamål. membership-0329: Ingen vald variabel mäter RFID-ändamål. membership-0330: Ingen vald variabel mäter RFID-ändamål. membership-0331: Ingen vald variabel mäter RFID-ändamål. membership-0332: Inga valda variabler avser RFID. membership-0333: Ingen vald variabel mäter RFID-ändamål. membership-0334: Inget valt mått avser RFID. membership-0335: Inga valda variabler mäter RFID-ändamål. membership-0336: Inga valda sektionsvariabler avser RFID-ändamål. membership-0337: Inget valt sektionsmått avser RFID-ändamål. membership-0338: Inga valda variabler mäter RFID-ändamål. membership-0339: Inget valt mått avser RFID. membership-0340: Inga valda variabler avser RFID. membership-0341: Inga valda variabler mäter RFID-ändamål. membership-0342: Inga valda variabler mäter RFID-ändamål. membership-0343: Inga valda variabler mäter RFID-ändamål. membership-0344: Ingen vald variabel mäter RFID-ändamål. membership-0345: RFID nämns som datakälla för big data-analys, inte som uppmätt identifierings- eller kontrolländamål. membership-0346: RFID nämns endast som möjligt inslag i IoT-system; ingen vald variabel mäter RFID-användning särskilt. membership-0347: Inga valda variabler mäter RFID-ändamål. membership-0348: Båda frågorna namnger RFID för identifierings- eller kontrolländamål: kundaktivitet och självskanning respektive produktionsövervakning och produktspårning. Definitionen utesluter inte uttryckliga RFID-komponenter i kombinerade teknikfrågor. membership-0349: De tre definierade variablerna mäter RFID för produktidentifiering, personidentifiering/access och produktionskontroll. Enbart koder belägger inte motsvarande medlemskap för övriga RFID-relaterade variabler. membership-0350: Inga belagda RFID-ändamål i denna sektion. membership-0351: Inga valda variabler mäter RFID-ändamål.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33570:13879:18628\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33572:13879:18628\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33574:13879:18628\ncatalog:variable_text:33577:13879:18628\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdcus"
+subject = "var:iot-sensorer-kundservice-kundaktivitet"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter RFID-ändamål. membership-0329: Ingen vald variabel mäter RFID-ändamål. membership-0330: Ingen vald variabel mäter RFID-ändamål. membership-0331: Ingen vald variabel mäter RFID-ändamål. membership-0332: Inga valda variabler avser RFID. membership-0333: Ingen vald variabel mäter RFID-ändamål. membership-0334: Inget valt mått avser RFID. membership-0335: Inga valda variabler mäter RFID-ändamål. membership-0336: Inga valda sektionsvariabler avser RFID-ändamål. membership-0337: Inget valt sektionsmått avser RFID-ändamål. membership-0338: Inga valda variabler mäter RFID-ändamål. membership-0339: Inget valt mått avser RFID. membership-0340: Inga valda variabler avser RFID. membership-0341: Inga valda variabler mäter RFID-ändamål. membership-0342: Inga valda variabler mäter RFID-ändamål. membership-0343: Inga valda variabler mäter RFID-ändamål. membership-0344: Ingen vald variabel mäter RFID-ändamål. membership-0345: RFID nämns som datakälla för big data-analys, inte som uppmätt identifierings- eller kontrolländamål. membership-0346: RFID nämns endast som möjligt inslag i IoT-system; ingen vald variabel mäter RFID-användning särskilt. membership-0347: Inga valda variabler mäter RFID-ändamål. membership-0348: Båda frågorna namnger RFID för identifierings- eller kontrolländamål: kundaktivitet och självskanning respektive produktionsövervakning och produktspårning. Definitionen utesluter inte uttryckliga RFID-komponenter i kombinerade teknikfrågor. membership-0349: De tre definierade variablerna mäter RFID för produktidentifiering, personidentifiering/access och produktionskontroll. Enbart koder belägger inte motsvarande medlemskap för övriga RFID-relaterade variabler. membership-0350: Inga belagda RFID-ändamål i denna sektion. membership-0351: Inga valda variabler mäter RFID-ändamål.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33570:13879:18628\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33572:13879:18628\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33574:13879:18628\ncatalog:variable_text:33577:13879:18628\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdec"
+subject = "var:iot-smarta-matare-lampor-optimera-energiforbrukning"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter energibesparande it-lösningar. membership-0329: Styrning av hushållsutrustning anger inte energibesparande ändamål. membership-0330: Ingen vald variabel mäter energibesparande it-lösningar. membership-0331: Ingen vald variabel mäter energibesparande it-lösningar. membership-0332: Inga valda variabler avser energibesparande it-lösningar. membership-0333: Ingen vald variabel mäter energibesparande it-lösningar. membership-0334: Inget valt mått avser energibesparande it-lösningar. membership-0335: Inga valda variabler mäter energibesparande it-lösningar. membership-0336: Energieffektivitet som inköpskriterium mäter inte användning av energibesparande it-lösningar. membership-0337: Inget valt sektionsmått avser energibesparande it-lösningar. membership-0338: Den uttryckliga IoT-tillämpningen omfattar internetanslutna lösningar för energihantering i hemmet. membership-0339: Inget valt mått avser energibesparande it-lösningar. membership-0340: Inga valda variabler mäter energibesparande it-lösningar. membership-0341: Inga valda variabler mäter energibesparande it-lösningar. membership-0342: Inga valda variabler mäter energibesparande it-lösningar. membership-0343: Inga valda variabler mäter energibesparande it-lösningar. membership-0344: Ingen vald variabel mäter energibesparande it-lösningar. membership-0345: Inget valt sektionsid mäter energibesparande it-lösningar. membership-0346: IoT-frågan anger hantering av energianvändning men belägger inte uttryckligen minskad energiförbrukning. membership-0347: Etiketterna belägger energibesparande it-lösningar och tillämpningar. Materialbesparing och effektuppföljning utesluts; opaka eller obestämda leveransbetydelser hålls utanför. membership-0348: Två variabler avser uttryckligen it-lösningar för minskad energiförbrukning. IoT-frågan avser smarta termostater, lampor och mätare för att optimera energianvändning och är en namngiven tillämpning inom samma definition. membership-0349: Ingen vald variabel har belagd it-lösning för minskad energiförbrukning. membership-0350: Inga belagda energibesparande IT-lösningar i denna sektion. membership-0351: Inga valda variabler mäter energibesparande it-lösningar.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:32981:17167:18628\ncatalog:variable_text:32985:20089:20454\ncatalog:variable_text:32986:20089:20454\ncatalog:variable_text:32987:20089:20454\ncatalog:variable_text:33052:19723:20089\ncatalog:variable_text:33059:17167:18628\ncatalog:variable_text:33060:17167:18628\ncatalog:variable_text:33061:13879:18628\ncatalog:variable_text:33062:16801:17167\ncatalog:variable_text:33064:17167:18628\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33249:20089:20454\ncatalog:variable_text:33250:20089:20454\ncatalog:variable_text:33342:13514:18262\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdec"
+subject = "var:iot-smarta-matare-lampor-optimera-energiforbrukning"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter energibesparande it-lösningar. membership-0329: Styrning av hushållsutrustning anger inte energibesparande ändamål. membership-0330: Ingen vald variabel mäter energibesparande it-lösningar. membership-0331: Ingen vald variabel mäter energibesparande it-lösningar. membership-0332: Inga valda variabler avser energibesparande it-lösningar. membership-0333: Ingen vald variabel mäter energibesparande it-lösningar. membership-0334: Inget valt mått avser energibesparande it-lösningar. membership-0335: Inga valda variabler mäter energibesparande it-lösningar. membership-0336: Energieffektivitet som inköpskriterium mäter inte användning av energibesparande it-lösningar. membership-0337: Inget valt sektionsmått avser energibesparande it-lösningar. membership-0338: Den uttryckliga IoT-tillämpningen omfattar internetanslutna lösningar för energihantering i hemmet. membership-0339: Inget valt mått avser energibesparande it-lösningar. membership-0340: Inga valda variabler mäter energibesparande it-lösningar. membership-0341: Inga valda variabler mäter energibesparande it-lösningar. membership-0342: Inga valda variabler mäter energibesparande it-lösningar. membership-0343: Inga valda variabler mäter energibesparande it-lösningar. membership-0344: Ingen vald variabel mäter energibesparande it-lösningar. membership-0345: Inget valt sektionsid mäter energibesparande it-lösningar. membership-0346: IoT-frågan anger hantering av energianvändning men belägger inte uttryckligen minskad energiförbrukning. membership-0347: Etiketterna belägger energibesparande it-lösningar och tillämpningar. Materialbesparing och effektuppföljning utesluts; opaka eller obestämda leveransbetydelser hålls utanför. membership-0348: Två variabler avser uttryckligen it-lösningar för minskad energiförbrukning. IoT-frågan avser smarta termostater, lampor och mätare för att optimera energianvändning och är en namngiven tillämpning inom samma definition. membership-0349: Ingen vald variabel har belagd it-lösning för minskad energiförbrukning. membership-0350: Inga belagda energibesparande IT-lösningar i denna sektion. membership-0351: Inga valda variabler mäter energibesparande it-lösningar.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:32981:17167:18628\ncatalog:variable_text:32985:20089:20454\ncatalog:variable_text:32986:20089:20454\ncatalog:variable_text:32987:20089:20454\ncatalog:variable_text:33052:19723:20089\ncatalog:variable_text:33059:17167:18628\ncatalog:variable_text:33060:17167:18628\ncatalog:variable_text:33061:13879:18628\ncatalog:variable_text:33062:16801:17167\ncatalog:variable_text:33064:17167:18628\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33249:20089:20454\ncatalog:variable_text:33250:20089:20454\ncatalog:variable_text:33342:13514:18262\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdmtn"
+subject = "var:iot-sensorer-skickbaserat-underhall-fordon"
 fields = { "sets" = ["anvandning-av-uppkopplade-smarta-enheter"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33241:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdmtn"
+subject = "var:iot-sensorer-skickbaserat-underhall-fordon"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33241:18262:18628"
 
@@ -13122,13 +13122,13 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:33242
 
 [[statement]]
 kind = "set"
-subject = "var:iotdprd"
+subject = "var:iot-sensorer-rfid-produktion-logistik-produktforflyttning"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter RFID-ändamål. membership-0329: Ingen vald variabel mäter RFID-ändamål. membership-0330: Ingen vald variabel mäter RFID-ändamål. membership-0331: Ingen vald variabel mäter RFID-ändamål. membership-0332: Inga valda variabler avser RFID. membership-0333: Ingen vald variabel mäter RFID-ändamål. membership-0334: Inget valt mått avser RFID. membership-0335: Inga valda variabler mäter RFID-ändamål. membership-0336: Inga valda sektionsvariabler avser RFID-ändamål. membership-0337: Inget valt sektionsmått avser RFID-ändamål. membership-0338: Inga valda variabler mäter RFID-ändamål. membership-0339: Inget valt mått avser RFID. membership-0340: Inga valda variabler avser RFID. membership-0341: Inga valda variabler mäter RFID-ändamål. membership-0342: Inga valda variabler mäter RFID-ändamål. membership-0343: Inga valda variabler mäter RFID-ändamål. membership-0344: Ingen vald variabel mäter RFID-ändamål. membership-0345: RFID nämns som datakälla för big data-analys, inte som uppmätt identifierings- eller kontrolländamål. membership-0346: RFID nämns endast som möjligt inslag i IoT-system; ingen vald variabel mäter RFID-användning särskilt. membership-0347: Inga valda variabler mäter RFID-ändamål. membership-0348: Båda frågorna namnger RFID för identifierings- eller kontrolländamål: kundaktivitet och självskanning respektive produktionsövervakning och produktspårning. Definitionen utesluter inte uttryckliga RFID-komponenter i kombinerade teknikfrågor. membership-0349: De tre definierade variablerna mäter RFID för produktidentifiering, personidentifiering/access och produktionskontroll. Enbart koder belägger inte motsvarande medlemskap för övriga RFID-relaterade variabler. membership-0350: Inga belagda RFID-ändamål i denna sektion. membership-0351: Inga valda variabler mäter RFID-ändamål.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33570:13879:18628\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33572:13879:18628\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33574:13879:18628\ncatalog:variable_text:33577:13879:18628\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:iotdprd"
+subject = "var:iot-sensorer-rfid-produktion-logistik-produktforflyttning"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan om annan anslutningsenhet räknar upp blandade enheter utan uttrycklig IoT-avgränsning. membership-0329: B5 mäter styrning av internetansluten hushållsutrustning. membership-0330: Valda betalningsvariabler beskriver digitala köp, inte IoT-användning. membership-0331: Ingen vald variabel mäter IoT-användning. membership-0332: Inga valda variabler har uttrycklig IoT-anknytning. membership-0333: Ingen vald variabel mäter IoT-användning. membership-0334: Inget valt mått avser IoT-användning. membership-0335: Den valda IoT-variabeln mäter frånvaro av problem, inte enhetsanvändning. membership-0336: Inga valda sektionsvariabler mäter IoT-användning. membership-0337: Inget valt sektionsmått avser IoT-användning. membership-0338: Frågorna mäter uppkopplade smarta enheter och tillämpningar. TV och spelkonsol avser vanliga internetenheter utan uttrycklig IoT-avgränsning i frågetexten; tidigare källbedömningar stöder deras uteslutning. membership-0339: Mäter användning av uttryckligen internetanslutna säkerhetssystem och virtuella assistenter. membership-0340: Utrustningsköpen mäter inte uttrycklig IoT-användning. membership-0341: Valda mobil- och nätverksmått saknar uttrycklig IoT-anknytning. membership-0342: Datoriserad arbetsutrustning saknar uttrycklig IoT-avgränsning. membership-0343: Valda smartphonemått saknar uttrycklig IoT-avgränsning. membership-0344: Ingen vald variabel har uttryckligt IoT-innehåll. membership-0345: Sensorvariablerna mäter big data-analys efter datakälla, vilket kandidaten undantar. membership-0346: Variablerna mäter uttrycklig IoT-användning efter tillämpning. DASSDS mäter endast analys av sensordata och utesluts. membership-0347: Inga valda variabler belägger IoT-användning. membership-0348: Variablerna mäter uttryckligen IoT-användning generellt och för kundservice, energi, underhåll, produktion samt andra tillämpningar. membership-0349: Robot- och RFID-måtten belägger inte användning av uppkopplade IoT-enheter. membership-0350: Ingen belagd IoT-användning i denna sektion. membership-0351: Inga valda variabler mäter IoT-användning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter RFID-ändamål. membership-0329: Ingen vald variabel mäter RFID-ändamål. membership-0330: Ingen vald variabel mäter RFID-ändamål. membership-0331: Ingen vald variabel mäter RFID-ändamål. membership-0332: Inga valda variabler avser RFID. membership-0333: Ingen vald variabel mäter RFID-ändamål. membership-0334: Inget valt mått avser RFID. membership-0335: Inga valda variabler mäter RFID-ändamål. membership-0336: Inga valda sektionsvariabler avser RFID-ändamål. membership-0337: Inget valt sektionsmått avser RFID-ändamål. membership-0338: Inga valda variabler mäter RFID-ändamål. membership-0339: Inget valt mått avser RFID. membership-0340: Inga valda variabler avser RFID. membership-0341: Inga valda variabler mäter RFID-ändamål. membership-0342: Inga valda variabler mäter RFID-ändamål. membership-0343: Inga valda variabler mäter RFID-ändamål. membership-0344: Ingen vald variabel mäter RFID-ändamål. membership-0345: RFID nämns som datakälla för big data-analys, inte som uppmätt identifierings- eller kontrolländamål. membership-0346: RFID nämns endast som möjligt inslag i IoT-system; ingen vald variabel mäter RFID-användning särskilt. membership-0347: Inga valda variabler mäter RFID-ändamål. membership-0348: Båda frågorna namnger RFID för identifierings- eller kontrolländamål: kundaktivitet och självskanning respektive produktionsövervakning och produktspårning. Definitionen utesluter inte uttryckliga RFID-komponenter i kombinerade teknikfrågor. membership-0349: De tre definierade variablerna mäter RFID för produktidentifiering, personidentifiering/access och produktionskontroll. Enbart koder belägger inte motsvarande medlemskap för övriga RFID-relaterade variabler. membership-0350: Inga belagda RFID-ändamål i denna sektion. membership-0351: Inga valda variabler mäter RFID-ändamål.\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32472:17897:18262\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32509:19723:20454\ncatalog:variable_text:32510:18262:19723\ncatalog:variable_text:32511:18262:20454\ncatalog:variable_text:32513:18262:20454\ncatalog:variable_text:32514:18262:19723\ncatalog:variable_text:32515:18262:19723\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32924:19723:20089\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33216:19723:20089\ncatalog:variable_text:33217:19723:20089\ncatalog:variable_text:33219:19723:20089\ncatalog:variable_text:33220:19723:20089\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33223:19723:20089\ncatalog:variable_text:33224:19723:20089\ncatalog:variable_text:33233:19723:20089\ncatalog:variable_text:33236:19723:20089\ncatalog:variable_text:33238:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33357:18262:20089\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33550:18993:19358\ncatalog:variable_text:33570:13879:18628\ncatalog:variable_text:33571:17167:17532\ncatalog:variable_text:33572:13879:18628\ncatalog:variable_text:33573:17167:17532\ncatalog:variable_text:33574:13879:18628\ncatalog:variable_text:33577:13879:18628\ncatalog:variable_text:33578:17167:17532\ncatalog:variable_text:33677:17532:17897\ncatalog:variable_text:33678:17532:17897\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33680:17532:17897\ncatalog:variable_text:33681:17532:17897\ncatalog:variable_text:33682:17532:17897"
 
@@ -13446,13 +13446,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33271:19723:200
 
 [[statement]]
 kind = "set"
-subject = "var:iucweb"
+subject = "var:anvant-internet-skapat-webbsida-eller-blogg-3-manader"
 fields = { "sets" = ["skapande-av-webbsidor-och-bloggar"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33272:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:iucweb"
+subject = "var:anvant-internet-skapat-webbsida-eller-blogg-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33272:16071:16436"
 
@@ -13506,13 +13506,13 @@ evidence = "IUHD_BOOK är en ogenomskinlig källkod.\ncatalog:variable_text:3327
 
 [[statement]]
 kind = "set"
-subject = "var:iuhd-em"
+subject = "var:mobil-internet-skicka-ta-emot-e-post-3-manader"
 fields = { "sets" = ["epostanvandning"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33277:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:iuhd-em"
+subject = "var:mobil-internet-skicka-ta-emot-e-post-3-manader"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33277:15340:15706"
 
@@ -13602,13 +13602,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33284:15340:157
 
 [[statement]]
 kind = "set"
-subject = "var:iumc-wl"
+subject = "var:wifi-barbar-dator-surfplatta-utanfor-hem-arbete-3-man"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågorna identifierar anslutningsenheter eller frånvaro av mobil anslutning. Mobiltelefonfrågan anger både enhet och teknik; annan mobil uppkoppling anger däremot ingen enhet. membership-0329: Etiketterna anger anslutningsenheter, inklusive bärbar dator utanför hemmet och arbetet. membership-0330: Bärbar dator utanför hemmet är ett enhetsmått. c3b2 anger anslutningsteknik och utesluts. membership-0331: data4c5 mäter bärbar dator som internetanslutningsenhet. membership-0332: Frågorna skiljer anslutningstekniker; enheter nämns som sammanhang och datc4c kombinerar mobiltelefon och bärbar dator. membership-0333: Mobilfrågorna mäter aktiviteter, inte enhetstyp för internetanslutning. membership-0334: DSL är anslutningsteknik; lokalt nätverk är en datoraktivitet utan uttrycklig internetanslutning. membership-0335: Mobilkod och smartphonefrågor mäter autentisering eller säkerhet, inte anslutningsenhet. membership-0336: Avstående från mobil internetanvändning och hantering av gammal utrustning mäter inte anslutningsenhet. membership-0337: Mobilmåtten mäter frekvens eller köp, inte enhetstyp för anslutning. membership-0338: Frågorna anger enhet för internetåtkomst eller internetanvändning. Även internet-pa-annat-satt avser enligt beskrivningen annan mobil utrustning. IoT-etiketterna för TV och spelkonsol ändrar inte frågornas enhetsinnehåll. membership-0339: Surfplattemåttet anger anslutningsenhet; mobiltelefonnät och wifi anger teknik. IUHD_OTH avser annan aktivitet, inte enhet. membership-0340: Utrustningsköpen anger inte enhet för internetanslutning. membership-0341: Dessa frågor skiljer anslutningsenheter åt. Frågor som uttryckligen skiljer nätverk eller mobilnätsteknik förs till teknikkandidaten. membership-0342: Arbetsutrustningsfrågorna anger inte enheter för internetanslutning. membership-0343: Smartphonebruk och datorinnehav mäter inte enhetstyp för internetanslutning. membership-0344: Tillhandahållande av bärbara arbetsenheter mäter inte enhetstyp för faktisk internetanslutning. membership-0345: Den enda möjliga enhetsvariabeln har en uttryckligen olöst motsättning mellan individbeskrivning och överlappande procentuppgift. Övriga anslutningsvariabler mäter teknik. membership-0346: IoT-tillämpningar och fast bredband mäter inte enhetstyp för internetanslutning. membership-0347: Inga valda variabler har fastställd betydelse som enhetstyp för internetanslutning. membership-0348: IoT-frågorna mäter smarta tillämpningar, inte enhetstyp som används för internetanslutning. membership-0349: PMD mäter arbetsgivarens tillhandahållande av utrustning, inte enhetstyp som faktiskt används för internetanslutning. membership-0350: Inga belagda anslutningsenheter i denna sektion. membership-0351: Inga valda variabler mäter enhetstyp för internetanslutning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Variablerna anger anslutningsteknik, bredbandstyp eller okänd eller saknad typ. Frågan om mobiltelefon med 3G/4G mäter även teknik; annan mobil uppkoppling saknar enhetsangivelse. membership-0329: De valda anslutningsmåtten anger enheter, inte anslutningsteknik eller bredbandstyp. membership-0330: Variablerna mäter trådlös anslutning till fastigheten respektive anslutning via trådlöst nätverk; r265 anger i stället enhet. membership-0331: data4c5 mäter anslutningsenhet och data5-frågorna skäl till saknad tillgång; båda utesluts från anslutningsteknik. membership-0332: Frågorna mäter WiFi/WiMax och annan uppkoppling än angivna tekniker; de stöds av den fasta teknikdefinitionen. membership-0333: Ingen vald variabel mäter anslutningsteknik. membership-0334: DSL-frågan mäter uttryckligen internetanslutningens teknik. membership-0335: De valda anslutningsrelaterade uppgifterna mäter skäl till saknad tillgång, som uttryckligen undantas. membership-0336: Befintligt fast bredband med okänd typ omfattas uttryckligen av den fasta definitionen. membership-0337: Installation av modem anger utrustningsinstallation, inte anslutningsteknik; frånvaroskäl är uttryckligen undantagna. membership-0338: Frågorna anger trådlöst nätverk, mobilt bredband, 3G/4G, fast kabel/fiber eller saknad mobil anslutning. Internet-pa-annat-satt avser i stället enhetstyp enligt beskrivningen. membership-0339: Mäter mobiltelefonnätet 3G/4G respektive trådlöst nätverk som anslutningsteknik. membership-0340: Utrustnings- och abonnemangsköp mäter inte anslutningsteknik. membership-0341: Frågorna specificerar WiFi, mobiltelefonnät, nätverksval, 3G/4G, 3G eller GPRS. Dessa är anslutningstekniker enligt den fasta definitionen. membership-0342: Inga valda variabler mäter internetanslutningsteknik. membership-0343: Valda tillgångs- och smartphonefrågor mäter inte internetanslutningsteknik. membership-0344: Tillhandahållna enheter med mobil anslutning mäter utrustning, inte anslutningsteknik eller bredbandstyp. membership-0345: Etiketterna anger annan fast bredbandsteknik, GSM samt modem/ISDN. empmd1pct hålls öppet eftersom underlaget uttryckligen lämnar dess betydelse olöst. membership-0346: Etikett och beskrivning anger fast bredbandsanslutning, exempelvis kabel-tv eller fiber, och stöder teknikgruppen. membership-0347: FIXBB mäter uttryckligen fast bredbandsanslutning. Leveransvariablernas betydelser är inte fastställda och EMPIACC3GPCT har endast kodetikett. membership-0348: Anslutningshastighet och dess tillräcklighet utesluts uttryckligen; ingen vald variabel belägger anslutningsteknik. membership-0349: PMD mäter dokumenterat tillhandahållande av utrustning. Leveransvariabelns alternativa bredbandsbetydelse är uttryckligen obekräftad och ger inte stöd för medlemskap. membership-0350: VPN är här en säker förbindelse för datautbyte, inte anslutningsteknik eller bredbandstyp. membership-0351: WLAN saknar dokumenterad betydelse och kan inte tilldelas gruppen från koden ensam.\ncatalog:occurrence:292038\ncatalog:occurrence:292095\ncatalog:occurrence:292427\ncatalog:occurrence:292428\ncatalog:variable_text:32255:16071:16436\ncatalog:variable_text:32257:15706:16071\ncatalog:variable_text:32258:15340:15706\ncatalog:variable_text:32259:15340:15706\ncatalog:variable_text:32325:17167:19358\ncatalog:variable_text:32339:16801:17167\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32342:17167:18262\ncatalog:variable_text:32343:20089:20454\ncatalog:variable_text:32344:16801:18993\ncatalog:variable_text:32345:13514:15706\ncatalog:variable_text:32346:16801:17167\ncatalog:variable_text:32347:16801:17167\ncatalog:variable_text:32368:13879:16071\ncatalog:variable_text:32369:15706:16436\ncatalog:variable_text:32374:16801:17167\ncatalog:variable_text:32376:14610:16436\ncatalog:variable_text:32377:15706:16071\ncatalog:variable_text:32378:17167:18993\ncatalog:variable_text:32379:14610:15340\ncatalog:variable_text:32380:17167:17532\ncatalog:variable_text:32384:13879:16071\ncatalog:variable_text:32385:15706:16071\ncatalog:variable_text:32389:15706:16436\ncatalog:variable_text:32456:20089:20454\ncatalog:variable_text:32457:17532:17897\ncatalog:variable_text:32458:20089:20454\ncatalog:variable_text:32459:17532:17897\ncatalog:variable_text:32462:20089:20454\ncatalog:variable_text:32489:17167:18262\ncatalog:variable_text:32495:15706:16071\ncatalog:variable_text:32540:17167:17532\ncatalog:variable_text:32647:19358:19723\ncatalog:variable_text:32648:13514:13879\ncatalog:variable_text:32649:13514:13879\ncatalog:variable_text:32650:13514:13879\ncatalog:variable_text:32651:13514:13879\ncatalog:variable_text:32652:13879:14245\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32761:13879:14245\ncatalog:variable_text:32776:13514:13879\ncatalog:variable_text:32837:13879:16436\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32890:17167:17532\ncatalog:variable_text:32899:18262:18628\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32923:17532:17897\ncatalog:variable_text:32945:16801:17167\ncatalog:variable_text:32946:14245:15706\ncatalog:variable_text:32947:17167:17532\ncatalog:variable_text:32950:17897:18262\ncatalog:variable_text:32951:17897:18262\ncatalog:variable_text:32952:17897:18262\ncatalog:variable_text:32953:17897:18262\ncatalog:variable_text:32954:17167:17532\ncatalog:variable_text:32956:17897:18262\ncatalog:variable_text:32958:17167:17532\ncatalog:variable_text:32971:16436:16801\ncatalog:variable_text:32976:13879:18628\ncatalog:variable_text:32978:16801:17167\ncatalog:variable_text:33017:16071:16436\ncatalog:variable_text:33022:17167:20454\ncatalog:variable_text:33023:16801:17167\ncatalog:variable_text:33047:19723:20089\ncatalog:variable_text:33055:19723:20089\ncatalog:variable_text:33091:15340:15706\ncatalog:variable_text:33094:15340:15706\ncatalog:variable_text:33095:15340:15706\ncatalog:variable_text:33146:13514:13879\ncatalog:variable_text:33148:14975:15706\ncatalog:variable_text:33150:16801:17167\ncatalog:variable_text:33152:17167:17532\ncatalog:variable_text:33153:15340:15706\ncatalog:variable_text:33154:14610:14975\ncatalog:variable_text:33160:15706:16071\ncatalog:variable_text:33164:16801:18993\ncatalog:variable_text:33165:13514:14610\ncatalog:variable_text:33167:16801:17167\ncatalog:variable_text:33169:16071:16436\ncatalog:variable_text:33170:13514:14975\ncatalog:variable_text:33171:13514:14975\ncatalog:variable_text:33172:17532:18262\ncatalog:variable_text:33173:16801:17167\ncatalog:variable_text:33174:16801:17167\ncatalog:variable_text:33175:16801:17167\ncatalog:variable_text:33176:13514:14975\ncatalog:variable_text:33177:14245:15706\ncatalog:variable_text:33178:15340:15706\ncatalog:variable_text:33179:14610:15340\ncatalog:variable_text:33180:16801:17897\ncatalog:variable_text:33181:14610:15340\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33244:19723:20089\ncatalog:variable_text:33279:15340:15706\ncatalog:variable_text:33281:15340:15706\ncatalog:variable_text:33284:15340:15706\ncatalog:variable_text:33285:15340:15706\ncatalog:variable_text:33342:13514:18262\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33388:17167:18262\ncatalog:variable_text:33416:17167:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33434:15706:16071\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33437:16801:17167\ncatalog:variable_text:33438:13514:15340\ncatalog:variable_text:33481:15706:16071\ncatalog:variable_text:33485:15340:15706\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33621:19723:20089\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33735:16436:17532\ncatalog:variable_text:33736:19723:20454\ncatalog:variable_text:33809:13879:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:iumc-wl"
+subject = "var:wifi-barbar-dator-surfplatta-utanfor-hem-arbete-3-man"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågorna identifierar anslutningsenheter eller frånvaro av mobil anslutning. Mobiltelefonfrågan anger både enhet och teknik; annan mobil uppkoppling anger däremot ingen enhet. membership-0329: Etiketterna anger anslutningsenheter, inklusive bärbar dator utanför hemmet och arbetet. membership-0330: Bärbar dator utanför hemmet är ett enhetsmått. c3b2 anger anslutningsteknik och utesluts. membership-0331: data4c5 mäter bärbar dator som internetanslutningsenhet. membership-0332: Frågorna skiljer anslutningstekniker; enheter nämns som sammanhang och datc4c kombinerar mobiltelefon och bärbar dator. membership-0333: Mobilfrågorna mäter aktiviteter, inte enhetstyp för internetanslutning. membership-0334: DSL är anslutningsteknik; lokalt nätverk är en datoraktivitet utan uttrycklig internetanslutning. membership-0335: Mobilkod och smartphonefrågor mäter autentisering eller säkerhet, inte anslutningsenhet. membership-0336: Avstående från mobil internetanvändning och hantering av gammal utrustning mäter inte anslutningsenhet. membership-0337: Mobilmåtten mäter frekvens eller köp, inte enhetstyp för anslutning. membership-0338: Frågorna anger enhet för internetåtkomst eller internetanvändning. Även internet-pa-annat-satt avser enligt beskrivningen annan mobil utrustning. IoT-etiketterna för TV och spelkonsol ändrar inte frågornas enhetsinnehåll. membership-0339: Surfplattemåttet anger anslutningsenhet; mobiltelefonnät och wifi anger teknik. IUHD_OTH avser annan aktivitet, inte enhet. membership-0340: Utrustningsköpen anger inte enhet för internetanslutning. membership-0341: Dessa frågor skiljer anslutningsenheter åt. Frågor som uttryckligen skiljer nätverk eller mobilnätsteknik förs till teknikkandidaten. membership-0342: Arbetsutrustningsfrågorna anger inte enheter för internetanslutning. membership-0343: Smartphonebruk och datorinnehav mäter inte enhetstyp för internetanslutning. membership-0344: Tillhandahållande av bärbara arbetsenheter mäter inte enhetstyp för faktisk internetanslutning. membership-0345: Den enda möjliga enhetsvariabeln har en uttryckligen olöst motsättning mellan individbeskrivning och överlappande procentuppgift. Övriga anslutningsvariabler mäter teknik. membership-0346: IoT-tillämpningar och fast bredband mäter inte enhetstyp för internetanslutning. membership-0347: Inga valda variabler har fastställd betydelse som enhetstyp för internetanslutning. membership-0348: IoT-frågorna mäter smarta tillämpningar, inte enhetstyp som används för internetanslutning. membership-0349: PMD mäter arbetsgivarens tillhandahållande av utrustning, inte enhetstyp som faktiskt används för internetanslutning. membership-0350: Inga belagda anslutningsenheter i denna sektion. membership-0351: Inga valda variabler mäter enhetstyp för internetanslutning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Variablerna anger anslutningsteknik, bredbandstyp eller okänd eller saknad typ. Frågan om mobiltelefon med 3G/4G mäter även teknik; annan mobil uppkoppling saknar enhetsangivelse. membership-0329: De valda anslutningsmåtten anger enheter, inte anslutningsteknik eller bredbandstyp. membership-0330: Variablerna mäter trådlös anslutning till fastigheten respektive anslutning via trådlöst nätverk; r265 anger i stället enhet. membership-0331: data4c5 mäter anslutningsenhet och data5-frågorna skäl till saknad tillgång; båda utesluts från anslutningsteknik. membership-0332: Frågorna mäter WiFi/WiMax och annan uppkoppling än angivna tekniker; de stöds av den fasta teknikdefinitionen. membership-0333: Ingen vald variabel mäter anslutningsteknik. membership-0334: DSL-frågan mäter uttryckligen internetanslutningens teknik. membership-0335: De valda anslutningsrelaterade uppgifterna mäter skäl till saknad tillgång, som uttryckligen undantas. membership-0336: Befintligt fast bredband med okänd typ omfattas uttryckligen av den fasta definitionen. membership-0337: Installation av modem anger utrustningsinstallation, inte anslutningsteknik; frånvaroskäl är uttryckligen undantagna. membership-0338: Frågorna anger trådlöst nätverk, mobilt bredband, 3G/4G, fast kabel/fiber eller saknad mobil anslutning. Internet-pa-annat-satt avser i stället enhetstyp enligt beskrivningen. membership-0339: Mäter mobiltelefonnätet 3G/4G respektive trådlöst nätverk som anslutningsteknik. membership-0340: Utrustnings- och abonnemangsköp mäter inte anslutningsteknik. membership-0341: Frågorna specificerar WiFi, mobiltelefonnät, nätverksval, 3G/4G, 3G eller GPRS. Dessa är anslutningstekniker enligt den fasta definitionen. membership-0342: Inga valda variabler mäter internetanslutningsteknik. membership-0343: Valda tillgångs- och smartphonefrågor mäter inte internetanslutningsteknik. membership-0344: Tillhandahållna enheter med mobil anslutning mäter utrustning, inte anslutningsteknik eller bredbandstyp. membership-0345: Etiketterna anger annan fast bredbandsteknik, GSM samt modem/ISDN. empmd1pct hålls öppet eftersom underlaget uttryckligen lämnar dess betydelse olöst. membership-0346: Etikett och beskrivning anger fast bredbandsanslutning, exempelvis kabel-tv eller fiber, och stöder teknikgruppen. membership-0347: FIXBB mäter uttryckligen fast bredbandsanslutning. Leveransvariablernas betydelser är inte fastställda och EMPIACC3GPCT har endast kodetikett. membership-0348: Anslutningshastighet och dess tillräcklighet utesluts uttryckligen; ingen vald variabel belägger anslutningsteknik. membership-0349: PMD mäter dokumenterat tillhandahållande av utrustning. Leveransvariabelns alternativa bredbandsbetydelse är uttryckligen obekräftad och ger inte stöd för medlemskap. membership-0350: VPN är här en säker förbindelse för datautbyte, inte anslutningsteknik eller bredbandstyp. membership-0351: WLAN saknar dokumenterad betydelse och kan inte tilldelas gruppen från koden ensam.\ncatalog:occurrence:292038\ncatalog:occurrence:292095\ncatalog:occurrence:292427\ncatalog:occurrence:292428\ncatalog:variable_text:32255:16071:16436\ncatalog:variable_text:32257:15706:16071\ncatalog:variable_text:32258:15340:15706\ncatalog:variable_text:32259:15340:15706\ncatalog:variable_text:32325:17167:19358\ncatalog:variable_text:32339:16801:17167\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32342:17167:18262\ncatalog:variable_text:32343:20089:20454\ncatalog:variable_text:32344:16801:18993\ncatalog:variable_text:32345:13514:15706\ncatalog:variable_text:32346:16801:17167\ncatalog:variable_text:32347:16801:17167\ncatalog:variable_text:32368:13879:16071\ncatalog:variable_text:32369:15706:16436\ncatalog:variable_text:32374:16801:17167\ncatalog:variable_text:32376:14610:16436\ncatalog:variable_text:32377:15706:16071\ncatalog:variable_text:32378:17167:18993\ncatalog:variable_text:32379:14610:15340\ncatalog:variable_text:32380:17167:17532\ncatalog:variable_text:32384:13879:16071\ncatalog:variable_text:32385:15706:16071\ncatalog:variable_text:32389:15706:16436\ncatalog:variable_text:32456:20089:20454\ncatalog:variable_text:32457:17532:17897\ncatalog:variable_text:32458:20089:20454\ncatalog:variable_text:32459:17532:17897\ncatalog:variable_text:32462:20089:20454\ncatalog:variable_text:32489:17167:18262\ncatalog:variable_text:32495:15706:16071\ncatalog:variable_text:32540:17167:17532\ncatalog:variable_text:32647:19358:19723\ncatalog:variable_text:32648:13514:13879\ncatalog:variable_text:32649:13514:13879\ncatalog:variable_text:32650:13514:13879\ncatalog:variable_text:32651:13514:13879\ncatalog:variable_text:32652:13879:14245\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32761:13879:14245\ncatalog:variable_text:32776:13514:13879\ncatalog:variable_text:32837:13879:16436\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32890:17167:17532\ncatalog:variable_text:32899:18262:18628\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32923:17532:17897\ncatalog:variable_text:32945:16801:17167\ncatalog:variable_text:32946:14245:15706\ncatalog:variable_text:32947:17167:17532\ncatalog:variable_text:32950:17897:18262\ncatalog:variable_text:32951:17897:18262\ncatalog:variable_text:32952:17897:18262\ncatalog:variable_text:32953:17897:18262\ncatalog:variable_text:32954:17167:17532\ncatalog:variable_text:32956:17897:18262\ncatalog:variable_text:32958:17167:17532\ncatalog:variable_text:32971:16436:16801\ncatalog:variable_text:32976:13879:18628\ncatalog:variable_text:32978:16801:17167\ncatalog:variable_text:33017:16071:16436\ncatalog:variable_text:33022:17167:20454\ncatalog:variable_text:33023:16801:17167\ncatalog:variable_text:33047:19723:20089\ncatalog:variable_text:33055:19723:20089\ncatalog:variable_text:33091:15340:15706\ncatalog:variable_text:33094:15340:15706\ncatalog:variable_text:33095:15340:15706\ncatalog:variable_text:33146:13514:13879\ncatalog:variable_text:33148:14975:15706\ncatalog:variable_text:33150:16801:17167\ncatalog:variable_text:33152:17167:17532\ncatalog:variable_text:33153:15340:15706\ncatalog:variable_text:33154:14610:14975\ncatalog:variable_text:33160:15706:16071\ncatalog:variable_text:33164:16801:18993\ncatalog:variable_text:33165:13514:14610\ncatalog:variable_text:33167:16801:17167\ncatalog:variable_text:33169:16071:16436\ncatalog:variable_text:33170:13514:14975\ncatalog:variable_text:33171:13514:14975\ncatalog:variable_text:33172:17532:18262\ncatalog:variable_text:33173:16801:17167\ncatalog:variable_text:33174:16801:17167\ncatalog:variable_text:33175:16801:17167\ncatalog:variable_text:33176:13514:14975\ncatalog:variable_text:33177:14245:15706\ncatalog:variable_text:33178:15340:15706\ncatalog:variable_text:33179:14610:15340\ncatalog:variable_text:33180:16801:17897\ncatalog:variable_text:33181:14610:15340\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33244:19723:20089\ncatalog:variable_text:33279:15340:15706\ncatalog:variable_text:33281:15340:15706\ncatalog:variable_text:33284:15340:15706\ncatalog:variable_text:33285:15340:15706\ncatalog:variable_text:33342:13514:18262\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33388:17167:18262\ncatalog:variable_text:33416:17167:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33434:15706:16071\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33437:16801:17167\ncatalog:variable_text:33438:13514:15340\ncatalog:variable_text:33481:15706:16071\ncatalog:variable_text:33485:15340:15706\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33621:19723:20089\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33735:16436:17532\ncatalog:variable_text:33736:19723:20454\ncatalog:variable_text:33809:13879:18628"
 
@@ -15558,37 +15558,37 @@ evidence = "Id:t är en källkod.\ncatalog:variable_text:33463:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-pgs"
+subject = "var:anvande-3d-skrivare-forsaljning-varor-inte-prototyp-modell"
 fields = { "sets" = ["anvandning-av-3d-utskrift"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33464:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-pgs"
+subject = "var:anvande-3d-skrivare-forsaljning-varor-inte-prototyp-modell"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33464:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-ppmi"
+subject = "var:anvande-3d-skrivare-prototyper-modeller-intern-anvandning"
 fields = { "sets" = ["anvandning-av-3d-utskrift"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33465:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-ppmi"
+subject = "var:anvande-3d-skrivare-prototyper-modeller-intern-anvandning"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33465:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-ppms"
+subject = "var:anvande-3d-skrivare-prototyper-modeller-forsaljning"
 fields = { "sets" = ["anvandning-av-3d-utskrift"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33466:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:p3d-ppms"
+subject = "var:anvande-3d-skrivare-prototyper-modeller-forsaljning"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33466:18262:18628"
 
@@ -15618,25 +15618,25 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:33468:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-3"
+subject = "var:inte-anvant-internet-3-manader-fysiska-psykiska-skal"
 fields = { "sets" = ["skal-till-utebliven-internetanvandning"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33469:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-3"
+subject = "var:inte-anvant-internet-3-manader-fysiska-psykiska-skal"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33469:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-4"
+subject = "var:inte-anvant-internet-3-manader-integritets-sakerhetsskal"
 fields = { "sets" = ["skal-till-utebliven-internetanvandning"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33470:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-4"
+subject = "var:inte-anvant-internet-3-manader-integritets-sakerhetsskal"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33470:20089:20454"
 
@@ -15654,13 +15654,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:33471:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-6"
+subject = "var:inte-anvant-internet-tycker-inte-om-litar-inte-pa-info"
 fields = { "sets" = ["skal-till-utebliven-internetanvandning"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33472:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:p49-6"
+subject = "var:inte-anvant-internet-tycker-inte-om-litar-inte-pa-info"
 fields = { "tags" = ["digital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33472:20089:20454"
 
@@ -15870,13 +15870,13 @@ evidence = "Källkolumnerna har andra ägare under andra perioder.\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:q1"
+subject = "var:anvander-barbara-enheter-i-arbetet"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33506:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q1"
+subject = "var:anvander-barbara-enheter-i-arbetet"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33506:17532:17897"
 
@@ -15918,85 +15918,85 @@ evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33511:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-skickar-och-tar"
+subject = "var:epost-eller-registrerar-uppgifter-databaser-arbete-veckovis"
 fields = { "sets" = ["digitala-arbetsaktiviteter", "epostanvandning"] }
 evidence = "Id:t är en opak frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda digitala färdighetsfrågor saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0329: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0330: Ingen vald variabel mäter digitala arbetsaktiviteter varje vecka. membership-0331: Ingen vald variabel mäter digitala arbetsaktiviteter minst varje vecka. membership-0332: Valda dator- och internetfrågor mäter inte digitala arbetsaktiviteter minst varje vecka. membership-0333: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0334: Inget valt mått avser veckovisa digitala arbetsaktiviteter. membership-0335: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0336: Inga valda sektionsvariabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0337: Inget valt sektionsmått avser veckovisa digitala arbetsaktiviteter. membership-0338: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0339: Det valda arbetsmåttet gäller senaste tre månaderna och saknar kravet minst varje vecka. membership-0340: Inga valda variabler mäter veckovisa arbetsaktiviteter. membership-0341: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0342: Frågebatteriet mäter namngivna digitala arbetsaktiviteter minst varje vecka samt frånvaro av dessa. membership-0343: Inga valda variabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0344: Allmänna personalandelar med datoranvändning dokumenterar inte de veckovisa arbetsaktiviteter som kandidaten avser. membership-0345: Inget valt sektionsid mäter de veckovisa arbetsaktiviteter som kandidaten avgränsar. membership-0346: Ingen vald variabel mäter digitala arbetsaktiviteter med kandidatens veckofrekvens. membership-0347: Inga valda variabler mäter de definierade veckovisa digitala arbetsaktiviteterna. membership-0348: Utförarfrågorna saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0349: Allmän datoranvändning och fjärråtkomst mäter inte de särskilt avgränsade veckovisa arbetsaktiviteterna. membership-0350: De valda användningsmåtten anger inte digitala arbetsaktiviteter minst varje vecka. membership-0351: Programvaruutvecklingens årsverken och arbetsändamål är inte frågor om digitala aktiviteter minst varje vecka. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan mäter e-postanvändning med bilagor. membership-0329: Båda beskriver sändning och mottagning av e-post. membership-0330: c4 utesluter uttryckligen e-post; ingen vald variabel mäter e-postanvändning. membership-0331: Delning via e-postbilaga är uttrycklig e-postanvändning och ingår i definitionen. membership-0332: Vald chatt- och studiekommunikation anger inte e-postanvändning. membership-0333: E-postfrågorna gäller ersättning med internetsamtal eller spam, inte e-postanvändning. membership-0334: Bedrägliga e-postmeddelanden mäts som incident, inte e-postanvändning. membership-0335: Inga valda variabler mäter e-postanvändning. membership-0336: Inga valda sektionsvariabler mäter e-postanvändning. membership-0337: Den valda e-postfrågan är särskilt avgränsad myndighetskontakt och därmed undantagen. membership-0338: Kontohackning och lämnad e-postadress mäter inte e-postanvändning. membership-0339: Mäter att skicka eller ta emot e-post med mobil utrustning. membership-0340: Inga valda variabler mäter e-postanvändning. membership-0341: Frågan mäter e-postläsning med mobiltelefon. membership-0342: Frågan omfattar uttryckligen att skicka och ta emot e-post, tillsammans med databasregistrering. membership-0343: Mäter skickad e-post med bilagor, uttryckligen inkluderat i definitionen. membership-0344: E-post nämns endast som exempel på it-system vid distansarbete. membership-0345: Köp av e-post som molntjänst mäter inte e-postanvändning enligt kandidaten. membership-0346: De valda e-postfrågorna mäter pandemiförändrad fjärråtkomst, inte faktisk e-postanvändning. membership-0347: EMRA-MPCT mäter fjärråtkomst till e-post, inte faktisk e-postanvändning. membership-0348: E-post som exempel på fakturadistribution är inte ett mått på e-postanvändning. membership-0349: RA-M mäter möjlig fjärråtkomst till företagets e-post, inte faktisk e-postanvändning. membership-0350: Kryptering av möjlig e-post är en säkerhetsåtgärd, inte ett e-postanvändningsmått. membership-0351: Inga valda variabler mäter e-postanvändning.\ncatalog:variable_text:32324:19723:20089\ncatalog:variable_text:32331:17167:18262\ncatalog:variable_text:32336:20089:20454\ncatalog:variable_text:32351:17167:18628\ncatalog:variable_text:32392:16071:16436\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32395:14975:15706\ncatalog:variable_text:32401:16801:17167\ncatalog:variable_text:32422:17167:20454\ncatalog:variable_text:32541:18993:20454\ncatalog:variable_text:32582:20089:20454\ncatalog:variable_text:32595:16071:16436\ncatalog:variable_text:32663:13514:15340\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32683:13514:13879\ncatalog:variable_text:32727:13879:14245\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32870:18628:18993\ncatalog:variable_text:32871:18628:18993\ncatalog:variable_text:32872:18628:18993\ncatalog:variable_text:32879:18628:18993\ncatalog:variable_text:32980:18993:19358\ncatalog:variable_text:33097:15706:16071\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33187:16801:17167\ncatalog:variable_text:33202:17167:17532\ncatalog:variable_text:33206:17532:17897\ncatalog:variable_text:33245:17167:17897\ncatalog:variable_text:33246:17167:17897\ncatalog:variable_text:33248:17167:17897\ncatalog:variable_text:33251:17167:17897\ncatalog:variable_text:33256:17167:17897\ncatalog:variable_text:33257:17167:17897\ncatalog:variable_text:33277:15340:15706\ncatalog:variable_text:33291:15340:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33429:13879:14245\ncatalog:variable_text:33462:17167:17532\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33513:17532:17897\ncatalog:variable_text:33514:17532:17897\ncatalog:variable_text:33515:17532:17897\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33517:17532:17897\ncatalog:variable_text:33518:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33547:19723:20089\ncatalog:variable_text:33610:19723:20089\ncatalog:variable_text:33663:14610:15340\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33669:17897:18262\ncatalog:variable_text:33676:20089:20454\ncatalog:variable_text:33775:17167:17897\ncatalog:variable_text:33776:16436:16801\ncatalog:variable_text:33777:17532:17897\ncatalog:variable_text:33779:17532:17897\ncatalog:variable_text:33781:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-skickar-och-tar"
+subject = "var:epost-eller-registrerar-uppgifter-databaser-arbete-veckovis"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda digitala färdighetsfrågor saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0329: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0330: Ingen vald variabel mäter digitala arbetsaktiviteter varje vecka. membership-0331: Ingen vald variabel mäter digitala arbetsaktiviteter minst varje vecka. membership-0332: Valda dator- och internetfrågor mäter inte digitala arbetsaktiviteter minst varje vecka. membership-0333: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0334: Inget valt mått avser veckovisa digitala arbetsaktiviteter. membership-0335: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0336: Inga valda sektionsvariabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0337: Inget valt sektionsmått avser veckovisa digitala arbetsaktiviteter. membership-0338: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0339: Det valda arbetsmåttet gäller senaste tre månaderna och saknar kravet minst varje vecka. membership-0340: Inga valda variabler mäter veckovisa arbetsaktiviteter. membership-0341: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0342: Frågebatteriet mäter namngivna digitala arbetsaktiviteter minst varje vecka samt frånvaro av dessa. membership-0343: Inga valda variabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0344: Allmänna personalandelar med datoranvändning dokumenterar inte de veckovisa arbetsaktiviteter som kandidaten avser. membership-0345: Inget valt sektionsid mäter de veckovisa arbetsaktiviteter som kandidaten avgränsar. membership-0346: Ingen vald variabel mäter digitala arbetsaktiviteter med kandidatens veckofrekvens. membership-0347: Inga valda variabler mäter de definierade veckovisa digitala arbetsaktiviteterna. membership-0348: Utförarfrågorna saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0349: Allmän datoranvändning och fjärråtkomst mäter inte de särskilt avgränsade veckovisa arbetsaktiviteterna. membership-0350: De valda användningsmåtten anger inte digitala arbetsaktiviteter minst varje vecka. membership-0351: Programvaruutvecklingens årsverken och arbetsändamål är inte frågor om digitala aktiviteter minst varje vecka. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågan mäter e-postanvändning med bilagor. membership-0329: Båda beskriver sändning och mottagning av e-post. membership-0330: c4 utesluter uttryckligen e-post; ingen vald variabel mäter e-postanvändning. membership-0331: Delning via e-postbilaga är uttrycklig e-postanvändning och ingår i definitionen. membership-0332: Vald chatt- och studiekommunikation anger inte e-postanvändning. membership-0333: E-postfrågorna gäller ersättning med internetsamtal eller spam, inte e-postanvändning. membership-0334: Bedrägliga e-postmeddelanden mäts som incident, inte e-postanvändning. membership-0335: Inga valda variabler mäter e-postanvändning. membership-0336: Inga valda sektionsvariabler mäter e-postanvändning. membership-0337: Den valda e-postfrågan är särskilt avgränsad myndighetskontakt och därmed undantagen. membership-0338: Kontohackning och lämnad e-postadress mäter inte e-postanvändning. membership-0339: Mäter att skicka eller ta emot e-post med mobil utrustning. membership-0340: Inga valda variabler mäter e-postanvändning. membership-0341: Frågan mäter e-postläsning med mobiltelefon. membership-0342: Frågan omfattar uttryckligen att skicka och ta emot e-post, tillsammans med databasregistrering. membership-0343: Mäter skickad e-post med bilagor, uttryckligen inkluderat i definitionen. membership-0344: E-post nämns endast som exempel på it-system vid distansarbete. membership-0345: Köp av e-post som molntjänst mäter inte e-postanvändning enligt kandidaten. membership-0346: De valda e-postfrågorna mäter pandemiförändrad fjärråtkomst, inte faktisk e-postanvändning. membership-0347: EMRA-MPCT mäter fjärråtkomst till e-post, inte faktisk e-postanvändning. membership-0348: E-post som exempel på fakturadistribution är inte ett mått på e-postanvändning. membership-0349: RA-M mäter möjlig fjärråtkomst till företagets e-post, inte faktisk e-postanvändning. membership-0350: Kryptering av möjlig e-post är en säkerhetsåtgärd, inte ett e-postanvändningsmått. membership-0351: Inga valda variabler mäter e-postanvändning.\ncatalog:variable_text:32324:19723:20089\ncatalog:variable_text:32331:17167:18262\ncatalog:variable_text:32336:20089:20454\ncatalog:variable_text:32351:17167:18628\ncatalog:variable_text:32392:16071:16436\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32395:14975:15706\ncatalog:variable_text:32401:16801:17167\ncatalog:variable_text:32422:17167:20454\ncatalog:variable_text:32541:18993:20454\ncatalog:variable_text:32582:20089:20454\ncatalog:variable_text:32595:16071:16436\ncatalog:variable_text:32663:13514:15340\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32683:13514:13879\ncatalog:variable_text:32727:13879:14245\ncatalog:variable_text:32763:14610:14975\ncatalog:variable_text:32774:14610:14975\ncatalog:variable_text:32775:14610:14975\ncatalog:variable_text:32870:18628:18993\ncatalog:variable_text:32871:18628:18993\ncatalog:variable_text:32872:18628:18993\ncatalog:variable_text:32879:18628:18993\ncatalog:variable_text:32980:18993:19358\ncatalog:variable_text:33097:15706:16071\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33187:16801:17167\ncatalog:variable_text:33202:17167:17532\ncatalog:variable_text:33206:17532:17897\ncatalog:variable_text:33245:17167:17897\ncatalog:variable_text:33246:17167:17897\ncatalog:variable_text:33248:17167:17897\ncatalog:variable_text:33251:17167:17897\ncatalog:variable_text:33256:17167:17897\ncatalog:variable_text:33257:17167:17897\ncatalog:variable_text:33277:15340:15706\ncatalog:variable_text:33291:15340:15706\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33429:13879:14245\ncatalog:variable_text:33462:17167:17532\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33513:17532:17897\ncatalog:variable_text:33514:17532:17897\ncatalog:variable_text:33515:17532:17897\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33517:17532:17897\ncatalog:variable_text:33518:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33547:19723:20089\ncatalog:variable_text:33610:19723:20089\ncatalog:variable_text:33663:14610:15340\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33669:17897:18262\ncatalog:variable_text:33676:20089:20454\ncatalog:variable_text:33775:17167:17897\ncatalog:variable_text:33776:16436:16801\ncatalog:variable_text:33777:17532:17897\ncatalog:variable_text:33779:17532:17897\ncatalog:variable_text:33781:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-skapar"
+subject = "var:skapar-redigerar-digitala-dokument-arbete-veckovis"
 fields = { "sets" = ["digitala-arbetsaktiviteter"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33513:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-skapar"
+subject = "var:skapar-redigerar-digitala-dokument-arbete-veckovis"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33513:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q3c"
+subject = "var:anvander-sociala-medier-arbete-minst-en-gang-veckan"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Den valda deltagandefrågan gäller politiska eller medborgerliga diskussioner, inte allmän användning av sociala medier. membership-0329: Politiska yttranden är särskilt avgränsat deltagande; blandad appanvändning identifierar inte sociala medier separat. membership-0330: Variabeln mäter aktivitetsfrekvens på sociala nätverk. membership-0331: ccs-pws mäter dokumentdelning via flera kanaler; d8:s annonsanknutna köp är varken ett entydigt mått på sociala medier eller deras användningsändamål. membership-0332: Chattfrågan anger inte sociala medier eller nätverk. membership-0333: Bloggläsning är användning av en social medieform och omfattas av den fasta definitionen. membership-0334: Deltagande på sociala nätverkssajter omfattas; professionella nätverk och legitimeringsmetoder är separat avgränsade. membership-0335: Inloggningsmetod och profilskydd mäter inte sociala mediers användning enligt kandidaten. membership-0336: De valda nätverksanknutna frågorna gäller avstående av säkerhetsskäl eller exponering, inte sociala mediers användning. membership-0337: Boendebokning via exempelvis Facebook mäter boendebokning, inte social medieanvändning. membership-0338: Kontohackning mäter en incident, inte användning av sociala medier. membership-0339: Mäter deltagande i sociala nätverk respektive användning av sociala medier. membership-0340: Plattformsexemplen beskriver köpkanaler, inte social medieanvändning som mätbegrepp. membership-0341: Politiska inlägg mäter särskilt avgränsat politiskt deltagande, inte allmän användning av sociala medier. membership-0342: Veckovis användning av sociala medier i arbetet omfattas; professionella nätverk är uttryckligen undantagna. membership-0343: Chattrumsmeddelanden och wiki-sökning mäter inte uttryckligen kandidatens sociala medieanvändning. membership-0344: Betald annonsering på bland annat sociala medier omfattas av kandidatens uttryckliga undantag. membership-0345: Samtliga fyra mäter användning av källangivna typer av sociala medier. Analys av sociala mediedata mäter ett annat begrepp. membership-0346: DASSM mäter dataanalys av sociala medier, inte användning av sociala medier som plattform. membership-0347: Inga valda variabler mäter användning av sociala medier. membership-0348: Ingen vald variabel mäter användning av sociala medier. membership-0349: Ingen vald variabel har belagd användning av sociala medier. membership-0350: Förekomst och namngivna användningsändamål omfattas. Formell policy och det kombinerade måttet ingen användning/enbart betalda annonser uppfyller inte den fasta definitionen. membership-0351: Länk till företagets profil på sociala medier dokumenterar dess närvaro på en sådan plattform och stöder den föreslagna grupptillhörigheten. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda digitala färdighetsfrågor saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0329: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0330: Ingen vald variabel mäter digitala arbetsaktiviteter varje vecka. membership-0331: Ingen vald variabel mäter digitala arbetsaktiviteter minst varje vecka. membership-0332: Valda dator- och internetfrågor mäter inte digitala arbetsaktiviteter minst varje vecka. membership-0333: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0334: Inget valt mått avser veckovisa digitala arbetsaktiviteter. membership-0335: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0336: Inga valda sektionsvariabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0337: Inget valt sektionsmått avser veckovisa digitala arbetsaktiviteter. membership-0338: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0339: Det valda arbetsmåttet gäller senaste tre månaderna och saknar kravet minst varje vecka. membership-0340: Inga valda variabler mäter veckovisa arbetsaktiviteter. membership-0341: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0342: Frågebatteriet mäter namngivna digitala arbetsaktiviteter minst varje vecka samt frånvaro av dessa. membership-0343: Inga valda variabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0344: Allmänna personalandelar med datoranvändning dokumenterar inte de veckovisa arbetsaktiviteter som kandidaten avser. membership-0345: Inget valt sektionsid mäter de veckovisa arbetsaktiviteter som kandidaten avgränsar. membership-0346: Ingen vald variabel mäter digitala arbetsaktiviteter med kandidatens veckofrekvens. membership-0347: Inga valda variabler mäter de definierade veckovisa digitala arbetsaktiviteterna. membership-0348: Utförarfrågorna saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0349: Allmän datoranvändning och fjärråtkomst mäter inte de särskilt avgränsade veckovisa arbetsaktiviteterna. membership-0350: De valda användningsmåtten anger inte digitala arbetsaktiviteter minst varje vecka. membership-0351: Programvaruutvecklingens årsverken och arbetsändamål är inte frågor om digitala aktiviteter minst varje vecka.\ncatalog:variable_text:32274:17532:17897\ncatalog:variable_text:32320:18628:20454\ncatalog:variable_text:32324:19723:20089\ncatalog:variable_text:32331:17167:18262\ncatalog:variable_text:32336:20089:20454\ncatalog:variable_text:32370:19358:19723\ncatalog:variable_text:32382:19358:19723\ncatalog:variable_text:32387:19358:19723\ncatalog:variable_text:32388:18628:18993\ncatalog:variable_text:32392:16071:16436\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32395:14975:15706\ncatalog:variable_text:32399:18628:20454\ncatalog:variable_text:32466:16801:17167\ncatalog:variable_text:32524:18262:18628\ncatalog:variable_text:32542:16436:16801\ncatalog:variable_text:32597:16071:16436\ncatalog:variable_text:32632:16801:17167\ncatalog:variable_text:32643:20089:20454\ncatalog:variable_text:32663:13514:15340\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32721:13879:14245\ncatalog:variable_text:32821:19723:20454\ncatalog:variable_text:32823:14975:15340\ncatalog:variable_text:32895:17532:17897\ncatalog:variable_text:32902:18262:18628\ncatalog:variable_text:32910:20089:20454\ncatalog:variable_text:32973:17897:18262\ncatalog:variable_text:33005:20089:20454\ncatalog:variable_text:33085:17532:18262\ncatalog:variable_text:33087:20089:20454\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33245:17167:17897\ncatalog:variable_text:33246:17167:17897\ncatalog:variable_text:33248:17167:17897\ncatalog:variable_text:33251:17167:17897\ncatalog:variable_text:33256:17167:17897\ncatalog:variable_text:33257:17167:17897\ncatalog:variable_text:33283:15340:15706\ncatalog:variable_text:33291:15340:15706\ncatalog:variable_text:33301:15706:16436\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33358:20089:20454\ncatalog:variable_text:33390:20089:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33462:17167:17532\ncatalog:variable_text:33494:17897:18262\ncatalog:variable_text:33504:17167:17532\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33513:17532:17897\ncatalog:variable_text:33514:17532:17897\ncatalog:variable_text:33515:17532:17897\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33517:17532:17897\ncatalog:variable_text:33518:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33547:19723:20089\ncatalog:variable_text:33664:15706:16071\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33669:17897:18262\ncatalog:variable_text:33670:17897:18262\ncatalog:variable_text:33671:17897:18262\ncatalog:variable_text:33672:17897:18262\ncatalog:variable_text:33673:17897:18262\ncatalog:variable_text:33674:15706:16071\ncatalog:variable_text:33675:17897:18262\ncatalog:variable_text:33676:20089:20454\ncatalog:variable_text:33683:15706:16071\ncatalog:variable_text:33688:15706:16071\ncatalog:variable_text:33775:17167:17897\ncatalog:variable_text:33776:16436:16801\ncatalog:variable_text:33777:17532:17897\ncatalog:variable_text:33779:17532:17897\ncatalog:variable_text:33781:17167:17897\ncatalog:variable_text:33807:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:q3c"
+subject = "var:anvander-sociala-medier-arbete-minst-en-gang-veckan"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Den valda deltagandefrågan gäller politiska eller medborgerliga diskussioner, inte allmän användning av sociala medier. membership-0329: Politiska yttranden är särskilt avgränsat deltagande; blandad appanvändning identifierar inte sociala medier separat. membership-0330: Variabeln mäter aktivitetsfrekvens på sociala nätverk. membership-0331: ccs-pws mäter dokumentdelning via flera kanaler; d8:s annonsanknutna köp är varken ett entydigt mått på sociala medier eller deras användningsändamål. membership-0332: Chattfrågan anger inte sociala medier eller nätverk. membership-0333: Bloggläsning är användning av en social medieform och omfattas av den fasta definitionen. membership-0334: Deltagande på sociala nätverkssajter omfattas; professionella nätverk och legitimeringsmetoder är separat avgränsade. membership-0335: Inloggningsmetod och profilskydd mäter inte sociala mediers användning enligt kandidaten. membership-0336: De valda nätverksanknutna frågorna gäller avstående av säkerhetsskäl eller exponering, inte sociala mediers användning. membership-0337: Boendebokning via exempelvis Facebook mäter boendebokning, inte social medieanvändning. membership-0338: Kontohackning mäter en incident, inte användning av sociala medier. membership-0339: Mäter deltagande i sociala nätverk respektive användning av sociala medier. membership-0340: Plattformsexemplen beskriver köpkanaler, inte social medieanvändning som mätbegrepp. membership-0341: Politiska inlägg mäter särskilt avgränsat politiskt deltagande, inte allmän användning av sociala medier. membership-0342: Veckovis användning av sociala medier i arbetet omfattas; professionella nätverk är uttryckligen undantagna. membership-0343: Chattrumsmeddelanden och wiki-sökning mäter inte uttryckligen kandidatens sociala medieanvändning. membership-0344: Betald annonsering på bland annat sociala medier omfattas av kandidatens uttryckliga undantag. membership-0345: Samtliga fyra mäter användning av källangivna typer av sociala medier. Analys av sociala mediedata mäter ett annat begrepp. membership-0346: DASSM mäter dataanalys av sociala medier, inte användning av sociala medier som plattform. membership-0347: Inga valda variabler mäter användning av sociala medier. membership-0348: Ingen vald variabel mäter användning av sociala medier. membership-0349: Ingen vald variabel har belagd användning av sociala medier. membership-0350: Förekomst och namngivna användningsändamål omfattas. Formell policy och det kombinerade måttet ingen användning/enbart betalda annonser uppfyller inte den fasta definitionen. membership-0351: Länk till företagets profil på sociala medier dokumenterar dess närvaro på en sådan plattform och stöder den föreslagna grupptillhörigheten. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Valda digitala färdighetsfrågor saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0329: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0330: Ingen vald variabel mäter digitala arbetsaktiviteter varje vecka. membership-0331: Ingen vald variabel mäter digitala arbetsaktiviteter minst varje vecka. membership-0332: Valda dator- och internetfrågor mäter inte digitala arbetsaktiviteter minst varje vecka. membership-0333: Ingen vald variabel mäter veckovisa digitala arbetsaktiviteter. membership-0334: Inget valt mått avser veckovisa digitala arbetsaktiviteter. membership-0335: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0336: Inga valda sektionsvariabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0337: Inget valt sektionsmått avser veckovisa digitala arbetsaktiviteter. membership-0338: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0339: Det valda arbetsmåttet gäller senaste tre månaderna och saknar kravet minst varje vecka. membership-0340: Inga valda variabler mäter veckovisa arbetsaktiviteter. membership-0341: Inga valda variabler mäter veckovisa digitala arbetsaktiviteter. membership-0342: Frågebatteriet mäter namngivna digitala arbetsaktiviteter minst varje vecka samt frånvaro av dessa. membership-0343: Inga valda variabler mäter digitala arbetsaktiviteter minst varje vecka. membership-0344: Allmänna personalandelar med datoranvändning dokumenterar inte de veckovisa arbetsaktiviteter som kandidaten avser. membership-0345: Inget valt sektionsid mäter de veckovisa arbetsaktiviteter som kandidaten avgränsar. membership-0346: Ingen vald variabel mäter digitala arbetsaktiviteter med kandidatens veckofrekvens. membership-0347: Inga valda variabler mäter de definierade veckovisa digitala arbetsaktiviteterna. membership-0348: Utförarfrågorna saknar kandidatens avgränsning till arbetsaktiviteter minst varje vecka. membership-0349: Allmän datoranvändning och fjärråtkomst mäter inte de särskilt avgränsade veckovisa arbetsaktiviteterna. membership-0350: De valda användningsmåtten anger inte digitala arbetsaktiviteter minst varje vecka. membership-0351: Programvaruutvecklingens årsverken och arbetsändamål är inte frågor om digitala aktiviteter minst varje vecka.\ncatalog:variable_text:32274:17532:17897\ncatalog:variable_text:32320:18628:20454\ncatalog:variable_text:32324:19723:20089\ncatalog:variable_text:32331:17167:18262\ncatalog:variable_text:32336:20089:20454\ncatalog:variable_text:32370:19358:19723\ncatalog:variable_text:32382:19358:19723\ncatalog:variable_text:32387:19358:19723\ncatalog:variable_text:32388:18628:18993\ncatalog:variable_text:32392:16071:16436\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32395:14975:15706\ncatalog:variable_text:32399:18628:20454\ncatalog:variable_text:32466:16801:17167\ncatalog:variable_text:32524:18262:18628\ncatalog:variable_text:32542:16436:16801\ncatalog:variable_text:32597:16071:16436\ncatalog:variable_text:32632:16801:17167\ncatalog:variable_text:32643:20089:20454\ncatalog:variable_text:32663:13514:15340\ncatalog:variable_text:32674:13514:13879\ncatalog:variable_text:32675:13514:13879\ncatalog:variable_text:32721:13879:14245\ncatalog:variable_text:32821:19723:20454\ncatalog:variable_text:32823:14975:15340\ncatalog:variable_text:32895:17532:17897\ncatalog:variable_text:32902:18262:18628\ncatalog:variable_text:32910:20089:20454\ncatalog:variable_text:32973:17897:18262\ncatalog:variable_text:33005:20089:20454\ncatalog:variable_text:33085:17532:18262\ncatalog:variable_text:33087:20089:20454\ncatalog:variable_text:33185:17897:18262\ncatalog:variable_text:33245:17167:17897\ncatalog:variable_text:33246:17167:17897\ncatalog:variable_text:33248:17167:17897\ncatalog:variable_text:33251:17167:17897\ncatalog:variable_text:33256:17167:17897\ncatalog:variable_text:33257:17167:17897\ncatalog:variable_text:33283:15340:15706\ncatalog:variable_text:33291:15340:15706\ncatalog:variable_text:33301:15706:16436\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33358:20089:20454\ncatalog:variable_text:33390:20089:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33462:17167:17532\ncatalog:variable_text:33494:17897:18262\ncatalog:variable_text:33504:17167:17532\ncatalog:variable_text:33512:17532:17897\ncatalog:variable_text:33513:17532:17897\ncatalog:variable_text:33514:17532:17897\ncatalog:variable_text:33515:17532:17897\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33517:17532:17897\ncatalog:variable_text:33518:17532:17897\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33546:19723:20089\ncatalog:variable_text:33547:19723:20089\ncatalog:variable_text:33664:15706:16071\ncatalog:variable_text:33665:17897:18262\ncatalog:variable_text:33669:17897:18262\ncatalog:variable_text:33670:17897:18262\ncatalog:variable_text:33671:17897:18262\ncatalog:variable_text:33672:17897:18262\ncatalog:variable_text:33673:17897:18262\ncatalog:variable_text:33674:15706:16071\ncatalog:variable_text:33675:17897:18262\ncatalog:variable_text:33676:20089:20454\ncatalog:variable_text:33683:15706:16071\ncatalog:variable_text:33688:15706:16071\ncatalog:variable_text:33775:17167:17897\ncatalog:variable_text:33776:16436:16801\ncatalog:variable_text:33777:17532:17897\ncatalog:variable_text:33779:17532:17897\ncatalog:variable_text:33781:17167:17897\ncatalog:variable_text:33807:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-anvander-appar"
+subject = "var:anvander-appar-instruktioner-uppgifter-arbete-veckovis"
 fields = { "sets" = ["digitala-arbetsaktiviteter"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33515:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-anvander-appar"
+subject = "var:anvander-appar-instruktioner-uppgifter-arbete-veckovis"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33515:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q3e"
+subject = "var:arbetsplats-egenutvecklad-programvara-minst-en-gang-veckan"
 fields = { "sets" = ["digitala-arbetsaktiviteter"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33516:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q3e"
+subject = "var:arbetsplats-egenutvecklad-programvara-minst-en-gang-veckan"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33516:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-utvecklar"
+subject = "var:utvecklar-forvaltar-it-system-mjukvara-arbete-veckovis"
 fields = { "sets" = ["digitala-arbetsaktiviteter"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33517:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-minst-en-gang-i-veckan-pa-sitt-arbete-utvecklar"
+subject = "var:utvecklar-forvaltar-it-system-mjukvara-arbete-veckovis"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33517:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-inga-av-de-aktiviteter-q3a-q3f-pa-sitt-arbete-minst-en"
+subject = "var:inga-specificerade-arbetsaktiviteter-veckovis"
 fields = { "sets" = ["digitala-arbetsaktiviteter"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33518:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:utfor-inga-av-de-aktiviteter-q3a-q3f-pa-sitt-arbete-minst-en"
+subject = "var:inga-specificerade-arbetsaktiviteter-veckovis"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33518:17532:17897"
 
@@ -16026,13 +16026,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:33520:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q6"
+subject = "var:valt-utvecklat-testat-programvara-it-utrustning-arbete"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33521:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q6"
+subject = "var:valt-utvecklat-testat-programvara-it-utrustning-arbete"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:33521:17532:17897"
 
@@ -16086,13 +16086,13 @@ evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33525:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:q8d"
+subject = "var:it-arbete-andrad-tid-vidareutbildning-kompetensutveckling"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33526:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:q8d"
+subject = "var:it-arbete-andrad-tid-vidareutbildning-kompetensutveckling"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33526:17532:17897"
 
@@ -16254,13 +16254,13 @@ evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33539:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:r2e"
+subject = "var:utbildat-sig-underhall-it-natverk-servrar-12-manader"
 fields = { "sets" = ["amnesomraden-for-it-utbildning"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33540:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:r2e"
+subject = "var:utbildat-sig-underhall-it-natverk-servrar-12-manader"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33540:17532:17897"
 
@@ -16302,37 +16302,37 @@ evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:33543:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:andel-foretag-vars-anstallda-har-fjarratkomst-till-dokument"
+subject = "var:andel-foretag-fjarratkomst-dokument-av-alla-foretag"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33545:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-foretag-vars-anstallda-har-fjarratkomst-till-dokument"
+subject = "var:andel-foretag-fjarratkomst-dokument-av-alla-foretag"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33545:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-fortag-vars-anstallda-har-fjarratkomst-till-foretagets"
+subject = "var:andel-foretag-fjarratkomst-e-post-av-alla-foretag"
 fields = { "sets" = ["fjarratkomst-till-epost"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33546:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-fortag-vars-anstallda-har-fjarratkomst-till-foretagets"
+subject = "var:andel-foretag-fjarratkomst-e-post-av-alla-foretag"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33546:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-foretag-vars-anstallda-har-fjarratkomst"
+subject = "var:andel-foretag-fjarratkomst-applik-mjukvara-av-alla-foretag"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33547:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-foretag-vars-anstallda-har-fjarratkomst"
+subject = "var:andel-foretag-fjarratkomst-applik-mjukvara-av-alla-foretag"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33547:19723:20089"
 
@@ -16494,25 +16494,25 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33560:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:svarigheter-med-rekrytera-personal-paverkade-foretagets"
+subject = "var:svarigheter-rekrytera-personal-beslut-anvanda-robotar"
 fields = { "sets" = ["skal-till-robotanvandning"] }
 evidence = "RBTWDR är en ogenomskinlig källkod.\ncatalog:variable_text:33561:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:svarigheter-med-rekrytera-personal-paverkade-foretagets"
+subject = "var:svarigheter-rekrytera-personal-beslut-anvanda-robotar"
 fields = { "tags" = ["digital"] }
 evidence = "RBTWDR är en ogenomskinlig källkod.\ncatalog:variable_text:33561:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:utokat-sortiment-paverkade-foretagets-beslut-att-anvanda"
+subject = "var:utokat-sortiment-paverkade-beslut-anvanda-robotar"
 fields = { "sets" = ["skal-till-robotanvandning"] }
 evidence = "RBTWER är en ogenomskinlig källkod.\ncatalog:variable_text:33562:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:utokat-sortiment-paverkade-foretagets-beslut-att-anvanda"
+subject = "var:utokat-sortiment-paverkade-beslut-anvanda-robotar"
 fields = { "tags" = ["digital"] }
 evidence = "RBTWER är en ogenomskinlig källkod.\ncatalog:variable_text:33562:18993:19358"
 
@@ -16602,25 +16602,25 @@ evidence = "Kontaktens resultat är undersökningsmetadata.\ncatalog:valueset:14
 
 [[statement]]
 kind = "set"
-subject = "var:rfac1"
+subject = "var:rfid-produktidentifiering-efter-produktion"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33571:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:rfac1"
+subject = "var:rfid-produktidentifiering-efter-produktion"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33571:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:rfaspri1"
+subject = "var:rfid-personidentifiering-eller-accesskontroll"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33573:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:rfaspri1"
+subject = "var:rfid-personidentifiering-eller-accesskontroll"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33573:17167:17532"
 
@@ -16638,13 +16638,13 @@ evidence = "RFID är digital teknik, men källan anger inte vilken aspekt som m�
 
 [[statement]]
 kind = "set"
-subject = "var:rfpsdp1"
+subject = "var:rfid-overvakning-kontroll-produktion"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33578:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:rfpsdp1"
+subject = "var:rfid-overvakning-kontroll-produktion"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33578:17167:17532"
 
@@ -16770,85 +16770,85 @@ evidence = "Variabeln mäter förvärvsinkomst.\ncatalog:variable_text:33591:186
 
 [[statement]]
 kind = "set"
-subject = "var:sec2icnff"
+subject = "var:konfidentiella-data-rojda-oavsiktligt-egen-personal"
 fields = { "sets" = [] }
 evidence = "SEC2ICNFF är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33592:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2icnff"
+subject = "var:konfidentiella-data-rojda-oavsiktligt-egen-personal"
 fields = { "tags" = ["digital"] }
 evidence = "SEC2ICNFF är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33592:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2idcdf"
+subject = "var:data-forstorda-eller-forvanskade-maskin-eller-programvarufel"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33593:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2idcdf"
+subject = "var:data-forstorda-eller-forvanskade-maskin-eller-programvarufel"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod.\ncatalog:variable_text:33593:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2iusva"
+subject = "var:it-tjanster-otillgangliga-yttre-attacker"
 fields = { "sets" = ["sakerhetsincidenter-med-otillgangliga-it-tjanster"] }
 evidence = "SEC2IUSVA är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33594:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2iusva"
+subject = "var:it-tjanster-otillgangliga-yttre-attacker"
 fields = { "tags" = ["digital"] }
 evidence = "SEC2IUSVA är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33594:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2iusvf"
+subject = "var:it-tjanster-otillgangliga-hardvaru-eller-programvarufel"
 fields = { "sets" = ["sakerhetsincidenter-med-otillgangliga-it-tjanster"] }
 evidence = "SEC2IUSVF är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33595:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sec2iusvf"
+subject = "var:it-tjanster-otillgangliga-hardvaru-eller-programvarufel"
 fields = { "tags" = ["digital"] }
 evidence = "SEC2IUSVF är en opak källkod och etiketten beskriver incidentens orsak.\ncatalog:variable_text:33595:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawcont"
+subject = "var:it-sakerhetsansvar-anstallda-avtal"
 fields = { "sets" = ["information-till-anstallda-om-it-sakerhetsansvar"] }
 evidence = "SECAWCONT är en opak källkod.\ncatalog:variable_text:33596:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawcont"
+subject = "var:it-sakerhetsansvar-anstallda-avtal"
 fields = { "tags" = ["digital"] }
 evidence = "SECAWCONT är en opak källkod.\ncatalog:variable_text:33596:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawctp"
+subject = "var:it-sakerhetsansvar-anstallda-obligatorisk-utbildning"
 fields = { "sets" = ["information-till-anstallda-om-it-sakerhetsansvar"] }
 evidence = "SECAWCTP är en opak källkod.\ncatalog:variable_text:33597:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawctp"
+subject = "var:it-sakerhetsansvar-anstallda-obligatorisk-utbildning"
 fields = { "tags" = ["digital"] }
 evidence = "SECAWCTP är en opak källkod.\ncatalog:variable_text:33597:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawvtgi"
+subject = "var:it-sakerhetsansvar-frivillig-utbildning-eller-information"
 fields = { "sets" = ["information-till-anstallda-om-it-sakerhetsansvar"] }
 evidence = "SECAWVTGI är en opak källkod.\ncatalog:variable_text:33598:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:secawvtgi"
+subject = "var:it-sakerhetsansvar-frivillig-utbildning-eller-information"
 fields = { "tags" = ["digital"] }
 evidence = "SECAWVTGI är en opak källkod.\ncatalog:variable_text:33598:19723:20089"
 
@@ -17934,13 +17934,13 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33722:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ai-hinder-kompabilitet-med-existerande-utrustning"
+subject = "var:ai-hinder-kompabilitet-utrustning-eller-mjukvara"
 fields = { "sets" = ["hinder-for-ai-anvandning"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33723:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ai-hinder-kompabilitet-med-existerande-utrustning"
+subject = "var:ai-hinder-kompabilitet-utrustning-eller-mjukvara"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33723:18262:18628"
 
@@ -18390,25 +18390,25 @@ evidence = "Återanvända kolumner har andra periodägare.\ncatalog:occurrence:2
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arsverken-utforda-av-egen-personal-som-arbetar"
+subject = "var:antal-arsverken-egen-personal-programvaruutveckling"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33775:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arsverken-utforda-av-egen-personal-som-arbetar"
+subject = "var:antal-arsverken-egen-personal-programvaruutveckling"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33775:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-som-arbetar-med-programvaruutveckling-for-foretagets"
+subject = "var:andel-arsverken-egen-anvandning-av-programvaruutv-arsverken"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33776:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-som-arbetar-med-programvaruutveckling-for-foretagets"
+subject = "var:andel-arsverken-egen-anvandning-av-programvaruutv-arsverken"
 fields = { "tags" = ["business", "digital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33776:16436:16801"
 
@@ -18450,13 +18450,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:33781:17167:178
 
 [[statement]]
 kind = "set"
-subject = "var:vbu"
+subject = "var:anvander-kundbeteende-webbplats-reklam-kundnojdhet"
 fields = { "sets" = ["datakallor-for-dataanalys"] }
 evidence = "VBU är en källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter datakällor för dataanalys. membership-0329: Ingen vald variabel mäter dataanalysens källor. membership-0330: Ingen vald variabel mäter dataanalyskällor. membership-0331: Ingen vald variabel mäter dataanalysens datakällor. membership-0332: Inga valda variabler avser dataanalyskällor. membership-0333: Ingen vald variabel mäter dataanalysens datakällor. membership-0334: Inget valt mått avser dataanalyskällor. membership-0335: Inga valda variabler mäter dataanalysens datakällor. membership-0336: Inga valda sektionsvariabler mäter dataanalysens datakällor. membership-0337: Inget valt sektionsmått avser datakällor för dataanalys. membership-0338: Inga valda variabler mäter dataanalyskällor. membership-0339: Inget valt mått avser dataanalysens datakällor. membership-0340: Inga valda variabler mäter dataanalyskällor. membership-0341: Inga valda variabler mäter datakällor för dataanalys. membership-0342: Utbildning i dataanalys och användning av arbetsprogramvara mäter inte analyserade datakällor. membership-0343: Inga valda variabler mäter datakällor för dataanalys. membership-0344: Ingen vald variabel mäter analyserade datakällor. membership-0345: De valda analyskällorna är uttryckligen big data-avgränsade och därmed undantagna. membership-0346: Variablerna mäter dataanalys efter analyserad datakälla, utan särskild big data-avgränsning. membership-0347: Inga valda variabler mäter dataanalys efter datakälla. membership-0348: BI-systemets användning anger ingen analyserad datakälla; IoT-frågorna mäter enhetsanvändning. membership-0349: Ingen vald variabel har belagd datakälla för dataanalys. membership-0350: Inga belagda analysdatakällor i denna sektion. membership-0351: Variabeln mäter användning av information från besökarnas webbplatsbeteende, en uttryckligt angiven datakälla utan big data-avgränsning.\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32522:18262:18628\ncatalog:variable_text:32523:18262:18628\ncatalog:variable_text:32524:18262:18628\ncatalog:variable_text:32637:20089:20454\ncatalog:variable_text:32638:20089:20454\ncatalog:variable_text:32639:20089:20454\ncatalog:variable_text:32640:20089:20454\ncatalog:variable_text:32641:20089:20454\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32643:20089:20454\ncatalog:variable_text:32644:20089:20454\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33258:20089:20454\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33539:17532:17897\ncatalog:variable_text:33783:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:vbu"
+subject = "var:anvander-kundbeteende-webbplats-reklam-kundnojdhet"
 fields = { "tags" = ["digital"] }
 evidence = "VBU är en källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Ingen vald variabel mäter datakällor för dataanalys. membership-0329: Ingen vald variabel mäter dataanalysens källor. membership-0330: Ingen vald variabel mäter dataanalyskällor. membership-0331: Ingen vald variabel mäter dataanalysens datakällor. membership-0332: Inga valda variabler avser dataanalyskällor. membership-0333: Ingen vald variabel mäter dataanalysens datakällor. membership-0334: Inget valt mått avser dataanalyskällor. membership-0335: Inga valda variabler mäter dataanalysens datakällor. membership-0336: Inga valda sektionsvariabler mäter dataanalysens datakällor. membership-0337: Inget valt sektionsmått avser datakällor för dataanalys. membership-0338: Inga valda variabler mäter dataanalyskällor. membership-0339: Inget valt mått avser dataanalysens datakällor. membership-0340: Inga valda variabler mäter dataanalyskällor. membership-0341: Inga valda variabler mäter datakällor för dataanalys. membership-0342: Utbildning i dataanalys och användning av arbetsprogramvara mäter inte analyserade datakällor. membership-0343: Inga valda variabler mäter datakällor för dataanalys. membership-0344: Ingen vald variabel mäter analyserade datakällor. membership-0345: De valda analyskällorna är uttryckligen big data-avgränsade och därmed undantagna. membership-0346: Variablerna mäter dataanalys efter analyserad datakälla, utan särskild big data-avgränsning. membership-0347: Inga valda variabler mäter dataanalys efter datakälla. membership-0348: BI-systemets användning anger ingen analyserad datakälla; IoT-frågorna mäter enhetsanvändning. membership-0349: Ingen vald variabel har belagd datakälla för dataanalys. membership-0350: Inga belagda analysdatakällor i denna sektion. membership-0351: Variabeln mäter användning av information från besökarnas webbplatsbeteende, en uttryckligt angiven datakälla utan big data-avgränsning.\ncatalog:variable_text:32501:18262:18628\ncatalog:variable_text:32504:17532:17897\ncatalog:variable_text:32522:18262:18628\ncatalog:variable_text:32523:18262:18628\ncatalog:variable_text:32524:18262:18628\ncatalog:variable_text:32637:20089:20454\ncatalog:variable_text:32638:20089:20454\ncatalog:variable_text:32639:20089:20454\ncatalog:variable_text:32640:20089:20454\ncatalog:variable_text:32641:20089:20454\ncatalog:variable_text:32642:20089:20454\ncatalog:variable_text:32643:20089:20454\ncatalog:variable_text:32644:20089:20454\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33258:20089:20454\ncatalog:variable_text:33334:19723:20454\ncatalog:variable_text:33393:20089:20454\ncatalog:variable_text:33516:17532:17897\ncatalog:variable_text:33539:17532:17897\ncatalog:variable_text:33783:17897:18262"
 
@@ -18678,13 +18678,13 @@ evidence = "WEBSM är en källkod.\ncatalog:variable_text:33807:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:webvac"
+subject = "var:foretagets-webbplats-se-eller-soka-lediga-tjanster"
 fields = { "sets" = [] }
 evidence = "WEBVAC är en källkod.\ncatalog:variable_text:33808:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:webvac"
+subject = "var:foretagets-webbplats-se-eller-soka-lediga-tjanster"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "WEBVAC är en källkod.\ncatalog:variable_text:33808:20089:20454"
 

@@ -2094,13 +2094,13 @@ evidence = "Ämneskodning och utbildning.\ncatalog:variable_text:35377:16617:202
 
 [[statement]]
 kind = "set"
-subject = "var:fatim"
+subject = "var:tjanstgoringstimmar-forsta-tjanst"
 fields = { "sets" = ["tjanstgoringstid"] }
 evidence = "FaTim är en källförkortning och etiketten anger tjänstgöringstimmar.\ncatalog:variable_text:35380:3103:10408"
 
 [[statement]]
 kind = "set"
-subject = "var:fatim"
+subject = "var:tjanstgoringstimmar-forsta-tjanst"
 fields = { "tags" = ["employment"] }
 evidence = "FaTim är en källförkortning och etiketten anger tjänstgöringstimmar.\ncatalog:variable_text:35380:3103:10408"
 

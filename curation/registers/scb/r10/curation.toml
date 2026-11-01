@@ -1091,13 +1091,13 @@ evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:areal-av-grodan-2"
+subject = "var:areal-groda-1"
 fields = { "sets" = ["grodareal"] }
 evidence = "Suffixet 2 är en tilldelad räknare och inte källkolumnens slotnummer 1.\ncatalog:occurrence:328994\ncatalog:variable_text:35772:6940:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:areal-av-grodan-2"
+subject = "var:areal-groda-1"
 fields = { "tags" = ["agriculture"] }
 evidence = "Suffixet 2 är en tilldelad räknare och inte källkolumnens slotnummer 1.\ncatalog:occurrence:328994\ncatalog:variable_text:35772:6940:7305"
 
@@ -1535,13 +1535,13 @@ evidence = "Samma kolumn har en annan ägare och värdemängderna beskriver stat
 
 [[statement]]
 kind = "set"
-subject = "var:astat-eu"
+subject = "var:arealklass-akermark-nya-kriterier"
 fields = { "sets" = ["akermarksstatus"] }
 evidence = "Astat är en källkod och labeln ger en benämning; kodlistan visar åkermarksstatus.\ncatalog:valueset:8387\ncatalog:variable_text:35809:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:astat-eu"
+subject = "var:arealklass-akermark-nya-kriterier"
 fields = { "tags" = ["agriculture"] }
 evidence = "Astat är en källkod och labeln ger en benämning; kodlistan visar åkermarksstatus.\ncatalog:valueset:8387\ncatalog:variable_text:35809:14610:14975"
 
@@ -2723,13 +2723,13 @@ evidence = "Siffersuffixet finns inte i källkolumnen och är en löpnummerdisam
 
 [[statement]]
 kind = "set"
-subject = "var:jtim-ny"
+subject = "var:standardtimmar-hela-jordbruket-ny-typologi"
 fields = { "sets" = ["standardtimmar"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35911:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:jtim-ny"
+subject = "var:standardtimmar-hela-jordbruket-ny-typologi"
 fields = { "tags" = ["agriculture", "employment"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35911:15340:15706"
 
@@ -2951,13 +2951,13 @@ evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:kvigs2"
+subject = "var:antal-kvigor-slakt-2-ar-over"
 fields = { "sets" = ["antal-kvigor"] }
 evidence = "Ensam bokstav s är en källkod för slakt och inte en läsbar ordstam.\ncatalog:variable_text:35933:10227:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:kvigs2"
+subject = "var:antal-kvigor-slakt-2-ar-over"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ensam bokstav s är en källkod för slakt och inte en läsbar ordstam.\ncatalog:variable_text:35933:10227:10957"
 
@@ -3743,13 +3743,13 @@ evidence = "Fg är en bokstavskod för första gången.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:suggorob"
+subject = "var:antal-suggor-ovriga-betackta"
 fields = { "sets" = ["antal-suggor-och-gyltor"] }
 evidence = "Ob är en bokstavskod för övriga betäckta.\ncatalog:variable_text:36005:10227:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:suggorob"
+subject = "var:antal-suggor-ovriga-betackta"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ob är en bokstavskod för övriga betäckta.\ncatalog:variable_text:36005:10227:10957"
 
@@ -4019,13 +4019,13 @@ evidence = "Tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:tkod"
+subject = "var:tradgard-odlingstyp"
 fields = { "sets" = ["tradgardsodlingsstatus"] }
 evidence = "T är en ensam källbokstav och id:t anger kod medan etiketten anger areal.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:tkod"
+subject = "var:tradgard-odlingstyp"
 fields = { "tags" = ["agriculture"] }
 evidence = "T är en ensam källbokstav och id:t anger kod medan etiketten anger areal.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
 

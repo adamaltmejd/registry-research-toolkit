@@ -104,7 +104,7 @@
 "tandvardsregion" = ["LOVA: TANDVARDSREGION"]
 "tempbehorighetfran" = ["LOVA HOSP: TEMPBEHORIGHETFRAN"]
 "tempbehorighettill" = ["LOVA HOSP: TEMPBEHORIGHETTILL"]
-"tmgrpnamn" = ["LOVA EXAMEN: TMGRPNAMN"]
+"examen-grov-gruppering-klartext" = ["LOVA EXAMEN: TMGRPNAMN"]
 "utb-spec-kod" = ["LOVA HOSP: UTB_SPEC_KOD"]
 "utbildningsinriktning-sun2000" = ["LOVA EXAMEN: SUN2000INR"]
 "utbildningsinriktning-sun2020" = ["LOVA EXAMEN: SUN2020INR"]

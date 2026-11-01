@@ -451,13 +451,13 @@ evidence = "Samma glyfosatdos som glyfosat-dos-per-hektar i olika perioder.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:dosas"
+subject = "var:dos-aktiv-substans-kilogram-per-hektar"
 fields = { "sets" = ["vaxtskyddsmedelsdos"] }
 evidence = "AS är en bokstavskod för aktiv substans.\ncatalog:occurrence:515506\ncatalog:variable_text:55276:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:dosas"
+subject = "var:dos-aktiv-substans-kilogram-per-hektar"
 fields = { "tags" = ["agriculture"] }
 evidence = "AS är en bokstavskod för aktiv substans.\ncatalog:occurrence:515506\ncatalog:variable_text:55276:13149:13514"
 
@@ -1351,25 +1351,25 @@ evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-omraden"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; 18 är källans indelning.\ncatalog:occurrence:515717\ncatalog:variable_text:55353:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-omraden"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; 18 är källans indelning.\ncatalog:occurrence:515717\ncatalog:variable_text:55353:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-omraden"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; 8 är källans indelning.\ncatalog:occurrence:515755\ncatalog:variable_text:55354:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-omraden"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; 8 är källans indelning.\ncatalog:occurrence:515755\ncatalog:variable_text:55354:18628:18993"
 

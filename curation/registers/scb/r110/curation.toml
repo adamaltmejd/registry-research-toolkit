@@ -307,13 +307,13 @@ evidence = "F11B har ett annat begrepp i en tidigare period.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:f12"
+subject = "var:huvudsaklig-sysselsattning-matveckan"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26033:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f12"
+subject = "var:huvudsaklig-sysselsattning-matveckan"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26033:17532:17897"
 
@@ -415,13 +415,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26041:12
 
 [[statement]]
 kind = "set"
-subject = "var:f24a"
+subject = "var:svart-fa-arbete-avsaknad-yrkeserfarenhet-senaste-3-ar"
 fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26042:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f24a"
+subject = "var:svart-fa-arbete-avsaknad-yrkeserfarenhet-senaste-3-ar"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26042:17532:17897"
 
@@ -451,13 +451,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26044:14
 
 [[statement]]
 kind = "set"
-subject = "var:f24b"
+subject = "var:svart-fa-arbete-avsaknad-arbetsgivarreferenser-senaste-3-ar"
 fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26045:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f24b"
+subject = "var:svart-fa-arbete-avsaknad-arbetsgivarreferenser-senaste-3-ar"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26045:17532:17897"
 
@@ -487,13 +487,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26047:14
 
 [[statement]]
 kind = "set"
-subject = "var:f24c"
+subject = "var:svart-fa-arbete-avsaknad-kontakter-senaste-3-ar"
 fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26048:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f24c"
+subject = "var:svart-fa-arbete-avsaknad-kontakter-senaste-3-ar"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26048:17532:17897"
 
@@ -955,13 +955,13 @@ evidence = "Kodar grupper av födelseländer.\ncatalog:variable_text:26086:14245
 
 [[statement]]
 kind = "set"
-subject = "var:gfbgrp"
+subject = "var:grund-bosattning-sex-grupper"
 fields = { "sets" = ["bosattningsgrund-och-invandringsskal"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:26087:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:gfbgrp"
+subject = "var:grund-bosattning-sex-grupper"
 fields = { "tags" = ["migration"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:26087:17532:17897"
 

@@ -1040,37 +1040,37 @@ evidence = "Åldersgrupp och ålder i år mäter ålder.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:apoang"
+subject = "var:avklarade-poang-allmanna-gymnasiala-komvux"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "A är en bokstavskod i källkolumnen och etiketten kolliderar med andra variabler.\ncatalog:variable_text:53315:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:apoang"
+subject = "var:avklarade-poang-allmanna-gymnasiala-komvux"
 fields = { "tags" = ["education"] }
 evidence = "A är en bokstavskod i källkolumnen och etiketten kolliderar med andra variabler.\ncatalog:variable_text:53315:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:apoang-num"
+subject = "var:avklarade-poang-allmanna-komvux"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "A och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53316:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:apoang-num"
+subject = "var:avklarade-poang-allmanna-komvux"
 fields = { "tags" = ["education"] }
 evidence = "A och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53316:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:atantal"
+subject = "var:antal-lasta-allmanna-studieforberedande-kurser-komvux"
 fields = { "sets" = ["antal-kurser"] }
 evidence = "Källförkortningen är ogenomskinlig; etiketten sammanfaller med yrkeskursernas etikett och målet behöver disambigueras.\ncatalog:variable_text:53318:6756:19905\ncatalog:variable_text:53389:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:atantal"
+subject = "var:antal-lasta-allmanna-studieforberedande-kurser-komvux"
 fields = { "tags" = ["education"] }
 evidence = "Källförkortningen är ogenomskinlig; etiketten sammanfaller med yrkeskursernas etikett och målet behöver disambigueras.\ncatalog:variable_text:53318:6756:19905\ncatalog:variable_text:53389:6756:19905"
 
@@ -1496,13 +1496,13 @@ evidence = "Variabeln anger kön.\ncatalog:variable_text:53354:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kxsunkat"
+subject = "var:utbildningsniva-forra-aret-tre-grupper"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "KX är en källkod som inte framgår av etiketten; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53355:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:kxsunkat"
+subject = "var:utbildningsniva-forra-aret-tre-grupper"
 fields = { "tags" = ["education"] }
 evidence = "KX är en källkod som inte framgår av etiketten; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53355:6756:19905"
 
@@ -1628,13 +1628,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp-detalj"
+subject = "var:utbildningsgrupp-sun2020-detaljerad"
 fields = { "sets" = ["utbildningsgrupp"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53368:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp-detalj"
+subject = "var:utbildningsgrupp-sun2020-detaljerad"
 fields = { "tags" = ["education"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53368:18628:20089"
 
@@ -1688,13 +1688,13 @@ evidence = "SUN-gruppfamiljen behålls samstämmigt; variabeln grupperar utbildn
 
 [[statement]]
 kind = "set"
-subject = "var:suninr"
+subject = "var:utbildningsinriktning-sun-forsta-siffran-16-74-ar"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53373:9862:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:suninr"
+subject = "var:utbildningsinriktning-sun-forsta-siffran-16-74-ar"
 fields = { "tags" = ["education"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53373:9862:10957"
 
@@ -1820,85 +1820,85 @@ evidence = "Variabeln markerar vald utbildning enligt en alternativ prioritering
 
 [[statement]]
 kind = "set"
-subject = "var:yandel"
+subject = "var:huvudsaklig-kursinriktning-komvux-tidigare-berakning"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "Y är en bokstavskod i källkolumnen; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53384:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:yandel"
+subject = "var:huvudsaklig-kursinriktning-komvux-tidigare-berakning"
 fields = { "tags" = ["education"] }
 evidence = "Y är en bokstavskod i källkolumnen; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53384:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:yandel-num"
+subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "Y och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53385:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:yandel-num"
+subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
 fields = { "tags" = ["education"] }
 evidence = "Y och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53385:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:yfieldmax"
+subject = "var:utbildningsinriktning-yrkeskurser-flest-avklarade-poang"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53386:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:yfieldmax"
+subject = "var:utbildningsinriktning-yrkeskurser-flest-avklarade-poang"
 fields = { "tags" = ["education"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar; målet behöver disambigueras.\ncatalog:variable_text:53386:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ypoang"
+subject = "var:avklarade-poang-yrkesinriktade-gymnasiala-komvux"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "Y är en bokstavskod i källkolumnen; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53387:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ypoang"
+subject = "var:avklarade-poang-yrkesinriktade-gymnasiala-komvux"
 fields = { "tags" = ["education"] }
 evidence = "Y är en bokstavskod i källkolumnen; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53387:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ypoang-num"
+subject = "var:avklarade-poang-yrkesinriktade-komvux"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "Y och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53388:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ypoang-num"
+subject = "var:avklarade-poang-yrkesinriktade-komvux"
 fields = { "tags" = ["education"] }
 evidence = "Y och formatändelsen Num är källkoder; etiketten kolliderar med andra variabler.\ncatalog:variable_text:53388:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ytantal"
+subject = "var:antal-lasta-yrkesinriktade-kurser-komvux"
 fields = { "sets" = ["antal-kurser"] }
 evidence = "Källförkortningen är ogenomskinlig; etiketten sammanfaller med de allmänna kursernas etikett och målet behöver disambigueras.\ncatalog:variable_text:53318:6756:19905\ncatalog:variable_text:53389:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ytantal"
+subject = "var:antal-lasta-yrkesinriktade-kurser-komvux"
 fields = { "tags" = ["education"] }
 evidence = "Källförkortningen är ogenomskinlig; etiketten sammanfaller med de allmänna kursernas etikett och målet behöver disambigueras.\ncatalog:variable_text:53318:6756:19905\ncatalog:variable_text:53389:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ytutim"
+subject = "var:undervisningstimmar-yrkesinriktade-kurser-komvux"
 fields = { "sets" = ["undervisningstimmar"] }
 evidence = "YTutim är en opak källmnemonik; etiketten kolliderar och målet behöver R6-prövning.\ncatalog:variable_text:53390:6756:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ytutim"
+subject = "var:undervisningstimmar-yrkesinriktade-kurser-komvux"
 fields = { "tags" = ["education"] }
 evidence = "YTutim är en opak källmnemonik; etiketten kolliderar och målet behöver R6-prövning.\ncatalog:variable_text:53390:6756:19905"
 

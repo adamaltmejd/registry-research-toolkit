@@ -380,13 +380,13 @@ evidence = "Siffersuffixet kommer inte från källkolumnen. Källkolumnen skilje
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-3"
+subject = "var:moderns-utbildningsniva-7-nivaer"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Siffersuffixet kommer inte från källkolumnen. Källkolumnen skiljer den kolliderande etiketten från övriga.\ncatalog:occurrence-locators:variable:22072\ncatalog:variable_text:22072:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-3"
+subject = "var:moderns-utbildningsniva-7-nivaer"
 fields = { "tags" = ["education"] }
 evidence = "Siffersuffixet kommer inte från källkolumnen. Källkolumnen skiljer den kolliderande etiketten från övriga.\ncatalog:occurrence-locators:variable:22072\ncatalog:variable_text:22072:14610:14975"
 

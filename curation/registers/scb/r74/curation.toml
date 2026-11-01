@@ -127,13 +127,13 @@ evidence = "Klassificerat använt uppvärmningssätt.\ncatalog:valueset:6646\nca
 
 [[statement]]
 kind = "set"
-subject = "var:barnklass-262"
+subject = "var:antal-barn-under-18-ar-vuxna-18-ar-och-aldre-i-huset-klass"
 fields = { "sets" = [] }
 evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar och målnamnet behöver därför hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7560\ncatalog:variable_text:7560:12418:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:barnklass-262"
+subject = "var:antal-barn-under-18-ar-vuxna-18-ar-och-aldre-i-huset-klass"
 fields = { "tags" = ["family-household"] }
 evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar och målnamnet behöver därför hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7560\ncatalog:variable_text:7560:12418:14245"
 

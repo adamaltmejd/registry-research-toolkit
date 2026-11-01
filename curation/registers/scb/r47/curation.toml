@@ -1377,13 +1377,13 @@ evidence = "Anstform-familjen behandlas enhetligt som en förkortningsfamilj med
 
 [[statement]]
 kind = "set"
-subject = "var:ant-hskod"
+subject = "var:antagande-larosate-forskarniva"
 fields = { "sets" = ["larosate"] }
 evidence = "Id:t innehåller opaka källkoder och etiketten kolliderar; målet kräver disambiguering med kolumnen.\ncatalog:occurrence:236086\ncatalog:variable_text:26263:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-hskod"
+subject = "var:antagande-larosate-forskarniva"
 fields = { "tags" = ["education"] }
 evidence = "Id:t innehåller opaka källkoder och etiketten kolliderar; målet kräver disambiguering med kolumnen.\ncatalog:occurrence:236086\ncatalog:variable_text:26263:13514:20089"
 
@@ -1821,13 +1821,13 @@ evidence = "Koden beskriver examenstyp.\ncatalog:variable_text:26302:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exhskod"
+subject = "var:larosate-hogsta-senaste-examen"
 fields = { "sets" = [] }
 evidence = "HS är en ogenomskinlig källkod för högskola.\ncatalog:variable_text:26303:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:exhskod"
+subject = "var:larosate-hogsta-senaste-examen"
 fields = { "tags" = ["education"] }
 evidence = "HS är en ogenomskinlig källkod för högskola.\ncatalog:variable_text:26303:18262:19723"
 
@@ -1905,25 +1905,25 @@ evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ffgantartermin"
+subject = "var:ar-termin-forsta-antagning-forskarutbildning"
 fields = { "sets" = ["antagningstidpunkt"] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26310:365:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgantartermin"
+subject = "var:ar-termin-forsta-antagning-forskarutbildning"
 fields = { "tags" = [] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26310:365:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgdoktartermin"
+subject = "var:ar-termin-forsta-doktorsexamen"
 fields = { "sets" = ["examenstidpunkt"] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26311:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgdoktartermin"
+subject = "var:ar-termin-forsta-doktorsexamen"
 fields = { "tags" = [] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26311:0:20089"
 
@@ -1941,37 +1941,37 @@ evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ffgexartermin"
+subject = "var:ar-termin-forsta-forskarexamen"
 fields = { "sets" = ["examenstidpunkt"] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26313:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgexartermin"
+subject = "var:ar-termin-forsta-forskarexamen"
 fields = { "tags" = [] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26313:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgexlar"
+subject = "var:lasar-forsta-forskarexamen"
 fields = { "sets" = ["examenstidpunkt"] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26314:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffgexlar"
+subject = "var:lasar-forsta-forskarexamen"
 fields = { "tags" = [] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26314:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffglicartermin"
+subject = "var:ar-termin-forsta-licentiatexamen"
 fields = { "sets" = ["examenstidpunkt"] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26315:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ffglicartermin"
+subject = "var:ar-termin-forsta-licentiatexamen"
 fields = { "tags" = [] }
 evidence = "FFG är en bokstavskod för första gången.\ncatalog:variable_text:26315:0:20089"
 
@@ -2397,13 +2397,13 @@ evidence = "Land för utlandsvistelse i samband med studier.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:landcsn"
+subject = "var:land-anknytning-annan-hogskola"
 fields = { "sets" = ["utbildningsland"] }
 evidence = "CSN i id:t är en bokstavskod som saknas i benämningen.\ncatalog:variable_text:26356:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:landcsn"
+subject = "var:land-anknytning-annan-hogskola"
 fields = { "tags" = ["geography"] }
 evidence = "CSN i id:t är en bokstavskod som saknas i benämningen.\ncatalog:variable_text:26356:0:20089"
 
@@ -2469,25 +2469,25 @@ evidence = "De två variablerna kodar läsår med olika längd.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:lex"
+subject = "var:forskarexamen-kod"
 fields = { "sets" = ["forskarexamenstyp"] }
 evidence = "L är en opak enbokstavskod; etiketten kolliderar med lextext och behöver D-12-disambiguering.\ncatalog:variable_text:26362:0:20089\ncatalog:variable_text:26363:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lex"
+subject = "var:forskarexamen-kod"
 fields = { "tags" = ["education"] }
 evidence = "L är en opak enbokstavskod; etiketten kolliderar med lextext och behöver D-12-disambiguering.\ncatalog:variable_text:26362:0:20089\ncatalog:variable_text:26363:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lextext"
+subject = "var:forskarexamen-benamning"
 fields = { "sets" = ["forskarexamenstyp"] }
 evidence = "L är en opak enbokstavskod; etiketten kolliderar med lex och behöver D-12-disambiguering.\ncatalog:variable_text:26362:0:20089\ncatalog:variable_text:26363:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lextext"
+subject = "var:forskarexamen-benamning"
 fields = { "tags" = ["education"] }
 evidence = "L är en opak enbokstavskod; etiketten kolliderar med lex och behöver D-12-disambiguering.\ncatalog:variable_text:26362:0:20089\ncatalog:variable_text:26363:0:20089"
 
@@ -2505,13 +2505,13 @@ evidence = "Det inledande L är en opak bokstavskod.\ncatalog:variable_text:2636
 
 [[statement]]
 kind = "set"
-subject = "var:lhsk"
+subject = "var:larosate-externkod"
 fields = { "sets" = ["larosate"] }
 evidence = "L är en enbokstavskod i källkolumnen och etiketten kolliderar; målet kräver disambiguering.\ncatalog:occurrence:236030\ncatalog:variable_text:26365:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lhsk"
+subject = "var:larosate-externkod"
 fields = { "tags" = ["education"] }
 evidence = "L är en enbokstavskod i källkolumnen och etiketten kolliderar; målet kräver disambiguering.\ncatalog:occurrence:236030\ncatalog:variable_text:26365:0:20089"
 
@@ -2541,13 +2541,13 @@ evidence = "L är en källkod och inte en läsbar ordstam i benämningen.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:lktyp"
+subject = "var:hogskolans-kurstyp-finansieringsform"
 fields = { "sets" = [] }
 evidence = "Lktyp är en opak källmnemonik.\ncatalog:variable_text:26368:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:lktyp"
+subject = "var:hogskolans-kurstyp-finansieringsform"
 fields = { "tags" = ["education"] }
 evidence = "Lktyp är en opak källmnemonik.\ncatalog:variable_text:26368:14061:14245"
 
@@ -2757,13 +2757,13 @@ evidence = "År, termin och läsår anger samma nybörjartidpunkt.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:nybdoktkar"
+subject = "var:ar-som-doktorandnyborjare"
 fields = { "sets" = ["doktorandnyborjartidpunkt"] }
 evidence = "K är en opak bokstavskod i årsbeteckningen.\ncatalog:variable_text:26390:0:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nybdoktkar"
+subject = "var:ar-som-doktorandnyborjare"
 fields = { "tags" = [] }
 evidence = "K är en opak bokstavskod i årsbeteckningen.\ncatalog:variable_text:26390:0:20089"
 

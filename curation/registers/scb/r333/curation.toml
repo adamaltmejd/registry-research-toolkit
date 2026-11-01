@@ -1453,25 +1453,25 @@ evidence = "Andelen och beloppet hör till samma bidragsbegrepp.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:andel-fp"
+subject = "var:foraldrapenning-procent-disponibel-familjeinkomst"
 fields = { "sets" = ["foraldrapenning"] }
 evidence = "Fp är en bokstavskod för föräldrapenning. Etiketten delas med beloppsvariabeln och målnamnet behöver därför hanteras enligt R6.\ncatalog:variable_text:6405:20088:20089\ncatalog:variable_text:6537:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-fp"
+subject = "var:foraldrapenning-procent-disponibel-familjeinkomst"
 fields = { "tags" = ["transfers"] }
 evidence = "Fp är en bokstavskod för föräldrapenning. Etiketten delas med beloppsvariabeln och målnamnet behöver därför hanteras enligt R6.\ncatalog:variable_text:6405:20088:20089\ncatalog:variable_text:6537:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-isocbu"
+subject = "var:ekonomiskt-bistand-procent-disponibel-familjeinkomst"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "Isocbu är en opak källkod; etiketten kolliderar och målsluggen kräver R6-kontroll.\ncatalog:variable_text:6406:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-isocbu"
+subject = "var:ekonomiskt-bistand-procent-disponibel-familjeinkomst"
 fields = { "tags" = ["transfers"] }
 evidence = "Isocbu är en opak källkod; etiketten kolliderar och målsluggen kräver R6-kontroll.\ncatalog:variable_text:6406:20088:20089"
 
@@ -2221,13 +2221,13 @@ evidence = "Familjens botyp hör ihop med barnets botyp.\ncatalog:occurrence-loc
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kehb"
+subject = "var:disponibel-inkomst-per-konsumtionsenhet-kronor"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källmnemoniken är opak; etiketten anger disponibel inkomst per konsumtionsenhet.\ncatalog:occurrence-locators:variable:6469"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kehb"
+subject = "var:disponibel-inkomst-per-konsumtionsenhet-kronor"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak; etiketten anger disponibel inkomst per konsumtionsenhet.\ncatalog:occurrence-locators:variable:6469"
 
@@ -3025,13 +3025,13 @@ evidence = "Församlingskodningar hör till samma geografiska begrepp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:fp-ink"
+subject = "var:foraldrapenning-skattepliktig-kronor"
 fields = { "sets" = ["foraldrapenning"] }
 evidence = "Fp är en bokstavskod för föräldrapenning. Etiketten delas med andelsvariabeln och målnamnet behöver därför hanteras enligt R6.\ncatalog:variable_text:6405:20088:20089\ncatalog:variable_text:6537:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fp-ink"
+subject = "var:foraldrapenning-skattepliktig-kronor"
 fields = { "tags" = ["transfers"] }
 evidence = "Fp är en bokstavskod för föräldrapenning. Etiketten delas med andelsvariabeln och målnamnet behöver därför hanteras enligt R6.\ncatalog:variable_text:6405:20088:20089\ncatalog:variable_text:6537:20088:20089"
 

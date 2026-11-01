@@ -4,7 +4,7 @@ public = "folkomrostningar-valdeltagande"
 
 [variables]
 "akumed" = ["Valdeltagande: akumed"]
-"akus" = ["Valdeltagande: akus"]
+"arbetskraftsstatus-tabellframstallning" = ["Valdeltagande: akus"]
 "alder-31-12" = ["Valdeltagande: alderslut"]
 "aldg" = ["Valdeltagande: aldg"]
 "aldgkon1" = ["Valdeltagande: aldgkon1"]

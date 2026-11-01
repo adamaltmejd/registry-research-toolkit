@@ -1561,25 +1561,25 @@ evidence = "Variabeln grupperar förälderns födelseland.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:fodelselandnamngrupp-nationell-b"
+subject = "var:barnets-fodelselandsgrupp"
 fields = { "sets" = [] }
 evidence = "Det ensamma B är en bokstavskod i källkolumnen.\ncatalog:variable_text:5321:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:fodelselandnamngrupp-nationell-b"
+subject = "var:barnets-fodelselandsgrupp"
 fields = { "tags" = ["demographics"] }
 evidence = "Det ensamma B är en bokstavskod i källkolumnen.\ncatalog:variable_text:5321:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:fodelselandnamngrupp-nationell-p"
+subject = "var:fodelselandsgrupp-andra-foraldern"
 fields = { "sets" = [] }
 evidence = "Det ensamma P är en bokstavskod i källkolumnen.\ncatalog:variable_text:5322:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:fodelselandnamngrupp-nationell-p"
+subject = "var:fodelselandsgrupp-andra-foraldern"
 fields = { "tags" = ["demographics"] }
 evidence = "Det ensamma P är en bokstavskod i källkolumnen.\ncatalog:variable_text:5322:13879:18262"
 
@@ -2797,13 +2797,13 @@ evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5425:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-not"
+subject = "var:laxhjalp-gor-har-inte-laxor"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5426:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-not"
+subject = "var:laxhjalp-gor-har-inte-laxor"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5426:13879:14245"
 
@@ -4729,13 +4729,13 @@ evidence = "Variabeln avser magont.\ncatalog:variable_text:5596:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:str-one"
+subject = "var:stress-hoga-krav-pa-sig-sjalv"
 fields = { "sets" = ["stress-av-hoga-krav"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5597:14245:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:str-one"
+subject = "var:stress-hoga-krav-pa-sig-sjalv"
 fields = { "tags" = ["health"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5597:14245:16436"
 
@@ -5329,13 +5329,13 @@ evidence = "Utbtyp-familjen behålls som läsbar. Variabeln avser gymnasieprogra
 
 [[statement]]
 kind = "set"
-subject = "var:utlsvbakg-p"
+subject = "var:utlandsk-svensk-bakgrund-andra-foraldern"
 fields = { "sets" = [] }
 evidence = "Den ensamma bokstaven p är en ogenomskinlig källkod.\ncatalog:variable_text:5650:16436:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsvbakg-p"
+subject = "var:utlandsk-svensk-bakgrund-andra-foraldern"
 fields = { "tags" = ["demographics"] }
 evidence = "Den ensamma bokstaven p är en ogenomskinlig källkod.\ncatalog:variable_text:5650:16436:18262"
 

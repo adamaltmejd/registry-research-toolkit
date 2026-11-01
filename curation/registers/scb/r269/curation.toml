@@ -187,13 +187,13 @@ evidence = "Faktiskt arbetade timmar är ett arbetstidsmått.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:frsnigrp"
+subject = "var:naringsgren-enbokstavskod"
 fields = { "sets" = ["naringsgren"] }
 evidence = "FrSNIgrp är en källmnemonik för näringsgrupp.\ncatalog:variable_text:6216:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:frsnigrp"
+subject = "var:naringsgren-enbokstavskod"
 fields = { "tags" = ["business"] }
 evidence = "FrSNIgrp är en källmnemonik för näringsgrupp.\ncatalog:variable_text:6216:17897:20089"
 
@@ -367,13 +367,13 @@ evidence = "Prestationslön är ett lönebelopp.\ncatalog:variable_text:6237:131
 
 [[statement]]
 kind = "set"
-subject = "var:sgrstratum"
+subject = "var:stratum-storleksklass-antal-anstallda"
 fields = { "sets" = ["stratum"] }
 evidence = "Sgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6238:13149:13879\ncatalog:variable_text:6238:16436:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrstratum"
+subject = "var:stratum-storleksklass-antal-anstallda"
 fields = { "tags" = ["methods"] }
 evidence = "Sgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6238:13149:13879\ncatalog:variable_text:6238:16436:20089"
 

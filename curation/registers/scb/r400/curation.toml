@@ -73,25 +73,25 @@ evidence = "Bostadsarea hör till boende och har en motsvarande variabel för ti
 
 [[statement]]
 kind = "set"
-subject = "var:bostytag"
+subject = "var:bostadsarea-fastighet-fore-flytt"
 fields = { "sets" = ["bostadsarea"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44633:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bostytag"
+subject = "var:bostadsarea-fastighet-fore-flytt"
 fields = { "tags" = ["housing"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44633:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:byggperg"
+subject = "var:nybyggnadsar-lagenhet-fore-flytt"
 fields = { "sets" = ["nybyggnadsar"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44634:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:byggperg"
+subject = "var:nybyggnadsar-lagenhet-fore-flytt"
 fields = { "tags" = ["housing"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44634:19723:20089"
 
@@ -289,13 +289,13 @@ evidence = "Länskoden anger geografisk tillhörighet.\ncatalog:variable_text:44
 
 [[statement]]
 kind = "set"
-subject = "var:lang"
+subject = "var:lan-fore-flytt"
 fields = { "sets" = ["lan"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44654:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lang"
+subject = "var:lan-fore-flytt"
 fields = { "tags" = ["geography"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44654:19723:20089"
 
@@ -325,25 +325,25 @@ evidence = "NYKO anger ett geografiskt område.\ncatalog:variable_text:44657:200
 
 [[statement]]
 kind = "set"
-subject = "var:nykog"
+subject = "var:nyckelkodsomrade-fore-flytt"
 fields = { "sets" = ["nyckelkodsomrade"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44658:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nykog"
+subject = "var:nyckelkodsomrade-fore-flytt"
 fields = { "tags" = ["geography"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44658:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nykoprefixg"
+subject = "var:forsamling-stockholms-kommun-fore-flytt"
 fields = { "sets" = ["forsamling-stockholm"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44659:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nykoprefixg"
+subject = "var:forsamling-stockholms-kommun-fore-flytt"
 fields = { "tags" = ["geography"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44659:19723:20089"
 
@@ -361,13 +361,13 @@ evidence = "TYKO beskriver en typområdesindelning.\ncatalog:variable_text:44663
 
 [[statement]]
 kind = "set"
-subject = "var:tykog"
+subject = "var:typomrade-tatort-nivafaktor-fore-flytt"
 fields = { "sets" = ["typomrade"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44664:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tykog"
+subject = "var:typomrade-tatort-nivafaktor-fore-flytt"
 fields = { "tags" = ["property"] }
 evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44664:19723:20089"
 
@@ -385,12 +385,12 @@ evidence = "Variabeln anger en TYKO-variant; källhistoriken bevarar skillnadern
 
 [[statement]]
 kind = "set"
-subject = "var:tykouskg"
+subject = "var:typomrade-stadsdelsomrade-fore-flytt"
 fields = { "sets" = ["typomrade"] }
 evidence = "USK och G är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:44666:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tykouskg"
+subject = "var:typomrade-stadsdelsomrade-fore-flytt"
 fields = { "tags" = ["property"] }
 evidence = "USK och G är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:44666:19723:20089"

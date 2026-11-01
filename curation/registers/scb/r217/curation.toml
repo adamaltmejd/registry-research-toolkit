@@ -165,109 +165,109 @@ evidence = "E20 är en ogenomskinlig källkod; etiketten delas med andra variabl
 
 [[statement]]
 kind = "set"
-subject = "var:e2015"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2015"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2015 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6173:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2015"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2015"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2015 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6173:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2016"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2016"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2016 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6174:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2016"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2016"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2016 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6174:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2017"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2017"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2017 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6175:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2017"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2017"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2017 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6175:17532:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2018"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2018"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2018 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6176:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2018"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2018"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2018 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6176:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2019"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2019"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2019 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6177:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2019"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2019"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2019 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6177:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2020"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2020"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6178:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2020"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2020"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6178:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:e2021"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2021"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2021 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6179:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:e2021"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2021"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2021 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6179:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:e2022"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2022-strandlinje-2024"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2022 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6180:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:e2022"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2022-strandlinje-2024"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2022 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6180:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:e2023"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2023-strandlinje-2024"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "E2023 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6181:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:e2023"
+subject = "var:exploaterad-havsstrand-inlandsstrand-2023-strandlinje-2024"
 fields = { "tags" = ["environment", "property"] }
 evidence = "E2023 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6181:19358:19723"
 
@@ -285,13 +285,13 @@ evidence = "ETOM20 är en ogenomskinlig källkod; den gemensamma etiketten kräv
 
 [[statement]]
 kind = "set"
-subject = "var:etom2020"
+subject = "var:exploaterad-havsstrand-inlandsstrand-till-och-med-2020"
 fields = { "sets" = ["exploaterad-strand"] }
 evidence = "ETOM2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6183:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:etom2020"
+subject = "var:exploaterad-havsstrand-inlandsstrand-till-och-med-2020"
 fields = { "tags" = ["environment", "property"] }
 evidence = "ETOM2020 är en ogenomskinlig källkod; den gemensamma etiketten kräver disambiguering.\ncatalog:variable_text:6183:18993:19723"
 

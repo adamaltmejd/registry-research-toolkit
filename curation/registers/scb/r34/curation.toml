@@ -284,19 +284,19 @@ evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2123\n\nReviewed doc
 [[statement]]
 kind = "set"
 subject = "individer-16plus: ku1instkod6"
-fields = { "variable" = "ku1instkod-1999" }
+fields = { "variable" = "institutionell-sektorkod-storsta-forvarvskalla-1999" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: ku1instkod7"
-fields = { "variable" = "ku1instkod-2000" }
+fields = { "variable" = "institutionell-sektorkod-storsta-forvarvskalla-2000" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: ku1instkod7"
-fields = { "variable" = "ku1instkod-2000" }
+fields = { "variable" = "institutionell-sektorkod-storsta-forvarvskalla-2000" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
@@ -314,19 +314,19 @@ evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed ins
 [[statement]]
 kind = "set"
 subject = "individer-16plus: ku2instkod6"
-fields = { "variable" = "ku2instkod-1999" }
+fields = { "variable" = "institutionell-sektorkod-nast-storsta-forvarvskalla-1999" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: ku2instkod7"
-fields = { "variable" = "ku2instkod-2000" }
+fields = { "variable" = "institutionell-sektorkod-nast-storsta-forvarvskalla-2000" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: ku2instkod7"
-fields = { "variable" = "ku2instkod-2000" }
+fields = { "variable" = "institutionell-sektorkod-nast-storsta-forvarvskalla-2000" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
 
 [[statement]]
@@ -2070,7 +2070,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-enhet"
+subject = "var:samredovisar-flera-foretag"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A94\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2105,14 +2105,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g11"
+subject = "var:rorelsekapital-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A63\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g12"
+subject = "var:omsattningstillg-exkl-lager-pagaende-arb-per-kortfrist-skuld"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A64\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2161,7 +2161,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g8"
+subject = "var:personalkostnader-per-omsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A60\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2196,14 +2196,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t11"
+subject = "var:immateriella-anlaggningstillgangar-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A75\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t12"
+subject = "var:materiella-anlaggningstillgangar-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A76\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2217,14 +2217,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t14"
+subject = "var:finansiella-anlaggningstillgangar-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A78\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t15"
+subject = "var:lager-pagaende-arbeten-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A79\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2238,14 +2238,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t17"
+subject = "var:ovriga-kortfristiga-fordringar-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A81\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t18"
+subject = "var:kassa-bank-kortfristiga-placeringar-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A82\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2280,7 +2280,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t22"
+subject = "var:avsattningar-langfristiga-skulder-per-nettoomsattning"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A86\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -4394,21 +4394,21 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:ku1instkod"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1968"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A260\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
 
 [[statement]]
 kind = "link"
-subject = "var:ku1instkod-1999"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1999"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A261\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
 
 [[statement]]
 kind = "link"
-subject = "var:ku1instkod-2000"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-2000"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A262\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
@@ -4464,21 +4464,21 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:ku2instkod"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1968"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A326\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
 
 [[statement]]
 kind = "link"
-subject = "var:ku2instkod-1999"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1999"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A327\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
 
 [[statement]]
 kind = "link"
-subject = "var:ku2instkod-2000"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-2000"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A328\n\nLISA Grundregister: RAMS-Jobb. RAMS-Jobb: SCB r26 includes Registret över jobb (r26/ids.toml)."
@@ -5605,7 +5605,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:fink"
+subject = "var:inkomst-rorelse-jordbruksfastighet-1989"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A407\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
@@ -5682,21 +5682,21 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:syssstat19"
+subject = "var:sysselsattningsstatus-november-fran-2019"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A144\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
 
 [[statement]]
 kind = "link"
-subject = "var:syssstatg"
+subject = "var:sysselsattningsstatus-november-avgransning-till-1992"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A140\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
 
 [[statement]]
 kind = "link"
-subject = "var:syssstatj"
+subject = "var:sysselsattningsstatus-november-avgransning-2004"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A142\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
@@ -5913,7 +5913,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:sun2020grp-detalj"
+subject = "var:utbildningsgrupp-detaljerad-sun-2020"
 relation = "derived_from"
 object = "scb/ureg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A125\n\nLISA Grundregister: UReg. UReg: SCB r24: Registret över befolkningens utbildning (Utbildningsregistret)."
@@ -5955,7 +5955,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:eseg-j16"
+subject = "var:europeisk-socioekonomisk-grupp-inkl-harledda-foretagaryrken"
 relation = "derived_from"
 object = "scb/yrkesreg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A215\n\nLISA Grundregister: Yreg. Yreg: SCB r55: Yrkesregistret."
@@ -6011,7 +6011,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:ssyk3-2012-j16"
+subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
 relation = "derived_from"
 object = "scb/yrkesreg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A205\n\nLISA Grundregister: Yreg. Yreg: SCB r55: Yrkesregistret."
@@ -6123,14 +6123,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:ssykar-j16"
+subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
 relation = "derived_from"
 object = "scb/yrkesreg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A210\n\nLISA Grundregister: Yreg. Yreg: SCB r55: Yrkesregistret."
 
 [[statement]]
 kind = "link"
-subject = "var:ssykstatus-j16"
+subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
 relation = "derived_from"
 object = "scb/yrkesreg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A212\n\nLISA Grundregister: Yreg. Yreg: SCB r55: Yrkesregistret."
@@ -13436,25 +13436,25 @@ evidence = "Ersättningsbeloppet ingår i inkomst vid arbetslöshet.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:akters-bman"
+subject = "var:aktivitetsersattning-bruttomanader"
 fields = { "sets" = ["aktivitetsersattning"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:37415:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akters-bman"
+subject = "var:aktivitetsersattning-bruttomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:37415:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akters-nman"
+subject = "var:aktivitetsersattning-nettomanader"
 fields = { "sets" = ["aktivitetsersattning"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:37416:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akters-nman"
+subject = "var:aktivitetsersattning-nettomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:37416:12053:16436"
 
@@ -15596,13 +15596,13 @@ evidence = "Identitetsfaktorn visar angränsande ägare med olika definitionshis
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-j16"
+subject = "var:europeisk-socioekonomisk-grupp-inkl-harledda-foretagaryrken"
 fields = { "sets" = ["socioekonomisk-gruppering"] }
 evidence = "ESeG och J16 är källkoder som inte återges som ord i etiketten.\ncatalog:variable_text:37602:16801:17167\ncatalog:variable_text:37602:17167:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-j16"
+subject = "var:europeisk-socioekonomisk-grupp-inkl-harledda-foretagaryrken"
 fields = { "tags" = ["employment"] }
 evidence = "ESeG och J16 är källkoder som inte återges som ord i etiketten.\ncatalog:variable_text:37602:16801:17167\ncatalog:variable_text:37602:17167:19723"
 
@@ -15704,13 +15704,13 @@ evidence = "Fastighetsnyckeln anger var personen är folkbokförd.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fink"
+subject = "var:inkomst-rorelse-jordbruksfastighet-1989"
 fields = { "sets" = ["inkomst-av-naringsverksamhet"] }
 evidence = "F är en ogenomskinlig bokstavskod.\ncatalog:variable_text:37616:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:fink"
+subject = "var:inkomst-rorelse-jordbruksfastighet-1989"
 fields = { "tags" = ["income"] }
 evidence = "F är en ogenomskinlig bokstavskod.\ncatalog:variable_text:37616:7305:7670"
 
@@ -16316,13 +16316,13 @@ evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-enhet"
+subject = "var:samredovisar-flera-foretag"
 fields = { "sets" = [] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37668:9862:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-enhet"
+subject = "var:samredovisar-flera-foretag"
 fields = { "tags" = ["business"] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37668:9862:18993"
 
@@ -16376,25 +16376,25 @@ evidence = "G10 är en opak källkod för kapitalets omsättningshastighet.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g11"
+subject = "var:rorelsekapital-per-nettoomsattning"
 fields = { "sets" = [] }
 evidence = "G11 är en opak källkod för rörelsekapital i relation till omsättning.\ncatalog:variable_text:37673:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g11"
+subject = "var:rorelsekapital-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "G11 är en opak källkod för rörelsekapital i relation till omsättning.\ncatalog:variable_text:37673:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g12"
+subject = "var:omsattningstillg-exkl-lager-pagaende-arb-per-kortfrist-skuld"
 fields = { "sets" = [] }
 evidence = "G12 är en opak källkod för kassalikviditet.\ncatalog:variable_text:37674:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g12"
+subject = "var:omsattningstillg-exkl-lager-pagaende-arb-per-kortfrist-skuld"
 fields = { "tags" = ["business"] }
 evidence = "G12 är en opak källkod för kassalikviditet.\ncatalog:variable_text:37674:9862:19723"
 
@@ -16472,13 +16472,13 @@ evidence = "G7 är en opak källkod för nettoomsättning per anställd.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g8"
+subject = "var:personalkostnader-per-omsattning"
 fields = { "sets" = ["personalkostnader"] }
 evidence = "G8 är en opak källkod för personalkostnader i relation till omsättning.\ncatalog:variable_text:37681:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g8"
+subject = "var:personalkostnader-per-omsattning"
 fields = { "tags" = ["business"] }
 evidence = "G8 är en opak källkod för personalkostnader i relation till omsättning.\ncatalog:variable_text:37681:9862:19723"
 
@@ -16532,25 +16532,25 @@ evidence = "T10 är en ogenomskinlig källkod. Måttet ingår med finansiella po
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t11"
+subject = "var:immateriella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "sets" = ["anlaggningstillgangar"] }
 evidence = "T11 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37686:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t11"
+subject = "var:immateriella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T11 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37686:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t12"
+subject = "var:materiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "sets" = ["anlaggningstillgangar"] }
 evidence = "T12 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37687:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t12"
+subject = "var:materiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T12 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37687:9862:19723"
 
@@ -16568,25 +16568,25 @@ evidence = "T13 är en ogenomskinlig källkod. Maskiner och inventarier är en n
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t14"
+subject = "var:finansiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "sets" = ["anlaggningstillgangar"] }
 evidence = "T14 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37689:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t14"
+subject = "var:finansiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T14 är en ogenomskinlig källkod. Måttet är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37689:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t15"
+subject = "var:lager-pagaende-arbeten-per-nettoomsattning"
 fields = { "sets" = ["omsattningstillgangar"] }
 evidence = "T15 är en ogenomskinlig källkod. Lager och pågående arbeten är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37690:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t15"
+subject = "var:lager-pagaende-arbeten-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T15 är en ogenomskinlig källkod. Lager och pågående arbeten är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37690:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
@@ -16604,25 +16604,25 @@ evidence = "T16 är en ogenomskinlig källkod. Kundfordringar är en namngiven k
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t17"
+subject = "var:ovriga-kortfristiga-fordringar-per-nettoomsattning"
 fields = { "sets" = ["omsattningstillgangar"] }
 evidence = "T17 är en ogenomskinlig källkod. Fordringarna är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37692:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t17"
+subject = "var:ovriga-kortfristiga-fordringar-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T17 är en ogenomskinlig källkod. Fordringarna är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37692:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t18"
+subject = "var:kassa-bank-kortfristiga-placeringar-per-nettoomsattning"
 fields = { "sets" = ["omsattningstillgangar"] }
 evidence = "T18 är en ogenomskinlig källkod. Måttet är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37693:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t18"
+subject = "var:kassa-bank-kortfristiga-placeringar-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T18 är en ogenomskinlig källkod. Måttet är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37693:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
@@ -16676,13 +16676,13 @@ evidence = "T21 är en ogenomskinlig källkod. Måttet ingår tillsammans med re
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t22"
+subject = "var:avsattningar-langfristiga-skulder-per-nettoomsattning"
 fields = { "sets" = ["avsattningar-och-langfristiga-skulder"] }
 evidence = "T22 är en ogenomskinlig källkod. Det kombinerade måttet ingår med komponentbeloppen i kandidatgruppen.\ncatalog:variable_text:37537:9862:19723\ncatalog:variable_text:37698:9862:19723\ncatalog:variable_text:38139:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t22"
+subject = "var:avsattningar-langfristiga-skulder-per-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "T22 är en ogenomskinlig källkod. Det kombinerade måttet ingår med komponentbeloppen i kandidatgruppen.\ncatalog:variable_text:37537:9862:19723\ncatalog:variable_text:37698:9862:19723\ncatalog:variable_text:38139:9862:19723"
 
@@ -17696,37 +17696,37 @@ evidence = "KU är en källkod; enheten ändras mellan perioderna och bevaras i 
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1968"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning.\ncatalog:variable_text:37788:9131:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1968"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning.\ncatalog:variable_text:37788:9131:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod-1999"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1999"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37789:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod-1999"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-1999"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37789:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod-2000"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-2000"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37790:11323:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1instkod-2000"
+subject = "var:institutionell-sektorkod-storsta-forvarvskalla-2000"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37790:11323:16071"
 
@@ -17828,37 +17828,37 @@ evidence = "KU är en opak källförkortning.\ncatalog:variable_text:37801:7305:
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1968"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning.\ncatalog:variable_text:37802:9131:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1968"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning.\ncatalog:variable_text:37802:9131:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod-1999"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1999"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37803:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod-1999"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-1999"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37803:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod-2000"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-2000"
 fields = { "sets" = ["institutionell-sektorkod"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37804:11323:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2instkod-2000"
+subject = "var:institutionell-sektorkod-nast-storsta-forvarvskalla-2000"
 fields = { "tags" = ["business"] }
 evidence = "KU är en opak källförkortning och årtalet kommer inte från källkolumnen.\ncatalog:variable_text:37804:11323:16071"
 
@@ -18764,25 +18764,25 @@ evidence = "Grupperat medborgarskap.\ncatalog:variable_text:37885:15706:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap-medblandnamn-2"
+subject = "var:medborgarskap-individer-15-ar-aldre"
 fields = { "sets" = ["medborgarskap"] }
 evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:37887:14610:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap-medblandnamn-2"
+subject = "var:medborgarskap-individer-15-ar-aldre"
 fields = { "tags" = ["demographics"] }
 evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:37887:14610:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap-medblandnamn-3"
+subject = "var:medborgarskap-individer-16-ar-aldre"
 fields = { "sets" = ["medborgarskap"] }
 evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:37888:7305:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap-medblandnamn-3"
+subject = "var:medborgarskap-individer-16-ar-aldre"
 fields = { "tags" = ["demographics"] }
 evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:37888:7305:14610"
 
@@ -20744,25 +20744,25 @@ evidence = "Nettodagarna tillhör sjukbidrag.\ncatalog:variable_text:38059:8766:
 
 [[statement]]
 kind = "set"
-subject = "var:sjukers-bman"
+subject = "var:sjukersattning-bruttomanader"
 fields = { "sets" = ["sjukersattning"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38060:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukers-bman"
+subject = "var:sjukersattning-bruttomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38060:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukers-nman"
+subject = "var:sjukersattning-nettomanader"
 fields = { "sets" = ["sjukersattning"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38061:12053:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukers-nman"
+subject = "var:sjukersattning-nettomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38061:12053:16436"
 
@@ -21272,13 +21272,13 @@ evidence = "Den operativa definitionen 2016 anger arbetsställenummer trots yrke
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3-2012-j16"
+subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
 fields = { "sets" = [] }
 evidence = "SSYK är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:38105:17167:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3-2012-j16"
+subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:38105:17167:19723"
 
@@ -21476,13 +21476,13 @@ evidence = "SSYK är en källkod som inte förekommer i etiketten.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:ssykar-j16"
+subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
 fields = { "sets" = ["yrkesuppgiftens-matar"] }
 evidence = "SSYK och J16 är källkoder som inte förekommer i etiketten.\ncatalog:variable_text:38122:17167:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykar-j16"
+subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
 fields = { "tags" = [] }
 evidence = "SSYK och J16 är källkoder som inte förekommer i etiketten.\ncatalog:variable_text:38122:17167:19723"
 
@@ -21500,25 +21500,25 @@ evidence = "SSYK är en källkod som inte förekommer i etiketten.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:ssykkalla-j16"
+subject = "var:kalla-yrke-huvudsaklig-inkl-harledda-foretagare"
 fields = { "sets" = ["yrkesuppgiftens-kalla"] }
 evidence = "SSYK och J16 är källkoder som inte förekommer i etiketten.\ncatalog:variable_text:38124:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykkalla-j16"
+subject = "var:kalla-yrke-huvudsaklig-inkl-harledda-foretagare"
 fields = { "tags" = ["methods"] }
 evidence = "SSYK och J16 är källkoder som inte förekommer i etiketten.\ncatalog:variable_text:38124:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykstatus-j16"
+subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
 fields = { "sets" = ["yrkeskodens-overensstammelse"] }
 evidence = "J16 är en källkod och saknas i etiketten.\ncatalog:variable_text:38125:17167:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykstatus-j16"
+subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
 fields = { "tags" = ["methods"] }
 evidence = "J16 är en källkod och saknas i etiketten.\ncatalog:variable_text:38125:17167:19723"
 
@@ -21812,13 +21812,13 @@ evidence = "Variabeln klassificerar utbildningsgrupp enligt SUN 2020.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp-detalj"
+subject = "var:utbildningsgrupp-detaljerad-sun-2020"
 fields = { "sets" = ["utbildningsgrupp"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:38150:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp-detalj"
+subject = "var:utbildningsgrupp-detaljerad-sun-2020"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:38150:18628:19723"
 
@@ -21896,37 +21896,37 @@ evidence = "Variabeln kodar sysselsättningsstatus i november enligt olika metod
 
 [[statement]]
 kind = "set"
-subject = "var:syssstat19"
+subject = "var:sysselsattningsstatus-november-fran-2019"
 fields = { "sets" = ["sysselsattningsstatus-november"] }
 evidence = "Familjen behandlas enhetligt som kodnamn; källan anger sysselsättningsstatus i november.\ncatalog:valueset:2346\ncatalog:variable_text:38157:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:syssstat19"
+subject = "var:sysselsattningsstatus-november-fran-2019"
 fields = { "tags" = ["employment"] }
 evidence = "Familjen behandlas enhetligt som kodnamn; källan anger sysselsättningsstatus i november.\ncatalog:valueset:2346\ncatalog:variable_text:38157:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:syssstatg"
+subject = "var:sysselsattningsstatus-november-avgransning-till-1992"
 fields = { "sets" = ["sysselsattningsstatus-november"] }
 evidence = "Den ensamma bokstaven G är en källkod och familjen behandlas enhetligt.\ncatalog:valueset:9839\ncatalog:variable_text:38158:7305:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:syssstatg"
+subject = "var:sysselsattningsstatus-november-avgransning-till-1992"
 fields = { "tags" = ["employment"] }
 evidence = "Den ensamma bokstaven G är en källkod och familjen behandlas enhetligt.\ncatalog:valueset:9839\ncatalog:variable_text:38158:7305:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:syssstatj"
+subject = "var:sysselsattningsstatus-november-avgransning-2004"
 fields = { "sets" = ["sysselsattningsstatus-november"] }
 evidence = "Den ensamma bokstaven J är en källkod och familjen behandlas enhetligt.\ncatalog:valueset:3140\ncatalog:valueset:4024\ncatalog:variable_text:38159:12053:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:syssstatj"
+subject = "var:sysselsattningsstatus-november-avgransning-2004"
 fields = { "tags" = ["employment"] }
 evidence = "Den ensamma bokstaven J är en källkod och familjen behandlas enhetligt.\ncatalog:valueset:3140\ncatalog:valueset:4024\ncatalog:variable_text:38159:12053:15340"
 

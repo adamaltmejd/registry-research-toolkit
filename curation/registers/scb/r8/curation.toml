@@ -1081,37 +1081,37 @@ evidence = "Bredden är en fordonsuppgift.\ncatalog:occurrence:105084"
 
 [[statement]]
 kind = "set"
-subject = "var:brforblwltpdriv"
+subject = "var:bransleforbrukning-wltp-liter-per-100-km-drivmedel-1"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11792:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:brforblwltpdriv"
+subject = "var:bransleforbrukning-wltp-liter-per-100-km-drivmedel-1"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11792:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:brforbr-2"
+subject = "var:branslemangd-per-korstracka-blandad-nedc-drivmedel-1"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "Suffixet 2 kommer inte från källkolumnen BrForbr1; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11793:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:brforbr-2"
+subject = "var:branslemangd-per-korstracka-blandad-nedc-drivmedel-1"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Suffixet 2 kommer inte från källkolumnen BrForbr1; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11793:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:brforvikblwltpdriv"
+subject = "var:bransleforbrukning-wltp-viktad-liter-per-100-km-drivmedel-1"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11794:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:brforvikblwltpdriv"
+subject = "var:bransleforbrukning-wltp-viktad-liter-per-100-km-drivmedel-1"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11794:20453:20454"
 
@@ -1141,37 +1141,37 @@ evidence = "Bussklass beskriver fordonets utformning.\ncatalog:occurrence:105098
 
 [[statement]]
 kind = "set"
-subject = "var:co2blwltpdriv"
+subject = "var:koldioxidutslapp-blandad-wltp-gram-per-km-drivmedel-1"
 fields = { "sets" = ["koldioxidutslapp"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11798:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:co2blwltpdriv"
+subject = "var:koldioxidutslapp-blandad-wltp-gram-per-km-drivmedel-1"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11798:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:co2landnedcdriv"
+subject = "var:koldioxidutslapp-landsvag-nedc-gram-per-km-drivmedel-1"
 fields = { "sets" = ["koldioxidutslapp"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11799:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:co2landnedcdriv"
+subject = "var:koldioxidutslapp-landsvag-nedc-gram-per-km-drivmedel-1"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11799:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:co2stadnedcdriv"
+subject = "var:koldioxidutslapp-stad-nedc-gram-per-km-drivmedel-1"
 fields = { "sets" = ["koldioxidutslapp"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11800:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:co2stadnedcdriv"
+subject = "var:koldioxidutslapp-stad-nedc-gram-per-km-drivmedel-1"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11800:20453:20454"
 
@@ -1309,13 +1309,13 @@ evidence = "Drivmedelskodningen hör till drivmedelsgruppen; den breda betecknin
 
 [[statement]]
 kind = "set"
-subject = "var:drivmedel-2"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
 fields = { "sets" = ["drivmedel"] }
 evidence = "Suffixet 2 är en tillagd räknare och ingår inte i källkolumnen.\ncatalog:occurrence-locators:variable:11816\ncatalog:variable_text:11816:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:drivmedel-2"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Suffixet 2 är en tillagd räknare och ingår inte i källkolumnen.\ncatalog:occurrence-locators:variable:11816\ncatalog:variable_text:11816:20453:20454"
 
@@ -2557,13 +2557,13 @@ evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kollidera
 
 [[statement]]
 kind = "set"
-subject = "var:noxhcdrivm"
+subject = "var:kvaveoxid-kolvateutslapp-massa-per-km-eller-kwh-drivmedel-1"
 fields = { "sets" = ["kvaveoxid-och-kolvateutslapp"] }
 evidence = "NOxHC är en källkod och etiketten kolliderar med måttet för drivmedel 2; målet kräver granskning.\ncatalog:occurrence-locators:variable:11921"
 
 [[statement]]
 kind = "set"
-subject = "var:noxhcdrivm"
+subject = "var:kvaveoxid-kolvateutslapp-massa-per-km-eller-kwh-drivmedel-1"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "NOxHC är en källkod och etiketten kolliderar med måttet för drivmedel 2; målet kräver granskning.\ncatalog:occurrence-locators:variable:11921"
 

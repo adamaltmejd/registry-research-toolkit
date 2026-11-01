@@ -442,13 +442,13 @@ evidence = "El för drift av värmepump.\ncatalog:variable_text:6334:17532:20454
 
 [[statement]]
 kind = "set"
-subject = "var:elk"
+subject = "var:bransleforbrukning-kraftvarmeel"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "K är en enstaka bokstavskod; etiketten anger bränsleförbrukning för kraftvärmeel.\ncatalog:variable_text:6335:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:elk"
+subject = "var:bransleforbrukning-kraftvarmeel"
 fields = { "tags" = ["energy"] }
 evidence = "K är en enstaka bokstavskod; etiketten anger bränsleförbrukning för kraftvärmeel.\ncatalog:variable_text:6335:17532:20454"
 
@@ -502,25 +502,25 @@ evidence = "F är en enstaka bokstavskod; etiketten anger värmeidentifikation.\
 
 [[statement]]
 kind = "set"
-subject = "var:fjarrk"
+subject = "var:bransleforbrukning-fjarrvarme-kraftvarme"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "K är en enstaka bokstavskod för kraftvärme.\ncatalog:variable_text:6341:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fjarrk"
+subject = "var:bransleforbrukning-fjarrvarme-kraftvarme"
 fields = { "tags" = ["energy"] }
 evidence = "K är en enstaka bokstavskod för kraftvärme.\ncatalog:variable_text:6341:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fjarrv"
+subject = "var:bransleforbrukning-fjarrvarme-enbart-varmeproduktion"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "V är en enstaka bokstavskod; källan anger bränsleförbrukning för fjärrvärme.\ncatalog:variable_text:6342:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fjarrv"
+subject = "var:bransleforbrukning-fjarrvarme-enbart-varmeproduktion"
 fields = { "tags" = ["energy"] }
 evidence = "V är en enstaka bokstavskod; källan anger bränsleförbrukning för fjärrvärme.\ncatalog:variable_text:6342:17532:20454"
 
@@ -766,25 +766,25 @@ evidence = "Samma klartext för övriga bränslen som motparten är uppdelad i i
 
 [[statement]]
 kind = "set"
-subject = "var:polj"
+subject = "var:levererad-mangd-hetvatten-anga-olja-andra-branslen"
 fields = { "sets" = ["hetvattenproduktion"] }
 evidence = "P är en enstaka bokstavskod; etiketten anger hetvatten från olja.\ncatalog:variable_text:6371:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:polj"
+subject = "var:levererad-mangd-hetvatten-anga-olja-andra-branslen"
 fields = { "tags" = ["energy"] }
 evidence = "P är en enstaka bokstavskod; etiketten anger hetvatten från olja.\ncatalog:variable_text:6371:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:pspill"
+subject = "var:levererad-mangd-hetvatten-anga-spillvarme"
 fields = { "sets" = ["hetvattenproduktion"] }
 evidence = "P är en enstaka bokstavskod; etiketten anger hetvatten från spillvärme.\ncatalog:variable_text:6372:16071:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:pspill"
+subject = "var:levererad-mangd-hetvatten-anga-spillvarme"
 fields = { "tags" = ["energy"] }
 evidence = "P är en enstaka bokstavskod; etiketten anger hetvatten från spillvärme.\ncatalog:variable_text:6372:16071:20454"
 

@@ -337,25 +337,25 @@ evidence = "Avgäldsräntan gäller mark och ränta.\ncatalog:variable_text:4065
 
 [[statement]]
 kind = "set"
-subject = "var:b-antaltrapphus"
+subject = "var:antal-trapphus-per-byggnadsprojekt"
 fields = { "sets" = ["antal-trapphus"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40655:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-antaltrapphus"
+subject = "var:antal-trapphus-per-byggnadsprojekt"
 fields = { "tags" = ["housing"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40655:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-armanpabjusterad"
+subject = "var:paborjandear-manad-justerad"
 fields = { "sets" = ["paborjandetidpunkt"] }
 evidence = "B är en opak bokstavskod; uppgiften är en justerad påbörjandetidpunkt.\ncatalog:variable_text:40656:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-armanpabjusterad"
+subject = "var:paborjandear-manad-justerad"
 fields = { "tags" = [] }
 evidence = "B är en opak bokstavskod; uppgiften är en justerad påbörjandetidpunkt.\ncatalog:variable_text:40656:13514:20089"
 
@@ -409,25 +409,25 @@ evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\
 
 [[statement]]
 kind = "set"
-subject = "var:b-fantvaningsplan"
+subject = "var:antal-vaningsplan-flest-lagenheter-projekt"
 fields = { "sets" = ["antal-vaningsplan"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar med andra variabler och mål kräver R6-prövning.\ncatalog:variable_text:40661:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fantvaningsplan"
+subject = "var:antal-vaningsplan-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar med andra variabler och mål kräver R6-prövning.\ncatalog:variable_text:40661:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fenergi"
+subject = "var:energislag-varmeanlaggning-flest-lagenheter-projekt"
 fields = { "sets" = ["energislag"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40662:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fenergi"
+subject = "var:energislag-varmeanlaggning-flest-lagenheter-projekt"
 fields = { "tags" = ["energy"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40662:13514:20089"
 
@@ -445,109 +445,109 @@ evidence = "B och F är opaka bokstavskoder.\ncatalog:variable_text:40663:13514:
 
 [[statement]]
 kind = "set"
-subject = "var:b-ffasadbekladnad"
+subject = "var:fasadbekladnad-flest-lagenheter-projekt"
 fields = { "sets" = ["fasadbekladnad"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40664:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-ffasadbekladnad"
+subject = "var:fasadbekladnad-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40664:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhiss"
+subject = "var:hiss-finns-finns-ej-flerbostadshusprojekt"
 fields = { "sets" = ["hissforekomst"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40665:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhiss"
+subject = "var:hiss-finns-finns-ej-flerbostadshusprojekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40665:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhusform"
+subject = "var:husform-flest-lagenheter-projekt"
 fields = { "sets" = ["husform"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40666:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhusform"
+subject = "var:husform-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40666:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhustyp"
+subject = "var:hustyp-flest-lagenheter-projekt"
 fields = { "sets" = ["hustyp"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40667:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fhustyp"
+subject = "var:hustyp-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40667:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-finreddvind"
+subject = "var:inredd-vind-flesta-lagenheter-smahusprojekt"
 fields = { "sets" = ["inredd-vind"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40668:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-finreddvind"
+subject = "var:inredd-vind-flesta-lagenheter-smahusprojekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40668:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-finredningsbarvind"
+subject = "var:inredningsbar-vind-flesta-lagenheter-smahusprojekt"
 fields = { "sets" = ["inredningsbar-vind"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40669:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-finredningsbarvind"
+subject = "var:inredningsbar-vind-flesta-lagenheter-smahusprojekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40669:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fkallare"
+subject = "var:kallare-finns-finns-ej-projekt"
 fields = { "sets" = ["kallarforekomst"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:variable_text:40670:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fkallare"
+subject = "var:kallare-finns-finns-ej-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:variable_text:40670:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fljudklassa"
+subject = "var:ljudklass-a-flesta-lagenheter-projekt"
 fields = { "sets" = ["ljudklass"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40671:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fljudklassa"
+subject = "var:ljudklass-a-flesta-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40671:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fljudklassb"
+subject = "var:ljudklass-b-flesta-lagenheter-projekt"
 fields = { "sets" = ["ljudklass"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40672:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fljudklassb"
+subject = "var:ljudklass-b-flesta-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40672:13514:20089"
 
@@ -565,13 +565,13 @@ evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R
 
 [[statement]]
 kind = "set"
-subject = "var:b-fstommematerial"
+subject = "var:stommaterial-flest-lagenheter-projekt"
 fields = { "sets" = ["stommaterial"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40674:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fstommematerial"
+subject = "var:stommaterial-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40674:13514:20089"
 
@@ -589,13 +589,13 @@ evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R
 
 [[statement]]
 kind = "set"
-subject = "var:b-ftakbelaggning"
+subject = "var:takbelaggning-flest-lagenheter-projekt"
 fields = { "sets" = ["takbelaggning"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40676:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-ftakbelaggning"
+subject = "var:takbelaggning-flest-lagenheter-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40676:13514:20089"
 
@@ -637,25 +637,25 @@ evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40679:135
 
 [[statement]]
 kind = "set"
-subject = "var:b-fvarmeatervinning"
+subject = "var:varmeatervinning-flesta-lagenheter-projekt"
 fields = { "sets" = ["varmeatervinning"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40680:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fvarmeatervinning"
+subject = "var:varmeatervinning-flesta-lagenheter-projekt"
 fields = { "tags" = ["energy"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40680:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fvind"
+subject = "var:inredningsbar-vind-finns-finns-ej-projekt"
 fields = { "sets" = ["inredningsbar-vind"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40681:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fvind"
+subject = "var:inredningsbar-vind-finns-finns-ej-projekt"
 fields = { "tags" = ["housing"] }
 evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40681:13514:20089"
 
@@ -685,13 +685,13 @@ evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:b-kaptomt"
+subject = "var:kapitaliserad-tomtrattsavgald-per-avgaldsranta-ksek"
 fields = { "sets" = ["tomtrattsavgald"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40684:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-kaptomt"
+subject = "var:kapitaliserad-tomtrattsavgald-per-avgaldsranta-ksek"
 fields = { "tags" = ["property"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40684:13514:20089"
 
@@ -781,13 +781,13 @@ evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40692:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-tidsatganghus"
+subject = "var:tidsatgang-husblanketter-totalt-minuter-byggprojekt"
 fields = { "sets" = ["tidsatgang-for-blanketter"] }
 evidence = "B är en enbokstavskod; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40693:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-tidsatganghus"
+subject = "var:tidsatgang-husblanketter-totalt-minuter-byggprojekt"
 fields = { "tags" = ["methods"] }
 evidence = "B är en enbokstavskod; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:40693:13514:20089"
 

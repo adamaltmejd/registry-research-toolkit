@@ -475,49 +475,49 @@ evidence = "Variabeln grupperar arbetstid per vecka.\ncatalog:valueset:9252\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:arr"
+subject = "var:kursanordnare-1-forsta-halvaret"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Arr är en ogenomskinlig källförkortning; etiketten anger kursanordnare.\ncatalog:variable_text:39678:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr"
+subject = "var:kursanordnare-1-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Arr är en ogenomskinlig källförkortning; etiketten anger kursanordnare.\ncatalog:variable_text:39678:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-2"
+subject = "var:kursanordnare-2-forsta-halvaret"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Arr är en ogenomskinlig källförkortning; tvåan är en källplats.\ncatalog:variable_text:39679:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-2"
+subject = "var:kursanordnare-2-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Arr är en ogenomskinlig källförkortning; tvåan är en källplats.\ncatalog:variable_text:39679:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-3"
+subject = "var:kursanordnare-3-forsta-halvaret"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Arr är en ogenomskinlig källförkortning; trean är en källplats.\ncatalog:variable_text:39680:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-3"
+subject = "var:kursanordnare-3-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Arr är en ogenomskinlig källförkortning; trean är en källplats.\ncatalog:variable_text:39680:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-4"
+subject = "var:kursanordnare-4-forsta-halvaret"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Arr är en ogenomskinlig källförkortning; fyran är en källplats.\ncatalog:variable_text:39681:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:arr-4"
+subject = "var:kursanordnare-4-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Arr är en ogenomskinlig källförkortning; fyran är en källplats.\ncatalog:variable_text:39681:13149:13330"
 
@@ -583,121 +583,121 @@ evidence = "Centralorganisation är en kodning av facklig tillhörighet.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:fikod0gr"
+subject = "var:kursinnehall-5-grupperad-andra-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39687:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod0gr"
+subject = "var:kursinnehall-5-grupperad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39687:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod1gr"
+subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39688:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod1gr"
+subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39688:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod2gr"
+subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39689:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod2gr"
+subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39689:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod3gr"
+subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39690:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod3gr"
+subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39690:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod4gr"
+subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39691:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod4gr"
+subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39691:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod5gr"
+subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39692:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod5gr"
+subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39692:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod6gr"
+subject = "var:kursinnehall-1-grupperad-andra-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39693:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod6gr"
+subject = "var:kursinnehall-1-grupperad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39693:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod7gr"
+subject = "var:kursinnehall-2-grupperad-andra-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39694:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod7gr"
+subject = "var:kursinnehall-2-grupperad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39694:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod8gr"
+subject = "var:kursinnehall-3-grupperad-andra-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39695:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod8gr"
+subject = "var:kursinnehall-3-grupperad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39695:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod9gr"
+subject = "var:kursinnehall-4-grupperad-andra-halvaret"
 fields = { "sets" = ["kursinnehall"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39696:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:fikod9gr"
+subject = "var:kursinnehall-4-grupperad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39696:10592:12418"
 
@@ -823,61 +823,61 @@ evidence = "Gruppnan är en källmnemonik utan tydliga stammar för etiketten.\n
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld"
+subject = "var:kursomfattning-dagar-1-forsta-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Gxpld är en ogenomskinlig källkod.\ncatalog:variable_text:39707:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld"
+subject = "var:kursomfattning-dagar-1-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Gxpld är en ogenomskinlig källkod.\ncatalog:variable_text:39707:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-2"
+subject = "var:kursomfattning-dagar-2-forsta-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39708:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-2"
+subject = "var:kursomfattning-dagar-2-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39708:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-3"
+subject = "var:kursomfattning-dagar-3-forsta-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39709:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-3"
+subject = "var:kursomfattning-dagar-3-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39709:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-4"
+subject = "var:kursomfattning-dagar-4-forsta-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39710:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-4"
+subject = "var:kursomfattning-dagar-4-forsta-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39710:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-5"
+subject = "var:kursomfattning-dagar-5-andra-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39711:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gxpld-5"
+subject = "var:kursomfattning-dagar-5-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39711:11688:12053"
 
@@ -1819,13 +1819,13 @@ evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:kursanordnare-5-3"
+subject = "var:kursanordnare-5-andra-halvaret"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Suffixet 3 är en tillagd räknare och finns inte i källkolumnen arr10.\ncatalog:variable_text:39790:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kursanordnare-5-3"
+subject = "var:kursanordnare-5-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 3 är en tillagd räknare och finns inte i källkolumnen arr10.\ncatalog:variable_text:39790:10592:12418"
 
@@ -2959,121 +2959,121 @@ evidence = "Källkolumnen används för kursens avslutningsstatus i nästa perio
 
 [[statement]]
 kind = "set"
-subject = "var:t11f"
+subject = "var:kurs-1-arbetstid-andra-halvaret"
 fields = { "sets" = ["utbildning-pa-arbetstid"] }
 evidence = "T11f är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39886:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11f"
+subject = "var:kurs-1-arbetstid-andra-halvaret"
 fields = { "tags" = ["education", "employment"] }
 evidence = "T11f är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39886:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11g"
+subject = "var:kurs-2-arbetstid-andra-halvaret"
 fields = { "sets" = ["utbildning-pa-arbetstid"] }
 evidence = "T11g är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39887:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11g"
+subject = "var:kurs-2-arbetstid-andra-halvaret"
 fields = { "tags" = ["education", "employment"] }
 evidence = "T11g är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39887:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11h"
+subject = "var:kurs-3-arbetstid-andra-halvaret"
 fields = { "sets" = ["utbildning-pa-arbetstid"] }
 evidence = "T11h är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39888:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11h"
+subject = "var:kurs-3-arbetstid-andra-halvaret"
 fields = { "tags" = ["education", "employment"] }
 evidence = "T11h är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39888:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11i"
+subject = "var:kurs-4-arbetstid-andra-halvaret"
 fields = { "sets" = ["utbildning-pa-arbetstid"] }
 evidence = "T11i är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39889:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11i"
+subject = "var:kurs-4-arbetstid-andra-halvaret"
 fields = { "tags" = ["education", "employment"] }
 evidence = "T11i är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39889:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11j"
+subject = "var:kurs-5-arbetstid-andra-halvaret"
 fields = { "sets" = ["utbildning-pa-arbetstid"] }
 evidence = "T11j är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39890:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t11j"
+subject = "var:kurs-5-arbetstid-andra-halvaret"
 fields = { "tags" = ["education", "employment"] }
 evidence = "T11j är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39890:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:t14f"
+subject = "var:kursinnehall-anvandning-kurs-1-andra-halvaret"
 fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
 evidence = "T14f är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39891:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14f"
+subject = "var:kursinnehall-anvandning-kurs-1-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "T14f är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39891:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14g"
+subject = "var:kursinnehall-anvandning-kurs-2-andra-halvaret"
 fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
 evidence = "T14g är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39892:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14g"
+subject = "var:kursinnehall-anvandning-kurs-2-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "T14g är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39892:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14h"
+subject = "var:kursinnehall-anvandning-kurs-3-andra-halvaret"
 fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
 evidence = "T14h är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39893:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14h"
+subject = "var:kursinnehall-anvandning-kurs-3-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "T14h är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39893:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14i"
+subject = "var:kursinnehall-anvandning-kurs-4-andra-halvaret"
 fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
 evidence = "T14i är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39894:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14i"
+subject = "var:kursinnehall-anvandning-kurs-4-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "T14i är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39894:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14j"
+subject = "var:kursinnehall-anvandning-kurs-5-andra-halvaret"
 fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
 evidence = "T14j är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39895:11688:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t14j"
+subject = "var:kursinnehall-anvandning-kurs-5-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "T14j är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39895:11688:12418"
 
@@ -3631,13 +3631,13 @@ evidence = "Samma källkolumn har en annan ägare i en senare observerad period.
 
 [[statement]]
 kind = "set"
-subject = "var:xplangd-4"
+subject = "var:kurs-5-antal-dagar-andra-halvaret"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Suffixet 4 kommer inte från källkolumnen xplangd0. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394291\ncatalog:variable_text:39942:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:xplangd-4"
+subject = "var:kurs-5-antal-dagar-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 4 kommer inte från källkolumnen xplangd0. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394291\ncatalog:variable_text:39942:12053:12418"
 
@@ -3715,61 +3715,61 @@ evidence = "Källkolumnen och etiketten anger kurs 5:s längd i dagar; uppdelnin
 
 [[statement]]
 kind = "set"
-subject = "var:xptim1"
+subject = "var:kurs-1-antal-kurstimmar"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 1.\ncatalog:variable_text:39949:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim1"
+subject = "var:kurs-1-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 1.\ncatalog:variable_text:39949:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim2"
+subject = "var:kurs-2-antal-kurstimmar"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 2.\ncatalog:variable_text:39950:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim2"
+subject = "var:kurs-2-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 2.\ncatalog:variable_text:39950:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim3"
+subject = "var:kurs-3-antal-kurstimmar"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 3.\ncatalog:variable_text:39951:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim3"
+subject = "var:kurs-3-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 3.\ncatalog:variable_text:39951:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim4"
+subject = "var:kurs-4-antal-kurstimmar"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 4.\ncatalog:variable_text:39952:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim4"
+subject = "var:kurs-4-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 4.\ncatalog:variable_text:39952:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim5"
+subject = "var:kurs-5-antal-kurstimmar"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\ncatalog:variable_text:39953:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:xptim5"
+subject = "var:kurs-5-antal-kurstimmar"
 fields = { "tags" = ["education"] }
 evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\ncatalog:variable_text:39953:14610:14791"
 

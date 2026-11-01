@@ -523,13 +523,13 @@ evidence = "ANTGM är en källkod; etiketten anger antalet gifta män.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:antgs"
+subject = "var:antal-gifta-sambo"
 fields = { "sets" = ["antal-gifta-och-sammanboende"] }
 evidence = "ANTGS är en källkod; etiketten anger antalet gifta eller sammanboende.\ncatalog:variable_text:26527:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:antgs"
+subject = "var:antal-gifta-sambo"
 fields = { "tags" = ["family-household"] }
 evidence = "ANTGS är en källkod; etiketten anger antalet gifta eller sammanboende.\ncatalog:variable_text:26527:10592:11688"
 
@@ -619,13 +619,13 @@ evidence = "Variabeln kodar en decilgrupp för disponibel inkomst.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:begsz"
+subject = "var:hushallstyp-vuxna-kosthushall"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod för hushållstyp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26536:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:begsz"
+subject = "var:hushallstyp-vuxna-kosthushall"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en opak källkod för hushållstyp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26536:18628:18993"
 
@@ -643,73 +643,73 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:26537:10592:116
 
 [[statement]]
 kind = "set"
-subject = "var:bhreg"
+subject = "var:h-region-indelning-2003"
 fields = { "sets" = ["h-region"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger H-region.\ncatalog:variable_text:26538:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bhreg"
+subject = "var:h-region-indelning-2003"
 fields = { "tags" = ["geography"] }
 evidence = "Källkoden är ogenomskinlig; etiketten anger H-region.\ncatalog:variable_text:26538:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bht19z"
+subject = "var:hushallstyp-kon-barnantal"
 fields = { "sets" = [] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8931\ncatalog:variable_text:26539:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bht19z"
+subject = "var:hushallstyp-kon-barnantal"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8931\ncatalog:variable_text:26539:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bht9z"
+subject = "var:hushallstyp-alder-barnantal-0-19-ar"
 fields = { "sets" = [] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:10186\ncatalog:variable_text:26540:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:bht9z"
+subject = "var:hushallstyp-alder-barnantal-0-19-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:10186\ncatalog:variable_text:26540:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtbarnz"
+subject = "var:hushallstyp-barnforekomst-under-20-ar"
 fields = { "sets" = [] }
 evidence = "BHT är en källkod för hushållstyp och familjen ska bedömas enhetligt.\ncatalog:valueset:4458\ncatalog:variable_text:26541:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtbarnz"
+subject = "var:hushallstyp-barnforekomst-under-20-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och familjen ska bedömas enhetligt.\ncatalog:valueset:4458\ncatalog:variable_text:26541:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtkvkvz"
+subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
 fields = { "sets" = [] }
 evidence = "Källkoden är en ogenomskinlig förkortning; kvartilgrupperna avser disponibel inkomst.\ncatalog:valueset:1082\ncatalog:variable_text:26542:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtkvkvz"
+subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är en ogenomskinlig förkortning; kvartilgrupperna avser disponibel inkomst.\ncatalog:valueset:1082\ncatalog:variable_text:26542:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtkvz"
+subject = "var:hushallstyp-kvartiltabeller"
 fields = { "sets" = [] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8041\ncatalog:variable_text:26543:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:bhtkvz"
+subject = "var:hushallstyp-kvartiltabeller"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8041\ncatalog:variable_text:26543:10592:11688"
 
@@ -751,13 +751,13 @@ evidence = "BKON innehåller en källkod före könsstammen; etiketten anger kö
 
 [[statement]]
 kind = "set"
-subject = "var:bkonz"
+subject = "var:hushallsforestandarens-kon"
 fields = { "sets" = ["kon"] }
 evidence = "BKONZ är en källmnemonik för kön.\ncatalog:variable_text:26547:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:bkonz"
+subject = "var:hushallsforestandarens-kon"
 fields = { "tags" = ["demographics"] }
 evidence = "BKONZ är en källmnemonik för kön.\ncatalog:variable_text:26547:18628:18993"
 
@@ -775,13 +775,13 @@ evidence = "Id:t är en opak källkod för kvintilgrupp.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:bkvz"
+subject = "var:kvartilgrupp-disponibel-inkomst"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod för kvartilgrupp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26549:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bkvz"
+subject = "var:kvartilgrupp-disponibel-inkomst"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod för kvartilgrupp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26549:15340:15706"
 
@@ -883,85 +883,85 @@ evidence = "Variabeln anger byggnadsår.\ncatalog:variable_text:26558:10592:1168
 
 [[statement]]
 kind = "set"
-subject = "var:carb2"
+subject = "var:arbetsinkomst-person-2"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26559:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb2"
+subject = "var:arbetsinkomst-person-2"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26559:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb3"
+subject = "var:arbetsinkomst-person-3"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26560:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb3"
+subject = "var:arbetsinkomst-person-3"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26560:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb4"
+subject = "var:arbetsinkomst-person-4"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26561:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb4"
+subject = "var:arbetsinkomst-person-4"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26561:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb5"
+subject = "var:arbetsinkomst-person-5"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26562:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb5"
+subject = "var:arbetsinkomst-person-5"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26562:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb6"
+subject = "var:arbetsinkomst-person-6"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26563:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb6"
+subject = "var:arbetsinkomst-person-6"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26563:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb7"
+subject = "var:arbetsinkomst-person-7"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26564:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb7"
+subject = "var:arbetsinkomst-person-7"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26564:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb8"
+subject = "var:arbetsinkomst-person-8"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26565:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:carb8"
+subject = "var:arbetsinkomst-person-8"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvariabler.\ncatalog:variable_text:26565:10592:10957"
 
@@ -991,13 +991,13 @@ evidence = "Id:t är en ogenomskinlig källkod; reparationsobjektet är inte spe
 
 [[statement]]
 kind = "set"
-subject = "var:cc044"
+subject = "var:sophamtning-vatten-avlopp-samfallighetsavgift-agt-smahus"
 fields = { "sets" = ["utgift-ovrig-bostadsdrift"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26569:10957:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:cc044"
+subject = "var:sophamtning-vatten-avlopp-samfallighetsavgift-agt-smahus"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26569:10957:11688"
 
@@ -1411,13 +1411,13 @@ evidence = "Källan beskriver en hushållsvikt för uppräkning.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:impbil"
+subject = "var:korstracka-imputerad"
 fields = { "sets" = ["korstracka"] }
 evidence = "Källkoden anger inte körsträcka med igenkännliga ordstammar; IMP-familjen bedöms enhetligt.\ncatalog:variable_text:26609:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:impbil"
+subject = "var:korstracka-imputerad"
 fields = { "tags" = ["transport"] }
 evidence = "Källkoden anger inte körsträcka med igenkännliga ordstammar; IMP-familjen bedöms enhetligt.\ncatalog:variable_text:26609:10592:11688"
 
@@ -1603,37 +1603,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2663
 
 [[statement]]
 kind = "set"
-subject = "var:p2sam"
+subject = "var:samhorighet-person-2"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26632:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p2sam"
+subject = "var:samhorighet-person-2"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26632:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p2sei"
+subject = "var:socioekonomisk-grupp-person-2"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26633:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p2sei"
+subject = "var:socioekonomisk-grupp-person-2"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26633:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p2sys"
+subject = "var:sysselsattningstyp-person-2"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26634:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p2sys"
+subject = "var:sysselsattningstyp-person-2"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26634:10592:11688"
 
@@ -1663,37 +1663,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2663
 
 [[statement]]
 kind = "set"
-subject = "var:p3sam"
+subject = "var:samhorighet-person-3"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26637:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p3sam"
+subject = "var:samhorighet-person-3"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26637:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p3sei"
+subject = "var:socioekonomisk-grupp-person-3"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26638:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p3sei"
+subject = "var:socioekonomisk-grupp-person-3"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26638:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p3sys"
+subject = "var:sysselsattningstyp-person-3"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26639:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p3sys"
+subject = "var:sysselsattningstyp-person-3"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26639:10592:11688"
 
@@ -1723,37 +1723,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2664
 
 [[statement]]
 kind = "set"
-subject = "var:p4sam"
+subject = "var:samhorighet-person-4"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26642:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p4sam"
+subject = "var:samhorighet-person-4"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26642:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p4sei"
+subject = "var:socioekonomisk-grupp-person-4"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26643:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p4sei"
+subject = "var:socioekonomisk-grupp-person-4"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26643:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p4sys"
+subject = "var:sysselsattningstyp-person-4"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26644:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p4sys"
+subject = "var:sysselsattningstyp-person-4"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26644:10592:11688"
 
@@ -1783,37 +1783,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2664
 
 [[statement]]
 kind = "set"
-subject = "var:p5sam"
+subject = "var:samhorighet-person-5"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26647:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p5sam"
+subject = "var:samhorighet-person-5"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26647:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p5sei"
+subject = "var:socioekonomisk-grupp-person-5"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26648:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p5sei"
+subject = "var:socioekonomisk-grupp-person-5"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26648:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p5sys"
+subject = "var:sysselsattningstyp-person-5"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26649:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p5sys"
+subject = "var:sysselsattningstyp-person-5"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26649:10592:11688"
 
@@ -1843,37 +1843,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2665
 
 [[statement]]
 kind = "set"
-subject = "var:p6sam"
+subject = "var:samhorighet-person-6"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26652:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p6sam"
+subject = "var:samhorighet-person-6"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26652:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p6sei"
+subject = "var:socioekonomisk-grupp-person-6"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26653:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p6sei"
+subject = "var:socioekonomisk-grupp-person-6"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26653:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p6sys"
+subject = "var:sysselsattningstyp-person-6"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26654:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p6sys"
+subject = "var:sysselsattningstyp-person-6"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26654:10592:11688"
 
@@ -1903,37 +1903,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2665
 
 [[statement]]
 kind = "set"
-subject = "var:p7sam"
+subject = "var:samhorighet-person-7"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26657:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p7sam"
+subject = "var:samhorighet-person-7"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26657:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p7sei"
+subject = "var:socioekonomisk-grupp-person-7"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26658:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p7sei"
+subject = "var:socioekonomisk-grupp-person-7"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26658:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p7sys"
+subject = "var:sysselsattningstyp-person-7"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26659:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p7sys"
+subject = "var:sysselsattningstyp-person-7"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26659:10592:11688"
 
@@ -1963,37 +1963,37 @@ evidence = "Personernas arbetsuppgifter hör samman.\ncatalog:variable_text:2666
 
 [[statement]]
 kind = "set"
-subject = "var:p8sam"
+subject = "var:samhorighet-person-8"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26662:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p8sam"
+subject = "var:samhorighet-person-8"
 fields = { "tags" = ["family-household"] }
 evidence = "Personslotten och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26662:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p8sei"
+subject = "var:socioekonomisk-grupp-person-8"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26663:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:p8sei"
+subject = "var:socioekonomisk-grupp-person-8"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:26663:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:p8sys"
+subject = "var:sysselsattningstyp-person-8"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26664:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:p8sys"
+subject = "var:sysselsattningstyp-person-8"
 fields = { "tags" = ["employment"] }
 evidence = "Personslotten och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:26664:10592:11688"
 
@@ -2095,13 +2095,13 @@ evidence = "Variabeln mäter ålder.\ncatalog:variable_text:26672:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:pant"
+subject = "var:antal-personer-hut-hushall"
 fields = { "sets" = ["hushallets-personantal"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; den gemensamma etiketten kräver målprövning.\ncatalog:variable_text:26673:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:pant"
+subject = "var:antal-personer-hut-hushall"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; den gemensamma etiketten kräver målprövning.\ncatalog:variable_text:26673:10592:11688"
 
@@ -2215,13 +2215,13 @@ evidence = "Postort anger postadressens geografiska område.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:prstr"
+subject = "var:privat-korstracka-per-ar"
 fields = { "sets" = ["korstracka"] }
 evidence = "Id:t är en opak källkod för körsträcka.\ncatalog:variable_text:26683:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:prstr"
+subject = "var:privat-korstracka-per-ar"
 fields = { "tags" = ["transport"] }
 evidence = "Id:t är en opak källkod för körsträcka.\ncatalog:variable_text:26683:10592:11688"
 
@@ -2683,25 +2683,25 @@ evidence = "Id:t är en opak källkod för arbetsinkomst; etiketten delas av fle
 
 [[statement]]
 kind = "set"
-subject = "var:scarb01"
+subject = "var:arbetsinkomst-2001"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "SCARB är en källkod och 01-familjen bedöms enhetligt; källan anger arbetsinkomst.\ncatalog:variable_text:26723:10957:11323\ncatalog:variable_text:26723:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:scarb01"
+subject = "var:arbetsinkomst-2001"
 fields = { "tags" = ["income"] }
 evidence = "SCARB är en källkod och 01-familjen bedöms enhetligt; källan anger arbetsinkomst.\ncatalog:variable_text:26723:10957:11323\ncatalog:variable_text:26723:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:scarb02"
+subject = "var:arbetsinkomst-2002"
 fields = { "sets" = ["arbetsinkomst"] }
 evidence = "Id:t är en opak källkod för arbetsinkomst; etiketten delas av flera variabler.\ncatalog:variable_text:26724:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:scarb02"
+subject = "var:arbetsinkomst-2002"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod för arbetsinkomst; etiketten delas av flera variabler.\ncatalog:variable_text:26724:11323:11688"
 
@@ -2731,25 +2731,25 @@ evidence = "Id:t är en ogenomskinlig källförkortning; etiketten kolliderar oc
 
 [[statement]]
 kind = "set"
-subject = "var:sinkh"
+subject = "var:sammanraknad-inkomst-hushall"
 fields = { "sets" = ["sammanraknad-inkomst"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26727:10957:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:sinkh"
+subject = "var:sammanraknad-inkomst-hushall"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26727:10957:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:sinkmiss"
+subject = "var:antal-personer-saknar-inkomstuppgift"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26728:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:sinkmiss"
+subject = "var:antal-personer-saknar-inkomstuppgift"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26728:10592:11688"
 
@@ -3043,25 +3043,25 @@ evidence = "Den generiska definitionen och kodlistan beskriver olika saker.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:u01"
+subject = "var:utgift-livsmedel-och-alkoholfri-dryck"
 fields = { "sets" = [] }
 evidence = "U01 är en ogenomskinlig källkod för den angivna utgiften.\ncatalog:variable_text:26753:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u01"
+subject = "var:utgift-livsmedel-och-alkoholfri-dryck"
 fields = { "tags" = ["consumption"] }
 evidence = "U01 är en ogenomskinlig källkod för den angivna utgiften.\ncatalog:variable_text:26753:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u011-imp"
+subject = "var:imputerat-livsmedel"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26754:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u011-imp"
+subject = "var:imputerat-livsmedel"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26754:18628:18993"
 
@@ -3079,13 +3079,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0111-imp"
+subject = "var:imputerat-spannmal-ris-eller-majsprodukter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26756:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0111-imp"
+subject = "var:imputerat-spannmal-ris-eller-majsprodukter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26756:18628:18993"
 
@@ -3103,13 +3103,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0112-imp"
+subject = "var:imputerat-utgift-kottprodukter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26758:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0112-imp"
+subject = "var:imputerat-utgift-kottprodukter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26758:18628:18993"
 
@@ -3151,13 +3151,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0114-imp"
+subject = "var:imputerat-mejeriprodukter-agg-vegetariska-alternativ"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26762:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0114-imp"
+subject = "var:imputerat-mejeriprodukter-agg-vegetariska-alternativ"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26762:18628:18993"
 
@@ -3175,13 +3175,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0115-imp"
+subject = "var:imputerat-matolja-smor-andra-fetter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26764:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0115-imp"
+subject = "var:imputerat-matolja-smor-andra-fetter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26764:18628:18993"
 
@@ -3199,13 +3199,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0116-imp"
+subject = "var:imputerat-frukt-bar-notter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26766:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0116-imp"
+subject = "var:imputerat-frukt-bar-notter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26766:18628:18993"
 
@@ -3235,13 +3235,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0117a-imp"
+subject = "var:imputerat-utgift-potatis-potatisprodukter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26769:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0117a-imp"
+subject = "var:imputerat-utgift-potatis-potatisprodukter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26769:18628:18993"
 
@@ -3259,13 +3259,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0117b-imp"
+subject = "var:imputerat-utgift-gronsaker-svamp-vegetarisk-mat"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26771:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0117b-imp"
+subject = "var:imputerat-utgift-gronsaker-svamp-vegetarisk-mat"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26771:18628:18993"
 
@@ -3295,13 +3295,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0118a-imp"
+subject = "var:imputerat-utgift-godis-choklad-glass"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26774:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0118a-imp"
+subject = "var:imputerat-utgift-godis-choklad-glass"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26774:18628:18993"
 
@@ -3319,13 +3319,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0118b-imp"
+subject = "var:imputerat-utgift-socker-sylt-marmelad-honung"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26776:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0118b-imp"
+subject = "var:imputerat-utgift-socker-sylt-marmelad-honung"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26776:18628:18993"
 
@@ -3355,13 +3355,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0119a-imp"
+subject = "var:imputerat-utgift-snacks"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26779:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0119a-imp"
+subject = "var:imputerat-utgift-snacks"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26779:18628:18993"
 
@@ -3379,13 +3379,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0119b-imp"
+subject = "var:imputerat-utgift-fardigratter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26781:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0119b-imp"
+subject = "var:imputerat-utgift-fardigratter"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26781:18628:18993"
 
@@ -3403,13 +3403,13 @@ evidence = "Id:t är en opak källkod för livsmedelsutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0119c-imp"
+subject = "var:imputerat-utgift-sas-kryddor-buljong"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26783:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0119c-imp"
+subject = "var:imputerat-utgift-sas-kryddor-buljong"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26783:18628:18993"
 
@@ -3439,13 +3439,13 @@ evidence = "U012a är en källkod; etiketten anger utgift för kaffe, te och cho
 
 [[statement]]
 kind = "set"
-subject = "var:u012a-imp"
+subject = "var:imputerat-utgift-kaffe-te-chokladdryck"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26786:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u012a-imp"
+subject = "var:imputerat-utgift-kaffe-te-chokladdryck"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26786:18628:18993"
 
@@ -3463,13 +3463,13 @@ evidence = "U012b är en källkod; etiketten anger utgift för övrig alkoholfri
 
 [[statement]]
 kind = "set"
-subject = "var:u012b-imp"
+subject = "var:imputerat-utgift-ovrig-alkoholfri-dryck"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26788:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u012b-imp"
+subject = "var:imputerat-utgift-ovrig-alkoholfri-dryck"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26788:18628:18993"
 
@@ -3499,13 +3499,13 @@ evidence = "U021 är en källkod; etiketten anger utgift för alkoholhaltig dryc
 
 [[statement]]
 kind = "set"
-subject = "var:u021-imp"
+subject = "var:imputerat-utgift-alkoholhaltig-dryck"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26791:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u021-imp"
+subject = "var:imputerat-utgift-alkoholhaltig-dryck"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26791:18628:18993"
 
@@ -3523,37 +3523,37 @@ evidence = "U02a är en opak utgiftskod.\ncatalog:variable_text:26792:18628:1899
 
 [[statement]]
 kind = "set"
-subject = "var:u02a-imp"
+subject = "var:imputerat-utgift-tobak"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26793:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u02a-imp"
+subject = "var:imputerat-utgift-tobak"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26793:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u031-imp"
+subject = "var:imputerat-utgift-klader"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26794:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u031-imp"
+subject = "var:imputerat-utgift-klader"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26794:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u032-imp"
+subject = "var:imputerat-utgift-skor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26795:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u032-imp"
+subject = "var:imputerat-utgift-skor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26795:18628:18993"
 
@@ -3619,13 +3619,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26800:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0411-o-imp"
+subject = "var:imputerat-hyra-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26801:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0411-o-imp"
+subject = "var:imputerat-hyra-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26801:18628:18993"
 
@@ -3643,13 +3643,13 @@ evidence = "U0412_o är en källkod; etiketten anger utgift för garage eller pa
 
 [[statement]]
 kind = "set"
-subject = "var:u0412-o-imp"
+subject = "var:imputerat-utgift-garage-parkeringsplats-vid-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26803:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0412-o-imp"
+subject = "var:imputerat-utgift-garage-parkeringsplats-vid-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26803:18628:18993"
 
@@ -3679,13 +3679,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26805:186
 
 [[statement]]
 kind = "set"
-subject = "var:u04121-x-imp"
+subject = "var:imputerat-utgift-hyra-andrabostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26806:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u04121-x-imp"
+subject = "var:imputerat-utgift-hyra-andrabostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26806:18628:18993"
 
@@ -3703,13 +3703,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26807:186
 
 [[statement]]
 kind = "set"
-subject = "var:u04121-y-imp"
+subject = "var:imputerat-utgift-hyra-fritidsbostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26808:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u04121-y-imp"
+subject = "var:imputerat-utgift-hyra-fritidsbostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26808:18628:18993"
 
@@ -3727,13 +3727,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26809:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0431-x"
+subject = "var:utgift-underhall-reparation-andrabostad"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26810:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0431-x"
+subject = "var:utgift-underhall-reparation-andrabostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26810:18628:18993"
 
@@ -3751,13 +3751,13 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u0431-y"
+subject = "var:utgift-underhall-reparation-fritidsbostad"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26812:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0431-y"
+subject = "var:utgift-underhall-reparation-fritidsbostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26812:18628:18993"
 
@@ -3787,13 +3787,13 @@ evidence = "Id:t är en ogenomskinlig källkod och tjänsten ingår i den redovi
 
 [[statement]]
 kind = "set"
-subject = "var:u04312a-imp"
+subject = "var:imputerat-utgift-sakerhetstjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26815:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u04312a-imp"
+subject = "var:imputerat-utgift-sakerhetstjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26815:18628:18993"
 
@@ -3811,25 +3811,25 @@ evidence = "Id:t är en ogenomskinlig källkod och produkterna ingår i den redo
 
 [[statement]]
 kind = "set"
-subject = "var:u04312b-imp"
+subject = "var:imputerat-utgift-sakerhetsprodukter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26817:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u04312b-imp"
+subject = "var:imputerat-utgift-sakerhetsprodukter"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26817:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0431a-o"
+subject = "var:utgift-underhall-reparation-ordinarie-bostad"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26818:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0431a-o"
+subject = "var:utgift-underhall-reparation-ordinarie-bostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26818:18628:18993"
 
@@ -3847,13 +3847,13 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u0431b-o"
+subject = "var:utgift-underhall-reparation-tomt-ordinarie-bostad"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26820:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0431b-o"
+subject = "var:utgift-underhall-reparation-tomt-ordinarie-bostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver prövning.\ncatalog:variable_text:26820:18628:18993"
 
@@ -3907,13 +3907,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26824:186
 
 [[statement]]
 kind = "set"
-subject = "var:u044-x-imp"
+subject = "var:imputerat-andra-driftsutgifter-andrabostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26825:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u044-x-imp"
+subject = "var:imputerat-andra-driftsutgifter-andrabostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26825:18628:18993"
 
@@ -3931,13 +3931,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26826:186
 
 [[statement]]
 kind = "set"
-subject = "var:u044-y-imp"
+subject = "var:imputerat-andra-driftsutgifter-fritidsbostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26827:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u044-y-imp"
+subject = "var:imputerat-andra-driftsutgifter-fritidsbostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26827:18628:18993"
 
@@ -3955,13 +3955,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26828:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0442-o-imp"
+subject = "var:imputerat-utgift-sophamtning-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26829:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0442-o-imp"
+subject = "var:imputerat-utgift-sophamtning-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26829:18628:18993"
 
@@ -3979,13 +3979,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26830:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0444a-o-imp"
+subject = "var:imputerat-utgift-sotning-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26831:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0444a-o-imp"
+subject = "var:imputerat-utgift-sotning-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26831:18628:18993"
 
@@ -4003,13 +4003,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26832:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0444b-o-imp"
+subject = "var:imputerat-utgift-vagunderhall-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26833:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0444b-o-imp"
+subject = "var:imputerat-utgift-vagunderhall-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26833:18628:18993"
 
@@ -4027,13 +4027,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26834:186
 
 [[statement]]
 kind = "set"
-subject = "var:u044x-o-imp"
+subject = "var:imputerat-utgift-vatten-avlopp-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26835:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u044x-o-imp"
+subject = "var:imputerat-utgift-vatten-avlopp-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26835:18628:18993"
 
@@ -4075,13 +4075,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26838:186
 
 [[statement]]
 kind = "set"
-subject = "var:u045-x-imp"
+subject = "var:imputerat-utgift-uppvarmning-hushallsel-andrabostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26839:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u045-x-imp"
+subject = "var:imputerat-utgift-uppvarmning-hushallsel-andrabostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26839:18628:18993"
 
@@ -4099,13 +4099,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26840:186
 
 [[statement]]
 kind = "set"
-subject = "var:u045-y-imp"
+subject = "var:imputerat-utgift-uppvarmning-hushallsel-fritidsbostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26841:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u045-y-imp"
+subject = "var:imputerat-utgift-uppvarmning-hushallsel-fritidsbostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26841:18628:18993"
 
@@ -4147,13 +4147,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26844:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0451b-o-imp"
+subject = "var:imputerat-utgift-hushallsel-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26845:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0451b-o-imp"
+subject = "var:imputerat-utgift-hushallsel-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26845:18628:18993"
 
@@ -4171,13 +4171,13 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u0454-o-imp"
+subject = "var:imputerat-uppvarmningsutgift-pellets-ved-flis-span"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26847:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0454-o-imp"
+subject = "var:imputerat-uppvarmningsutgift-pellets-ved-flis-span"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26847:18628:18993"
 
@@ -4255,37 +4255,37 @@ evidence = "Id:t är en opak källkod för möbelutgift.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:u05111a-imp"
+subject = "var:imputerat-utgift-sittmobler"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26854:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111a-imp"
+subject = "var:imputerat-utgift-sittmobler"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26854:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111b-imp"
+subject = "var:imputerat-utgift-bord"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26855:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111b-imp"
+subject = "var:imputerat-utgift-bord"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26855:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111c-imp"
+subject = "var:imputerat-utgift-sangar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26856:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111c-imp"
+subject = "var:imputerat-utgift-sangar"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26856:18628:18993"
 
@@ -4303,13 +4303,13 @@ evidence = "Id:t är en opak källkod för möbelutgift.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:u05111d-imp"
+subject = "var:imputerat-utgift-forvaringsmobler"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Id:t är en opak källkod för imputeringsstatus; etiketten kolliderar.\ncatalog:variable_text:26858:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111d-imp"
+subject = "var:imputerat-utgift-forvaringsmobler"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t är en opak källkod för imputeringsstatus; etiketten kolliderar.\ncatalog:variable_text:26858:18628:18993"
 
@@ -4327,25 +4327,25 @@ evidence = "Id:t är en opak källkod för möbelutgift.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:u05111e-imp"
+subject = "var:imputerat-utgift-ovriga-mobler-inomhusbruk"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är ett opakt variabelnamn; etiketten anger imputeringsstatus. Måttets komponent framgår av den operativa definitionen.\ncatalog:valueset:10481\ncatalog:variable_text:26860:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05111e-imp"
+subject = "var:imputerat-utgift-ovriga-mobler-inomhusbruk"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är ett opakt variabelnamn; etiketten anger imputeringsstatus. Måttets komponent framgår av den operativa definitionen.\ncatalog:valueset:10481\ncatalog:variable_text:26860:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05112-imp"
+subject = "var:imputerat-utgift-utemobler"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26861:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05112-imp"
+subject = "var:imputerat-utgift-utemobler"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26861:18628:18993"
 
@@ -4363,13 +4363,13 @@ evidence = "Id:t är en opak källkod för inventarieutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0511x-imp"
+subject = "var:imputerat-utgift-mindre-inventarier"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är ett opakt variabelnamn; etiketten anger imputeringsstatus. Måttets komponent framgår av den operativa definitionen.\ncatalog:valueset:10481\ncatalog:variable_text:26863:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0511x-imp"
+subject = "var:imputerat-utgift-mindre-inventarier"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är ett opakt variabelnamn; etiketten anger imputeringsstatus. Måttets komponent framgår av den operativa definitionen.\ncatalog:valueset:10481\ncatalog:variable_text:26863:18628:18993"
 
@@ -4387,13 +4387,13 @@ evidence = "Id:t är en opak källkod för möbelreparation.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u0512-imp"
+subject = "var:imputerat-utgift-reparation-mobler"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26865:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0512-imp"
+subject = "var:imputerat-utgift-reparation-mobler"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26865:18628:18993"
 
@@ -4411,13 +4411,13 @@ evidence = "Id:t är en opak källkod; utgiften ingår i gruppen hemtextilier.\n
 
 [[statement]]
 kind = "set"
-subject = "var:u052-imp"
+subject = "var:imputerat-utgift-textilier"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26867:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u052-imp"
+subject = "var:imputerat-utgift-textilier"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26867:18628:18993"
 
@@ -4471,37 +4471,37 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26871:186
 
 [[statement]]
 kind = "set"
-subject = "var:u05311a-imp"
+subject = "var:imputerat-utgift-kyl-frys"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26872:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311a-imp"
+subject = "var:imputerat-utgift-kyl-frys"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26872:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311b-imp"
+subject = "var:imputerat-utgift-spis"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26873:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311b-imp"
+subject = "var:imputerat-utgift-spis"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26873:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311c-imp"
+subject = "var:imputerat-utgift-diskmaskin"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26874:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311c-imp"
+subject = "var:imputerat-utgift-diskmaskin"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26874:18628:18993"
 
@@ -4519,25 +4519,25 @@ evidence = "Id:t är en ogenomskinlig källkod och utgiften ingår i den angivna
 
 [[statement]]
 kind = "set"
-subject = "var:u05311d-imp"
+subject = "var:imputerat-utgift-ovrig-fast-utrustning-kok"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Id:t är en opak källkod för imputeringsstatus; etiketten kolliderar.\ncatalog:variable_text:26876:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05311d-imp"
+subject = "var:imputerat-utgift-ovrig-fast-utrustning-kok"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t är en opak källkod för imputeringsstatus; etiketten kolliderar.\ncatalog:variable_text:26876:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05312-imp"
+subject = "var:imputerat-utgift-tvattmaskin-torktumlare-torkskap"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26877:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05312-imp"
+subject = "var:imputerat-utgift-tvattmaskin-torktumlare-torkskap"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26877:18628:18993"
 
@@ -4555,13 +4555,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26878:186
 
 [[statement]]
 kind = "set"
-subject = "var:u05313-imp"
+subject = "var:imputerat-utgift-element-flakt-luftkonditionering"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26879:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05313-imp"
+subject = "var:imputerat-utgift-element-flakt-luftkonditionering"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26879:18628:18993"
 
@@ -4579,13 +4579,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26880:186
 
 [[statement]]
 kind = "set"
-subject = "var:u05314-imp"
+subject = "var:imputerat-utgift-dammsugare"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26881:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05314-imp"
+subject = "var:imputerat-utgift-dammsugare"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26881:18628:18993"
 
@@ -4615,13 +4615,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26883:186
 
 [[statement]]
 kind = "set"
-subject = "var:u0532-imp"
+subject = "var:imputerat-utgift-mindre-elektrisk-hushallsutrustning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26884:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0532-imp"
+subject = "var:imputerat-utgift-mindre-elektrisk-hushallsutrustning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26884:18628:18993"
 
@@ -4639,13 +4639,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26885:186
 
 [[statement]]
 kind = "set"
-subject = "var:u054-imp"
+subject = "var:imputerat-utgift-glas-porslin"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26886:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u054-imp"
+subject = "var:imputerat-utgift-glas-porslin"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26886:18628:18993"
 
@@ -4663,25 +4663,25 @@ evidence = "Id:t är en opak källkod för reparationsutgift.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u05404-imp"
+subject = "var:imputerat-utgift-reparation-glas-porslin-bestick"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26888:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05404-imp"
+subject = "var:imputerat-utgift-reparation-glas-porslin-bestick"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26888:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u054a"
+subject = "var:utgift-glas-kristall-keramik-bestick-porslin-koksredskap"
 fields = { "sets" = ["utgift-hushallsartiklar"] }
 evidence = "Id:t är en opak källkod för hushållsartiklar.\ncatalog:variable_text:26889:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u054a"
+subject = "var:utgift-glas-kristall-keramik-bestick-porslin-koksredskap"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en opak källkod för hushållsartiklar.\ncatalog:variable_text:26889:18628:18993"
 
@@ -4699,13 +4699,13 @@ evidence = "U0551 är en källkod; etiketten anger utgift för motordrivna verkt
 
 [[statement]]
 kind = "set"
-subject = "var:u0551-imp"
+subject = "var:imputerat-utgift-motordrivna-verktyg-tradgardsredskap"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26891:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0551-imp"
+subject = "var:imputerat-utgift-motordrivna-verktyg-tradgardsredskap"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26891:18628:18993"
 
@@ -4723,13 +4723,13 @@ evidence = "U0552 är en källkod; etiketten anger utgift för icke motordrivna 
 
 [[statement]]
 kind = "set"
-subject = "var:u0552-imp"
+subject = "var:imputerat-utgift-icke-motordrivna-verktyg"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26893:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0552-imp"
+subject = "var:imputerat-utgift-icke-motordrivna-verktyg"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26893:18628:18993"
 
@@ -4783,13 +4783,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26897:186
 
 [[statement]]
 kind = "set"
-subject = "var:u05611-imp"
+subject = "var:imputerat-utgift-renhallningsprodukter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26898:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u05611-imp"
+subject = "var:imputerat-utgift-renhallningsprodukter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26898:18628:18993"
 
@@ -4867,13 +4867,13 @@ evidence = "U06111 är en källkod; etiketten anger utgift för medicin.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:u06111-imp"
+subject = "var:imputerat-utgift-medicin-medicinliknande-produkter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26905:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u06111-imp"
+subject = "var:imputerat-utgift-medicin-medicinliknande-produkter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26905:18628:18993"
 
@@ -4891,13 +4891,13 @@ evidence = "U06112 är en källkod; etiketten anger utgift för naturläkemedel 
 
 [[statement]]
 kind = "set"
-subject = "var:u06112-imp"
+subject = "var:imputerat-utgift-naturlakemedel-kosttillskott"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26907:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u06112-imp"
+subject = "var:imputerat-utgift-naturlakemedel-kosttillskott"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26907:18628:18993"
 
@@ -4915,13 +4915,13 @@ evidence = "U0612 är en källkod; etiketten anger utgift för övriga hälsopro
 
 [[statement]]
 kind = "set"
-subject = "var:u0612-imp"
+subject = "var:imputerat-utgift-ovriga-produkter-halsa"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26909:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0612-imp"
+subject = "var:imputerat-utgift-ovriga-produkter-halsa"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26909:18628:18993"
 
@@ -4939,13 +4939,13 @@ evidence = "U06131 är en opak utgiftskod.\ncatalog:variable_text:26910:18628:18
 
 [[statement]]
 kind = "set"
-subject = "var:u06131-imp"
+subject = "var:imputerat-utgift-glasogon-kontaktlinser-tillbehor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26911:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u06131-imp"
+subject = "var:imputerat-utgift-glasogon-kontaktlinser-tillbehor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26911:18628:18993"
 
@@ -4975,25 +4975,25 @@ evidence = "Id:t är en opak källkod för vårdutgift.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:u0621-imp"
+subject = "var:imputerat-utgift-lakarvard"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26914:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0621-imp"
+subject = "var:imputerat-utgift-lakarvard"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26914:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0622-imp"
+subject = "var:imputerat-utgift-tandvard"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26915:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0622-imp"
+subject = "var:imputerat-utgift-tandvard"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26915:18628:18993"
 
@@ -5011,13 +5011,13 @@ evidence = "Id:t är en opak källkod; utgiften hör till annan hälsovård.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:u06a-imp"
+subject = "var:imputerat-utgift-annan-halsokopplad-vard"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26917:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u06a-imp"
+subject = "var:imputerat-utgift-annan-halsokopplad-vard"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26917:18628:18993"
 
@@ -5035,13 +5035,13 @@ evidence = "Id:t är en opak källkod för fordonsköp.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:u0711a-imp"
+subject = "var:imputerat-utgift-inkop-bil"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26919:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0711a-imp"
+subject = "var:imputerat-utgift-inkop-bil"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26919:18628:18993"
 
@@ -5059,25 +5059,25 @@ evidence = "Id:t är en opak källkod för fordonsköp.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:u0712-imp"
+subject = "var:imputerat-utgift-kop-motorcykel-moped-vespa"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26921:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0712-imp"
+subject = "var:imputerat-utgift-kop-motorcykel-moped-vespa"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26921:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0713-imp"
+subject = "var:imputerat-utgift-cykel"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26922:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0713-imp"
+subject = "var:imputerat-utgift-cykel"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26922:18628:18993"
 
@@ -5107,13 +5107,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller fordonsdelar och tillbeh
 
 [[statement]]
 kind = "set"
-subject = "var:u0721-imp"
+subject = "var:imputerat-utgift-reservdelar-tillbehor-fordon"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26925:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0721-imp"
+subject = "var:imputerat-utgift-reservdelar-tillbehor-fordon"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26925:18628:18993"
 
@@ -5131,13 +5131,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller drivmedel.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:u0722-imp"
+subject = "var:imputerat-utgift-drivmedel"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26927:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0722-imp"
+subject = "var:imputerat-utgift-drivmedel"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26927:18628:18993"
 
@@ -5155,13 +5155,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften. Coordinator
 
 [[statement]]
 kind = "set"
-subject = "var:u0723-imp"
+subject = "var:imputerat-utgift-service-underhall-fordon"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26929:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0723-imp"
+subject = "var:imputerat-utgift-service-underhall-fordon"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26929:18628:18993"
 
@@ -5179,49 +5179,49 @@ evidence = "U07241 är en källkod; etiketten anger utgift för garage och parke
 
 [[statement]]
 kind = "set"
-subject = "var:u07241a"
+subject = "var:utgift-parkering-langtidshyra-inte-anslutning-bostaden"
 fields = { "sets" = [] }
 evidence = "U07241a är en opak utgiftskod.\ncatalog:variable_text:26931:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241a"
+subject = "var:utgift-parkering-langtidshyra-inte-anslutning-bostaden"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "U07241a är en opak utgiftskod.\ncatalog:variable_text:26931:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241a-imp"
+subject = "var:imputerat-utgift-parkering-langtidshyra"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26932:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241a-imp"
+subject = "var:imputerat-utgift-parkering-langtidshyra"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26932:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241b"
+subject = "var:utgift-parkering-tillfallig-inte-anslutning-bostaden"
 fields = { "sets" = [] }
 evidence = "U07241b är en opak utgiftskod.\ncatalog:variable_text:26933:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241b"
+subject = "var:utgift-parkering-tillfallig-inte-anslutning-bostaden"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "U07241b är en opak utgiftskod.\ncatalog:variable_text:26933:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241b-imp"
+subject = "var:imputerat-utgift-parkering-tillfallig-parkeringsplats"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26934:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07241b-imp"
+subject = "var:imputerat-utgift-parkering-tillfallig-parkeringsplats"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26934:18628:18993"
 
@@ -5239,13 +5239,13 @@ evidence = "Id:t är en opak källkod; besiktning och samredovisade avgifter ing
 
 [[statement]]
 kind = "set"
-subject = "var:u07242-imp"
+subject = "var:imputerat-utgift-besiktning-biltullar-parkeringsboter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26936:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07242-imp"
+subject = "var:imputerat-utgift-besiktning-biltullar-parkeringsboter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26936:18628:18993"
 
@@ -5263,13 +5263,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:u07243-imp"
+subject = "var:imputerat-utgift-korkortsrelaterad-aktivitet"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26938:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07243-imp"
+subject = "var:imputerat-utgift-korkortsrelaterad-aktivitet"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26938:18628:18993"
 
@@ -5287,13 +5287,13 @@ evidence = "Id:t är en opak källkod; uttryckligen samredovisad bilhyra omfatta
 
 [[statement]]
 kind = "set"
-subject = "var:u07244-imp"
+subject = "var:imputerat-utgift-hyra-bil-annat-fordon"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26940:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07244-imp"
+subject = "var:imputerat-utgift-hyra-bil-annat-fordon"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26940:18628:18993"
 
@@ -5323,13 +5323,13 @@ evidence = "U0731 är en källkod; etiketten anger utgift för tågkort.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:u0731-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-tag"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26943:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0731-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-tag"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26943:18628:18993"
 
@@ -5347,25 +5347,25 @@ evidence = "U07321 är en källkod; etiketten anger utgift för busskort.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:u07321-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-buss"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26945:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07321-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-buss"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26945:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07322-imp"
+subject = "var:imputerat-utgift-taxi"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26946:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07322-imp"
+subject = "var:imputerat-utgift-taxi"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26946:18628:18993"
 
@@ -5383,13 +5383,13 @@ evidence = "U0733 är en källkod; etiketten anger utgift för flygreskort.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:u0733-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-flygresor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26948:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0733-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-flygresor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26948:18628:18993"
 
@@ -5407,13 +5407,13 @@ evidence = "U0734 är en källkod; etiketten anger utgift för båtresekort.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:u0734-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-batresor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26950:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0734-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-batresor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26950:18628:18993"
 
@@ -5431,13 +5431,13 @@ evidence = "U0735 är en källkod; etiketten anger utgift för kombinerat reskor
 
 [[statement]]
 kind = "set"
-subject = "var:u0735-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-kombinerade-fardsatt"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26952:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0735-imp"
+subject = "var:imputerat-utgift-manadskort-arskort-kombinerade-fardsatt"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26952:18628:18993"
 
@@ -5455,13 +5455,13 @@ evidence = "U073a är en källkod; etiketten anger utgift för övriga resebilje
 
 [[statement]]
 kind = "set"
-subject = "var:u073a-imp"
+subject = "var:imputerat-utgift-ovriga-biljetter-buss-tag-flyg-bat"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26954:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u073a-imp"
+subject = "var:imputerat-utgift-ovriga-biljetter-buss-tag-flyg-bat"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26954:18628:18993"
 
@@ -5491,13 +5491,13 @@ evidence = "U0741 är en källkod; etiketten anger utgift för porto och frakt.\
 
 [[statement]]
 kind = "set"
-subject = "var:u0741-imp"
+subject = "var:imputerat-utgift-porto-frakt"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26957:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0741-imp"
+subject = "var:imputerat-utgift-porto-frakt"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26957:18628:18993"
 
@@ -5515,13 +5515,13 @@ evidence = "U07491 är en källkod; etiketten anger utgift för flyttjänster oc
 
 [[statement]]
 kind = "set"
-subject = "var:u07491-imp"
+subject = "var:imputerat-utgift-flyttjanster-magasinering"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26959:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u07491-imp"
+subject = "var:imputerat-utgift-flyttjanster-magasinering"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26959:18628:18993"
 
@@ -5551,13 +5551,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller telefonutrustning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:u0811-imp"
+subject = "var:imputerat-utgift-fast-telefon-fax"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26962:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0811-imp"
+subject = "var:imputerat-utgift-fast-telefon-fax"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26962:18628:18993"
 
@@ -5575,13 +5575,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller telefonutrustning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:u0812-imp"
+subject = "var:imputerat-utgift-mobiltelefon"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26964:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0812-imp"
+subject = "var:imputerat-utgift-mobiltelefon"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26964:18628:18993"
 
@@ -5599,13 +5599,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller datorutrustning.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:u0813-imp"
+subject = "var:imputerat-utgift-dator-surfplatta"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26966:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0813-imp"
+subject = "var:imputerat-utgift-dator-surfplatta"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26966:18628:18993"
 
@@ -5623,13 +5623,13 @@ evidence = "U0814 är en källkod; etiketten anger utgift för TV- och ljudutrus
 
 [[statement]]
 kind = "set"
-subject = "var:u0814a"
+subject = "var:utgift-tv-apparat"
 fields = { "sets" = [] }
 evidence = "U0814a är en opak utgiftskod.\ncatalog:variable_text:26968:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0814a"
+subject = "var:utgift-tv-apparat"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "U0814a är en opak utgiftskod.\ncatalog:variable_text:26968:18628:18993"
 
@@ -5659,13 +5659,13 @@ evidence = "U0814b är en källkod; etiketten anger utgift för DVD-spelare och 
 
 [[statement]]
 kind = "set"
-subject = "var:u0814b-imp"
+subject = "var:imputerat-utgift-dvd-spelare-hogtalare-digitalbox"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26971:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0814b-imp"
+subject = "var:imputerat-utgift-dvd-spelare-hogtalare-digitalbox"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26971:18628:18993"
 
@@ -5683,13 +5683,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller datalagringsutrustning.\
 
 [[statement]]
 kind = "set"
-subject = "var:u0815-imp"
+subject = "var:imputerat-utgift-harddiskar-usb-minnen"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26973:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0815-imp"
+subject = "var:imputerat-utgift-harddiskar-usb-minnen"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26973:18628:18993"
 
@@ -5707,13 +5707,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller hemelektronik. Coordinat
 
 [[statement]]
 kind = "set"
-subject = "var:u0819-imp"
+subject = "var:imputerat-utgift-ovrig-hemelektronik-tillbehor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26975:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0819-imp"
+subject = "var:imputerat-utgift-ovrig-hemelektronik-tillbehor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26975:18628:18993"
 
@@ -5731,13 +5731,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:u082-imp"
+subject = "var:imputerat-utgift-mjukvaror-appar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26977:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u082-imp"
+subject = "var:imputerat-utgift-mjukvaror-appar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26977:18628:18993"
 
@@ -5767,13 +5767,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller telefoni.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:u0831-imp"
+subject = "var:imputerat-utgift-fast-telefoni"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26980:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0831-imp"
+subject = "var:imputerat-utgift-fast-telefoni"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26980:18628:18993"
 
@@ -5791,13 +5791,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller telefoni.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:u0832-imp"
+subject = "var:imputerat-utgift-mobiltelefoni"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26982:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0832-imp"
+subject = "var:imputerat-utgift-mobiltelefoni"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26982:18628:18993"
 
@@ -5815,13 +5815,13 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 
 [[statement]]
 kind = "set"
-subject = "var:u08391"
+subject = "var:utgift-tv-abonnemang-utover-grundutbudet"
 fields = { "sets" = ["utgift-tv-tjanster"] }
 evidence = "Id:t är en opak källkod; den operativa definitionen avser TV-abonnemang.\ncatalog:variable_text:26984:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u08391"
+subject = "var:utgift-tv-abonnemang-utover-grundutbudet"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Id:t är en opak källkod; den operativa definitionen avser TV-abonnemang.\ncatalog:variable_text:26984:18628:18993"
 
@@ -5863,13 +5863,13 @@ evidence = "U08392a är en källkod; etiketten anger utgift för streamingtjäns
 
 [[statement]]
 kind = "set"
-subject = "var:u08392a-imp"
+subject = "var:imputerat-utgift-streamingtjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26988:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u08392a-imp"
+subject = "var:imputerat-utgift-streamingtjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26988:18628:18993"
 
@@ -5887,13 +5887,13 @@ evidence = "U08392b är en källkod; etiketten anger utgift för digitala musikt
 
 [[statement]]
 kind = "set"
-subject = "var:u08392b-imp"
+subject = "var:imputerat-utgift-digitala-musiktjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26990:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u08392b-imp"
+subject = "var:imputerat-utgift-digitala-musiktjanster"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26990:18628:18993"
 
@@ -5923,13 +5923,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller kameror och tillbehör.\
 
 [[statement]]
 kind = "set"
-subject = "var:u0911-imp"
+subject = "var:imputerat-utgift-kameror-tillbehor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26993:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0911-imp"
+subject = "var:imputerat-utgift-kameror-tillbehor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26993:18628:18993"
 
@@ -5947,13 +5947,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller optiska fritidsinstrumen
 
 [[statement]]
 kind = "set"
-subject = "var:u09113-imp"
+subject = "var:imputerat-utgift-optisk-utrustning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26995:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09113-imp"
+subject = "var:imputerat-utgift-optisk-utrustning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26995:18628:18993"
 
@@ -5995,13 +5995,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26998:186
 
 [[statement]]
 kind = "set"
-subject = "var:u09123a-imp"
+subject = "var:imputerat-utgift-bat-batmotor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26999:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09123a-imp"
+subject = "var:imputerat-utgift-bat-batmotor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26999:18628:18993"
 
@@ -6019,13 +6019,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27000:186
 
 [[statement]]
 kind = "set"
-subject = "var:u09123b-imp"
+subject = "var:imputerat-utgift-kanoter-dykutrustning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27001:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09123b-imp"
+subject = "var:imputerat-utgift-kanoter-dykutrustning"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27001:18628:18993"
 
@@ -6043,13 +6043,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:u09124-imp"
+subject = "var:imputerat-utgift-hastar-utrustning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27003:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09124-imp"
+subject = "var:imputerat-utgift-hastar-utrustning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27003:18628:18993"
 
@@ -6067,13 +6067,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:u09129-imp"
+subject = "var:imputerat-utgift-ovrig-storre-fritidsutrustning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27005:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09129-imp"
+subject = "var:imputerat-utgift-ovrig-storre-fritidsutrustning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27005:18628:18993"
 
@@ -6103,13 +6103,13 @@ evidence = "Id:t är en opak källkod; spelkonsoler omfattas av kandidatgruppen.
 
 [[statement]]
 kind = "set"
-subject = "var:u09211-imp"
+subject = "var:imputerat-utgift-spelkonsol-spel-tillbehor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27008:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09211-imp"
+subject = "var:imputerat-utgift-spelkonsol-spel-tillbehor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27008:18628:18993"
 
@@ -6127,13 +6127,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller leksaker, spel och hobby
 
 [[statement]]
 kind = "set"
-subject = "var:u09212-imp"
+subject = "var:imputerat-utgift-leksaker-spel-hobbysamlingar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27010:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09212-imp"
+subject = "var:imputerat-utgift-leksaker-spel-hobbysamlingar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27010:18628:18993"
 
@@ -6151,13 +6151,13 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:u09213-imp"
+subject = "var:imputerat-utgift-varor-fest-hogtid"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27012:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09213-imp"
+subject = "var:imputerat-utgift-varor-fest-hogtid"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27012:18628:18993"
 
@@ -6175,13 +6175,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller sport- och friluftsutrus
 
 [[statement]]
 kind = "set"
-subject = "var:u0922-imp"
+subject = "var:imputerat-utgift-utrustning-idrott-friluftsliv"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27014:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0922-imp"
+subject = "var:imputerat-utgift-utrustning-idrott-friluftsliv"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27014:18628:18993"
 
@@ -6199,25 +6199,25 @@ evidence = "Id:t är en opak källkod; samredovisningen omfattas av båda kandid
 
 [[statement]]
 kind = "set"
-subject = "var:u0931-imp"
+subject = "var:imputerat-utgift-blommor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27016:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0931-imp"
+subject = "var:imputerat-utgift-blommor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27016:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0932-imp"
+subject = "var:imputerat-utgift-sallskapsdjur"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27017:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0932-imp"
+subject = "var:imputerat-utgift-sallskapsdjur"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27017:18628:18993"
 
@@ -6235,13 +6235,13 @@ evidence = "Id:t är en opak källkod; samredovisningen omfattas av kandidatgrup
 
 [[statement]]
 kind = "set"
-subject = "var:u0945-imp"
+subject = "var:imputerat-utgift-veterinar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27019:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0945-imp"
+subject = "var:imputerat-utgift-veterinar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27019:18628:18993"
 
@@ -6259,13 +6259,13 @@ evidence = "Id:t är en opak källkod; fritidstjänsten omfattas av kandidatgrup
 
 [[statement]]
 kind = "set"
-subject = "var:u09461-imp"
+subject = "var:imputerat-utgift-intrade-nojesfalt-lekland"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27021:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09461-imp"
+subject = "var:imputerat-utgift-intrade-nojesfalt-lekland"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27021:18628:18993"
 
@@ -6283,13 +6283,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller fritidsaktivitet.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:u09462-imp"
+subject = "var:imputerat-utgift-tranings-eller-fritidsaktivitet"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27023:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u09462-imp"
+subject = "var:imputerat-utgift-tranings-eller-fritidsaktivitet"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27023:18628:18993"
 
@@ -6319,13 +6319,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller spel och lotterier.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:u0947-imp"
+subject = "var:imputerat-utgift-spel-lotter"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27026:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0947-imp"
+subject = "var:imputerat-utgift-spel-lotter"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27026:18628:18993"
 
@@ -6367,13 +6367,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller inspelningar på fysiska
 
 [[statement]]
 kind = "set"
-subject = "var:u0952-imp"
+subject = "var:imputerat-utgift-skivor-film-eller-musik"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27030:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0952-imp"
+subject = "var:imputerat-utgift-skivor-film-eller-musik"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27030:18628:18993"
 
@@ -6403,13 +6403,13 @@ evidence = "Id:t är en opak källkod; inträdesutgiften är en kulturell tjäns
 
 [[statement]]
 kind = "set"
-subject = "var:u0961-imp"
+subject = "var:imputerat-utgift-intrade-teater-konsert-cirkus-bio"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27033:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0961-imp"
+subject = "var:imputerat-utgift-intrade-teater-konsert-cirkus-bio"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27033:18628:18993"
 
@@ -6427,25 +6427,25 @@ evidence = "Id:t är en opak källkod; inträdesutgiften är en kulturell tjäns
 
 [[statement]]
 kind = "set"
-subject = "var:u0962-imp"
+subject = "var:imputerat-utgift-intrade-museum-utstallning-zoo"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27035:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0962-imp"
+subject = "var:imputerat-utgift-intrade-museum-utstallning-zoo"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27035:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0963-imp"
+subject = "var:imputerat-utgift-fototjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27036:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0963-imp"
+subject = "var:imputerat-utgift-fototjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27036:18628:18993"
 
@@ -6463,13 +6463,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller kulturella tjänster.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:u0969-imp"
+subject = "var:imputerat-utgift-andra-kulturella-tjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27038:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u0969-imp"
+subject = "var:imputerat-utgift-andra-kulturella-tjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27038:18628:18993"
 
@@ -6487,13 +6487,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller tidningar och böcker.\n
 
 [[statement]]
 kind = "set"
-subject = "var:u097-imp"
+subject = "var:imputerat-utgift-tidningar-bocker"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27040:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u097-imp"
+subject = "var:imputerat-utgift-tidningar-bocker"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27040:18628:18993"
 
@@ -6511,25 +6511,25 @@ evidence = "Id:t är en opak källkod; beloppet gäller paketresa.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:u098-imp"
+subject = "var:imputerat-utgift-paket-eller-charterresa"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27042:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u098-imp"
+subject = "var:imputerat-utgift-paket-eller-charterresa"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27042:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u10"
+subject = "var:utgift-utbildning-summeringsniva"
 fields = { "sets" = ["utgift-utbildning"] }
 evidence = "Id:t är en opak källkod; beloppet gäller utbildning.\ncatalog:variable_text:27043:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u10"
+subject = "var:utgift-utbildning-summeringsniva"
 fields = { "tags" = ["consumption", "education"] }
 evidence = "Id:t är en opak källkod; beloppet gäller utbildning.\ncatalog:variable_text:27043:18628:18993"
 
@@ -6547,13 +6547,13 @@ evidence = "Beloppet gäller utbildning och ingår i kandidatgruppen.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:u105-imp"
+subject = "var:imputerat-utgift-utbildning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27045:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u105-imp"
+subject = "var:imputerat-utgift-utbildning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27045:18628:18993"
 
@@ -6583,13 +6583,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27047:186
 
 [[statement]]
 kind = "set"
-subject = "var:u111-imp"
+subject = "var:imputerat-utgift-restauranger-andra-matstallen"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27048:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u111-imp"
+subject = "var:imputerat-utgift-restauranger-andra-matstallen"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27048:18628:18993"
 
@@ -6607,13 +6607,13 @@ evidence = "U112 är en källkod; etiketten anger utgift för hotell och semeste
 
 [[statement]]
 kind = "set"
-subject = "var:u112-imp"
+subject = "var:imputerat-utgift-hotell-annat-semesterboende"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27050:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u112-imp"
+subject = "var:imputerat-utgift-hotell-annat-semesterboende"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27050:18628:18993"
 
@@ -6643,13 +6643,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27052:186
 
 [[statement]]
 kind = "set"
-subject = "var:u1212a-imp"
+subject = "var:imputerat-utgift-sjuk-och-olycksfallsforsakring"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27053:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1212a-imp"
+subject = "var:imputerat-utgift-sjuk-och-olycksfallsforsakring"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27053:18628:18993"
 
@@ -6667,13 +6667,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27054:186
 
 [[statement]]
 kind = "set"
-subject = "var:u1212b-imp"
+subject = "var:imputerat-utgift-tandvardsforsakring"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27055:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1212b-imp"
+subject = "var:imputerat-utgift-tandvardsforsakring"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27055:18628:18993"
 
@@ -6703,13 +6703,13 @@ evidence = "U1213_x är en källkod; etiketten anger utgift för försäkring f�
 
 [[statement]]
 kind = "set"
-subject = "var:u1213-x-imp"
+subject = "var:imputerat-utgift-forsakring-andrabostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27058:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1213-x-imp"
+subject = "var:imputerat-utgift-forsakring-andrabostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27058:18628:18993"
 
@@ -6727,13 +6727,13 @@ evidence = "U1213_y är en källkod; etiketten anger utgift för försäkring f�
 
 [[statement]]
 kind = "set"
-subject = "var:u1213-y-imp"
+subject = "var:imputerat-utgift-forsakring-fritidsbostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27060:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1213-y-imp"
+subject = "var:imputerat-utgift-forsakring-fritidsbostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27060:18628:18993"
 
@@ -6751,13 +6751,13 @@ evidence = "U1213a_o är en källkod; etiketten anger utgift för villaförsäkr
 
 [[statement]]
 kind = "set"
-subject = "var:u1213a-o-imp"
+subject = "var:imputerat-utgift-villaforsakring-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27062:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1213a-o-imp"
+subject = "var:imputerat-utgift-villaforsakring-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27062:18628:18993"
 
@@ -6775,13 +6775,13 @@ evidence = "U1213b_o är en källkod; etiketten anger utgift för hemförsäkrin
 
 [[statement]]
 kind = "set"
-subject = "var:u1213b-o-imp"
+subject = "var:imputerat-utgift-hemforsakring-ordinarie-bostad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27064:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1213b-o-imp"
+subject = "var:imputerat-utgift-hemforsakring-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27064:18628:18993"
 
@@ -6799,13 +6799,13 @@ evidence = "U12141 är en källkod; etiketten anger utgift för fordonsförsäkr
 
 [[statement]]
 kind = "set"
-subject = "var:u12141-imp"
+subject = "var:imputerat-utgift-fordonsforsakring"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27066:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u12141-imp"
+subject = "var:imputerat-utgift-fordonsforsakring"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27066:18628:18993"
 
@@ -6823,13 +6823,13 @@ evidence = "U1219 är en källkod; etiketten anger utgift för övriga försäkr
 
 [[statement]]
 kind = "set"
-subject = "var:u1219-imp"
+subject = "var:imputerat-utgift-ovriga-forsakringar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27068:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1219-imp"
+subject = "var:imputerat-utgift-ovriga-forsakringar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27068:18628:18993"
 
@@ -6847,13 +6847,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller finansiella tjänster.\n
 
 [[statement]]
 kind = "set"
-subject = "var:u12220-imp"
+subject = "var:imputerat-utgift-finansiella-tjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27070:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u12220-imp"
+subject = "var:imputerat-utgift-finansiella-tjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27070:18628:18993"
 
@@ -6895,13 +6895,13 @@ evidence = "U1311 är en källkod; etiketten anger utgift för apparater för pe
 
 [[statement]]
 kind = "set"
-subject = "var:u1311-imp"
+subject = "var:imputerat-utgift-elektriska-apparater-personlig-vard"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27074:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1311-imp"
+subject = "var:imputerat-utgift-elektriska-apparater-personlig-vard"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27074:18628:18993"
 
@@ -6919,13 +6919,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27075:186
 
 [[statement]]
 kind = "set"
-subject = "var:u1312-imp"
+subject = "var:imputerat-utgift-produkter-personlig-hygien"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27076:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1312-imp"
+subject = "var:imputerat-utgift-produkter-personlig-hygien"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27076:18628:18993"
 
@@ -6943,13 +6943,13 @@ evidence = "U1313 är en källkod; etiketten anger utgift för personligt välbe
 
 [[statement]]
 kind = "set"
-subject = "var:u1313-imp"
+subject = "var:imputerat-utgift-tjanster-personligt-valbefinnande"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27078:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1313-imp"
+subject = "var:imputerat-utgift-tjanster-personligt-valbefinnande"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27078:18628:18993"
 
@@ -6967,13 +6967,13 @@ evidence = "Id:t är en opak källkod; beloppet gäller smycken och klockor.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:u1321-imp"
+subject = "var:imputerat-utgift-smycken-armbandsklockor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27080:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u1321-imp"
+subject = "var:imputerat-utgift-smycken-armbandsklockor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27080:18628:18993"
 
@@ -7003,25 +7003,25 @@ evidence = "Id:t är en opak källkod; beloppet gäller barnartiklar.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:u13291a-imp"
+subject = "var:imputerat-utgift-barnartiklar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27083:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13291a-imp"
+subject = "var:imputerat-utgift-barnartiklar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27083:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13291b-imp"
+subject = "var:imputerat-utgift-vaskor"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27084:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13291b-imp"
+subject = "var:imputerat-utgift-vaskor"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27084:18628:18993"
 
@@ -7039,13 +7039,13 @@ evidence = "Id:t är en opak källkod för barnomsorgsutgift.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u13301-imp"
+subject = "var:imputerat-utgift-barnomsorg"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27086:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13301-imp"
+subject = "var:imputerat-utgift-barnomsorg"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27086:18628:18993"
 
@@ -7063,13 +7063,13 @@ evidence = "Id:t är en opak källkod för hemtjänstutgift.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:u13303-imp"
+subject = "var:imputerat-utgift-hemtjanst"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27088:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13303-imp"
+subject = "var:imputerat-utgift-hemtjanst"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27088:18628:18993"
 
@@ -7099,13 +7099,13 @@ evidence = "Id:t är en opak källkod för tjänsteutgift.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:u13909a-imp"
+subject = "var:imputerat-utgift-maklartjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27091:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13909a-imp"
+subject = "var:imputerat-utgift-maklartjanster"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27091:18628:18993"
 
@@ -7123,13 +7123,13 @@ evidence = "Id:t är en opak källkod för tjänsteutgift.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:u13909b-imp"
+subject = "var:imputerat-utgift-juridiska-tjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27093:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13909b-imp"
+subject = "var:imputerat-utgift-juridiska-tjanster"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27093:18628:18993"
 
@@ -7147,37 +7147,37 @@ evidence = "Id:t är en opak källkod för tjänsteutgift.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:u13909c-imp"
+subject = "var:imputerat-utgift-bokforingstjanster"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27095:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u13909c-imp"
+subject = "var:imputerat-utgift-bokforingstjanster"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:27095:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u21-imp"
+subject = "var:imputerat-utgift-fackavgift-a-kassa"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27096:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u21-imp"
+subject = "var:imputerat-utgift-fackavgift-a-kassa"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27096:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u22"
+subject = "var:summerad-utgift-ranta-exklusive-bolan"
 fields = { "sets" = ["skuldranta"] }
 evidence = "U22 är en opak utgiftskod.\ncatalog:variable_text:27097:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u22"
+subject = "var:summerad-utgift-ranta-exklusive-bolan"
 fields = { "tags" = ["consumption", "finance"] }
 evidence = "U22 är en opak utgiftskod.\ncatalog:variable_text:27097:18628:18993"
 
@@ -7207,13 +7207,13 @@ evidence = "Variabeln mäter ränteutgift för fordonslån.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:u221-o"
+subject = "var:utgift-ranta-bolan-ordinarie-bostad"
 fields = { "sets" = ["skuldranta"] }
 evidence = "U221_o är en opak utgiftskod.\ncatalog:variable_text:27100:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u221-o"
+subject = "var:utgift-ranta-bolan-ordinarie-bostad"
 fields = { "tags" = ["consumption", "finance", "housing"] }
 evidence = "U221_o är en opak utgiftskod.\ncatalog:variable_text:27100:18628:18993"
 
@@ -7231,13 +7231,13 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u221-x"
+subject = "var:utgift-ranta-bolan-andrabostad"
 fields = { "sets" = ["skuldranta"] }
 evidence = "U221_x är en opak utgiftskod.\ncatalog:variable_text:27102:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u221-x"
+subject = "var:utgift-ranta-bolan-andrabostad"
 fields = { "tags" = ["consumption", "finance", "housing"] }
 evidence = "U221_x är en opak utgiftskod.\ncatalog:variable_text:27102:18628:18993"
 
@@ -7255,13 +7255,13 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:u2221-imp"
+subject = "var:imputerat-utgift-ranta-fordonslan"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27104:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u2221-imp"
+subject = "var:imputerat-utgift-ranta-fordonslan"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27104:18628:18993"
 
@@ -7279,13 +7279,13 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 
 [[statement]]
 kind = "set"
-subject = "var:u225-y"
+subject = "var:utgift-ranta-bolan-fritidsbostad"
 fields = { "sets" = ["skuldranta"] }
 evidence = "U225_y är en opak utgiftskod.\ncatalog:variable_text:27106:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u225-y"
+subject = "var:utgift-ranta-bolan-fritidsbostad"
 fields = { "tags" = ["consumption", "finance", "housing"] }
 evidence = "U225_y är en opak utgiftskod.\ncatalog:variable_text:27106:18628:18993"
 
@@ -7315,25 +7315,25 @@ evidence = "U23 är en källkod; etiketten anger utgift för fordonsskatt.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:u23-imp"
+subject = "var:imputerat-utgift-fordonsskatt"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27109:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u23-imp"
+subject = "var:imputerat-utgift-fordonsskatt"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27109:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u24"
+subject = "var:utgift-gavor-summa"
 fields = { "sets" = ["utgift-gavor"] }
 evidence = "U24 är en opak utgiftskod.\ncatalog:variable_text:27110:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u24"
+subject = "var:utgift-gavor-summa"
 fields = { "tags" = ["consumption"] }
 evidence = "U24 är en opak utgiftskod.\ncatalog:variable_text:27110:18628:18993"
 
@@ -7363,49 +7363,49 @@ evidence = "Variabeln mäter gåvor till privatpersoner.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:u241-imp"
+subject = "var:imputerat-utgift-gavor-privatpersoner"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27113:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u241-imp"
+subject = "var:imputerat-utgift-gavor-privatpersoner"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27113:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u242-imp"
+subject = "var:imputerat-utgift-gavor-organisationer-samfund-foreningar"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27114:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u242-imp"
+subject = "var:imputerat-utgift-gavor-organisationer-samfund-foreningar"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27114:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u25112-o"
+subject = "var:utgift-tomtrattsavgald-ordinarie-bostad"
 fields = { "sets" = ["utgift-tomtrattsavgald"] }
 evidence = "Id:t är en opak källkod för tomträttsavgäld; etiketten kolliderar.\ncatalog:variable_text:27115:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u25112-o"
+subject = "var:utgift-tomtrattsavgald-ordinarie-bostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en opak källkod för tomträttsavgäld; etiketten kolliderar.\ncatalog:variable_text:27115:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u25112-xy"
+subject = "var:utgift-tomtrattsavgald-andra-bostader"
 fields = { "sets" = ["utgift-tomtrattsavgald"] }
 evidence = "Id:t är en opak källkod för tomträttsavgäld; etiketten kolliderar.\ncatalog:variable_text:27116:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:u25112-xy"
+subject = "var:utgift-tomtrattsavgald-andra-bostader"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en opak källkod för tomträttsavgäld; etiketten kolliderar.\ncatalog:variable_text:27116:18628:18993"
 
@@ -7543,37 +7543,37 @@ evidence = "Variabeln mäter uppvärmningsutgift.\ncatalog:variable_text:27129:1
 
 [[statement]]
 kind = "set"
-subject = "var:upsam"
+subject = "var:samhorighet-urvalsperson"
 fields = { "sets" = ["relation-inom-hushallet"] }
 evidence = "UP och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:27130:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:upsam"
+subject = "var:samhorighet-urvalsperson"
 fields = { "tags" = ["family-household"] }
 evidence = "UP och SAM ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:27130:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:upsei"
+subject = "var:socioekonomisk-grupp-urvalsperson"
 fields = { "sets" = ["socioekonomisk-grupp"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:27131:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:upsei"
+subject = "var:socioekonomisk-grupp-urvalsperson"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod och familjen bedöms enhetligt.\ncatalog:variable_text:27131:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:upsys"
+subject = "var:sysselsattningstyp-urvalsperson"
 fields = { "sets" = ["sysselsattningstyp"] }
 evidence = "UP och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:27132:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:upsys"
+subject = "var:sysselsattningstyp-urvalsperson"
 fields = { "tags" = ["employment"] }
 evidence = "UP och SYS ingår i en familj med ogenomskinliga källkoder.\ncatalog:variable_text:27132:10592:11688"
 
@@ -8959,13 +8959,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27248:105
 
 [[statement]]
 kind = "set"
-subject = "var:vk2267"
+subject = "var:utgift-fritidsbostad-hyra-arrende"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27249:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vk2267"
+subject = "var:utgift-fritidsbostad-hyra-arrende"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27249:10592:11688"
 
@@ -8983,13 +8983,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27250:105
 
 [[statement]]
 kind = "set"
-subject = "var:vk2269"
+subject = "var:utgift-fritidsbostad-va-sotning"
 fields = { "sets" = ["utgift-ovrig-bostadsdrift"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27251:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vk2269"
+subject = "var:utgift-fritidsbostad-va-sotning"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27251:10592:11688"
 
@@ -9007,13 +9007,13 @@ evidence = "Id:t är en opak varukod.\ncatalog:variable_text:27252:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vk2302"
+subject = "var:utgift-skap"
 fields = { "sets" = ["utgift-mobler-och-inventarier"] }
 evidence = "Id:t är en opak varukod.\ncatalog:variable_text:27253:10592:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vk2302"
+subject = "var:utgift-skap"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en opak varukod.\ncatalog:variable_text:27253:10592:11688"
 

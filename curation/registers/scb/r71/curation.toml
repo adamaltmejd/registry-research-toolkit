@@ -1447,13 +1447,13 @@ evidence = "UTax är en ogenomskinlig källmnemonik för uppskattat basvärde.\n
 
 [[statement]]
 kind = "set"
-subject = "var:va"
+subject = "var:vatten-avlopp"
 fields = { "sets" = [] }
 evidence = "VA är en bokstavskod för vatten och avlopp.\ncatalog:variable_text:10136:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:va"
+subject = "var:vatten-avlopp"
 fields = { "tags" = ["housing"] }
 evidence = "VA är en bokstavskod för vatten och avlopp.\ncatalog:variable_text:10136:10592:12053"
 

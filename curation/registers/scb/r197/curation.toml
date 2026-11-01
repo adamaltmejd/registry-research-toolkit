@@ -1657,13 +1657,13 @@ evidence = "V1090 är en ogenomskinlig kolumnkod för övriga intäktsreduktione
 
 [[statement]]
 kind = "set"
-subject = "var:v1130"
+subject = "var:varmhyra-kallhyra"
 fields = { "sets" = [] }
 evidence = "V1130 är en ogenomskinlig kolumnkod för varmhyra eller kallhyra.\ncatalog:variable_text:27515:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:v1130"
+subject = "var:varmhyra-kallhyra"
 fields = { "tags" = ["housing"] }
 evidence = "V1130 är en ogenomskinlig kolumnkod för varmhyra eller kallhyra.\ncatalog:variable_text:27515:15340:16071"
 

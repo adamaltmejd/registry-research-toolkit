@@ -1592,25 +1592,25 @@ evidence = "One cost meaning was split by a column rename; key, label, definitio
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud2"
-fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2" }
+fields = { "variable" = "kostnader-kursavgifter-prov-icke-formell-utbildning-2" }
 evidence = "One cost meaning was split by a column rename; the training-2 role, key, label, definition, unit and value set agree."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval2"
-fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2" }
+fields = { "variable" = "kostnader-kursavgifter-prov-icke-formell-utbildning-2" }
 evidence = "One cost meaning was split by a column rename; the training-2 role, key, label, definition, unit and value set agree."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud3"
-fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2" }
+fields = { "variable" = "kostnader-kursavgifter-prov-icke-formell-utbildning-3" }
 evidence = "One cost meaning was split by a column rename; the training-3 role, key, label, definition, unit and value set agree."
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval3"
-fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2" }
+fields = { "variable" = "kostnader-kursavgifter-prov-icke-formell-utbildning-3" }
 evidence = "One cost meaning was split by a column rename; the training-3 role, key, label, definition, unit and value set agree."
 
 [[statement]]
@@ -1903,25 +1903,25 @@ evidence = "Identitetsfakten avser olika kodningar av hinder.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:difftype-03a"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsgivare"
 fields = { "sets" = ["hinder-for-utbildningsdeltagande"] }
 evidence = "DIFFTYPE är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:878:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:difftype-03a"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsgivare"
 fields = { "tags" = ["education"] }
 evidence = "DIFFTYPE är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:878:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:difftype-03b"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsformedlingen"
 fields = { "sets" = ["hinder-for-utbildningsdeltagande"] }
 evidence = "DIFFTYPE är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:879:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:difftype-03b"
+subject = "var:utbildning-inte-vill-delta-saknat-stod-arbetsformedlingen"
 fields = { "tags" = ["education"] }
 evidence = "DIFFTYPE är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:879:18993:19358"
 
@@ -1987,13 +1987,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas av andra variab
 
 [[statement]]
 kind = "set"
-subject = "var:dropeducvoc"
+subject = "var:avbruten-utbildning-hogsta-niva-typ"
 fields = { "sets" = ["utbildningstyp-pa-formell-niva"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:885:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:dropeducvoc"
+subject = "var:avbruten-utbildning-hogsta-niva-typ"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:885:16801:17167"
 
@@ -2167,61 +2167,61 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:900:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-1"
+subject = "var:betalare-formell-utbildning-arbetsgivare-eller-blivande"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:901:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-1"
+subject = "var:betalare-formell-utbildning-arbetsgivare-eller-blivande"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:901:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-2"
+subject = "var:betalare-formell-utbildning-arbetsformedlingen"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:902:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-2"
+subject = "var:betalare-formell-utbildning-arbetsformedlingen"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:902:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-3"
+subject = "var:betalare-formell-utbildning-offentlig-eller-privat-sektor"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:903:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-3"
+subject = "var:betalare-formell-utbildning-offentlig-eller-privat-sektor"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:903:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-4"
+subject = "var:betalare-formell-utbildning-hushallsmedlem-eller-slakting"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:904:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-4"
+subject = "var:betalare-formell-utbildning-hushallsmedlem-eller-slakting"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:904:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-5"
+subject = "var:betalare-formell-utbildning-intervjupersonen-sjalv"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:905:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidby-5"
+subject = "var:betalare-formell-utbildning-intervjupersonen-sjalv"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:905:15156:15522"
 
@@ -2251,85 +2251,85 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger antal skäl till
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01"
+subject = "var:skal-formell-battre-arbete-och-eller-karriarmojligheter"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Etiketten delas med andra variabler och kräver disambiguering enligt D-12.\ncatalog:variable_text:908:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01"
+subject = "var:skal-formell-battre-arbete-och-eller-karriarmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Etiketten delas med andra variabler och kräver disambiguering enligt D-12.\ncatalog:variable_text:908:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01a"
+subject = "var:skal-formell-utbildning-utfora-arbetet-battre"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:909:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01a"
+subject = "var:skal-formell-utbildning-utfora-arbetet-battre"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:909:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01b"
+subject = "var:skal-formell-utbildning-oka-karriarmojligheter"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:910:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-01b"
+subject = "var:skal-formell-utbildning-oka-karriarmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:910:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-02"
+subject = "var:skal-formell-utbildning-minska-risk-forlora-arbetet"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:911:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-02"
+subject = "var:skal-formell-utbildning-minska-risk-forlora-arbetet"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:911:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-03"
+subject = "var:skal-formell-utbildning-fa-arbete-eller-byta-arbete-yrke"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:912:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-03"
+subject = "var:skal-formell-utbildning-fa-arbete-eller-byta-arbete-yrke"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:912:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-04"
+subject = "var:skal-formell-utbildning-starta-eget-foretag"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:913:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-04"
+subject = "var:skal-formell-utbildning-starta-eget-foretag"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:913:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-05"
+subject = "var:skal-formell-utbildning-tvungen-delta"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:914:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-05"
+subject = "var:skal-formell-utbildning-tvungen-delta"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:914:18993:19358"
 
@@ -2347,49 +2347,49 @@ evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver dis
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-06-7"
+subject = "var:skal-formell-oka-kunskap-fardighet-intresserande-amne"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:916:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-06-7"
+subject = "var:skal-formell-oka-kunskap-fardighet-intresserande-amne"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:916:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-07"
+subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:917:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-07"
+subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:917:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-08"
+subject = "var:skal-formell-utbildning-utbildningsbevis"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:918:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-08"
+subject = "var:skal-formell-utbildning-utbildningsbevis"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:918:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-09"
+subject = "var:skal-formell-utbildning-traffa-nya-manniskor-noje"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:919:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedreason-09"
+subject = "var:skal-formell-utbildning-traffa-nya-manniskor-noje"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:919:18993:19358"
 
@@ -2431,61 +2431,61 @@ evidence = "FED är en opak källkod i id:t.\ncatalog:variable_text:922:18993:19
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-1"
+subject = "var:missnoje-formell-utbildning-inte-relevant-ingen-nytta"
 fields = { "sets" = ["orsaker-till-utbildningsmissnoje"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:923:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-1"
+subject = "var:missnoje-formell-utbildning-inte-relevant-ingen-nytta"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:923:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-2"
+subject = "var:missnoje-formell-utbildning-for-lag-utbildningsniva"
 fields = { "sets" = ["orsaker-till-utbildningsmissnoje"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:924:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-2"
+subject = "var:missnoje-formell-utbildning-for-lag-utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:924:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-3"
+subject = "var:missnoje-formell-utbildning-for-hog-utbildningsniva"
 fields = { "sets" = ["orsaker-till-utbildningsmissnoje"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:925:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-3"
+subject = "var:missnoje-formell-utbildning-for-hog-utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:925:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-4"
+subject = "var:missnoje-formell-utbildning-undervisningskvalitet"
 fields = { "sets" = ["orsaker-till-utbildningsmissnoje"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:926:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-4"
+subject = "var:missnoje-formell-utbildning-undervisningskvalitet"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:926:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-5"
+subject = "var:missnoje-formell-utbildning-administration"
 fields = { "sets" = ["orsaker-till-utbildningsmissnoje"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:927:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedunsatreason-5"
+subject = "var:missnoje-formell-utbildning-administration"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:927:15156:15522"
 
@@ -2503,13 +2503,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:fedusea"
+subject = "var:kunskapsanvandning-formell-utbildning-hittills"
 fields = { "sets" = ["kunskapsanvandning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:929:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedusea"
+subject = "var:kunskapsanvandning-formell-utbildning-hittills"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:929:18993:19358"
 
@@ -2527,25 +2527,25 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:fedvoc"
+subject = "var:inriktning-senaste-formella-utbildning-isced-3-4"
 fields = { "sets" = ["utbildningstyp-pa-formell-niva"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:931:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fedvoc"
+subject = "var:inriktning-senaste-formella-utbildning-isced-3-4"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:931:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fedworktime"
+subject = "var:betald-arbetstid-senaste-formella-utbildning-12-manader"
 fields = { "sets" = ["utbildning-under-arbetstid"] }
 evidence = "FED är en opak källkod i id:t.\ncatalog:variable_text:932:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedworktime"
+subject = "var:betald-arbetstid-senaste-formella-utbildning-12-manader"
 fields = { "tags" = ["education", "employment"] }
 evidence = "FED är en opak källkod i id:t.\ncatalog:variable_text:932:18993:19358"
 
@@ -2887,49 +2887,49 @@ evidence = "GUIDE är en opak källkod som inte återges i etiketten.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst"
+subject = "var:gratis-information-utbildningsmojligheter"
 fields = { "sets" = ["funnen-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:961:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst"
+subject = "var:gratis-information-utbildningsmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:961:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst-2"
+subject = "var:betald-information-utbildningsmojligheter"
 fields = { "sets" = ["funnen-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:962:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst-2"
+subject = "var:betald-information-utbildningsmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:962:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst-3"
+subject = "var:inte-fatt-information-utbildningsmojligheter-trots-sokning"
 fields = { "sets" = ["funnen-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:963:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinst-3"
+subject = "var:inte-fatt-information-utbildningsmojligheter-trots-sokning"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:963:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinter"
+subject = "var:utbildningsinformation-personlig-kontakt-12-manader"
 fields = { "sets" = ["formedlingssatt-for-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:964:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:guideinter"
+subject = "var:utbildningsinformation-personlig-kontakt-12-manader"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:964:18993:19358"
 
@@ -2959,13 +2959,13 @@ evidence = "GUIDETYPE är en opak källkod.\ncatalog:variable_text:966:16801:171
 
 [[statement]]
 kind = "set"
-subject = "var:hatlevel"
+subject = "var:hogsta-utbildningsniva-isced"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:967:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:hatlevel"
+subject = "var:hogsta-utbildningsniva-isced"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:967:18993:19358"
 
@@ -2995,13 +2995,13 @@ evidence = "HH är en opak källförkortning.\ncatalog:variable_text:969:18993:1
 
 [[statement]]
 kind = "set"
-subject = "var:hhlabour-emp"
+subject = "var:antal-personer-hushall-16-64-ar-i-arbete"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:970:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:hhlabour-emp"
+subject = "var:antal-personer-hushall-16-64-ar-i-arbete"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:970:15156:15522"
 
@@ -3151,217 +3151,217 @@ evidence = "Variabeln anger antal betalare för den tredje aktiviteten.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-1"
+subject = "var:datoraktivitet-flytta-fil-eller-mapp"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:986:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-1"
+subject = "var:datoraktivitet-flytta-fil-eller-mapp"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:986:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-10"
+subject = "var:datoraktivitet-installera-ersatta-operativsystem"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:987:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-10"
+subject = "var:datoraktivitet-installera-ersatta-operativsystem"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:987:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-2"
+subject = "var:kopiera-klippa-klistra-flytta-information-i-dokument"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:988:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-2"
+subject = "var:kopiera-klippa-klistra-flytta-information-i-dokument"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:988:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-3"
+subject = "var:datoraktivitet-berakningar-formler-kalkylprogram"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:989:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-3"
+subject = "var:datoraktivitet-berakningar-formler-kalkylprogram"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:989:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-4"
+subject = "var:datoraktivitet-komprimera-filer"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:990:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-4"
+subject = "var:datoraktivitet-komprimera-filer"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:990:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-5"
+subject = "var:datoraktivitet-ansluta-installera-ny-utrustning"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:991:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-5"
+subject = "var:datoraktivitet-ansluta-installera-ny-utrustning"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:991:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-6"
+subject = "var:datoraktivitet-skriva-datorprogram"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:992:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-6"
+subject = "var:datoraktivitet-skriva-datorprogram"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:992:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-7"
+subject = "var:datoraktivitet-overfora-filer-dator-annan-utrustning"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:993:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-7"
+subject = "var:datoraktivitet-overfora-filer-dator-annan-utrustning"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:993:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-8"
+subject = "var:andra-kontrollera-programkonfiguration-utom-webblasare"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:994:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-8"
+subject = "var:andra-kontrollera-programkonfiguration-utom-webblasare"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:994:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-9"
+subject = "var:datoraktivitet-skapa-elektroniska-presentationer"
 fields = { "sets" = ["datoraktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:995:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictcomputer-9"
+subject = "var:datoraktivitet-skapa-elektroniska-presentationer"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:995:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-1"
+subject = "var:internetaktivitet-sokmotor-hitta-information"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:996:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-1"
+subject = "var:internetaktivitet-sokmotor-hitta-information"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:996:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-2"
+subject = "var:internetaktivitet-skicka-e-post-med-bilagor"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:997:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-2"
+subject = "var:internetaktivitet-skicka-e-post-med-bilagor"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:997:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-3"
+subject = "var:delta-chatt-diskussionsgrupp-forum-socialt-natverk"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:998:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-3"
+subject = "var:delta-chatt-diskussionsgrupp-forum-socialt-natverk"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:998:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-4"
+subject = "var:internetaktivitet-ringa-telefonsamtal"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:999:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-4"
+subject = "var:internetaktivitet-ringa-telefonsamtal"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:999:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-5"
+subject = "var:internetaktivitet-anvanda-fildelningsprogram"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1000:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-5"
+subject = "var:internetaktivitet-anvanda-fildelningsprogram"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1000:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-6"
+subject = "var:internetaktivitet-skapa-webbsida"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1001:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-6"
+subject = "var:internetaktivitet-skapa-webbsida"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1001:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-7"
+subject = "var:internetaktivitet-ladda-upp-pa-webbplatser"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1002:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-7"
+subject = "var:internetaktivitet-ladda-upp-pa-webbplatser"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1002:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-8"
+subject = "var:andra-webblasarens-sakerhetsinstallningar"
 fields = { "sets" = ["internetaktiviteter"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1003:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ictinternet-8"
+subject = "var:andra-webblasarens-sakerhetsinstallningar"
 fields = { "tags" = ["digital"] }
 evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kolliderar.\ncatalog:variable_text:1003:15156:15522"
 
@@ -3511,37 +3511,37 @@ evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1015:12
 
 [[statement]]
 kind = "set"
-subject = "var:infcomputer"
+subject = "var:informell-inlarning-dator-surfplatta-smartphone"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1016:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:infcomputer"
+subject = "var:informell-inlarning-dator-surfplatta-smartphone"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1016:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:infdevice"
+subject = "var:informell-inlarning-mobil-surfplatta-dator-tv-radio"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1017:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:infdevice"
+subject = "var:informell-inlarning-mobil-surfplatta-dator-tv-radio"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1017:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:inffamily"
+subject = "var:informell-inlarning-van-kollega-familjemedlem"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1018:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:inffamily"
+subject = "var:informell-inlarning-van-kollega-familjemedlem"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1018:18993:19358"
 
@@ -3607,25 +3607,25 @@ evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:102
 
 [[statement]]
 kind = "set"
-subject = "var:inflibraries"
+subject = "var:informell-inlarning-besoka-larocenter-bibliotek"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1024:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:inflibraries"
+subject = "var:informell-inlarning-besoka-larocenter-bibliotek"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1024:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:infmaterial"
+subject = "var:informell-inlarning-bok-tidning-instruktionsbok"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1025:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:infmaterial"
+subject = "var:informell-inlarning-bok-tidning-instruktionsbok"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1025:18993:19358"
 
@@ -3643,25 +3643,25 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger metoden.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:infmethod"
+subject = "var:informell-inlarningsmetod-senaste-aktiviteten"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger inlärningsmetoden.\ncatalog:variable_text:1027:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:infmethod"
+subject = "var:informell-inlarningsmetod-senaste-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger inlärningsmetoden.\ncatalog:variable_text:1027:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:infmuseum"
+subject = "var:informell-inlarning-guidade-visningar"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1028:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:infmuseum"
+subject = "var:informell-inlarning-guidade-visningar"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1028:18993:19358"
 
@@ -3871,13 +3871,13 @@ evidence = "Variabeln mäter deltagande i informellt lärande.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:infpurp1"
+subject = "var:syfte-informell-utbildning-senaste-aktiviteten"
 fields = { "sets" = ["utbildningens-syfte"] }
 evidence = "INFPURP är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:1046:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:infpurp1"
+subject = "var:syfte-informell-utbildning-senaste-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "INFPURP är en opak källkod; etikettkollision kräver målgranskning.\ncatalog:variable_text:1046:15156:15522"
 
@@ -4027,25 +4027,25 @@ evidence = "Variabeln mäter utbildningskostnader.\ncatalog:variable_text:1058:1
 
 [[statement]]
 kind = "set"
-subject = "var:kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2"
+subject = "var:kostnader-kursavgifter-prov-icke-formell-utbildning-2"
 fields = { "sets" = ["utbildningskostnader"] }
 evidence = "Den avslutande räknaren 2 kommer inte från källkolumnen.\ncatalog:variable_text:1059:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2"
+subject = "var:kostnader-kursavgifter-prov-icke-formell-utbildning-2"
 fields = { "tags" = ["education"] }
 evidence = "Den avslutande räknaren 2 kommer inte från källkolumnen.\ncatalog:variable_text:1059:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2"
+subject = "var:kostnader-kursavgifter-prov-icke-formell-utbildning-3"
 fields = { "sets" = ["utbildningskostnader"] }
 evidence = "Den avslutande räknaren 2 kommer inte från källkolumnen.\ncatalog:variable_text:1060:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2"
+subject = "var:kostnader-kursavgifter-prov-icke-formell-utbildning-3"
 fields = { "tags" = ["education"] }
 evidence = "Den avslutande räknaren 2 kommer inte från källkolumnen.\ncatalog:variable_text:1060:15156:15522"
 
@@ -4279,73 +4279,73 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:langused-2"
+subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1080:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-2"
+subject = "var:sprakkunskaper-forutom-modersmal-andra-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1080:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-3"
+subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1081:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-3"
+subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1081:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-4"
+subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1082:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-4"
+subject = "var:sprakkunskaper-forutom-modersmal-fjarde-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1082:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-5"
+subject = "var:sprakkunskaper-forutom-modersmal-femte-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1083:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-5"
+subject = "var:sprakkunskaper-forutom-modersmal-femte-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1083:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-6"
+subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1084:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-6"
+subject = "var:sprakkunskaper-forutom-modersmal-sjatte-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1084:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-7"
+subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
 fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1085:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:langused-7"
+subject = "var:sprakkunskaper-forutom-modersmal-sjunde-spraket"
 fields = { "tags" = [] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1085:18993:19358"
 
@@ -4807,13 +4807,13 @@ evidence = "NFEACT och PURP är opaka källkoder; etiketten kolliderar.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact07-type"
+subject = "var:typ-icke-formell-utbildning-sjunde-aktivitet"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1125:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact07-type"
+subject = "var:typ-icke-formell-utbildning-sjunde-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1125:16801:17167"
 
@@ -4831,85 +4831,85 @@ evidence = "NFEACT är en opak källkod; etiketten kolliderar.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact08-type"
+subject = "var:typ-icke-formell-utbildning-attonde-aktivitet"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1127:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact08-type"
+subject = "var:typ-icke-formell-utbildning-attonde-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1127:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact09-type"
+subject = "var:typ-icke-formell-utbildning-nionde-aktivitet"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1128:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact09-type"
+subject = "var:typ-icke-formell-utbildning-nionde-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1128:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact10-type"
+subject = "var:typ-icke-formell-utbildning-tionde-aktivitet"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1129:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeact10-type"
+subject = "var:typ-icke-formell-utbildning-tionde-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1129:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert1"
+subject = "var:utbildningsbevis-icke-formell-utbildning-forsta"
 fields = { "sets" = ["utbildningsbevis"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1130:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert1"
+subject = "var:utbildningsbevis-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1130:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert2"
+subject = "var:utbildningsbevis-icke-formell-utbildning-andra"
 fields = { "sets" = ["utbildningsbevis"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1131:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert2"
+subject = "var:utbildningsbevis-icke-formell-utbildning-andra"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1131:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert3"
+subject = "var:utbildningsbevis-icke-formell-utbildning-tredje"
 fields = { "sets" = ["utbildningsbevis"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1132:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecert3"
+subject = "var:utbildningsbevis-icke-formell-utbildning-tredje"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1132:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecourse"
+subject = "var:deltagande-icke-formell-utbildning-kurser"
 fields = { "sets" = ["deltagande-i-icke-formell-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1133:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfecourse"
+subject = "var:deltagande-icke-formell-utbildning-kurser"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1133:18993:19358"
 
@@ -4939,25 +4939,25 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger nätbaserade dis
 
 [[statement]]
 kind = "set"
-subject = "var:nfefield"
+subject = "var:inriktning-icke-formell-forsta-slumpvalda-aktivitet"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1136:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfefield"
+subject = "var:inriktning-icke-formell-forsta-slumpvalda-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1136:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfefield2"
+subject = "var:inriktning-icke-formell-andra-slumpvalda-aktivitet"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1137:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfefield2"
+subject = "var:inriktning-icke-formell-andra-slumpvalda-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1137:18993:19358"
 
@@ -4975,49 +4975,49 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:nfeguidedjt"
+subject = "var:deltagande-icke-formell-utbildning-handledd-arbetsplats"
 fields = { "sets" = ["deltagande-i-icke-formell-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1139:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeguidedjt"
+subject = "var:deltagande-icke-formell-utbildning-handledd-arbetsplats"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1139:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeinitia1"
+subject = "var:uppmanare-utbildning-forsta-slumpvalda-aktivitet"
 fields = { "sets" = ["uppmanare-till-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1140:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeinitia1"
+subject = "var:uppmanare-utbildning-forsta-slumpvalda-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1140:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeinitia2"
+subject = "var:uppmanare-utbildning-andra-slumpvalda-aktivitet"
 fields = { "sets" = ["uppmanare-till-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1141:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeinitia2"
+subject = "var:uppmanare-utbildning-andra-slumpvalda-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1141:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfelesson"
+subject = "var:deltagande-icke-formell-utbildning-privatlektioner"
 fields = { "sets" = ["deltagande-i-icke-formell-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1142:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfelesson"
+subject = "var:deltagande-icke-formell-utbildning-privatlektioner"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1142:18993:19358"
 
@@ -5107,109 +5107,109 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med kurs
 
 [[statement]]
 kind = "set"
-subject = "var:nfeontea"
+subject = "var:lararkontakt-internet-icke-formell-utbildning-forsta"
 fields = { "sets" = ["kontakt-med-larare"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med lärare för första aktiviteten.\ncatalog:variable_text:1150:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeontea"
+subject = "var:lararkontakt-internet-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med lärare för första aktiviteten.\ncatalog:variable_text:1150:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome1"
+subject = "var:resultat-icke-formell-utbildning-forsta-nytt-arbete"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1151:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome1"
+subject = "var:resultat-icke-formell-utbildning-forsta-nytt-arbete"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1151:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome1-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-forsta"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1152:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome1-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1152:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome2"
+subject = "var:resultat-icke-formell-utbildning-andra-nytt-arbete"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1153:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome2"
+subject = "var:resultat-icke-formell-utbildning-andra-nytt-arbete"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1153:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome2-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-andra"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1154:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome2-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-andra"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1154:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome3"
+subject = "var:resultat-icke-formell-utbildning-tredje-nytt-arbete"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1155:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome3"
+subject = "var:resultat-icke-formell-utbildning-tredje-nytt-arbete"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1155:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome3-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-tredje"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1156:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcome3-antal"
+subject = "var:antal-resultat-icke-formell-utbildning-tredje"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1156:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcomemain"
+subject = "var:viktigaste-resultat-icke-formell-utbildning-forsta"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1157:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeoutcomemain"
+subject = "var:viktigaste-resultat-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:1157:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaid"
+subject = "var:betalning-sjalv-annan-gratis-icke-formell-utbildning-forsta"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och källetiketten kolliderar.\ncatalog:variable_text:1158:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaid"
+subject = "var:betalning-sjalv-annan-gratis-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och källetiketten kolliderar.\ncatalog:variable_text:1158:18993:19358"
 
@@ -5239,61 +5239,61 @@ evidence = "Identitetsfaktet länkar indikatorn till ett tidigare antal för sam
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-1"
+subject = "var:betalare-icke-formell-forsta-arbetsgivare"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1161:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-1"
+subject = "var:betalare-icke-formell-forsta-arbetsgivare"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1161:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-2"
+subject = "var:betalare-icke-formell-forsta-arbetsformedlingen"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1162:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-2"
+subject = "var:betalare-icke-formell-forsta-arbetsformedlingen"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1162:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-3"
+subject = "var:betalare-icke-formell-forsta-offentlig-eller-privat-sektor"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1163:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-3"
+subject = "var:betalare-icke-formell-forsta-offentlig-eller-privat-sektor"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1163:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-4"
+subject = "var:betalare-icke-formell-forsta-hushallsmedlem-eller-slakting"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1164:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-4"
+subject = "var:betalare-icke-formell-forsta-hushallsmedlem-eller-slakting"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1164:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-5"
+subject = "var:betalare-icke-formell-forsta-intervjupersonen-sjalv"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1165:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby1-5"
+subject = "var:betalare-icke-formell-forsta-intervjupersonen-sjalv"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1165:15156:15522"
 
@@ -5311,121 +5311,121 @@ evidence = "Identitetsfaktet länkar indikatorn till ett tidigare antal för sam
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-1"
+subject = "var:betalare-icke-formell-andra-arbetsgivare"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1167:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-1"
+subject = "var:betalare-icke-formell-andra-arbetsgivare"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1167:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-2"
+subject = "var:betalare-icke-formell-andra-arbetsformedlingen"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1168:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-2"
+subject = "var:betalare-icke-formell-andra-arbetsformedlingen"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1168:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-3"
+subject = "var:betalare-icke-formell-andra-offentlig-eller-privat-sektor"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1169:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-3"
+subject = "var:betalare-icke-formell-andra-offentlig-eller-privat-sektor"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1169:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-4"
+subject = "var:betalare-icke-formell-andra-hushallsmedlem-eller-slakting"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1170:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-4"
+subject = "var:betalare-icke-formell-andra-hushallsmedlem-eller-slakting"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1170:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-5"
+subject = "var:betalare-icke-formell-andra-intervjupersonen-sjalv"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1171:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby2-5"
+subject = "var:betalare-icke-formell-andra-intervjupersonen-sjalv"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1171:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3"
+subject = "var:betalare-icke-formell-tredje-arbetsgivare"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1172:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3"
+subject = "var:betalare-icke-formell-tredje-arbetsgivare"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1172:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-2"
+subject = "var:betalare-icke-formell-tredje-arbetsformedlingen"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1173:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-2"
+subject = "var:betalare-icke-formell-tredje-arbetsformedlingen"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1173:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-3"
+subject = "var:betalare-icke-formell-tredje-offentlig-sektor"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1174:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-3"
+subject = "var:betalare-icke-formell-tredje-offentlig-sektor"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1174:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-4"
+subject = "var:betalare-icke-formell-tredje-hushallsmedlem-eller-slakting"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1175:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-4"
+subject = "var:betalare-icke-formell-tredje-hushallsmedlem-eller-slakting"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1175:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-5"
+subject = "var:betalare-icke-formell-tredje-intervjupersonen-sjalv"
 fields = { "sets" = ["utbildningens-finansiering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1176:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfepaidby3-5"
+subject = "var:betalare-icke-formell-tredje-intervjupersonen-sjalv"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1176:15156:15522"
 
@@ -5443,37 +5443,37 @@ evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver dis
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider1"
+subject = "var:typ-utbildningsanordnare-forsta-aktiviteten"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1178:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider1"
+subject = "var:typ-utbildningsanordnare-forsta-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1178:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider2"
+subject = "var:typ-utbildningsanordnare-andra-aktiviteten"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1179:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider2"
+subject = "var:typ-utbildningsanordnare-andra-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1179:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider3"
+subject = "var:typ-utbildningsanordnare-tredje-aktiviteten"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1180:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeprovider3"
+subject = "var:typ-utbildningsanordnare-tredje-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1180:15156:15522"
 
@@ -5527,61 +5527,61 @@ evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:nferand1-type"
+subject = "var:aktivitetstyp-icke-formell-forsta-slumpmassiga"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1186:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nferand1-type"
+subject = "var:aktivitetstyp-icke-formell-forsta-slumpmassiga"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1186:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nferand2-type"
+subject = "var:aktivitetstyp-icke-formell-andra-slumpmassiga"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1187:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nferand2-type"
+subject = "var:aktivitetstyp-icke-formell-andra-slumpmassiga"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1187:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nferand3-type"
+subject = "var:aktivitetstyp-icke-formell-tredje-slumpmassiga"
 fields = { "sets" = ["typ-av-icke-formell-utbildningsaktivitet"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1188:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nferand3-type"
+subject = "var:aktivitetstyp-icke-formell-tredje-slumpmassiga"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable_text:1188:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1"
+subject = "var:antal-skal-deltagande-icke-formell-forsta-aktiviteten"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1189:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1"
+subject = "var:antal-skal-deltagande-icke-formell-forsta-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1189:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1-01"
+subject = "var:skal-icke-formell-forsta-battre-arbete-karriarmojligheter"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för första aktiviteten.\ncatalog:variable_text:1190:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1-01"
+subject = "var:skal-icke-formell-forsta-battre-arbete-karriarmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för första aktiviteten.\ncatalog:variable_text:1190:15156:15522"
 
@@ -5599,13 +5599,13 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för fö
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1-01b"
+subject = "var:skal-icke-formell-forsta-oka-karriarmojligheter"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för första aktiviteten.\ncatalog:variable_text:1192:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason1-01b"
+subject = "var:skal-icke-formell-forsta-oka-karriarmojligheter"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för första aktiviteten.\ncatalog:variable_text:1192:18993:19358"
 
@@ -5767,13 +5767,13 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för fö
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason2"
+subject = "var:antal-skal-deltagande-icke-formell-andra-aktiviteten"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1206:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason2"
+subject = "var:antal-skal-deltagande-icke-formell-andra-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1206:15156:15522"
 
@@ -5971,13 +5971,13 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger skälet för and
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason3"
+subject = "var:antal-skal-deltagande-icke-formell-tredje-aktiviteten"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1223:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfereason3"
+subject = "var:antal-skal-deltagande-icke-formell-tredje-aktiviteten"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1223:15156:15522"
 
@@ -6007,49 +6007,49 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger viktigaste skäl
 
 [[statement]]
 kind = "set"
-subject = "var:nfeskillsmain1"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-forsta-aktivitet"
 fields = { "sets" = ["forvarvade-kunskaper"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1226:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeskillsmain1"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-forsta-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1226:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeskillsmain2"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-andra-aktivitet"
 fields = { "sets" = ["forvarvade-kunskaper"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1227:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeskillsmain2"
+subject = "var:huvudsaklig-formaga-kunskap-icke-formell-andra-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:1227:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeuse"
+subject = "var:kunskapsanvandning-icke-formell-forsta-aktivitet"
 fields = { "sets" = ["kunskapsanvandning"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1228:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeuse"
+subject = "var:kunskapsanvandning-icke-formell-forsta-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1228:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeusea"
+subject = "var:kunskapsanvandning-hittills-icke-formell-forsta-aktivitet"
 fields = { "sets" = ["kunskapsanvandning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1229:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeusea"
+subject = "var:kunskapsanvandning-hittills-icke-formell-forsta-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1229:18993:19358"
 
@@ -6067,13 +6067,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:nfeworkshop"
+subject = "var:deltagande-icke-formell-workshopar-seminarier"
 fields = { "sets" = ["deltagande-i-icke-formell-utbildning"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1231:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeworkshop"
+subject = "var:deltagande-icke-formell-workshopar-seminarier"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1231:18993:19358"
 
@@ -6091,13 +6091,13 @@ evidence = "NFE är en opak källkod; etiketten kolliderar.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:nfeworktime10"
+subject = "var:icke-formell-utbildning-atminstone-en-betald-arbetstid"
 fields = { "sets" = ["utbildning-under-arbetstid"] }
 evidence = "NFE är en opak källkod.\ncatalog:variable_text:1233:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeworktime10"
+subject = "var:icke-formell-utbildning-atminstone-en-betald-arbetstid"
 fields = { "tags" = ["education", "employment"] }
 evidence = "NFE är en opak källkod.\ncatalog:variable_text:1233:15156:15522"
 
@@ -6595,13 +6595,13 @@ evidence = "Samboförhållande är en familjerelation.\ncatalog:variable_text:12
 
 [[statement]]
 kind = "set"
-subject = "var:seekfound"
+subject = "var:information-funnen-efter-informationssokning"
 fields = { "sets" = ["funnen-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1275:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:seekfound"
+subject = "var:information-funnen-efter-informationssokning"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1275:15156:15522"
 
@@ -7123,13 +7123,13 @@ evidence = "Variabeln gäller undervisningsmetod i andra aktiviteten.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:undervisningsmetod-informell-utbildning-informell-infmethod2"
+subject = "var:inlarningsmetod-informell-utbildning-nast-senast-aktivitet"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:1320:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:undervisningsmetod-informell-utbildning-informell-infmethod2"
+subject = "var:inlarningsmetod-informell-utbildning-nast-senast-aktivitet"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:1320:15156:15522"
 

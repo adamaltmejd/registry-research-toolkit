@@ -506,13 +506,13 @@ evidence = "Samma kursplansval är korrekt uppdelat mellan perioder med sv-eller
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203641\ncatalog:variable_text:22127:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203641\ncatalog:variable_text:22127:15706:15887"
 
@@ -566,25 +566,25 @@ evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203644\ncatalog:variable_text:22132:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203644\ncatalog:variable_text:22132:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203645\ncatalog:variable_text:22133:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203645\ncatalog:variable_text:22133:15706:15887"
 
@@ -686,25 +686,25 @@ evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203648\ncatalog:variable_text:22142:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203648\ncatalog:variable_text:22142:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203649\ncatalog:variable_text:22143:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203649\ncatalog:variable_text:22143:15706:15887"
 

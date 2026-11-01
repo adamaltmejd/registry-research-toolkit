@@ -411,25 +411,25 @@ evidence = "Variabeln anger landstingsvalkretsens namn.\ncatalog:occurrence-loca
 
 [[statement]]
 kind = "set"
-subject = "var:ll"
+subject = "var:lanskod-nominering-kommunfullmaktige"
 fields = { "sets" = ["lan"] }
 evidence = "LL är en opak källkod för län; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2784\ncatalog:variable_text:2784:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ll"
+subject = "var:lanskod-nominering-kommunfullmaktige"
 fields = { "tags" = ["geography"] }
 evidence = "LL är en opak källkod för län; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2784\ncatalog:variable_text:2784:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommunkod-nominering-kommunfullmaktige"
 fields = { "sets" = ["kommun"] }
 evidence = "LLKK är en opak källkod för kommun; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2785\ncatalog:variable_text:2785:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommunkod-nominering-kommunfullmaktige"
 fields = { "tags" = ["geography"] }
 evidence = "LLKK är en opak källkod för kommun; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2785\ncatalog:variable_text:2785:17532:18262"
 

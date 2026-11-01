@@ -792,13 +792,13 @@ evidence = "Samma landstingskodning är uppdelad mellan perioder med scb/fortroe
 
 [[statement]]
 kind = "set"
-subject = "var:landsting-5059"
+subject = "var:landstingsnamn-ny-namnsattning"
 fields = { "sets" = ["region-eller-landsting"] }
 evidence = "5059 är ett tillagt löpnummer som saknas i källkolumnen; mål behöver R6-prövning.\ncatalog:variable_text:13048:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:landsting-5059"
+subject = "var:landstingsnamn-ny-namnsattning"
 fields = { "tags" = ["geography"] }
 evidence = "5059 är ett tillagt löpnummer som saknas i källkolumnen; mål behöver R6-prövning.\ncatalog:variable_text:13048:13514:13879"
 
@@ -828,13 +828,13 @@ evidence = "Samma landstingskodning är uppdelad mellan perioder med scb/fortroe
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommun-fortroendeuppdrag"
 fields = { "sets" = [] }
 evidence = "LLKK är en opak kod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13051:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommun-fortroendeuppdrag"
 fields = { "tags" = ["geography"] }
 evidence = "LLKK är en opak kod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13051:19358:19723"
 
@@ -1140,13 +1140,13 @@ evidence = "Identitetsfaktet visar överlappande olika inkomstbegrepp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-2"
+subject = "var:sammanraknad-forvarvsinkomst-kronor"
 fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
 evidence = "Suffixet 2 är en tillagd räknare; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13078:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-2"
+subject = "var:sammanraknad-forvarvsinkomst-kronor"
 fields = { "tags" = ["income"] }
 evidence = "Suffixet 2 är en tillagd räknare; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13078:19358:19723"
 

@@ -151,85 +151,85 @@ evidence = "F13 är en opak frågekod; etiketten anger hyra.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1"
+subject = "var:bostadsbidrag-ej-berattigad"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25892:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1"
+subject = "var:bostadsbidrag-ej-berattigad"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25892:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2"
+subject = "var:bostadsbidrag-aterbetalningsskyldig"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25893:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2"
+subject = "var:bostadsbidrag-aterbetalningsskyldig"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25893:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3"
+subject = "var:bostadsbidrag-for-gammal"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25894:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3"
+subject = "var:bostadsbidrag-for-gammal"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25894:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4"
+subject = "var:bostadsbidrag-litet-belopp"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25895:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4"
+subject = "var:bostadsbidrag-litet-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25895:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5"
+subject = "var:bostadsbidrag-kande-inte-till-mojligheten"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25896:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5"
+subject = "var:bostadsbidrag-kande-inte-till-mojligheten"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25896:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6"
+subject = "var:bostadsbidrag-klara-sig-pa-egen-hand"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25897:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6"
+subject = "var:bostadsbidrag-klara-sig-pa-egen-hand"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25897:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-7"
+subject = "var:bostadsbidrag-annat"
 fields = { "sets" = ["skal-att-inte-anvanda-bostadsbidrag"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25898:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-7"
+subject = "var:bostadsbidrag-annat"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25898:13514:13695"
 
@@ -571,13 +571,13 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25927:
 
 [[statement]]
 kind = "set"
-subject = "var:f26-7"
+subject = "var:brist-pa-pengar-avstatt-resa-till-slaktingar-vanner"
 fields = { "sets" = ["ekonomiskt-betingade-avstaenden"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25928:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-7"
+subject = "var:brist-pa-pengar-avstatt-resa-till-slaktingar-vanner"
 fields = { "tags" = ["transport"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25928:13514:13695"
 
@@ -607,13 +607,13 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25930:
 
 [[statement]]
 kind = "set"
-subject = "var:f27-1"
+subject = "var:hur-ofta-ga-pa-restaurang-pub-cafe"
 fields = { "sets" = [] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25931:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-1"
+subject = "var:hur-ofta-ga-pa-restaurang-pub-cafe"
 fields = { "tags" = ["culture"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25931:13514:13695"
 
@@ -631,13 +631,13 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25932:
 
 [[statement]]
 kind = "set"
-subject = "var:f27-3"
+subject = "var:hur-ofta-ga-pa-teater-konsert"
 fields = { "sets" = ["kulturbesok"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25933:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-3"
+subject = "var:hur-ofta-ga-pa-teater-konsert"
 fields = { "tags" = ["culture"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25933:13514:13695"
 
@@ -955,73 +955,73 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25960:
 
 [[statement]]
 kind = "set"
-subject = "var:f4-1"
+subject = "var:val-av-kurser-program-utbildningen-kravs-for-yrke"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25961:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-1"
+subject = "var:val-av-kurser-program-utbildningen-kravs-for-yrke"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25961:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-2"
+subject = "var:val-av-kurser-program-oka-chanser-pa-arbetsmarknaden"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25962:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-2"
+subject = "var:val-av-kurser-program-oka-chanser-pa-arbetsmarknaden"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25962:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-3"
+subject = "var:val-av-kurser-program-studier-istallet-for-arbetsloshet"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25963:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-3"
+subject = "var:val-av-kurser-program-studier-istallet-for-arbetsloshet"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25963:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-4"
+subject = "var:val-av-kurser-program-personlig-utveckling"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25964:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-4"
+subject = "var:val-av-kurser-program-personlig-utveckling"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25964:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-5"
+subject = "var:val-av-kurser-program-fortbildning"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25965:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-5"
+subject = "var:val-av-kurser-program-fortbildning"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25965:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-6"
+subject = "var:val-av-kurser-program-komma-in-pa-annan-kurs-program"
 fields = { "sets" = ["motiv-for-utbildningsval"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25966:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-6"
+subject = "var:val-av-kurser-program-komma-in-pa-annan-kurs-program"
 fields = { "tags" = ["education"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25966:13514:13695"
 

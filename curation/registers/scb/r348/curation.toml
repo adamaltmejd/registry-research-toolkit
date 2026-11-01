@@ -49,13 +49,13 @@ evidence = "Distriktskoden anger folkbokföringens geografiska område.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:distriktskodg"
+subject = "var:distrikt-tidigare"
 fields = { "sets" = [] }
 evidence = "G är en bokstavskod från källkolumnen; etiketten anger tidigare distrikt.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:distriktskodg"
+subject = "var:distrikt-tidigare"
 fields = { "tags" = ["geography"] }
 evidence = "G är en bokstavskod från källkolumnen; etiketten anger tidigare distrikt.\ncatalog:variable_text:23598:-366:20454\ncatalog:variable_text:23599:-366:20454"
 

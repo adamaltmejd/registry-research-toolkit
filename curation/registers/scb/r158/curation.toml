@@ -379,13 +379,13 @@ evidence = "Preciserat syfte för skyddat område.\ncatalog:occurrence:442858"
 
 [[statement]]
 kind = "set"
-subject = "var:registrerande-myndighet-43153"
+subject = "var:registrerande-myndighet"
 fields = { "sets" = ["registeransvarig"] }
 evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:registrerande-myndighet-43153"
+subject = "var:registrerande-myndighet"
 fields = { "tags" = ["environment"] }
 evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
 
