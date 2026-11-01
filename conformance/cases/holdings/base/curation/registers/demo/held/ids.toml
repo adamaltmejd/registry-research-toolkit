@@ -1,0 +1,5 @@
+[variables]
+id = ["Id"]
+value = ["Old @ 2017-01-01", "New @ 2019-01-01"]
+late = ["Late"]
+year = ["Year"]

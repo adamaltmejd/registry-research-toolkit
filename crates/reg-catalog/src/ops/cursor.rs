@@ -11,7 +11,7 @@ pub(super) fn context(params: &Params) -> String {
     params
         .values
         .iter()
-        .filter(|(name, _)| !matches!(**name, "cursor" | "limit"))
+        .filter(|(name, _)| !matches!(**name, "cursor" | "steward_cursor" | "limit"))
         .flat_map(|(name, values)| {
             values
                 .iter()

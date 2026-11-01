@@ -29,11 +29,15 @@ pub const OPERATIONS: &[Operation] = &[Operation {
 pub enum Show {
     Root {
         providers: Vec<ShowProviderRef>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        steward_providers: Option<Vec<ShowProviderRef>>,
     },
     Provider {
         fqid: String,
         name: String,
         registers: Vec<ShowRegisterRef>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        steward_registers: Option<Vec<ShowRegisterRef>>,
     },
     Register {
         fqid: String,
@@ -145,9 +149,23 @@ pub struct ShowSpelling {
 }
 
 fn show(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = match params.get("ref") {
+        Some(value) => server.catalog.connect_for_ref(value)?,
+        None => server.catalog.connect()?,
+    };
     let shown = match params.get("ref") {
-        None => root(&conn)?,
+        None => {
+            let mut shown = root(&conn)?;
+            if let Some(extra) = server.catalog.connect_holdings()?
+                && let Show::Root { providers, .. } = root(&extra)?
+                && let Show::Root {
+                    steward_providers, ..
+                } = &mut shown
+            {
+                *steward_providers = Some(providers);
+            }
+            shown
+        }
         Some(value) => {
             let entity = refs::resolve(&conn, value)?;
             match entity.kind.as_str() {
@@ -182,7 +200,10 @@ fn root(conn: &Connection) -> Result<Show, Error> {
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
-    Ok(Show::Root { providers })
+    Ok(Show::Root {
+        providers,
+        steward_providers: None,
+    })
 }
 
 fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
@@ -205,10 +226,41 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
+    let base = server.catalog.connect()?;
+    let is_base_provider: bool = base.query_row(
+        "SELECT EXISTS(SELECT 1 FROM provider WHERE pid = ?)",
+        [&entity.pid],
+        |r| r.get(0),
+    )?;
+    let supplemental = if is_base_provider {
+        server.catalog.connect_holdings()?
+    } else {
+        None
+    };
     Ok(Show::Provider {
         fqid: entity.pid.clone(),
         name,
         registers,
+        steward_registers: supplemental
+            .map(|extra| {
+                let mut query = extra.prepare(
+                    "SELECT r.pid, n.body, r.start, r.end FROM register r
+                 JOIN provider p ON p.id = r.provider_id JOIN text n ON n.id = r.name_text
+                 WHERE p.pid = ? ORDER BY r.pid",
+                )?;
+                Ok::<_, Error>(
+                    query
+                        .query_map([&entity.pid], |r| {
+                            Ok(ShowRegisterRef {
+                                fqid: r.get(0)?,
+                                name: r.get(1)?,
+                                period: server.period(r.get(2)?, r.get(3)?),
+                            })
+                        })?
+                        .collect::<rusqlite::Result<Vec<_>>>()?,
+                )
+            })
+            .transpose()?,
     })
 }
 

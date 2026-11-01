@@ -46,7 +46,7 @@ contract_version = "5.1.0"
 name = "search"
 http = ["GET /api/search"]
 tool = "search"
-params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", limit = "limit?", cursor = "cursor?" }
+params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?", scope = "enum(reference|steward)?" }
 result = "Page<SearchHit>"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """One ranked list per call over `search` (FTS5) and `search_item`. Order is \
@@ -61,12 +61,15 @@ filtered search. Its value sets come from `values?code=&label=`. The tokenizer i
 Classification hits are empty until D curates classifications. `q` is at \
 most 200 characters with no NUL; a query with no letter or digit returns no items, not \
 an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
-50, maximum 200."""
+50, maximum 200. A paired steward returns a separately labelled `steward` group \
+with its own total and cursor (`steward_cursor`); reference ranks never mix with \
+supplemental ranks. `scope=steward` filters accepted holdings before ranks, counts \
+and paging. Both cursors bind the scope and both component generations."""
 
 [[operation]]
 name = "search_facets"
 http = ["GET /api/search/facets"]
-params = { q = "string", register = "ref?", limit = "limit?" }
+params = { q = "string", register = "ref?", limit = "limit?", scope = "enum(reference|steward)?" }
 result = "RegisterFacets: {registers: [{fqid, name?, variable_matches, variables?: [{fqid, name}]}]} in FQID order"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """Per register, the count of `search`'s `variable` hits for `q`, counted in one \
@@ -76,7 +79,9 @@ only that register and its entry adds `variables`: the matched variables (FQID a
 name) in FQID order, never cut. Without `register`, `limit` adds each register's first \
 `limit` matched variables, `variable_matches` still counting them all, and a listed \
 entry adds the register's `name`. Absent, it is counts only. No MCP tool: it feeds \
-the SPA's in-place register filter, and an agent narrows with `search`'s `register`."""
+the SPA's in-place register filter, and an agent narrows with `search`'s `register`. \
+Paired mode adds a separate `steward` group; `scope=steward` narrows both groups \
+to accepted holdings before aggregation."""
 
 [[operation]]
 name = "context"
@@ -274,6 +279,7 @@ note = "A `pdf` document's bytes by content hash (`doc.content`). Served inline.
 # its `api` cases.
 
 [shape.Meta]
+steward = "paired mode only: {owner, catalog_generation, holdings_generation, schema_version}"
 contract_version = "string; contract_version above"
 generation = "string; the catalog's generation_id (64 hex)"
 catalog_version = "string; meta catalog_version"
@@ -321,6 +327,9 @@ code = "code, label (string | null), value_set_count (integer; the value sets so
 document = "doc, title, heading, page"
 
 [shape.Context]
+steward = "paired mode only: selected steward identity; as Meta.steward"
+steward_config = "paired mode only: compiled {presentation, logo, scope}; runtime reads no steward TOML"
+steward_sizes = "paired mode only: supplemental {providers, registers, tables, variables}"
 catalog_version = "string"
 schema_version = "string"
 period_span = "Period; the hull of every register"
@@ -337,7 +346,8 @@ definition, register, period, unit_types, texts [{period, label, definition, \
 operational_definition, unit}], spellings [{spelling, kind}], tables [fqid]), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \
-Registers list their tables and variables unpaged."""
+Registers list their tables and variables unpaged. Paired roots also expose \
+`steward_providers`; provider summaries expose supplemental `steward_registers`."""
 
 [shape.Release]
 name = "string; the literal delivery name"
@@ -388,6 +398,7 @@ nodes = "[{fqid, kind, name}]"
 edges = "[{kind, from, to, at (Period | null), prov (\"source\" | \"curated\" | \"rule\"), caveat}]"
 
 [shape.Coverage]
+held = "paired mode only: accepted placements [{table, variable, physical_table, column, period, role, carried, caveat}]; public ids resolved in their own database origin"
 fqid = "string"
 kind = "\"register\" | \"table\" | \"variable\""
 period = "Period; the hull"

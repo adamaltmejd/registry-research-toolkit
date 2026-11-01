@@ -2,11 +2,12 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR --port N [--host ADDR] [--public-host HOST]
-//!                [--write-limit N] [--mmap-size BYTES]
-//! reg-meta mcp --db DIR
+//!                [--write-limit N] [--mmap-size BYTES] [--catalog NAME]
+//! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
-//! Both admit `DIR/reg_meta.db`. `serve` serves every registered operation and
+//! Both admit `DIR/reg_meta.db`. `--catalog NAME` additionally admits its pinned
+//! `DIR/reg_meta_NAME.db` holdings partner; the default `global` opens the base only. `serve` serves every registered operation and
 //! download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
 //! names. `/mcp` and every POST share one rate limit per client address, keyed with
@@ -55,6 +56,7 @@ enum Mode {
 
 struct Args {
     db: PathBuf,
+    catalog: String,
     /// `serve --mmap-size`; `mcp` keeps the default.
     mmap_size: i64,
     mode: Mode,
@@ -62,11 +64,12 @@ struct Args {
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
-    let (mut db, mut port) = (None, None);
+    let (mut db, mut port, mut catalog) = (None, None, None);
     let (mut host, mut public_host, mut write_limit, mut mmap_size) = (None, None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
+            "--catalog" => &mut catalog,
             "--port" => &mut port,
             "--host" => &mut host,
             "--public-host" => &mut public_host,
@@ -115,6 +118,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     };
     Ok(Args {
         db: db.ok_or_else(|| Error::invalid_parameter("--db"))?.into(),
+        catalog: catalog.unwrap_or_else(|| "global".to_owned()),
         mmap_size: match mmap_size {
             Some(bytes) => bytes
                 .parse()
@@ -136,7 +140,8 @@ fn refuse(err: &Error) -> ! {
 #[tokio::main]
 async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
-    let catalog = Catalog::open(&args.db, args.mmap_size).unwrap_or_else(|err| refuse(&err));
+    let catalog = Catalog::open_selected(&args.db, &args.catalog, args.mmap_size)
+        .unwrap_or_else(|err| refuse(&err));
     let server = Arc::new(Server::new(catalog, VERSION).unwrap_or_else(|err| refuse(&err)));
     match args.mode {
         Mode::Serve {

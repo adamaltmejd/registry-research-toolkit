@@ -37,6 +37,23 @@ pub struct Coverage {
     /// `null` for a register or a table.
     #[schema(required = true)]
     columns: Option<Vec<CoverageColumn>>,
+    /// Accepted physical placements, absent in reference-only mode.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    held: Option<Vec<HeldPlacement>>,
+}
+
+/// A physical placement's public semantic coordinates and held interval.
+#[derive(Serialize, ToSchema)]
+pub struct HeldPlacement {
+    table: String,
+    variable: String,
+    physical_table: String,
+    column: String,
+    period: Period,
+    role: String,
+    carried: bool,
+    #[schema(required = true)]
+    caveat: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -107,7 +124,7 @@ fn gaps(
 
 fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     let value = params["ref"];
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let hit = refs::resolve(&conn, value)?;
     let (hull_sql, tables_sql) = match hit.kind.as_str() {
         "table" => (
@@ -188,12 +205,18 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     let columns = variable
         .then(|| columns(server, &conn, hit.id))
         .transpose()?;
+    let held = server
+        .catalog
+        .connect_holdings()?
+        .map(|extra| held(server, &extra, &hit.pid, &hit.kind, &tables))
+        .transpose()?;
     Ok(serde_json::to_value(Coverage {
         fqid: hit.pid,
         kind: hit.kind,
         period: server.period(hull.0, hull.1),
         tables,
         columns,
+        held,
     })
     .expect("Coverage serializes"))
 }
@@ -230,4 +253,41 @@ fn columns(
             spans: periods(server, &spans),
         })
         .collect())
+}
+
+/// Query holdings by public ids, never by a row id from the semantic connection.
+fn held(
+    server: &Server,
+    conn: &Connection,
+    pid: &str,
+    kind: &str,
+    tables: &[CoverageTable],
+) -> Result<Vec<HeldPlacement>, Error> {
+    let mut out = Vec::new();
+    let mut query = conn.prepare(
+        "SELECT m.table_pid, m.variable_pid, t.physical_name, c.name, m.start, m.end,
+                m.role, m.carried, m.caveat
+         FROM holding_mapping m
+           JOIN holding_column c ON c.id = m.column_id
+           JOIN holding_table t ON t.id = c.holding_id
+         WHERE m.table_pid = ?1 AND (?2 IS NULL OR m.variable_pid = ?2)
+         ORDER BY m.variable_pid, m.start, m.end, t.physical_name, c.ordinal",
+    )?;
+    for table in tables {
+        let variable = (kind == "variable").then_some(pid);
+        let rows = query.query_map(rusqlite::params![table.fqid, variable], |r| {
+            Ok(HeldPlacement {
+                table: r.get(0)?,
+                variable: r.get(1)?,
+                physical_table: r.get(2)?,
+                column: r.get(3)?,
+                period: server.period(r.get(4)?, r.get(5)?),
+                role: r.get(6)?,
+                carried: r.get(7)?,
+                caveat: r.get(8)?,
+            })
+        })?;
+        out.extend(rows.collect::<rusqlite::Result<Vec<_>>>()?);
+    }
+    Ok(out)
 }

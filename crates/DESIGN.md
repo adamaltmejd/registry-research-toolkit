@@ -1497,6 +1497,41 @@ without their database origin. Do not import schema-v3's obsolete programme id r
 `reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
 cross-file references that SQLite cannot enforce as foreign keys.
 
+The compiler's closed steward config adds `inputs.holdings` (authored replacement
+topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
+SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
+individual file pins are also accepted. Every supplemental manifest input is pinned too.
+Config bytes must match the selected Git commit, including when index flags hide
+worktree changes. Paths stay inside that checkout and directory traversal refuses
+symlinks. `--registry <file>` selects an explicit alternative pin registry, including
+the synthetic corpus; it does not weaken commit or input admission.
+
+`inputs.holdings` declares physical tables and reviewed column decisions once. The old
+inventory and series remain migration evidence, not additional compiler authorities.
+Automatic matching still reads the raw census against the resolved semantic view; it
+does not consume generated automatic mappings. The census reader's closed config names
+the table header and numbered-column prefix and permits evidenced literal prefix
+rewrites only. Identifiers remain exact after reader trimming; rewrites affect matching,
+not emitted physical names. CSV errors identify input roles and row numbers without
+echoing private source values.
+
+Ordinary supplemental curation records its locks with
+`reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
+The same premise path runs during holdings compilation. A referenced base public id
+records its kind and exact catalog generation/file digest in the ordinary premise;
+changing the base requires explicit lock review. `holding_relation` stores these
+ordinary `derived_from` links with qualified public-id endpoints and local statement
+provenance. The supplemental subject and reference object retain their own database
+origins, including reverse graph queries. Only derivation crosses this boundary;
+identity/succession relations are not imported as shortcuts. Standalone catalog builds
+do not admit `--base` or emit a catalog with unresolved external endpoints.
+
+In paired metadata search, `scope=steward` restricts register, table and variable hits
+to accepted placements and their requested intervals before counts and ranking. A code
+or document hit is not itself a possession claim; linked values and documents remain
+available through semantic metadata. Supplemental results retain their own group, count
+and cursor. Reference-only response fields remain unchanged.
+
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
 overwritten. Their public ids must be distinct; the reader resolves a public id to one

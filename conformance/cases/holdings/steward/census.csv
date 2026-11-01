@@ -1,0 +1,10 @@
+Category,Detail,Table,V1,V2,V3,V4,V5,V6,V7,V8,V9
+Synthetic,Rivals,Owners,Shared,,,,,,,,
+Synthetic,Pool,Pool,Received_Id,Old,New,Late,Unknown,Slot2,Code,Held,Year
+Synthetic,Partition,Part A,Id,New,,,,,,,
+Synthetic,Partition,Part B,Id,New,,,,,,,
+Synthetic,Projection,Parent,Id,,,,,,,,
+Synthetic,Projection,Child,Id,,,,,,,,
+Synthetic,Unknown,Unknown,Unplaced,,,,,,,,
+Synthetic,Lookup,Lookup,Code,,,,,,,,
+Synthetic,Excluded,Excluded,Secret,,,,,,,,

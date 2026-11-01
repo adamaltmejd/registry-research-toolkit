@@ -33,7 +33,9 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/search"],
         tool: Some("search"),
         description: "Full-text search over registers, tables, variables, value codes and \
-                      documents, ranked by relevance. Exact column names are `resolve`.",
+                      documents, ranked by relevance. Paired steward results have separate \
+                      ranks, counts and cursors; scope=steward filters held intervals before \
+                      ranking. Exact column names are `resolve`.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("type", Type::Enum(TYPES)),
@@ -41,6 +43,8 @@ pub const OPERATIONS: &[Operation] = &[
             Param::optional("period", Type::Period),
             Param::optional("limit", Type::Limit),
             Param::optional("cursor", Type::Cursor),
+            Param::optional("steward_cursor", Type::Cursor),
+            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search,
@@ -56,6 +60,7 @@ pub const OPERATIONS: &[Operation] = &[
             Param::required("q", Type::String),
             Param::optional("register", Type::Ref),
             Param::optional("limit", Type::Limit),
+            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search_facets,
@@ -63,12 +68,26 @@ pub const OPERATIONS: &[Operation] = &[
     },
 ];
 
-/// `Page<SearchHit>`.
+/// `Page<SearchHit>`; paired mode adds a count and an independently ranked steward group.
 #[derive(Serialize, ToSchema)]
 pub struct SearchPage {
     items: Vec<SearchHit>,
     #[schema(required = true)]
     next_cursor: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    total: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    steward: Option<StewardSearchPage>,
+}
+
+/// Supplemental matches have their own rank, count and cursor. Independent bm25
+/// scores from different databases are never compared.
+#[derive(Serialize, ToSchema)]
+pub struct StewardSearchPage {
+    owner: String,
+    items: Vec<SearchHit>,
+    next_cursor: Option<String>,
+    total: i64,
 }
 
 /// `shape.SearchHit`: one hit, tagged by its kind.
@@ -130,6 +149,14 @@ pub enum SearchHit {
 #[derive(Serialize, ToSchema)]
 pub struct RegisterFacets {
     registers: Vec<RegisterFacet>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    steward: Option<StewardRegisterFacets>,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct StewardRegisterFacets {
+    owner: String,
+    registers: Vec<RegisterFacet>,
 }
 
 /// One register's matched variables. `name` and `variables` are present only in the
@@ -167,6 +194,36 @@ fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
+    let held = match params.get("scope").copied().unwrap_or("reference") {
+        "reference" => false,
+        "steward" if server.catalog.steward().is_some() => true,
+        _ => return Err(Error::invalid_parameter("scope")),
+    };
+    let conn = server.catalog.connect()?;
+    let mut page = search_origin(server, params, &conn, "cursor", "reference", held)?;
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        let supplemental =
+            search_origin(server, params, &extra, "steward_cursor", "steward", held)?;
+        page.steward = Some(StewardSearchPage {
+            owner: server.catalog.steward().expect("admitted holdings").owner,
+            items: supplemental.items,
+            next_cursor: supplemental.next_cursor,
+            total: supplemental.total.expect("paired search has a count"),
+        });
+    } else if params.get("steward_cursor").is_some() {
+        return Err(Error::invalid_parameter("steward_cursor"));
+    }
+    Ok(serde_json::to_value(page).expect("a page serializes"))
+}
+
+fn search_origin(
+    server: &Server,
+    params: &Params,
+    conn: &Connection,
+    cursor_name: &str,
+    origin: &str,
+    held: bool,
+) -> Result<SearchPage, Error> {
     let expression = fts::query(params["q"])?;
     let kind = params
         .get("type")
@@ -179,35 +236,61 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         .transpose()?;
     let period = super::days(params, "period")?;
     let limit = super::limit(params)?;
+    let paired = server.catalog.steward().is_some();
+    let context = if paired {
+        format!("{}&origin={origin}", cursor::context(params))
+    } else {
+        cursor::context(params)
+    };
     let generation = server.catalog.generation();
-    let context = cursor::context(params);
     let offset = params
-        .get("cursor")
+        .get(cursor_name)
         .map(|c| cursor::decode(c, generation, &context, DEPTH))
         .transpose()?
         .map_or(0, |(offset, _)| offset);
-    let conn = server.catalog.connect()?;
-    let register = params
+    let register = match params
         .get("register")
-        .map(|r| register(&conn, r))
-        .transpose()?;
-    let Some(expression) = expression else {
-        return Ok(page(vec![], None));
+        .map(|r| register(conn, r))
+        .transpose()
+    {
+        Ok(id) => id,
+        Err(err) if paired && err.kind() == Code::NotFound => {
+            // A register in the other database has no matches in this group.
+            server.catalog.connect_for_ref(params["register"])?;
+            return Ok(SearchPage {
+                items: vec![],
+                next_cursor: None,
+                total: Some(0),
+                steward: None,
+            });
+        }
+        Err(err) => return Err(err),
     };
-
-    // A page never passes the DEPTH-th hit; one extra row tells whether more follow.
-    let take = limit.min(DEPTH - offset);
+    let Some(expression) = expression else {
+        return Ok(SearchPage {
+            items: vec![],
+            next_cursor: None,
+            total: paired.then_some(0),
+            steward: None,
+        });
+    };
+    let scope = held_search_scope(server, conn, held)?;
+    let filter = format!(
+        "search MATCH ?1 AND (?2 IS NULL OR i.kind = ?2)
+        AND (?3 IS NULL OR i.register_id = ?3)
+        AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end)){scope}"
+    );
     let (start, end) = period.unzip();
+    let total = paired.then(|| conn.query_row(
+        &format!("SELECT COUNT(*) FROM search JOIN search_item i ON i.id = search.rowid WHERE {filter}"),
+        params![expression, kind, register, start, end], |r| r.get(0))).transpose()?;
+    let take = limit.min(DEPTH - offset);
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
     let mut rows: Vec<(i64, String, Option<i64>, String)> = conn
         .prepare(&format!(
             "SELECT i.id, i.kind, i.entity_id, i.sort_key
-             FROM search JOIN search_item i ON i.id = search.rowid
-             WHERE search MATCH ?1
-               AND (?2 IS NULL OR i.kind = ?2)
-               AND (?3 IS NULL OR i.register_id = ?3)
-               AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end))
-             ORDER BY {ORDER} LIMIT ?6 OFFSET ?7"
+         FROM search JOIN search_item i ON i.id = search.rowid
+         WHERE {filter} ORDER BY {ORDER} LIMIT ?6 OFFSET ?7"
         ))?
         .query_map(
             params![
@@ -219,24 +302,50 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
                 sql_int(take + 1),
                 sql_int(offset)
             ],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
         )?
         .collect::<rusqlite::Result<_>>()?;
     let more = rows.len() > take;
     rows.truncate(take);
-    let next = (more && offset + take < DEPTH).then(|| {
-        let last = &rows.last().expect("a page before more hits").3;
-        cursor::encode(generation, &context, offset + take, last)
+    let next_cursor = (more && offset + take < DEPTH).then(|| {
+        cursor::encode(
+            generation,
+            &context,
+            offset + take,
+            &rows.last().expect("nonempty page").3,
+        )
     });
     let items = rows
         .iter()
-        .map(|(id, kind, entity, _)| hit(server, &conn, &expression, *id, kind, *entity))
+        .map(|(id, kind, entity, _)| hit(server, conn, &expression, *id, kind, *entity))
         .collect::<Result<_, _>>()?;
-    Ok(page(items, next))
+    Ok(SearchPage {
+        items,
+        next_cursor,
+        total,
+        steward: None,
+    })
 }
 
-fn page(items: Vec<SearchHit>, next_cursor: Option<String>) -> Value {
-    serde_json::to_value(SearchPage { items, next_cursor }).expect("a page serializes")
+/// Possession is restricted by public id and requested interval before either
+/// the count or the ranked page query. Code/document presence grants no possession.
+fn held_search_scope(
+    server: &Server,
+    conn: &Connection,
+    held: bool,
+) -> Result<&'static str, Error> {
+    Ok(if held {
+        server.catalog.attach_holdings(conn)?;
+        " AND EXISTS (SELECT 1 FROM held.holding_mapping hm
+            JOIN variable hv ON hv.pid = hm.variable_pid
+            JOIN tbl ht ON ht.pid = hm.table_pid
+            WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))
+              AND ((i.kind = 'variable' AND i.entity_id = hv.id)
+               OR (i.kind = 'table' AND i.entity_id = ht.id)
+               OR (i.kind = 'register' AND i.entity_id = ht.register_id)))"
+    } else {
+        ""
+    })
 }
 
 /// A row's hit, with the fields rule 6 lists.
@@ -385,16 +494,44 @@ fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
         .is_some()
         .then(|| super::limit(params))
         .transpose()?;
-    let conn = server.catalog.connect()?;
-    let register = params
-        .get("register")
-        .map(|r| register(&conn, r))
-        .transpose()?;
-    let registers = match expression {
-        None => vec![],
-        Some(expression) => facets(&conn, &expression, register, limit)?,
+    let held = match params.get("scope").copied().unwrap_or("reference") {
+        "reference" => false,
+        "steward" if server.catalog.steward().is_some() => true,
+        _ => return Err(Error::invalid_parameter("scope")),
     };
-    Ok(serde_json::to_value(RegisterFacets { registers }).expect("facets serialize"))
+    let run = |conn: &Connection| -> Result<Vec<RegisterFacet>, Error> {
+        let register = match params
+            .get("register")
+            .map(|r| register(conn, r))
+            .transpose()
+        {
+            Ok(id) => id,
+            Err(err) if server.catalog.steward().is_some() && err.kind() == Code::NotFound => {
+                server.catalog.connect_for_ref(params["register"])?;
+                return Ok(vec![]);
+            }
+            Err(err) => return Err(err),
+        };
+        if held {
+            server.catalog.attach_holdings(conn)?;
+        }
+        match &expression {
+            None => Ok(vec![]),
+            Some(expression) => facets(conn, expression, register, limit, held),
+        }
+    };
+    let registers = run(&server.catalog.connect()?)?;
+    let steward = server
+        .catalog
+        .connect_holdings()?
+        .map(|extra| {
+            Ok::<_, Error>(StewardRegisterFacets {
+                owner: server.catalog.steward().expect("admitted pair").owner,
+                registers: run(&extra)?,
+            })
+        })
+        .transpose()?;
+    Ok(serde_json::to_value(RegisterFacets { registers, steward }).expect("facets serialize"))
 }
 
 /// Rule 7: each register's matched variables, counted; with `register` that register's
@@ -404,19 +541,26 @@ fn facets(
     expression: &str,
     register: Option<i64>,
     limit: Option<usize>,
+    held: bool,
 ) -> Result<Vec<RegisterFacet>, Error> {
+    let scope = if held {
+        " AND EXISTS (SELECT 1 FROM held.holding_mapping hm WHERE hm.variable_pid = v.pid)"
+    } else {
+        ""
+    };
     let mut registers: Vec<(i64, RegisterFacet)> = conn
-        .prepare(
+        .prepare(&format!(
             "SELECT r.id, r.pid, n.body, m.matches
              FROM (SELECT i.register_id AS id, COUNT(*) AS matches
                    FROM search JOIN search_item i ON i.id = search.rowid
+                     JOIN variable v ON v.id = i.entity_id
                    WHERE search MATCH ?1 AND i.kind = 'variable'
-                     AND (?2 IS NULL OR i.register_id = ?2)
+                     AND (?2 IS NULL OR i.register_id = ?2){scope}
                    GROUP BY i.register_id) m
                JOIN register r ON r.id = m.id
                JOIN text n ON n.id = r.name_text
-             ORDER BY r.pid",
-        )?
+             ORDER BY r.pid"
+        ))?
         .query_map(params![expression, register], |row| {
             Ok((
                 row.get(0)?,
@@ -443,7 +587,7 @@ fn facets(
     };
     let mut variables: BTreeMap<i64, Vec<FacetVariable>> = BTreeMap::new();
     let rows = conn
-        .prepare(
+        .prepare(&format!(
             "SELECT register_id, pid, label FROM (
                SELECT i.register_id, v.pid, l.body AS label,
                       ROW_NUMBER() OVER (PARTITION BY i.register_id ORDER BY v.pid) AS n
@@ -451,10 +595,10 @@ fn facets(
                  JOIN variable v ON v.id = i.entity_id
                  JOIN text l ON l.id = v.label_text
                WHERE search MATCH ?1 AND i.kind = 'variable'
-                 AND (?2 IS NULL OR i.register_id = ?2))
+                 AND (?2 IS NULL OR i.register_id = ?2){scope})
              WHERE n <= ?3
-             ORDER BY register_id, pid",
-        )?
+             ORDER BY register_id, pid"
+        ))?
         .query_map(params![expression, register, listed], |row| {
             Ok((
                 row.get::<_, i64>(0)?,

@@ -1,0 +1,7 @@
+census_table = "Table"
+census_columns = "V"
+
+[[rewrite]]
+prefix = "Received_"
+replacement = ""
+evidence = "Synthetic census explicitly prefixes the reference row key."

@@ -1,7 +1,7 @@
 [
   {
     "name": "search",
-    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`.",
+    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -19,6 +19,16 @@
           "type": "string"
         },
         "register": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "reference",
+            "steward"
+          ],
+          "type": "string"
+        },
+        "steward_cursor": {
           "type": "string"
         },
         "type": {
@@ -79,6 +89,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -326,7 +346,7 @@
           ]
         },
         "SearchPage": {
-          "description": "`Page<SearchHit>`.",
+          "description": "`Page<SearchHit>`; paired mode adds a count and an independently ranked steward group.",
           "properties": {
             "items": {
               "items": {
@@ -339,11 +359,82 @@
                 "string",
                 "null"
               ]
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/StewardSearchPage"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "total": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
             }
           },
           "required": [
             "items",
             "next_cursor"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
+          ],
+          "type": "object"
+        },
+        "StewardSearchPage": {
+          "description": "Supplemental matches have their own rank, count and cursor. Independent bm25\nscores from different databases are never compared.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/SearchHit"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "owner": {
+              "type": "string"
+            },
+            "total": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "owner",
+            "items",
+            "total"
           ],
           "type": "object"
         }
@@ -436,6 +527,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -561,6 +662,15 @@
                     "$ref": "#/$defs/ShowProviderRef"
                   },
                   "type": "array"
+                },
+                "steward_providers": {
+                  "items": {
+                    "$ref": "#/$defs/ShowProviderRef"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
                 }
               },
               "required": [
@@ -588,6 +698,15 @@
                     "$ref": "#/$defs/ShowRegisterRef"
                   },
                   "type": "array"
+                },
+                "steward_registers": {
+                  "items": {
+                    "$ref": "#/$defs/ShowRegisterRef"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
                 }
               },
               "required": [
@@ -975,6 +1094,30 @@
             "period"
           ],
           "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
+          ],
+          "type": "object"
         }
       },
       "anyOf": [
@@ -1102,6 +1245,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -1464,6 +1617,30 @@
           ],
           "type": "object"
         },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
+          ],
+          "type": "object"
+        },
         "ValueSetRef": {
           "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
           "properties": {
@@ -1616,12 +1793,46 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
             "contract_version",
             "generation",
             "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         },
@@ -1963,6 +2174,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -1991,6 +2212,30 @@
           "required": [
             "start",
             "end"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         }
@@ -2061,6 +2306,16 @@
             },
             "fqid": {
               "type": "string"
+            },
+            "held": {
+              "description": "Accepted physical placements, absent in reference-only mode.",
+              "items": {
+                "$ref": "#/$defs/HeldPlacement"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
             },
             "kind": {
               "type": "string"
@@ -2183,6 +2438,49 @@
           ],
           "type": "object"
         },
+        "HeldPlacement": {
+          "description": "A physical placement's public semantic coordinates and held interval.",
+          "properties": {
+            "carried": {
+              "type": "boolean"
+            },
+            "caveat": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "column": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "physical_table": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "table": {
+              "type": "string"
+            },
+            "variable": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "table",
+            "variable",
+            "physical_table",
+            "column",
+            "period",
+            "role",
+            "carried",
+            "caveat"
+          ],
+          "type": "object"
+        },
         "Meta": {
           "description": "The response `meta` (`shape.Meta`).",
           "properties": {
@@ -2194,6 +2492,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -2300,6 +2608,30 @@
             "primary",
             "parse_state",
             "populations"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         }
@@ -2547,6 +2879,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -2661,6 +3003,30 @@
           "required": [
             "items",
             "next_cursor"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         },
@@ -2813,6 +3179,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -2885,6 +3261,30 @@
             "name",
             "register",
             "alias"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         }
@@ -3109,6 +3509,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -3360,6 +3770,30 @@
           "required": [
             "variable",
             "spelling"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         },
@@ -3667,6 +4101,16 @@
             },
             "generation": {
               "type": "string"
+            },
+            "steward": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Steward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -3715,6 +4159,30 @@
             "url",
             "bytes",
             "page"
+          ],
+          "type": "object"
+        },
+        "Steward": {
+          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "properties": {
+            "catalog_generation": {
+              "type": "string"
+            },
+            "holdings_generation": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "schema_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "owner",
+            "catalog_generation",
+            "holdings_generation",
+            "schema_version"
           ],
           "type": "object"
         }

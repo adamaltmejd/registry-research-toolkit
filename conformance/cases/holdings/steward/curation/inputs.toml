@@ -1,0 +1,12 @@
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "steward"
+name = "Supplemental provider"
+
+[[input]]
+name = "slots"
+reader = "transcription"
+path = "inputs/slots"
+provider = "steward"

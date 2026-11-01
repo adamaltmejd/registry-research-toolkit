@@ -1,8 +1,8 @@
 # Steward pin registry: each steward id selects its dedicated repository, an exact commit
-# and the relative path of its config. No branch, no implicit latest. Read by the holdings
-# compiler (e-holdings); nothing reads this file yet.
+# and the relative path of its config. No branch, no implicit latest. The holdings
+# compiler verifies the supplied checkout and every consumed input against this pin.
 
 [swecov]
 repo = "git@github.com:adamaltmejd/swecov-steward.git"
-commit = "755ce7aa5b6ceb39825f165806f6f86f350e5351"
+commit = "9e4091d7b54abb52598360d1bae42d16c5584ff5"
 config = "steward.toml"
