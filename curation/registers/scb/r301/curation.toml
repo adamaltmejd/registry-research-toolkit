@@ -7330,3 +7330,24 @@ kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatmother @2011-07-01..2012-06-30 where key = 'v32454'"
 fields = { "description" = "Moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
 evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser modern i alla perioder.\ncatalog:valueset:1455\ncatalog:variable_text:1328:18993:19358"
+
+[[statement]]
+kind = "link"
+subject = "var:nfepaidby1"
+relation = "continues"
+object = "scb/aes/nfepaidby"
+evidence = "AES NFEPAIDBY1: payer count for 1st random non-formal activity (2011, vs10300) -> any-payer indicator (2022, vs8055); same survey item, measure redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:nfepaidby2"
+relation = "continues"
+object = "scb/aes/icke-formell-utbildning-kostnadsvariabler-andra"
+evidence = "AES NFEPAIDBY2: payer count for 2nd activity (2011) -> any-payer indicator (2022); same item, coding redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:svarighet-vid-utbildningsdeltagande-orsaker-till-att"
+relation = "continues"
+object = "scb/aes/difftype"
+evidence = "AES DIFFTYPE: number of difficulties with participation (2011, vs933) -> any-reason indicator for not participating more (2022, vs6720); same topic, measure redefined."

@@ -512,3 +512,21 @@ kind = "set"
 subject = "var:totalareal-land-vatten"
 fields = { "tags" = ["geography"] }
 evidence = "Samma källkolumn har angränsande kopplingar till totalareal och geometri.\ncatalog:occurrence:323785\ncatalog:occurrence:323796"
+
+[[statement]]
+kind = "set"
+subject = "land-och-vattenarealer: sp_geometry @2024-01-01..2024-12-31 where key = 'v39461'"
+fields = { "variable" = "totalareal-land-vatten" }
+evidence = "Land and water areas SP_Geometry: labelled 'Totalareal land och vatten' in km2 (2020-23) but the 2020 operational text is 'Lantmäteriets nedladdningstjänst ... polygoner', and from 2024 it is the geometry datatype. The column holds the polygon geometry throughout; the 2020-23 label is wrong, so this is one variable, not a successor."
+
+[[statement]]
+kind = "set"
+subject = "land-och-vattenarealer: sp_geometry @2025-01-01..2025-12-31 where key = 'v39461'"
+fields = { "variable" = "totalareal-land-vatten" }
+evidence = "Land and water areas SP_Geometry: labelled 'Totalareal land och vatten' in km2 (2020-23) but the 2020 operational text is 'Lantmäteriets nedladdningstjänst ... polygoner', and from 2024 it is the geometry datatype. The column holds the polygon geometry throughout; the 2020-23 label is wrong, so this is one variable, not a successor."
+
+[[statement]]
+kind = "set"
+subject = "land-och-vattenarealer: sp_geometry @2026-01-01..2026-12-31 where key = 'v39461'"
+fields = { "variable" = "totalareal-land-vatten" }
+evidence = "Land and water areas SP_Geometry: labelled 'Totalareal land och vatten' in km2 (2020-23) but the 2020 operational text is 'Lantmäteriets nedladdningstjänst ... polygoner', and from 2024 it is the geometry datatype. The column holds the polygon geometry throughout; the 2020-23 label is wrong, so this is one variable, not a successor."

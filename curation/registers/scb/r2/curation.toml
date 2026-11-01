@@ -7522,3 +7522,10 @@ kind = "set"
 subject = "medborgarskapsandringar-kvartal: MedblandGGrupp_EU @2024-01-01..2024-12-31 where key = 'v271'"
 fields = { "description" = "Grupperat tidigare medborgarskapsland." }
 evidence = "Beskrivningen avser aktuellt medborgarskap, men variabeln grupperar tidigare medborgarskapsland.\ncatalog:occurrence:436286"
+
+[[statement]]
+kind = "link"
+subject = "var:grund-for-bosattning-grundforbosattning"
+relation = "continues"
+object = "scb/rtb/grund-for-bosattning-grupperad-prioriterad"
+evidence = "RTB settlement grounds: derived grouping (1987-2005) -> Migration Agency code (2006+); classification replaced."

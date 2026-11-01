@@ -316,3 +316,10 @@ kind = "set"
 subject = "var:totled"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln mäter totalt antal lediga jobb.\ncatalog:variable_text:35083:18993:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:kvartal"
+relation = "continues"
+object = "scb/kv/ar-och-kvartal"
+evidence = "KV: year-and-quarter (2005-06) -> quarter (2007+); time key recoded."

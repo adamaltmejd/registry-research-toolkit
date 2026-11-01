@@ -1133,3 +1133,10 @@ kind = "set"
 subject = "var:vem-har-kontrakt"
 fields = { "tags" = ["housing"] }
 evidence = "Källkolumnen har kopplats till olika kontrakts- och bostadskategorier.\ncatalog:occurrence:233844\ncatalog:occurrence:233875\ncatalog:valueset:3902"
+
+[[statement]]
+kind = "link"
+subject = "var:vardear"
+relation = "continues"
+object = "scb/hib/vardear-klassindelat"
+evidence = "HIB value year: classified value year (2007-13, vs1127) -> value year in years (2020+); same concept, finer coding."

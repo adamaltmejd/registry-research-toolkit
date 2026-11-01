@@ -5602,3 +5602,10 @@ kind = "set"
 subject = "arbetsorsakade-besvar-2018: OLANTAL @2022-01-01..2022-12-31 where key = 'v38414'"
 fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"
+
+[[statement]]
+kind = "link"
+subject = "var:besvar-minskat-andrade-uppg"
+relation = "continues"
+object = "scb/arbetsorsakade-besvar/besvar-minskat-uppg-eller-tid"
+evidence = "BESVARMI: complaints reduced after changed duties or reduced hours (2001-2003) -> after changed duties (2004-2010), same value set vs8772; narrowed question."

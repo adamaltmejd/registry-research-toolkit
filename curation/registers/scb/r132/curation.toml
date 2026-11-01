@@ -1264,3 +1264,52 @@ kind = "set"
 subject = "industrins-energianvandning: varde @2008-01-01..2008-12-31 where key = 'v16432'"
 fields = { "variable" = "inkopsvarde-av-elenergi" }
 evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
+
+[[statement]]
+kind = "link"
+subject = "var:adress-till-arbetsstallet"
+relation = "continues"
+object = "scb/isen/vilken-adress-har-redovisningsenheten-adress"
+evidence = "ISEN: reporting-unit address (2004-05) -> establishment address (2006+); reporting unit redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:benamning-pa-arbetsstallet-ben"
+relation = "continues"
+object = "scb/isen/benamning-pa-redovisningsenheten-ben"
+evidence = "ISEN Ben: reporting-unit name -> establishment name (2006+)."
+
+[[statement]]
+kind = "link"
+subject = "var:blankett-indatum"
+relation = "continues"
+object = "scb/isen/insamlingsdatum"
+evidence = "ISEN: electronic collection date -> form receipt date (2006+)."
+
+[[statement]]
+kind = "link"
+subject = "var:epost-arbetsstallet"
+relation = "continues"
+object = "scb/isen/epost-redovisningsenheten"
+evidence = "ISEN EPost: reporting-unit email -> establishment email (2006+)."
+
+[[statement]]
+kind = "link"
+subject = "var:kontrollnr-arbetsstallet"
+relation = "continues"
+object = "scb/isen/kontrollnr-redovisningsenh"
+evidence = "ISEN RekNr: reporting-unit control number -> establishment control number (2006+)."
+
+[[statement]]
+kind = "link"
+subject = "var:orgnr-foretaget"
+relation = "continues"
+object = "scb/isen/organisationsnummer-redovisningsenheten-peorgnr"
+evidence = "ISEN: reporting-unit org number -> company org number (2006+)."
+
+[[statement]]
+kind = "link"
+subject = "var:panneffekt-arbetsstallet"
+relation = "continues"
+object = "scb/isen/panneffekt-redovisningsenheten"
+evidence = "ISEN Panneff: boiler capacity of reporting unit -> of establishment (2006)."

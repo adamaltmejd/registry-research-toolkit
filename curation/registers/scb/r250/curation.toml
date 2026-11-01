@@ -995,3 +995,10 @@ kind = "set"
 subject = "var:yrkespaketkod"
 fields = { "tags" = ["education"] }
 evidence = "Yrkespaketets kod beskriver en utbildningskombination.\ncatalog:variable_text:34557:19905:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:orgnr"
+relation = "continues"
+object = "scb/komvux-anpassad/person-orgnr"
+evidence = "Komvux anpassad PeOrgNr: person/org number (2015-19) -> organisation number (2020+); identifier narrowed."

@@ -965,3 +965,10 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodningen av svensk och utländsk bakgrund är en befolkningsuppgift.\ncatalog:variable_text:23152:18809:20270"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "continues"
+object = "scb/gymnasieskola-prov/skolans-namn"
+evidence = "Gymnasieskola tests SKOLA: school name -> school-unit name (2013+); unit redefined."

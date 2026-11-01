@@ -1541,3 +1541,10 @@ kind = "set"
 subject = "regionfullmaktigeval: valkretsnamn @2022-01-01..2022-12-31 where key = 'v22871'"
 fields = { "variable" = "lt-valkretsnamn" }
 evidence = "Both define constituency names for seats awarded in the regional council election table, using character column valkretsnamn. County council constituency becomes regional constituency with the same operational meaning. The last earlier observation is [17532,17897), followed by [18993,19358); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "link"
+subject = "var:ltnamn"
+relation = "continues"
+object = "scb/allmanna-val-valresultat/landstingets-namn"
+evidence = "Election ltnamn: county council name (1973-2018) -> Region name (2022); landsting renamed to regions, char name column."

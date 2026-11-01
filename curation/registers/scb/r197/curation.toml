@@ -1876,3 +1876,17 @@ kind = "set"
 subject = "privatagda-flerbostadshus: y20 @2008-01-01..2008-12-31 where key = 'v16477'"
 fields = { "variable" = "total-lokalyta-y20" }
 evidence = "Both define premises floor area in square metres. In the privately owned apartment building table, Y20 has consecutive observations [13514,13879), [13879,14245) and [14245,14610), with no overlap between these ledgers."
+
+[[statement]]
+kind = "link"
+subject = "var:driftkostnader-vatten-och-avlopp-v4050"
+relation = "continues"
+object = "scb/iku/v4050"
+evidence = "IKU V4050: water operating costs (2007-11) -> water and sewerage fixed+variable charges (2012-15), KSEK; broadened."
+
+[[statement]]
+kind = "link"
+subject = "var:driftskostnader-reparationer-underhall"
+relation = "continues"
+object = "scb/iku/driftskostnader-reparationer"
+evidence = "IKU V3010: repairs and running maintenance (2007-11) -> incl. periodic maintenance (2012-15); broadened."

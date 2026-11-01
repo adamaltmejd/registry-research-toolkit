@@ -1955,3 +1955,10 @@ kind = "set"
 subject = "amne-sv-eng-ma: en_ej_delt @2012-01-01..2012-06-30 where key = 'v8498'"
 fields = { "description" = "Deltagande i delprov i engelska." }
 evidence = "Definitionen anger undervisning men den operativa definitionen och värdena gäller provdeltagande under alla perioder.\ncatalog:valueset:8776\ncatalog:variable_text:22233:12053:12234\ncatalog:variable_text:22233:15340:15522"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "continues"
+object = "scb/grundskola-prov-ak9/skolans-namn"
+evidence = "Grundskola tests Skolnamn: school name (2003-2013) -> school-unit name (2014+); unit redefined."

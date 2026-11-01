@@ -976,3 +976,17 @@ kind = "set"
 subject = "individ: KFFB @2006-01-01..2006-12-31 where key = 'v41163'"
 fields = { "description" = "Kapitalförlust finansiellt, bruttobelopp. Härledd uppgift." }
 evidence = "Beskrivningen anger kapitalvinst men etiketten och källkolumnen anger kapitalförlust.\ncatalog:variable_text:33895:12784:13514"
+
+[[statement]]
+kind = "link"
+subject = "var:kapitalforlust-bostadsratt"
+relation = "continues"
+object = "scb/kapitalvinster/kapitalforlust-smahus-bostadsratt"
+evidence = "Capital gains KFRB: loss on small houses and tenant-owned flats (2005-06) -> tenant-owned flats only (2007+); narrowed."
+
+[[statement]]
+kind = "link"
+subject = "var:kapitalvinst-bostadsratt"
+relation = "continues"
+object = "scb/kapitalvinster/kapitalvinst-smahus-bostadsratt"
+evidence = "Capital gains KVRB: same narrowing for gains."

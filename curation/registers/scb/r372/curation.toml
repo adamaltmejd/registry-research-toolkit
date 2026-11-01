@@ -1750,3 +1750,17 @@ kind = "set"
 subject = "juridiska-enheter: HAEFax @2022-01-01..2022-12-31 where key = 'v814'"
 fields = { "description" = "Faxnummer" }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12073:10592:19358"
+
+[[statement]]
+kind = "link"
+subject = "var:antal-anstallda-arbetsstalle"
+relation = "continues"
+object = "scb/foretagsreg/aktuellt-antal-anstallda"
+evidence = "Business register: current employees, price-base threshold (1999-2020) -> employees per workplace, SEK 1000/month threshold (2021+); definition change, split by unit."
+
+[[statement]]
+kind = "link"
+subject = "var:antal-anstallda-juridisk-enhet"
+relation = "continues"
+object = "scb/foretagsreg/aktuellt-antal-anstallda"
+evidence = "Business register: current employees (1999-2020) -> employees per legal unit (2021+); definition change, split by unit."

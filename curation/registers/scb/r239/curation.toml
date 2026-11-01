@@ -648,3 +648,10 @@ kind = "set"
 subject = "var:valgrund"
 fields = { "tags" = ["democracy"] }
 evidence = "Valgrund beskriver hur kandidaten valdes.\ncatalog:occurrence-locators:variable:2808\ncatalog:variable_text:2808:18993:19358"
+
+[[statement]]
+kind = "link"
+subject = "var:boende-disponibel-inkomst"
+relation = "continues"
+object = "scb/allmanna-val-nominerade/disponibel-inkomst-familj"
+evidence = "Election nominees CDISPH: family disposable income (1991-2014) -> household ('Boende') disposable income (2018+), Kronor; unit of aggregation redefined."

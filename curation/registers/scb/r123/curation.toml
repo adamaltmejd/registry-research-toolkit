@@ -14284,3 +14284,10 @@ kind = "set"
 subject = "arbetsmiljoundersokningen: uppminut @1999-01-01..1999-12-31 where key = 'v41606'"
 fields = { "variable" = "samma-moment-per-2-minuter" }
 evidence = "Both definitions ask whether work requires exclusively repeating the same task or movement at least twice per minute. They share the complete seven-code time-proportion scale and UPPMINUT column, with nonoverlapping periods [9862,10227) and [10592,10957)."
+
+[[statement]]
+kind = "link"
+subject = "var:tunga-arbetsmoment-tidigare"
+relation = "continues"
+object = "scb/arbetsmiljoundersokningen/tunga-momenten-okat"
+evidence = "AMU MERTUNGA: change in heavy tasks within the job (1997) -> heavy tasks in previous vs current occupation (1999-2003), same value set vs6330; revised question."

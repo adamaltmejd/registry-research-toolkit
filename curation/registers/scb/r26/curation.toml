@@ -4283,3 +4283,17 @@ kind = "set"
 subject = "fad-arbetsstallen: peorgnr2 @2022-01-01..2022-12-31 where key = 'v42019'"
 fields = { "variable" = "person-orgnr-2" }
 evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
+
+[[statement]]
+kind = "link"
+subject = "var:sysselsattningsstatus-november-agi"
+relation = "continues"
+object = "scb/rams/sysselsattningsstatus-november"
+evidence = "RAMS employment status Nov: 1 hour/week criterion (1986-2018) -> AGI payment >= 99 kr (2019+); definition change."
+
+[[statement]]
+kind = "link"
+subject = "var:sysselsattningsstatus-november-agi"
+relation = "continues"
+object = "scb/rams/syssstat-nov-jobbet"
+evidence = "RAMS jobs table: job-level Nov status (1998-2018) -> AGI-based Nov status (2019+); definition change."

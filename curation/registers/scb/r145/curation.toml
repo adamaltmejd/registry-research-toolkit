@@ -448,3 +448,17 @@ kind = "set"
 subject = "var:totaker"
 fields = { "tags" = ["agriculture"] }
 evidence = "Total åkerareal är ett jordbruksmått.\ncatalog:variable_text:26235:16801:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:ekologisk-hostsadd-hostdinkel-speltvete"
+relation = "continues"
+object = "scb/hostsadda-arealer/ekologisk-hostsadd-areal-hostdinkel"
+evidence = "Autumn-sown areas Areal_511: organic winter spelt -> winter spelt and spelt wheat (2023+), hectares; broadened crop."
+
+[[statement]]
+kind = "link"
+subject = "var:hostsadd-areal-hostdinkel-speltvete"
+relation = "continues"
+object = "scb/hostsadda-arealer/hostsadd-areal-hostdinkel"
+evidence = "Areal_511 non-organic: same broadening."

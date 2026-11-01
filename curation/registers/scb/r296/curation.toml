@@ -1367,3 +1367,17 @@ kind = "set"
 subject = "ppi: UrvStatus @2025-01-01..2025-12-31 where key = 'v6415'"
 fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
 evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "link"
+subject = "var:period-ppi-period"
+relation = "continues"
+object = "scb/prisindex/period"
+evidence = "PPI Period: 12 months (2013-16) -> 12 months plus base month (2017+); coding extended."
+
+[[statement]]
+kind = "link"
+subject = "var:produktgrupp-sammanvagda"
+relation = "continues"
+object = "scb/prisindex/produktgrupp-namn"
+evidence = "PPI product group: product grouping (2013-21) -> weighted classes (2022+); grouping redefined."
