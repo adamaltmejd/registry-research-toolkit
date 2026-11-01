@@ -18764,19 +18764,19 @@ evidence = "Both identify the respondent by personal identity number: both expli
 kind = "set"
 subject = "it-anvandning-i-foretag: awseu @2015-01-01..2015-12-31 where key = 'v34111'"
 fields = { "variable" = "awshm" }
-evidence = "Both measure receipt of website or app orders from customers in other EU countries. The first has [16436,16801), which does not overlap the second's supplied periods. Both use complete value set 7898; the 2013 AWSHM spelling does not change its documented EU population."
+evidence = "The 2015 AWSEU and 2017-2024 AWSEU occurrences measure website or app orders from other EU countries and share the complete four-code value set. The 2013 source labels are rotated; its AWSEU occurrence is assigned to this EU variable separately by column continuity."
 
 [[statement]]
 kind = "set"
 subject = "it-anvandning-i-foretag: awshm @2015-01-01..2015-12-31 where key = 'v34106'"
 fields = { "variable" = "awsww" }
-evidence = "Both measure receipt of website or app orders from customers in Sweden, with non-overlapping supplied periods and identical complete value set 7898. The 2013 AWSWW occurrence explicitly documents the Swedish customer population."
+evidence = "The 2015 AWSHM and 2017-2024 AWSHM occurrences measure website or app orders from Sweden and share the complete four-code value set. The 2013 source labels are rotated; its AWSHM occurrence is assigned to this Sweden variable separately by column continuity."
 
 [[statement]]
 kind = "set"
 subject = "it-anvandning-i-foretag: awsww @2015-01-01..2015-12-31 where key = 'v34110'"
 fields = { "variable" = "ehandel-bestallningar-webb-varlden" }
-evidence = "Both measure receipt of website or app orders from customers in the rest of the world, with non-overlapping supplied periods and identical complete value set 7898. The 2013 AWSEU occurrence explicitly documents this world population."
+evidence = "The 2015 AWSWW and 2017-2024 AWSWW occurrences measure website or app orders from the rest of the world and share the complete four-code value set. The 2013 source labels are rotated; its AWSWW occurrence is assigned to this world variable separately by column continuity."
 
 [[statement]]
 kind = "set"
@@ -18863,3 +18863,21 @@ relation = "continues"
 object = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
 at = "2015-01-01.."
 evidence = "IT use GDIST: persons engaged working remotely (2013-14) -> employees working remotely (2015-20); population wording changed."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSHM @2013-01-01..2013-12-31 where key = 'v19119' and release = 'r5213'"
+fields = { "variable" = "awsww" }
+evidence = "The 2013 web-order labels/definitions rotate geography: AWSHM says EU, AWSWW Sweden and AWSEU world. The 2013 EDI siblings AXSHM/AXSEU/AXSWW and every later AWS release (2015, 2017, 2019, 2021, 2022, 2024) consistently use HM=Sweden, EU=other EU and WW=rest of world. All share the same complete four-code value set, with no operational text or magnitude distinction. Assign the whole occurrence by column continuity; retain the erroneous source text. The undocumented 2011 deliveries remain unresolved."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSEU @2013-01-01..2013-12-31 where key = 'v19120' and release = 'r5213'"
+fields = { "variable" = "awshm" }
+evidence = "The 2013 web-order labels/definitions rotate geography: AWSHM says EU, AWSWW Sweden and AWSEU world. The 2013 EDI siblings AXSHM/AXSEU/AXSWW and every later AWS release (2015, 2017, 2019, 2021, 2022, 2024) consistently use HM=Sweden, EU=other EU and WW=rest of world. All share the same complete four-code value set, with no operational text or magnitude distinction. Assign the whole occurrence by column continuity; retain the erroneous source text. The undocumented 2011 deliveries remain unresolved."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSWW @2013-01-01..2013-12-31 where key = 'v19121' and release = 'r5213'"
+fields = { "variable" = "ehandel-bestallningar-webb-varlden" }
+evidence = "The 2013 web-order labels/definitions rotate geography: AWSHM says EU, AWSWW Sweden and AWSEU world. The 2013 EDI siblings AXSHM/AXSEU/AXSWW and every later AWS release (2015, 2017, 2019, 2021, 2022, 2024) consistently use HM=Sweden, EU=other EU and WW=rest of world. All share the same complete four-code value set, with no operational text or magnitude distinction. Assign the whole occurrence by column continuity; retain the erroneous source text. The undocumented 2011 deliveries remain unresolved."
