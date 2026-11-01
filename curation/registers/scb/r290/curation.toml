@@ -704,32 +704,14 @@ evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Internt u
 [[statement]]
 kind = "set"
 subject = "var:investeringsinkomster-landsting"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Investeringsinkomsterna hör till kandidatgruppen och offentlig ekonomi.\ncatalog:occurrence:322625\ncatalog:occurrence:322626\ncatalog:variable_text:35139:17897:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringsinkomster-landsting"
 fields = { "tags" = ["public-finance"] }
 evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Investeringsinkomsterna hör till kandidatgruppen och offentlig ekonomi.\ncatalog:occurrence:322625\ncatalog:occurrence:322626\ncatalog:variable_text:35139:17897:20454"
 
 [[statement]]
 kind = "set"
 subject = "var:investeringsinkomster-statliga-bidrag"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Statliga investeringsbidrag är en uttrycklig komponent i kandidatgruppen.\ncatalog:occurrence:321983\ncatalog:occurrence:322003\ncatalog:variable_text:35140:16801:17532\ncatalog:variable_text:35140:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringsinkomster-statliga-bidrag"
 fields = { "tags" = ["public-finance"] }
 evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Statliga investeringsbidrag är en uttrycklig komponent i kandidatgruppen.\ncatalog:occurrence:321983\ncatalog:occurrence:322003\ncatalog:variable_text:35140:16801:17532\ncatalog:variable_text:35140:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringsinkomster-statsbidrag"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Statsbidraget är en uttrycklig komponent av investeringsinkomster.\ncatalog:occurrence:322625\ncatalog:occurrence:322626\ncatalog:variable_text:35141:17897:20454"
 
 [[statement]]
 kind = "set"
@@ -1768,3 +1750,21 @@ kind = "set"
 subject = "var:verksamhetsanknutna-tjanster-regionsagda"
 fields = { "tags" = ["public-finance"] }
 evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från företag.\ncatalog:occurrence:323101\ncatalog:variable_text:35229:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-landsting"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r41 defines investment income used in investment accounting, account 950, directly matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35012\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35139"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statliga-bidrag"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r42 explicitly defines state investment grants by activity, satisfying the group's investment-component requirement.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35013\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35140"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statsbidrag"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r43 explicitly identifies grants for buildings and equipment as a component of investment income, account 951.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35014\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35141"

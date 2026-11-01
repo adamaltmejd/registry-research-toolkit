@@ -596,32 +596,14 @@ evidence = "Antal vuxna är ett redovisat delantal av hushållets personer.\ncat
 [[statement]]
 kind = "set"
 subject = "var:bcdz"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod för decilgrupp.\ncatalog:variable_text:26534:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:bcdz"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod för decilgrupp.\ncatalog:variable_text:26534:15340:15706"
 
 [[statement]]
 kind = "set"
 subject = "var:bdecilz"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar en decilgrupp för disponibel inkomst.\ncatalog:variable_text:26535:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:bdecilz"
 fields = { "tags" = ["income"] }
 evidence = "Variabeln kodar en decilgrupp för disponibel inkomst.\ncatalog:variable_text:26535:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-vuxna-kosthushall"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod för hushållstyp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26536:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -656,20 +638,8 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger H-region.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:hushallstyp-kon-barnantal"
-fields = { "sets" = [] }
-evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8931\ncatalog:variable_text:26539:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-kon-barnantal"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8931\ncatalog:variable_text:26539:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-alder-barnantal-0-19-ar"
-fields = { "sets" = [] }
-evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:10186\ncatalog:variable_text:26540:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -680,32 +650,14 @@ evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig 
 [[statement]]
 kind = "set"
 subject = "var:hushallstyp-barnforekomst-under-20-ar"
-fields = { "sets" = [] }
-evidence = "BHT är en källkod för hushållstyp och familjen ska bedömas enhetligt.\ncatalog:valueset:4458\ncatalog:variable_text:26541:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-barnforekomst-under-20-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT är en källkod för hushållstyp och familjen ska bedömas enhetligt.\ncatalog:valueset:4458\ncatalog:variable_text:26541:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
-fields = { "sets" = [] }
-evidence = "Källkoden är en ogenomskinlig förkortning; kvartilgrupperna avser disponibel inkomst.\ncatalog:valueset:1082\ncatalog:variable_text:26542:10592:11688"
 
 [[statement]]
 kind = "set"
 subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är en ogenomskinlig förkortning; kvartilgrupperna avser disponibel inkomst.\ncatalog:valueset:1082\ncatalog:variable_text:26542:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-kvartiltabeller"
-fields = { "sets" = [] }
-evidence = "BHT är en källkod för hushållstyp och ingår i en ogenomskinlig förkortningsfamilj.\ncatalog:valueset:8041\ncatalog:variable_text:26543:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -764,32 +716,14 @@ evidence = "BKONZ är en källmnemonik för kön.\ncatalog:variable_text:26547:1
 [[statement]]
 kind = "set"
 subject = "var:kvintilgrupp"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod för kvintilgrupp.\ncatalog:variable_text:26548:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:kvintilgrupp"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod för kvintilgrupp.\ncatalog:variable_text:26548:15340:15706"
 
 [[statement]]
 kind = "set"
 subject = "var:kvartilgrupp-disponibel-inkomst"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod för kvartilgrupp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26549:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:kvartilgrupp-disponibel-inkomst"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod för kvartilgrupp; etiketten kolliderar med andra variabler.\ncatalog:variable_text:26549:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:boarea"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter bostadsarea.\ncatalog:variable_text:26550:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -812,20 +746,8 @@ evidence = "Imputeringsmarkör för bostadsarea.\ncatalog:variable_text:26551:18
 [[statement]]
 kind = "set"
 subject = "var:bohtyp2"
-fields = { "sets" = [] }
-evidence = "Etiketten anger en kombination av bostadstyp och hushållstyp, men källan anger att innehållet är oklart.\ncatalog:variable_text:26552:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:bohtyp2"
 fields = { "tags" = ["family-household", "housing"] }
 evidence = "Etiketten anger en kombination av bostadstyp och hushållstyp, men källan anger att innehållet är oklart.\ncatalog:variable_text:26552:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:boyta-kvm"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter bostadsarea.\ncatalog:variable_text:26554:15340:15706"
 
 [[statement]]
 kind = "set"
@@ -968,12 +890,6 @@ evidence = "Id:t är en opak källkod; etiketten delas av flera arbetsinkomstvar
 [[statement]]
 kind = "set"
 subject = "var:faktisk-betald-hyra-hyreslgh"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26566:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:faktisk-betald-hyra-hyreslgh"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26566:10957:11688"
 
@@ -1048,12 +964,6 @@ kind = "set"
 subject = "var:civilstand-urval"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln kodar civilstånd vid urvalet.\ncatalog:variable_text:26573:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:decd"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod för decilgrupp.\ncatalog:variable_text:26575:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -1280,12 +1190,6 @@ evidence = "Den avslutande bokstaven är en ogenomskinlig källkod; etiketten ko
 [[statement]]
 kind = "set"
 subject = "var:htypkv"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar hushållstyp; källan anger att kodernas betydelse är okänd.\ncatalog:variable_text:26596:11323:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:htypkv"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln kodar hushållstyp; källan anger att kodernas betydelse är okänd.\ncatalog:variable_text:26596:11323:11688"
 
@@ -1352,12 +1256,6 @@ evidence = "Variabeln mäter hushållsföreståndarens ålder.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:hushallstyp-kosthushall"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i observerade perioder.\ncatalog:occurrence:241607\ncatalog:occurrence:241692\ncatalog:occurrence:241709\ncatalog:variable_text:26603:12053:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallstyp-kosthushall"
 fields = { "tags" = ["family-household"] }
 evidence = "Samma källkolumn har olika ägare i observerade perioder.\ncatalog:occurrence:241607\ncatalog:occurrence:241692\ncatalog:occurrence:241709\ncatalog:variable_text:26603:12053:14610"
 
@@ -1372,12 +1270,6 @@ kind = "set"
 subject = "var:hushallsvikt-kalibrerad"
 fields = { "tags" = ["methods"] }
 evidence = "Källan beskriver en kalibrerad uppräkningsvikt.\ncatalog:variable_text:26604:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:hushsoc"
-fields = { "sets" = [] }
-evidence = "Etiketten anger kombinationen, men källan anger att innehållet är oklart.\ncatalog:variable_text:26605:10592:11323"
 
 [[statement]]
 kind = "set"
@@ -2272,12 +2164,6 @@ kind = "set"
 subject = "var:utgift-for-forbrukningsvaror-personliga"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26687:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-forbrukningsvaror-ovriga"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26688:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -3596,20 +3482,8 @@ evidence = "U04_y är en källkod; etiketten anger boendeutgift för fritidsbost
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-hyra-for-bostad-andrabostad-och-fritidshus"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26799:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-for-bostad-andrabostad-och-fritidshus"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26799:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-for-ordinarie-bostaden"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26800:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -3628,12 +3502,6 @@ kind = "set"
 subject = "var:imputerat-hyra-ordinarie-bostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26801:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-garage-eller-parkeringsplats-vid-bostaden"
-fields = { "sets" = [] }
-evidence = "U0412_o är en källkod; etiketten anger utgift för garage eller parkering vid bostaden.\ncatalog:variable_text:26802:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -3656,20 +3524,8 @@ evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-hyra-andrabostad-och-fritidsbostad"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26804:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-andrabostad-och-fritidsbostad"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26804:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-andrabostad"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26805:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -3688,12 +3544,6 @@ kind = "set"
 subject = "var:imputerat-utgift-hyra-andrabostad"
 fields = { "tags" = ["methods"] }
 evidence = "ID:t är en opak källkod för imputeringsstatus.\ncatalog:variable_text:26806:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-fritidsbostad"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26807:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -4760,20 +4610,8 @@ evidence = "U056 är en källkod; etiketten anger utgift för förbrukningsvaror
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-renhallningsprodukter-och-forbrukningsvaror"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26896:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-renhallningsprodukter-och-forbrukningsvaror"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26896:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-renhallningsprodukter"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:26897:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -4844,20 +4682,8 @@ evidence = "U061 är en källkod; etiketten anger utgift för medicin och hälso
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-medicin-naturlakemedel-och-kosttillskott"
-fields = { "sets" = [] }
-evidence = "U0611 är en källkod; etiketten anger utgift för medicin och kosttillskott.\ncatalog:variable_text:26903:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-medicin-naturlakemedel-och-kosttillskott"
 fields = { "tags" = ["consumption", "medicines"] }
 evidence = "U0611 är en källkod; etiketten anger utgift för medicin och kosttillskott.\ncatalog:variable_text:26903:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-medicin-och-medicinliknande-produkter"
-fields = { "sets" = [] }
-evidence = "U06111 är en källkod; etiketten anger utgift för medicin.\ncatalog:variable_text:26904:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -4880,12 +4706,6 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-naturlakemedel-kosttillskott-m-m"
-fields = { "sets" = [] }
-evidence = "U06112 är en källkod; etiketten anger utgift för naturläkemedel och kosttillskott.\ncatalog:variable_text:26906:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-naturlakemedel-kosttillskott-m-m"
 fields = { "tags" = ["consumption", "medicines"] }
 evidence = "U06112 är en källkod; etiketten anger utgift för naturläkemedel och kosttillskott.\ncatalog:variable_text:26906:18628:18993"
 
@@ -4900,12 +4720,6 @@ kind = "set"
 subject = "var:imputerat-utgift-naturlakemedel-kosttillskott"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26907:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-ovriga-produkter-inom-halsa"
-fields = { "sets" = [] }
-evidence = "U0612 är en källkod; etiketten anger utgift för övriga hälsoprodukter.\ncatalog:variable_text:26908:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -5096,12 +4910,6 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-reservdelar-o-tillbehor-till-fordon"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; beloppet gäller fordonsdelar och tillbehör.\ncatalog:variable_text:26924:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-reservdelar-o-tillbehor-till-fordon"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "Id:t är en opak källkod; beloppet gäller fordonsdelar och tillbehör.\ncatalog:variable_text:26924:18628:18993"
 
@@ -5168,20 +4976,8 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-garage-och-parkeringsplats"
-fields = { "sets" = [] }
-evidence = "U07241 är en källkod; etiketten anger utgift för garage och parkering.\ncatalog:variable_text:26930:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-garage-och-parkeringsplats"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "U07241 är en källkod; etiketten anger utgift för garage och parkering.\ncatalog:variable_text:26930:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-parkering-langtidshyra-inte-anslutning-bostaden"
-fields = { "sets" = [] }
-evidence = "U07241a är en opak utgiftskod.\ncatalog:variable_text:26931:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -5200,12 +4996,6 @@ kind = "set"
 subject = "var:imputerat-utgift-parkering-langtidshyra"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26932:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-parkering-tillfallig-inte-anslutning-bostaden"
-fields = { "sets" = [] }
-evidence = "U07241b är en opak utgiftskod.\ncatalog:variable_text:26933:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -5612,20 +5402,8 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-tv-dvd-spelare-hogtalare-m-m"
-fields = { "sets" = [] }
-evidence = "U0814 är en källkod; etiketten anger utgift för TV- och ljudutrustning.\ncatalog:variable_text:26967:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-tv-dvd-spelare-hogtalare-m-m"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "U0814 är en källkod; etiketten anger utgift för TV- och ljudutrustning.\ncatalog:variable_text:26967:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-tv-apparat"
-fields = { "sets" = [] }
-evidence = "U0814a är en opak utgiftskod.\ncatalog:variable_text:26968:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -5644,12 +5422,6 @@ kind = "set"
 subject = "var:u0814a-imp"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:26969:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-dvd-spelare-hogtalare-digitalbox-m-m"
-fields = { "sets" = [] }
-evidence = "U0814b är en källkod; etiketten anger utgift för DVD-spelare och ljudutrustning.\ncatalog:variable_text:26970:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -6092,12 +5864,6 @@ evidence = "Id:t är en opak källkod; etiketten beskriver utgiften.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-spelkonsol-spel-och-tillbehor"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; spelkonsoler omfattas av kandidatgruppen.\ncatalog:variable_text:27007:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-spelkonsol-spel-och-tillbehor"
 fields = { "tags" = ["consumption", "culture", "digital"] }
 evidence = "Id:t är en opak källkod; spelkonsoler omfattas av kandidatgruppen.\ncatalog:variable_text:27007:18628:18993"
 
@@ -6112,12 +5878,6 @@ kind = "set"
 subject = "var:imputerat-utgift-spelkonsol-spel-tillbehor"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27008:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-leksaker-spel-och-hobbysamlingar"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; beloppet gäller leksaker, spel och hobbyartiklar.\ncatalog:variable_text:27009:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -6224,12 +5984,6 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-tjanster-for-djur-intradesavgift"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; samredovisningen omfattas av kandidatgruppernas uttryckliga avgränsningar.\ncatalog:variable_text:27018:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-tjanster-for-djur-intradesavgift"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Id:t är en opak källkod; samredovisningen omfattas av kandidatgruppernas uttryckliga avgränsningar.\ncatalog:variable_text:27018:18628:18993"
 
@@ -6268,12 +6022,6 @@ kind = "set"
 subject = "var:imputerat-utgift-intrade-nojesfalt-lekland"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27021:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-tranings-eller-fritidsaktivitet"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; beloppet gäller fritidsaktivitet.\ncatalog:variable_text:27022:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -6904,12 +6652,6 @@ kind = "set"
 subject = "var:imputerat-utgift-elektriska-apparater-personlig-vard"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och behöver särskiljas med kolumnnamnet.\ncatalog:variable_text:27074:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-produkter-for-personlig-hygien"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27075:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -8084,12 +7826,6 @@ evidence = "Variabeln mäter utgift för fordon.\ncatalog:variable_text:27175:18
 [[statement]]
 kind = "set"
 subject = "var:utgift-idrottsevenemang"
-fields = { "sets" = [] }
-evidence = "Beloppet gäller idrottsevenemang.\ncatalog:variable_text:27176:10592:11688\ncatalog:variable_text:27176:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-idrottsevenemang"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Beloppet gäller idrottsevenemang.\ncatalog:variable_text:27176:10592:11688\ncatalog:variable_text:27176:18628:18993"
 
@@ -8156,32 +7892,14 @@ evidence = "Källan anger utgift för övriga tillbehör. Coordinator group memb
 [[statement]]
 kind = "set"
 subject = "var:utgift-reparation-hyra-tillbehor"
-fields = { "sets" = [] }
-evidence = "Källan anger att skillnaden mellan likalydande variabler är oklar.\ncatalog:variable_text:27182:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-reparation-hyra-tillbehor"
 fields = { "tags" = ["consumption"] }
 evidence = "Källan anger att skillnaden mellan likalydande variabler är oklar.\ncatalog:variable_text:27182:10957:11688"
 
 [[statement]]
 kind = "set"
 subject = "var:utgift-reparation-hyra-tillbehor-literal-vk2605"
-fields = { "sets" = [] }
-evidence = "Källan anger att skillnaden mellan likalydande variabler är oklar.\ncatalog:variable_text:27183:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-reparation-hyra-tillbehor-literal-vk2605"
 fields = { "tags" = ["consumption"] }
 evidence = "Källan anger att skillnaden mellan likalydande variabler är oklar.\ncatalog:variable_text:27183:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-reparation-hyra-tillbehor-literal-vk2645"
-fields = { "sets" = [] }
-evidence = "Källan anger att skillnaden mellan likalydande variabler är oklar.\ncatalog:variable_text:27184:10957:11688"
 
 [[statement]]
 kind = "set"
@@ -8300,12 +8018,6 @@ evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Un
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-rengoringsmedel"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27194:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-rengoringsmedel"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27194:10592:11688"
 
@@ -8324,32 +8036,14 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27195:105
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-hushallspapper"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27196:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hushallspapper"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27196:10592:11688"
 
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-toalettpapper"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0278: Övriga förbrukningsvaror omfattas; den separata personliga komponenten hör till personlig hygien. membership-0279: Förbrukningsvaror, rengöringsprodukter och kandidatens namngivna komponenter behålls; toalettpapper följer den fasta kandidatindelningen. membership-0280: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. membership-0281: Renhållningsprodukter och förbrukningsvaror omfattas. U056 utesluts enligt den fasta definitionen eftersom beloppet även omfattar hushållstjänster, trots tidigare medlemsförslag. membership-0282: Ingen vald variabel i sektionen mäter hushållets förbrukningsvaror; personlig hygien är undantagen. membership-0283: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. membership-0284: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0278: Personliga förbrukningsvaror stöds som personlig hygien av den granskade källbedömningen. membership-0279: Tvål, schampo, kosmetika, mensskydd och blöjor är namngivna hygienprodukter; toalettpapper följer den fasta kandidatindelningen i förbrukningsvaror. membership-0280: Ingen vald variabel mäter utgifter för personlig hygien. membership-0281: Ingen vald variabel mäter personlig hygien; hushållets rengöringsprodukter är uttryckligen uteslutna. membership-0282: Beloppet gäller produkter för personlig hygien. Summan för produkter och tjänster för personlig vård är bredare. membership-0283: Ingen vald variabel mäter utgifter för personlig hygien. membership-0284: Ingen vald variabel mäter utgifter för personlig hygien.\ncatalog:variable_text:26687:10592:11688\ncatalog:variable_text:26688:10592:11688\ncatalog:variable_text:26895:18628:18993\ncatalog:variable_text:26896:18628:18993\ncatalog:variable_text:26897:18628:18993\ncatalog:variable_text:27072:18628:18993\ncatalog:variable_text:27075:18628:18993\ncatalog:variable_text:27170:18628:18993\ncatalog:variable_text:27193:10592:11688\ncatalog:variable_text:27194:10592:11688\ncatalog:variable_text:27195:10592:11688\ncatalog:variable_text:27196:10592:11688\ncatalog:variable_text:27197:10592:11688\ncatalog:variable_text:27198:10592:11688\ncatalog:variable_text:27201:10592:11688\ncatalog:variable_text:27202:10592:11688\ncatalog:variable_text:27203:10592:11688\ncatalog:variable_text:27204:10592:11688\ncatalog:variable_text:27205:10592:11688\ncatalog:variable_text:27207:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-toalettpapper"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0278: Övriga förbrukningsvaror omfattas; den separata personliga komponenten hör till personlig hygien. membership-0279: Förbrukningsvaror, rengöringsprodukter och kandidatens namngivna komponenter behålls; toalettpapper följer den fasta kandidatindelningen. membership-0280: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. membership-0281: Renhållningsprodukter och förbrukningsvaror omfattas. U056 utesluts enligt den fasta definitionen eftersom beloppet även omfattar hushållstjänster, trots tidigare medlemsförslag. membership-0282: Ingen vald variabel i sektionen mäter hushållets förbrukningsvaror; personlig hygien är undantagen. membership-0283: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. membership-0284: Ingen vald variabel mäter utgifter för hushållets förbrukningsvaror. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0278: Personliga förbrukningsvaror stöds som personlig hygien av den granskade källbedömningen. membership-0279: Tvål, schampo, kosmetika, mensskydd och blöjor är namngivna hygienprodukter; toalettpapper följer den fasta kandidatindelningen i förbrukningsvaror. membership-0280: Ingen vald variabel mäter utgifter för personlig hygien. membership-0281: Ingen vald variabel mäter personlig hygien; hushållets rengöringsprodukter är uttryckligen uteslutna. membership-0282: Beloppet gäller produkter för personlig hygien. Summan för produkter och tjänster för personlig vård är bredare. membership-0283: Ingen vald variabel mäter utgifter för personlig hygien. membership-0284: Ingen vald variabel mäter utgifter för personlig hygien.\ncatalog:variable_text:26687:10592:11688\ncatalog:variable_text:26688:10592:11688\ncatalog:variable_text:26895:18628:18993\ncatalog:variable_text:26896:18628:18993\ncatalog:variable_text:26897:18628:18993\ncatalog:variable_text:27072:18628:18993\ncatalog:variable_text:27075:18628:18993\ncatalog:variable_text:27170:18628:18993\ncatalog:variable_text:27193:10592:11688\ncatalog:variable_text:27194:10592:11688\ncatalog:variable_text:27195:10592:11688\ncatalog:variable_text:27196:10592:11688\ncatalog:variable_text:27197:10592:11688\ncatalog:variable_text:27198:10592:11688\ncatalog:variable_text:27201:10592:11688\ncatalog:variable_text:27202:10592:11688\ncatalog:variable_text:27203:10592:11688\ncatalog:variable_text:27204:10592:11688\ncatalog:variable_text:27205:10592:11688\ncatalog:variable_text:27207:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-plastpasar"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27198:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -8384,12 +8078,6 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27200:105
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-tval-shampo"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27201:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-tval-shampo"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27201:10592:11688"
 
@@ -8408,20 +8096,8 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27202:105
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-mensskydd"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27203:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-mensskydd"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27203:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-blojor"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27204:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -8432,20 +8108,8 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27204:105
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-ovriga-toalettartiklar"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27205:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-ovriga-toalettartiklar"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27205:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-sjukvardsartiklar"
-fields = { "sets" = [] }
-evidence = "VK2034 är en källkod; etiketten anger utgift för sjukvårdsartiklar.\ncatalog:variable_text:27206:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -8924,12 +8588,6 @@ evidence = "VK2202 är en källkod; etiketten anger utgift för hem- och villaf�
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-tillfallig-hyra-t-ex-barn-pa-studieort"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:27246:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-tillfallig-hyra-t-ex-barn-pa-studieort"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:27246:10592:11688"
 
@@ -8956,12 +8614,6 @@ kind = "set"
 subject = "var:utgift-for-fritidsbostad-utlamnande-rep"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27248:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-fritidsbostad-hyra-arrende"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27249:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -9440,20 +9092,8 @@ evidence = "Id:t är en opak varukod.\ncatalog:variable_text:27288:10592:11688"
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-medicin"
-fields = { "sets" = [] }
-evidence = "VK2401 är en källkod; etiketten anger medicinutgift.\ncatalog:variable_text:27289:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-medicin"
 fields = { "tags" = ["consumption", "medicines"] }
 evidence = "VK2401 är en källkod; etiketten anger medicinutgift.\ncatalog:variable_text:27289:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-vitaminer"
-fields = { "sets" = [] }
-evidence = "VK2402 är en källkod; etiketten anger utgift för vitaminer.\ncatalog:variable_text:27290:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -9572,12 +9212,6 @@ evidence = "Id:t är en opak källkod; beloppet gäller drivmedel.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-bildack"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; bildäck omfattas av kandidatgruppen.\ncatalog:variable_text:27301:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-bildack"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "Id:t är en opak källkod; bildäck omfattas av kandidatgruppen.\ncatalog:variable_text:27301:10592:11688"
 
@@ -9592,12 +9226,6 @@ kind = "set"
 subject = "var:utgift-for-besiktning-bil"
 fields = { "tags" = ["consumption", "transport"] }
 evidence = "Id:t är en opak källkod; beloppet gäller fordonsbesiktning.\ncatalog:variable_text:27302:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hyra-av-bil-p-avg-mm"
-fields = { "sets" = [] }
-evidence = "VK2509 är en källkod; etiketten anger utgift för bilhyra och parkering.\ncatalog:variable_text:27303:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -9884,12 +9512,6 @@ evidence = "VK2602 är en källkod; etiketten anger videoutgift.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-stereo-radio-bandspelare"
-fields = { "sets" = [] }
-evidence = "VK2603 är en källkod; etiketten anger utgift för ljudutrustning.\ncatalog:variable_text:27327:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-stereo-radio-bandspelare"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "VK2603 är en källkod; etiketten anger utgift för ljudutrustning.\ncatalog:variable_text:27327:10592:11688"
 
@@ -9904,12 +9526,6 @@ kind = "set"
 subject = "var:utgift-for-videokamera-kamera"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Id:t är en opak källkod; beloppet gäller kameror.\ncatalog:variable_text:27328:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-parabol"
-fields = { "sets" = [] }
-evidence = "VK2607 är en källkod; etiketten anger utgift för parabol.\ncatalog:variable_text:27329:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -10088,12 +9704,6 @@ evidence = "Id:t är en opak källkod; beloppet gäller köpta videoband.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-hobbyartiklar"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; beloppet gäller hobbyartiklar.\ncatalog:variable_text:27345:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-hobbyartiklar"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Id:t är en opak källkod; beloppet gäller hobbyartiklar.\ncatalog:variable_text:27345:10592:11688"
 
@@ -10216,12 +9826,6 @@ kind = "set"
 subject = "var:utgift-for-museer-utstallningar"
 fields = { "tags" = ["consumption", "culture"] }
 evidence = "Id:t är en opak källkod; beloppet gäller museer och utställningar.\ncatalog:variable_text:27355:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-avgift-for-idrottsutovande"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak källkod; beloppet gäller idrottsutövande.\ncatalog:variable_text:27356:10592:11688"
 
 [[statement]]
 kind = "set"
@@ -10864,3 +10468,405 @@ kind = "set"
 subject = "hushall-1999-2001: vk2731 @1999-01-01..1999-12-31 where key = 'v41071'"
 fields = { "description" = "Utgift för utemåltider." }
 evidence = "Rättar mellanrummet utan att ändra innebörden.\ncatalog:variable_text:27372:10957:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:bcdz"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r202 defines deciles of household disposable income; r200 and r196 confirm ten income bands.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26455\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7698\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26534"
+
+[[statement]]
+kind = "set"
+subject = "var:bdecilz"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r203 defines deciles of household disposable income; r201 confirms ten decile codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26456\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26535"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "r211 measures dwelling area in square metres, matching the area measure in r213.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26460\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26548\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26553"
+
+[[statement]]
+kind = "set"
+subject = "var:bohtyp2"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r212 explicitly defines housing type crossed with household type, an included combination; detailed content remains unclear.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26462\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26550"
+
+[[statement]]
+kind = "set"
+subject = "var:boyta-kvm"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "r213 measures dwelling area in square metres, matching the area measure in r211.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26548\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26553"
+
+[[statement]]
+kind = "set"
+subject = "var:decd"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r214 defines disposable income deciles and explicitly describes codes 1–10 and 99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26473\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26569"
+
+[[statement]]
+kind = "set"
+subject = "var:faktisk-betald-hyra-hyreslgh"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r215 explicitly measures actual rent paid for a rental apartment in kronor.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26481\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26577"
+
+[[statement]]
+kind = "set"
+subject = "var:htypkv"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r216 defines household type under the Consumer Agency classification; unknown code meanings do not change that stated concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26498\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:240788\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26593"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-alder-barnantal-0-19-ar"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r206 derives household types from composition, ages and relationships; r189 confirms the household categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26507\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10186\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26540"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-barnforekomst-under-20-ar"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r207 defines household type by children; r193 supplies child-presence categories rather than person counts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26508\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4458\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26541"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kon-barnantal"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r205 defines household type; r199 confirms categories by partnership, sex and children.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26509\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26539"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kosthushall"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r217 defines household types based on adults in the cost household; r195 supplies the categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26510\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5451\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26601"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kvartiltabeller"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r209 defines household type; r197 confirms household composition categories, despite their use in quartile tables.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26511\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8041\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26543"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-vuxna-kosthushall"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r204 derives household types from adults, ages and relationships; r195 confirms composition categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26512\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5451\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26536"
+
+[[statement]]
+kind = "set"
+subject = "var:hushsoc"
+fields = { "sets" = ["hushallstyp"] }
+evidence = "r218 explicitly defines household type crossed with socioeconomic group, an included combination; detailed coding remains unclear.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26603"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartilgrupp-disponibel-inkomst"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r210 defines disposable income quartiles; r190, r194 and r191 confirm four income groups.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26679\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1082\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4973\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26547"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r208 defines disposable income quartiles within household type; r190 confirms four quartile codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26680\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1082\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26542"
+
+[[statement]]
+kind = "set"
+subject = "var:kvd"
+fields = { "sets" = ["hushallstyp", "inkomstgrupper"] }
+evidence = "r220 explicitly defines household type crossed with disposable income quartile, an included combination; detailed coding remains unclear. | r220 explicitly defines household type crossed with income quartile, an included combination; detailed coding remains unclear.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26681\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26622"
+
+[[statement]]
+kind = "set"
+subject = "var:kvintilgrupp"
+fields = { "sets" = ["inkomstgrupper"] }
+evidence = "r221 defines quintiles of household disposable income; r192 and r198 supply five income bands.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26682\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2486\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26623"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-avgift-for-idrottsutovande"
+fields = { "sets" = ["utgift-idrott-och-fritidsaktivitet"] }
+evidence = "r147 defines fees for participating in sports, directly covered by r190.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26956\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-idrott-och-fritidsaktivitet"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-bildack"
+fields = { "sets" = ["utgift-fordonsdelar-och-tillbehor"] }
+evidence = "r224 measures car tyre expenditure, explicitly included in the fixed vehicle parts definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26865\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26972"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-blojor"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r148 defines diaper expenditure, a personal-hygiene consumable within r193.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26869\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26976\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-dvd-spelare-hogtalare-digitalbox-m-m"
+fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
+evidence = "r149 specifies DVD players, speakers and digital boxes; r135 explicitly includes that component in the TV-and-audio equipment total.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241983\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27008\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-forbrukningsvaror-ovriga"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r226 defines expenditure on other consumables, within the fixed consumables category. | r226 defines expenditure on other consumables, within the fixed consumables category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26920\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27027"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-garage-eller-parkeringsplats-vid-bostaden"
+fields = { "sets" = ["utgift-garage-och-parkering"] }
+evidence = "r227 asks about a fixed garage or parking place near the dwelling and its expenditure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26941\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27048"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-garage-och-parkeringsplats"
+fields = { "sets" = ["utgift-garage-och-parkering"] }
+evidence = "r228 explicitly sums long-term parking rental and temporary parking expenditure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26942\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27049"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hobbyartiklar"
+fields = { "sets" = ["utgift-leksaker-spel-och-hobby"] }
+evidence = "r153 defines expenditure on hobby articles, directly included by r191.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27070\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-leksaker-spel-och-hobby"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hushallspapper"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r229 defines expenditure on household paper, a household consumable. | r229 defines expenditure on household paper, a household consumable.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27076"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-andrabostad"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r230 explicitly defines rent expenditure for a second dwelling.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26972\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27079"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-andrabostad-och-fritidsbostad"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r231 explicitly sums second dwelling rent and holiday dwelling rent.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26973\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27080"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-av-bil-p-avg-mm"
+fields = { "sets" = ["utgift-garage-och-parkering"] }
+evidence = "r232 explicitly combines car rental with parking fees, which the fixed definition permits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27082"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-for-bostad-andrabostad-och-fritidshus"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r234 sums ordinary, second and holiday dwelling rents with garage expenditure, an explicitly permitted aggregate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26978\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27085"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-for-ordinarie-bostaden"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r235 defines ordinary dwelling rent and annualizes reported monthly rent or fees.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26979\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27086"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hyra-fritidsbostad"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r236 explicitly defines rent expenditure for a holiday dwelling.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26980\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27087"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-leksaker-spel-och-hobbysamlingar"
+fields = { "sets" = ["utgift-leksaker-spel-och-hobby"] }
+evidence = "r156 defines expenditure on toys, games and hobby collections, directly matching r191.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27130\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-leksaker-spel-och-hobby"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-medicin"
+fields = { "sets" = ["utgift-medicin-och-kosttillskott"] }
+evidence = "r157 defines medicine expenditure, directly included by r192.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27147\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-medicin-och-kosttillskott"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-medicin-naturlakemedel-och-kosttillskott"
+fields = { "sets" = ["utgift-medicin-och-kosttillskott"] }
+evidence = "r131 explicitly sums medicine-like products and natural remedies or supplements, directly matching r192.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27041\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241914\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-medicin-och-kosttillskott"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-medicin-och-medicinliknande-produkter"
+fields = { "sets" = ["utgift-medicin-och-kosttillskott"] }
+evidence = "r159 defines medicine and medicine-like product expenditure; r131 explicitly includes this component in the medicines-and-supplements total.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27043\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241914\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27150\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-medicin-och-kosttillskott"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-mensskydd"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r160 defines menstrual-product expenditure, a personal-hygiene consumable covered by r193.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27045\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27152\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-naturlakemedel-kosttillskott-m-m"
+fields = { "sets" = ["utgift-medicin-och-kosttillskott"] }
+evidence = "r161 explicitly defines expenditure on natural remedies, supplements, vitamins and iron tablets, within r192.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27062\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27169\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-medicin-och-kosttillskott"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-ovriga-produkter-inom-halsa"
+fields = { "sets" = ["utgift-sjukvardsartiklar"] }
+evidence = "r163 specifies health products such as plasters, first-aid kits, masks and condoms, matching the goods scope in r195.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27091\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27198\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-sjukvardsartiklar"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-ovriga-toalettartiklar"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r164 defines expenditure on other toiletries, matching the personal-hygiene product scope in r193.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27097\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27204\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-parabol"
+fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
+evidence = "r165 defines satellite-dish expenditure, a TV-equipment component covered by r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27104\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27211\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-plastpasar"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r166 defines plastic-bag expenditure, a named household consumable within r189. | r166 defines plastic-bag expenditure, a named household consumable within r189.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27108\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27215\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-hushallets-forbrukningsvaror"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-produkter-for-personlig-hygien"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r167 explicitly defines expenditure on products for personal hygiene, directly matching r193.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27219\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-rengoringsmedel"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r169 defines expenditure on cleaning agents, directly covered by the cleaning-products scope in r189. | r169 defines expenditure on cleaning agents, directly covered by the cleaning-products scope in r189.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27118\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27225\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-hushallets-forbrukningsvaror"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-renhallningsprodukter"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r170 defines cleaning-product expenditure, and r128 explicitly includes this component in the cleaning-products and consumables total. | r170 defines cleaning-product expenditure, and r128 explicitly includes this component in the cleaning-products and consumables total.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27119\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241905\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27226\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-hushallets-forbrukningsvaror"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-renhallningsprodukter-och-forbrukningsvaror"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r128 explicitly defines a sum of cleaning products and consumables, matching r189 without adding household services. | r128 explicitly defines a sum of cleaning products and consumables, matching r189 without adding household services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241905\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-hushallets-forbrukningsvaror"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-reservdelar-o-tillbehor-till-fordon"
+fields = { "sets" = ["utgift-fordonsdelar-och-tillbehor"] }
+evidence = "r244 explicitly defines expenditure on spare parts and accessories for vehicles.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27236"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-sjukvardsartiklar"
+fields = { "sets" = ["utgift-sjukvardsartiklar"] }
+evidence = "r172 defines expenditure on healthcare articles, explicitly covered by r195.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27145\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27252\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-sjukvardsartiklar"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-spelkonsol-spel-och-tillbehor"
+fields = { "sets" = ["utgift-leksaker-spel-och-hobby"] }
+evidence = "r173 defines expenditure on game consoles, games and accessories, which r191 explicitly includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27167\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27274\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-leksaker-spel-och-hobby"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-stereo-radio-bandspelare"
+fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
+evidence = "r174 defines expenditure on stereo equipment, radios and tape players, directly within the audio-equipment scope of r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27173\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27280\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tillfallig-hyra-t-ex-barn-pa-studieort"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r248 defines temporary rent with a child studying elsewhere as the explicit residential example.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27196\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27303"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tjanster-for-djur-intradesavgift"
+fields = { "sets" = ["utgift-idrott-och-fritidsaktivitet"] }
+evidence = "r140 explicitly combines training or leisure activities and sporting events with other services; r190 includes expressly jointly reported leisure services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27198\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:242040\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-idrott-och-fritidsaktivitet"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-toalettpapper"
+fields = { "sets" = ["utgift-hushallets-forbrukningsvaror"] }
+evidence = "r176 defines toilet-paper expenditure, a household consumable covered by r189. | r176 defines toilet-paper expenditure, a household consumable covered by r189.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27200\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27307\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-hushallets-forbrukningsvaror"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tranings-eller-fritidsaktivitet"
+fields = { "sets" = ["utgift-idrott-och-fritidsaktivitet"] }
+evidence = "r177 defines expenditure on training or leisure activities, directly matching the participation scope in r190.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27202\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27309\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-idrott-och-fritidsaktivitet"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tv-dvd-spelare-hogtalare-m-m"
+fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
+evidence = "r135 explicitly sums TV expenditure and DVD-player, speaker and digital-box expenditure, matching r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241983\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tval-shampo"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r179 defines soap and shampoo expenditure, named personal-hygiene consumables within r193.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27207\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27314\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-vitaminer"
+fields = { "sets" = ["utgift-medicin-och-kosttillskott"] }
+evidence = "r181 defines vitamin expenditure; r161 explicitly names vitamins among natural remedies and supplements covered by r192.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27169\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27344\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-medicin-och-kosttillskott"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-fritidsbostad-hyra-arrende"
+fields = { "sets" = ["utgift-bostadshyra"] }
+evidence = "r253 explicitly measures holiday dwelling rent or lease expenditure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27245\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27373"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-idrottsevenemang"
+fields = { "sets" = ["utgift-idrott-och-fritidsaktivitet"] }
+evidence = "r183 defines expenditure on sporting events, explicitly included by r190.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27251\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27354\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-idrott-och-fritidsaktivitet"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-parkering-langtidshyra-inte-anslutning-bostaden"
+fields = { "sets" = ["utgift-garage-och-parkering"] }
+evidence = "r222 explicitly measures long-term garage or parking rental away from the dwelling.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27258\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26812"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-parkering-tillfallig-inte-anslutning-bostaden"
+fields = { "sets" = ["utgift-garage-och-parkering"] }
+evidence = "r223 explicitly measures temporary parking fees away from the dwelling.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27259\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26814"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-reparation-hyra-tillbehor"
+fields = { "sets" = ["utgift-reparation-hyra-och-tillbehor"] }
+evidence = "r184 defines expenditure under the exact joint designation required by r194; its note leaves differences between namesakes unresolved.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27263\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27360\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-reparation-hyra-och-tillbehor"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-reparation-hyra-tillbehor-literal-vk2605"
+fields = { "sets" = ["utgift-reparation-hyra-och-tillbehor"] }
+evidence = "r185 defines expenditure under the exact joint designation required by r194; unresolved differences between namesakes do not change that criterion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27264\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27361\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-reparation-hyra-och-tillbehor"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-reparation-hyra-tillbehor-literal-vk2645"
+fields = { "sets" = ["utgift-reparation-hyra-och-tillbehor"] }
+evidence = "r186 defines expenditure under the joint designation required by r194. Its unexplained unit 0 does not supply a competing concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27362\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-reparation-hyra-och-tillbehor"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-tv-apparat"
+fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
+evidence = "r136 explicitly specifies expenditure on a TV set, establishing equipment within r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241984\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"

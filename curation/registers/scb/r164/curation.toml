@@ -962,12 +962,6 @@ evidence = "Fr och EP samt ändelsen A är källkod i id:t.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:fr-euro-folkdel"
-fields = { "sets" = [] }
-evidence = "Variabeln anger deltagande i eurofolkomröstningen.\ncatalog:valueset:1901\ncatalog:variable_text:40972:13088:13118"
-
-[[statement]]
-kind = "set"
-subject = "var:fr-euro-folkdel"
 fields = { "tags" = ["democracy"] }
 evidence = "Variabeln anger deltagande i eurofolkomröstningen.\ncatalog:valueset:1901\ncatalog:variable_text:40972:13088:13118"
 
@@ -1378,12 +1372,6 @@ kind = "set"
 subject = "var:fr27"
 fields = { "tags" = ["housing"] }
 evidence = "Fr27 är en ogenomskinlig frågekod. Etiketten kolliderar med den härledda bostadstypen och kräver målgranskning.\ncatalog:occurrence:405948\ncatalog:valueset:5996"
-
-[[statement]]
-kind = "set"
-subject = "var:fr29"
-fields = { "sets" = [] }
-evidence = "Fr29 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar med andra folkomröstningsvariabler och kräver målgranskning.\ncatalog:valueset:222\ncatalog:variable_text:41008:12539:12570"
 
 [[statement]]
 kind = "set"
@@ -3820,3 +3808,15 @@ kind = "set"
 subject = "november: valdplan @2025-05-01..2025-05-31 where key = 'v7768'"
 fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval" }
 evidence = "Rättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkdel"
+fields = { "sets" = ["deltagande-folkomrostning"] }
+evidence = "All supplied occurrences explicitly ask about participation in the 2003 euro referendum (r22, r24, r26).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40836\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402433\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402526"
+
+[[statement]]
+kind = "set"
+subject = "var:fr29"
+fields = { "sets" = ["deltagande-folkomrostning"] }
+evidence = "The questions explicitly ask whether the respondent participated in the euro referendum (r17, r20), with Yes/No responses (r70).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40844\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:222"

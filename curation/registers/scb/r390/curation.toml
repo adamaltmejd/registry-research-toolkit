@@ -184,12 +184,6 @@ evidence = "F02 är en opak frågekod. Coordinator group membership: Antalsvaria
 [[statement]]
 kind = "set"
 subject = "var:f02a"
-fields = { "sets" = [] }
-evidence = "F02a är en opak frågekod. Coordinator group membership: Antalsvariablerna mäter fiskedagar. F02 och F02a–c kodar uttryckligen också antal dagar i storleksintervall och omfattas därför. Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21018:17897:18628\ncatalog:variable_text:21019:17897:18628\ncatalog:variable_text:21020:17897:18628\ncatalog:variable_text:21021:17897:18628\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21052:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21054:17167:17532\ncatalog:variable_text:21055:17167:17532\ncatalog:variable_text:21056:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:f02a"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F02a är en opak frågekod. Coordinator group membership: Antalsvariablerna mäter fiskedagar. F02 och F02a–c kodar uttryckligen också antal dagar i storleksintervall och omfattas därför. Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21018:17897:18628\ncatalog:variable_text:21019:17897:18628\ncatalog:variable_text:21020:17897:18628\ncatalog:variable_text:21021:17897:18628\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21052:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21054:17167:17532\ncatalog:variable_text:21055:17167:17532\ncatalog:variable_text:21056:17167:17532"
 
@@ -688,12 +682,6 @@ evidence = "F18h är en opak frågekod; etiketten delas med betydelsevariabeln.\
 [[statement]]
 kind = "set"
 subject = "var:f1a"
-fields = { "sets" = [] }
-evidence = "F1a är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21049:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:f1a"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F1a är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21049:16801:17532"
 
@@ -708,12 +696,6 @@ kind = "set"
 subject = "var:antal-fiskedagar-ifjol"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F1b är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21050:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:f2a"
-fields = { "sets" = [] }
-evidence = "F2a är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21051:16801:17532"
 
 [[statement]]
 kind = "set"
@@ -736,12 +718,6 @@ evidence = "F2b är en opak frågekod; etiketten delas med andra variabler.\ncat
 [[statement]]
 kind = "set"
 subject = "var:f2c"
-fields = { "sets" = [] }
-evidence = "F2c är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21053:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:f2c"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F2c är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21053:17167:17532"
 
@@ -756,12 +732,6 @@ kind = "set"
 subject = "var:f2d"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F2d är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21054:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:f2e"
-fields = { "sets" = [] }
-evidence = "F2e är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
@@ -1152,3 +1122,33 @@ kind = "set"
 subject = "var:vikt-composite-fas2"
 fields = { "tags" = ["methods"] }
 evidence = "Sammanvägningsvikten är undersökningsmetodik.\ncatalog:variable_text:21092:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:f02a"
+fields = { "sets" = ["fiskedeltagande"] }
+evidence = "Every occurrence uses binary participation codes: at least one day or no days. The operational text specifies January–April participation, matching the yes/no peers (r30, r44, r56, r57, r61).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:20941\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191153\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191318\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:13047\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21006"
+
+[[statement]]
+kind = "set"
+subject = "var:f1a"
+fields = { "sets" = ["fiskedeltagande"] }
+evidence = "The definition asks whether the person fished last year, and both occurrences use a complete yes/no code list, matching the participation peers (r20, r23, r57, r71).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:20944\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191071\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21046"
+
+[[statement]]
+kind = "set"
+subject = "var:f2a"
+fields = { "sets" = ["fiskedeltagande"] }
+evidence = "Both occurrences measure whether recreational fishing occurred in the survey round using complete yes/no codes, matching F2c and F2e (r22, r25, r57, r73, r74, r75).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:20945\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191073\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21048\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21050\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21052"
+
+[[statement]]
+kind = "set"
+subject = "var:f2c"
+fields = { "sets" = ["fiskedeltagande"] }
+evidence = "The definition measures whether recreational fishing occurred in the survey round, using complete yes/no codes and sharing that concept with F2a and F2e (r26, r57, r73, r74, r75).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:20947\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191114\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21048\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21050\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21052"
+
+[[statement]]
+kind = "set"
+subject = "var:f2e"
+fields = { "sets" = ["fiskedeltagande"] }
+evidence = "The definition measures whether recreational fishing occurred in the survey round, using complete yes/no codes and sharing that concept with F2a and F2c (r27, r57, r73, r74, r75).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:20949\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:191116\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21048\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21050\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21052"

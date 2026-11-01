@@ -626,20 +626,8 @@ evidence = "Arbetskraftskostnader är ett företagskostnadsmått.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:b1a"
-fields = { "sets" = [] }
-evidence = "B1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6950:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:b1a"
 fields = { "tags" = ["education"] }
 evidence = "B1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6950:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:foretag-finansierade-extern-kurs-anstallda"
-fields = { "sets" = [] }
-evidence = "B1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6951:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -770,12 +758,6 @@ evidence = "B2eflag är en opak källkod; den gemensamma etiketten kräver käll
 [[statement]]
 kind = "set"
 subject = "var:b3a"
-fields = { "sets" = [] }
-evidence = "B3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6962:14610:14975\ncatalog:variable_text:6962:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:b3a"
 fields = { "tags" = ["education"] }
 evidence = "B3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6962:14610:14975\ncatalog:variable_text:6962:16436:16801"
 
@@ -806,20 +788,8 @@ evidence = "B5aflag är en opak källkod; den gemensamma etiketten kräver käll
 [[statement]]
 kind = "set"
 subject = "var:donerat-bidrag"
-fields = { "sets" = [] }
-evidence = "B5b är en opak källkod och etiketten anger donerat bidrag.\ncatalog:variable_text:6965:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:donerat-bidrag"
 fields = { "tags" = ["business", "education"] }
 evidence = "B5b är en opak källkod och etiketten anger donerat bidrag.\ncatalog:variable_text:6965:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:b5bflag"
-fields = { "sets" = [] }
-evidence = "Etikett och operationell definition beskriver olika riktning för bidraget. Coordinator group membership: Donationernas förekomst och belopp hör samman. B5bflag behålls enligt fast inkludering och skyddat medlemskap trots den dokumenterade riktningskonflikten.\ncatalog:variable_text:6964:16436:16801\ncatalog:variable_text:6965:16436:16801\ncatalog:variable_text:6966:14610:14975\ncatalog:variable_text:6966:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -914,32 +884,14 @@ evidence = "Mottaget bidragsbelopp hör till förmåner och bidrag.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-kursdeltagare"
-fields = { "sets" = [] }
-evidence = "C1tot är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6974:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-kursdeltagare"
 fields = { "tags" = ["education"] }
 evidence = "C1tot är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6974:16436:16801"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-kvinnor-kursdeltagare"
-fields = { "sets" = [] }
-evidence = "C2f är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6975:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-kvinnor-kursdeltagare"
 fields = { "tags" = ["education"] }
 evidence = "C2f är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6975:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-man-kursdeltagare"
-fields = { "sets" = [] }
-evidence = "C2m är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6976:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -1166,20 +1118,8 @@ evidence = "C5Main är en opak källkod och källan har en särskild etikett.\nc
 [[statement]]
 kind = "set"
 subject = "var:utbildningsanordnare-grund-gymnasie-universitet-hogskola"
-fields = { "sets" = [] }
-evidence = "C6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6995:14610:14975\ncatalog:variable_text:6995:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsanordnare-grund-gymnasie-universitet-hogskola"
 fields = { "tags" = ["education"] }
 evidence = "C6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6995:14610:14975\ncatalog:variable_text:6995:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:c6b"
-fields = { "sets" = [] }
-evidence = "C6b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6996:14610:14975\ncatalog:variable_text:6996:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -1190,20 +1130,8 @@ evidence = "C6b är en opak källkod; den gemensamma etiketten kräver källkolu
 [[statement]]
 kind = "set"
 subject = "var:privata-utbildningsanordnare-konsulter"
-fields = { "sets" = [] }
-evidence = "C6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6997:14610:14975\ncatalog:variable_text:6997:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:privata-utbildningsanordnare-konsulter"
 fields = { "tags" = ["education"] }
 evidence = "C6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6997:14610:14975\ncatalog:variable_text:6997:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:c6d"
-fields = { "sets" = [] }
-evidence = "C6d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6998:14610:14975\ncatalog:variable_text:6998:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -1214,20 +1142,8 @@ evidence = "C6d är en opak källkod; den gemensamma etiketten kräver källkolu
 [[statement]]
 kind = "set"
 subject = "var:utbildningsanordnare-bransch-arbetsgivare-handelskammare"
-fields = { "sets" = [] }
-evidence = "C6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6999:14610:14975\ncatalog:variable_text:6999:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsanordnare-bransch-arbetsgivare-handelskammare"
 fields = { "tags" = ["education"] }
 evidence = "C6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6999:14610:14975\ncatalog:variable_text:6999:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsanordnare-fackforeningar"
-fields = { "sets" = [] }
-evidence = "C6f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7000:14610:14975\ncatalog:variable_text:7000:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -1250,20 +1166,8 @@ evidence = "Innehållet ändras mellan perioderna och värdemängden stämmer in
 [[statement]]
 kind = "set"
 subject = "var:c6g"
-fields = { "sets" = [] }
-evidence = "C6g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7002:14610:14975\ncatalog:variable_text:7002:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:c6g"
 fields = { "tags" = ["education"] }
 evidence = "C6g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7002:14610:14975\ncatalog:variable_text:7002:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsanordnare"
-fields = { "sets" = [] }
-evidence = "C6Main är en opak källkod och etiketten anger utbildningsanordnare.\ncatalog:variable_text:7003:14610:14975"
 
 [[statement]]
 kind = "set"
@@ -2158,3 +2062,99 @@ kind = "set"
 subject = "continuing-vocational-training-survey: Size_SP @2010-01-01..2010-12-31 where key = 'v39617'"
 fields = { "description" = "Företagets storleksklass baserad på antal anställda." }
 evidence = "Beskrivningen anger ett antal, men variabeln mäter storleksklass baserad på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kursdeltagare"
+fields = { "sets" = ["kursdeltagare"] }
+evidence = "r31 and r53 count employees who attended at least one course, matching the participant-count definition in r96.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6892\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54126\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kursdeltagare"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kvinnor-kursdeltagare"
+fields = { "sets" = ["kursdeltagare"] }
+evidence = "r32 and r54 count female employees who attended at least one course, a participant subgroup covered by r96.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6894\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54127\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kursdeltagare"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-man-kursdeltagare"
+fields = { "sets" = ["kursdeltagare"] }
+evidence = "r33 and r55 count male employees who attended at least one course, a participant subgroup covered by r96.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6897\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54128\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kursdeltagare"
+
+[[statement]]
+kind = "set"
+subject = "var:b1a"
+fields = { "sets" = ["kurser-genom-arbetsgivaren"] }
+evidence = "r24 and r46 record whether the company arranged internal courses for employees, matching r97.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6903\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53950\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54103\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kurser-genom-arbetsgivaren"
+
+[[statement]]
+kind = "set"
+subject = "var:b3a"
+fields = { "sets" = ["kurser-genom-arbetsgivaren"] }
+evidence = "r26 records employer-provided internal or external courses and r48 internal courses; both fit r97.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6910\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54115\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kurser-genom-arbetsgivaren"
+
+[[statement]]
+kind = "set"
+subject = "var:b5bflag"
+fields = { "sets" = ["ekonomiska-donationer"] }
+evidence = "r30 and r52 explicitly record whether the company gave contributions to staff-training funds, matching donation occurrence in r95.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6912\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53967\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54120\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/ekonomiska-donationer"
+
+[[statement]]
+kind = "set"
+subject = "var:c6b"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r36 and r58 identify other public education providers used for external courses, matching r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6919\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53996\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54147\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:c6d"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r38 and r60 identify private companies whose main purpose is not education as course providers, matching r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6920\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53998\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54149\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:c6g"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r42 and r64 identify the other-provider category for external courses, matching provider types in r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54002\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54153\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:donerat-bidrag"
+fields = { "sets" = ["ekonomiska-donationer"] }
+evidence = "r29 and r51 define the amount donated to staff-training funds, matching donation amounts in r95.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6924\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53966\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54119\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/ekonomiska-donationer"
+
+[[statement]]
+kind = "set"
+subject = "var:foretag-finansierade-extern-kurs-anstallda"
+fields = { "sets" = ["kurser-genom-arbetsgivaren"] }
+evidence = "r25 and r47 record company financing of employees' external-course participation, matching r97.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6938\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53951\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54104\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/kurser-genom-arbetsgivaren"
+
+[[statement]]
+kind = "set"
+subject = "var:privata-utbildningsanordnare-konsulter"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r37 and r59 identify private training providers and consultants used for external courses, matching r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7003\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53997\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54148\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r43 identifies the main provider type; r71 supplies provider categories, matching r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7014\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54003\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8687\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare-bransch-arbetsgivare-handelskammare"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r39 and r61 identify industry bodies, employer organizations or chambers of commerce as external-course providers, matching r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7015\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54150\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare-fackforeningar"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r40 and r62 identify trade unions as external-course providers, matching provider types in r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7016\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54000\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54151\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare-grund-gymnasie-universitet-hogskola"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "r35 and r57 identify schools and universities as external-course providers, matching provider types in r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7017\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53995\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54146\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"

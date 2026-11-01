@@ -290,20 +290,8 @@ evidence = "Avdragsgill ingående moms är en del av ingående moms.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:export-oms"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter total export av varor och tjänster.\ncatalog:variable_text:39280:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:export-oms"
 fields = { "tags" = ["trade"] }
 evidence = "Variabeln mäter total export av varor och tjänster.\ncatalog:variable_text:39280:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:export-varor-eg-land"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter varuexport till annat EG-land.\ncatalog:variable_text:39281:17532:19358"
 
 [[statement]]
 kind = "set"
@@ -482,12 +470,6 @@ evidence = "Variabeln mäter tjänsteinköp från annat EG-land.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:m21-omsvaruteg"
-fields = { "sets" = [] }
-evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39296:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:m21-omsvaruteg"
 fields = { "tags" = ["trade"] }
 evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39296:13149:13514"
 
@@ -502,12 +484,6 @@ kind = "set"
 subject = "var:m22-inkoptjauteg"
 fields = { "tags" = ["trade"] }
 evidence = "Variabeln mäter tjänsteinköp från land utanför EG.\ncatalog:variable_text:39297:14245:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m22-omstjautl"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter tjänster till utlandet.\ncatalog:variable_text:39298:10592:13514"
 
 [[statement]]
 kind = "set"
@@ -530,12 +506,6 @@ evidence = "Variabeln mäter företagsinköp av varor.\ncatalog:variable_text:39
 [[statement]]
 kind = "set"
 subject = "var:m23-omsvareg"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter export av varor till annat EG-land.\ncatalog:variable_text:39300:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:m23-omsvareg"
 fields = { "tags" = ["trade"] }
 evidence = "Variabeln mäter export av varor till annat EG-land.\ncatalog:variable_text:39300:13149:13514"
 
@@ -550,12 +520,6 @@ kind = "set"
 subject = "var:m24-inkoptjasverige"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln mäter tjänsteinköp i Sverige.\ncatalog:variable_text:39301:17532:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m24-overfvareg"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar överföring av varor till utlandet.\ncatalog:variable_text:39302:10592:13514"
 
 [[statement]]
 kind = "set"
@@ -662,12 +626,6 @@ evidence = "Variabeln mäter utgående moms på varuförvärv.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:m36-21-forsvaruteg"
-fields = { "sets" = [] }
-evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39311:14245:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m36-21-forsvaruteg"
 fields = { "tags" = ["trade"] }
 evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39311:14245:19358"
 
@@ -710,12 +668,6 @@ evidence = "Variabeln mäter mellanmans inköp vid trepartshandel.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:m38-trepforsvar"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter trepartsförsäljning till annat EG-land; ingen kandidat omfattar detta. Coordinator group membership: Samtliga mäter export, försäljning eller överföring till utlandet. Även trepartsförsäljning till annat EG-land omfattas av den fasta definitionen.\ncatalog:variable_text:39280:13879:19358\ncatalog:variable_text:39281:17532:19358\ncatalog:variable_text:39296:13149:13514\ncatalog:variable_text:39298:10592:13514\ncatalog:variable_text:39300:13149:13514\ncatalog:variable_text:39302:10592:13514\ncatalog:variable_text:39311:14245:19358\ncatalog:variable_text:39315:14975:19358\ncatalog:variable_text:39317:14245:19358\ncatalog:variable_text:39318:17532:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m38-trepforsvar"
 fields = { "tags" = ["trade"] }
 evidence = "Variabeln mäter trepartsförsäljning till annat EG-land; ingen kandidat omfattar detta. Coordinator group membership: Samtliga mäter export, försäljning eller överföring till utlandet. Även trepartsförsäljning till annat EG-land omfattas av den fasta definitionen.\ncatalog:variable_text:39280:13879:19358\ncatalog:variable_text:39281:17532:19358\ncatalog:variable_text:39296:13149:13514\ncatalog:variable_text:39298:10592:13514\ncatalog:variable_text:39300:13149:13514\ncatalog:variable_text:39302:10592:13514\ncatalog:variable_text:39311:14245:19358\ncatalog:variable_text:39315:14975:19358\ncatalog:variable_text:39317:14245:19358\ncatalog:variable_text:39318:17532:19358"
 
@@ -734,20 +686,8 @@ evidence = "Variabeln mäter nettomoms att betala eller återfå.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:m39-forstjaeg"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter tjänsteexport till EG-länder.\ncatalog:variable_text:39317:14245:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m39-forstjaeg"
 fields = { "tags" = ["trade"] }
 evidence = "Variabeln mäter tjänsteexport till EG-länder.\ncatalog:variable_text:39317:14245:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:m40-forstjauteg"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter tjänsteexport till land utanför EU.\ncatalog:variable_text:39318:17532:19358"
 
 [[statement]]
 kind = "set"
@@ -1294,3 +1234,63 @@ kind = "set"
 subject = "momsdeklarationsregistret: Sni92 @2006-01-01..2006-12-31 where key = 'v4027'"
 fields = { "description" = "Bransch i FDB enligt SNI92." }
 evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:export-oms"
+fields = { "sets" = ["export"] }
+evidence = "r137 defines total foreign turnover in goods and services; r47 explicitly sums M35, M36, M39 and M40.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39140\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388499\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39281"
+
+[[statement]]
+kind = "set"
+subject = "var:export-varor-eg-land"
+fields = { "sets" = ["export"] }
+evidence = "r138 defines goods turnover to another EC country; r42 explicitly identifies this as goods exports within the EU.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39141\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39282"
+
+[[statement]]
+kind = "set"
+subject = "var:m21-omsvaruteg"
+fields = { "sets" = ["export"] }
+evidence = "r38 explicitly measures goods exports outside the EC/EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39155\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388434"
+
+[[statement]]
+kind = "set"
+subject = "var:m22-omstjautl"
+fields = { "sets" = ["export"] }
+evidence = "r140 defines turnover from services supplied abroad, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39157\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39298"
+
+[[statement]]
+kind = "set"
+subject = "var:m23-omsvareg"
+fields = { "sets" = ["export"] }
+evidence = "r141 defines goods turnover to another EC country; r40 explicitly identifies this as goods exports within the EU.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39159\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388436\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39300"
+
+[[statement]]
+kind = "set"
+subject = "var:m24-overfvareg"
+fields = { "sets" = ["export"] }
+evidence = "r142 describes goods transferred to another EC country without sale and later returned; the fixed definition explicitly includes foreign transfers.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39161\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39302"
+
+[[statement]]
+kind = "set"
+subject = "var:m36-21-forsvaruteg"
+fields = { "sets" = ["export"] }
+evidence = "r43 explicitly measures goods exports outside the EC/EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39170\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388479"
+
+[[statement]]
+kind = "set"
+subject = "var:m38-trepforsvar"
+fields = { "sets" = ["export"] }
+evidence = "r144 defines triangular sales of goods to another EC country. The fixed definition includes foreign goods sales without excluding triangular sales.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39174\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39315"
+
+[[statement]]
+kind = "set"
+subject = "var:m39-forstjaeg"
+fields = { "sets" = ["export"] }
+evidence = "r45 explicitly measures service-export turnover within the EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39176\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388482"
+
+[[statement]]
+kind = "set"
+subject = "var:m40-forstjauteg"
+fields = { "sets" = ["export"] }
+evidence = "r46 explicitly measures service-export turnover outside the EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39177\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388483"

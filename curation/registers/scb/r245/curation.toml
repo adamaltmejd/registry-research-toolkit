@@ -1197,3 +1197,9 @@ kind = "set"
 subject = "var:vistelsetid"
 fields = { "tags" = ["migration"] }
 evidence = "Total tid folkbokförd i Sverige beskriver vistelsetid.\ncatalog:variable_text:7810:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "SEI in the main occupation (r7) distinguishes skilled and unskilled workers, employee levels and self-employed people (r6), supporting the employment theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:247\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7788"

@@ -520,3 +520,81 @@ kind = "set"
 subject = "var:typ-12"
 fields = { "tags" = ["environment"] }
 evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442874\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r14 and r41 explicitly define a protection decision date and identify SCI decision dates in the operational definition. | r14 and r41 explicitly define a protection decision date and identify SCI decision dates in the operational definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42585\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442737\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42728"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r16 and r42 explicitly define a protection decision date and identify SPA decision dates in the operational definition. | r16 and r42 explicitly define a protection decision date and identify SPA decision dates in the operational definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42586\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42729"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslutsstatus"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status. | r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42587\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442794\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442820"
+
+[[statement]]
+kind = "set"
+subject = "var:datbeslut"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r37 and r44 explicitly define the date a decision to protect an area was made. | r37 and r44 explicitly define the date a decision to protect an area was made.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42592\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42735"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-bevarandeomr-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r18 and r45 define a protection decision date and expressly include decisions at EU level. | r18 and r45 define a protection decision date and expressly include decisions at EU level.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42593\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442744\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42736"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-skyddsomr-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r19 and r46 define a protection decision date and expressly include decisions at EU level. | r19 and r46 define a protection decision date and expressly include decisions at EU level.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42594\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42737"
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r15 and r47 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42739"
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r17 and r48 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442740\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42740"
+
+[[statement]]
+kind = "set"
+subject = "var:inlamn-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date. | r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42598\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42741"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-beslutsdat"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r21 and r50 define protection decision dates and expressly include the latest decision. | r21 and r50 define protection decision dates and expressly include the latest decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42610\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442755\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42753"
+
+[[statement]]
+kind = "set"
+subject = "var:uppd-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r22 and r51 explicitly define a protection decision date; the column name alone does not establish an excluded administrative update date. | r22 and r51 explicitly define a protection decision date; the column name alone does not establish an excluded administrative update date.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42624\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42767"
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-beslutsdatum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r23 and r52 define a protection decision date, with operational text expressly covering original decisions. | r23 and r52 define a protection decision date, with operational text expressly covering original decisions.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42625\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42768"
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-gallandedatum"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r24, r40 and r53 consistently define when protection takes legal effect, matching the effective-date group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42626\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442876\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42769"

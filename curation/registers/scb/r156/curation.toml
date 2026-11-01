@@ -362,32 +362,14 @@ evidence = "Suffixet 2 saknas i källkolumnen GatuNr.\ncatalog:variable_text:275
 [[statement]]
 kind = "set"
 subject = "var:hushallsinvestering-totalt"
-fields = { "sets" = [] }
-evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsinvestering-totalt"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
 
 [[statement]]
 kind = "set"
 subject = "var:hushallsinvestering-energibesparing"
-fields = { "sets" = [] }
-evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsinvestering-energibesparing"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsinvestering-varmeatervinning"
-fields = { "sets" = [] }
-evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27570:14975:16071"
 
 [[statement]]
 kind = "set"
@@ -406,12 +388,6 @@ kind = "set"
 subject = "var:husbeskr"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans kolumn och enhet ger olika besked om innehållstyp. Coordinator group membership: Samtliga fem skyddade medlemskap behålls enligt den fasta inkluderingen av hushållsinvesteringar och tillhörande kontrollbelopp. Innehållskonflikten för husbeskr kräver granskning.\ncatalog:variable_text:27568:15340:16071\ncatalog:variable_text:27569:14975:16071\ncatalog:variable_text:27570:14975:16071\ncatalog:variable_text:27571:13149:13514\ncatalog:variable_text:27572:14975:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsinvestering"
-fields = { "sets" = [] }
-evidence = "Beloppet ingår bland hushållsinvesteringarna.\ncatalog:variable_text:27572:14975:15340"
 
 [[statement]]
 kind = "set"
@@ -1384,3 +1360,27 @@ kind = "set"
 subject = "industrins-miljoskyddskostnader: Fax @2015-01-01..2015-12-31 where key = 'v814'"
 fields = { "description" = "Faxnummer" }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27562:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering"
+fields = { "sets" = ["hushallsinvesteringar"] }
+evidence = "r6 records an integer KSEK amount, and r22 explicitly identifies the measure as total hushållsinvestering, satisfying the fixed group definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243350\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243642"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-energibesparing"
+fields = { "sets" = ["hushallsinvesteringar"] }
+evidence = "r26 and r29 explicitly identify hushållsinvestering for energy saving, recorded as integer KSEK amounts, supporting inclusion as component amounts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27479\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243724\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243795"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-totalt"
+fields = { "sets" = ["hushallsinvesteringar"] }
+evidence = "r25 and r28 record total hushållsinvestering as integer KSEK amounts in the control column, matching the group's inclusion of control amounts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27480\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243723\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243794"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsinvestering-varmeatervinning"
+fields = { "sets" = ["hushallsinvesteringar"] }
+evidence = "r27 and r30 explicitly identify hushållsinvestering for heat recovery, recorded as integer KSEK amounts, supporting inclusion as component amounts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27481\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243725\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:243796"

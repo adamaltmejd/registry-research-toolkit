@@ -1154,12 +1154,6 @@ evidence = "Antalet personer i ledningsansvar hör till chefsansvar i arbetet.\n
 [[statement]]
 kind = "set"
 subject = "var:arbentim"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst under mätveckan.\ncatalog:occurrence:249935"
-
-[[statement]]
-kind = "set"
-subject = "var:arbentim"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser arbetsförekomst under mätveckan.\ncatalog:occurrence:249935"
 
@@ -1174,12 +1168,6 @@ kind = "set"
 subject = "var:arbetar-hemifran"
 fields = { "tags" = ["employment"] }
 evidence = "F14 har en annan ägare i en tidigare period.\ncatalog:occurrence:249001\ncatalog:occurrence:249101"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetar-inom-utbildningens-omrade"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250328\ncatalog:occurrence:250375"
 
 [[statement]]
 kind = "set"
@@ -1214,20 +1202,8 @@ evidence = "F16 har andra ägare i andra perioder; variabeln kombinerar arbete o
 [[statement]]
 kind = "set"
 subject = "var:arbete"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst.\ncatalog:occurrence:249160\ncatalog:occurrence:249492"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser arbetsförekomst.\ncatalog:occurrence:249160\ncatalog:occurrence:249492"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-2"
-fields = { "sets" = [] }
-evidence = "F10 återanvänds för andra frågor, och arbete avser både arbete under mätveckan och arbete vid sidan av huvudsaklig sysselsättning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Samtliga mäter förekomst av arbete enligt etiketter och fast definition; samtliga medlemskap är skyddade. membership-0300: Valda sysselsättningskategorier och kvarvaro på första arbetet mäter andra begrepp än arbetsförekomst. membership-0301: Variablerna mäter arbetsförekomst, även med preciserad varaktighet efter utbildning; skyddade medlemskap behålls. membership-0302: Variabeln anger uttryckligen arbetsförekomst under mätveckan. membership-0303: Variablerna mäter arbetsförekomst under mätveckan eller efter utbildning; skyddade medlemskap behålls. membership-0304: Variablerna avser arbetsförekomst, inklusive arbete efter utbildning. Skyddade medlemskap behålls. membership-0305: Huvudsaklig sysselsättning, utbildningsmatchning och tid till första arbete är andra begrepp än arbetsförekomst.\ncatalog:occurrence:248915\ncatalog:occurrence:248992\ncatalog:occurrence:249473\ncatalog:occurrence:249496\ncatalog:variable_text:29365:12478:12509\ncatalog:variable_text:29367:19174:19358\ncatalog:variable_text:29370:16161:16191\ncatalog:variable_text:29371:15431:15461\ncatalog:variable_text:29371:17167:17348\ncatalog:variable_text:29372:14669:14700\ncatalog:variable_text:29373:15796:15826\ncatalog:variable_text:29374:18628:18809\ncatalog:variable_text:29375:13208:13239\ncatalog:variable_text:29376:12478:12509\ncatalog:variable_text:29377:14669:14700\ncatalog:variable_text:29378:13939:13970\ncatalog:variable_text:29379:17167:17348\ncatalog:variable_text:29380:15796:15826\ncatalog:variable_text:29381:11747:11778\ncatalog:variable_text:29382:11017:11048\ncatalog:variable_text:29408:19358:19539\ncatalog:variable_text:29611:18628:18809\ncatalog:variable_text:29709:19174:19358\ncatalog:variable_text:29749:11747:11778\ncatalog:variable_text:29849:15796:15826\ncatalog:variable_text:29850:18078:18262\ncatalog:variable_text:29853:18628:18809\ncatalog:variable_text:29854:19174:19358\ncatalog:variable_text:29855:17167:17348\ncatalog:variable_text:29857:19174:19358\ncatalog:variable_text:29914:15796:15826\ncatalog:variable_text:29916:17167:17348\ncatalog:variable_text:29937:19358:19539"
 
 [[statement]]
 kind = "set"
@@ -1238,20 +1214,8 @@ evidence = "F10 återanvänds för andra frågor, och arbete avser både arbete 
 [[statement]]
 kind = "set"
 subject = "var:arbete-matveckan-hogskoleexaminerade"
-fields = { "sets" = [] }
-evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F11.\ncatalog:occurrence:250246\ncatalog:variable_text:29372:13208:13239\ncatalog:variable_text:29372:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-matveckan-hogskoleexaminerade"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F11.\ncatalog:occurrence:250246\ncatalog:variable_text:29372:13208:13239\ncatalog:variable_text:29372:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-4"
-fields = { "sets" = [] }
-evidence = "F15 återanvänds för en annan fråga; variabeln mäter arbetsförekomst under mätveckan.\ncatalog:occurrence:248924\ncatalog:occurrence:249102\ncatalog:variable_text:29373:15796:15826"
 
 [[statement]]
 kind = "set"
@@ -1262,20 +1226,8 @@ evidence = "F15 återanvänds för en annan fråga; variabeln mäter arbetsföre
 [[statement]]
 kind = "set"
 subject = "var:arbete-5"
-fields = { "sets" = [] }
-evidence = "Suffixet 5 är en räknare, medan källkolumnen är F5.\ncatalog:occurrence:249136\ncatalog:variable_text:29374:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-5"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 5 är en räknare, medan källkolumnen är F5.\ncatalog:occurrence:249136\ncatalog:variable_text:29374:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249159"
 
 [[statement]]
 kind = "set"
@@ -1286,20 +1238,8 @@ evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:arbete-efter-utbildning-arbete"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249936"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-arbete"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249936"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-f01"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249267\ncatalog:occurrence:249367\ncatalog:occurrence:250232"
 
 [[statement]]
 kind = "set"
@@ -1310,20 +1250,8 @@ evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:arbete-efter-utbildning-f1"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:250031\ncatalog:occurrence:250139"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-f1"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:250031\ncatalog:occurrence:250139"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-f6"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:248966\ncatalog:occurrence:249057\ncatalog:occurrence:249137"
 
 [[statement]]
 kind = "set"
@@ -1334,32 +1262,14 @@ evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:arbete-efter-utbildning-f8"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248973\ncatalog:occurrence:249059"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-f8"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248973\ncatalog:occurrence:249059"
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-efter-utbildning-fr16"
-fields = { "sets" = [] }
-evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249901"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-fr16"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser arbetsförekomst efter utbildning.\ncatalog:occurrence:249901"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-efter-utbildning-fr17"
-fields = { "sets" = [] }
-evidence = "Källkolumnen används också för tid till första arbete.\ncatalog:occurrence:249806\ncatalog:occurrence:249902"
 
 [[statement]]
 kind = "set"
@@ -1666,12 +1576,6 @@ kind = "set"
 subject = "var:arbete-inom-norden-f9-1"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29407:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-minst-6-manader-gymnasiet"
-fields = { "sets" = [] }
-evidence = "Identitetsfakta gäller andra begrepp i samma källkolumner.\ncatalog:occurrence:249495\ncatalog:occurrence:249502\ncatalog:occurrence:249505\ncatalog:occurrence:249548\ncatalog:occurrence:249567\ncatalog:occurrence:249643\ncatalog:occurrence:249645\ncatalog:occurrence:249648\ncatalog:occurrence:249712\ncatalog:occurrence:249714"
 
 [[statement]]
 kind = "set"
@@ -2606,32 +2510,14 @@ evidence = "Variabeln gäller nöjdhet med arbetet.\ncatalog:variable_text:29485
 [[statement]]
 kind = "set"
 subject = "var:arbovutb"
-fields = { "sets" = [] }
-evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\ncatalog:occurrence:249957"
-
-[[statement]]
-kind = "set"
-subject = "var:arbovutb"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\ncatalog:occurrence:249957"
 
 [[statement]]
 kind = "set"
 subject = "var:avregkod"
-fields = { "sets" = [] }
-evidence = "Koden beskriver svar, bortfall och övertäckning.\ncatalog:valueset:8527\ncatalog:variable_text:29487:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:avregkod"
 fields = { "tags" = ["methods"] }
 evidence = "Koden beskriver svar, bortfall och övertäckning.\ncatalog:valueset:8527\ncatalog:variable_text:29487:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:avregkod-avreg"
-fields = { "sets" = [] }
-evidence = "Avreg har en annan ägare mellan variabelns observerade perioder.\ncatalog:occurrence:249365\ncatalog:occurrence:249493\ncatalog:occurrence:249544"
 
 [[statement]]
 kind = "set"
@@ -2926,12 +2812,6 @@ kind = "set"
 subject = "var:studier-oavsett-bidrag"
 fields = { "tags" = ["education"] }
 evidence = "Id:t anger bidrag medan variabeln mäter studier oavsett bidrag.\ncatalog:occurrence:249190\ncatalog:variable_text:29513:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:blankettstatus"
-fields = { "sets" = [] }
-evidence = "Variabeln beskriver insamlingens status.\ncatalog:variable_text:29514:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -3338,12 +3218,6 @@ evidence = "F11_ny är en opak frågekod; källetiketten anger arbete på APL-pl
 [[statement]]
 kind = "set"
 subject = "var:f12"
-fields = { "sets" = [] }
-evidence = "F12 är en opak frågekod och källan anger ett specifikt svarsalternativ.\ncatalog:occurrence:250378\ncatalog:variable_text:29549:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:f12"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F12 är en opak frågekod och källan anger ett specifikt svarsalternativ.\ncatalog:occurrence:250378\ncatalog:variable_text:29549:19174:19358"
 
@@ -3370,12 +3244,6 @@ kind = "set"
 subject = "var:anstallningsform-hogskoleexaminerade"
 fields = { "tags" = ["employment"] }
 evidence = "F12 är en ogenomskinlig källkod och suffixet är inte en källkolumn.\ncatalog:occurrence:250247\ncatalog:variable_text:29551:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-0"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248918\ncatalog:occurrence:248995"
 
 [[statement]]
 kind = "set"
@@ -3686,20 +3554,8 @@ evidence = "Id:t är en ogenomskinlig frågekod; etiketten anger fritext om andr
 [[statement]]
 kind = "set"
 subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29578:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29578:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:f1b-02"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29579:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -3710,20 +3566,8 @@ evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att 
 [[statement]]
 kind = "set"
 subject = "var:f1b-03"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29580:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:f1b-03"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29580:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:f1b-04"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29581:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -3734,20 +3578,8 @@ evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att 
 [[statement]]
 kind = "set"
 subject = "var:f1b-05"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29582:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:f1b-05"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29582:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:f1b-06"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29583:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -3902,20 +3734,8 @@ evidence = "F28_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29595
 [[statement]]
 kind = "set"
 subject = "var:studier-utomlands-efter-gymnasieutbildning"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29596:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-utomlands-efter-gymnasieutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29596:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-kande-inte"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249041\ncatalog:variable_text:29597:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -3926,20 +3746,8 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249041\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:orsak-examenskrav-inte-natts-behover-inte-examensbevis"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29598:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examenskrav-inte-natts-behover-inte-examensbevis"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29598:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:f3-03"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29599:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -3950,20 +3758,8 @@ evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29599:17
 [[statement]]
 kind = "set"
 subject = "var:orsak-examenskrav-inte-natts-svart-kombinera-studier-familj"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29600:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examenskrav-inte-natts-svart-kombinera-studier-familj"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29600:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examenskrav-inte-natts-studiesvarigheter"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29601:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -4010,32 +3806,14 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:f30"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250192\ncatalog:occurrence:250278"
-
-[[statement]]
-kind = "set"
-subject = "var:f30"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250192\ncatalog:occurrence:250278"
 
 [[statement]]
 kind = "set"
 subject = "var:f32-5"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29606:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:f32-5"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29606:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:f33-5"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250098\ncatalog:occurrence:250285"
 
 [[statement]]
 kind = "set"
@@ -4058,32 +3836,14 @@ evidence = "F35 är en ogenomskinlig källkod.\ncatalog:occurrence:250100\ncatal
 [[statement]]
 kind = "set"
 subject = "var:f36"
-fields = { "sets" = [] }
-evidence = "F36 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:250304\ncatalog:variable_text:29609:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:f36"
 fields = { "tags" = ["education"] }
 evidence = "F36 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:250304\ncatalog:variable_text:29609:14669:14700"
 
 [[statement]]
 kind = "set"
 subject = "var:f38-5"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29610:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:f38-5"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29610:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:f4-f5-arbete"
-fields = { "sets" = [] }
-evidence = "Frågekoderna F4 och F5 är opaka delar av namnet.\ncatalog:occurrence:249135\ncatalog:variable_text:29611:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -4094,12 +3854,6 @@ evidence = "Frågekoderna F4 och F5 är opaka delar av namnet.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:f5"
-fields = { "sets" = [] }
-evidence = "F5 är en opak frågekod.\ncatalog:occurrence:249591\ncatalog:variable_text:29612:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:f5"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F5 är en opak frågekod.\ncatalog:occurrence:249591\ncatalog:variable_text:29612:17167:17348"
 
@@ -4118,20 +3872,8 @@ evidence = "Källkolumnen har en annan ägare i en annan period. Coordinator gro
 [[statement]]
 kind = "set"
 subject = "var:orsak-examen-ej-uttagen-arbete-inte-matchade-utbildningen"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29614:15796:15826\ncatalog:variable_text:29614:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examen-ej-uttagen-arbete-inte-matchade-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29614:15796:15826\ncatalog:variable_text:29614:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examen-ej-tagits-ut-utbildningen-hade-fel"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29615:15796:15826\ncatalog:variable_text:29615:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -4142,32 +3884,14 @@ evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29615:15
 [[statement]]
 kind = "set"
 subject = "var:f5-05"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248960\ncatalog:occurrence:249056"
-
-[[statement]]
-kind = "set"
-subject = "var:f5-05"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248960\ncatalog:occurrence:249056"
 
 [[statement]]
 kind = "set"
 subject = "var:orsak-examen-ej-uttagen-svart-kombinera-studier-familj"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29617:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examen-ej-uttagen-svart-kombinera-studier-familj"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29617:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:f5-06-txt"
-fields = { "sets" = [] }
-evidence = "F5 och txt är opaka källkoder.\ncatalog:occurrence:249597\ncatalog:variable_text:29618:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -4178,32 +3902,14 @@ evidence = "F5 och txt är opaka källkoder.\ncatalog:occurrence:249597\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:orsak-till-att-examen-ej-tagits-ut-tappade-motivationen"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29619:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examen-ej-tagits-ut-tappade-motivationen"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29619:15796:15826"
 
 [[statement]]
 kind = "set"
 subject = "var:orsak-till-att-examen-ej-tagits-ut-ekonomiska-skal"
-fields = { "sets" = [] }
-evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29620:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examen-ej-tagits-ut-ekonomiska-skal"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29620:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:f5-txt"
-fields = { "sets" = [] }
-evidence = "F5 och txt är opaka källkoder.\ncatalog:occurrence:249745\ncatalog:variable_text:29621:19358:19539"
 
 [[statement]]
 kind = "set"
@@ -4370,12 +4076,6 @@ evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med svarsaltern
 [[statement]]
 kind = "set"
 subject = "var:f7-0"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250337\ncatalog:occurrence:250406"
-
-[[statement]]
-kind = "set"
-subject = "var:f7-0"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250337\ncatalog:occurrence:250406"
 
@@ -4438,12 +4138,6 @@ kind = "set"
 subject = "var:skal-studera-annan-anledning"
 fields = { "tags" = ["education"] }
 evidence = "F7_txt är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:250410\ncatalog:variable_text:29640:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:f8-0"
-fields = { "sets" = [] }
-evidence = "F8 är en opak frågekod.\ncatalog:occurrence:249139\ncatalog:variable_text:29641:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -5534,12 +5228,6 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29731:11
 [[statement]]
 kind = "set"
 subject = "var:fr21"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräver särskiljning.\ncatalog:variable_text:29732:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:fr21"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräver särskiljning.\ncatalog:variable_text:29732:11747:11778"
 
@@ -5578,12 +5266,6 @@ kind = "set"
 subject = "var:arbete-utomlands-land-utanfor-europa"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29735:11017:11048"
-
-[[statement]]
-kind = "set"
-subject = "var:fr23c"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräver särskiljning.\ncatalog:variable_text:29736:11017:11048"
 
 [[statement]]
 kind = "set"
@@ -5714,12 +5396,6 @@ evidence = "Fr3e är en ogenomskinlig källkod.\ncatalog:occurrence:249916\ncata
 [[statement]]
 kind = "set"
 subject = "var:fr3f"
-fields = { "sets" = [] }
-evidence = "Fr3f är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: De valda geografiska arbetsvariablerna gäller arbete utomlands, inte studier. membership-0300: Ingen vald variabel mäter utlandsstudier eller deras geografiska delområden. membership-0301: Etiketten anger utlandsstudier. Den blandade uppgiften om arbete eller studier avgränsar inte utlandsstudier. membership-0302: Variablerna anger utlandsstudier, geografiska delalternativ eller svarsalternativet inga utlandsstudier. membership-0303: Medlemmarna mäter utlandsstudier, geografiska delar eller alternativet inga utlandsstudier. Fr24a–fr24e hålls utanför i väntan på avgörande stöd om deltagande kontra nivå. membership-0304: De inkluderade variablerna avser uttryckligen utlandsstudier eller geografiska delområden. Studier-i-sverige hålls utanför på grund av olöst konflikt mellan aktuell etikett och äldre värdemängder. membership-0305: Studiekommun och studielän anger studieplats, inte utlandsstudier. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Avklarade högskolepoäng mäter utbildningsresultat och examensförekomst mäter examen, inte det definierade utbildningsdeltagandet. membership-0300: Valda studieuppgifter gäller planer och skäl, inte faktiskt utbildningsdeltagande. membership-0301: Etiketter och beskrivningar anger studier respektive kursdeltagande, oavsett den missvisande identifieraren bidrag. membership-0302: Variablerna anger faktiskt deltagande i kurser respektive högskolestudier. membership-0303: Variablerna mäter deltagande i kurser eller utbildning och namngivna former. Fr3f anger deltagande genom utlandsstudier, inte en geografisk fördelning. membership-0304: Variablerna anger faktiskt kurs- eller studiedeltagande. Geografiska studiealternativ och studier i stället för arbete tillhör andra fasta kandidater. membership-0305: Variablerna anger studier under höstterminen respektive eftergymnasiala studier före YH. LIA-deltagande är praktikdeltagande och saknar stöd som utbildningsform inom denna fasta kandidat.\ncatalog:occurrence:249917\ncatalog:valueset:11094\ncatalog:valueset:6703\ncatalog:valueset:9915\ncatalog:variable_text:29344:17167:17348\ncatalog:variable_text:29369:16161:16191\ncatalog:variable_text:29388:15796:15826\ncatalog:variable_text:29395:15796:15826\ncatalog:variable_text:29400:15796:15826\ncatalog:variable_text:29406:15796:15826\ncatalog:variable_text:29415:15796:15826\ncatalog:variable_text:29513:13208:13239\ncatalog:variable_text:29525:11747:11778\ncatalog:variable_text:29526:13939:13970\ncatalog:variable_text:29527:14669:14700\ncatalog:variable_text:29528:14669:14700\ncatalog:variable_text:29529:11747:11778\ncatalog:variable_text:29533:17167:17348\ncatalog:variable_text:29534:15796:15826\ncatalog:variable_text:29540:18628:18809\ncatalog:variable_text:29541:15796:15826\ncatalog:variable_text:29596:14669:14700\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29608:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29623:19174:19358\ncatalog:variable_text:29732:11747:11778\ncatalog:variable_text:29736:11017:11048\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29742:11017:11048\ncatalog:variable_text:29743:11747:11778\ncatalog:variable_text:29744:11747:11778\ncatalog:variable_text:29745:11747:11778\ncatalog:variable_text:29746:11747:11778\ncatalog:variable_text:29747:11747:11778\ncatalog:variable_text:29748:11747:11778\ncatalog:variable_text:29781:18628:18809\ncatalog:variable_text:29811:18628:18809\ncatalog:variable_text:29825:19174:19358\ncatalog:variable_text:29842:19174:19358\ncatalog:variable_text:29859:18628:18809\ncatalog:variable_text:29910:13208:13239\ncatalog:variable_text:30021:17167:17348\ncatalog:variable_text:30087:19358:19539\ncatalog:variable_text:30089:18078:18262\ncatalog:variable_text:30090:19174:19358\ncatalog:variable_text:30091:14669:14700\ncatalog:variable_text:30092:14669:14700\ncatalog:variable_text:30093:13939:13970\ncatalog:variable_text:30094:13208:13239\ncatalog:variable_text:30095:14669:14700\ncatalog:variable_text:30096:13208:13239\ncatalog:variable_text:30097:12478:12509\ncatalog:variable_text:30098:14669:14700\ncatalog:variable_text:30099:14669:14700\ncatalog:variable_text:30100:13939:13970\ncatalog:variable_text:30101:13208:13239\ncatalog:variable_text:30102:14669:14700\ncatalog:variable_text:30103:13208:13239\ncatalog:variable_text:30104:12478:12509\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30106:14669:14700\ncatalog:variable_text:30116:13939:13970\ncatalog:variable_text:30117:11747:11778\ncatalog:variable_text:30118:11747:11778\ncatalog:variable_text:30120:13208:13239\ncatalog:variable_text:30121:12478:12509"
-
-[[statement]]
-kind = "set"
-subject = "var:fr3f"
 fields = { "tags" = ["education"] }
 evidence = "Fr3f är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: De valda geografiska arbetsvariablerna gäller arbete utomlands, inte studier. membership-0300: Ingen vald variabel mäter utlandsstudier eller deras geografiska delområden. membership-0301: Etiketten anger utlandsstudier. Den blandade uppgiften om arbete eller studier avgränsar inte utlandsstudier. membership-0302: Variablerna anger utlandsstudier, geografiska delalternativ eller svarsalternativet inga utlandsstudier. membership-0303: Medlemmarna mäter utlandsstudier, geografiska delar eller alternativet inga utlandsstudier. Fr24a–fr24e hålls utanför i väntan på avgörande stöd om deltagande kontra nivå. membership-0304: De inkluderade variablerna avser uttryckligen utlandsstudier eller geografiska delområden. Studier-i-sverige hålls utanför på grund av olöst konflikt mellan aktuell etikett och äldre värdemängder. membership-0305: Studiekommun och studielän anger studieplats, inte utlandsstudier. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Avklarade högskolepoäng mäter utbildningsresultat och examensförekomst mäter examen, inte det definierade utbildningsdeltagandet. membership-0300: Valda studieuppgifter gäller planer och skäl, inte faktiskt utbildningsdeltagande. membership-0301: Etiketter och beskrivningar anger studier respektive kursdeltagande, oavsett den missvisande identifieraren bidrag. membership-0302: Variablerna anger faktiskt deltagande i kurser respektive högskolestudier. membership-0303: Variablerna mäter deltagande i kurser eller utbildning och namngivna former. Fr3f anger deltagande genom utlandsstudier, inte en geografisk fördelning. membership-0304: Variablerna anger faktiskt kurs- eller studiedeltagande. Geografiska studiealternativ och studier i stället för arbete tillhör andra fasta kandidater. membership-0305: Variablerna anger studier under höstterminen respektive eftergymnasiala studier före YH. LIA-deltagande är praktikdeltagande och saknar stöd som utbildningsform inom denna fasta kandidat.\ncatalog:occurrence:249917\ncatalog:valueset:11094\ncatalog:valueset:6703\ncatalog:valueset:9915\ncatalog:variable_text:29344:17167:17348\ncatalog:variable_text:29369:16161:16191\ncatalog:variable_text:29388:15796:15826\ncatalog:variable_text:29395:15796:15826\ncatalog:variable_text:29400:15796:15826\ncatalog:variable_text:29406:15796:15826\ncatalog:variable_text:29415:15796:15826\ncatalog:variable_text:29513:13208:13239\ncatalog:variable_text:29525:11747:11778\ncatalog:variable_text:29526:13939:13970\ncatalog:variable_text:29527:14669:14700\ncatalog:variable_text:29528:14669:14700\ncatalog:variable_text:29529:11747:11778\ncatalog:variable_text:29533:17167:17348\ncatalog:variable_text:29534:15796:15826\ncatalog:variable_text:29540:18628:18809\ncatalog:variable_text:29541:15796:15826\ncatalog:variable_text:29596:14669:14700\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29608:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29623:19174:19358\ncatalog:variable_text:29732:11747:11778\ncatalog:variable_text:29736:11017:11048\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29742:11017:11048\ncatalog:variable_text:29743:11747:11778\ncatalog:variable_text:29744:11747:11778\ncatalog:variable_text:29745:11747:11778\ncatalog:variable_text:29746:11747:11778\ncatalog:variable_text:29747:11747:11778\ncatalog:variable_text:29748:11747:11778\ncatalog:variable_text:29781:18628:18809\ncatalog:variable_text:29811:18628:18809\ncatalog:variable_text:29825:19174:19358\ncatalog:variable_text:29842:19174:19358\ncatalog:variable_text:29859:18628:18809\ncatalog:variable_text:29910:13208:13239\ncatalog:variable_text:30021:17167:17348\ncatalog:variable_text:30087:19358:19539\ncatalog:variable_text:30089:18078:18262\ncatalog:variable_text:30090:19174:19358\ncatalog:variable_text:30091:14669:14700\ncatalog:variable_text:30092:14669:14700\ncatalog:variable_text:30093:13939:13970\ncatalog:variable_text:30094:13208:13239\ncatalog:variable_text:30095:14669:14700\ncatalog:variable_text:30096:13208:13239\ncatalog:variable_text:30097:12478:12509\ncatalog:variable_text:30098:14669:14700\ncatalog:variable_text:30099:14669:14700\ncatalog:variable_text:30100:13939:13970\ncatalog:variable_text:30101:13208:13239\ncatalog:variable_text:30102:14669:14700\ncatalog:variable_text:30103:13208:13239\ncatalog:variable_text:30104:12478:12509\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30106:14669:14700\ncatalog:variable_text:30116:13939:13970\ncatalog:variable_text:30117:11747:11778\ncatalog:variable_text:30118:11747:11778\ncatalog:variable_text:30120:13208:13239\ncatalog:variable_text:30121:12478:12509"
 
@@ -5734,12 +5410,6 @@ kind = "set"
 subject = "var:annan-kurs-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Fr3g är en ogenomskinlig källkod.\ncatalog:occurrence:249918\ncatalog:variable_text:29748:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
-fields = { "sets" = [] }
-evidence = "Fr4 är en opak frågekod.\ncatalog:variable_text:29749:11747:11778"
 
 [[statement]]
 kind = "set"
@@ -6111,12 +5781,6 @@ evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog
 kind = "set"
 subject = "var:framtidsplaner-andra-saker"
 fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Källkolumnerna har andra ägare i tidigare perioder.\ncatalog:occurrence:249419\ncatalog:occurrence:249426\ncatalog:occurrence:249583\ncatalog:occurrence:249665"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-saker"
-fields = { "tags" = [] }
 evidence = "Källkolumnerna har andra ägare i tidigare perioder.\ncatalog:occurrence:249419\ncatalog:occurrence:249426\ncatalog:occurrence:249583\ncatalog:occurrence:249665"
 
 [[statement]]
@@ -6878,12 +6542,6 @@ evidence = "Variabeln klassificerar personens utbildningsnivå före YH.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:hur-nojd-ar-du-med-din-yh-utbildning"
-fields = { "sets" = [] }
-evidence = "F12 har olika ägare i olika observerade perioder. Variabeln avser allmän nöjdhet med YH-utbildningen.\ncatalog:occurrence:250330\ncatalog:occurrence:250377\ncatalog:valueset:10845\ncatalog:variable_text:29844:18078:18262\ncatalog:variable_text:29844:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:hur-nojd-ar-du-med-din-yh-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "F12 har olika ägare i olika observerade perioder. Variabeln avser allmän nöjdhet med YH-utbildningen.\ncatalog:occurrence:250330\ncatalog:occurrence:250377\ncatalog:valueset:10845\ncatalog:variable_text:29844:18078:18262\ncatalog:variable_text:29844:19174:19358"
 
@@ -7070,12 +6728,6 @@ evidence = "Variabeln mäter skäl till studier.\ncatalog:occurrence:249132\ncat
 [[statement]]
 kind = "set"
 subject = "var:typ-av-interjvu"
-fields = { "sets" = [] }
-evidence = "Idkoll är en ogenomskinlig källmnemonik för intervjutyp.\ncatalog:variable_text:29861:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-interjvu"
 fields = { "tags" = ["methods"] }
 evidence = "Idkoll är en ogenomskinlig källmnemonik för intervjutyp.\ncatalog:variable_text:29861:17167:17348"
 
@@ -7094,32 +6746,14 @@ evidence = "Imputering är en statistisk kvalitetsmarkör.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:indatamedium"
-fields = { "sets" = [] }
-evidence = "Indatamedium anger hur svaret skickats in.\ncatalog:variable_text:29863:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:indatamedium"
 fields = { "tags" = ["methods"] }
 evidence = "Indatamedium anger hur svaret skickats in.\ncatalog:variable_text:29863:18262:18444"
 
 [[statement]]
 kind = "set"
 subject = "var:inflodeskod"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare före och efter denna period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter blankettstatus; avregistreringskod omfattas uttryckligen inte. membership-0300: Vald insamlingsmetod anger metod, inte blankettstatus. membership-0301: Variabeln anger blankettens svarsstatus. membership-0302: Infokalla och uestatus anger blankettstatus. Inflödeskod anger svar, bortfall eller övertäckning och mäter därmed svarsstatus. membership-0303: Valda administrativa variabler avser avregistrering, svarstidpunkt eller antal; ingen har aktuell etikett för blankettstatus. membership-0304: Ingen vald variabel anger blankettens svars- eller handläggningsstatus. membership-0305: Ingen vald variabel anger blankettens svars- eller handläggningsstatus.\ncatalog:occurrence:249365\ncatalog:occurrence:249493\ncatalog:occurrence:249544\ncatalog:valueset:12075\ncatalog:variable_text:29487:13939:13970\ncatalog:variable_text:29488:17167:17348\ncatalog:variable_text:29489:11747:11778\ncatalog:variable_text:29514:17167:17348\ncatalog:variable_text:29524:11747:11778\ncatalog:variable_text:29864:16161:16191\ncatalog:variable_text:29865:17167:17348\ncatalog:variable_text:29867:15796:15826\ncatalog:variable_text:30083:11017:11048\ncatalog:variable_text:30162:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:inflodeskod"
 fields = { "tags" = ["methods"] }
 evidence = "Samma källkolumn har en annan ägare före och efter denna period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter blankettstatus; avregistreringskod omfattas uttryckligen inte. membership-0300: Vald insamlingsmetod anger metod, inte blankettstatus. membership-0301: Variabeln anger blankettens svarsstatus. membership-0302: Infokalla och uestatus anger blankettstatus. Inflödeskod anger svar, bortfall eller övertäckning och mäter därmed svarsstatus. membership-0303: Valda administrativa variabler avser avregistrering, svarstidpunkt eller antal; ingen har aktuell etikett för blankettstatus. membership-0304: Ingen vald variabel anger blankettens svars- eller handläggningsstatus. membership-0305: Ingen vald variabel anger blankettens svars- eller handläggningsstatus.\ncatalog:occurrence:249365\ncatalog:occurrence:249493\ncatalog:occurrence:249544\ncatalog:valueset:12075\ncatalog:variable_text:29487:13939:13970\ncatalog:variable_text:29488:17167:17348\ncatalog:variable_text:29489:11747:11778\ncatalog:variable_text:29514:17167:17348\ncatalog:variable_text:29524:11747:11778\ncatalog:variable_text:29864:16161:16191\ncatalog:variable_text:29865:17167:17348\ncatalog:variable_text:29867:15796:15826\ncatalog:variable_text:30083:11017:11048\ncatalog:variable_text:30162:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:infokalla"
-fields = { "sets" = [] }
-evidence = "Värdena skiljer webbsvar och intervjuer. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter blankettstatus; avregistreringskod omfattas uttryckligen inte. membership-0300: Vald insamlingsmetod anger metod, inte blankettstatus. membership-0301: Variabeln anger blankettens svarsstatus. membership-0302: Infokalla och uestatus anger blankettstatus. Inflödeskod anger svar, bortfall eller övertäckning och mäter därmed svarsstatus. membership-0303: Valda administrativa variabler avser avregistrering, svarstidpunkt eller antal; ingen har aktuell etikett för blankettstatus. membership-0304: Ingen vald variabel anger blankettens svars- eller handläggningsstatus. membership-0305: Ingen vald variabel anger blankettens svars- eller handläggningsstatus. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter insamlingsmetod eller medium. membership-0300: Variabeln anger enkätens insamlingsmetod. membership-0301: Ingen vald variabel i sektionen anger insamlingsmetod, medium eller intervjutyp. membership-0302: Intervjutyp och indatamedium stöder medlemskap. Statusetiketten för infokalla och urvalsdesignetiketterna för mode-variablerna stöder inte medlemskap enligt den fasta definitionen. membership-0303: Valda administrativa uppgifter avser koder, antal och datum, inte insamlingsmetod eller medium. membership-0304: Ingen vald variabel anger insamlingsmetod, medium eller intervjutyp. membership-0305: Utsändningsgrupp anger ett kontaktstrategiexperiment, inte insamlingsmetod, medium eller intervjutyp.\ncatalog:valueset:12075\ncatalog:variable_text:29487:13939:13970\ncatalog:variable_text:29488:17167:17348\ncatalog:variable_text:29489:11747:11778\ncatalog:variable_text:29514:17167:17348\ncatalog:variable_text:29524:11747:11778\ncatalog:variable_text:29861:17167:17348\ncatalog:variable_text:29863:19358:19539\ncatalog:variable_text:29864:16161:16191\ncatalog:variable_text:29865:17167:17348\ncatalog:variable_text:29867:15796:15826\ncatalog:variable_text:29927:11017:11048\ncatalog:variable_text:29938:17167:17348\ncatalog:variable_text:29939:17167:17348\ncatalog:variable_text:30083:11017:11048\ncatalog:variable_text:30162:17167:17348\ncatalog:variable_text:30189:19174:19358"
 
 [[statement]]
 kind = "set"
@@ -7138,12 +6772,6 @@ kind = "set"
 subject = "var:inriktning-i-gymnasiet"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln grupperar gymnasieinriktningar.\ncatalog:variable_text:29866:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:insamlingsmetod"
-fields = { "sets" = [] }
-evidence = "Variabeln anger insamlingssätt.\ncatalog:variable_text:29867:15796:15826"
 
 [[statement]]
 kind = "set"
@@ -7958,12 +7586,6 @@ evidence = "Variabeln grupperar medborgarskapsländer.\ncatalog:variable_text:29
 [[statement]]
 kind = "set"
 subject = "var:minst-en-timmes-arbete-under-matveckan"
-fields = { "sets" = [] }
-evidence = "Källkolumnerna har andra ägare för andra begrepp.\ncatalog:occurrence:249516\ncatalog:occurrence:249519\ncatalog:occurrence:249569\ncatalog:occurrence:249590"
-
-[[statement]]
-kind = "set"
-subject = "var:minst-en-timmes-arbete-under-matveckan"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnerna har andra ägare för andra begrepp.\ncatalog:occurrence:249516\ncatalog:occurrence:249519\ncatalog:occurrence:249569\ncatalog:occurrence:249590"
 
@@ -8038,12 +7660,6 @@ kind = "set"
 subject = "var:nojd-med-arbetet"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:249601\ncatalog:occurrence:249681"
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-med-avslutad-utbildning"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har andra ägare i andra perioder.\ncatalog:occurrence:249476\ncatalog:occurrence:249505\ncatalog:occurrence:249567"
 
 [[statement]]
 kind = "set"
@@ -8342,20 +7958,8 @@ evidence = "Samma källkolumn har en annan ägare i en annan period. Coordinator
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-utbildning-2"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:248931\ncatalog:occurrence:249032"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-utbildning-2"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:248931\ncatalog:occurrence:249032"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-universitets-hogskoleutbildning"
-fields = { "sets" = [] }
-evidence = "Suffixet 3 är inte en del av källkolumnen.\ncatalog:occurrence:248949\ncatalog:variable_text:29971:15796:15826"
 
 [[statement]]
 kind = "set"
@@ -8366,32 +7970,14 @@ evidence = "Suffixet 3 är inte en del av källkolumnen.\ncatalog:occurrence:248
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-utbildning-4"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249438\ncatalog:occurrence:249586"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-utbildning-4"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249438\ncatalog:occurrence:249586"
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-utbildning-5"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250092\ncatalog:occurrence:250193"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-utbildning-5"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250092\ncatalog:occurrence:250193"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdutb"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter nöjdhet med utbildningen.\ncatalog:occurrence:249235\ncatalog:variable_text:29974:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -8534,20 +8120,8 @@ evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence
 [[statement]]
 kind = "set"
 subject = "var:orsak-examen-ej-uttagen-annan"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248960\ncatalog:occurrence:249056"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examen-ej-uttagen-annan"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248960\ncatalog:occurrence:249056"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examen-ej-uttagen-behover-ej"
-fields = { "sets" = [] }
-evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:248956\ncatalog:occurrence:248957\ncatalog:occurrence:249052\ncatalog:occurrence:249053"
 
 [[statement]]
 kind = "set"
@@ -8558,20 +8132,8 @@ evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:orsak-examen-ej-uttagen-kande-ej-kraven"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248956\ncatalog:occurrence:249052"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-examen-ej-uttagen-kande-ej-kraven"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248956\ncatalog:occurrence:249052"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-f3-04"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29990:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -8582,20 +8144,8 @@ evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:orsak-till-att-examenskrav-inte-natts-f3-05"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29991:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-f3-05"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29991:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-f3-07"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29992:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -8606,20 +8156,8 @@ evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:orsak-till-att-examenskrav-inte-natts-f3-08"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29993:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-f3-08"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29993:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:orsak-till-att-examenskrav-inte-natts-f3-10"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:variable_text:29994:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -8630,20 +8168,8 @@ evidence = "Variabeln gäller en orsak till ej uppnådda examenskrav.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f13-02"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248919\ncatalog:occurrence:248996"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f13-02"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248919\ncatalog:occurrence:248996"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f13-03"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248920\ncatalog:occurrence:248997"
 
 [[statement]]
 kind = "set"
@@ -8654,20 +8180,8 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f13-04"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248921\ncatalog:occurrence:248998"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f13-04"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248921\ncatalog:occurrence:248998"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f13-05"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:248922\ncatalog:occurrence:248999"
 
 [[statement]]
 kind = "set"
@@ -8678,20 +8192,8 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f13-06"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249000"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f13-06"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249000"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-02"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249140"
 
 [[statement]]
 kind = "set"
@@ -8702,20 +8204,8 @@ evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f8-03"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249141"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-03"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249141"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-04"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249142"
 
 [[statement]]
 kind = "set"
@@ -8726,20 +8216,8 @@ evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f8-05"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249143"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-05"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249143"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-06"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249144"
 
 [[statement]]
 kind = "set"
@@ -8750,20 +8228,8 @@ evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:orsaker-till-ej-overenstammande-arbete-f8-07"
-fields = { "sets" = [] }
-evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249145"
-
-[[statement]]
-kind = "set"
-subject = "var:orsaker-till-ej-overenstammande-arbete-f8-07"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatalog:occurrence:249145"
-
-[[statement]]
-kind = "set"
-subject = "var:overens"
-fields = { "sets" = [] }
-evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\ncatalog:occurrence:249237"
 
 [[statement]]
 kind = "set"
@@ -8774,20 +8240,8 @@ evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\nca
 [[statement]]
 kind = "set"
 subject = "var:overensstammelse-gymnasieutbildning"
-fields = { "sets" = [] }
-evidence = "Källkolumnerna har andra ägare för andra begrepp.\ncatalog:occurrence:249519\ncatalog:occurrence:249530\ncatalog:occurrence:249590\ncatalog:occurrence:249600"
-
-[[statement]]
-kind = "set"
-subject = "var:overensstammelse-gymnasieutbildning"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnerna har andra ägare för andra begrepp.\ncatalog:occurrence:249519\ncatalog:occurrence:249530\ncatalog:occurrence:249590\ncatalog:occurrence:249600"
-
-[[statement]]
-kind = "set"
-subject = "var:overensstammelse-utbildning-och-arbete"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:249776\ncatalog:occurrence:249872"
 
 [[statement]]
 kind = "set"
@@ -8798,20 +8252,8 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:overensstammer-arbetet-med-utbildningen"
-fields = { "sets" = [] }
-evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:250329\ncatalog:occurrence:250335\ncatalog:occurrence:250376\ncatalog:occurrence:250404"
-
-[[statement]]
-kind = "set"
-subject = "var:overensstammer-arbetet-med-utbildningen"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:250329\ncatalog:occurrence:250335\ncatalog:occurrence:250376\ncatalog:occurrence:250404"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrarbut"
-fields = { "sets" = [] }
-evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\ncatalog:occurrence:249999"
 
 [[statement]]
 kind = "set"
@@ -9086,12 +8528,6 @@ evidence = "Variabeln anger stratum vid urvalsdragning.\ncatalog:variable_text:3
 [[statement]]
 kind = "set"
 subject = "var:skal-arbete-ej-overensstammer"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250336\ncatalog:occurrence:250405"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-ej-overensstammer"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250336\ncatalog:occurrence:250405"
 
@@ -9266,20 +8702,8 @@ evidence = "The item records a reason for choosing YH.\ncatalog:occurrence:25039
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-02"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30050:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-02"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30050:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-03"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30051:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -9290,20 +8714,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30051:17167:173
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-04"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30052:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-04"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30052:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-05"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30053:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -9314,20 +8726,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30053:17167:173
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-06"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30054:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-06"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30054:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-utbildning-vet-inte"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30055:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -9338,20 +8738,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30055:17167:173
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-1"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30056:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-1"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30056:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-2"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30057:19358:19539"
 
 [[statement]]
 kind = "set"
@@ -9362,32 +8750,14 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30057:19358:195
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-3"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30058:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-3"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30058:19358:19539"
 
 [[statement]]
 kind = "set"
 subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-4"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30059:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-4"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30059:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-5"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30060:19358:19539"
 
 [[statement]]
 kind = "set"
@@ -9410,20 +8780,8 @@ evidence = "Värdemängderna anger olika innehåll mellan perioderna.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250330\ncatalog:occurrence:250377"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250330\ncatalog:occurrence:250377"
-
-[[statement]]
-kind = "set"
-subject = "var:inte-overensstammer-svart-fa-arbete-overhuvudtaget-2022"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30063:19174:19358"
 
 [[statement]]
 kind = "set"
@@ -9434,20 +8792,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30063:19174:193
 [[statement]]
 kind = "set"
 subject = "var:skal-inte-overensstammer-arbetar-inom-annan-utbildning-2022"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30064:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-inte-overensstammer-arbetar-inom-annan-utbildning-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30064:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-mer-attraktivt-2022"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30065:19174:19358"
 
 [[statement]]
 kind = "set"
@@ -9458,20 +8804,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30065:19174:193
 [[statement]]
 kind = "set"
 subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2022"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30066:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30066:19174:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2022"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30067:19174:19358"
 
 [[statement]]
 kind = "set"
@@ -9482,20 +8816,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30067:19174:193
 [[statement]]
 kind = "set"
 subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-02"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250338\ncatalog:occurrence:250407"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-02"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250338\ncatalog:occurrence:250407"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-03"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250339\ncatalog:occurrence:250408"
 
 [[statement]]
 kind = "set"
@@ -9506,20 +8828,8 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-04"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250340\ncatalog:occurrence:250409"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-04"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:250340\ncatalog:occurrence:250409"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2019"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30071:18078:18262"
 
 [[statement]]
 kind = "set"
@@ -9530,20 +8840,8 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30071:18078:182
 [[statement]]
 kind = "set"
 subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2019"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30072:18078:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2019"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30072:18078:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-arbete-inte-overensstammer-familjeskal"
-fields = { "sets" = [] }
-evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30073:18078:18262"
 
 [[statement]]
 kind = "set"
@@ -9758,20 +9056,8 @@ evidence = "Variabeln anger studiernas län.\ncatalog:variable_text:30090:18078:
 [[statement]]
 kind = "set"
 subject = "var:studier-europa-utom-norden"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30091:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-europa-utom-norden"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30091:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30092:14669:14700"
 
 [[statement]]
 kind = "set"
@@ -9782,20 +9068,8 @@ evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.
 [[statement]]
 kind = "set"
 subject = "var:studier-i-ovriga-varlden-f32-4"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30093:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-f32-4"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30093:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-f33-4"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250097\ncatalog:occurrence:250284"
 
 [[statement]]
 kind = "set"
@@ -9806,32 +9080,14 @@ evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:studier-i-ovriga-varlden-f38-4"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30095:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-f38-4"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30095:14669:14700"
 
 [[statement]]
 kind = "set"
 subject = "var:studier-i-ovriga-varlden-studovr"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30096:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-studovr"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30096:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-studut4"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30097:12478:12509"
 
 [[statement]]
 kind = "set"
@@ -9854,20 +9110,8 @@ evidence = "Källkolumnen har en annan ägare och värdemängderna anger olika g
 [[statement]]
 kind = "set"
 subject = "var:studier-i-usa"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30099:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30099:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-f32-3"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30100:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -9878,20 +9122,8 @@ evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:studier-i-usa-f33-3"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250096\ncatalog:occurrence:250283"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-f33-3"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250096\ncatalog:occurrence:250283"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-f38-3"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30102:14669:14700"
 
 [[statement]]
 kind = "set"
@@ -9902,20 +9134,8 @@ evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:studier-i-usa-studusa"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30103:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-studusa"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30103:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-studut3"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30104:12478:12509"
 
 [[statement]]
 kind = "set"
@@ -9926,20 +9146,8 @@ evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:studier-inom-europa"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250095\ncatalog:occurrence:250282"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-inom-europa"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250095\ncatalog:occurrence:250282"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-inom-norden"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30106:14669:14700"
 
 [[statement]]
 kind = "set"
@@ -10046,32 +9254,14 @@ evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:studier-utomlands"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:249339\ncatalog:occurrence:249588"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-utomlands"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:249339\ncatalog:occurrence:249588"
 
 [[statement]]
 kind = "set"
 subject = "var:studier-utomlands-inom-europa"
-fields = { "sets" = [] }
-evidence = "Källan visar olika innehållstyper mellan perioderna.\ncatalog:occurrence:249816\ncatalog:occurrence:249910\ncatalog:valueset:1161\ncatalog:valueset:4151"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-utomlands-inom-europa"
 fields = { "tags" = ["education"] }
 evidence = "Källan visar olika innehållstyper mellan perioderna.\ncatalog:occurrence:249816\ncatalog:occurrence:249910\ncatalog:valueset:1161\ncatalog:valueset:4151"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-utomlands-utanfor-europa"
-fields = { "sets" = [] }
-evidence = "Källan visar olika innehållstyper mellan perioderna.\ncatalog:occurrence:249817\ncatalog:occurrence:249911\ncatalog:valueset:1161\ncatalog:valueset:4151"
 
 [[statement]]
 kind = "set"
@@ -10094,20 +9284,8 @@ evidence = "Variabeln anger utbildningens studietakt.\ncatalog:variable_text:301
 [[statement]]
 kind = "set"
 subject = "var:studnej"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller svarsalternativet inga utlandsstudier.\ncatalog:valueset:12480\ncatalog:variable_text:30120:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studnej"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller svarsalternativet inga utlandsstudier.\ncatalog:valueset:12480\ncatalog:variable_text:30120:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studut5"
-fields = { "sets" = [] }
-evidence = "Variabeln gäller svarsalternativet inga utlandsstudier.\ncatalog:valueset:9915\ncatalog:variable_text:30121:12478:12509"
 
 [[statement]]
 kind = "set"
@@ -10574,12 +9752,6 @@ evidence = "Variabeln avser studieplaner.\ncatalog:variable_text:30160:12478:125
 [[statement]]
 kind = "set"
 subject = "var:uestatus"
-fields = { "sets" = [] }
-evidence = "UEStatus är en opak källkod; etiketten anger blankettens statuskod.\ncatalog:variable_text:30162:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:uestatus"
 fields = { "tags" = ["methods"] }
 evidence = "UEStatus är en opak källkod; etiketten anger blankettens statuskod.\ncatalog:variable_text:30162:17167:17348"
 
@@ -10610,20 +9782,8 @@ evidence = "Samma urvalsstorlek är korrekt uppdelad per period mot lilla-n-per-
 [[statement]]
 kind = "set"
 subject = "var:utb-arbete-overensstammelse"
-fields = { "sets" = [] }
-evidence = "F12 återanvänds för en fråga om arbetslöshet; denna variabel avser utbildningens överensstämmelse med arbetet.\ncatalog:occurrence:248917\ncatalog:occurrence:248994\ncatalog:variable_text:30165:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F12 återanvänds för en fråga om arbetslöshet; denna variabel avser utbildningens överensstämmelse med arbetet.\ncatalog:occurrence:248917\ncatalog:occurrence:248994\ncatalog:variable_text:30165:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-2"
-fields = { "sets" = [] }
-evidence = "F17 återanvänds för en fråga om studier i stället för arbete.\ncatalog:occurrence:249475\ncatalog:occurrence:249504\ncatalog:variable_text:30166:15431:15461"
 
 [[statement]]
 kind = "set"
@@ -10634,20 +9794,8 @@ evidence = "F17 återanvänds för en fråga om studier i stället för arbete.\
 [[statement]]
 kind = "set"
 subject = "var:utb-arbete-overensstammelse-3"
-fields = { "sets" = [] }
-evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F18.\ncatalog:occurrence:250148\ncatalog:variable_text:30167:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-3"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F18.\ncatalog:occurrence:250148\ncatalog:variable_text:30167:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-4"
-fields = { "sets" = [] }
-evidence = "F20 återanvänds för en fråga om nöjdhet med utbildningen.\ncatalog:occurrence:248930\ncatalog:occurrence:249031\ncatalog:variable_text:30168:15796:15826"
 
 [[statement]]
 kind = "set"
@@ -10658,20 +9806,8 @@ evidence = "F20 återanvänds för en fråga om nöjdhet med utbildningen.\ncata
 [[statement]]
 kind = "set"
 subject = "var:utb-arbete-overensstammelse-5"
-fields = { "sets" = [] }
-evidence = "F22 återanvänds för en fråga om tillräcklig kunskap och förmåga i arbetet.\ncatalog:occurrence:250153\ncatalog:occurrence:250260\ncatalog:variable_text:30169:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-5"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F22 återanvänds för en fråga om tillräcklig kunskap och förmåga i arbetet.\ncatalog:occurrence:250153\ncatalog:occurrence:250260\ncatalog:variable_text:30169:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-6"
-fields = { "sets" = [] }
-evidence = "F7 återanvänds för en fråga om tid till första arbete.\ncatalog:occurrence:249058\ncatalog:occurrence:249138\ncatalog:variable_text:30170:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -10834,12 +9970,6 @@ kind = "set"
 subject = "var:utbnivar"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln avser tillräcklig utbildningsnivå för arbetet.\ncatalog:variable_text:30184:12478:12509"
-
-[[statement]]
-kind = "set"
-subject = "var:utbnojd"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter nöjdhet med utbildningen.\ncatalog:occurrence:250025\ncatalog:variable_text:30185:12478:12509"
 
 [[statement]]
 kind = "set"
@@ -11278,3 +10408,873 @@ kind = "set"
 subject = "intradet-hogskoleexaminerade: f31 @2010-03-01..2010-03-31 where key = 'v5215'"
 fields = { "variable" = "nojdhet-med-arbete-6" }
 evidence = "Both measure job satisfaction in the higher-education-graduate table during nonoverlapping periods [13208,13239) and [14669,14700). Codes 1–4 retain very satisfied through very dissatisfied; differences concern skip and nonresponse entries."
+
+[[statement]]
+kind = "set"
+subject = "var:arbentim"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition asks whether the person worked during 22–28 March 2004, with yes/no responses (r135, r173).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29279\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249935\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6257"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-inom-utbildningens-omrade"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r105 and r108 explicitly ask whether work is within the areas targeted by YH education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29281\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250328\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250387\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The later occurrence explicitly measures at least one hour of reference-week work; both occurrences use yes/no work codes (r112, r161, r185).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29284\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249492\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11180\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9861"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-2"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The history measures work during the reference week and having secondary employment or a business; both measure work occurrence (r188, r87).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29285\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248992\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29372"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-4"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The question asks whether any work occurred during the specified April 2013 week, even for one hour (r83).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29286\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248924"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-5"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The question asks whether the respondent has employment or a business alongside the main activity (r94).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29287\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249136"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The definition identifies work after education, and the complete value set specifies work lasting longer than six months with yes/no responses (r192, r163).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29292\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11844\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29376"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-arbete"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition measures work lasting at least six months after completed upper-secondary education, with yes/no responses (r136, r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29293\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249936\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8541"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-f01"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definitions measure whether work lasting at least six months occurred after upper-secondary or higher education (r101, r106, r150).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29294\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249267\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249367\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250232"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-f1"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition asks whether work lasting at least six months occurred after higher education, with yes/no work codes (r145, r177).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250139\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6973"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-f6"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The question asks whether the respondent has had work lasting at least six months since completing university studies (r90).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29296\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249057"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-f8"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The question asks whether the respondent has had work lasting at least six months since university studies (r85).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29297\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248973"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-fr16"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition identifies permanent employment or temporary employment lasting longer than six months, with yes/no responses (r133, r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29298\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8541"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-efter-utbildning-fr17"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition identifies permanent employment or temporary employment lasting longer than six months, with yes/no responses (r131, r179).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249806\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8003"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-matveckan-hogskoleexaminerade"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definitions explicitly measure work during the reference week, supported by yes/no work codes (r146, r151, r177, r169).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29325\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250141\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250246\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2978\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6973"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-minst-6-manader-gymnasiet"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The definition and later questions ask whether work lasting at least six months occurred after leaving upper-secondary education (r200).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29326\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29409"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "Both questions ask whether any work occurred during a specified week, including one hour and employment during leave (r132, r134).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29327\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249919"
+
+[[statement]]
+kind = "set"
+subject = "var:arbovutb"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r93 measures work–education correspondence, and r112 confirms educational field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29413\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249957\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11703\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "sets" = ["avregistreringskod"] }
+evidence = "The history documents categorical Avreg coding for respondents, nonresponse and overcoverage, matching Avregkod-avreg (r201, r180, r202).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29489"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod-avreg"
+fields = { "sets" = ["avregistreringskod"] }
+evidence = "The history documents categorical Avreg coding for respondents, nonresponse and overcoverage, matching the other supplied Avreg variable (r202, r180, r201).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29415\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29489"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettstatus"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "The current definition explicitly identifies form response status; codes include completed, partial and missing responses (r204, r174).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29445\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:628\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29518"
+
+[[statement]]
+kind = "set"
+subject = "var:f12"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The question explicitly asks why work does not match YH education, specifically difficulty finding work where the respondent wants to live (r155, r205).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29476\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29553"
+
+[[statement]]
+kind = "set"
+subject = "var:f13-0"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records no available jobs in the training field as a mismatch reason (r44).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248995"
+
+[[statement]]
+kind = "set"
+subject = "var:f1b-02"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r84 asks why no degree certificate was obtained, naming no perceived need for one.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29490\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249116"
+
+[[statement]]
+kind = "set"
+subject = "var:f1b-03"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r85 asks why no degree certificate was obtained, with obtaining employment as the alternative.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249117"
+
+[[statement]]
+kind = "set"
+subject = "var:f1b-04"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r86 asks why no degree certificate was obtained, naming an unsuitable educational direction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29492\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249118"
+
+[[statement]]
+kind = "set"
+subject = "var:f1b-05"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r87 explicitly supplies the other-reason alternative for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249119"
+
+[[statement]]
+kind = "set"
+subject = "var:f1b-06"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r88 asks why no degree certificate was obtained, naming unfamiliarity with the requirements.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29494\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249120"
+
+[[statement]]
+kind = "set"
+subject = "var:f3-03"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r70 records obtaining employment as a cause of insufficient credits for a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29501\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249043"
+
+[[statement]]
+kind = "set"
+subject = "var:f30"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The definition measures satisfaction with education, supported by a complete satisfied/dissatisfied response scale (r207, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29505\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29603"
+
+[[statement]]
+kind = "set"
+subject = "var:f32-5"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r107 explicitly measures whether the person studied abroad after completing education, with yes/no codes in r117.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29506\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250198\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1703"
+
+[[statement]]
+kind = "set"
+subject = "var:f33-5"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r104 defines study-abroad participation, and r111 supplies complete yes/no codes for studying abroad after education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29507\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250098\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10794"
+
+[[statement]]
+kind = "set"
+subject = "var:f36"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The definition measures satisfaction with education, supported by complete satisfied/dissatisfied response categories (r208, r178).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29508\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:759\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29606"
+
+[[statement]]
+kind = "set"
+subject = "var:f38-5"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r109 explicitly measures whether the person studied abroad after completing education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29509\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250310"
+
+[[statement]]
+kind = "set"
+subject = "var:f4-f5-arbete"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The operational definition derives whether the person is working, and codes distinguish in work from not in work (r93, r165).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29510\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249135\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12884"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records no available jobs in the training field as a mismatch reason (r57).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29511\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249591"
+
+[[statement]]
+kind = "set"
+subject = "var:f5-05"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r62 records difficulty combining studies and work as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29513\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248960"
+
+[[statement]]
+kind = "set"
+subject = "var:f5-06-txt"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "This character field collects free text specifying other reasons for education–job mismatch, explicitly included by the group (r63).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249597"
+
+[[statement]]
+kind = "set"
+subject = "var:f5-txt"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences collect free text specifying other reasons for education–job mismatch, explicitly included by the group (r71, r78).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29515\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249678\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249745"
+
+[[statement]]
+kind = "set"
+subject = "var:f7-0"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The definition asks why work does not match YH education; this option records difficulty finding work where the respondent wants to live (r80).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29520\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250337"
+
+[[statement]]
+kind = "set"
+subject = "var:f8-0"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The question explicitly records no available jobs in the training field as a mismatch reason (r50).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29522\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249139"
+
+[[statement]]
+kind = "set"
+subject = "var:fr21"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r98 explicitly asks about studying abroad, with geographical participation codes in r115 despite its work-related valueset name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29606\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249909\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12457"
+
+[[statement]]
+kind = "set"
+subject = "var:fr23c"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r97 explicitly asks about studying abroad, with geographical participation codes in r121 despite its work-related valueset name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29607\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249818\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4151"
+
+[[statement]]
+kind = "set"
+subject = "var:fr3f"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r99 explicitly measures whether the respondent undertook a course or education through studying abroad.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29608\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249917"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-andra-saker"
+fields = { "tags" = ["culture"] }
+evidence = "r69, r76 and r81 explicitly describe plans for leisure activities such as travel or pursuing an interest, covered by culture.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29610\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249583\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249665\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249732"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-nojd-ar-du-med-din-yh-utbildning"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "Both occurrences ask satisfaction with the YH education as a whole, supported by satisfaction response categories (r154, r156, r160).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29680\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250330\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250391\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10845"
+
+[[statement]]
+kind = "set"
+subject = "var:indatamedium"
+fields = { "sets" = ["insamlingssatt"] }
+evidence = "The definition identifies input medium, and operational text specifies how the response was submitted (r217, r127). | The definition identifies input medium, and operational text specifies how the response was submitted (r217, r127).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29729\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249687\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29847"
+
+[[statement]]
+kind = "set"
+subject = "var:inflodeskod"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "The definition classifies response, nonresponse and overcoverage; the code lists confirm these form-status outcomes (r218, r168, r180).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29730\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2658\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29848"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "The fixed definition follows current status labels: these identify form status and SCB response coding, although the codes distinguish response modes (r269, r219, r122, r164).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29731\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249605\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12075\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29849\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/blankettstatus"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "sets" = ["insamlingssatt"] }
+evidence = "Operational definitions describe collection method, including paper and web questionnaires; codes also include telephone interviews (r220, r166, r170). | The supplied operational definitions and paper, web and telephone categories establish collection method (r220, r166, r170).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29733\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29851"
+
+[[statement]]
+kind = "set"
+subject = "var:inte-overensstammer-svart-fa-arbete-overhuvudtaget-2022"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records difficulty finding any work as a reason for YH education–job mismatch (r88).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250379"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-en-timmes-arbete-under-matveckan"
+fields = { "sets" = ["forekomst-av-arbete"] }
+evidence = "The definition measures reference-week work among those whose main activity is not work; later operational text asks about secondary employment or a business (r221).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29821\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29929"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-avslutad-utbildning"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The definition measures satisfaction with completed education, supported by a five-category satisfaction scale (r222, r167).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29828\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29936"
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning-2"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "Both occurrences explicitly ask overall satisfaction with university or higher education (r89, r92).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29853\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249032\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249123"
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning-4"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "Both operational definitions ask satisfaction with the completed upper-secondary education (r103, r108).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29854\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249438"
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning-5"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The definition measures satisfaction with education, and the complete code list contains satisfied and dissatisfied responses (r227, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29965"
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-universitets-hogskoleutbildning"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The operational question explicitly asks overall satisfaction with university or higher education (r84).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29857\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248949"
+
+[[statement]]
+kind = "set"
+subject = "var:nojdutb"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The definition measures satisfaction with education, and the complete codes provide satisfied/dissatisfied categories (r228, r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29858\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9509\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29967"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examen-ej-uttagen-annan"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r67 and r82 explicitly supply the other-reason alternative for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29871\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248965\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249056"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examen-ej-uttagen-arbete-inte-matchade-utbildningen"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r60 and r80 both name obtaining employment as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29872\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248958\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249054"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examen-ej-uttagen-behover-ej"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r58 and r79 both record no perceived need for a certificate as a reason for not obtaining one.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29873\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248956\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249053"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examen-ej-uttagen-kande-ej-kraven"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r66 names study difficulties and r78 unfamiliarity with requirements; both concern reasons for not obtaining a certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248964\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249052"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examen-ej-uttagen-svart-kombinera-studier-familj"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r63 records difficulty combining studies and family as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29875\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248961"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examenskrav-inte-natts-behover-inte-examensbevis"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r69 places no perceived need for a certificate under causes of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29876\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249042"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examenskrav-inte-natts-studiesvarigheter"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r76 records study difficulties as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29877\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249049"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-examenskrav-inte-natts-svart-kombinera-studier-familj"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r73 records difficulty combining studies and family as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29878\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249046"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r83 asks why no certificate was obtained and names insufficient credits; it does not ask what caused the credit shortfall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29879\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249115"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examen-ej-tagits-ut-ekonomiska-skal"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r65 records financial reasons as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29880\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248963"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examen-ej-tagits-ut-tappade-motivationen"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r64 records lost motivation as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29881\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248962"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examen-ej-tagits-ut-utbildningen-hade-fel"
+fields = { "sets" = ["skal-till-ej-uttagen-examen"] }
+evidence = "r61 and r81 name an unsuitable educational direction as a reason for not obtaining a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29882\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248959\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249055"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-f3-04"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r71 records an unsuitable educational direction as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29883\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249044"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-f3-05"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r72 records difficulty combining studies and work as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29884\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249045"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-f3-07"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r74 records lost motivation or dissatisfaction with studying as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29885\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249047"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-f3-08"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r75 records financial reasons as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29886\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249048"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-f3-10"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r77 explicitly supplies the other-cause alternative for insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29887\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249050"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-att-examenskrav-inte-natts-kande-inte"
+fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
+evidence = "r68 records unfamiliarity with certificate requirements as a cause of insufficient degree credits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249041"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f13-02"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required experience is explicitly an option in the question asking for reasons for education–job mismatch (r45).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29889\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248996"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f13-03"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required professional authorization is explicitly an option in the education–job mismatch-reasons question (r46).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29890\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248997"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f13-04"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking employer contacts is explicitly an option in the question asking for reasons for education–job mismatch (r47).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29891\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248998"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f13-05"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Wanting different work is explicitly an option in the question asking for reasons for education–job mismatch (r48).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29892\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248999"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f13-06"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Other reasons are explicitly an option in the question asking why work does not match the training field (r49).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249000"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-02"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required experience is explicitly an option in the question asking for reasons for education–job mismatch (r51).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29894\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249140"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-03"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required professional authorization is explicitly an option in the education–job mismatch-reasons question (r52).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29895\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249141"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-04"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking employer contacts is explicitly an option in the question about reasons for education–job mismatch (r53).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29896\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249142"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-05"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Wanting different work is explicitly an option in the question about reasons for education–job mismatch (r54).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29897\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249143"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-06"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Pandemic-related changes in duties are explicitly recorded as a reason for education–job mismatch (r55).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29898\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249144"
+
+[[statement]]
+kind = "set"
+subject = "var:orsaker-till-ej-overenstammande-arbete-f8-07"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Other reasons are explicitly an option in the question asking why work does not match the training field (r56).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29899\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249145"
+
+[[statement]]
+kind = "set"
+subject = "var:overens"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r163 defines work–education correspondence, and r121 specifies educational field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30003\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:overensstammelse-gymnasieutbildning"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r75, r80 and r85 explicitly ask whether work matches the field of upper-secondary education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249590\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249671\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249738\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:overensstammelse-utbildning-och-arbete"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r86 and r90 measure work–education correspondence; r128 and r130 establish occupational-field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249872\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7123\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8162\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:overensstammer-arbetet-med-utbildningen"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r106 and r107 ask how current work matches YH education, and r122 confirms match-degree responses within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29903\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250376\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5026\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrarbut"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r94 measures how work abroad matched completed education; r112 confirms field-match responses, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29904\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11703\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-ej-overensstammer"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The definition asks for YH mismatch reasons, the operational option is 'other', and the codes distinguish that option from not selected (r79, r93).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250336\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10154"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-familjeskal"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Family reasons are an explicit response option under the question asking why work does not match YH education (r86).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250343"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2019"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Choosing to remain in the previous job is an explicit option under the YH mismatch-reasons question (r84).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29933\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250341"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2022"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The question explicitly records choosing to remain in the previous job as a reason for YH education–job mismatch (r91).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29934\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250382"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-mer-attraktivt-2022"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The question explicitly records a more attractive current job as a reason for YH education–job mismatch (r90).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29935\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250381"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2019"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required experience is an explicit response option under the question asking why work does not match YH education (r85).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29936\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250342"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2022"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Lacking required experience is explicitly recorded as a reason for YH education–job mismatch (r92).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29937\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250383"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-arbete-inte-overensstammer-utbildning-vet-inte"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "This is the explicit 'don't know' response to the mismatch-reasons question, covered by the group's inclusion of response suboptions (r64).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29938\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249598"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-inte-overensstammer-arbetar-inom-annan-utbildning-2022"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Working in the field of another qualification is explicitly recorded as a reason for YH education–job mismatch (r89).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29951\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250380"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-1"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences explicitly record no available jobs in the training field as a mismatch reason (r65, r72).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29955\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249672\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249739"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-2"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences explicitly record lacking required experience as a reason for education–job mismatch (r66, r73).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29956\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249673\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249740"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-3"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences explicitly record lacking required certification or trade examinations as a mismatch reason (r67, r74).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29957\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249674\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249741"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-4"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences explicitly record lacking employer contacts as a reason for education–job mismatch (r68, r75).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29958\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249675\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249742"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-f5-5"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Both occurrences explicitly record wanting different work as a reason for education–job mismatch (r69, r76).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29959\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249676\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249743"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-02"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records lacking required experience as a reason for education–job mismatch (r58).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29960\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249592"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-03"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records lacking required certification or trade examinations as a mismatch reason (r59).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29961\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249593"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-04"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records lacking employer contacts as a reason for education–job mismatch (r60).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249594"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-05"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records wanting different work as a reason for education–job mismatch (r61).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249595"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-06"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly records other reasons for education–job mismatch; its codes are yes/no responses (r62, r94).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29964\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11301"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "The operational question explicitly identifies this as the 'other' option for reasons why work does not match YH education (r87).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29966\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250377"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-02"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Difficulty finding any work is an explicit response option under the question asking why work does not match YH education (r81).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29967\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250338"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-03"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "Working in the field of another qualification is an explicit response option under the YH mismatch-reasons question (r82).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250339"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-04"
+fields = { "sets" = ["orsaker-till-bristande-utbildningsmatchning"] }
+evidence = "A more attractive current job is an explicit response option under the YH mismatch-reasons question (r83).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250340"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-europa-utom-norden"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r89, r91, r94 and r100 consistently measure studies in Europe excluding the Nordic countries.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29996\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249243\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249341\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249440\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250010"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r93 and r96 explicitly measure studies outside Europe and the USA after secondary education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29997\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249343\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249442"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-f32-4"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r106 explicitly measures studies in the rest of the world after completing education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29998\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250197"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-f33-4"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r169 defines studies in the rest of the world; its occurrence uses the complete yes/no codes in r123.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250097\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30091"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-f38-4"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r108 measures study participation in the rest of the world after completing education, supported by geographical yes/no codes in r126.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30000\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250309\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9124"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-studovr"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r90 measures studies in the rest of the world after secondary education; r125 supplies geographical yes/no codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30001\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249247\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8850"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-studut4"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r101 measures studies in the rest of the world after secondary education; r110 explicitly codes participation there.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30002\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250012\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10435"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r92 and r95 define studies in the USA; r124 and r119 explicitly code participation there.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30004\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249342\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249441\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3437\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7489"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-f32-3"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r105 explicitly measures whether the person studied in the USA after completing education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30005\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250196"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-f33-3"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r175 defines studies in the USA; its occurrence uses the complete yes/no codes in r123.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250096\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30098"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-f38-3"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r104 explicitly measures post-education studies in the USA; r118 confirms the geographic participation meaning included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30007\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250308\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3437\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-studusa"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r56 explicitly measures studies in the USA, and r129 confirms USA-study responses within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30008\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249248\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7489\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-studut3"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r96 explicitly measures studies in the USA, and r133 confirms that response meaning within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30009\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250011\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9706\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-inom-europa"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r101 and r103 explicitly measure studies within Europe, a named geographic subarea included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30010\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250195\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250307\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-inom-norden"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r55, r59, r61 and r95 explicitly measure studies in the Nordic countries, a geographic subarea included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30011\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249246\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249340\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249439\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250009\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r58 explicitly measures studies abroad after upper-secondary education, within the fixed scope in r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249339\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-efter-gymnasieutbildning"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r62 measures studies abroad after upper-secondary education; its negative responses in r109 still measure participation within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249443\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11094\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-inom-europa"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r88 and r91 explicitly ask about studies abroad within Europe, a geographic subarea included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249816\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249910\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-utanfor-europa"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r89 and r92 explicitly ask about studies abroad outside Europe, a geographic subarea included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30026\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249817\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249911\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studnej"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r54 measures studies abroad, and r115 explicitly codes non-participation in those studies, within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30028\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249245\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12480\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:studut5"
+fields = { "sets" = ["studier-utomlands"] }
+evidence = "r97 measures studies abroad, and r134 explicitly codes non-participation in those studies, within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30029\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250013\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9915\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-interjvu"
+fields = { "sets" = ["insamlingssatt"] }
+evidence = "The operational definition and complete codes distinguish direct and indirect interviews, an explicitly included interview type (r121, r175). | The operational definition and complete codes distinguish direct and indirect interviews, within the fixed interview-type inclusion (r121, r175).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30066\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249604\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6605"
+
+[[statement]]
+kind = "set"
+subject = "var:uestatus"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "The definition identifies form status; codes distinguish not received, received and registered, and returned or interrupted responses (r266, r184).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30073\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9696\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30161"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r47 explicitly asks whether work matches the field of university education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30076\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248994\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-2"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r57, r60 and r63 measure work–education correspondence; r121 and r131 establish field matching within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30077\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249287\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249387\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8626\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-3"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r100 describes correspondence between work and completed higher education; r121 establishes field-match responses within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30078\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-4"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r46 measures work–study correspondence, and r131 explicitly defines educational field matching within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30079\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248930\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8626\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-5"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r102 measures work–education correspondence, and r131 specifies educational field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30080\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250260\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8626\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-6"
+fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
+evidence = "r52 explicitly asks whether work matches the field of university education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30081\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249138\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:utbnojd"
+fields = { "sets" = ["nojdhet-med-utbildningen"] }
+evidence = "The operational definition asks satisfaction with the completed upper-secondary education, supported by satisfaction categories (r138, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30095\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064"

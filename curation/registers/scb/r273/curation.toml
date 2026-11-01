@@ -1148,12 +1148,6 @@ evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:beh-gymn"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter gymnasiebehörighet.\ncatalog:variable_text:44239:10227:15340\ncatalog:variable_text:44373:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:beh-gymn"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln mäter gymnasiebehörighet.\ncatalog:variable_text:44239:10227:15340\ncatalog:variable_text:44373:18993:19723"
 
@@ -2144,12 +2138,6 @@ evidence = "Utbildning inom etableringsprogrammet.\ncatalog:variable_text:44326:
 [[statement]]
 kind = "set"
 subject = "var:etabl-utbniva"
-fields = { "sets" = [] }
-evidence = "Utbildningsnivå för deltagare i etablering.\ncatalog:variable_text:44327:14610:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:etabl-utbniva"
 fields = { "tags" = ["education", "integration"] }
 evidence = "Utbildningsnivå för deltagare i etablering.\ncatalog:variable_text:44327:14610:19723"
 
@@ -2200,12 +2188,6 @@ kind = "set"
 subject = "var:etabltill-obearb"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "Variabeln mäter utbetalt etableringstillägg.\ncatalog:variable_text:44331:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:faderns-utbildningsniva"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-oldfar och sun2020niva-oldfar.\ncatalog:occurrence:458952\ncatalog:occurrence:459184\ncatalog:occurrence:460534\ncatalog:occurrence:460768"
 
 [[statement]]
 kind = "set"
@@ -2432,12 +2414,6 @@ evidence = "Nettodagar är ett mått på förebyggande sjukpenning.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-delat"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i nästa period.\ncatalog:occurrence:460505\ncatalog:occurrence:460736"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-delat"
 fields = { "tags" = ["transfers"] }
 evidence = "Samma källkolumn har en annan ägare i nästa period.\ncatalog:occurrence:460505\ncatalog:occurrence:460736"
 
@@ -2656,12 +2632,6 @@ kind = "set"
 subject = "var:gymnasieskola-arskurs"
 fields = { "tags" = ["education"] }
 evidence = "Gymnasieskolans årskurs fortsätter i arskurs.\ncatalog:occurrence:460368\ncatalog:occurrence:460575"
-
-[[statement]]
-kind = "set"
-subject = "var:gymnbeh-npgm"
-fields = { "sets" = [] }
-evidence = "Måttet avser gymnasiebehörighet.\ncatalog:variable_text:44373:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -2996,12 +2966,6 @@ evidence = "Löneinkomst och kontant bruttolön ingår i samma kandidatgrupp.\nc
 [[statement]]
 kind = "set"
 subject = "var:manader-ekonomiskt-bistand"
-fields = { "sets" = [] }
-evidence = "Månader med ekonomiskt bistånd.\ncatalog:variable_text:44404:9862:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:manader-ekonomiskt-bistand"
 fields = { "tags" = ["transfers"] }
 evidence = "Månader med ekonomiskt bistånd.\ncatalog:variable_text:44404:9862:15340"
 
@@ -3704,20 +3668,8 @@ evidence = "Nettodagar med smittbärarsjukpenning.\ncatalog:variable_text:44473:
 [[statement]]
 kind = "set"
 subject = "var:socbidrforstod-obearb"
-fields = { "sets" = [] }
-evidence = "Utbetalt ekonomiskt bistånd i kronor.\ncatalog:variable_text:44474:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:socbidrforstod-obearb"
 fields = { "tags" = ["transfers"] }
 evidence = "Utbetalt ekonomiskt bistånd i kronor.\ncatalog:variable_text:44474:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:socbidrmanfar"
-fields = { "sets" = [] }
-evidence = "Faderns månader med ekonomiskt bistånd.\ncatalog:variable_text:44475:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -3728,20 +3680,8 @@ evidence = "Faderns månader med ekonomiskt bistånd.\ncatalog:variable_text:444
 [[statement]]
 kind = "set"
 subject = "var:socbidrmanforstod"
-fields = { "sets" = [] }
-evidence = "Månader med försörjningsstöd.\ncatalog:variable_text:44476:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:socbidrmanforstod"
 fields = { "tags" = ["transfers"] }
 evidence = "Månader med försörjningsstöd.\ncatalog:variable_text:44476:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:socbidrmanmor"
-fields = { "sets" = [] }
-evidence = "Moderns månader med ekonomiskt bistånd.\ncatalog:variable_text:44477:9862:19723"
 
 [[statement]]
 kind = "set"
@@ -3992,20 +3932,8 @@ evidence = "Summabelopp för utbildningsstöd.\ncatalog:variable_text:44499:9862
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-old-mor"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-oldmor och sun2020niva-oldmor.\ncatalog:occurrence:458953\ncatalog:occurrence:459185\ncatalog:occurrence:460535\ncatalog:occurrence:460769"
-
-[[statement]]
-kind = "set"
-subject = "var:sun-niva-old-mor"
 fields = { "tags" = ["education"] }
 evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-oldmor och sun2020niva-oldmor.\ncatalog:occurrence:458953\ncatalog:occurrence:459185\ncatalog:occurrence:460535\ncatalog:occurrence:460769"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
-fields = { "sets" = [] }
-evidence = "Samma tresiffriga nivåbegrepp är uppdelat per period med utbildningsniva-3-positioner.\ncatalog:occurrence:459182\ncatalog:occurrence:459416"
 
 [[statement]]
 kind = "set"
@@ -4016,32 +3944,14 @@ evidence = "Samma tresiffriga nivåbegrepp är uppdelat per period med utbildnin
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-old-66.\ncatalog:occurrence:459183\ncatalog:occurrence:459417"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old"
 fields = { "tags" = ["education"] }
 evidence = "Samma sjunivåbegrepp är uppdelat per period med sun2000niva-old-66.\ncatalog:occurrence:459183\ncatalog:occurrence:459417"
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-oldfar"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med faderns-utbildningsniva.\ncatalog:occurrence:458952\ncatalog:occurrence:459184"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-oldfar"
 fields = { "tags" = ["education"] }
 evidence = "Samma sjunivåbegrepp är uppdelat per period med faderns-utbildningsniva.\ncatalog:occurrence:458952\ncatalog:occurrence:459184"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-oldmor"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med sun-niva-old-mor.\ncatalog:occurrence:458953\ncatalog:occurrence:459185"
 
 [[statement]]
 kind = "set"
@@ -4064,20 +3974,8 @@ evidence = "Utbildningsgrupp enligt SUN.\ncatalog:variable_text:44506:18262:1972
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva"
-fields = { "sets" = [] }
-evidence = "Utbildningsnivå enligt SUN.\ncatalog:variable_text:44507:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
 fields = { "tags" = ["education"] }
 evidence = "Utbildningsnivå enligt SUN.\ncatalog:variable_text:44507:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "sets" = [] }
-evidence = "Aggregerad utbildningsnivå.\ncatalog:variable_text:44508:17897:18993\ncatalog:variable_text:44508:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -4088,20 +3986,8 @@ evidence = "Aggregerad utbildningsnivå.\ncatalog:variable_text:44508:17897:1899
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-oldadbiofar"
-fields = { "sets" = [] }
-evidence = "Faderns utbildningsnivå.\ncatalog:variable_text:44509:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldadbiofar"
 fields = { "tags" = ["education"] }
 evidence = "Faderns utbildningsnivå.\ncatalog:variable_text:44509:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldadbiomor"
-fields = { "sets" = [] }
-evidence = "Moderns utbildningsnivå.\ncatalog:variable_text:44510:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -4112,20 +3998,8 @@ evidence = "Moderns utbildningsnivå.\ncatalog:variable_text:44510:18993:19358"
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-oldfar"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med faderns-utbildningsniva.\ncatalog:occurrence:460534\ncatalog:occurrence:460768"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldfar"
 fields = { "tags" = ["education"] }
 evidence = "Samma sjunivåbegrepp är uppdelat per period med faderns-utbildningsniva.\ncatalog:occurrence:460534\ncatalog:occurrence:460768"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldmor"
-fields = { "sets" = [] }
-evidence = "Samma sjunivåbegrepp är uppdelat per period med sun-niva-old-mor.\ncatalog:occurrence:460535\ncatalog:occurrence:460769"
 
 [[statement]]
 kind = "set"
@@ -4292,12 +4166,6 @@ evidence = "Beloppet kombinerar ekonomiskt bistånd och introduktionsersättning
 [[statement]]
 kind = "set"
 subject = "var:utbetalt-ekonomiskt-bistand"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i föregående period.\ncatalog:occurrence:460505\ncatalog:occurrence:460736"
-
-[[statement]]
-kind = "set"
-subject = "var:utbetalt-ekonomiskt-bistand"
 fields = { "tags" = ["transfers"] }
 evidence = "Samma källkolumn har en annan ägare i föregående period.\ncatalog:occurrence:460505\ncatalog:occurrence:460736"
 
@@ -4360,12 +4228,6 @@ kind = "set"
 subject = "var:utbildningsinriktning-4-positioner"
 fields = { "tags" = ["education"] }
 evidence = "Samma utbildningsinriktning är uppdelad per period med scb/stativ/utbildningsinriktning.\ncatalog:occurrence:459181\ncatalog:occurrence:459415"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-3-positioner"
-fields = { "sets" = [] }
-evidence = "Samma tresiffriga nivåbegrepp är uppdelat per period med sun2000niva.\ncatalog:occurrence:459182\ncatalog:occurrence:459416"
 
 [[statement]]
 kind = "set"
@@ -4830,3 +4692,141 @@ relation = "continues"
 object = "scb/stativ/sjuk-havandeskaps-sjuklonegaranti"
 at = "2022-01-01.."
 evidence = "STATIV SjukPP: sickness/pregnancy/carrier benefit + sick-pay guarantee (1997-2021) -> sickness benefit excl. employer entry (2022+); redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:beh-gymn"
+fields = { "sets" = ["gymnasiebehorighet"] }
+evidence = "The definition specifies upper-secondary eligibility requirements, and the codes explicitly distinguish eligibility for national upper-secondary programs (r337, r335).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44111\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9853\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44256"
+
+[[statement]]
+kind = "set"
+subject = "var:etabl-utbniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition explicitly measures education level among establishment-program participants, and all supplied categories describe education levels (r339, r328).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44171\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4869\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44313"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition measures the father's education level under SUN, supported by explicit education-level categories (r340, r334).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44177\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44319"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-delat"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The supplied history describes maintenance support allocated equally between applicants and co-applicants, measured in hundreds of kronor (r341).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44198\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44340"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnbeh-npgm"
+fields = { "sets" = ["gymnasiebehorighet"] }
+evidence = "The definition measures eligibility for upper-secondary school after compulsory school, and the codes distinguish eligible from ineligible pupils (r342, r332).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7425\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44360"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-ekonomiskt-bistand"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition counts months receiving social assistance, and the operational text specifies a family-based measure in months (r345).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44253\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44394"
+
+[[statement]]
+kind = "set"
+subject = "var:socbidrforstod-obearb"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition sums maintenance support and other financial assistance; the recorded measure is an annual individual amount in kronor (r346).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44327\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44468"
+
+[[statement]]
+kind = "set"
+subject = "var:socbidrmanfar"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition measures months receiving social assistance for the individual's father; the operational text explains the parental and family-based derivation (r347).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44328\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44469"
+
+[[statement]]
+kind = "set"
+subject = "var:socbidrmanforstod"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition explicitly counts months receiving maintenance support, with a family-based operational definition and months as the unit (r348).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44329\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44470"
+
+[[statement]]
+kind = "set"
+subject = "var:socbidrmanmor"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition measures months receiving social assistance for the individual's mother; the operational text explains the parental and family-based derivation (r349).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44330\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44471"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition measures the mother's education level under SUN, supported by explicit education-level categories (r350, r334).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44496"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition classifies completed education by SUN level, and the operational text specifies the highest education's full three-digit level code (r351).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44497"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The supplied history describes highest education aggregated into seven levels, with explicit education-level categories (r352, r353, r331). | The supplied history describes highest education aggregated into seven levels, with explicit education-level categories (r352, r353, r331).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7364\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44498\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44499"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-oldfar"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition explicitly aggregates the father's education into seven levels, confirmed by the supplied level categories (r354, r334).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44358\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44500"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-oldmor"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition explicitly aggregates the mother's education into seven levels, confirmed by the supplied level categories (r355, r334).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44359\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44501"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition explicitly classifies completed education by SUN level; the operational text specifies the highest education's three-digit level code (r356).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44361\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44503"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The operational definition identifies an aggregate of highest education, and the supplied categories measure education level (r357, r331, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44362\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7364\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44504"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldadbiofar"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The father's measure uses a SUN education-level definition and seven explicit education-level categories (r358, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44363\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44505"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldadbiomor"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The mother's measure uses a SUN education-level definition and seven explicit education-level categories (r359, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44364\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44506"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldfar"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The father's measure uses a SUN education-level definition and seven explicit education-level categories (r360, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44507"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-oldmor"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The mother's measure uses a SUN education-level definition and seven explicit education-level categories (r361, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44366\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44508"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-ekonomiskt-bistand"
+fields = { "sets" = ["ekonomiskt-bistand"] }
+evidence = "The definition sums maintenance support and other financial assistance, recorded as an annual individual amount in hundreds of kronor (r363).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44380\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44524"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The definition explicitly measures the full three-position SUN 2000 education-level code; later operational text specifies the person's highest education (r364).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44530"

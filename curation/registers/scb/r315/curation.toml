@@ -586,3 +586,9 @@ kind = "set"
 subject = "deltagare-i-svenskundervisning-for-invandrare-sfi: F11 @2008-07-01..2008-12-31 where key = 'v7499'"
 fields = { "description" = "Beskriver om personen har introduktionsersättning." }
 evidence = "Definitionen anger ett utbetalt belopp till hushållet, medan frågan mäter om personen har introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "tags" = ["demographics"] }
+evidence = "r9 defines the person's mother tongue; r7 supplies language categories. This supports demographics as a population-composition characteristic.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4921\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41970"

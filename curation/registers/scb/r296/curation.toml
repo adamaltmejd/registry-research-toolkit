@@ -1041,12 +1041,6 @@ evidence = "Variabeln kodar en allmän produktgrupp.\ncatalog:variable_text:4090
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-beskrivnsv"
-fields = { "sets" = [] }
-evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40909:18993:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-beskrivnsv"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40909:18993:20819"
 
@@ -1065,20 +1059,8 @@ evidence = "Källkolumnen har en efterföljande annan ägare och den sista perio
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-namnsv"
-fields = { "sets" = [] }
-evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40911:15706:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-namnsv"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40911:15706:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-pg"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar produktgrupp enligt källans definition.\ncatalog:variable_text:40912:13514:15340"
 
 [[statement]]
 kind = "set"
@@ -1137,20 +1119,8 @@ evidence = "Kod för TPI-produktgrupp på sjusiffernivå.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:produktgruppsnamn"
-fields = { "sets" = [] }
-evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40917:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgruppsnamn"
 fields = { "tags" = ["business"] }
 evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40917:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgruppsnamn-namnsv"
-fields = { "sets" = [] }
-evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40918:16071:16436"
 
 [[statement]]
 kind = "set"
@@ -1383,3 +1353,33 @@ relation = "continues"
 object = "scb/prisindex/produktgrupp-namn"
 at = "2022-01-01.."
 evidence = "PPI product group: product grouping (2013-21) -> weighted classes (2022+); grouping redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-beskrivnsv"
+fields = { "sets" = ["produktgrupp"] }
+evidence = "r74 describes the general SPIN/SNI product grouping, and r99 explicitly defines product groups as SPIN 2015 codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40766\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:400949\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:401120"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namnsv"
+fields = { "sets" = ["produktgrupp"] }
+evidence = "r55 describes the general PPI SPIN/SNI product grouping, rather than a separate weighted-class classification.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:400823"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-pg"
+fields = { "sets" = ["produktgrupp"] }
+evidence = "r116 explicitly defines this field as a five-digit SPIN code or national-accounts product group, supporting the general product-group classification.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:401354"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn"
+fields = { "sets" = ["produktgrupp"] }
+evidence = "r123 describes product groups below COICOP classes; its complete code list contains general SPIN sections A–U (r127).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40774\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:401478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10413"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn-namnsv"
+fields = { "sets" = ["produktgrupp"] }
+evidence = "r124 describes product groups below COICOP classes; its complete code list contains general SPIN sections A–U (r127).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:401488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10413"

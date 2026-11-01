@@ -1064,32 +1064,14 @@ evidence = "Samma källkolumner har även postortsägare och äldre postnummerä
 [[statement]]
 kind = "set"
 subject = "var:postort-for-arbetsstallet-poanst"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har olika ägare och enhetsbenämningar.\ncatalog:occurrence:288233\ncatalog:occurrence:288271\ncatalog:occurrence:288634\ncatalog:occurrence:288666"
-
-[[statement]]
-kind = "set"
-subject = "var:postort-for-arbetsstallet-poanst"
 fields = { "tags" = ["geography"] }
 evidence = "Samma kolumn har olika ägare och enhetsbenämningar.\ncatalog:occurrence:288233\ncatalog:occurrence:288271\ncatalog:occurrence:288634\ncatalog:occurrence:288666"
 
 [[statement]]
 kind = "set"
 subject = "var:postort-for-arbetsstallet-postort"
-fields = { "sets" = [] }
-evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
-
-[[statement]]
-kind = "set"
-subject = "var:postort-for-arbetsstallet-postort"
 fields = { "tags" = ["geography"] }
 evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
-
-[[statement]]
-kind = "set"
-subject = "var:postort-for-arbetsstallet-ppostort"
-fields = { "sets" = [] }
-evidence = "Anger arbetsställets postort.\ncatalog:variable_text:32240:17897:20089"
 
 [[statement]]
 kind = "set"
@@ -1184,20 +1166,8 @@ evidence = "Anger redovisningsenhetens adress.\ncatalog:variable_text:32252:1278
 [[statement]]
 kind = "set"
 subject = "var:vilken-postort-har-redovisningsenheten-poanst"
-fields = { "sets" = [] }
-evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288233\ncatalog:occurrence:288271"
-
-[[statement]]
-kind = "set"
-subject = "var:vilken-postort-har-redovisningsenheten-poanst"
 fields = { "tags" = ["geography"] }
 evidence = "Enhetsbenämningen skiljer sig mellan perioderna.\ncatalog:occurrence:288233\ncatalog:occurrence:288271"
-
-[[statement]]
-kind = "set"
-subject = "var:vilken-postort-har-redovisningsenheten-postort"
-fields = { "sets" = [] }
-evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
 
 [[statement]]
 kind = "set"
@@ -1320,3 +1290,33 @@ kind = "set"
 subject = "industrins-energianvandning: postnr @2017-01-01..2017-12-31 where key = 'v16428' and release = 'r11509'"
 fields = { "variable" = "postnummer-arbetsstallet" }
 evidence = "ISEN G101: in 2006-2016 and 2018 PostNr consistently denotes the establishment postal code and PoAnst the postal town. Only release r11509 (2017) exchanges their labels and definitions; neither has a value set or operational text. Restore ownership by column; retain the source text."
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-poanst"
+fields = { "sets" = ["postort"] }
+evidence = "Keep postort for the entire current 13-occurrence PoAnst series (2006-2018). Twelve annual occurrences explicitly define the establishment's postal town. The 2017 occurrence (release r11509, source key v16429) still contains the erroneous postal-code label/definition, but main #2050 explicitly restores its ownership to this postal-town variable by PoAnst continuity: 2006-2016 and 2018 agree, and only 2017 exchanges PoAnst/PostNr labels and definitions. This matches the fixed postort definition's establishment/reporting-unit postal locality scope and its exclusion of actual postal codes and full addresses. The corrected 2017 PostNr occurrence belongs to postnummer-arbetsstallet, not this group member. Evidence: 607352e7:curation/registers/scb/r132/curation.toml and the pinned current catalog's full 2006-2018 occurrence set.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288271\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288322\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288360\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288395\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288431\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288467\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288502\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288535\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288568\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288601\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288634\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288666\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:occurrence:288698\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32239\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort\ngit:607352e710191a3c9130ea72235855bf3685511f:curation/registers/scb/r132/curation.toml"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-postort"
+fields = { "sets" = ["postort"] }
+evidence = "The definition describes the workplace's postal locality (r53), matching the fixed scope (r58) and the partner in r51.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32239\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-ppostort"
+fields = { "sets" = ["postort"] }
+evidence = "The definition describes a postal locality (r54), matching the fixed scope (r58) and the workplace-locality partner in r51.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32240\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-poanst"
+fields = { "sets" = ["postort"] }
+evidence = "The definition explicitly asks for the reporting unit's postal locality (r55), which the fixed scope includes (r58); r56 supplies a matching partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32144\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32253\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32254\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-postort-har-redovisningsenheten-postort"
+fields = { "sets" = ["postort"] }
+evidence = "The definition explicitly asks for the reporting unit's postal locality (r56), included by r58 and also measured by the partner in r55.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32145\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32253\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32254\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/isen/postort"

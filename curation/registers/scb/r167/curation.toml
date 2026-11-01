@@ -454,3 +454,9 @@ kind = "set"
 subject = "var:sni2007-5siffror"
 fields = { "tags" = ["business"] }
 evidence = "Id:t stämmer för SNI 2007 men äldre perioders värdemängder anger andra SNI-versioner.\ncatalog:valueset:12187\ncatalog:valueset:2242\ncatalog:valueset:3354\ncatalog:variable_text:34869:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:objekttyp"
+fields = { "tags" = ["business"] }
+evidence = "The complete codes distinguish composition (A) from bankruptcy (K) (r30), recorded in bankruptcy/public-composition data supplied by Bolagsverket (r1). This fits the business theme’s coverage of business demography.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:316250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3751"

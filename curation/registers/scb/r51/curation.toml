@@ -392,12 +392,6 @@ evidence = "Källan och värdemängderna beskriver anställningsform, som omfatt
 [[statement]]
 kind = "set"
 subject = "var:anstallningsform-hel-del-ovrig"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har en efterföljande ägare med annan etikett och definition. Coordinator group membership: Båda variablerna kodar anställningsform; den fasta definitionen omfattar uttryckligen heltid, deltid och övrigt. Avtalad veckoarbetstid, överenskommen sysselsättningsgrad och omfattningsklasser omfattas. Skyddat medlemskap för osys behålls trots den dokumenterade definitionskonflikten. Tjänstgöringsomfattning utesluts eftersom den uttryckligen mäter faktisk tjänstgöringstid.\ncatalog:occurrence:446808\ncatalog:occurrence:446858\ncatalog:variable_text:42944:9496:20089\ncatalog:variable_text:42945:10592:15340\ncatalog:variable_text:42956:18628:20089\ncatalog:variable_text:42967:15706:20089\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089\ncatalog:variable_text:42985:18628:20089\ncatalog:variable_text:43006:15706:16801\ncatalog:variable_text:43007:19358:20089\ncatalog:variable_text:43010:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:anstallningsform-hel-del-ovrig"
 fields = { "tags" = ["employment"] }
 evidence = "Samma kolumn har en efterföljande ägare med annan etikett och definition. Coordinator group membership: Båda variablerna kodar anställningsform; den fasta definitionen omfattar uttryckligen heltid, deltid och övrigt. Avtalad veckoarbetstid, överenskommen sysselsättningsgrad och omfattningsklasser omfattas. Skyddat medlemskap för osys behålls trots den dokumenterade definitionskonflikten. Tjänstgöringsomfattning utesluts eftersom den uttryckligen mäter faktisk tjänstgöringstid.\ncatalog:occurrence:446808\ncatalog:occurrence:446858\ncatalog:variable_text:42944:9496:20089\ncatalog:variable_text:42945:10592:15340\ncatalog:variable_text:42956:18628:20089\ncatalog:variable_text:42967:15706:20089\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089\ncatalog:variable_text:42985:18628:20089\ncatalog:variable_text:43006:15706:16801\ncatalog:variable_text:43007:19358:20089\ncatalog:variable_text:43010:19358:20089"
 
@@ -496,12 +490,6 @@ kind = "set"
 subject = "var:avtal"
 fields = { "tags" = ["employment"] }
 evidence = "Avtalskod hör till avtalstillhörighet.\ncatalog:variable_text:42955:17167:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:avtalad-veckoarbetstid"
-fields = { "sets" = [] }
-evidence = "Avtalad arbetstid hör till kandidatgruppen.\ncatalog:variable_text:42956:18628:20089"
 
 [[statement]]
 kind = "set"
@@ -1052,20 +1040,8 @@ evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningsgrad-manadsavlonade"
-fields = { "sets" = [] }
-evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-osysly i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningsgrad-manadsavlonade"
 fields = { "tags" = ["employment"] }
 evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-osysly i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningsgrad-osysly"
-fields = { "sets" = [] }
-evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-manadsavlonade i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
 
 [[statement]]
 kind = "set"
@@ -1372,3 +1348,27 @@ kind = "set"
 subject = "lonestrukturstatistik-regioner: arbhf @2007-01-01..2007-12-31 where key = 'v2522'"
 fields = { "variable" = "antal-arbetade-timmar" }
 evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The codes distinguish full-time and part-time monthly employment, and later rules classify agreed employment extent using 100-percent and below-100-percent thresholds (r135, r100, r115). | The codes distinguish full-time and part-time monthly employment, and later rules classify agreed employment extent using 100-percent and below-100-percent thresholds (r135, r100, r115).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42802\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447163\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447311\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3662"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-veckoarbetstid"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definition specifies contractual weekly working hours, which the fixed group includes (r119).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42812\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447356"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definition measures employment extent according to the employment certificate for monthly-paid employees, with zeros for hourly-paid employees (r33).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42858\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446483"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definitions measure agreed employment extent without accounting for leave extent (r103, r128).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447190\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447437"

@@ -301,12 +301,6 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56077:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-juni"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56077:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-juni-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56078:14610:2932897"
@@ -436,24 +430,12 @@ kind = "set"
 subject = "var:aldstes-hinder-september-sok1"
 fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56088:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:annatbelopp"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56089:15340:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:annatbelopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56089:15340:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:annatind"
-fields = { "sets" = [] }
-evidence = "Utbetalning för kategorin annat.\ncatalog:variable_text:56090:15340:2932897"
 
 [[statement]]
 kind = "set"
@@ -844,12 +826,6 @@ kind = "set"
 subject = "var:antal-barn-under-18-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn inom ett åldersintervall ingår i gruppen och beskriver hushållets sammansättning.\ncatalog:variable_text:56122:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-ovriga-personer-18-21-ar"
-fields = { "sets" = [] }
-evidence = "Antalet är en komponent av hushållsstorlek.\ncatalog:variable_text:56123:7305:2932897"
 
 [[statement]]
 kind = "set"
@@ -872,12 +848,6 @@ evidence = "Antalet månader omfattar ekonomiskt bistånd och introduktionsersä
 [[statement]]
 kind = "set"
 subject = "var:antpers"
-fields = { "sets" = [] }
-evidence = "Antalet mäter hushållets storlek.\ncatalog:variable_text:56125:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:antpers"
 fields = { "tags" = ["family-household"] }
 evidence = "Antalet mäter hushållets storlek.\ncatalog:variable_text:56125:7305:2932897"
 
@@ -1952,20 +1922,8 @@ evidence = "Avslutskod för ekonomiskt bistånd.\ncatalog:variable_text:56215:17
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-april"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56216:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-april"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56216:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-augusti"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56217:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -1976,20 +1934,8 @@ evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-december"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56218:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-december"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56218:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-februari"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56219:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -2000,20 +1946,8 @@ evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-januari"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56220:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-januari"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56220:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-juli"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56221:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -2024,20 +1958,8 @@ evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-juni"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56222:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-juni"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56222:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-maj"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56223:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -2048,20 +1970,8 @@ evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-mars"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56224:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-mars"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56224:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-november"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56225:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -2072,20 +1982,8 @@ evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:belopp-annat-oktober"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56226:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-oktober"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56226:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp-annat-september"
-fields = { "sets" = [] }
-evidence = "Beloppet avser bistånd i kategorin annat.\ncatalog:variable_text:56227:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -2840,32 +2738,14 @@ evidence = "Månatlig kodning av försörjningshinder.\ncatalog:variable_text:56
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-april"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56290:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-april"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56290:17167:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-augusti"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56291:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-augusti"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56291:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-belopp"
-fields = { "sets" = [] }
-evidence = "Belopp för försörjningsstöd.\ncatalog:variable_text:56292:15340:16071"
 
 [[statement]]
 kind = "set"
@@ -3020,20 +2900,8 @@ evidence = "Bistånd till tillfälligt boende.\ncatalog:variable_text:56304:1716
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-december"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56305:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-december"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56305:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-februari"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56306:17167:2932897"
 
 [[statement]]
 kind = "set"
@@ -3044,20 +2912,8 @@ evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-januari"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56307:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-januari"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56307:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-juli"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56308:17167:2932897"
 
 [[statement]]
 kind = "set"
@@ -3068,20 +2924,8 @@ evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-juni"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56309:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-juni"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56309:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-maj"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56310:17167:2932897"
 
 [[statement]]
 kind = "set"
@@ -3092,20 +2936,8 @@ evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-mars"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56311:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-mars"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56311:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-november"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56312:17167:2932897"
 
 [[statement]]
 kind = "set"
@@ -3116,32 +2948,14 @@ evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-oktober"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56313:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-oktober"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56313:17167:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjningsstod-september"
-fields = { "sets" = [] }
-evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56314:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-september"
 fields = { "tags" = ["transfers"] }
 evidence = "Försörjningsstöd inklusive tillfälligt boende.\ncatalog:variable_text:56314:17167:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:fstodbelopp"
-fields = { "sets" = [] }
-evidence = "Månadsbelopp för försörjningsstöd.\ncatalog:variable_text:56315:15340:2932897"
 
 [[statement]]
 kind = "set"
@@ -3196,12 +3010,6 @@ kind = "set"
 subject = "var:fstodinkllivsf"
 fields = { "tags" = ["transfers"] }
 evidence = "Etiketten och definitionen skiljer sig om beloppets omfattning.\ncatalog:variable_text:56319:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:fstodtotalbelopp"
-fields = { "sets" = [] }
-evidence = "Årsbelopp för försörjningsstöd.\ncatalog:variable_text:56320:17167:2932897"
 
 [[statement]]
 kind = "set"
@@ -3896,20 +3704,8 @@ evidence = "Län och kommun från folkbokföring anger geografisk tillhörighet.
 [[statement]]
 kind = "set"
 subject = "var:livsfbel"
-fields = { "sets" = [] }
-evidence = "Beloppet avser livsföring i övrigt.\ncatalog:variable_text:56381:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:livsfbel"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser livsföring i övrigt.\ncatalog:variable_text:56381:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:livsfbelopp"
-fields = { "sets" = [] }
-evidence = "Beloppet avser livsföring i övrigt.\ncatalog:variable_text:56382:15340:2932897"
 
 [[statement]]
 kind = "set"
@@ -4496,20 +4292,8 @@ evidence = "Biståndsbelopp för övrig skuld.\ncatalog:variable_text:56430:1461
 [[statement]]
 kind = "set"
 subject = "var:livsftotalbelopp"
-fields = { "sets" = [] }
-evidence = "Beloppet avser livsföring i övrigt.\ncatalog:variable_text:56431:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:livsftotalbelopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser livsföring i övrigt.\ncatalog:variable_text:56431:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:livsfx"
-fields = { "sets" = [] }
-evidence = "Utbetalningsmarkeringen avser delkategorier av livsföring i övrigt.\ncatalog:variable_text:56432:14610:2932897"
 
 [[statement]]
 kind = "set"
@@ -6164,20 +5948,8 @@ evidence = "Etikett och definition anger olika omfattning.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:utlanskt-hushall"
-fields = { "sets" = [] }
-evidence = "Etiketten står i konflikt med definition och värdekoder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel kodar inrikes eller utrikes födelse. Flyktingstatus och födelsetid uppfyller inte definitionen. membership-0502: Variablerna kodar utrikes födelse för hushåll respektive person. Den motstridigt dokumenterade medborgarskapsvariabeln tilldelas inget ytterligare medlemskap utan avgörande källstöd. membership-0503: Båda beskrivningarna anger om sökande eller medsökande är utrikesfödd. För utländskt hushåll kvarstår konflikten med etiketten och den andra fasta kandidatens inkludering.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56273:7305:17167\ncatalog:variable_text:56274:7305:2932897\ncatalog:variable_text:56275:7305:2932897\ncatalog:variable_text:56276:7305:2932897\ncatalog:variable_text:56277:7305:2932897\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56578:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:utlanskt-hushall"
 fields = { "tags" = ["demographics"] }
 evidence = "Etiketten står i konflikt med definition och värdekoder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel kodar inrikes eller utrikes födelse. Flyktingstatus och födelsetid uppfyller inte definitionen. membership-0502: Variablerna kodar utrikes födelse för hushåll respektive person. Den motstridigt dokumenterade medborgarskapsvariabeln tilldelas inget ytterligare medlemskap utan avgörande källstöd. membership-0503: Båda beskrivningarna anger om sökande eller medsökande är utrikesfödd. För utländskt hushåll kvarstår konflikten med etiketten och den andra fasta kandidatens inkludering.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56273:7305:17167\ncatalog:variable_text:56274:7305:2932897\ncatalog:variable_text:56275:7305:2932897\ncatalog:variable_text:56276:7305:2932897\ncatalog:variable_text:56277:7305:2932897\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56578:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:utrfodh"
-fields = { "sets" = [] }
-evidence = "Kodning av utrikes födelse i hushållet.\ncatalog:variable_text:56578:15340:16071"
 
 [[statement]]
 kind = "set"
@@ -6188,20 +5960,8 @@ evidence = "Kodning av utrikes födelse i hushållet.\ncatalog:variable_text:565
 [[statement]]
 kind = "set"
 subject = "var:utrfodhh"
-fields = { "sets" = [] }
-evidence = "Kodning av utrikes födelse i hushållet.\ncatalog:variable_text:56579:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:utrfodhh"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodning av utrikes födelse i hushållet.\ncatalog:variable_text:56579:7305:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:utrikesfodd"
-fields = { "sets" = [] }
-evidence = "Kodning av inrikes eller utrikes födelse.\ncatalog:variable_text:56580:7305:2932897"
 
 [[statement]]
 kind = "set"
@@ -6448,3 +6208,243 @@ kind = "set"
 subject = "ekb-ar: SOKYNGSTINVANDRA @1999-01-01..2009-12-31 where key = 'n:sokyngstinvandra'"
 fields = { "description" = "Invandringsår för den yngsta sökanden (om minst två sökande, annars tom)." }
 evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56531:10592:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juni"
+fields = { "tags" = ["transfers"] }
+evidence = "Coordinator-approved audit correction: Def 'Den äldstes försörjningshinder, juni' in sos/ekb (economic assistance register), member of set forsorjningshinder; the obstacle to self-support of an assistance recipient is plainly the transfers/social-care theme.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:22\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56077"
+
+[[statement]]
+kind = "set"
+subject = "var:annatbelopp"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r90 defines the monthly assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55905\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56089"
+
+[[statement]]
+kind = "set"
+subject = "var:annatind"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r91 defines monthly payment occurrence specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55906\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56090"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-personer-18-21-ar"
+fields = { "sets" = ["hushallsstorlek"] }
+evidence = "r94 counts household applicants aged 18–21, an allowed person component; r95 supplies the household-total partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55940\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56126"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "sets" = ["hushallsstorlek"] }
+evidence = "r95 counts household persons; r94 supplies a distinct household person-component partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55942\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56126"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-april"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r92 defines April's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56035\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56219"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-augusti"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r93 defines August's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56036\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56220"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-december"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r94 defines December's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56037\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56221"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-februari"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r95 defines February's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56038\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56222"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-januari"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r96 defines January's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56039\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56223"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-juli"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r97 defines July's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56224"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-juni"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r98 defines June's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56041\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56225"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-maj"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r99 defines May's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56042\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56226"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-mars"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r100 defines March's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56043\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56227"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-november"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r101 defines November's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56044\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56228"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-oktober"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r102 defines October's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56045\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56229"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-annat-september"
+fields = { "sets" = ["bistand-livsforing-annat"] }
+evidence = "r103 defines September's assistance amount specifically for the 'other' purpose category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56046\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56230"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-april"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r104 defines April's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56109\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56293"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-augusti"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r105 defines August's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56110\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56294"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-belopp"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r106 defines the sum of reported maintenance support amounts, matching the total-amount concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56111\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56295"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-december"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r107 defines December's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56308"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-februari"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r108 defines February's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56309"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-januari"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r109 defines January's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56310"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-juli"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r110 defines July's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56311"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-juni"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r111 defines June's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56312"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-maj"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r112 defines May's maintenance support including temporary accommodation, an explicitly permitted combined amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56313"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-mars"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r106 describes March maintenance support including temporary housing, an allowed combined measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56314"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-november"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r107 describes November maintenance support including temporary housing, an allowed combined measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56315"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-oktober"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r108 describes October maintenance support including temporary housing, an allowed combined measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56132\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56316"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-september"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r109 describes September maintenance support including temporary housing, an allowed combined measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56133\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56317"
+
+[[statement]]
+kind = "set"
+subject = "var:fstodbelopp"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r110 defines total monthly maintenance support; its label explicitly includes temporary housing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56134\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56318"
+
+[[statement]]
+kind = "set"
+subject = "var:fstodtotalbelopp"
+fields = { "sets" = ["forsorjningsstod"] }
+evidence = "r112 defines the sum of maintenance-support amounts and labels it the annual total, within the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56139\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56323"
+
+[[statement]]
+kind = "set"
+subject = "var:livsfbel"
+fields = { "sets" = ["bistand-livsforing-i-ovrigt"] }
+evidence = "r120 explicitly defines the total amount paid for other living expenses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56197\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56381"
+
+[[statement]]
+kind = "set"
+subject = "var:livsfbelopp"
+fields = { "sets" = ["bistand-livsforing-i-ovrigt"] }
+evidence = "r121 defines the monthly total for other living expenses as the sum of its subcategories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56198\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56382"
+
+[[statement]]
+kind = "set"
+subject = "var:livsftotalbelopp"
+fields = { "sets" = ["bistand-livsforing-i-ovrigt"] }
+evidence = "r122 defines the sum of monthly amounts for other living expenses, matching the aggregate-amount concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56247\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56431"
+
+[[statement]]
+kind = "set"
+subject = "var:livsfx"
+fields = { "sets" = ["bistand-livsforing-i-ovrigt"] }
+evidence = "r123 records whether any subcategory has payments without specified amounts, providing overall payment information rather than a single-purpose measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56248\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56432"
+
+[[statement]]
+kind = "set"
+subject = "var:utlanskt-hushall"
+fields = { "sets" = ["utrikes-fodelse"] }
+evidence = "r114 and the complete codes in r68 establish household foreign-birth status, within this group's definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56393\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12410\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56577"
+
+[[statement]]
+kind = "set"
+subject = "var:utrfodh"
+fields = { "sets" = ["utrikes-fodelse"] }
+evidence = "r115 describes applicants' foreign-birth status, and the complete codes in r68 confirm household foreign-birth coding.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56394\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12410\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56578"
+
+[[statement]]
+kind = "set"
+subject = "var:utrfodhh"
+fields = { "sets" = ["utrikes-fodelse"] }
+evidence = "r116 derives household foreign-birth status from applicants; the complete codes in r67 confirm that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56395\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10904\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56579"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikesfodd"
+fields = { "sets" = ["utrikes-fodelse"] }
+evidence = "r117 explicitly indicates whether an applicant or co-applicant is foreign-born, matching the fixed birth-status concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56580"

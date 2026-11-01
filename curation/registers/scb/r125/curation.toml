@@ -56,12 +56,6 @@ evidence = "Variabeln anger arbetskraftsstatus.\ncatalog:variable_text:21468:193
 [[statement]]
 kind = "set"
 subject = "var:hjalpvariabel-funktionsnedsattning"
-fields = { "sets" = [] }
-evidence = "Aux är en källkod och funk är en förkortning; etiketten anger hjälpvariabelns innehåll.\ncatalog:variable_text:21469:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:hjalpvariabel-funktionsnedsattning"
 fields = { "tags" = ["disability", "transfers"] }
 evidence = "Aux är en källkod och funk är en förkortning; etiketten anger hjälpvariabelns innehåll.\ncatalog:variable_text:21469:19358:20089"
 
@@ -88,12 +82,6 @@ kind = "set"
 subject = "var:fodelseland-varldsdel"
 fields = { "tags" = ["demographics"] }
 evidence = "Variabeln och hjälpvariabeln kodar födelseland.\ncatalog:variable_text:21471:19358:20089\ncatalog:variable_text:21502:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:funk"
-fields = { "sets" = [] }
-evidence = "Variabeln och hjälpvariabeln kodar förekomst av funktionsnedsättning.\ncatalog:variable_text:21469:19358:20089\ncatalog:variable_text:21472:19358:20089"
 
 [[statement]]
 kind = "set"
@@ -640,3 +628,15 @@ kind = "set"
 subject = "var:yrkesbenamning-huvud"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger yrke i huvudsysslan.\ncatalog:variable_text:21520:19358:19723\ncatalog:variable_text:21520:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "sets" = ["funktionsnedsattning"] }
+evidence = "FUNK directly asks whether the person has a disability and defines the filter identifying persons with disabilities (r4, r6, r9), matching the group's presence-of-disability concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197759\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21483"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-funktionsnedsattning"
+fields = { "sets" = ["funktionsnedsattning"] }
+evidence = "The fixed definition explicitly includes the helper variable (r1, r2, r11). Its documented measure is derived benefit/support receipt (r3, r5, r10); assignment follows that explicit inclusion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:21469:19358:20089\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:21472:19358:20089\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197754\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21500\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/funktionsnedsattning-arbetsmarknad/funktionsnedsattning"

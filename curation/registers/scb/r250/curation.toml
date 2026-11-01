@@ -1003,3 +1003,9 @@ relation = "continues"
 object = "scb/komvux-anpassad/person-orgnr"
 at = "2020-10-15.."
 evidence = "Komvux anpassad PeOrgNr: person/org number (2015-19) -> organisation number (2020+); identifier narrowed."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "The definition classifies legal entities by legal form (r22), operationalized as the provider's legal form (r1). This fits the business tag's coverage of organizational structure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:303471\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34513"

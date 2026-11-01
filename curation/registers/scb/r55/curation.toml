@@ -1334,12 +1334,6 @@ evidence = "Jobbbyte och in- och utflöde avser arbetsmarknaden.\ncatalog:values
 [[statement]]
 kind = "set"
 subject = "var:kalla-for-yrkesuppgift-for-egna-foretagare"
-fields = { "sets" = [] }
-evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kalla-for-yrkesuppgift-for-egna-foretagare"
 fields = { "tags" = ["methods"] }
 evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
 
@@ -1514,12 +1508,6 @@ evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\nca
 [[statement]]
 kind = "set"
 subject = "var:kalla-for-yrkesuppgift-storsta-forvarvskallan"
-fields = { "sets" = [] }
-evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kalla-for-yrkesuppgift-storsta-forvarvskallan"
 fields = { "tags" = ["methods"] }
 evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
 
@@ -1586,12 +1574,6 @@ evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\nca
 [[statement]]
 kind = "set"
 subject = "var:kalla-for-yrkesuppgift-nast-storsta-forvarvskallan"
-fields = { "sets" = [] }
-evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kalla-for-yrkesuppgift-nast-storsta-forvarvskallan"
 fields = { "tags" = ["methods"] }
 evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
 
@@ -1646,12 +1628,6 @@ evidence = "Nov2 är en källförkortning för jobb två i november och familjen
 [[statement]]
 kind = "set"
 subject = "var:nov2kallassyk"
-fields = { "sets" = [] }
-evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55658:11323:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nov2kallassyk"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55658:11323:20089"
 
@@ -1730,12 +1706,6 @@ evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning
 [[statement]]
 kind = "set"
 subject = "var:kalla-for-yrkesuppgift-ovrigt-jobb"
-fields = { "sets" = [] }
-evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kalla-for-yrkesuppgift-ovrigt-jobb"
 fields = { "tags" = ["methods"] }
 evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
 
@@ -1838,20 +1808,8 @@ evidence = "Identitetsfakta och motstridiga sektordefinitioner kräver samordnin
 [[statement]]
 kind = "set"
 subject = "var:ssyk-overensstammelse"
-fields = { "sets" = [] }
-evidence = "Variabeln beskriver yrkeskodens kvalitet och koppling.\ncatalog:valueset:11068\ncatalog:variable_text:55680:11323:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk-overensstammelse"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln beskriver yrkeskodens kvalitet och koppling.\ncatalog:valueset:11068\ncatalog:variable_text:55680:11323:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk-status"
-fields = { "sets" = [] }
-evidence = "Variabeln beskriver yrkeskodens koppling och imputering.\ncatalog:valueset:3438\ncatalog:variable_text:55681:11323:20089"
 
 [[statement]]
 kind = "set"
@@ -2026,12 +1984,6 @@ kind = "set"
 subject = "var:ssykar"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55695:11323:17897\ncatalog:variable_text:55695:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ssykkalla"
-fields = { "sets" = [] }
-evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55696:11323:20089"
 
 [[statement]]
 kind = "set"
@@ -2090,12 +2042,6 @@ evidence = "Samma kolumn har en annan ägare med en snävare inkomstdefinition.\
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr"
-fields = { "sets" = [] }
-evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med utbildnings-inriktning-sun-2000.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000inr"
 fields = { "tags" = ["education"] }
 evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med utbildnings-inriktning-sun-2000.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
 
@@ -2122,12 +2068,6 @@ kind = "set"
 subject = "var:sun2000niva-old"
 fields = { "tags" = ["education"] }
 evidence = "Samma aggregerade nivå är korrekt uppdelad per period med sun2000niva-old-66.\ncatalog:occurrence:517577\ncatalog:occurrence:517632\ncatalog:valueset:4769\ncatalog:variable_text:55703:11323:16801\ncatalog:variable_text:55704:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020inr"
-fields = { "sets" = [] }
-evidence = "Utbildningsinriktning ingår i kandidatgruppen.\ncatalog:variable_text:55705:17897:20089"
 
 [[statement]]
 kind = "set"
@@ -2218,12 +2158,6 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning-storst"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55712:11323:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildnings-inriktning-sun-2000"
-fields = { "sets" = [] }
-evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med sun2000inr.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
 
 [[statement]]
 kind = "set"
@@ -2680,3 +2614,69 @@ kind = "set"
 subject = "yrkesverksamma: sun2000niva_old @2018-01-01..2018-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
 evidence = "Both classify completed education level using the same seven category meanings, from primary education shorter than nine years to doctoral education. Both use the complete value sets 4769 and 9143, including the same missing code. Sun2000Niva_Old changes ownership at day 16801 without overlap in all three tables."
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-for-yrkesuppgift-for-egna-foretagare"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r60 explicitly records where entrepreneurs' occupation information was obtained. Its source categories (r432) and the largest-job source counterpart (r162) support this group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55446\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:517271\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5124"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-for-yrkesuppgift-nast-storsta-forvarvskallan"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r163 defines the occupation-information source for the second-largest earnings source, paired with the largest-source variable (r162). r433 confirms source categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55447\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5658"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-for-yrkesuppgift-ovrigt-jobb"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r165 defines the occupation-information source for the other job; r162 supplies the largest-job counterpart. Their shared codes identify information sources (r433).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55448\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518115\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5658"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-for-yrkesuppgift-storsta-forvarvskallan"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r162 defines the occupation-information source for the largest earnings source; r163 defines its second-largest counterpart. Both measure occupation-information provenance.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55449\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:518100"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2kallassyk"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r25 specifies the source of occupation information for job two in November. r16 supplies the main-employment counterpart, with source categories confirmed by r433.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55472\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516879\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516953\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5658"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-overensstammelse"
+fields = { "sets" = ["yrkeskodens-overensstammelse"] }
+evidence = "r328 explicitly interprets codes through occupation linkage to the organisation number for annual occupational activity. r17 provides the corresponding November-employment linkage measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:520047"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-status"
+fields = { "sets" = ["yrkeskodens-overensstammelse"] }
+evidence = "r17 explicitly distinguishes occupations linked to the November-employment organisation number from unlinked occupations. r328 supplies the annual occupational-activity counterpart.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55494\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:520047"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykkalla"
+fields = { "sets" = ["yrkesuppgiftens-kalla"] }
+evidence = "r16 specifies the source of occupation information for the main November employment. r25 supplies the second-job counterpart, and r433 confirms source categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55507\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516879\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516953\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5658"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "r106 explicitly specifies the complete four-position SUN2000 education-field code, as does the earlier counterpart (r18). This establishes the shared concept beyond their labels.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516891\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:517630"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "r293 explicitly specifies the four-position SUN2020 field-of-education code. Its SUN2000 partner also measures education field (r106), within the fixed version-inclusive definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55517\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:517630\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:519613"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildnings-inriktning-sun-2000"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "r18 explicitly measures education field using the complete SUN2000 code. r106 documents the same concept for another candidate variable.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:516891\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:517630"

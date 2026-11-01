@@ -3076,3 +3076,9 @@ kind = "set"
 subject = "taxeringsutfallet: ulagallmloneavgex1 @2018-01-01..2018-12-31 where key = 'v37010'"
 fields = { "variable" = "ulagallmloneavg2" }
 evidence = "Both identify the general payroll contribution base for the preceding income year, for individuals, in SEK. The later definition describes the base as summed. Both use UlagAllmLoneAvg2 in non-overlapping observed periods [14245,16436) and [17167,17532); coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:katkod"
+fields = { "tags" = ["taxation"] }
+evidence = "The definition classifies taxpayers into natural persons/estates and legal-entity categories (r18), confirmed by the complete four-code list (r17), supporting taxation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44835\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44984"

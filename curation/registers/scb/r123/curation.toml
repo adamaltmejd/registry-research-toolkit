@@ -7646,12 +7646,6 @@ evidence = "Samma begrepp är uppdelat mellan observerade perioder.\ncatalog:occ
 [[statement]]
 kind = "set"
 subject = "var:annandat"
-fields = { "sets" = [] }
-evidence = "Annan datautrustning i arbetet.\ncatalog:variable_text:3392:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:annandat"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Annan datautrustning i arbetet.\ncatalog:variable_text:3392:12053:12418"
 
@@ -7846,12 +7840,6 @@ kind = "set"
 subject = "var:anvander-datormus"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Mäter användning av datormus.\ncatalog:variable_text:3409:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:anvander-persondator"
-fields = { "sets" = [] }
-evidence = "Användning av persondator.\ncatalog:valueset:6281\ncatalog:variable_text:3410:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -8294,32 +8282,14 @@ evidence = "Gäller arbetstid.\ncatalog:variable_text:3448:19723:20089"
 [[statement]]
 kind = "set"
 subject = "var:arbutrhandmotordriv"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3449:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrhandmotordriv"
 fields = { "tags" = ["employment"] }
 evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3449:19723:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:arbutrhandverktyg"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3450:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrhandverktyg"
 fields = { "tags" = ["employment"] }
 evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3450:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrlyftanordning"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3451:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -8342,20 +8312,8 @@ evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3452:1
 [[statement]]
 kind = "set"
 subject = "var:arbutrnejingetovan"
-fields = { "sets" = [] }
-evidence = "Anger svar om arbetsutrustning.\ncatalog:variable_text:3453:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrnejingetovan"
 fields = { "tags" = ["employment"] }
 evidence = "Anger svar om arbetsutrustning.\ncatalog:variable_text:3453:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrstatmaskiner"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3454:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -8366,20 +8324,8 @@ evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3454:1
 [[statement]]
 kind = "set"
 subject = "var:arbutrstegarstallning"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3455:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrstegarstallning"
 fields = { "tags" = ["employment"] }
 evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3455:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrtrycksattanord"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3456:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -8510,12 +8456,6 @@ evidence = "Mäter smärta i axlar eller armar.\ncatalog:variable_text:3466:1862
 [[statement]]
 kind = "set"
 subject = "var:barbar"
-fields = { "sets" = [] }
-evidence = "Typ av datorutrustning.\ncatalog:valueset:2993\ncatalog:variable_text:3467:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:barbar"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Typ av datorutrustning.\ncatalog:valueset:2993\ncatalog:variable_text:3467:12053:12418"
 
@@ -8530,12 +8470,6 @@ kind = "set"
 subject = "var:bearbdat"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Gäller användning av datautrustning i arbetet.\ncatalog:variable_text:3468:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:belplus"
-fields = { "sets" = [] }
-evidence = "Mäter förändring i arbetsbelastning.\ncatalog:variable_text:3469:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -8690,12 +8624,6 @@ evidence = "Gäller datoranvändning i arbetet.\ncatalog:variable_text:3481:1205
 [[statement]]
 kind = "set"
 subject = "var:bildskar"
-fields = { "sets" = [] }
-evidence = "Arbete vid bildskärm. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3925:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:bildskar"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Arbete vid bildskärm. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3925:12053:12418"
 
@@ -8786,12 +8714,6 @@ evidence = "Mäter konflikt med chefer.\ncatalog:variable_text:3489:18628:18993"
 [[statement]]
 kind = "set"
 subject = "var:cheferst"
-fields = { "sets" = [] }
-evidence = "Mäter stöd från chefer.\ncatalog:variable_text:3490:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:cheferst"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter stöd från chefer.\ncatalog:variable_text:3490:18628:18993"
 
@@ -8866,12 +8788,6 @@ kind = "set"
 subject = "var:trakasserier-som-grundas-pa-kon-fran-chefer"
 fields = { "tags" = ["employment"] }
 evidence = "Källkoden är en ogenomskinlig förkortning av trakasserier från chefer eller arbetskamrater.\ncatalog:variable_text:3496:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:data"
-fields = { "sets" = [] }
-evidence = "Användning av datorutrustning.\ncatalog:variable_text:3497:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -9062,12 +8978,6 @@ evidence = "Svarsalternativ om diskriminering.\ncatalog:variable_text:3512:19723
 [[statement]]
 kind = "set"
 subject = "var:drar-in-pa-luncher-arbetar-over"
-fields = { "sets" = [] }
-evidence = "Frågan gäller konsekvenser av stor arbetsmängd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter förändrad arbetsbelastning eller stor arbetsmängd genom dess angivna konsekvenser, i enlighet med fasta inkluderingar. membership-0027: Mäter upplevd arbetsmängd och stor arbetsbelastning; ansvar och förändrad arbetstakt är andra egenskaper. membership-0028: Annatmkttid gäller att annat tar tid från huvudsysslan, inte mängden arbete eller dess förändring; övriga valda variabler ger inget medlemskap. membership-0029: Mäter för stor arbetsmängd enligt definitionen.\ncatalog:variable_text:3397:18628:18993\ncatalog:variable_text:3469:15706:16071\ncatalog:variable_text:3513:18628:18993\ncatalog:variable_text:3578:18628:18993\ncatalog:variable_text:3662:12053:12418\ncatalog:variable_text:3678:12053:12418\ncatalog:variable_text:3694:18628:18993\ncatalog:variable_text:3833:19723:20089\ncatalog:variable_text:3834:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:drar-in-pa-luncher-arbetar-over"
 fields = { "tags" = ["employment"] }
 evidence = "Frågan gäller konsekvenser av stor arbetsmängd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter förändrad arbetsbelastning eller stor arbetsmängd genom dess angivna konsekvenser, i enlighet med fasta inkluderingar. membership-0027: Mäter upplevd arbetsmängd och stor arbetsbelastning; ansvar och förändrad arbetstakt är andra egenskaper. membership-0028: Annatmkttid gäller att annat tar tid från huvudsysslan, inte mängden arbete eller dess förändring; övriga valda variabler ger inget medlemskap. membership-0029: Mäter för stor arbetsmängd enligt definitionen.\ncatalog:variable_text:3397:18628:18993\ncatalog:variable_text:3469:15706:16071\ncatalog:variable_text:3513:18628:18993\ncatalog:variable_text:3578:18628:18993\ncatalog:variable_text:3662:12053:12418\ncatalog:variable_text:3678:12053:12418\ncatalog:variable_text:3694:18628:18993\ncatalog:variable_text:3833:19723:20089\ncatalog:variable_text:3834:18628:18993"
 
@@ -9166,12 +9076,6 @@ kind = "set"
 subject = "var:etnisk"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter diskriminering på grund av etnicitet.\ncatalog:variable_text:3521:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:fattater"
-fields = { "sets" = [] }
-evidence = "Mäter erhållen återkommande utbildning.\ncatalog:variable_text:3522:9862:10227"
 
 [[statement]]
 kind = "set"
@@ -9722,12 +9626,6 @@ evidence = "Mäter besvär i händer och handleder.\ncatalog:variable_text:3567:
 [[statement]]
 kind = "set"
 subject = "var:handmask"
-fields = { "sets" = [] }
-evidence = "Mäter användning av handhållna maskiner.\ncatalog:variable_text:3568:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:handmask"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter användning av handhållna maskiner.\ncatalog:variable_text:3568:18628:18993"
 
@@ -9854,12 +9752,6 @@ evidence = "Mäter en konsekvens av stressig arbetsbelastning.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:hjalp-vid-svara-uppgifter"
-fields = { "sets" = [] }
-evidence = "Mäter möjlighet till råd vid svåra uppgifter. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Krävande problemlösning omfattas av kandidatens fasta inkludering. Tillgång till hjälp mäter stöd, inte arbetsuppgiftens svårighet eller behov av råd. membership-0027: Mäter svårighetsgrad, behov av råd och tid med svåra arbetsuppgifter. membership-0028: Ingen vald variabel mäter uppgifternas svårighet eller behov av råd vid svåra uppgifter. membership-0029: Inga valda variabler i denna sektion mäter arbetsuppgifternas svårighetsgrad. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter möjlighet till stöd, uppmuntran eller hjälp i besvärliga, svåra eller kritiska situationer, enligt fasta inkluderingar. membership-0027: Mäter sammanvägt stöd samt upplevt stöd och hjälp från chefer och arbetskamrater. membership-0028: Valda chefsfrågor gäller förutsättningar och prioritering, inte allmänt stöd eller praktisk hjälp enligt kandidaten. membership-0029: Mäter hjälp och stöd från arbetskollegor; saknat socialt stöd är en svarskategori om arbetsförutsättningar.\ncatalog:variable_text:3490:18628:18993\ncatalog:variable_text:3491:19723:20089\ncatalog:variable_text:3579:18628:18993\ncatalog:variable_text:3580:19723:20089\ncatalog:variable_text:3612:18628:18993\ncatalog:variable_text:3641:18628:18993\ncatalog:variable_text:3642:12784:13149\ncatalog:variable_text:3764:19723:20089\ncatalog:variable_text:3829:18628:18993\ncatalog:variable_text:3830:19723:20089\ncatalog:variable_text:3831:15706:16071\ncatalog:variable_text:3842:12053:12418\ncatalog:variable_text:3843:12053:12418\ncatalog:variable_text:3844:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:hjalp-vid-svara-uppgifter"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter möjlighet till råd vid svåra uppgifter. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Krävande problemlösning omfattas av kandidatens fasta inkludering. Tillgång till hjälp mäter stöd, inte arbetsuppgiftens svårighet eller behov av råd. membership-0027: Mäter svårighetsgrad, behov av råd och tid med svåra arbetsuppgifter. membership-0028: Ingen vald variabel mäter uppgifternas svårighet eller behov av råd vid svåra uppgifter. membership-0029: Inga valda variabler i denna sektion mäter arbetsuppgifternas svårighetsgrad. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter möjlighet till stöd, uppmuntran eller hjälp i besvärliga, svåra eller kritiska situationer, enligt fasta inkluderingar. membership-0027: Mäter sammanvägt stöd samt upplevt stöd och hjälp från chefer och arbetskamrater. membership-0028: Valda chefsfrågor gäller förutsättningar och prioritering, inte allmänt stöd eller praktisk hjälp enligt kandidaten. membership-0029: Mäter hjälp och stöd från arbetskollegor; saknat socialt stöd är en svarskategori om arbetsförutsättningar.\ncatalog:variable_text:3490:18628:18993\ncatalog:variable_text:3491:19723:20089\ncatalog:variable_text:3579:18628:18993\ncatalog:variable_text:3580:19723:20089\ncatalog:variable_text:3612:18628:18993\ncatalog:variable_text:3641:18628:18993\ncatalog:variable_text:3642:12784:13149\ncatalog:variable_text:3764:19723:20089\ncatalog:variable_text:3829:18628:18993\ncatalog:variable_text:3830:19723:20089\ncatalog:variable_text:3831:15706:16071\ncatalog:variable_text:3842:12053:12418\ncatalog:variable_text:3843:12053:12418\ncatalog:variable_text:3844:18628:18993"
 
@@ -9926,20 +9818,8 @@ evidence = "Gäller våld eller hot i arbetet.\ncatalog:variable_text:3584:19723
 [[statement]]
 kind = "set"
 subject = "var:hsoters"
-fields = { "sets" = [] }
-evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3585:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:hsoters"
 fields = { "tags" = ["employment"] }
 evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3585:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-mertid-totalt-huvudsysslan-anstallda-2021"
-fields = { "sets" = [] }
-evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3586:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -10106,20 +9986,8 @@ evidence = "Mäter inkomstgrupp.\ncatalog:variable_text:3599:18628:18993"
 [[statement]]
 kind = "set"
 subject = "var:intepenannanorsak"
-fields = { "sets" = [] }
-evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3600:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intepenannanorsak"
 fields = { "tags" = ["employment"] }
 evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3600:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intepenarbetsmiljo"
-fields = { "sets" = [] }
-evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3601:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -10130,44 +9998,20 @@ evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:intepenarbetstider"
-fields = { "sets" = [] }
-evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3602:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intepenarbetstider"
 fields = { "tags" = ["employment"] }
 evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3602:19723:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:intepenarbetsupp"
-fields = { "sets" = [] }
-evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3603:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intepenarbetsupp"
 fields = { "tags" = ["employment"] }
 evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3603:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intepenhalsoskal"
-fields = { "sets" = [] }
-evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3604:19723:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:intepenhalsoskal"
 fields = { "tags" = ["employment", "health"] }
 evidence = "Angiven orsak till att inte kunna arbeta till pension.\ncatalog:variable_text:3604:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:intressantarb"
-fields = { "sets" = [] }
-evidence = "Mäter intressant och stimulerande arbete.\ncatalog:variable_text:3605:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -10226,12 +10070,6 @@ evidence = "Mäter ett index för kontroll i arbetet.\ncatalog:variable_text:360
 [[statement]]
 kind = "set"
 subject = "var:jobbstim"
-fields = { "sets" = [] }
-evidence = "Mäter stimulans i arbetet.\ncatalog:variable_text:3610:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:jobbstim"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter stimulans i arbetet.\ncatalog:variable_text:3610:18628:18993"
 
@@ -10246,12 +10084,6 @@ kind = "set"
 subject = "var:justerbart-bord"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller möjlighet att växla arbetsställning.\ncatalog:variable_text:3611:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kamratst"
-fields = { "sets" = [] }
-evidence = "Mäter stöd från arbetskamrater.\ncatalog:variable_text:3612:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -10282,12 +10114,6 @@ kind = "set"
 subject = "var:kan-inte-koppla-av-tankarna"
 fields = { "tags" = ["employment"] }
 evidence = "Samma fråga är uppdelad mellan observerade perioder.\ncatalog:occurrence:24266\ncatalog:occurrence:24415"
-
-[[statement]]
-kind = "set"
-subject = "var:kassaapp"
-fields = { "sets" = [] }
-evidence = "Användning av kassautrustning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -10330,12 +10156,6 @@ kind = "set"
 subject = "var:klienter"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller kontakt med personer i arbetet.\ncatalog:variable_text:3618:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kompetensutveckling"
-fields = { "sets" = [] }
-evidence = "Mäter kompetensutveckling i arbetet.\ncatalog:variable_text:3619:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -10478,12 +10298,6 @@ evidence = "Mäter typ av kontorsarbetsplats.\ncatalog:variable_text:3630:18628:
 [[statement]]
 kind = "set"
 subject = "var:kontroll"
-fields = { "sets" = [] }
-evidence = "Användning av kontrollutrustning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:kontroll"
 fields = { "tags" = ["employment"] }
 evidence = "Användning av kontrollutrustning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
 
@@ -10598,20 +10412,8 @@ evidence = "Mäter överensstämmelse mellan krav och kunskaper.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:kravprob"
-fields = { "sets" = [] }
-evidence = "Gäller krävande problemlösning i arbetet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Krävande problemlösning omfattas av kandidatens fasta inkludering. Tillgång till hjälp mäter stöd, inte arbetsuppgiftens svårighet eller behov av råd. membership-0027: Mäter svårighetsgrad, behov av råd och tid med svåra arbetsuppgifter. membership-0028: Ingen vald variabel mäter uppgifternas svårighet eller behov av råd vid svåra uppgifter. membership-0029: Inga valda variabler i denna sektion mäter arbetsuppgifternas svårighetsgrad.\ncatalog:variable_text:3579:18628:18993\ncatalog:variable_text:3641:18628:18993\ncatalog:variable_text:3842:12053:12418\ncatalog:variable_text:3843:12053:12418\ncatalog:variable_text:3844:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kravprob"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller krävande problemlösning i arbetet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Krävande problemlösning omfattas av kandidatens fasta inkludering. Tillgång till hjälp mäter stöd, inte arbetsuppgiftens svårighet eller behov av råd. membership-0027: Mäter svårighetsgrad, behov av råd och tid med svåra arbetsuppgifter. membership-0028: Ingen vald variabel mäter uppgifternas svårighet eller behov av råd vid svåra uppgifter. membership-0029: Inga valda variabler i denna sektion mäter arbetsuppgifternas svårighetsgrad.\ncatalog:variable_text:3579:18628:18993\ncatalog:variable_text:3641:18628:18993\ncatalog:variable_text:3842:12053:12418\ncatalog:variable_text:3843:12053:12418\ncatalog:variable_text:3844:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kritik95"
-fields = { "sets" = [] }
-evidence = "Mäter möjlighet till hjälp i kritiska situationer. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter möjlighet till stöd, uppmuntran eller hjälp i besvärliga, svåra eller kritiska situationer, enligt fasta inkluderingar. membership-0027: Mäter sammanvägt stöd samt upplevt stöd och hjälp från chefer och arbetskamrater. membership-0028: Valda chefsfrågor gäller förutsättningar och prioritering, inte allmänt stöd eller praktisk hjälp enligt kandidaten. membership-0029: Mäter hjälp och stöd från arbetskollegor; saknat socialt stöd är en svarskategori om arbetsförutsättningar.\ncatalog:variable_text:3490:18628:18993\ncatalog:variable_text:3491:19723:20089\ncatalog:variable_text:3579:18628:18993\ncatalog:variable_text:3580:19723:20089\ncatalog:variable_text:3612:18628:18993\ncatalog:variable_text:3642:12784:13149\ncatalog:variable_text:3764:19723:20089\ncatalog:variable_text:3829:18628:18993\ncatalog:variable_text:3830:19723:20089\ncatalog:variable_text:3831:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -10774,12 +10576,6 @@ kind = "set"
 subject = "var:laptid"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Tid med bärbar dator.\ncatalog:variable_text:3655:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:laptop"
-fields = { "sets" = [] }
-evidence = "Användning av bärbar dator.\ncatalog:variable_text:3656:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -11234,12 +11030,6 @@ evidence = "Mäter förekomst av arbetsmiljömöten.\ncatalog:variable_text:3693
 [[statement]]
 kind = "set"
 subject = "var:mycklite"
-fields = { "sets" = [] }
-evidence = "Mäter upplevd arbetsmängd.\ncatalog:variable_text:3694:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:mycklite"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter upplevd arbetsmängd.\ncatalog:variable_text:3694:18628:18993"
 
@@ -11534,12 +11324,6 @@ evidence = "Samma begrepp som motsvarande senare källkolumnsperiod är korrekt 
 [[statement]]
 kind = "set"
 subject = "var:overtid-frekvens"
-fields = { "sets" = [] }
-evidence = "Mäter övertidens frekvens.\ncatalog:variable_text:3719:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-frekvens"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter övertidens frekvens.\ncatalog:variable_text:3719:12053:12418"
 
@@ -11558,20 +11342,8 @@ evidence = "Källkolumnen har olika ägare och operationaliseringen skiljer enba
 [[statement]]
 kind = "set"
 subject = "var:overtid-med-ersattning-2"
-fields = { "sets" = [] }
-evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:3721:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-med-ersattning-2"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:3721:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-minst-10-timmar"
-fields = { "sets" = [] }
-evidence = "Den tidiga värdemängden är utelämnad medan senare värden uttrycker en tiotimmarströskel.\ncatalog:valueset:10775\ncatalog:valueset:8732\ncatalog:variable_text:3722:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -11582,20 +11354,8 @@ evidence = "Den tidiga värdemängden är utelämnad medan senare värden uttryc
 [[statement]]
 kind = "set"
 subject = "var:overtid-minst-5-timmar"
-fields = { "sets" = [] }
-evidence = "Den tidiga värdemängden är utelämnad medan senare värden uttrycker en femtimmarströskel.\ncatalog:valueset:10793\ncatalog:valueset:8732\ncatalog:variable_text:3723:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-minst-5-timmar"
 fields = { "tags" = ["employment"] }
 evidence = "Den tidiga värdemängden är utelämnad medan senare värden uttrycker en femtimmarströskel.\ncatalog:valueset:10793\ncatalog:valueset:8732\ncatalog:variable_text:3723:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-totalt"
-fields = { "sets" = [] }
-evidence = "Mäter förekomst av övertid totalt.\ncatalog:variable_text:3724:17897:18262"
 
 [[statement]]
 kind = "set"
@@ -11606,20 +11366,8 @@ evidence = "Mäter förekomst av övertid totalt.\ncatalog:variable_text:3724:17
 [[statement]]
 kind = "set"
 subject = "var:overtid-utan-ersattning"
-fields = { "sets" = [] }
-evidence = "Mäter övertid utan ersättning.\ncatalog:variable_text:3725:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-utan-ersattning"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter övertid utan ersättning.\ncatalog:variable_text:3725:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:overtidstimmar-totalt-huvudsyssla"
-fields = { "sets" = [] }
-evidence = "Mäter antal övertidstimmar.\ncatalog:variable_text:3726:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -11810,20 +11558,8 @@ evidence = "Mäter nära kontakt med svårt sjuka eller personer med allvarliga 
 [[statement]]
 kind = "set"
 subject = "var:prodtyp"
-fields = { "sets" = [] }
-evidence = "Användning av datoriserad produktionsutrustning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:prodtyp"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Användning av datoriserad produktionsutrustning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:produkti"
-fields = { "sets" = [] }
-evidence = "Utrustning för datastyrning av produktion. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -12830,20 +12566,8 @@ evidence = "Frågan kontrollerar om det registerförda yrket stämmer med det nu
 [[statement]]
 kind = "set"
 subject = "var:statmask"
-fields = { "sets" = [] }
-evidence = "Mäter användning av stationära maskiner.\ncatalog:variable_text:3828:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:statmask"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter användning av stationära maskiner.\ncatalog:variable_text:3828:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:stodindex"
-fields = { "sets" = [] }
-evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3829:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -12854,20 +12578,8 @@ evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3829:18628
 [[statement]]
 kind = "set"
 subject = "var:stodarbetskollegor"
-fields = { "sets" = [] }
-evidence = "Mäter stöd från arbetskollegor.\ncatalog:variable_text:3830:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stodarbetskollegor"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter stöd från arbetskollegor.\ncatalog:variable_text:3830:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stodhjal"
-fields = { "sets" = [] }
-evidence = "Mäter upplevt stöd och hjälp.\ncatalog:variable_text:3831:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -12890,20 +12602,8 @@ evidence = "Populationstotal per urvalsstratum.\ncatalog:variable_text:3832:1972
 [[statement]]
 kind = "set"
 subject = "var:storarbetsbelastning"
-fields = { "sets" = [] }
-evidence = "Mäter stor arbetsbelastning.\ncatalog:variable_text:3833:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:storarbetsbelastning"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter stor arbetsbelastning.\ncatalog:variable_text:3833:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:storbel"
-fields = { "sets" = [] }
-evidence = "Mäter stor arbetsbelastning.\ncatalog:variable_text:3834:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -12974,12 +12674,6 @@ evidence = "Mäter exponering för sura eller basiska ämnen.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:surfplatta-smartphone"
-fields = { "sets" = [] }
-evidence = "Användning av digital utrustning.\ncatalog:variable_text:3840:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:surfplatta-smartphone"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Användning av digital utrustning.\ncatalog:variable_text:3840:18628:18993"
 
@@ -12998,32 +12692,14 @@ evidence = "Gäller fortsatt enkätmedverkan.\ncatalog:variable_text:3841:18628:
 [[statement]]
 kind = "set"
 subject = "var:svaraarb"
-fields = { "sets" = [] }
-evidence = "Gäller svåra arbetsuppgifter och behov av råd.\ncatalog:variable_text:3842:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:svaraarb"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller svåra arbetsuppgifter och behov av råd.\ncatalog:variable_text:3842:12053:12418"
 
 [[statement]]
 kind = "set"
 subject = "var:svaratid"
-fields = { "sets" = [] }
-evidence = "Mäter arbetstid med svåra uppgifter.\ncatalog:variable_text:3843:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:svaratid"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter arbetstid med svåra uppgifter.\ncatalog:variable_text:3843:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:svarenkl"
-fields = { "sets" = [] }
-evidence = "Gäller upplevd svårighetsgrad i arbetsuppgifter.\ncatalog:variable_text:3844:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -13066,12 +12742,6 @@ kind = "set"
 subject = "var:systemat"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter systematiskt arbetsmiljöarbete.\ncatalog:variable_text:3847:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:oppet-svar-for-fraga-t19"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -13682,12 +13352,6 @@ evidence = "Mäter överensstämmelse mellan arbetsuppgifter och utbildning.\nca
 [[statement]]
 kind = "set"
 subject = "var:utbildar"
-fields = { "sets" = [] }
-evidence = "Mäter antal utbildningsdagar på betald arbetstid.\ncatalog:variable_text:3899:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildar"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Mäter antal utbildningsdagar på betald arbetstid.\ncatalog:variable_text:3899:15706:16071"
 
@@ -13702,12 +13366,6 @@ kind = "set"
 subject = "var:utbildni"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter utbildning som arbetet kräver.\ncatalog:variable_text:3900:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-pa-betald-arbetstid"
-fields = { "sets" = [] }
-evidence = "Mäter utbildning på betald arbetstid.\ncatalog:variable_text:3901:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -13990,12 +13648,6 @@ kind = "set"
 subject = "var:vaxlasittastakont"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller möjlighet att växla arbetsställning på kontoret.\ncatalog:variable_text:3924:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:verktygs"
-fields = { "sets" = [] }
-evidence = "Användning av verktygsmaskin. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Handhållna maskiner omfattas. Datoransluten kassa och datoriserad kontrollutrustning hör enligt den fasta avgränsningen till datorutrustning. membership-0027: Rörliga och stationära maskiner omfattas. Datoriserad produktionsutrustning placeras enligt den fasta datorutrustningsdefinitionen; manuellt maskinarbetes tidsandel och övervakningskrav mäter andra egenskaper. membership-0028: Gemensam fråga kodar användning av arbetsutrustning, inklusive svaret inget av ovanstående. membership-0029: Den valda utrustningsfrågan gäller utbildning eller instruktion, vilket definitionen exkluderar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3449:19723:20089\ncatalog:variable_text:3450:19723:20089\ncatalog:variable_text:3451:19723:20089\ncatalog:variable_text:3452:19723:20089\ncatalog:variable_text:3453:19723:20089\ncatalog:variable_text:3454:19723:20089\ncatalog:variable_text:3455:19723:20089\ncatalog:variable_text:3456:19723:20089\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3568:18628:18993\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3670:12053:12418\ncatalog:variable_text:3671:12053:12418\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3754:18628:18993\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3828:18628:18993\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3903:19723:20089\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -14292,3 +13944,351 @@ relation = "continues"
 object = "scb/arbetsmiljoundersokningen/tunga-momenten-okat"
 at = "1999-01-01.."
 evidence = "AMU MERTUNGA: change in heavy tasks within the job (1997) -> heavy tasks in previous vs current occupation (1999-2003), same value set vs6330; revised question."
+
+[[statement]]
+kind = "set"
+subject = "var:annandat"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question explicitly measures use of other computer equipment at work (r214), within the fixed scope (r251). | The question explicitly measures use of other computer equipment at work (r214), within the fixed scope (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3388\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3392\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-persondator"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures personal-computer use at work (r216); later codes distinguish desktop and laptop use (r209), within scope (r251). | The question measures personal-computer use at work (r216); later codes distinguish desktop and laptop use (r209), within scope (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3408\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6281\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3413\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrhandmotordriv"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The operational definition specifies handheld powered machines or tools used for at least a quarter of working time (r217), within scope (r248). | The operational definition specifies handheld powered machines or tools used for at least a quarter of working time (r217), within scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3448\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3454\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrhandverktyg"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The operational definition specifies non-powered hand tools used for at least a quarter of working time (r218), within the equipment scope (r248). | The operational definition specifies non-powered hand tools used for at least a quarter of working time (r218), within the equipment scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3449\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3455\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrlyftanordning"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The response measures use of lifting devices, including lifts and cranes (r219); this equipment category fits the fixed scope (r248). | The response measures use of lifting devices, including lifts and cranes (r219); this equipment category fits the fixed scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3450\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3456\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrnejingetovan"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "This is the explicit 'none of the above' response to the equipment-use question (r221), recording non-use of the included equipment categories (r248). | This is the explicit 'none of the above' response to the equipment-use question (r221), recording non-use of the included equipment categories (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3452\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3458\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrstatmaskiner"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The response specifies use of stationary machinery or process systems for production, handling, transport or packaging (r222), matching the equipment scope (r248). | The response specifies use of stationary machinery or process systems for production, handling, transport or packaging (r222), matching the equipment scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3453\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3459\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrstegarstallning"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The response specifies use of ladders or scaffolding for at least a quarter of working time (r223), an included equipment category (r248). | The response specifies use of ladders or scaffolding for at least a quarter of working time (r223), an included equipment category (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3460\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrtrycksattanord"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The response explicitly identifies use of pressurized equipment for at least a quarter of working time (r224), within the equipment scope (r248). | The response explicitly identifies use of pressurized equipment for at least a quarter of working time (r224), within the equipment scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3455\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3461\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:barbar"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question distinguishes portable and stationary computer equipment (r225; r205), which are included equipment types (r251). | The question distinguishes portable and stationary computer equipment (r225; r205), which are included equipment types (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3466\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2993\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3472\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:belplus"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "The question explicitly asks whether workload increased or decreased over five years (r226), matching the included change in workload (r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3475\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:bildskar"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures working at a display screen (r227), and its codes explicitly situate this within computer-equipment use (r201; r251). | The question measures working at a display screen (r227), and its codes explicitly situate this within computer-equipment use (r201; r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3482\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10276\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3488\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:cheferst"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question measures access to support and encouragement from managers when work feels difficult (r261).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3490\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3496"
+
+[[statement]]
+kind = "set"
+subject = "var:data"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The derived variable measures use of one or more types of computer equipment (r228), within the fixed scope (r251). | The derived variable measures use of one or more types of computer equipment (r228), within the fixed scope (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3496\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3502\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:drar-in-pa-luncher-arbetar-over"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "The question explicitly links having so much to do with skipped lunches, overtime or taking work home (r229), supporting workload membership (r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3512\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3518\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:fattater"
+fields = { "sets" = ["utbildning-och-kompetensutveckling-i-arbetet"] }
+evidence = "The question asks whether required job training has actually been received; the operational text identifies the eligibility condition (r263, r49).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3522\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:24241\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3528"
+
+[[statement]]
+kind = "set"
+subject = "var:handmask"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The question explicitly measures work with handheld or portable machinery for at least a quarter of working time (r230), within scope (r248). | The question explicitly measures work with handheld or portable machinery for at least a quarter of working time (r230), within scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3567\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3572\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-vid-svara-uppgifter"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question measures access to advice or help when work tasks feel difficult (r264).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3578\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3583"
+
+[[statement]]
+kind = "set"
+subject = "var:hsoters"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question measures whether compensated overtime occurred in the main job, an explicitly included overtime component (r265, r216).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3584\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26697\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3589"
+
+[[statement]]
+kind = "set"
+subject = "var:intepenannanorsak"
+fields = { "sets" = ["orsaker-till-att-inte-arbeta-till-pension"] }
+evidence = "The question records another reason for being unable to work until retirement, within the multiple-response reasons question (r267, r226).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3595\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26927\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3601"
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetsmiljo"
+fields = { "sets" = ["orsaker-till-att-inte-arbeta-till-pension"] }
+evidence = "The question records work environment as a reason for being unable to work until retirement (r268, r227).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26928\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3602"
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetstider"
+fields = { "sets" = ["orsaker-till-att-inte-arbeta-till-pension"] }
+evidence = "The question records working hours as a reason for being unable to work until retirement (r269, r228).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3603"
+
+[[statement]]
+kind = "set"
+subject = "var:intepenarbetsupp"
+fields = { "sets" = ["orsaker-till-att-inte-arbeta-till-pension"] }
+evidence = "The question records work tasks as a reason for being unable to work until retirement (r270, r229).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3598\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26930\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3604"
+
+[[statement]]
+kind = "set"
+subject = "var:intepenhalsoskal"
+fields = { "sets" = ["orsaker-till-att-inte-arbeta-till-pension"] }
+evidence = "The question records health reasons for being unable to work until retirement (r271, r230).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3599\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3605"
+
+[[statement]]
+kind = "set"
+subject = "var:intressantarb"
+fields = { "sets" = ["stimulans-och-utveckling-i-arbetet"] }
+evidence = "The question directly measures whether work is interesting and stimulating (r272).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3600\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3606"
+
+[[statement]]
+kind = "set"
+subject = "var:jobbstim"
+fields = { "sets" = ["stimulans-och-utveckling-i-arbetet"] }
+evidence = "The question directly measures whether work is interesting and stimulating (r273).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3606\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3612"
+
+[[statement]]
+kind = "set"
+subject = "var:kamratst"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question measures access to support and encouragement from coworkers when work feels difficult (r274).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3608\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3614"
+
+[[statement]]
+kind = "set"
+subject = "var:kassaapp"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question explicitly measures use of a cash register connected to a computer (r232), an included computer-equipment type (r251). | The question explicitly measures use of a cash register connected to a computer (r232), an included computer-equipment type (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3611\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3617\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/datorutrustning-i-arbetet"
+
+[[statement]]
+kind = "set"
+subject = "var:kompetensutveckling"
+fields = { "sets" = ["utbildning-och-kompetensutveckling-i-arbetet"] }
+evidence = "The question asks whether workplace competence development, such as a course or training, was received during the past year (r276).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3614\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3621"
+
+[[statement]]
+kind = "set"
+subject = "var:kontroll"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures use of computerized control or measuring equipment at work (r277). | The question measures use of computerized control or measuring equipment at work (r277).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3626\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3633"
+
+[[statement]]
+kind = "set"
+subject = "var:kravprob"
+fields = { "sets" = ["arbetsuppgifternas-svarighetsgrad"] }
+evidence = "The question measures time spent understanding or solving demanding problems (r234), an aspect of task difficulty included by the fixed definition (r250).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3637\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3643\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsuppgifternas-svarighetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:kritik95"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question measures having to cope without help from surrounding people in critical situations, a negative measure of available help (r278).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3638\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3644"
+
+[[statement]]
+kind = "set"
+subject = "var:laptop"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question asks whether a portable computer is used at work (r279). | The question asks whether a portable computer is used at work (r279).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3652\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3658"
+
+[[statement]]
+kind = "set"
+subject = "var:mycklite"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "The question and complete codes measure having too much or too little work (r236; r202), directly matching perceived work quantity (r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3688\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3695\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:oppet-svar-for-fraga-t19"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The open response specifies which other data equipment is used at work, recording an equipment type (r283). | The open response specifies which other data equipment is used at work, recording an equipment type (r283).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3711\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3718"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-frekvens"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question asks how often work extends beyond ordinary working hours, with frequency codes from daily to never (r285, r243).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3718\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4106\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3725"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-med-ersattning-2"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question and operational definitions measure occurrence of compensated overtime in the main job (r287).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3727"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-mertid-totalt-huvudsysslan-anstallda-2021"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question measures occurrence of overtime or additional hours with or without compensation (r266).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3721\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3590"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-10-timmar"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The definition and supplied later codes measure overtime against a ten-hour threshold, within the included overtime scope (r288, r235).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3722\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3728"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-5-timmar"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The definition and supplied later codes measure overtime against a five-hour threshold, within the included overtime scope (r289, r236).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3723\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10793\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3729"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-totalt"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question measures occurrence of overtime or additional hours with or without compensation (r290).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3724\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3730"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-utan-ersattning"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The question measures occurrence of overtime without compensation in time or money, an included overtime component (r291).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3725\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3731"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidstimmar-totalt-huvudsyssla"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "The definition measures total overtime and additional hours with and without compensation; the latest occurrence explicitly uses hours (r292, r218).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3726\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:26699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3732"
+
+[[statement]]
+kind = "set"
+subject = "var:prodtyp"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The derived measure records use of programmable machine tools, computer-controlled production equipment, or computerized control and measuring equipment (r293). | The derived measure records use of programmable machine tools, computer-controlled production equipment, or computerized control and measuring equipment (r293).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3745"
+
+[[statement]]
+kind = "set"
+subject = "var:produkti"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures use of equipment for computer-controlled production processes, an included equipment type (r294). | The question measures use of equipment for computer-controlled production processes, an included equipment type (r294).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3740\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3746"
+
+[[statement]]
+kind = "set"
+subject = "var:statmask"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "The question measures work with stationary machinery or process systems for at least a quarter of working time (r240), within scope (r248). | The question measures work with stationary machinery or process systems for at least a quarter of working time (r240), within scope (r248).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3824\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3830\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:stodarbetskollegor"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question asks whether coworkers provide help and support when requested (r295).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3831"
+
+[[statement]]
+kind = "set"
+subject = "var:stodhjal"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The question measures perceived support and help from coworkers and managers, with codes ranging from insufficient support to excessive involvement (r296, r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3826\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7797\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3832"
+
+[[statement]]
+kind = "set"
+subject = "var:stodindex"
+fields = { "sets" = ["stod-och-hjalp-i-arbetet"] }
+evidence = "The index combines support from managers and coworkers, and its codes distinguish support from both sources (r297, r242).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3833"
+
+[[statement]]
+kind = "set"
+subject = "var:storarbetsbelastning"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "The question defines excessive workload as having far too much to do (r241), directly matching the group (r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3829\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3835\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:storbel"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "The question explicitly defines heavy workload as far too much to do (r242), matching perceived work quantity (r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3830\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3836\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:surfplatta-smartphone"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures use of a tablet, smartphone, or both at work (r298). | The question measures use of a tablet, smartphone, or both at work (r298).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3836\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3842"
+
+[[statement]]
+kind = "set"
+subject = "var:svaraarb"
+fields = { "sets" = ["arbetsuppgifternas-svarighetsgrad"] }
+evidence = "The question asks whether tasks feel difficult enough to want advice or help (r244), matching the included need for advice (r250).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3838\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3844\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsuppgifternas-svarighetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:svaratid"
+fields = { "sets" = ["arbetsuppgifternas-svarighetsgrad"] }
+evidence = "The question measures time spent on tasks difficult enough to prompt a need for advice or help (r245), explicitly within scope (r250).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3839\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3845\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsuppgifternas-svarighetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:svarenkl"
+fields = { "sets" = ["arbetsuppgifternas-svarighetsgrad"] }
+evidence = "The question and codes measure whether tasks are too difficult or too easy (r246; r204), directly matching task difficulty (r250).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3840\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12217\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3846\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsuppgifternas-svarighetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildar"
+fields = { "sets" = ["utbildning-och-kompetensutveckling-i-arbetet"] }
+evidence = "The question measures days of training received during paid working time; the operational text confirms a day count (r299).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3887\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3898"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-pa-betald-arbetstid"
+fields = { "sets" = ["utbildning-och-kompetensutveckling-i-arbetet"] }
+evidence = "The question measures training received during paid working time; later codes also record its duration (r300, r249).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3889\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6204\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3900"
+
+[[statement]]
+kind = "set"
+subject = "var:verktygs"
+fields = { "sets" = ["datorutrustning-i-arbetet"] }
+evidence = "The question measures use of a programmable machine tool at work, an included equipment type (r301). | The question measures use of a programmable machine tool at work, an included equipment type (r301).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3913\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3925"

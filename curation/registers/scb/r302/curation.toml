@@ -578,20 +578,8 @@ evidence = "F20_7 är en opak frågekod för bedömning av kontakter med arbetsl
 [[statement]]
 kind = "set"
 subject = "var:har-haft-nytta-av-utbildningen-nar-det-galler-arbete"
-fields = { "sets" = [] }
-evidence = "F21_1 är en opak frågekod för utbildningens nytta för arbete.\ncatalog:valueset:6121\ncatalog:variable_text:26182:14245:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:har-haft-nytta-av-utbildningen-nar-det-galler-arbete"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F21_1 är en opak frågekod för utbildningens nytta för arbete.\ncatalog:valueset:6121\ncatalog:variable_text:26182:14245:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:har-haft-nytta-av-utbildningen-nar-det-galler-lon"
-fields = { "sets" = [] }
-evidence = "F21_2 är en opak frågekod för utbildningens nytta för lön.\ncatalog:valueset:6121\ncatalog:variable_text:26183:14245:14610"
 
 [[statement]]
 kind = "set"
@@ -622,12 +610,6 @@ kind = "set"
 subject = "var:f21-4"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen behöver klargöras före namnbyte.\ncatalog:valueset:5533\ncatalog:variable_text:26185:14245:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:nytta-utbildning-privatliv-fritid"
-fields = { "sets" = [] }
-evidence = "F21_5 är en opak frågekod.\ncatalog:variable_text:26186:14245:14610"
 
 [[statement]]
 kind = "set"
@@ -754,3 +736,21 @@ kind = "set"
 subject = "var:utbildningsomrade-grov"
 fields = { "tags" = ["education"] }
 evidence = "Utbildningsområde är en utbildningsuppgift.\ncatalog:valueset:5165\ncatalog:variable_text:26197:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:har-haft-nytta-av-utbildningen-nar-det-galler-arbete"
+fields = { "sets" = ["upplevd-nytta-av-utbildningen"] }
+evidence = "Work-related educational benefit is documented in r6 and r16, with explicit benefit responses in r12; pay benefit provides a supported group partner (r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26075\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235485\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26178"
+
+[[statement]]
+kind = "set"
+subject = "var:har-haft-nytta-av-utbildningen-nar-det-galler-lon"
+fields = { "sets" = ["upplevd-nytta-av-utbildningen"] }
+evidence = "Pay-related educational benefit is documented in r7 and r17, with explicit benefit responses in r12; work benefit provides a supported group partner (r6).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26076\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235485\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26179"
+
+[[statement]]
+kind = "set"
+subject = "var:nytta-utbildning-privatliv-fritid"
+fields = { "sets" = ["upplevd-nytta-av-utbildningen"] }
+evidence = "Private-life/leisure educational benefit is documented in r10 and r15, with explicit benefit responses in r12; work benefit provides a supported group partner (r6).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26087\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26175"

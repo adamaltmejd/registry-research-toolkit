@@ -4968,12 +4968,6 @@ evidence = "Skolans län är en geografisk länsangivelse.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:laroplan"
-fields = { "sets" = [] }
-evidence = "Variabeln anger utbildningens läroplan.\ncatalog:variable_text:22759:16252:16617"
-
-[[statement]]
-kind = "set"
-subject = "var:laroplan"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger utbildningens läroplan.\ncatalog:variable_text:22759:16252:16617"
 
@@ -6140,12 +6134,6 @@ kind = "set"
 subject = "var:skollan"
 fields = { "tags" = ["geography"] }
 evidence = "Skolans län är en geografisk länsangivelse.\ncatalog:variable_text:22874:9678:12600"
-
-[[statement]]
-kind = "set"
-subject = "var:sluttyp"
-fields = { "sets" = [] }
-evidence = "Sluttyp anger inte läroplan i någon av perioderna.\ncatalog:variable_text:22875:15887:16617\ncatalog:variable_text:22875:16617:16983"
 
 [[statement]]
 kind = "set"
@@ -9908,3 +9896,27 @@ kind = "set"
 subject = "slutbetyg: Streck @2024-07-01..2025-06-30 where key = 'v32868'"
 fields = { "description" = "Antal ämnen med streck i betyget. Streck anges när bedömningsunderlag saknas på grund av mycket stor frånvaro." }
 evidence = "Variabeln mäter antal ämnen med streck; den befintliga texten förklarar endast streckets innebörd.\ncatalog:variable_text:22889:16252:16617\ncatalog:variable_text:22889:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-avslutad-gymnasieutbildning"
+fields = { "sets" = ["avslutningsar"] }
+evidence = "r33 explicitly records the calendar year of completing upper-secondary school, which avslutningsar includes (r92).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:207685\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/avslutningsar"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangsar"
+fields = { "sets" = ["avslutningsar"] }
+evidence = "The source defines the measure as leaving year (r54, r89), explicitly included by avslutningsar (r92).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:208285\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:22500\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/avslutningsar"
+
+[[statement]]
+kind = "set"
+subject = "var:laroplan"
+fields = { "sets" = ["laroplan"] }
+evidence = "r64 explicitly identifies the curriculum followed; the complete code lists distinguish Lpf94 and Gy2011 (r84, r86), satisfying r93.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22682\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:211523\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6278\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/laroplan"
+
+[[statement]]
+kind = "set"
+subject = "var:sluttyp"
+fields = { "sets" = ["laroplan"] }
+evidence = "The operational definitions identify the curriculum followed (r69, r74), and the complete codes distinguish Lpf94 from Gy2011 (r85), satisfying r93.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22803\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:211900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:212252\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5557\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/laroplan"

@@ -32,12 +32,6 @@ evidence = "Avdraget är en skatteuppgift.\ncatalog:variable_text:33876:12784:16
 [[statement]]
 kind = "set"
 subject = "var:avdrag-realisationsforlust-kapital"
-fields = { "sets" = [] }
-evidence = "Avdraget avser realisationsförlust.\ncatalog:variable_text:33877:12784:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-realisationsforlust-kapital"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Avdraget avser realisationsförlust.\ncatalog:variable_text:33877:12784:18262"
 
@@ -200,44 +194,20 @@ evidence = "Variabeln mäter ränte- och utdelningsinkomst.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-aktier-fonder-k4"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust.\ncatalog:variable_text:33891:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-aktier-fonder-k4"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalförlust.\ncatalog:variable_text:33891:12784:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-annan-fond-rantefond"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust på fondandelar.\ncatalog:variable_text:33892:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-annan-fond-rantefond"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalförlust på fondandelar.\ncatalog:variable_text:33892:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-bostadsratt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294279\ncatalog:occurrence:294329"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-bostadsratt"
 fields = { "tags" = ["income", "property"] }
 evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294279\ncatalog:occurrence:294329"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-brutto"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust.\ncatalog:variable_text:33894:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -260,32 +230,14 @@ evidence = "Variabeln avser finansiell kapitalförlust.\ncatalog:variable_text:3
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-fonder"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust på fonder.\ncatalog:variable_text:33896:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-fonder"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalförlust på fonder.\ncatalog:variable_text:33896:13514:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-naringsfastighet"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust på näringsfastighet.\ncatalog:variable_text:33897:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-naringsfastighet"
 fields = { "tags" = ["income", "property"] }
 evidence = "Variabeln mäter kapitalförlust på näringsfastighet.\ncatalog:variable_text:33897:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-naringsfastighet-avdrag"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter avdragsgill kapitalförlust.\ncatalog:variable_text:33898:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -296,20 +248,8 @@ evidence = "Variabeln mäter avdragsgill kapitalförlust.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-rantefond"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalförlust på räntefond.\ncatalog:variable_text:33899:12784:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-rantefond"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalförlust på räntefond.\ncatalog:variable_text:33899:12784:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-smahus-bostadsratt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294279\ncatalog:occurrence:294329"
 
 [[statement]]
 kind = "set"
@@ -320,44 +260,20 @@ evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncat
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-aktier-fonder-k-blankett"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst på värdepapper.\ncatalog:variable_text:33901:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-aktier-fonder-k-blankett"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalvinst på värdepapper.\ncatalog:variable_text:33901:12784:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-annan-fond-rantefond"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst på fondandelar.\ncatalog:variable_text:33902:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-annan-fond-rantefond"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalvinst på fondandelar.\ncatalog:variable_text:33902:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-bostadsratt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294298\ncatalog:occurrence:294350"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-bostadsratt"
 fields = { "tags" = ["income", "property"] }
 evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294298\ncatalog:occurrence:294350"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-brutto"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst.\ncatalog:variable_text:33904:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -368,20 +284,8 @@ evidence = "Variabeln mäter kapitalvinst.\ncatalog:variable_text:33904:13514:18
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-finansiellt-brutto"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter finansiell kapitalvinst.\ncatalog:variable_text:33905:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-finansiellt-brutto"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter finansiell kapitalvinst.\ncatalog:variable_text:33905:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-finansiellt-netto"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter finansiell kapitalvinst netto.\ncatalog:variable_text:33906:17897:18262"
 
 [[statement]]
 kind = "set"
@@ -392,20 +296,8 @@ evidence = "Variabeln mäter finansiell kapitalvinst netto.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-fonder"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst på fonder.\ncatalog:variable_text:33907:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-fonder"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalvinst på fonder.\ncatalog:variable_text:33907:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-naringsfastighet"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst på näringsfastighet.\ncatalog:variable_text:33908:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -416,32 +308,14 @@ evidence = "Variabeln mäter kapitalvinst på näringsfastighet.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-naringsfastighet-skatt"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter skattepliktig kapitalvinst.\ncatalog:variable_text:33909:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-naringsfastighet-skatt"
 fields = { "tags" = ["income", "property", "taxation"] }
 evidence = "Variabeln mäter skattepliktig kapitalvinst.\ncatalog:variable_text:33909:12784:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-rantefond"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter kapitalvinst på räntefond.\ncatalog:variable_text:33910:12784:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-rantefond"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter kapitalvinst på räntefond.\ncatalog:variable_text:33910:12784:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-smahus-bostadsratt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncatalog:occurrence:294298\ncatalog:occurrence:294350"
 
 [[statement]]
 kind = "set"
@@ -476,32 +350,14 @@ evidence = "KBTUPP är en källkod för återföring av uppskovsbelopp.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:forlust-enligt-blankett-k5-och-k6"
-fields = { "sets" = [] }
-evidence = "KFBOT är en källkod för förlust enligt K5 och K6.\ncatalog:variable_text:33914:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-enligt-blankett-k5-och-k6"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFBOT är en källkod för förlust enligt K5 och K6.\ncatalog:variable_text:33914:13879:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-finansiellt-avdragsgillt-belopp"
-fields = { "sets" = [] }
-evidence = "KFF är en källkod för finansiell kapitalförlust.\ncatalog:variable_text:33915:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-finansiellt-avdragsgillt-belopp"
 fields = { "tags" = ["finance", "income", "taxation"] }
 evidence = "KFF är en källkod för finansiell kapitalförlust.\ncatalog:variable_text:33915:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-aktier"
-fields = { "sets" = [] }
-evidence = "KFFA är en källkod för kapitalförlust på aktier.\ncatalog:variable_text:33916:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -524,32 +380,14 @@ evidence = "KFFAOP är en källkod för kapitalförlust på optioner.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-vissa-ej-marknadsnoterade-vardepapper"
-fields = { "sets" = [] }
-evidence = "KFFOV är en källkod för kapitalförlust på vissa onoterade värdepapper.\ncatalog:variable_text:33918:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-vissa-ej-marknadsnoterade-vardepapper"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFOV är en källkod för kapitalförlust på vissa onoterade värdepapper.\ncatalog:variable_text:33918:12784:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-ovriga-finansiella-forluster"
-fields = { "sets" = [] }
-evidence = "KFFOVR är en källkod för övriga finansiella kapitalförluster.\ncatalog:variable_text:33919:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-ovriga-finansiella-forluster"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFOVR är en källkod för övriga finansiella kapitalförluster.\ncatalog:variable_text:33919:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-enligt-blankett-k7-och-k8"
-fields = { "sets" = [] }
-evidence = "KFNAT är en källkod för förlust enligt K7 och K8.\ncatalog:variable_text:33920:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -560,20 +398,8 @@ evidence = "KFNAT är en källkod för förlust enligt K7 och K8.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:forlust-fondandelar"
-fields = { "sets" = [] }
-evidence = "KFNFOT är en källkod för förlust på fondandelar.\ncatalog:variable_text:33921:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFNFOT är en källkod för förlust på fondandelar.\ncatalog:variable_text:33921:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-fondandelar-skattefri"
-fields = { "sets" = [] }
-evidence = "KFNFOTSF är en källkod för skattefri förlust.\ncatalog:variable_text:33922:16801:18262"
 
 [[statement]]
 kind = "set"
@@ -584,20 +410,8 @@ evidence = "KFNFOTSF är en källkod för skattefri förlust.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:forlust-ej-marknadsnoterade-fondandelar"
-fields = { "sets" = [] }
-evidence = "KFOFOT är en källkod för förlust på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33923:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:forlust-ej-marknadsnoterade-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFOFOT är en källkod för förlust på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33923:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-smahus-och-bostadsratt-avdragsgillt-belopp"
-fields = { "sets" = [] }
-evidence = "KFR är en källkod för avdragsgill kapitalförlust.\ncatalog:variable_text:33924:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -608,12 +422,6 @@ evidence = "KFR är en källkod för avdragsgill kapitalförlust.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-restpost"
-fields = { "sets" = [] }
-evidence = "KFREST är en källkod för kapitalförlustens restpost.\ncatalog:variable_text:33925:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-restpost"
 fields = { "tags" = ["income"] }
 evidence = "KFREST är en källkod för kapitalförlustens restpost.\ncatalog:variable_text:33925:12784:13514"
 
@@ -628,24 +436,12 @@ kind = "set"
 subject = "var:kfrrest"
 fields = { "tags" = ["income"] }
 evidence = "Etikett och definition anger motstridiga kvantiteter.\ncatalog:variable_text:33926:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-smahus-enligt-k-blankett"
-fields = { "sets" = [] }
-evidence = "KFRS är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33927:13514:14610"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-smahus-enligt-k-blankett"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFRS är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33927:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-smahus"
-fields = { "sets" = [] }
-evidence = "KFRSMA är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33928:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -716,20 +512,8 @@ evidence = "Variabeln mäter överskott vid uthyrning.\ncatalog:variable_text:33
 [[statement]]
 kind = "set"
 subject = "var:vinst-enligt-blankett-k5-och-k6"
-fields = { "sets" = [] }
-evidence = "KVBOT är en källkod för vinst enligt K5 och K6.\ncatalog:variable_text:33934:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-enligt-blankett-k5-och-k6"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVBOT är en källkod för vinst enligt K5 och K6.\ncatalog:variable_text:33934:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-finansiellt-skattepliktigt-belopp"
-fields = { "sets" = [] }
-evidence = "KVF är en källkod för skattepliktig finansiell kapitalvinst.\ncatalog:variable_text:33935:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -740,20 +524,8 @@ evidence = "KVF är en källkod för skattepliktig finansiell kapitalvinst.\ncat
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-aktier-m-m"
-fields = { "sets" = [] }
-evidence = "KVFA är en källkod för kapitalvinst på aktier.\ncatalog:variable_text:33936:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-aktier-m-m"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVFA är en källkod för kapitalvinst på aktier.\ncatalog:variable_text:33936:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-vissa-ej-marknadsnoterade-vardepapper"
-fields = { "sets" = [] }
-evidence = "KVFOV är en källkod för kapitalvinst på vissa onoterade värdepapper.\ncatalog:variable_text:33937:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -764,32 +536,14 @@ evidence = "KVFOV är en källkod för kapitalvinst på vissa onoterade värdepa
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-ovriga-finansiella-vinster"
-fields = { "sets" = [] }
-evidence = "KVFOVR är en källkod för övriga finansiella kapitalvinster.\ncatalog:variable_text:33938:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-ovriga-finansiella-vinster"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVFOVR är en källkod för övriga finansiella kapitalvinster.\ncatalog:variable_text:33938:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-enligt-blankett-k7-och-k8"
-fields = { "sets" = [] }
-evidence = "KVNAT är en källkod för vinst enligt K7 och K8.\ncatalog:variable_text:33939:13514:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:vinst-enligt-blankett-k7-och-k8"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVNAT är en källkod för vinst enligt K7 och K8.\ncatalog:variable_text:33939:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-fondandelar"
-fields = { "sets" = [] }
-evidence = "KVNFOT är en källkod för vinst på fondandelar.\ncatalog:variable_text:33940:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -812,20 +566,8 @@ evidence = "KVNFOTSF är en källkod för skattefri vinst. Coordinator group mem
 [[statement]]
 kind = "set"
 subject = "var:vinst-ej-marknadsnoterade-fondandelar"
-fields = { "sets" = [] }
-evidence = "KVOFOT är en källkod för vinst på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33942:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-ej-marknadsnoterade-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVOFOT är en källkod för vinst på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33942:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-smahus-och-bostadsratt-skattepliktigt-belopp"
-fields = { "sets" = [] }
-evidence = "KVR är en källkod för skattepliktig kapitalvinst.\ncatalog:variable_text:33943:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -836,44 +578,20 @@ evidence = "KVR är en källkod för skattepliktig kapitalvinst.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-restpost"
-fields = { "sets" = [] }
-evidence = "KVREST är en källkod för kapitalvinstens restpost.\ncatalog:variable_text:33944:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-restpost"
 fields = { "tags" = ["income"] }
 evidence = "KVREST är en källkod för kapitalvinstens restpost.\ncatalog:variable_text:33944:12784:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-smahus-eller-bostadsratt"
-fields = { "sets" = [] }
-evidence = "KVRREST är en källkod för kapitalvinst avseende småhus eller bostadsrätt.\ncatalog:variable_text:33945:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-smahus-eller-bostadsratt"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVRREST är en källkod för kapitalvinst avseende småhus eller bostadsrätt.\ncatalog:variable_text:33945:13514:18262"
 
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-smahus"
-fields = { "sets" = [] }
-evidence = "KVRS är en källkod för kapitalvinst på småhus.\ncatalog:variable_text:33946:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-smahus"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVRS är en källkod för kapitalvinst på småhus.\ncatalog:variable_text:33946:13514:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-smahus-exklusive-uppskov"
-fields = { "sets" = [] }
-evidence = "KVRSEJUPP är en källkod för kapitalvinst på småhus exklusive uppskov.\ncatalog:variable_text:33947:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -908,20 +626,8 @@ evidence = "Variabeln avser positiv räntefördelning i kapital.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:realisationsvinst-kapital"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter realisationsvinst.\ncatalog:variable_text:33952:12784:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:realisationsvinst-kapital"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Variabeln mäter realisationsvinst.\ncatalog:variable_text:33952:12784:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-fastighet-och-bostadsratt-netto"
-fields = { "sets" = [] }
-evidence = "RNETTO är en källkod för nettovinst på fastighet och bostadsrätt.\ncatalog:variable_text:33953:13514:18262"
 
 [[statement]]
 kind = "set"
@@ -956,12 +662,6 @@ evidence = "Variabeln kodar senast känt civilstånd.\ncatalog:variable_text:339
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-netto"
-fields = { "sets" = [] }
-evidence = "TNETTO är en källkod för kapitalvinst netto.\ncatalog:variable_text:33956:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-netto"
 fields = { "tags" = ["income"] }
 evidence = "TNETTO är en källkod för kapitalvinst netto.\ncatalog:variable_text:33956:17897:18262"
 
@@ -992,3 +692,303 @@ relation = "continues"
 object = "scb/kapitalvinster/kapitalvinst-smahus-bostadsratt"
 at = "2007-01-01.."
 evidence = "Capital gains KVRB: same narrowing for gains."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-realisationsforlust-kapital"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r492 defines the final assessed capital loss after offsetting gains and reducing it to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33754\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33881"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-ej-marknadsnoterade-fondandelar"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r493 explicitly defines assessed capital losses from asset disposals, supporting the loss group despite differences in the stated asset coverage.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33890"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-enligt-blankett-k5-och-k6"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r494 defines assessed losses from house and housing-cooperative sales before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33891"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-enligt-blankett-k7-och-k8"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r495 defines assessed losses from commercial-property and commercial housing-cooperative sales before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33892"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-fondandelar"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r496 defines assessed capital losses from disposals of funds, shares and closely held company interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33766\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33893"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-fondandelar-skattefri"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r497 defines the tax-exempt portion of disposal losses on closely held and unlisted company interests; the fixed group includes tax-exempt losses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33767\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33894"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-aktier"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r499 defines capital losses from disposals of shares and equity-index bonds, excluding funds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33774\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33901"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-aktier-fonder-k4"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r500 defines capital losses on shares, funds and related assets reported on K4, with the operational definition specifying section A.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33902"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-annan-fond-rantefond"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r501 defines capital losses from disposals of investment-fund interests other than the specified interest-fund category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33776\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33903"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-bostadsratt"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r502 defines losses from housing-cooperative sales before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33777\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33904"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-brutto"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r503 defines calculated losses minus calculated gains, measuring loss before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33778\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33905"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-finansiellt-avdragsgillt-belopp"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r504 defines the deductible amount of all financial capital losses, including residual losses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33779\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33906"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-fonder"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r506 defines capital losses from fund disposals; its earlier restriction to equity and mixed funds remains within the loss concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33781\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33908"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-naringsfastighet"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r507 defines a derived capital-loss amount for commercial property.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33909"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-naringsfastighet-avdrag"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r508 defines deductible commercial-property capital losses, calculated as 63 percent of the full loss.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33910"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-ovriga-finansiella-forluster"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r509 defines other financial capital losses, including disposals of closely held and unlisted company interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33784\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33911"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-rantefond"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r510 defines capital losses from disposals of interests in interest funds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33912"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-restpost"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r511 defines a residual capital loss and explicitly states that 70 percent of the residual loss is deductible.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33786\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33913"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-smahus"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r512 defines losses from house sales before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33787\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33914"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-smahus-bostadsratt"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r513 defines losses from houses and housing cooperatives before reduction to the deductible amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33788\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33915"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-smahus-enligt-k-blankett"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r514 defines capital losses from house sales reported on declaration form K5.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33916"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-smahus-och-bostadsratt-avdragsgillt-belopp"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r515 defines deductible losses from houses and housing cooperatives, calculated as 50 percent of the full loss.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33790\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33917"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-vissa-ej-marknadsnoterade-vardepapper"
+fields = { "sets" = ["kapitalforlust"] }
+evidence = "r516 defines disposal losses on specified unlisted securities, including options, equity-index bonds and premium bonds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33791\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33918"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-aktier-fonder-k-blankett"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r517 defines capital gains on shares, funds and related assets reported on K4, with the operational definition specifying section A.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33792\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33919"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-aktier-m-m"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r518 defines capital gains from disposals of shares and equity-index bonds, excluding funds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33793\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33920"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-annan-fond-rantefond"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r519 defines capital gains from disposals of investment-fund interests other than the specified interest-fund category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33794\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33921"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-bostadsratt"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r520 defines a housing-cooperative sale gain before tax scaling. Included recaptured deferrals are part of this gain measure, not a separate recapture measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33795\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33922"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-brutto"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r521 defines calculated gains minus calculated losses, measuring gains before reduction to the taxable amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33796\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33923"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-fastighet-och-bostadsratt-netto"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r522 defines gains minus losses from house, housing-cooperative and commercial-property sales before tax scaling.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33797\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33924"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-finansiellt-brutto"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r523 defines summed financial capital gains, including residual gains, as a gross amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33798\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33925"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-finansiellt-netto"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r524 defines financial disposal gains minus losses before tax scaling, explicitly supporting the group's net-gain scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33799\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33926"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-finansiellt-skattepliktigt-belopp"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r525 defines the taxable amount of financial capital gains, including residual gains.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33800\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33927"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-fonder"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r526 defines capital gains from fund disposals; its earlier restriction to equity and mixed funds remains within the gain concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33801\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33928"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-naringsfastighet"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r527 defines commercial-property capital gains before reduction to the taxable amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33802\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33929"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-naringsfastighet-skatt"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r528 defines taxable commercial-property capital gains, calculated as 90 percent of the full gain.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33803\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33930"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-netto"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r529 defines all capital gains minus all capital losses before tax scaling, directly supporting the net-gain scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33804\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33931"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-ovriga-finansiella-vinster"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r530 defines other financial capital gains, including gains from disposals of closely held and unlisted company interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33805\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33932"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-rantefond"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r531 defines capital gains from disposals of interests in interest funds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33806\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33933"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-restpost"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r532 defines a capital-gain residual as the difference between assessed capital gain/loss and gains calculated from declaration forms.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33807\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33934"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-smahus"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r533 defines a house-sale gain before tax scaling. Included recaptured deferrals are part of this gain measure, not a separate recapture measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33808\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33935"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-smahus-bostadsratt"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r534 defines gains from houses and housing cooperatives before reduction to the taxable amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33809\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33936"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-smahus-eller-bostadsratt"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r535 defines a residual for property-sale gains, including recaptured deferrals. It measures residual gains rather than a separate deferral recapture.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33810\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33937"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-smahus-exklusive-uppskov"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r536 defines house-sale capital gains before tax scaling and explicitly excludes recaptured deferred gains.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33811\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33938"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-smahus-och-bostadsratt-skattepliktigt-belopp"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r537 defines taxable gains from houses and housing cooperatives, calculated as two-thirds of the full gain.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33812\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33939"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-vissa-ej-marknadsnoterade-vardepapper"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r538 defines disposal gains on specified unlisted securities, including options, equity-index bonds and premium bonds.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33813\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33940"
+
+[[statement]]
+kind = "set"
+subject = "var:realisationsvinst-kapital"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r540 defines the assessed taxable capital gain after offsetting losses, which fits the taxable-gain scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33822\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33949"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-ej-marknadsnoterade-fondandelar"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r541 defines assessed capital gains from disposals of fund interests, securities, other assets and partnership interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33952"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-enligt-blankett-k5-och-k6"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r542 defines assessed gains from house and housing-cooperative sales before reduction to the taxable amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33826\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33953"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-enligt-blankett-k7-och-k8"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r543 defines assessed gains from commercial-property and commercial housing-cooperative sales before reduction to the taxable amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33954"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-fondandelar"
+fields = { "sets" = ["kapitalvinst"] }
+evidence = "r544 defines assessed capital gains from disposals of funds, shares and closely held company interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33828\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33955"
