@@ -1,13 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:riksnyckel"
-fields = { "sets" = ["legacy-riksnyckel"] }
-evidence = "reg_meta_build/curation/registers/scb/gdb.toml:120\nreg_meta_build/curation/registers/scb/gdb.toml:127\nreg_meta_build/curation/registers/scb/gdb.toml:139\nreg_meta_build/curation/registers/scb/gdb.toml:151\nreg_meta_build/curation/registers/scb/gdb.toml:163\nreg_meta_build/curation/registers/scb/gdb.toml:175\nreg_meta_build/curation/registers/scb/gdb.toml:187\nreg_meta_build/curation/registers/scb/gdb.toml:199\nreg_meta_build/curation/registers/scb/gdb.toml:211\nreg_meta_build/curation/registers/scb/gdb.toml:223\nreg_meta_build/curation/registers/scb/gdb.toml:235\nreg_meta_build/curation/registers/scb/gdb.toml:247\n\nComplete source-native address-key family: both simultaneously supplied columns have the identical source member and definition Officiell identitet för adress. Keep both physical encodings and original widths through checked per-column co-delivery; no equal observed values or corrected widths are asserted. Batch52-domain42b-role-review.json.\n\nExact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
-caveat = "The source simultaneously supplies two representations of the same declared address-key member, with text widths10 and4. Both original fields and widths are retained; the common width remains unknown."
-
-[[statement]]
-kind = "set"
 subject = "adresser-fastigheter: {kommun,lan} @2018-01-01"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -200,7 +193,696 @@ evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy ex
 
 [[statement]]
 kind = "set"
+subject = "var:adressomrade"
+fields = { "sets" = [] }
+evidence = "Adressområdet anger geografisk tillhörighet.\ncatalog:variable_text:21522:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Adressområdet anger geografisk tillhörighet.\ncatalog:variable_text:21522:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomradestyp"
+fields = { "sets" = [] }
+evidence = "Typen beskriver ett geografiskt adressområde.\ncatalog:variable_text:21523:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomradestyp"
+fields = { "tags" = ["geography"] }
+evidence = "Typen beskriver ett geografiskt adressområde.\ncatalog:variable_text:21523:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "sets" = [] }
+evidence = "Adressplatsen anger geografisk tillhörighet.\ncatalog:variable_text:21524:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "tags" = ["geography"] }
+evidence = "Adressplatsen anger geografisk tillhörighet.\ncatalog:variable_text:21524:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplatstyp"
+fields = { "sets" = [] }
+evidence = "Typen beskriver en geografisk adressplats.\ncatalog:variable_text:21526:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplatstyp"
+fields = { "tags" = ["geography"] }
+evidence = "Typen beskriver en geografisk adressplats.\ncatalog:variable_text:21526:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "sets" = [] }
+evidence = "Antalet avser geografiska fastighetspunkter.\ncatalog:variable_text:21527:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "tags" = ["geography"] }
+evidence = "Antalet avser geografiska fastighetspunkter.\ncatalog:variable_text:21527:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal folkbokförda personer.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter antal folkbokförda personer.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "sets" = [] }
+evidence = "Avståndet avser geografiska fastighetspunkter.\ncatalog:variable_text:21529:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "tags" = ["geography"] }
+evidence = "Avståndet avser geografiska fastighetspunkter.\ncatalog:variable_text:21529:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "sets" = [] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:21533:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "tags" = ["geography"] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:21533:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:21534:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:21534:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-nordkoord"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Fastighetens nordliga koordinat tillhör koordinatgruppen.\ncatalog:variable_text:21535:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-nordkoord"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetens nordliga koordinat tillhör koordinatgruppen.\ncatalog:variable_text:21535:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-ostkoord"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Fastighetens ostliga koordinat tillhör koordinatgruppen.\ncatalog:variable_text:21536:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-ostkoord"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetens ostliga koordinat tillhör koordinatgruppen.\ncatalog:variable_text:21536:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-status"
+fields = { "sets" = [] }
+evidence = "Statuskodningen skiljer sig från efterföljande scb/gdb/status och identitetsfaktet kräver granskning.\ncatalog:occurrence:198351\ncatalog:occurrence:198370\ncatalog:valueset:10907\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-status"
+fields = { "tags" = ["property"] }
+evidence = "Statuskodningen skiljer sig från efterföljande scb/gdb/status och identitetsfaktet kräver granskning.\ncatalog:occurrence:198351\ncatalog:occurrence:198370\ncatalog:valueset:10907\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen används som geografisk lägesnyckel.\ncatalog:occurrence:198520\ncatalog:variable_text:21538:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen används som geografisk lägesnyckel.\ncatalog:occurrence:198520\ncatalog:variable_text:21538:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["forsamlingstillhorighet"] }
+evidence = "Församlingstillhörighet ingår i kandidatgruppen.\ncatalog:variable_text:21540:16436:16437"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingstillhörighet ingår i kandidatgruppen.\ncatalog:variable_text:21540:16436:16437"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "sets" = ["forsamlingstillhorighet"] }
+evidence = "Stockholms församlingskod ingår i kandidatgruppen.\ncatalog:variable_text:21541:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "tags" = ["geography"] }
+evidence = "Stockholms församlingskod ingår i kandidatgruppen.\ncatalog:variable_text:21541:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:fs-20000101"
+fields = { "sets" = ["forsamlingstillhorighet"] }
+evidence = "Fs är en bokstavskod för församling; etiketten anger den frysta indelningen.\ncatalog:variable_text:21542:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:fs-20000101"
+fields = { "tags" = ["geography"] }
+evidence = "Fs är en bokstavskod för församling; etiketten anger den frysta indelningen.\ncatalog:variable_text:21542:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:gardsnamn"
+fields = { "sets" = [] }
+evidence = "Gårdsnamnet är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21543:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:gardsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Gårdsnamnet är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21543:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunamn"
+fields = { "sets" = [] }
+evidence = "Gatunamn är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21544:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunamn"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunamn är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21544:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "sets" = [] }
+evidence = "Gatunummer är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21545:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunummer är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21545:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:geografisk-kommundel"
+fields = { "sets" = [] }
+evidence = "Kommundelen är en geografisk indelning.\ncatalog:variable_text:21546:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:geografisk-kommundel"
+fields = { "tags" = ["geography"] }
+evidence = "Kommundelen är en geografisk indelning.\ncatalog:variable_text:21546:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "sets" = [] }
+evidence = "Källmarkeringen beskriver uppgiftens ursprung.\ncatalog:variable_text:21547:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "tags" = ["methods"] }
+evidence = "Källmarkeringen beskriver uppgiftens ursprung.\ncatalog:variable_text:21547:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-postnummeromrade"
+fields = { "sets" = [] }
+evidence = "Koden beskriver förändring av geografisk postnummerindelning.\ncatalog:variable_text:21548:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-postnummeromrade"
+fields = { "tags" = ["geography"] }
+evidence = "Koden beskriver förändring av geografisk postnummerindelning.\ncatalog:variable_text:21548:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:21549:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:21549:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:21551:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:21551:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:landskap"
+fields = { "sets" = [] }
+evidence = "Landskap är en geografisk indelning.\ncatalog:variable_text:21552:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:landskap"
+fields = { "tags" = ["geography"] }
+evidence = "Landskap är en geografisk indelning.\ncatalog:variable_text:21552:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:littera"
+fields = { "sets" = [] }
+evidence = "Littera är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21553:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:littera"
+fields = { "tags" = ["geography"] }
+evidence = "Littera är en del av adressens geografiska lokalisering.\ncatalog:variable_text:21553:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-adr"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Adressuffixet ingår i en förkortningsfamilj som behandlas enhetligt; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21554\ncatalog:occurrence:198236\ncatalog:variable_text:21554:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-adr"
+fields = { "tags" = ["geography"] }
+evidence = "Adressuffixet ingår i en förkortningsfamilj som behandlas enhetligt; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21554\ncatalog:occurrence:198236\ncatalog:variable_text:21554:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-fst"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Fastighetssuffixet ingår i en förkortningsfamilj som behandlas enhetligt; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21555\ncatalog:occurrence:198237\ncatalog:variable_text:21555:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref-fst"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetssuffixet ingår i en förkortningsfamilj som behandlas enhetligt; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21555\ncatalog:occurrence:198237\ncatalog:variable_text:21555:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "sets" = [] }
+evidence = "NYKO är en geografisk områdesindelning.\ncatalog:variable_text:21556:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "tags" = ["geography"] }
+evidence = "NYKO är en geografisk områdesindelning.\ncatalog:variable_text:21556:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:objekttyp"
+fields = { "sets" = [] }
+evidence = "Objekttypen skiljer fastigheter, samfälligheter och gemensamhetsanläggningar.\ncatalog:valueset:4873\ncatalog:valueset:5638"
+
+[[statement]]
+kind = "set"
+subject = "var:objekttyp"
+fields = { "tags" = ["property"] }
+evidence = "Objekttypen skiljer fastigheter, samfälligheter och gemensamhetsanläggningar.\ncatalog:valueset:4873\ncatalog:valueset:5638"
+
+[[statement]]
+kind = "set"
+subject = "var:popularnamn"
+fields = { "sets" = [] }
+evidence = "Populärnamnet kompletterar adressplatsens geografiska lokalisering.\ncatalog:variable_text:21558:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:popularnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Populärnamnet kompletterar adressplatsens geografiska lokalisering.\ncatalog:variable_text:21558:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postnummeromrade"] }
+evidence = "Postnummer ingår i kandidatgruppen för postnummerområden.\ncatalog:variable_text:21559:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer ingår i kandidatgruppen för postnummerområden.\ncatalog:variable_text:21559:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade-58"
+fields = { "sets" = ["postnummeromrade"] }
+evidence = "Suffixet 58 är en räknare som saknas i källkolumnen; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:21560:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade-58"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 58 är en räknare som saknas i källkolumnen; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:21560:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade-old"
+fields = { "sets" = ["postnummeromrade"] }
+evidence = "Samma äldre postnummerområdesbegrepp som scb/gdb/postnummeromrade-gammalt är uppdelat mellan observerade perioder.\ncatalog:occurrence:198456\ncatalog:occurrence:198475"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade-old"
+fields = { "tags" = ["geography"] }
+evidence = "Samma äldre postnummerområdesbegrepp som scb/gdb/postnummeromrade-gammalt är uppdelat mellan observerade perioder.\ncatalog:occurrence:198456\ncatalog:occurrence:198475"
+
+[[statement]]
+kind = "set"
+subject = "var:postnummeromrade-gammalt"
+fields = { "sets" = ["postnummeromrade"] }
+evidence = "Samma äldre postnummerområdesbegrepp som scb/gdb/postnromrade-old är uppdelat mellan observerade perioder.\ncatalog:occurrence:198456\ncatalog:occurrence:198475\ncatalog:occurrence:198530"
+
+[[statement]]
+kind = "set"
+subject = "var:postnummeromrade-gammalt"
+fields = { "tags" = ["geography"] }
+evidence = "Samma äldre postnummerområdesbegrepp som scb/gdb/postnromrade-old är uppdelat mellan observerade perioder.\ncatalog:occurrence:198456\ncatalog:occurrence:198475\ncatalog:occurrence:198530"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort är ett geografiskt område.\ncatalog:variable_text:21563:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort är ett geografiskt område.\ncatalog:variable_text:21563:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "sets" = [] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:21564:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:21564:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckel"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckel"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
 subject = "var:riksnyckel-rnpadrpl"
-fields = { "sets" = ["legacy-riksnyckel"] }
-evidence = "reg_meta_build/curation/registers/scb/gdb.toml:120\nreg_meta_build/curation/registers/scb/gdb.toml:127\nreg_meta_build/curation/registers/scb/gdb.toml:139\nreg_meta_build/curation/registers/scb/gdb.toml:151\nreg_meta_build/curation/registers/scb/gdb.toml:163\nreg_meta_build/curation/registers/scb/gdb.toml:175\nreg_meta_build/curation/registers/scb/gdb.toml:187\nreg_meta_build/curation/registers/scb/gdb.toml:199\nreg_meta_build/curation/registers/scb/gdb.toml:211\nreg_meta_build/curation/registers/scb/gdb.toml:223\nreg_meta_build/curation/registers/scb/gdb.toml:235\nreg_meta_build/curation/registers/scb/gdb.toml:247\n\nComplete source-native address-key family: both simultaneously supplied columns have the identical source member and definition Officiell identitet för adress. Keep both physical encodings and original widths through checked per-column co-delivery; no equal observed values or corrected widths are asserted. Batch52-domain42b-role-review.json.\n\nExact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
-caveat = "The source simultaneously supplies two representations of the same declared address-key member, with text widths10 and4. Both original fields and widths are retained; the common width remains unknown."
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:riksnyckel-rnpadrpl"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:sams"
+fields = { "sets" = [] }
+evidence = "SAMS anger geografisk områdestillhörighet.\ncatalog:variable_text:21570:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:sams"
+fields = { "tags" = ["geography"] }
+evidence = "SAMS anger geografisk områdestillhörighet.\ncatalog:variable_text:21570:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "sets" = ["smaortstillhorighet"] }
+evidence = "Samma småortstillhörighet som scb/gdb/smaort-kod är uppdelad mellan observerade perioder.\ncatalog:occurrence:198179\ncatalog:occurrence:198205"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "tags" = ["geography"] }
+evidence = "Samma småortstillhörighet som scb/gdb/smaort-kod är uppdelad mellan observerade perioder.\ncatalog:occurrence:198179\ncatalog:occurrence:198205"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort-kod"
+fields = { "sets" = ["smaortstillhorighet"] }
+evidence = "Samma småortstillhörighet som scb/gdb/smaort är uppdelad mellan observerade perioder.\ncatalog:occurrence:198179\ncatalog:occurrence:198205"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Samma småortstillhörighet som scb/gdb/smaort är uppdelad mellan observerade perioder.\ncatalog:occurrence:198179\ncatalog:occurrence:198205"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktet och de olika statusvärdemängderna kräver granskning.\ncatalog:occurrence:198351\ncatalog:occurrence:198370\ncatalog:valueset:10907\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktet och de olika statusvärdemängderna kräver granskning.\ncatalog:occurrence:198351\ncatalog:occurrence:198370\ncatalog:valueset:10907\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "sets" = ["tatortstillhorighet"] }
+evidence = "Tätortstillhörigheten är perioduppdelad från scb/gdb/tatort-tom-2010 när definitionen ändras.\ncatalog:occurrence:198061\ncatalog:occurrence:198089\ncatalog:occurrence:198517\ncatalog:occurrence:198535"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortstillhörigheten är perioduppdelad från scb/gdb/tatort-tom-2010 när definitionen ändras.\ncatalog:occurrence:198061\ncatalog:occurrence:198089\ncatalog:occurrence:198517\ncatalog:occurrence:198535"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "sets" = ["tatortstillhorighet"] }
+evidence = "Tätortstillhörigheten är perioduppdelad från scb/gdb/tatort när definitionen ändras.\ncatalog:occurrence:198061\ncatalog:occurrence:198089\ncatalog:occurrence:198517\ncatalog:occurrence:198535"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortstillhörigheten är perioduppdelad från scb/gdb/tatort när definitionen ändras.\ncatalog:occurrence:198061\ncatalog:occurrence:198089\ncatalog:occurrence:198517\ncatalog:occurrence:198535"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "sets" = [] }
+evidence = "Valdistrikt är både en geografisk indelning och en indelning för val.\ncatalog:variable_text:21578:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Valdistrikt är både en geografisk indelning och en indelning för val.\ncatalog:variable_text:21578:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ykoord-adr"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Källmnemoniken och adressuffixet är inte läsbara som etikettens ord; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21579\ncatalog:occurrence:198238\ncatalog:variable_text:21579:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ykoord-adr"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken och adressuffixet är inte läsbara som etikettens ord; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21579\ncatalog:occurrence:198238\ncatalog:variable_text:21579:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ykoord-fst"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Källmnemoniken och fastighetssuffixet är inte läsbara som etikettens ord; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21580\ncatalog:occurrence:198239\ncatalog:variable_text:21580:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ykoord-fst"
+fields = { "tags" = ["geography"] }
+evidence = "Källmnemoniken och fastighetssuffixet är inte läsbara som etikettens ord; koordinaten hör till gruppen för geografiska koordinater.\ncatalog:occurrence-locators:variable:21580\ncatalog:occurrence:198239\ncatalog:variable_text:21580:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2007-01-01..2007-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2008-01-01..2008-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2009-01-01..2009-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2010-01-01..2010-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2011-01-01..2011-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2012-01-01..2012-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2013-01-01..2013-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2014-01-01..2014-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2015-01-01..2015-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "adresser: AntPers @2016-01-01..2016-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2010-01-01..2010-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2011-01-01..2011-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2012-01-01..2012-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2013-01-01..2013-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2014-01-01..2014-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2015-01-01..2015-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2016-01-01..2016-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: AntPers @2017-01-01..2017-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: antpers @2008-01-01..2008-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: antpers @2009-01-01..2009-01-01 where key = 'v392'"
+fields = { "description" = "Antal personer folkbokförda på fastigheten." }
+evidence = "Familjeantalet motsägs av uppgiften om folkbokförda på fastigheten; beskrivningen behåller den gemensamma mängden.\ncatalog:variable_text:21528:13514:13515\ncatalog:variable_text:21528:15706:15707\ncatalog:variable_text:21528:17167:17168"

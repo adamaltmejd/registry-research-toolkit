@@ -1,0 +1,120 @@
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivnsv"
+fields = { "sets" = [] }
+evidence = "The operational definition changes from an indistinguishable description to a numbered representation of the cost category.\ncatalog:variable_text:6196:19358:20089\ncatalog:variable_text:6196:20089:20454\ncatalog:variable_text:6196:20454:20819\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivnsv"
+fields = { "tags" = ["business"] }
+evidence = "The operational definition changes from an indistinguishable description to a numbered representation of the cost category.\ncatalog:variable_text:6196:19358:20089\ncatalog:variable_text:6196:20089:20454\ncatalog:variable_text:6196:20454:20819\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib1968"
+fields = { "sets" = [] }
+evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6197:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib1968"
+fields = { "tags" = ["housing", "prices"] }
+evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6197:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2015"
+fields = { "sets" = [] }
+evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6198:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2015"
+fields = { "tags" = ["housing", "prices"] }
+evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6198:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas1980"
+fields = { "sets" = [] }
+evidence = "Indexserien mäter byggkostnadsprisernas utveckling.\ncatalog:register:61\ncatalog:variable_text:6200:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas1980"
+fields = { "tags" = ["housing", "prices"] }
+evidence = "Indexserien mäter byggkostnadsprisernas utveckling.\ncatalog:register:61\ncatalog:variable_text:6200:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:klass"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar hustyp för byggkostnadsindex.\ncatalog:variable_text:6201:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:klass"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln klassificerar hustyp för byggkostnadsindex.\ncatalog:variable_text:6201:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalvariant"
+fields = { "sets" = [] }
+evidence = "Produkttypen beskriver en produkt som mäts i byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6202:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalvariant"
+fields = { "tags" = ["housing"] }
+evidence = "Produkttypen beskriver en produkt som mäts i byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6202:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:namnsv"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver delkostnadsslag tillsammans med BeskrivnSV och ProdGrpKod.\ncatalog:variable_text:6196:20454:20819\ncatalog:variable_text:6204:20089:20819\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:namnsv"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver delkostnadsslag tillsammans med BeskrivnSV och ProdGrpKod.\ncatalog:variable_text:6196:20454:20819\ncatalog:variable_text:6204:20089:20819\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpkod"
+fields = { "sets" = [] }
+evidence = "Koden beskriver delkostnadsslag inom byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpkod"
+fields = { "tags" = ["housing"] }
+evidence = "Koden beskriver delkostnadsslag inom byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6205:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodkod"
+fields = { "sets" = [] }
+evidence = "Koden beskriver en produkt som mäts i byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6206:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodkod"
+fields = { "tags" = ["housing"] }
+evidence = "Koden beskriver en produkt som mäts i byggkostnadsindex.\ncatalog:register:61\ncatalog:variable_text:6206:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt"
+fields = { "sets" = [] }
+evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variable_text:6207:19358:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variable_text:6207:19358:20819"

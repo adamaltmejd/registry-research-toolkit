@@ -460,3 +460,5283 @@ kind = "set"
 subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q08c2"
 fields = { "label" = "Sysselsättningsstatus — år när senaste avlönade arbete upphörde" }
 evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1342\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:39954:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:39954:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-avslutad-utbildning"
+fields = { "sets" = ["tidpunkt-for-avslutad-utbildning"] }
+evidence = "Variabeln anger ålder vid avslutad utbildning.\ncatalog:variable_text:39955:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-avslutad-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ålder vid avslutad utbildning.\ncatalog:variable_text:39955:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsplats-larande"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn är samtidigt kopplad till en annan variabel.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsplats-larande"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn är samtidigt kopplad till en annan variabel.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-vilket-ar-slutade-du-att-studera-pa-utbildningen"
+fields = { "sets" = ["utbildningsavbrott"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:occurrence:394747\ncatalog:variable_text:39957:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-utbildning-vilket-ar-slutade-du-att-studera-pa-utbildningen"
+fields = { "tags" = ["education"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:occurrence:394747\ncatalog:variable_text:39957:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01a3"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger utbildningsnivå.\ncatalog:variable_text:39958:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01a3"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger utbildningsnivå.\ncatalog:variable_text:39958:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01b"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:39959:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01b"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:39959:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01d"
+fields = { "sets" = ["tidpunkt-for-avslutad-utbildning"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten anger examensmånad.\ncatalog:variable_text:39960:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q01d"
+fields = { "tags" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten anger examensmånad.\ncatalog:variable_text:39960:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller pågående utbildning.\ncatalog:variable_text:39961:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller pågående utbildning.\ncatalog:variable_text:39961:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02b"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningsnivå.\ncatalog:variable_text:39962:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningsnivå.\ncatalog:variable_text:39962:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02c"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:occurrence:394743\ncatalog:variable_text:39963:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q02c"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:occurrence:394743\ncatalog:variable_text:39963:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03a"
+fields = { "sets" = ["utbildningsavbrott"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394744\ncatalog:variable_text:39964:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03a"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394744\ncatalog:variable_text:39964:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03b"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:39965:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:39965:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03c"
+fields = { "sets" = ["utbildningsavbrott"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394746\ncatalog:variable_text:39966:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03c"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394746\ncatalog:variable_text:39966:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03d"
+fields = { "sets" = ["utbildningsavbrott"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394748\ncatalog:variable_text:39967:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q03d"
+fields = { "tags" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394748\ncatalog:variable_text:39967:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q04a"
+fields = { "sets" = ["deltagande-i-formell-utbildning"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller deltagande i formell utbildning.\ncatalog:variable_text:39968:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q04a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller deltagande i formell utbildning.\ncatalog:variable_text:39968:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q04b"
+fields = { "sets" = ["deltagande-i-formell-utbildning"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller antal formella utbildningar.\ncatalog:variable_text:39969:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q04b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller antal formella utbildningar.\ncatalog:variable_text:39969:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05a"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningens nivå.\ncatalog:variable_text:39970:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningens nivå.\ncatalog:variable_text:39970:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05b"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394752\ncatalog:variable_text:39971:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05b"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394752\ncatalog:variable_text:39971:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394753\ncatalog:variable_text:39972:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q05c"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394753\ncatalog:variable_text:39972:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q1"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Den fasta kandidatens källstödda urval och granskade förslag gäller förekomst och antal aktiviteter. Utbildningstid, yrkesanknytning, motiv och hinder mäter andra egenskaper. membership-0424: Inställning till lärande och utbildningsnivå mäter inte förekomst eller antal utbildningsaktiviteter senaste året.\ncatalog:occurrence:394766\ncatalog:variable_text:39973:15340:15706\ncatalog:variable_text:39978:15340:15706\ncatalog:variable_text:39979:15340:15706\ncatalog:variable_text:39980:15340:15706\ncatalog:variable_text:39981:15340:15706\ncatalog:variable_text:39982:15340:15706\ncatalog:variable_text:39983:15340:15706\ncatalog:variable_text:39984:15340:15706\ncatalog:variable_text:39985:15340:15706\ncatalog:variable_text:39986:15340:15706\ncatalog:variable_text:39987:15340:15706\ncatalog:variable_text:39993:15340:15706\ncatalog:variable_text:39994:15340:15706\ncatalog:variable_text:39995:15340:15706\ncatalog:variable_text:39996:15340:15706\ncatalog:variable_text:39997:15340:15706\ncatalog:variable_text:39998:15340:15706\ncatalog:variable_text:40199:15340:15706\ncatalog:variable_text:40200:15340:15706\ncatalog:variable_text:40404:15340:15706\ncatalog:variable_text:40405:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q1"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Den fasta kandidatens källstödda urval och granskade förslag gäller förekomst och antal aktiviteter. Utbildningstid, yrkesanknytning, motiv och hinder mäter andra egenskaper. membership-0424: Inställning till lärande och utbildningsnivå mäter inte förekomst eller antal utbildningsaktiviteter senaste året.\ncatalog:occurrence:394766\ncatalog:variable_text:39973:15340:15706\ncatalog:variable_text:39978:15340:15706\ncatalog:variable_text:39979:15340:15706\ncatalog:variable_text:39980:15340:15706\ncatalog:variable_text:39981:15340:15706\ncatalog:variable_text:39982:15340:15706\ncatalog:variable_text:39983:15340:15706\ncatalog:variable_text:39984:15340:15706\ncatalog:variable_text:39985:15340:15706\ncatalog:variable_text:39986:15340:15706\ncatalog:variable_text:39987:15340:15706\ncatalog:variable_text:39993:15340:15706\ncatalog:variable_text:39994:15340:15706\ncatalog:variable_text:39995:15340:15706\ncatalog:variable_text:39996:15340:15706\ncatalog:variable_text:39997:15340:15706\ncatalog:variable_text:39998:15340:15706\ncatalog:variable_text:40199:15340:15706\ncatalog:variable_text:40200:15340:15706\ncatalog:variable_text:40404:15340:15706\ncatalog:variable_text:40405:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbete under utbildning.\ncatalog:variable_text:39974:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10a"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbete under utbildning.\ncatalog:variable_text:39974:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildning under eller utanför arbetstid.\ncatalog:valueset:691\ncatalog:variable_text:39975:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10b"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildning under eller utanför arbetstid.\ncatalog:valueset:691\ncatalog:variable_text:39975:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394756\ncatalog:variable_text:39976:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q10c"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394756\ncatalog:variable_text:39976:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q11"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394757\ncatalog:variable_text:39977:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q11"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394757\ncatalog:variable_text:39977:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12a"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394758\ncatalog:variable_text:39978:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12a"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394758\ncatalog:variable_text:39978:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12b"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394759\ncatalog:variable_text:39979:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12b"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394759\ncatalog:variable_text:39979:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12c"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394760\ncatalog:variable_text:39980:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12c"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394760\ncatalog:variable_text:39980:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12d"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394761\ncatalog:variable_text:39981:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12d"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394761\ncatalog:variable_text:39981:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12e"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394762\ncatalog:variable_text:39982:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12e"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394762\ncatalog:variable_text:39982:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12f"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394763\ncatalog:variable_text:39983:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12f"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394763\ncatalog:variable_text:39983:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12g"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394764\ncatalog:variable_text:39984:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12g"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394764\ncatalog:variable_text:39984:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12h"
+fields = { "sets" = ["deltagande-i-utbildningsaktiviteter"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394765\ncatalog:variable_text:39985:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q12h"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394765\ncatalog:variable_text:39985:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q14a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningsaktivitetens yrkesanknytning.\ncatalog:variable_text:39986:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q14a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningsaktivitetens yrkesanknytning.\ncatalog:variable_text:39986:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q14b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller anledningen till utbildningen.\ncatalog:variable_text:39987:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q14b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller anledningen till utbildningen.\ncatalog:variable_text:39987:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbete under utbildningen.\ncatalog:variable_text:39988:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15a"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbete under utbildningen.\ncatalog:variable_text:39988:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildning under eller utanför arbetstid.\ncatalog:valueset:691\ncatalog:variable_text:39989:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15b"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildning under eller utanför arbetstid.\ncatalog:valueset:691\ncatalog:variable_text:39989:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394771\ncatalog:variable_text:39990:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q15c"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394771\ncatalog:variable_text:39990:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q16"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394772\ncatalog:variable_text:39991:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q16"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394772\ncatalog:variable_text:39991:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q17"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394773\ncatalog:variable_text:39992:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q17"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394773\ncatalog:variable_text:39992:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q18a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller veckor i utbildning.\ncatalog:variable_text:39993:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q18a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller veckor i utbildning.\ncatalog:variable_text:39993:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q19a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller dagar i utbildning.\ncatalog:variable_text:39994:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q19a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller dagar i utbildning.\ncatalog:variable_text:39994:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q20a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller timmar i utbildning.\ncatalog:variable_text:39995:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q20a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller timmar i utbildning.\ncatalog:variable_text:39995:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q20b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller andelen utbildningstid som var yrkesrelaterad.\ncatalog:variable_text:39996:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q20b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller andelen utbildningstid som var yrkesrelaterad.\ncatalog:variable_text:39996:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q26a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller önskat men uteblivet deltagande.\ncatalog:variable_text:39997:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q26a"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller önskat men uteblivet deltagande.\ncatalog:variable_text:39997:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q26b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller hinder för utbildning.\ncatalog:variable_text:39998:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:b-q26b"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller hinder för utbildning.\ncatalog:variable_text:39998:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-hur-gammalt-ar-ditt-aldsta-barn"
+fields = { "sets" = [] }
+evidence = "Frågan mäter ålder hos det äldsta barnet.\ncatalog:variable_text:39999:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-hur-gammalt-ar-ditt-aldsta-barn"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Frågan mäter ålder hos det äldsta barnet.\ncatalog:variable_text:39999:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-ungefar-hur-manga-bocker-finns-det-i-ditt-hem-rakna-inte-tidningar-tidskrifter-eller-skolbocker-en-meter-i-en-bokhylla-motsvarar-ungefar-40-bocker"
+fields = { "sets" = [] }
+evidence = "Id:t överstiger 60 tecken; källetekettens generella lydelse kräver särskiljning enligt D-12.\ncatalog:variable_text:40000:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-ungefar-hur-manga-bocker-finns-det-i-ditt-hem-rakna-inte-tidningar-tidskrifter-eller-skolbocker-en-meter-i-en-bokhylla-motsvarar-ungefar-40-bocker"
+fields = { "tags" = ["culture"] }
+evidence = "Id:t överstiger 60 tecken; källetekettens generella lydelse kräver särskiljning enligt D-12.\ncatalog:variable_text:40000:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q0"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40002:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q0"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40002:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01a"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394807\ncatalog:variable_text:40003:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394807\ncatalog:variable_text:40003:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01b"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394808\ncatalog:variable_text:40004:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394808\ncatalog:variable_text:40004:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01c"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394809\ncatalog:variable_text:40005:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q01c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394809\ncatalog:variable_text:40005:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02a"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394810\ncatalog:variable_text:40006:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394810\ncatalog:variable_text:40006:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02b"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394811\ncatalog:variable_text:40007:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394811\ncatalog:variable_text:40007:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02c"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394812\ncatalog:variable_text:40008:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q02c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394812\ncatalog:variable_text:40008:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-01"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40009:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-01"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40009:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-02"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40010:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-02"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40010:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-03"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40011:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-03"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40011:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-04"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40012:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-04"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40012:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-05"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40013:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-05"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40013:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-06"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40014:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-06"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40014:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-07"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40015:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-07"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40015:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-08"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40016:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-08"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40016:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-09"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40017:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-09"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40017:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-10"
+fields = { "sets" = ["skal-att-inte-soka-arbete"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40018:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q03-10"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; variabeln anger ett skäl att inte söka arbete.\ncatalog:variable_text:40018:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04a"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394823\ncatalog:variable_text:40019:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394823\ncatalog:variable_text:40019:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04b"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394824\ncatalog:variable_text:40020:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394824\ncatalog:variable_text:40020:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04c"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394825\ncatalog:variable_text:40021:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394825\ncatalog:variable_text:40021:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04d"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394826\ncatalog:variable_text:40022:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04d"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394826\ncatalog:variable_text:40022:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04e"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394827\ncatalog:variable_text:40023:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04e"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394827\ncatalog:variable_text:40023:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04f"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394828\ncatalog:variable_text:40024:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04f"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394828\ncatalog:variable_text:40024:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04g"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394829\ncatalog:variable_text:40025:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04g"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394829\ncatalog:variable_text:40025:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04h"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394830\ncatalog:variable_text:40026:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04h"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394830\ncatalog:variable_text:40026:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04i"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394831\ncatalog:variable_text:40027:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04i"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394831\ncatalog:variable_text:40027:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04j"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394832\ncatalog:variable_text:40028:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q04j"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394832\ncatalog:variable_text:40028:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q05"
+fields = { "sets" = ["metoder-for-arbetssokande"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Alla etiketter anger hur arbete sökts förra månaden och motsvarar kandidatens definition. membership-0424: Sektionens arbetsrelaterade variabler beskriver arbete och arbetslivserfarenhet, inte hur arbete söktes förra månaden.\ncatalog:occurrence:394833\ncatalog:variable_text:40019:15340:15706\ncatalog:variable_text:40020:15340:15706\ncatalog:variable_text:40021:15340:15706\ncatalog:variable_text:40022:15340:15706\ncatalog:variable_text:40023:15340:15706\ncatalog:variable_text:40024:15340:15706\ncatalog:variable_text:40025:15340:15706\ncatalog:variable_text:40026:15340:15706\ncatalog:variable_text:40027:15340:15706\ncatalog:variable_text:40028:15340:15706\ncatalog:variable_text:40029:15340:15706\ncatalog:variable_text:40263:15340:15706\ncatalog:variable_text:40385:15340:15706\ncatalog:variable_text:40387:15340:15706\ncatalog:variable_text:40388:15340:15706\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q05"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Alla etiketter anger hur arbete sökts förra månaden och motsvarar kandidatens definition. membership-0424: Sektionens arbetsrelaterade variabler beskriver arbete och arbetslivserfarenhet, inte hur arbete söktes förra månaden.\ncatalog:occurrence:394833\ncatalog:variable_text:40019:15340:15706\ncatalog:variable_text:40020:15340:15706\ncatalog:variable_text:40021:15340:15706\ncatalog:variable_text:40022:15340:15706\ncatalog:variable_text:40023:15340:15706\ncatalog:variable_text:40024:15340:15706\ncatalog:variable_text:40025:15340:15706\ncatalog:variable_text:40026:15340:15706\ncatalog:variable_text:40027:15340:15706\ncatalog:variable_text:40028:15340:15706\ncatalog:variable_text:40029:15340:15706\ncatalog:variable_text:40263:15340:15706\ncatalog:variable_text:40385:15340:15706\ncatalog:variable_text:40387:15340:15706\ncatalog:variable_text:40388:15340:15706\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q06"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394834\ncatalog:variable_text:40030:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q06"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394834\ncatalog:variable_text:40030:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08a"
+fields = { "sets" = ["erfarenhet-av-betalt-arbete"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40031:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40031:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08b"
+fields = { "sets" = ["erfarenhet-av-betalt-arbete"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40032:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40032:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08c"
+fields = { "sets" = ["tidpunkt-for-senaste-arbetets-slut"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394838\ncatalog:variable_text:40033:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q08c"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394838\ncatalog:variable_text:40033:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q10a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40034:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-q10a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40034:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-s03"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Etiketterna anger aktuell situation eller sysselsättning senaste veckan eller månaden. Separata sökmetoder och tidigare arbetslivserfarenhet utesluts. membership-0424: Variablerna med kapitelrubriken sysselsättningsstatus mäter tidigare arbetslivserfarenhet och arbetets sluttidpunkt, som definitionen utesluter.\ncatalog:occurrence:394842\ncatalog:variable_text:40002:15340:15706\ncatalog:variable_text:40003:15340:15706\ncatalog:variable_text:40004:15340:15706\ncatalog:variable_text:40005:15340:15706\ncatalog:variable_text:40006:15340:15706\ncatalog:variable_text:40007:15340:15706\ncatalog:variable_text:40008:15340:15706\ncatalog:variable_text:40030:15340:15706\ncatalog:variable_text:40031:15340:15706\ncatalog:variable_text:40032:15340:15706\ncatalog:variable_text:40035:15340:15706\ncatalog:variable_text:40388:15340:15706\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c-s03"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0423: Etiketterna anger aktuell situation eller sysselsättning senaste veckan eller månaden. Separata sökmetoder och tidigare arbetslivserfarenhet utesluts. membership-0424: Variablerna med kapitelrubriken sysselsättningsstatus mäter tidigare arbetslivserfarenhet och arbetets sluttidpunkt, som definitionen utesluter.\ncatalog:occurrence:394842\ncatalog:variable_text:40002:15340:15706\ncatalog:variable_text:40003:15340:15706\ncatalog:variable_text:40004:15340:15706\ncatalog:variable_text:40005:15340:15706\ncatalog:variable_text:40006:15340:15706\ncatalog:variable_text:40007:15340:15706\ncatalog:variable_text:40008:15340:15706\ncatalog:variable_text:40030:15340:15706\ncatalog:variable_text:40031:15340:15706\ncatalog:variable_text:40032:15340:15706\ncatalog:variable_text:40035:15340:15706\ncatalog:variable_text:40388:15340:15706\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c300c02s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40036:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c300c02s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40036:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c301c05s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40037:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c301c05s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40037:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c305215s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40038:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c305215s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40038:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c308120s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40039:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c308120s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40039:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c309320s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40040:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c309320s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40040:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c310406s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40041:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c310406s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40041:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c313410s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40042:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c313410s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40042:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c600c04s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40043:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c600c04s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40043:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c601c06s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40044:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c601c06s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40044:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c602501s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40045:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c602501s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40045:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c604505s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40046:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c604505s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40046:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c605506s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40047:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c605506s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40047:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c606509s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40048:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c606509s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40048:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c607510s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40049:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c607510s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40049:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c608513s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40050:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c608513s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40050:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c611516s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40051:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c611516s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40051:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c612518s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40052:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c612518s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40052:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c613520s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40053:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c613520s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40053:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c614601s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40054:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c614601s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40054:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c615602s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40055:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c615602s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40055:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c617605s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40056:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c617605s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40056:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c618607s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40057:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c618607s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40057:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c619609s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40058:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c619609s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40058:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c620610s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40059:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c620610s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40059:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c622615s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40060:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c622615s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40060:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c623616s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40061:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c623616s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40061:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c624619s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40062:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:c624619s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40062:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cntryid-e"
+fields = { "sets" = [] }
+evidence = "Id:t är en källmnemonik med formatsuffix.\ncatalog:variable_text:40063:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cntryid-e"
+fields = { "tags" = ["geography"] }
+evidence = "Id:t är en källmnemonik med formatsuffix.\ncatalog:variable_text:40063:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:computerexperience"
+fields = { "sets" = [] }
+evidence = "Variabeln anger datorerfarenhet.\ncatalog:variable_text:40064:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:computerexperience"
+fields = { "tags" = ["digital"] }
+evidence = "Variabeln anger datorerfarenhet.\ncatalog:variable_text:40064:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och kräver särskiljning enligt D-12.\ncatalog:variable_text:40065:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och kräver särskiljning enligt D-12.\ncatalog:variable_text:40065:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q05a"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40066:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q05a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40066:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q05b"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40067:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q05b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40067:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06a"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40068:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40068:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394861\ncatalog:variable_text:40069:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394861\ncatalog:variable_text:40069:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394862\ncatalog:variable_text:40070:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q06c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394862\ncatalog:variable_text:40070:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q07a"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40071:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q07a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40071:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q07b"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40072:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q07b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40072:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q08a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbetsledning.\ncatalog:variable_text:40073:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q08a"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller arbetsledning.\ncatalog:variable_text:40073:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q08b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394866\ncatalog:variable_text:40074:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q08b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394866\ncatalog:variable_text:40074:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11a"
+fields = { "sets" = ["sjalvbestammande-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40075:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40075:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11b"
+fields = { "sets" = ["sjalvbestammande-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40076:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40076:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11c"
+fields = { "sets" = ["sjalvbestammande-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40077:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11c"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40077:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11d"
+fields = { "sets" = ["sjalvbestammande-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40078:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q11d"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40078:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q12a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningskrav i arbetet.\ncatalog:variable_text:40079:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q12a"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningskrav i arbetet.\ncatalog:variable_text:40079:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q12b"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningskrav i arbetet.\ncatalog:variable_text:40080:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q12b"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkoden är ogenomskinlig; frågan gäller utbildningskrav i arbetet.\ncatalog:variable_text:40080:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q13a"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394877\ncatalog:variable_text:40081:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q13a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394877\ncatalog:variable_text:40081:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q13c"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394878\ncatalog:variable_text:40082:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q13c"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394878\ncatalog:variable_text:40082:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16a"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; etiketten anger sättet att få lön.\ncatalog:variable_text:40083:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16a"
+fields = { "tags" = ["income"] }
+evidence = "Källkoden är ogenomskinlig; etiketten anger sättet att få lön.\ncatalog:variable_text:40083:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16b"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40084:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16b"
+fields = { "tags" = ["income"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40084:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16d"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40085:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q16d"
+fields = { "tags" = ["income"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40085:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q17a"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40086:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q17a"
+fields = { "tags" = ["income"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40086:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q17b"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40087:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q17b"
+fields = { "tags" = ["income"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40087:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q18a"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40088:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-q18a"
+fields = { "tags" = ["income"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40088:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-s16a"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40089:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d-s16a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40089:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d302c02s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40090:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d302c02s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40090:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d304710s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40091:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d304710s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40091:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d306110s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40092:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d306110s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40092:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d307401s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40093:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d307401s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40093:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d311701s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40094:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d311701s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40094:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d315512s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40095:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:d315512s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40095:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40096:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40096:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q05a"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40097:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q05a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40097:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q05b"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40098:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q05b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40098:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q07a"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40099:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q07a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40099:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q07b"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40100:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e-q07b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40100:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e318001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40101:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e318001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40101:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e320001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40102:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e320001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40102:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e321001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40103:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e321001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40103:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e322001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40104:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e322001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40104:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e323003s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40105:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e323003s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40105:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e327001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40106:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e327001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40106:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e329002s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40107:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e329002s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40107:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e632001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40108:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e632001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40108:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e634001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40109:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e634001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40109:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e635001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40110:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e635001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40110:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e636001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40111:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e636001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40111:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e641001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40112:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e641001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40112:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e644002s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40113:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e644002s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40113:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e645001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40114:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e645001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40114:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e646002s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40115:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e646002s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40115:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e650001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40116:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e650001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40116:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e651002s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40117:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e651002s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40117:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e655001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40118:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e655001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40118:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e657001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40119:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e657001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40119:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e660003s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40120:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e660003s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40120:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e661001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40121:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e661001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40121:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e664001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40122:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e664001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40122:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e665001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40123:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:e665001s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40123:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar"
+fields = { "sets" = ["tidpunkt-for-avslutad-utbildning"] }
+evidence = "Examensår ingår i gruppen för avslutad utbildning.\ncatalog:variable_text:40124:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar"
+fields = { "tags" = [] }
+evidence = "Examensår ingår i gruppen för avslutad utbildning.\ncatalog:variable_text:40124:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q01b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40125:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q01b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40125:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40126:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40126:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40127:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40127:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40128:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40128:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02d"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40129:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02d"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40129:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02e"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40130:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q02e"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40130:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03a"
+fields = { "sets" = ["planering-i-arbetet"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394933\ncatalog:variable_text:40131:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394933\ncatalog:variable_text:40131:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03b"
+fields = { "sets" = ["planering-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40132:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40132:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03c"
+fields = { "sets" = ["planering-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40133:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q03c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40133:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q04a"
+fields = { "sets" = ["paverkan-och-forhandling-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40134:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q04a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40134:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q04b"
+fields = { "sets" = ["paverkan-och-forhandling-i-arbetet"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394937\ncatalog:variable_text:40135:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q04b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:394937\ncatalog:variable_text:40135:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q05a"
+fields = { "sets" = ["problemlosning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40136:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q05a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40136:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q05b"
+fields = { "sets" = ["problemlosning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40137:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q05b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40137:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q06b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40138:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q06b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40138:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q06c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40139:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q06c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40139:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q07a"
+fields = { "sets" = ["kunskapsmatchning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40140:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q07a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40140:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q07b"
+fields = { "sets" = ["kunskapsmatchning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40141:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f-q07b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40141:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q0"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40142:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q0"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40142:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01a"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40143:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01a"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40143:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01b"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40144:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01b"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40144:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01c"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40145:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01c"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40145:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01d"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40146:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01d"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40146:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01e"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40147:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01e"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40147:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01f"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40148:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01f"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40148:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01g"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40149:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01g"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40149:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01h"
+fields = { "sets" = ["lasning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40150:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q01h"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40150:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02a"
+fields = { "sets" = ["skrivande-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40151:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02a"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40151:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02b"
+fields = { "sets" = ["skrivande-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40152:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40152:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02c"
+fields = { "sets" = ["skrivande-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40153:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40153:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02d"
+fields = { "sets" = ["skrivande-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40154:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q02d"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40154:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03b"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40155:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03b"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40155:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03c"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40156:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40156:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03d"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40157:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03d"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40157:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03f"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40158:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03f"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40158:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03g"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40159:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03g"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40159:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03h"
+fields = { "sets" = ["rakning-i-arbetet"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40160:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q03h"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod.\ncatalog:variable_text:40160:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05a"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40161:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05a"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40161:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05c"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40162:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05c"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40162:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05d"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40163:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05d"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40163:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05e"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40164:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05e"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40164:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05f"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40165:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05f"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40165:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05g"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40166:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05g"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40166:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05h"
+fields = { "sets" = ["datoranvandning-i-arbetet"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40167:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:g-q05h"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:40167:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394973\ncatalog:variable_text:40168:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01a"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394973\ncatalog:variable_text:40168:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394974\ncatalog:variable_text:40169:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01b"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394974\ncatalog:variable_text:40169:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394975\ncatalog:variable_text:40170:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01c"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394975\ncatalog:variable_text:40170:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01d"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394976\ncatalog:variable_text:40171:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01d"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394976\ncatalog:variable_text:40171:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01e"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40172:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01e"
+fields = { "tags" = ["culture"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40172:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01f"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394978\ncatalog:variable_text:40173:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01f"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394978\ncatalog:variable_text:40173:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01g"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394979\ncatalog:variable_text:40174:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01g"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394979\ncatalog:variable_text:40174:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01h"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394980\ncatalog:variable_text:40175:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q01h"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394980\ncatalog:variable_text:40175:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394981\ncatalog:variable_text:40176:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02a"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394981\ncatalog:variable_text:40176:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394982\ncatalog:variable_text:40177:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02b"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394982\ncatalog:variable_text:40177:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394983\ncatalog:variable_text:40178:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02c"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394983\ncatalog:variable_text:40178:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02d"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394984\ncatalog:variable_text:40179:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q02d"
+fields = { "tags" = ["culture"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394984\ncatalog:variable_text:40179:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q04a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394991\ncatalog:variable_text:40186:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q04a"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394991\ncatalog:variable_text:40186:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q04b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394992\ncatalog:variable_text:40187:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q04b"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394992\ncatalog:variable_text:40187:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394993\ncatalog:variable_text:40188:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05a"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394993\ncatalog:variable_text:40188:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394994\ncatalog:variable_text:40189:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05c"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394994\ncatalog:variable_text:40189:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05d"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394995\ncatalog:variable_text:40190:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05d"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394995\ncatalog:variable_text:40190:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05e"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40191:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05e"
+fields = { "tags" = ["digital"] }
+evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40191:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05f"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394997\ncatalog:variable_text:40192:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05f"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394997\ncatalog:variable_text:40192:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05g"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394998\ncatalog:variable_text:40193:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05g"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394998\ncatalog:variable_text:40193:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05h"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394999\ncatalog:variable_text:40194:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:h-q05h"
+fields = { "tags" = ["digital"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:394999\ncatalog:variable_text:40194:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-har-brist-pa-datorkunskap-paverkat-dina-chanser-for-att-bli-anstalld-befordrad-eller-fa-loneforhojning"
+fields = { "sets" = ["datorkunskapsmatchning-i-arbetet"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40195:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-har-brist-pa-datorkunskap-paverkat-dina-chanser-for-att-bli-anstalld-befordrad-eller-fa-loneforhojning"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40195:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-tycker-du-att-du-har-de-datorkunskaper-som-behovs-for-att-utfora-ditt-nuvarande-arbete-bra-tycker-du-att-du-hade-de-datorkunskaper-som-behovdes-for-att-utfora-ditt-senaste-arbete-bra"
+fields = { "sets" = ["datorkunskapsmatchning-i-arbetet"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40196:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-tycker-du-att-du-har-de-datorkunskaper-som-behovs-for-att-utfora-ditt-nuvarande-arbete-bra-tycker-du-att-du-hade-de-datorkunskaper-som-behovdes-for-att-utfora-ditt-senaste-arbete-bra"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40196:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-vilken-datorkunskap-ar-nodvandig-for-att-kunna-utfora-ditt-nuvarande-arbete-vilken-datorkunskap-var-nodvandig-for-att-kunna-utfora-ditt-senaste-arbete"
+fields = { "sets" = ["datorkunskapsmatchning-i-arbetet"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40197:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-brukar-du-pa-arbetet-vilken-datorkunskap-ar-nodvandig-for-att-kunna-utfora-ditt-nuvarande-arbete-vilken-datorkunskap-var-nodvandig-for-att-kunna-utfora-ditt-senaste-arbete"
+fields = { "tags" = ["digital", "employment"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40197:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q05f"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40204:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q05f"
+fields = { "tags" = ["culture"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40204:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q06a"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40205:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q06a"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40205:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q08"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40208:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:i-q08"
+fields = { "tags" = ["health"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40208:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q0"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40211:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q0"
+fields = { "tags" = ["family-household"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40211:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q02a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395013\ncatalog:variable_text:40212:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q02a"
+fields = { "tags" = ["family-household"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395013\ncatalog:variable_text:40212:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q02c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395014\ncatalog:variable_text:40213:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q02c"
+fields = { "tags" = ["employment"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395014\ncatalog:variable_text:40213:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395015\ncatalog:variable_text:40214:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03a"
+fields = { "tags" = ["family-household"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395015\ncatalog:variable_text:40214:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395016\ncatalog:variable_text:40215:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03b"
+fields = { "tags" = ["family-household"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395016\ncatalog:variable_text:40215:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395017\ncatalog:variable_text:40216:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03c"
+fields = { "tags" = ["demographics"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395017\ncatalog:variable_text:40216:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03d"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40217:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q03d"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Id:t är en ogenomskinlig källkod; etiketten delas med andra frågor.\ncatalog:variable_text:40217:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q04a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395020\ncatalog:variable_text:40218:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q04a"
+fields = { "tags" = ["demographics"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395020\ncatalog:variable_text:40218:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q04c"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395021\ncatalog:variable_text:40219:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q04c"
+fields = { "tags" = ["migration"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395021\ncatalog:variable_text:40219:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q06a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395023\ncatalog:variable_text:40220:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q06a"
+fields = { "tags" = ["demographics"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395023\ncatalog:variable_text:40220:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q06b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395024\ncatalog:variable_text:40221:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q06b"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395024\ncatalog:variable_text:40221:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q07a"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395025\ncatalog:variable_text:40222:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q07a"
+fields = { "tags" = ["demographics"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395025\ncatalog:variable_text:40222:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q07b"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395026\ncatalog:variable_text:40223:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:j-q07b"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig frågekod; etiketten delas av flera variabler.\ncatalog:occurrence:395026\ncatalog:variable_text:40223:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:variable_text:40224:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:variable_text:40224:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = [] }
+evidence = "Variabeln anger land.\ncatalog:variable_text:40225:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger land.\ncatalog:variable_text:40225:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:litstatus"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40226:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:litstatus"
+fields = { "tags" = ["education", "methods"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40226:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m300c02s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40227:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m300c02s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40227:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m301c05s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40228:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m301c05s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40228:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m305215s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40229:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m305215s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40229:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m305218s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40230:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m305218s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40230:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309319s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40231:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309319s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40231:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309320s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40232:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309320s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40232:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309321s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40233:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309321s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40233:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309322s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40234:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m309322s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40234:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m310406s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40235:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m310406s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40235:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m310407s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40236:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m310407s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40236:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313410s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40237:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313410s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40237:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313411s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40238:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313411s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40238:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313412s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40239:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313412s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40239:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313413s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40240:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313413s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40240:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313414s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40241:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m313414s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40241:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m600c04s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40242:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m600c04s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40242:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602501s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40243:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602501s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40243:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602502s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40244:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602502s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40244:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602503s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40245:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m602503s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40245:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m604505s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40246:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m604505s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40246:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m610515s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40247:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m610515s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40247:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m615602s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40248:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m615602s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40248:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m615603s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40249:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m615603s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40249:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m618607s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40250:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m618607s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40250:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m618608s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40251:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m618608s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40251:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m620610s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40252:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m620610s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40252:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m620612s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40253:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m620612s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40253:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623616s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en opak uppgiftskod.\ncatalog:variable_text:40254:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623616s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak uppgiftskod.\ncatalog:variable_text:40254:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623617s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40255:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623617s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40255:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623618s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40256:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m623618s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40256:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m624619s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40257:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m624619s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40257:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m624620s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40258:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:m624620s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40258:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n302c02s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40259:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n302c02s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40259:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n306110s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40260:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n306110s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40260:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n306111s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40261:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:n306111s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40261:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:numstatus"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40262:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:numstatus"
+fields = { "tags" = ["education", "methods"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40262:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-ar-du-anstalld-eller-egen-foretagare"
+fields = { "sets" = ["stallning-i-arbetet"] }
+evidence = "Frågan gäller ställning som anställd eller företagare.\ncatalog:variable_text:40263:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-ar-du-anstalld-eller-egen-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Frågan gäller ställning som anställd eller företagare.\ncatalog:variable_text:40263:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-hur-manga-timmar-arbetar-du-vanligtvis-per-vecka-pa-ditt-nuvarande-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
+fields = { "sets" = ["vanlig-veckoarbetstid"] }
+evidence = "Id:t överstiger 60 tecken; den generella etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40264:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-hur-manga-timmar-arbetar-du-vanligtvis-per-vecka-pa-ditt-nuvarande-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken; den generella etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40264:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-ar"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40265:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-ar"
+fields = { "tags" = ["income"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40265:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-dag"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40266:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-dag"
+fields = { "tags" = ["income"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40266:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-manad"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40267:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-manad"
+fields = { "tags" = ["income"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40267:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-tva-veckor"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40268:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-tva-veckor"
+fields = { "tags" = ["income"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40268:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-vecka"
+fields = { "sets" = ["lon-fore-skatt"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40269:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-vecka"
+fields = { "tags" = ["income"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40269:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-arbeta-med-ditt-egna-foretag"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40270:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-arbeta-med-ditt-egna-foretag"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40270:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-hos-din-arbetsgivare"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40271:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-hos-din-arbetsgivare"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40271:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-de-nar-du-borjade-arbeta-i-ditt-nuvarande-egna-foretag"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40272:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-de-nar-du-borjade-arbeta-i-ditt-nuvarande-egna-foretag"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40272:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-det-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40273:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-det-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken; den delade etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40273:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-pa-det-stora-hela-hur-nojd-ar-du-med-ditt-nuvarande-arbete-ar-du"
+fields = { "sets" = [] }
+evidence = "Id:t överstiger 60 tecken; den generella etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40274:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-pa-det-stora-hela-hur-nojd-ar-du-med-ditt-nuvarande-arbete-ar-du"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken; den generella etiketten kräver särskiljning enligt D-12.\ncatalog:variable_text:40274:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-vilken-typ-av-anstallning-har-du-ar-det"
+fields = { "sets" = ["anstallningsform"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40275:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbetsplats-vilken-typ-av-anstallning-har-du-ar-det"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40275:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40276:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40276:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317002s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40277:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317002s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40277:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317003s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40278:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p317003s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40278:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p324002s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40279:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p324002s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40279:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p324003s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40280:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p324003s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40280:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p330001s"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40281:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p330001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40281:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p601c06s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40282:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p601c06s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40282:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p614601s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40283:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p614601s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40283:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p640001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40284:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p640001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40284:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p645001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40285:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p645001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40285:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p655001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40286:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p655001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40286:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p664001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40287:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p664001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40287:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p666001s"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40288:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p666001s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40288:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901002s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40289:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901002s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40289:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901003s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40290:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901003s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40290:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901004s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40291:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901004s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40291:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901005s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40292:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901005s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40292:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901006s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40293:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901006s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40293:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901011s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40294:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901011s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40294:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901013s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40295:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901013s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40295:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901015s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40296:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901015s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40296:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901017s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40297:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901017s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40297:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901018s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40298:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901018s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40298:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901019s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40299:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901019s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40299:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901020s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40300:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901020s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40300:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901021s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40301:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901021s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40301:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901024s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40302:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901024s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40302:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901025s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40303:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p901025s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40303:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902014s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40304:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902014s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40304:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902021s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40305:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902021s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40305:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902022s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40306:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902022s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40306:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902024s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40307:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p902024s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40307:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903007s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40308:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903007s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40308:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903012s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40309:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903012s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40309:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903017s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40310:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903017s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40310:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903021s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40311:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903021s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40311:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903024s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40312:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p903024s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40312:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904009s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40313:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904009s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40313:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904010s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40314:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904010s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40314:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904012s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40315:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904012s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40315:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904014s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40316:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904014s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40316:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904015s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40317:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904015s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40317:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904020s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40318:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904020s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40318:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904021s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40319:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904021s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40319:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904022s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40320:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904022s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40320:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904024s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40321:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904024s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40321:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904025s"
+fields = { "sets" = ["ordforrad-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40322:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p904025s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40322:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911001s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40323:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911001s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40323:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911003s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40324:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911003s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40324:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911004s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40325:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911004s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40325:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911005s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40326:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911005s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40326:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911006s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40327:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911006s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40327:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911007s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40328:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911007s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40328:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911008s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40329:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911008s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40329:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911009s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40330:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911009s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40330:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911010s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40331:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911010s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40331:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911014s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40332:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911014s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40332:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911017s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40333:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911017s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40333:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911020s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40334:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p911020s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40334:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912002s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40335:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912002s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40335:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912011s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40336:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912011s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40336:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912013s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40337:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912013s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40337:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912019s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40338:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p912019s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40338:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p913013s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40339:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p913013s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40339:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914012s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40340:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914012s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40340:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914015s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40341:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914015s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40341:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914016s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40342:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914016s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40342:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914018s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40343:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914018s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40343:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914019s"
+fields = { "sets" = ["meningsbyggnad-i-enklare-lasovningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40344:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p914019s"
+fields = { "tags" = ["education"] }
+evidence = "Källkoden är ogenomskinlig; etiketten identifierar läsuppgiften.\ncatalog:variable_text:40344:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p921002s"
+fields = { "sets" = ["textforstaelse-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40345:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p921002s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40345:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p921035s"
+fields = { "sets" = ["textforstaelse-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40346:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p921035s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40346:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p922023s"
+fields = { "sets" = ["textforstaelse-i-enklare-lasovningar"] }
+evidence = "Id:t är en opak uppgiftskod.\ncatalog:occurrence:395136\ncatalog:variable_text:40347:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p922023s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak uppgiftskod.\ncatalog:occurrence:395136\ncatalog:variable_text:40347:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p924035s"
+fields = { "sets" = ["textforstaelse-i-enklare-lasovningar"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40348:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:p924035s"
+fields = { "tags" = ["education"] }
+evidence = "Id är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40348:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pslstatus"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40350:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pslstatus"
+fields = { "tags" = ["education", "methods"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40350:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40351:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40351:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit10"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40352:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit10"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40352:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit2"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40353:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit2"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40353:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit3"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40354:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit3"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40354:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit4"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40355:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit4"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40355:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit5"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40356:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit5"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40356:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit6"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40357:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit6"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40357:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit7"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40358:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit7"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40358:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit8"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40359:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit8"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40359:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit9"
+fields = { "sets" = ["lasfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40360:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvlit9"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40360:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40361:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40361:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum10"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40362:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum10"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40362:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum2"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40363:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum2"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40363:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum3"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40364:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum3"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40364:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum4"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40365:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum4"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40365:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum5"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40366:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum5"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40366:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum6"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40367:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum6"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40367:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum7"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40368:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum7"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40368:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum8"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40369:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum8"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40369:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum9"
+fields = { "sets" = ["raknefardighet"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40370:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvnum9"
+fields = { "tags" = ["education"] }
+evidence = "Källförkortningen är ogenomskinlig; etiketten anger räknefärdighet.\ncatalog:variable_text:40370:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40371:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40371:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl10"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40372:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl10"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40372:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl2"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40373:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl2"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40373:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl3"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40374:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl3"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40374:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl4"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40375:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl4"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40375:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl5"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40376:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl5"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40376:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl6"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40377:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl6"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40377:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl7"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40378:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl7"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40378:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl8"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40379:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl8"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40379:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl9"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40380:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:pvpsl9"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig källmnemonik; etiketten delas med andra resultat.\ncatalog:variable_text:40380:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-det-galler-fortfarande-det-foretag-du-lamnade-inom-de-12-senaste-manaderna-nar-du-borjade-arbeta-med-ditt-foretag-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-innan-du-senast-slutade-arbeta-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40381:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-det-galler-fortfarande-det-foretag-du-lamnade-inom-de-12-senaste-manaderna-nar-du-borjade-arbeta-med-ditt-foretag-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-innan-du-senast-slutade-arbeta-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40381:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-fragan-galler-fortfarande-det-arbete-du-har-lamnat-inom-de-12-senaste-manaderna-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-innan-du-senast-slutade-arbeta-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-under-vilket-ar-var-det"
+fields = { "sets" = ["tidpunkt-for-arbetets-borjan"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40382:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-fragan-galler-fortfarande-det-arbete-du-har-lamnat-inom-de-12-senaste-manaderna-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-innan-du-senast-slutade-arbeta-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-under-vilket-ar-var-det"
+fields = { "tags" = [] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40382:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-hur-manga-personer-arbetade-for-din-arbetsgivare-pa-din-arbetsplats-var-det"
+fields = { "sets" = ["arbetsplatsstorlek"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40383:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-hur-manga-personer-arbetade-for-din-arbetsgivare-pa-din-arbetsplats-var-det"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40383:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-hur-manga-timmar-arbetade-du-vanligtvis-per-vecka-pa-detta-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
+fields = { "sets" = ["vanlig-veckoarbetstid"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40384:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-hur-manga-timmar-arbetade-du-vanligtvis-per-vecka-pa-detta-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:40384:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-var-du-anstalld-eller-var-du-egen-foretagare"
+fields = { "sets" = ["stallning-i-arbetet"] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger ställningen i senaste arbetet.\ncatalog:variable_text:40385:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-var-du-anstalld-eller-var-du-egen-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger ställningen i senaste arbetet.\ncatalog:variable_text:40385:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-vilken-typ-av-anstallning-hade-du-var-det"
+fields = { "sets" = ["anstallningsform"] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger anställningsform.\ncatalog:variable_text:40386:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-vilken-typ-av-anstallning-hade-du-var-det"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger anställningsform.\ncatalog:variable_text:40386:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-vilket-var-det-huvudsakliga-skalet-till-att-du-slutade-pa-ditt-senaste-arbete"
+fields = { "sets" = [] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger skälet till att arbetet upphörde.\ncatalog:variable_text:40387:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-arbetsplats-vilket-var-det-huvudsakliga-skalet-till-att-du-slutade-pa-ditt-senaste-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t överstiger 60 tecken; etiketten anger skälet till att arbetet upphörde.\ncatalog:variable_text:40387:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-ungefar-hur-manga-ar-har-du-totalt-haft-betalt-arbete-rakna-bara-med-ar-da-du-haft-heltids-eller-deltidsarbete-minst-6-manader"
+fields = { "sets" = ["erfarenhet-av-betalt-arbete"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40388:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-ungefar-hur-manga-ar-har-du-totalt-haft-betalt-arbete-rakna-bara-med-ar-da-du-haft-heltids-eller-deltidsarbete-minst-6-manader"
+fields = { "tags" = ["employment"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40388:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-vilket-ar-slutade-du-pa-ditt-senaste-avlonade-arbete"
+fields = { "sets" = ["tidpunkt-for-senaste-arbetets-slut"] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-vilket-ar-slutade-du-pa-ditt-senaste-avlonade-arbete"
+fields = { "tags" = [] }
+evidence = "Id är längre än 60 tecken.\ncatalog:variable_text:40389:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u01a000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40390:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u01a000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40390:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u01b000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40391:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u01b000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40391:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u02x000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40392:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u02x000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40392:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u03a000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40393:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u03a000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40393:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u04a000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40394:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u04a000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40394:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u06a000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40395:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u06a000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40395:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u06b000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40396:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u06b000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40396:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u07x000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40397:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u07x000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40397:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u11b000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40398:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u11b000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40398:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u16x000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40399:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u16x000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40399:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u19a000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40400:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u19a000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40400:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u19b000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40401:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u19b000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40401:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u21x000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40402:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u21x000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40402:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u23x000s"
+fields = { "sets" = ["problemlosningsfardighet"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40403:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:u23x000s"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig uppgiftskod.\ncatalog:variable_text:40403:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger högsta fullföljda utbildningsnivå.\ncatalog:variable_text:40404:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger högsta fullföljda utbildningsnivå.\ncatalog:variable_text:40404:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva-2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Siffersuffixet är inte hämtat från källkolumnen.\ncatalog:variable_text:40405:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva-2"
+fields = { "tags" = ["education"] }
+evidence = "Siffersuffixet är inte hämtat från källkolumnen.\ncatalog:variable_text:40405:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-krav"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn är överlappande mappad till en annan variabel. Frågan gäller erfarenhet snarare än utbildningsnivå.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-krav"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn är överlappande mappad till en annan variabel. Frågan gäller erfarenhet snarare än utbildningsnivå.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39986:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q15b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39989:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q18a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q19a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q20b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26a @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q26b @2012-01-01..2012-12-31 where key = 'v32879'"
+fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706"

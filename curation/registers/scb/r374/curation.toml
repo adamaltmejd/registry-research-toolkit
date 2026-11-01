@@ -1,0 +1,2160 @@
+
+[[statement]]
+kind = "set"
+subject = "var:a1"
+fields = { "sets" = [] }
+evidence = "A1 är en opak källkod; etiketten anger näringsgren enligt NACE.\ncatalog:variable_text:6898:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a1"
+fields = { "tags" = ["business"] }
+evidence = "A1 är en opak källkod; etiketten anger näringsgren enligt NACE.\ncatalog:variable_text:6898:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10a"
+fields = { "sets" = ["kompetensbehov"] }
+evidence = "A10a är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6899:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10a"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A10a är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6899:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10b"
+fields = { "sets" = ["kompetensbehov"] }
+evidence = "A10b är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6900:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10b"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A10b är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6900:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10c"
+fields = { "sets" = ["kompetensbehov"] }
+evidence = "A10c är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6901:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10c"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A10c är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6901:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10d"
+fields = { "sets" = ["kompetensbehov"] }
+evidence = "A10d är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6902:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a10d"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A10d är en opak källkod; den gemensamma etiketten kräver disambiguering mot källkolumnen.\ncatalog:variable_text:6902:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a11a"
+fields = { "sets" = [] }
+evidence = "A11a är en opak källkod och etiketten beskriver utbildningsbehovets status.\ncatalog:variable_text:6903:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11a"
+fields = { "tags" = ["education"] }
+evidence = "A11a är en opak källkod och etiketten beskriver utbildningsbehovets status.\ncatalog:variable_text:6903:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11ba"
+fields = { "sets" = [] }
+evidence = "A11ba är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6904:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11ba"
+fields = { "tags" = ["education"] }
+evidence = "A11ba är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6904:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bb"
+fields = { "sets" = [] }
+evidence = "A11bb är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6905:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bb"
+fields = { "tags" = ["education"] }
+evidence = "A11bb är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6905:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bc"
+fields = { "sets" = [] }
+evidence = "A11bc är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6906:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bc"
+fields = { "tags" = ["education"] }
+evidence = "A11bc är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6906:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bd"
+fields = { "sets" = [] }
+evidence = "A11bd är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6907:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a11bd"
+fields = { "tags" = ["education"] }
+evidence = "A11bd är en opak källkod; etiketten anger varianten.\ncatalog:variable_text:6907:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a12a"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6908:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12a"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6908:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12b"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6909:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12b"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6909:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12c"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6910:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12c"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6910:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12d"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6911:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12d"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6911:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12e"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6912:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12e"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6912:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12f"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6913:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12f"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6913:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12flag"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12flag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6914:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12flag"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12flag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6914:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12g"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6915:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12g"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6915:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12h"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6916:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12h"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6916:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12i"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6917:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12i"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6917:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12j"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12j är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6918:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12j"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12j är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6918:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12k"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12k är en opak källkod; etiketten omfattar båda periodernas kompetensområde och kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6919:14610:14975\ncatalog:variable_text:6919:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12k"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12k är en opak källkod; etiketten omfattar båda periodernas kompetensområde och kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6919:14610:14975\ncatalog:variable_text:6919:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12l"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12l är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6920:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12l"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12l är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6920:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12main"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12Main är en opak källkod och källan har en särskild etikett.\ncatalog:variable_text:6921:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a12main"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12Main är en opak källkod och källan har en särskild etikett.\ncatalog:variable_text:6921:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a12o"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "A12o är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6922:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a12o"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A12o är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6922:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a13"
+fields = { "sets" = [] }
+evidence = "A13 är en opak källkod och etiketten anger utbildningsplan.\ncatalog:variable_text:6923:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a13"
+fields = { "tags" = ["education"] }
+evidence = "A13 är en opak källkod och etiketten anger utbildningsplan.\ncatalog:variable_text:6923:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a14"
+fields = { "sets" = [] }
+evidence = "A14 är en opak källkod och etiketten anger budget.\ncatalog:variable_text:6924:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a14"
+fields = { "tags" = ["education"] }
+evidence = "A14 är en opak källkod och etiketten anger budget.\ncatalog:variable_text:6924:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a15"
+fields = { "sets" = [] }
+evidence = "A15 är en opak källkod och etiketten anger fackförbund.\ncatalog:variable_text:6925:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a15"
+fields = { "tags" = ["employment"] }
+evidence = "A15 är en opak källkod och etiketten anger fackförbund.\ncatalog:variable_text:6925:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16a"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6926:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16a"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6926:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16ba"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16ba är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6927:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16ba"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16ba är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6927:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bb"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16bb är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6928:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bb"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16bb är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6928:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bc"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16bc är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6929:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bc"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16bc är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6929:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bd"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16bd är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6930:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bd"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16bd är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6930:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16be"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16be är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6931:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16be"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16be är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6931:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bf"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16bf är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6932:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bf"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16bf är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6932:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bg"
+fields = { "sets" = ["personalrepresentanters-medverkan"] }
+evidence = "A16bg är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6933:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a16bg"
+fields = { "tags" = ["education", "employment"] }
+evidence = "A16bg är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6933:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a17a"
+fields = { "sets" = ["information-om-personalutbildning"] }
+evidence = "A17a är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6934:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17a"
+fields = { "tags" = ["education"] }
+evidence = "A17a är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6934:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17b"
+fields = { "sets" = ["information-om-personalutbildning"] }
+evidence = "A17b är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6935:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17b"
+fields = { "tags" = ["education"] }
+evidence = "A17b är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6935:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17c"
+fields = { "sets" = ["information-om-personalutbildning"] }
+evidence = "A17c är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6936:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17c"
+fields = { "tags" = ["education"] }
+evidence = "A17c är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6936:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17d"
+fields = { "sets" = ["information-om-personalutbildning"] }
+evidence = "A17d är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6937:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17d"
+fields = { "tags" = ["education"] }
+evidence = "A17d är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6937:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17e"
+fields = { "sets" = ["information-om-personalutbildning"] }
+evidence = "A17e är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6938:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a17e"
+fields = { "tags" = ["education"] }
+evidence = "A17e är en opak källkod och etiketten anger varianten.\ncatalog:variable_text:6938:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a3tot"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "A3tot är en opak källkod och etiketten anger antal anställda föregående år.\ncatalog:variable_text:6939:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a3tot"
+fields = { "tags" = ["employment"] }
+evidence = "A3tot är en opak källkod och etiketten anger antal anställda föregående år.\ncatalog:variable_text:6939:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a6"
+fields = { "sets" = [] }
+evidence = "A6 är en opak källkod och etiketten anger tjänst, produkt eller metod.\ncatalog:variable_text:6940:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a6"
+fields = { "tags" = ["business", "research"] }
+evidence = "A6 är en opak källkod och etiketten anger tjänst, produkt eller metod.\ncatalog:variable_text:6940:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a7"
+fields = { "sets" = [] }
+evidence = "A7 är en opak källkod och etiketten anger utbildningscenter.\ncatalog:variable_text:6941:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a7"
+fields = { "tags" = ["education"] }
+evidence = "A7 är en opak källkod och etiketten anger utbildningscenter.\ncatalog:variable_text:6941:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:a8"
+fields = { "sets" = [] }
+evidence = "A8 är en opak källkod och etiketten anger ansvar för utbildning.\ncatalog:variable_text:6942:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a8"
+fields = { "tags" = ["education"] }
+evidence = "A8 är en opak källkod och etiketten anger ansvar för utbildning.\ncatalog:variable_text:6942:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a9"
+fields = { "sets" = [] }
+evidence = "A9 är en opak källkod och etiketten anger utvärdering av behov.\ncatalog:variable_text:6943:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:a9"
+fields = { "tags" = ["business", "employment"] }
+evidence = "A9 är en opak källkod och etiketten anger utvärdering av behov.\ncatalog:variable_text:6943:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antalet anställda hör till gruppen; referensdatumet varierar med undersökningsåret.\ncatalog:variable_text:6944:14610:14975\ncatalog:variable_text:6944:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda hör till gruppen; referensdatumet varierar med undersökningsåret.\ncatalog:variable_text:6944:14610:14975\ncatalog:variable_text:6944:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda enligt FDB hör till gruppen antal anställda.\ncatalog:variable_text:6945:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda enligt FDB hör till gruppen antal anställda.\ncatalog:variable_text:6945:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kvinnor"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antalet anställda kvinnor hör till gruppen; kön är en nedbrytning av antalet.\ncatalog:variable_text:6946:14610:14975\ncatalog:variable_text:6946:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-kvinnor"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda kvinnor hör till gruppen; kön är en nedbrytning av antalet.\ncatalog:variable_text:6946:14610:14975\ncatalog:variable_text:6946:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-man"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antalet anställda män hör till gruppen; kön är en nedbrytning av antalet.\ncatalog:variable_text:6947:14610:14975\ncatalog:variable_text:6947:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-man"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda män hör till gruppen; kön är en nedbrytning av antalet.\ncatalog:variable_text:6947:14610:14975\ncatalog:variable_text:6947:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "sets" = [] }
+evidence = "Arbetade timmar är ett arbetsmarknadsmått och ingår inte i gruppen antal anställda.\ncatalog:variable_text:6948:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetade timmar är ett arbetsmarknadsmått och ingår inte i gruppen antal anställda.\ncatalog:variable_text:6948:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftskostnader"
+fields = { "sets" = [] }
+evidence = "Arbetskraftskostnader är ett företagskostnadsmått.\ncatalog:variable_text:6949:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftskostnader"
+fields = { "tags" = ["business"] }
+evidence = "Arbetskraftskostnader är ett företagskostnadsmått.\ncatalog:variable_text:6949:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b1a"
+fields = { "sets" = [] }
+evidence = "B1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6950:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b1a"
+fields = { "tags" = ["education"] }
+evidence = "B1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6950:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b1b"
+fields = { "sets" = [] }
+evidence = "B1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6951:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b1b"
+fields = { "tags" = ["education"] }
+evidence = "B1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6951:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2a"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6952:14610:14975\ncatalog:variable_text:6952:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2a"
+fields = { "tags" = ["education"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6952:14610:14975\ncatalog:variable_text:6952:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2aflag"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "B2aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6953:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2aflag"
+fields = { "tags" = ["education"] }
+evidence = "B2aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6953:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2b"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6954:14610:14975\ncatalog:variable_text:6954:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2b"
+fields = { "tags" = ["education"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6954:14610:14975\ncatalog:variable_text:6954:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2bflag"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "B2bflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6955:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2bflag"
+fields = { "tags" = ["education"] }
+evidence = "B2bflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6955:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2c"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6956:14610:14975\ncatalog:variable_text:6956:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2c"
+fields = { "tags" = ["education"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6956:14610:14975\ncatalog:variable_text:6956:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2cflag"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "B2cflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6957:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2cflag"
+fields = { "tags" = ["education"] }
+evidence = "B2cflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6957:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2d"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6958:14610:14975\ncatalog:variable_text:6958:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2d"
+fields = { "tags" = ["education"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6958:14610:14975\ncatalog:variable_text:6958:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2dflag"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "B2dflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6959:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2dflag"
+fields = { "tags" = ["education"] }
+evidence = "B2dflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6959:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2e"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6960:14610:14975\ncatalog:variable_text:6960:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2e"
+fields = { "tags" = ["education"] }
+evidence = "Måttets enhet och representation ändras mellan perioderna.\ncatalog:valueset:10418\ncatalog:variable_text:6960:14610:14975\ncatalog:variable_text:6960:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2eflag"
+fields = { "sets" = ["annan-personalutbildning"] }
+evidence = "B2eflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6961:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b2eflag"
+fields = { "tags" = ["education"] }
+evidence = "B2eflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6961:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b3a"
+fields = { "sets" = [] }
+evidence = "B3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6962:14610:14975\ncatalog:variable_text:6962:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b3a"
+fields = { "tags" = ["education"] }
+evidence = "B3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6962:14610:14975\ncatalog:variable_text:6962:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b4a"
+fields = { "sets" = [] }
+evidence = "Utbildningstypen ändras mellan perioderna. Coordinator group membership: Etiketter och aktuella beskrivningar kodar kurser genom arbetsgivaren. B4a behålls enligt den fasta inkluderingen; dess periodkonflikt kräver granskning.\ncatalog:variable_text:6950:16436:16801\ncatalog:variable_text:6951:16436:16801\ncatalog:variable_text:6962:16436:16801\ncatalog:variable_text:6963:14610:14975\ncatalog:variable_text:6963:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b4a"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstypen ändras mellan perioderna. Coordinator group membership: Etiketter och aktuella beskrivningar kodar kurser genom arbetsgivaren. B4a behålls enligt den fasta inkluderingen; dess periodkonflikt kräver granskning.\ncatalog:variable_text:6950:16436:16801\ncatalog:variable_text:6951:16436:16801\ncatalog:variable_text:6962:16436:16801\ncatalog:variable_text:6963:14610:14975\ncatalog:variable_text:6963:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5aflag"
+fields = { "sets" = [] }
+evidence = "B5aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6964:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5aflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "B5aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6964:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5b"
+fields = { "sets" = [] }
+evidence = "B5b är en opak källkod och etiketten anger donerat bidrag.\ncatalog:variable_text:6965:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5b"
+fields = { "tags" = ["business", "education"] }
+evidence = "B5b är en opak källkod och etiketten anger donerat bidrag.\ncatalog:variable_text:6965:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5bflag"
+fields = { "sets" = [] }
+evidence = "Etikett och operationell definition beskriver olika riktning för bidraget. Coordinator group membership: Donationernas förekomst och belopp hör samman. B5bflag behålls enligt fast inkludering och skyddat medlemskap trots den dokumenterade riktningskonflikten.\ncatalog:variable_text:6964:16436:16801\ncatalog:variable_text:6965:16436:16801\ncatalog:variable_text:6966:14610:14975\ncatalog:variable_text:6966:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b5bflag"
+fields = { "tags" = ["education"] }
+evidence = "Etikett och operationell definition beskriver olika riktning för bidraget. Coordinator group membership: Donationernas förekomst och belopp hör samman. B5bflag behålls enligt fast inkludering och skyddat medlemskap trots den dokumenterade riktningskonflikten.\ncatalog:variable_text:6964:16436:16801\ncatalog:variable_text:6965:16436:16801\ncatalog:variable_text:6966:14610:14975\ncatalog:variable_text:6966:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6a"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6967:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6a"
+fields = { "tags" = ["education"] }
+evidence = "B6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6967:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6b"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6968:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6b"
+fields = { "tags" = ["education"] }
+evidence = "B6b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6968:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6c"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6969:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6c"
+fields = { "tags" = ["education"] }
+evidence = "B6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6969:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6d"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6970:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6d"
+fields = { "tags" = ["education"] }
+evidence = "B6d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6970:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6e"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6971:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6e"
+fields = { "tags" = ["education"] }
+evidence = "B6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6971:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:b6f"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "B6f är en opak källkod och etiketten anger källa för förmåner och bidrag.\ncatalog:variable_text:6972:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:b6f"
+fields = { "tags" = ["education"] }
+evidence = "B6f är en opak källkod och etiketten anger källa för förmåner och bidrag.\ncatalog:variable_text:6972:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragsbelopp"
+fields = { "sets" = ["formaner-och-bidrag"] }
+evidence = "Mottaget bidragsbelopp hör till förmåner och bidrag.\ncatalog:variable_text:6973:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragsbelopp"
+fields = { "tags" = ["education"] }
+evidence = "Mottaget bidragsbelopp hör till förmåner och bidrag.\ncatalog:variable_text:6973:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c1tot"
+fields = { "sets" = [] }
+evidence = "C1tot är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6974:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c1tot"
+fields = { "tags" = ["education"] }
+evidence = "C1tot är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6974:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c2f"
+fields = { "sets" = [] }
+evidence = "C2f är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6975:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c2f"
+fields = { "tags" = ["education"] }
+evidence = "C2f är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6975:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c2m"
+fields = { "sets" = [] }
+evidence = "C2m är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6976:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c2m"
+fields = { "tags" = ["education"] }
+evidence = "C2m är en opak källkod; etiketten delas med andra variabler och kräver källkolumnen.\ncatalog:variable_text:6976:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3e"
+fields = { "sets" = ["utbildningstid"] }
+evidence = "C3e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6977:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3e"
+fields = { "tags" = ["education"] }
+evidence = "C3e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6977:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3i"
+fields = { "sets" = ["utbildningstid"] }
+evidence = "C3i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6978:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3i"
+fields = { "tags" = ["education"] }
+evidence = "C3i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6978:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3tot"
+fields = { "sets" = ["utbildningstid"] }
+evidence = "C3tot är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6979:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c3tot"
+fields = { "tags" = ["education"] }
+evidence = "C3tot är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6979:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c4"
+fields = { "sets" = [] }
+evidence = "C4 är en opak källkod och etiketten anger obligatorisk kurs. Coordinator group membership: C1tot, C2f och C2m mäter kursdeltagare totalt och efter kön. C4 behålls enligt fast inkludering och skyddat medlemskap trots konflikten med beskrivningens tidsandel.\ncatalog:variable_text:6974:16436:16801\ncatalog:variable_text:6975:16436:16801\ncatalog:variable_text:6976:16436:16801\ncatalog:variable_text:6980:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c4"
+fields = { "tags" = ["education"] }
+evidence = "C4 är en opak källkod och etiketten anger obligatorisk kurs. Coordinator group membership: C1tot, C2f och C2m mäter kursdeltagare totalt och efter kön. C4 behålls enligt fast inkludering och skyddat medlemskap trots konflikten med beskrivningens tidsandel.\ncatalog:variable_text:6974:16436:16801\ncatalog:variable_text:6975:16436:16801\ncatalog:variable_text:6976:16436:16801\ncatalog:variable_text:6980:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5a"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6981:14610:14975\ncatalog:variable_text:6981:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5a"
+fields = { "tags" = ["education"] }
+evidence = "C5a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6981:14610:14975\ncatalog:variable_text:6981:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5b"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6982:14610:14975\ncatalog:variable_text:6982:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5b"
+fields = { "tags" = ["education"] }
+evidence = "C5b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6982:14610:14975\ncatalog:variable_text:6982:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5c"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6983:14610:14975\ncatalog:variable_text:6983:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5c"
+fields = { "tags" = ["education"] }
+evidence = "C5c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6983:14610:14975\ncatalog:variable_text:6983:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5d"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6984:14610:14975\ncatalog:variable_text:6984:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5d"
+fields = { "tags" = ["education"] }
+evidence = "C5d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6984:14610:14975\ncatalog:variable_text:6984:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5e"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6985:14610:14975\ncatalog:variable_text:6985:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5e"
+fields = { "tags" = ["education"] }
+evidence = "C5e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6985:14610:14975\ncatalog:variable_text:6985:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5f"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6986:14610:14975\ncatalog:variable_text:6986:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5f"
+fields = { "tags" = ["education"] }
+evidence = "C5f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6986:14610:14975\ncatalog:variable_text:6986:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5flag"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "Värdemängd och operationell definition har olika omfattning.\ncatalog:valueset:1107\ncatalog:variable_text:6987:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5flag"
+fields = { "tags" = ["education"] }
+evidence = "Värdemängd och operationell definition har olika omfattning.\ncatalog:valueset:1107\ncatalog:variable_text:6987:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5g"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6988:14610:14975\ncatalog:variable_text:6988:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5g"
+fields = { "tags" = ["education"] }
+evidence = "C5g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6988:14610:14975\ncatalog:variable_text:6988:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5h"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6989:14610:14975\ncatalog:variable_text:6989:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5h"
+fields = { "tags" = ["education"] }
+evidence = "C5h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6989:14610:14975\ncatalog:variable_text:6989:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5i"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6990:14610:14975\ncatalog:variable_text:6990:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5i"
+fields = { "tags" = ["education"] }
+evidence = "C5i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6990:14610:14975\ncatalog:variable_text:6990:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5j"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5j är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6991:14610:14975\ncatalog:variable_text:6991:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5j"
+fields = { "tags" = ["education"] }
+evidence = "C5j är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6991:14610:14975\ncatalog:variable_text:6991:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5k"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5k är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6992:14610:14975\ncatalog:variable_text:6992:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5k"
+fields = { "tags" = ["education"] }
+evidence = "C5k är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6992:14610:14975\ncatalog:variable_text:6992:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5l"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5l är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6993:14610:14975\ncatalog:variable_text:6993:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5l"
+fields = { "tags" = ["education"] }
+evidence = "C5l är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6993:14610:14975\ncatalog:variable_text:6993:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c5main"
+fields = { "sets" = ["kompetensomraden"] }
+evidence = "C5Main är en opak källkod och källan har en särskild etikett.\ncatalog:variable_text:6994:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:c5main"
+fields = { "tags" = ["education"] }
+evidence = "C5Main är en opak källkod och källan har en särskild etikett.\ncatalog:variable_text:6994:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:c6a"
+fields = { "sets" = [] }
+evidence = "C6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6995:14610:14975\ncatalog:variable_text:6995:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6a"
+fields = { "tags" = ["education"] }
+evidence = "C6a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6995:14610:14975\ncatalog:variable_text:6995:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6b"
+fields = { "sets" = [] }
+evidence = "C6b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6996:14610:14975\ncatalog:variable_text:6996:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6b"
+fields = { "tags" = ["education"] }
+evidence = "C6b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6996:14610:14975\ncatalog:variable_text:6996:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6c"
+fields = { "sets" = [] }
+evidence = "C6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6997:14610:14975\ncatalog:variable_text:6997:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6c"
+fields = { "tags" = ["education"] }
+evidence = "C6c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6997:14610:14975\ncatalog:variable_text:6997:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6d"
+fields = { "sets" = [] }
+evidence = "C6d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6998:14610:14975\ncatalog:variable_text:6998:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6d"
+fields = { "tags" = ["education"] }
+evidence = "C6d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6998:14610:14975\ncatalog:variable_text:6998:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6e"
+fields = { "sets" = [] }
+evidence = "C6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6999:14610:14975\ncatalog:variable_text:6999:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6e"
+fields = { "tags" = ["education"] }
+evidence = "C6e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:6999:14610:14975\ncatalog:variable_text:6999:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6f"
+fields = { "sets" = [] }
+evidence = "C6f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7000:14610:14975\ncatalog:variable_text:7000:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6f"
+fields = { "tags" = ["education"] }
+evidence = "C6f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7000:14610:14975\ncatalog:variable_text:7000:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6flag"
+fields = { "sets" = [] }
+evidence = "Innehållet ändras mellan perioderna och värdemängden stämmer inte med definitionen.\ncatalog:valueset:1107\ncatalog:variable_text:7001:14610:14975\ncatalog:variable_text:7001:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6flag"
+fields = { "tags" = ["education"] }
+evidence = "Innehållet ändras mellan perioderna och värdemängden stämmer inte med definitionen.\ncatalog:valueset:1107\ncatalog:variable_text:7001:14610:14975\ncatalog:variable_text:7001:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6g"
+fields = { "sets" = [] }
+evidence = "C6g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7002:14610:14975\ncatalog:variable_text:7002:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6g"
+fields = { "tags" = ["education"] }
+evidence = "C6g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7002:14610:14975\ncatalog:variable_text:7002:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c6main"
+fields = { "sets" = [] }
+evidence = "C6Main är en opak källkod och etiketten anger utbildningsanordnare.\ncatalog:variable_text:7003:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:c6main"
+fields = { "tags" = ["education"] }
+evidence = "C6Main är en opak källkod och etiketten anger utbildningsanordnare.\ncatalog:variable_text:7003:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:c7a"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7004:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7a"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7004:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7aflag"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7005:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7aflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7aflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7005:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7b"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7006:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7b"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7006:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7bflag"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7bflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7007:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7bflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7bflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7007:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7c"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7008:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7c"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7008:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7cflag"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7cflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7009:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7cflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7cflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7009:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7d"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7010:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7d"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7010:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7dflag"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7dflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7011:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7dflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7dflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7011:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7sflag"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7sflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7012:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7sflag"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7sflag är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7012:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7sub"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7sub är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7013:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7sub"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7sub är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7013:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7tot"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "C7tot är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7014:14610:14975\ncatalog:variable_text:7014:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:c7tot"
+fields = { "tags" = ["business", "education"] }
+evidence = "C7tot är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7014:14610:14975\ncatalog:variable_text:7014:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d1a"
+fields = { "sets" = ["kvalitetssakring-av-utbildning"] }
+evidence = "D1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7015:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1a"
+fields = { "tags" = ["education"] }
+evidence = "D1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7015:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1b"
+fields = { "sets" = ["kvalitetssakring-av-utbildning"] }
+evidence = "D1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7016:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1b"
+fields = { "tags" = ["education"] }
+evidence = "D1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7016:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1c"
+fields = { "sets" = ["kvalitetssakring-av-utbildning"] }
+evidence = "D1c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7017:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1c"
+fields = { "tags" = ["education"] }
+evidence = "D1c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7017:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1d"
+fields = { "sets" = ["kvalitetssakring-av-utbildning"] }
+evidence = "D1d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7018:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1d"
+fields = { "tags" = ["education"] }
+evidence = "D1d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7018:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1e"
+fields = { "sets" = ["kvalitetssakring-av-utbildning"] }
+evidence = "D1e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7019:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d1e"
+fields = { "tags" = ["education"] }
+evidence = "D1e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7019:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:d2a"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2a är en källkod för utvärdering.\ncatalog:variable_text:7020:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2a"
+fields = { "tags" = ["education"] }
+evidence = "D2a är en källkod för utvärdering.\ncatalog:variable_text:7020:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2ba"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2ba är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7021:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2ba"
+fields = { "tags" = ["education"] }
+evidence = "D2ba är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7021:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bb"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2bb är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7022:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bb"
+fields = { "tags" = ["education"] }
+evidence = "D2bb är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7022:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bc"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2bc är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7023:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bc"
+fields = { "tags" = ["education"] }
+evidence = "D2bc är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7023:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bd"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2bd är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7024:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2bd"
+fields = { "tags" = ["education"] }
+evidence = "D2bd är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7024:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2be"
+fields = { "sets" = ["utvardering-av-utbildning"] }
+evidence = "D2be är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7025:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d2be"
+fields = { "tags" = ["education"] }
+evidence = "D2be är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7025:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3a"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7026:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3a"
+fields = { "tags" = ["education"] }
+evidence = "D3a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7026:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3b"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7027:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3b"
+fields = { "tags" = ["education"] }
+evidence = "D3b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7027:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3c"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7028:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3c"
+fields = { "tags" = ["education"] }
+evidence = "D3c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7028:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3d"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7029:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3d"
+fields = { "tags" = ["education"] }
+evidence = "D3d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7029:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3e"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7030:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3e"
+fields = { "tags" = ["education"] }
+evidence = "D3e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7030:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3f"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7031:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3f"
+fields = { "tags" = ["education"] }
+evidence = "D3f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7031:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3g"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7032:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3g"
+fields = { "tags" = ["education"] }
+evidence = "D3g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7032:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3h"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7033:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3h"
+fields = { "tags" = ["education"] }
+evidence = "D3h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7033:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3i"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "D3i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7034:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:d3i"
+fields = { "tags" = ["education"] }
+evidence = "D3i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7034:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1a"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7035:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1a"
+fields = { "tags" = ["education"] }
+evidence = "E1a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7035:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1b"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7036:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1b"
+fields = { "tags" = ["education"] }
+evidence = "E1b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7036:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1c"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7037:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1c"
+fields = { "tags" = ["education"] }
+evidence = "E1c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7037:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1d"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7038:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1d"
+fields = { "tags" = ["education"] }
+evidence = "E1d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7038:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1e"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7039:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1e"
+fields = { "tags" = ["education"] }
+evidence = "E1e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7039:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1f"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7040:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1f"
+fields = { "tags" = ["education"] }
+evidence = "E1f är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7040:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1g"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7041:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1g"
+fields = { "tags" = ["education"] }
+evidence = "E1g är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7041:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1h"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7042:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1h"
+fields = { "tags" = ["education"] }
+evidence = "E1h är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7042:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1i"
+fields = { "sets" = ["hinder-for-personalutbildning"] }
+evidence = "E1i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7043:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:e1i"
+fields = { "tags" = ["education"] }
+evidence = "E1i är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7043:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f1tot"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "F1tot är en opak källkod och etiketten anger antal anställda lärlingar.\ncatalog:variable_text:7044:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f1tot"
+fields = { "tags" = ["employment"] }
+evidence = "F1tot är en opak källkod och etiketten anger antal anställda lärlingar.\ncatalog:variable_text:7044:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f2a"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "F2a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7045:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2a"
+fields = { "tags" = ["education"] }
+evidence = "F2a är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7045:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2b"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "F2b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7046:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2b"
+fields = { "tags" = ["education"] }
+evidence = "F2b är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7046:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2c"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "F2c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7047:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2c"
+fields = { "tags" = ["education"] }
+evidence = "F2c är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7047:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2d"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "F2d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7048:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2d"
+fields = { "tags" = ["education"] }
+evidence = "F2d är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7048:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2e"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "F2e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7049:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f2e"
+fields = { "tags" = ["education"] }
+evidence = "F2e är en opak källkod; den gemensamma etiketten kräver källkolumnen som åtskillnad.\ncatalog:variable_text:7049:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:idlangua"
+fields = { "sets" = [] }
+evidence = "IDLANGUA är en opak källkod och etiketten anger datainsamlingens språk.\ncatalog:variable_text:7051:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:idlangua"
+fields = { "tags" = ["methods"] }
+evidence = "IDLANGUA är en opak källkod och etiketten anger datainsamlingens språk.\ncatalog:variable_text:7051:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "sets" = [] }
+evidence = "Insamlingsmetod är undersökningsmetod.\ncatalog:variable_text:7052:14610:14975\ncatalog:variable_text:7052:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Insamlingsmetod är undersökningsmetod.\ncatalog:variable_text:7052:14610:14975\ncatalog:variable_text:7052:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = [] }
+evidence = "Land anger uppgifternas geografiska ursprung.\ncatalog:variable_text:7053:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography"] }
+evidence = "Land anger uppgifternas geografiska ursprung.\ncatalog:variable_text:7053:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:n-sp"
+fields = { "sets" = [] }
+evidence = "N_SP är en opak källkod och etiketten anger antal i målpopulation per stratum.\ncatalog:variable_text:7054:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:n-sp"
+fields = { "tags" = ["methods"] }
+evidence = "N_SP är en opak källkod och etiketten anger antal i målpopulation per stratum.\ncatalog:variable_text:7054:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nace-sp"
+fields = { "sets" = [] }
+evidence = "NACE är läsbart i etiketten och källsuffixet ger inte i sig tillräckligt stöd för namnbyte. Klassificeringen behöver klargöras. Coordinator group membership: Båda variablernas etiketter och aktuella beskrivningar anger näringsgren enligt NACE. A1 ger den efterfrågade registerlokala motparten till nace-sp, vars klassificeringskonflikt kvarstår för granskning.\ncatalog:occurrence-locators:variable:7045\ncatalog:occurrence-locators:variable:7047\ncatalog:valueset:7336\ncatalog:variable_text:6898:16436:16801\ncatalog:variable_text:7055:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nace-sp"
+fields = { "tags" = ["business"] }
+evidence = "NACE är läsbart i etiketten och källsuffixet ger inte i sig tillräckligt stöd för namnbyte. Klassificeringen behöver klargöras. Coordinator group membership: Båda variablernas etiketter och aktuella beskrivningar anger näringsgren enligt NACE. A1 ger den efterfrågade registerlokala motparten till nace-sp, vars klassificeringskonflikt kvarstår för granskning.\ncatalog:occurrence-locators:variable:7045\ncatalog:occurrence-locators:variable:7047\ncatalog:valueset:7336\ncatalog:variable_text:6898:16436:16801\ncatalog:variable_text:7055:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nstra-sp"
+fields = { "sets" = [] }
+evidence = "NSTRA_SP är en opak källkod och etiketten anger antal företag i urvalsramen per stratum.\ncatalog:variable_text:7056:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nstra-sp"
+fields = { "tags" = ["methods"] }
+evidence = "NSTRA_SP är en opak källkod och etiketten anger antal företag i urvalsramen per stratum.\ncatalog:variable_text:7056:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = [] }
+evidence = "NUTS anger regional indelning.\ncatalog:valueset:10882\ncatalog:variable_text:7057:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS anger regional indelning.\ncatalog:valueset:10882\ncatalog:variable_text:7057:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:pac"
+fields = { "sets" = ["utbildningskostnader"] }
+evidence = "PAC finns i etiketten och är läsbart; kostnaden avser frånvaro för kursdeltagande. Coordinator group membership: C7 omfattar utbildningskostnadernas totaler, komponenter och förekomstkodningar. PAC läggs till eftersom kostnaden uttryckligen avser frånvaro på grund av kursdeltagande. Allmänna arbetskraftskostnader utesluts.\ncatalog:variable_text:6949:16436:16801\ncatalog:variable_text:7004:16436:16801\ncatalog:variable_text:7005:16436:16801\ncatalog:variable_text:7006:16436:16801\ncatalog:variable_text:7007:16436:16801\ncatalog:variable_text:7008:16436:16801\ncatalog:variable_text:7009:16436:16801\ncatalog:variable_text:7010:16436:16801\ncatalog:variable_text:7011:16436:16801\ncatalog:variable_text:7012:16436:16801\ncatalog:variable_text:7013:16436:16801\ncatalog:variable_text:7014:16436:16801\ncatalog:variable_text:7058:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:pac"
+fields = { "tags" = ["business", "education"] }
+evidence = "PAC finns i etiketten och är läsbart; kostnaden avser frånvaro för kursdeltagande. Coordinator group membership: C7 omfattar utbildningskostnadernas totaler, komponenter och förekomstkodningar. PAC läggs till eftersom kostnaden uttryckligen avser frånvaro på grund av kursdeltagande. Allmänna arbetskraftskostnader utesluts.\ncatalog:variable_text:6949:16436:16801\ncatalog:variable_text:7004:16436:16801\ncatalog:variable_text:7005:16436:16801\ncatalog:variable_text:7006:16436:16801\ncatalog:variable_text:7007:16436:16801\ncatalog:variable_text:7008:16436:16801\ncatalog:variable_text:7009:16436:16801\ncatalog:variable_text:7010:16436:16801\ncatalog:variable_text:7011:16436:16801\ncatalog:variable_text:7012:16436:16801\ncatalog:variable_text:7013:16436:16801\ncatalog:variable_text:7014:16436:16801\ncatalog:variable_text:7058:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-yrkeskvalifikation"
+fields = { "sets" = ["grundlaggande-yrkesutbildning"] }
+evidence = "Variabeln kodar anställning av personer vars huvudsakliga aktivitet är studier mot yrkeskvalifikation.\ncatalog:variable_text:7061:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-yrkeskvalifikation"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar anställning av personer vars huvudsakliga aktivitet är studier mot yrkeskvalifikation.\ncatalog:variable_text:7061:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:suburval"
+fields = { "sets" = [] }
+evidence = "Suburval är en urvalsvariabel.\ncatalog:variable_text:7062:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:suburval"
+fields = { "tags" = ["methods"] }
+evidence = "Suburval är en urvalsvariabel.\ncatalog:variable_text:7062:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:svarande-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antal svarande per stratum är undersökningsmetodik.\ncatalog:variable_text:7063:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:svarande-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande per stratum är undersökningsmetodik.\ncatalog:variable_text:7063:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsalternativ"
+fields = { "sets" = [] }
+evidence = "Den operationella definitionen beskriver svar och urvalsramstillhörighet.\ncatalog:variable_text:7064:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsalternativ"
+fields = { "tags" = ["methods"] }
+evidence = "Den operationella definitionen beskriver svar och urvalsramstillhörighet.\ncatalog:variable_text:7064:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:weight"
+fields = { "sets" = [] }
+evidence = "Weight är ett engelskt ord för vikt och är läsbart; källans siffra 1 saknas i identifieraren men utgör inte ett felaktigt tillagt suffix.\ncatalog:variable_text:7065:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:weight"
+fields = { "tags" = ["methods"] }
+evidence = "Weight är ett engelskt ord för vikt och är läsbart; källans siffra 1 saknas i identifieraren men utgör inte ett felaktigt tillagt suffix.\ncatalog:variable_text:7065:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C1tot @2010-01-01..2010-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal deltagare.\ncatalog:variable_text:6974:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C1tot @2015-01-01..2015-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal deltagare.\ncatalog:variable_text:6974:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C2f @2010-01-01..2010-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda kvinnor i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal kvinnliga deltagare.\ncatalog:variable_text:6975:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C2f @2015-01-01..2015-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda kvinnor i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal kvinnliga deltagare.\ncatalog:variable_text:6975:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C2m @2010-01-01..2010-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda män i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal manliga deltagare.\ncatalog:variable_text:6976:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C2m @2015-01-01..2015-12-31 where key = 'v39592'"
+fields = { "description" = "Antal anställda män i företaget som deltog i minst en kurs under referensåret." }
+evidence = "Beskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal manliga deltagare.\ncatalog:variable_text:6976:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7a @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets kostnader för externa kurser och externa lärare på interna kurser under referensåret." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7004:14610:14975\ncatalog:variable_text:7004:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7a @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets kostnader för externa kurser och externa lärare på interna kurser under referensåret." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7004:14610:14975\ncatalog:variable_text:7004:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7aflag @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade kostnader för externa kurser och externa lärare på interna kurser under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7005:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7aflag @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade kostnader för externa kurser och externa lärare på interna kurser under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7005:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7b @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets resekostnader och traktamenten för kursdeltagare under referensåret." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7006:14610:14975\ncatalog:variable_text:7006:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7b @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets resekostnader och traktamenten för kursdeltagare under referensåret." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7006:14610:14975\ncatalog:variable_text:7006:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7bflag @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade resekostnader och traktamenten för kursdeltagare under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7007:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7bflag @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade resekostnader och traktamenten för kursdeltagare under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7007:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7c @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7008:14610:14975\ncatalog:variable_text:7008:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7c @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7008:14610:14975\ncatalog:variable_text:7008:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7cflag @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7009:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7cflag @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7009:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7d @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7010:14610:14975\ncatalog:variable_text:7010:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7d @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler." }
+evidence = "Beskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7010:14610:14975\ncatalog:variable_text:7010:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7dflag @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7011:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7dflag @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget hade kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler under referensåret." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om en kostnadskomponent förekom.\ncatalog:variable_text:7011:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7sflag @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget endast har en total kostnad för anställdas kurser under referensåret när kostnaden inte helt kan fördelas på kategorier." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om företaget endast har en total kurskostnad.\ncatalog:variable_text:7012:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7sflag @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Om företaget endast har en total kostnad för anställdas kurser under referensåret när kostnaden inte helt kan fördelas på kategorier." }
+evidence = "Beskrivningen anger total kostnad medan variabeln anger om företaget endast har en total kurskostnad.\ncatalog:variable_text:7012:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7sub @2010-01-01..2010-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets totala kostnad för anställdas kurser under referensåret när fördelning på kostnadskategorier saknas helt eller delvis." }
+evidence = "Beskrivningen anger total personalutbildningskostnad medan variabeln mäter företagets totala kurskostnad när kategorifördelning saknas helt eller delvis.\ncatalog:variable_text:7013:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C7sub @2015-01-01..2015-12-31 where key = 'v39606'"
+fields = { "description" = "Företagets totala kostnad för anställdas kurser under referensåret när fördelning på kostnadskategorier saknas helt eller delvis." }
+evidence = "Beskrivningen anger total personalutbildningskostnad medan variabeln mäter företagets totala kurskostnad när kategorifördelning saknas helt eller delvis.\ncatalog:variable_text:7013:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: SIZE_SP @2015-01-01..2015-12-31 where key = 'v39617'"
+fields = { "description" = "Företagets storleksklass baserad på antal anställda." }
+evidence = "Beskrivningen anger ett antal, men variabeln mäter storleksklass baserad på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: Size_SP @2010-01-01..2010-12-31 where key = 'v39617'"
+fields = { "description" = "Företagets storleksklass baserad på antal anställda." }
+evidence = "Beskrivningen anger ett antal, men variabeln mäter storleksklass baserad på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"

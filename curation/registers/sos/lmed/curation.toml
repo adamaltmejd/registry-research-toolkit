@@ -65,18 +65,1236 @@ evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_
 
 [[statement]]
 kind = "set"
+subject = "var:agarform"
+fields = { "sets" = [] }
+evidence = "Ägarform för vårdverksamhet.\ncatalog:variable_text:56632:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:agarform"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ägarform för vårdverksamhet.\ncatalog:variable_text:56632:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56633:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56633:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = ["forpackningsantal"] }
+evidence = "Antal expedierade förpackningar hör till förpackningsantal.\ncatalog:variable_text:56634:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["medicines"] }
+evidence = "Antal expedierade förpackningar hör till förpackningsantal.\ncatalog:variable_text:56634:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-numerisk-enhet"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Enheten hör till förpackningsstorlek.\ncatalog:variable_text:56635:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-numerisk-enhet"
+fields = { "tags" = ["medicines"] }
+evidence = "Enheten hör till förpackningsstorlek.\ncatalog:variable_text:56635:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-uthamtade-ddd"
+fields = { "sets" = ["definierade-dygnsdoser"] }
+evidence = "Uttagets mängd i definierade dygnsdoser.\ncatalog:variable_text:56636:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-uthamtade-ddd"
+fields = { "tags" = ["medicines"] }
+evidence = "Uttagets mängd i definierade dygnsdoser.\ncatalog:variable_text:56636:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antidot"
+fields = { "sets" = [] }
+evidence = "Produktens antidotklassning är en läkemedelsegenskap.\ncatalog:variable_text:56637:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antidot"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens antidotklassning är en läkemedelsegenskap.\ncatalog:variable_text:56637:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antnum"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Numerisk förpackningsstorlek.\ncatalog:variable_text:56638:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antnum"
+fields = { "tags" = ["medicines"] }
+evidence = "Numerisk förpackningsstorlek.\ncatalog:variable_text:56638:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arblan"
+fields = { "sets" = [] }
+evidence = "Arbetsplatsens län är en geografisk uppgift.\ncatalog:variable_text:56640:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arblan"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsplatsens län är en geografisk uppgift.\ncatalog:variable_text:56640:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-benamning"
+fields = { "sets" = ["varubenamning"] }
+evidence = "Artikelns benämning hör till varubenämning.\ncatalog:variable_text:56641:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-benamning"
+fields = { "tags" = ["medicines"] }
+evidence = "Artikelns benämning hör till varubenämning.\ncatalog:variable_text:56641:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-utbytbar"
+fields = { "sets" = ["lakemedelsutbytbarhet"] }
+evidence = "Artikelns utbytbarhet ingår i kandidatgruppen.\ncatalog:variable_text:56642:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-utbytbar"
+fields = { "tags" = ["medicines"] }
+evidence = "Artikelns utbytbarhet ingår i kandidatgruppen.\ncatalog:variable_text:56642:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-utbytbar-orsak"
+fields = { "sets" = ["lakemedelsutbytbarhet"] }
+evidence = "Orsaken hör till artikelns utbytbarhet.\ncatalog:variable_text:56643:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artikel-utbytbar-orsak"
+fields = { "tags" = ["medicines"] }
+evidence = "Orsaken hör till artikelns utbytbarhet.\ncatalog:variable_text:56643:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikelse-parallell-import"
+fields = { "sets" = [] }
+evidence = "Avvikelsen beskriver läkemedlets egenskaper.\ncatalog:variable_text:56646:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikelse-parallell-import"
+fields = { "tags" = ["medicines"] }
+evidence = "Avvikelsen beskriver läkemedlets egenskaper.\ncatalog:variable_text:56646:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:begransad-subvention"
+fields = { "sets" = ["lakemedelsforman"] }
+evidence = "Begränsning av läkemedelsförmånen.\ncatalog:variable_text:56647:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:begransad-subvention"
+fields = { "tags" = ["medicines"] }
+evidence = "Begränsning av läkemedelsförmånen.\ncatalog:variable_text:56647:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beredningsform"
+fields = { "sets" = [] }
+evidence = "Produktens beredningsform.\ncatalog:variable_text:56648:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beredningsform"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens beredningsform.\ncatalog:variable_text:56648:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning"
+fields = { "sets" = [] }
+evidence = "Beskrivningen avser artikeln.\ncatalog:variable_text:56649:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning"
+fields = { "tags" = ["medicines"] }
+evidence = "Beskrivningen avser artikeln.\ncatalog:variable_text:56649:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bytesk"
+fields = { "sets" = ["lakemedelsbyte"] }
+evidence = "Koden anger typ av läkemedelsbyte.\ncatalog:variable_text:56650:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:bytesk"
+fields = { "tags" = ["medicines"] }
+evidence = "Koden anger typ av läkemedelsbyte.\ncatalog:variable_text:56650:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:bytet-tillatet"
+fields = { "sets" = ["lakemedelsbyte"] }
+evidence = "Tillåtelse till byte vid expedition.\ncatalog:variable_text:56651:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bytet-tillatet"
+fields = { "tags" = ["medicines"] }
+evidence = "Tillåtelse till byte vid expedition.\ncatalog:variable_text:56651:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ddd"
+fields = { "sets" = ["definierade-dygnsdoser"] }
+evidence = "Definierad dygnsdos.\ncatalog:variable_text:56652:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ddd"
+fields = { "tags" = ["medicines"] }
+evidence = "Definierad dygnsdos.\ncatalog:variable_text:56652:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dddenhet"
+fields = { "sets" = ["definierade-dygnsdoser"] }
+evidence = "Enhet för definierad dygnsdos.\ncatalog:variable_text:56653:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dddenhet"
+fields = { "tags" = ["medicines"] }
+evidence = "Enhet för definierad dygnsdos.\ncatalog:variable_text:56653:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-bryttillstand"
+fields = { "sets" = [] }
+evidence = "Bryttillstånd för dosdispensering är en läkemedelsuppgift.\ncatalog:variable_text:56654:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-bryttillstand"
+fields = { "tags" = ["medicines"] }
+evidence = "Bryttillstånd för dosdispensering är en läkemedelsuppgift.\ncatalog:variable_text:56654:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-bryttillstand-hallbar"
+fields = { "sets" = [] }
+evidence = "Hållbarhet vid dosdispensering.\ncatalog:variable_text:56655:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-bryttillstand-hallbar"
+fields = { "tags" = ["medicines"] }
+evidence = "Hållbarhet vid dosdispensering.\ncatalog:variable_text:56655:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:doseringsenhet"
+fields = { "sets" = [] }
+evidence = "Doseringsenhet för läkemedelsprodukt.\ncatalog:variable_text:56656:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:doseringsenhet"
+fields = { "tags" = ["medicines"] }
+evidence = "Doseringsenhet för läkemedelsprodukt.\ncatalog:variable_text:56656:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:doseringstext"
+fields = { "sets" = [] }
+evidence = "Text om dosering och användning.\ncatalog:variable_text:56657:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:doseringstext"
+fields = { "tags" = ["medicines"] }
+evidence = "Text om dosering och användning.\ncatalog:variable_text:56657:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-dos"
+fields = { "sets" = [] }
+evidence = "Artikeln är avsedd för dosdispensering.\ncatalog:variable_text:56659:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-dos"
+fields = { "tags" = ["medicines"] }
+evidence = "Artikeln är avsedd för dosdispensering.\ncatalog:variable_text:56659:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:explan"
+fields = { "sets" = [] }
+evidence = "Apotekets län är en geografisk uppgift.\ncatalog:variable_text:56661:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:explan"
+fields = { "tags" = ["geography"] }
+evidence = "Apotekets län är en geografisk uppgift.\ncatalog:variable_text:56661:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fantal"
+fields = { "sets" = ["forpackningsantal"] }
+evidence = "F är en enbokstavskod för förskrivet.\ncatalog:variable_text:56662:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fantal"
+fields = { "tags" = ["medicines"] }
+evidence = "F är en enbokstavskod för förskrivet.\ncatalog:variable_text:56662:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Patientens födelsedatum.\ncatalog:variable_text:56665:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Patientens födelsedatum.\ncatalog:variable_text:56665:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Alternativ representation av patientens födelsedatum.\ncatalog:variable_text:56666:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "tags" = ["demographics"] }
+evidence = "Alternativ representation av patientens födelsedatum.\ncatalog:variable_text:56666:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "sets" = ["lakemedelsforman"] }
+evidence = "Artikelns förmånsstatus.\ncatalog:variable_text:56667:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "tags" = ["medicines"] }
+evidence = "Artikelns förmånsstatus.\ncatalog:variable_text:56667:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:formanstyp"
+fields = { "sets" = ["lakemedelsforman"] }
+evidence = "Typ av läkemedelsförmån.\ncatalog:variable_text:56668:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:formanstyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Typ av läkemedelsförmån.\ncatalog:variable_text:56668:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackning-text"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Förpackningstexten beskriver förpackningens storlek.\ncatalog:variable_text:56669:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackning-text"
+fields = { "tags" = ["medicines"] }
+evidence = "Förpackningstexten beskriver förpackningens storlek.\ncatalog:variable_text:56669:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpacknings-storlek-beskrivning"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Sammansatt beskrivning av förpackningsstorlek.\ncatalog:variable_text:56670:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpacknings-storlek-beskrivning"
+fields = { "tags" = ["medicines"] }
+evidence = "Sammansatt beskrivning av förpackningsstorlek.\ncatalog:variable_text:56670:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpacknings-typ-inre"
+fields = { "sets" = [] }
+evidence = "Den inre förpackningens typ är en produktegenskap.\ncatalog:variable_text:56671:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpacknings-typ-inre"
+fields = { "tags" = ["medicines"] }
+evidence = "Den inre förpackningens typ är en produktegenskap.\ncatalog:variable_text:56671:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackningsmultipel-1"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Förpackningsmultipel enligt källans position 1.\ncatalog:variable_text:56672:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackningsmultipel-1"
+fields = { "tags" = ["medicines"] }
+evidence = "Förpackningsmultipel enligt källans position 1.\ncatalog:variable_text:56672:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackningsmultipel-2"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "Förpackningsmultipel enligt källans position 2.\ncatalog:variable_text:56673:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpackningsmultipel-2"
+fields = { "tags" = ["medicines"] }
+evidence = "Förpackningsmultipel enligt källans position 2.\ncatalog:variable_text:56673:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpddd"
+fields = { "sets" = ["definierade-dygnsdoser"] }
+evidence = "Antal definierade dygnsdoser per förpackning.\ncatalog:variable_text:56674:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forpddd"
+fields = { "tags" = ["medicines"] }
+evidence = "Antal definierade dygnsdoser per förpackning.\ncatalog:variable_text:56674:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljnings-restriktion"
+fields = { "sets" = [] }
+evidence = "Restriktioner för försäljning av artikeln.\ncatalog:variable_text:56675:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljnings-restriktion"
+fields = { "tags" = ["medicines"] }
+evidence = "Restriktioner för försäljning av artikeln.\ncatalog:variable_text:56675:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsstopp"
+fields = { "sets" = ["forsaljningsstopp"] }
+evidence = "Markering av försäljningsstopp.\ncatalog:variable_text:56676:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsstopp"
+fields = { "tags" = ["medicines"] }
+evidence = "Markering av försäljningsstopp.\ncatalog:variable_text:56676:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsstopp-kommentar-vara"
+fields = { "sets" = ["forsaljningsstopp"] }
+evidence = "Kommentar till försäljningsstopp.\ncatalog:variable_text:56677:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsstopp-kommentar-vara"
+fields = { "tags" = ["medicines"] }
+evidence = "Kommentar till försäljningsstopp.\ncatalog:variable_text:56677:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:godkannande-procedur"
+fields = { "sets" = [] }
+evidence = "Proceduren avser godkännande av läkemedelsprodukt.\ncatalog:variable_text:56681:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:godkannande-procedur"
+fields = { "tags" = ["medicines"] }
+evidence = "Proceduren avser godkännande av läkemedelsprodukt.\ncatalog:variable_text:56681:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppvarunummer"
+fields = { "sets" = [] }
+evidence = "Variabeln anger produktens tillhörighet till gruppvarunummer.\ncatalog:variable_text:56683:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppvarunummer"
+fields = { "tags" = ["medicines"] }
+evidence = "Variabeln anger produktens tillhörighet till gruppvarunummer.\ncatalog:variable_text:56683:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hforps"
+fields = { "sets" = ["forpackningsstorlek"] }
+evidence = "H är en enbokstavskod och forps är en källmnemonik.\ncatalog:variable_text:56684:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hforps"
+fields = { "tags" = ["medicines"] }
+evidence = "H är en enbokstavskod och forps är en källmnemonik.\ncatalog:variable_text:56684:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ingavg"
+fields = { "sets" = ["egenavgift"] }
+evidence = "Ackumulerad egenavgift före expedition.\ncatalog:variable_text:56686:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ingavg"
+fields = { "tags" = ["medicines"] }
+evidence = "Ackumulerad egenavgift före expedition.\ncatalog:variable_text:56686:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:innehaller-laktos"
+fields = { "sets" = [] }
+evidence = "Produktens laktosinnehåll.\ncatalog:variable_text:56687:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:innehaller-laktos"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens laktosinnehåll.\ncatalog:variable_text:56687:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:innehaller-latex"
+fields = { "sets" = [] }
+evidence = "Förekomst av latex i produktens artiklar.\ncatalog:variable_text:56688:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:innehaller-latex"
+fields = { "tags" = ["medicines"] }
+evidence = "Förekomst av latex i produktens artiklar.\ncatalog:variable_text:56688:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:iterering"
+fields = { "sets" = [] }
+evidence = "Möjlighet till flergångsförskrivning.\ncatalog:variable_text:56690:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:iterering"
+fields = { "tags" = ["medicines"] }
+evidence = "Möjlighet till flergångsförskrivning.\ncatalog:variable_text:56690:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Patientens kön är en demografisk uppgift.\ncatalog:variable_text:56691:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Patientens kön är en demografisk uppgift.\ncatalog:variable_text:56691:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedel"
+fields = { "sets" = [] }
+evidence = "Produktens läkemedelsstatus.\ncatalog:variable_text:56693:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedel"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens läkemedelsstatus.\ncatalog:variable_text:56693:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsform"
+fields = { "sets" = [] }
+evidence = "Läkemedelsform är en beredningsform.\ncatalog:variable_text:56694:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsform"
+fields = { "tags" = ["medicines"] }
+evidence = "Läkemedelsform är en beredningsform.\ncatalog:variable_text:56694:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsform-grupp"
+fields = { "sets" = [] }
+evidence = "Id:t anger läkemedelsform men källan anger avsedd administreringsplats.\ncatalog:variable_text:56695:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsform-grupp"
+fields = { "tags" = ["medicines"] }
+evidence = "Id:t anger läkemedelsform men källan anger avsedd administreringsplats.\ncatalog:variable_text:56695:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "sets" = ["lan-kommun-forsamling"] }
+evidence = "Folkbokföringsortens geografiska indelning.\ncatalog:variable_text:56696:12965:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsortens geografiska indelning.\ncatalog:variable_text:56696:12965:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-och-kommun"
+fields = { "sets" = ["lan-kommun-forsamling"] }
+evidence = "Folkbokföringsortens geografiska indelning.\ncatalog:variable_text:56697:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-och-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsortens geografiska indelning.\ncatalog:variable_text:56697:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lankost"
+fields = { "sets" = ["expeditionskostnad"] }
+evidence = "Förmånskostnaden är en del av expeditionskostnaden.\ncatalog:variable_text:56698:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lankost"
+fields = { "tags" = ["medicines"] }
+evidence = "Förmånskostnaden är en del av expeditionskostnaden.\ncatalog:variable_text:56698:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadsfors"
+fields = { "sets" = [] }
+evidence = "Produktens marknadsföringsstatus.\ncatalog:variable_text:56699:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadsfors"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens marknadsföringsstatus.\ncatalog:variable_text:56699:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:merkost"
+fields = { "sets" = ["expeditionskostnad"] }
+evidence = "Merkostnad vid expedition.\ncatalog:variable_text:56701:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:merkost"
+fields = { "tags" = ["medicines"] }
+evidence = "Merkostnad vid expedition.\ncatalog:variable_text:56701:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:moms"
+fields = { "sets" = [] }
+evidence = "Momssats är en skatteuppgift.\ncatalog:variable_text:56702:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Momssats är en skatteuppgift.\ncatalog:variable_text:56702:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:narkklass"
+fields = { "sets" = [] }
+evidence = "Produktens narkotikaklass.\ncatalog:variable_text:56703:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:narkklass"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens narkotikaklass.\ncatalog:variable_text:56703:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinationstyp-forsaljningssatt"
+fields = { "sets" = [] }
+evidence = "Typ av ordination för den expedierade varan.\ncatalog:variable_text:56706:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinationstyp-forsaljningssatt"
+fields = { "tags" = ["medicines"] }
+evidence = "Typ av ordination för den expedierade varan.\ncatalog:variable_text:56706:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:parallellimport-fran"
+fields = { "sets" = [] }
+evidence = "Ursprungsland för parallellimport.\ncatalog:variable_text:56707:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:parallellimport-fran"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Ursprungsland för parallellimport.\ncatalog:variable_text:56707:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patkost"
+fields = { "sets" = ["egenavgift", "expeditionskostnad"] }
+evidence = "Patientens avgift är en del av expeditionskostnaden och hör till egenavgift.\ncatalog:variable_text:56708:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patkost"
+fields = { "tags" = ["medicines"] }
+evidence = "Patientens avgift är en del av expeditionskostnaden och hör till egenavgift.\ncatalog:variable_text:56708:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:56711:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:56711:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-aip"
+fields = { "sets" = ["apotekens-inkopspris"] }
+evidence = "Apotekens inköpspris.\ncatalog:variable_text:56712:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-aip"
+fields = { "tags" = ["medicines", "prices"] }
+evidence = "Apotekens inköpspris.\ncatalog:variable_text:56712:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-aup"
+fields = { "sets" = ["apotekens-utforsaljningspris"] }
+evidence = "Apotekens utförsäljningspris.\ncatalog:variable_text:56713:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-aup"
+fields = { "tags" = ["medicines", "prices"] }
+evidence = "Apotekens utförsäljningspris.\ncatalog:variable_text:56713:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-per-forpackning"
+fields = { "sets" = ["apotekens-utforsaljningspris"] }
+evidence = "Förpackningspris enligt varuregistret.\ncatalog:variable_text:56714:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:pris-per-forpackning"
+fields = { "tags" = ["medicines", "prices"] }
+evidence = "Förpackningspris enligt varuregistret.\ncatalog:variable_text:56714:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:pristyp"
+fields = { "sets" = [] }
+evidence = "Klassificering av artikelns pristyp.\ncatalog:variable_text:56715:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pristyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Klassificering av artikelns pristyp.\ncatalog:variable_text:56715:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt"
+fields = { "sets" = [] }
+evidence = "Produktens handelsnamn.\ncatalog:variable_text:56716:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens handelsnamn.\ncatalog:variable_text:56716:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt-benamning"
+fields = { "sets" = [] }
+evidence = "Beskrivning av handelsvarans egenskaper.\ncatalog:variable_text:56717:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt-benamning"
+fields = { "tags" = ["medicines"] }
+evidence = "Beskrivning av handelsvarans egenskaper.\ncatalog:variable_text:56717:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt-beskrivning"
+fields = { "sets" = [] }
+evidence = "Etiketten anger form medan definitionen anger allmän produktupplysning. Coordinator group membership: Beredningsform och läkemedelsform mäter samma egenskap. Produkt-beskrivning behålls med stöd av etikettens uttryckliga formupplysning och kandidatens omfattning, men källbeskrivningen och tidigare gruppbedömning är motstridiga. Administreringsplats och förpackningstyp utesluts.\ncatalog:variable_text:56648:12965:2932897\ncatalog:variable_text:56671:12965:2932897\ncatalog:variable_text:56694:12965:2932897\ncatalog:variable_text:56695:12965:2932897\ncatalog:variable_text:56718:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt-beskrivning"
+fields = { "tags" = ["medicines"] }
+evidence = "Etiketten anger form medan definitionen anger allmän produktupplysning. Coordinator group membership: Beredningsform och läkemedelsform mäter samma egenskap. Produkt-beskrivning behålls med stöd av etikettens uttryckliga formupplysning och kandidatens omfattning, men källbeskrivningen och tidigare gruppbedömning är motstridiga. Administreringsplats och förpackningstyp utesluts.\ncatalog:variable_text:56648:12965:2932897\ncatalog:variable_text:56671:12965:2932897\ncatalog:variable_text:56694:12965:2932897\ncatalog:variable_text:56695:12965:2932897\ncatalog:variable_text:56718:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkttyp"
+fields = { "sets" = [] }
+evidence = "Klassificering av expedierad produkt.\ncatalog:variable_text:56719:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:produkttyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Klassificering av expedierad produkt.\ncatalog:variable_text:56719:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:receptbelagd-status"
+fields = { "sets" = [] }
+evidence = "Produktens receptbelagda status.\ncatalog:variable_text:56721:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:receptbelagd-status"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens receptbelagda status.\ncatalog:variable_text:56721:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:registertyp"
+fields = { "sets" = [] }
+evidence = "Datakällans registertyp.\ncatalog:variable_text:56722:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:registertyp"
+fields = { "tags" = ["methods"] }
+evidence = "Datakällans registertyp.\ncatalog:variable_text:56722:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rikslicens"
+fields = { "sets" = [] }
+evidence = "Produktens rikslicensstatus.\ncatalog:variable_text:56723:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rikslicens"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens rikslicensstatus.\ncatalog:variable_text:56723:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sakerhetsdetaljer"
+fields = { "sets" = [] }
+evidence = "Krav på säkerhetsdetaljer för förpackningen.\ncatalog:variable_text:56724:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sakerhetsdetaljer"
+fields = { "tags" = ["medicines"] }
+evidence = "Krav på säkerhetsdetaljer för förpackningen.\ncatalog:variable_text:56724:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilda-lakemedel"
+fields = { "sets" = ["sarskilt-lakemedel"] }
+evidence = "Klassificering enligt receptregleringen.\ncatalog:variable_text:56725:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilda-lakemedel"
+fields = { "tags" = ["medicines"] }
+evidence = "Klassificering enligt receptregleringen.\ncatalog:variable_text:56725:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-lakemedel"
+fields = { "sets" = ["sarskilt-lakemedel"] }
+evidence = "Indikator för särskilt läkemedel.\ncatalog:variable_text:56726:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-lakemedel"
+fields = { "tags" = ["medicines"] }
+evidence = "Indikator för särskilt läkemedel.\ncatalog:variable_text:56726:12965:2932897"
+
+[[statement]]
+kind = "set"
 subject = "var:specialistutbildningskod-1"
 fields = { "sets" = ["specialistutbildningskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56729:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-1"
+fields = { "tags" = ["education", "healthcare"] }
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56729:12965:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:specialistutbildningskod-2"
 fields = { "sets" = ["specialistutbildningskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56730:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-2"
+fields = { "tags" = ["education", "healthcare"] }
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56730:12965:2932897"
 
 [[statement]]
 kind = "set"
 subject = "var:specialistutbildningskod-3"
 fields = { "sets" = ["specialistutbildningskod"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56731:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-3"
+fields = { "tags" = ["education", "healthcare"] }
+evidence = "Förskrivarens specialistutbildning.\ncatalog:variable_text:56731:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:startfp"
+fields = { "sets" = [] }
+evidence = "Uttag av startförpackning.\ncatalog:variable_text:56733:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:startfp"
+fields = { "tags" = ["medicines"] }
+evidence = "Uttag av startförpackning.\ncatalog:variable_text:56733:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkaenhet"
+fields = { "sets" = ["lakemedelsstyrka"] }
+evidence = "Enhet för läkemedlets styrka.\ncatalog:variable_text:56735:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkaenhet"
+fields = { "tags" = ["medicines"] }
+evidence = "Enhet för läkemedlets styrka.\ncatalog:variable_text:56735:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkalf"
+fields = { "sets" = ["lakemedelsstyrka"] }
+evidence = "Alfanumerisk läkemedelsstyrka.\ncatalog:variable_text:56736:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkalf"
+fields = { "tags" = ["medicines"] }
+evidence = "Alfanumerisk läkemedelsstyrka.\ncatalog:variable_text:56736:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrknum"
+fields = { "sets" = ["lakemedelsstyrka"] }
+evidence = "Numerisk läkemedelsstyrka.\ncatalog:variable_text:56737:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:styrknum"
+fields = { "tags" = ["medicines"] }
+evidence = "Numerisk läkemedelsstyrka.\ncatalog:variable_text:56737:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:subnamn"
+fields = { "sets" = [] }
+evidence = "Aktiv substans eller handelsvara i klartext.\ncatalog:variable_text:56738:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:subnamn"
+fields = { "tags" = ["medicines"] }
+evidence = "Aktiv substans eller handelsvara i klartext.\ncatalog:variable_text:56738:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-bestallningsstopp-hist-rang"
+fields = { "sets" = ["bestallningsstoppsrang"] }
+evidence = "Historisk rang för beställningsstopp.\ncatalog:variable_text:56739:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-bestallningsstopp-hist-rang"
+fields = { "tags" = ["medicines"] }
+evidence = "Historisk rang för beställningsstopp.\ncatalog:variable_text:56739:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-bestallningsstopp-rang"
+fields = { "sets" = ["bestallningsstoppsrang"] }
+evidence = "Rang för beställningsstopp.\ncatalog:variable_text:56740:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-bestallningsstopp-rang"
+fields = { "tags" = ["medicines"] }
+evidence = "Rang för beställningsstopp.\ncatalog:variable_text:56740:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-periodens-vara-hist-rang"
+fields = { "sets" = ["periodens-vara-rang"] }
+evidence = "Historisk rang för periodens vara.\ncatalog:variable_text:56743:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-periodens-vara-hist-rang"
+fields = { "tags" = ["medicines"] }
+evidence = "Historisk rang för periodens vara.\ncatalog:variable_text:56743:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-periodens-vara-rang"
+fields = { "sets" = ["periodens-vara-rang"] }
+evidence = "Rang för periodens vara.\ncatalog:variable_text:56744:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-periodens-vara-rang"
+fields = { "tags" = ["medicines"] }
+evidence = "Rang för periodens vara.\ncatalog:variable_text:56744:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-pris-aip"
+fields = { "sets" = ["apotekens-inkopspris"] }
+evidence = "Apotekens inköpspris från TLV.\ncatalog:variable_text:56746:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-pris-aip"
+fields = { "tags" = ["medicines", "prices"] }
+evidence = "Apotekens inköpspris från TLV.\ncatalog:variable_text:56746:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-pris-aup"
+fields = { "sets" = ["apotekens-utforsaljningspris"] }
+evidence = "Apotekens utförsäljningspris från TLV.\ncatalog:variable_text:56747:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tlv-pris-aup"
+fields = { "tags" = ["medicines", "prices"] }
+evidence = "Apotekens utförsäljningspris från TLV.\ncatalog:variable_text:56747:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:totalkostnad-exkl-moms"
+fields = { "sets" = ["expeditionskostnad"] }
+evidence = "Totalkostnad vid expedition.\ncatalog:variable_text:56750:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:totalkostnad-exkl-moms"
+fields = { "tags" = ["medicines"] }
+evidence = "Totalkostnad vid expedition.\ncatalog:variable_text:56750:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:transtyp"
+fields = { "sets" = [] }
+evidence = "Typ av ordination för expedierad vara.\ncatalog:variable_text:56751:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:transtyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Typ av ordination för expedierad vara.\ncatalog:variable_text:56751:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprung"
+fields = { "sets" = [] }
+evidence = "Receptets ursprung anger hur det inkom till apoteket.\ncatalog:variable_text:56752:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprung"
+fields = { "tags" = ["medicines"] }
+evidence = "Receptets ursprung anger hur det inkom till apoteket.\ncatalog:variable_text:56752:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod"
+fields = { "sets" = [] }
+evidence = "Förskrivarens utbildning.\ncatalog:variable_text:56753:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod"
+fields = { "tags" = ["education"] }
+evidence = "Förskrivarens utbildning.\ncatalog:variable_text:56753:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbytbar"
+fields = { "sets" = ["lakemedelsutbytbarhet"] }
+evidence = "Produktens generella utbytbarhet.\ncatalog:variable_text:56754:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbytbar"
+fields = { "tags" = ["medicines"] }
+evidence = "Produktens generella utbytbarhet.\ncatalog:variable_text:56754:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utfkat"
+fields = { "sets" = [] }
+evidence = "Förskrivarens yrkeskategori.\ncatalog:variable_text:56755:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utfkat"
+fields = { "tags" = ["healthcare"] }
+evidence = "Förskrivarens yrkeskategori.\ncatalog:variable_text:56755:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utlamnandebegransning"
+fields = { "sets" = [] }
+evidence = "Begränsning av produktens utlämnande.\ncatalog:variable_text:56756:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utlamnandebegransning"
+fields = { "tags" = ["medicines"] }
+evidence = "Begränsning av produktens utlämnande.\ncatalog:variable_text:56756:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utokad-overvakning"
+fields = { "sets" = [] }
+evidence = "Läkemedlets status under utökad övervakning.\ncatalog:variable_text:56757:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utokad-overvakning"
+fields = { "tags" = ["medicines"] }
+evidence = "Läkemedlets status under utökad övervakning.\ncatalog:variable_text:56757:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardform"
+fields = { "sets" = [] }
+evidence = "Förskrivande verksamhets vårdform.\ncatalog:variable_text:56758:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardform"
+fields = { "tags" = ["healthcare"] }
+evidence = "Förskrivande verksamhets vårdform.\ncatalog:variable_text:56758:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varubenamning"
+fields = { "sets" = ["varubenamning"] }
+evidence = "Varans sammansatta benämning.\ncatalog:variable_text:56759:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varubenamning"
+fields = { "tags" = ["medicines"] }
+evidence = "Varans sammansatta benämning.\ncatalog:variable_text:56759:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varutyp"
+fields = { "sets" = [] }
+evidence = "Typ av vara enligt receptstatus.\ncatalog:valueset:645\ncatalog:valueset:8432\ncatalog:variable_text:56762:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varutyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Typ av vara enligt receptstatus.\ncatalog:valueset:645\ncatalog:valueset:8432\ncatalog:variable_text:56762:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsinriktning"
+fields = { "sets" = [] }
+evidence = "Medicinsk verksamhetsinriktning.\ncatalog:variable_text:56763:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsinriktning"
+fields = { "tags" = ["healthcare"] }
+evidence = "Medicinsk verksamhetsinriktning.\ncatalog:variable_text:56763:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:veterinarlakemedel"
+fields = { "sets" = [] }
+evidence = "Indikator för veterinärläkemedel.\ncatalog:variable_text:56764:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:veterinarlakemedel"
+fields = { "tags" = ["medicines"] }
+evidence = "Indikator för veterinärläkemedel.\ncatalog:variable_text:56764:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "sets" = [] }
+evidence = "Förskrivarens yrkeskategori.\ncatalog:variable_text:56765:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "tags" = ["employment", "healthcare"] }
+evidence = "Förskrivarens yrkeskategori.\ncatalog:variable_text:56765:12965:2932897"

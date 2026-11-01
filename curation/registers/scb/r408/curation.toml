@@ -58,3 +58,1323 @@ kind = "set"
 subject = "anstallningar-laps: agkat"
 fields = { "classification" = "class/agarkat/agarkat2020" }
 evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:3209:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:3209:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk egenskap.\ncatalog:variable_text:3212:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk egenskap.\ncatalog:variable_text:3212:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-k"
+fields = { "sets" = ["kon-och-konsfordelning"] }
+evidence = "K är en enbokstavskod för kvinnor. Variabeln hör till könsfördelning.\ncatalog:variable_text:3213:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-k"
+fields = { "tags" = ["demographics"] }
+evidence = "K är en enbokstavskod för kvinnor. Variabeln hör till könsfördelning.\ncatalog:variable_text:3213:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-m"
+fields = { "sets" = ["kon-och-konsfordelning"] }
+evidence = "M är en enbokstavskod för män. Variabeln hör till könsfördelning.\ncatalog:variable_text:3214:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-m"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en enbokstavskod för män. Variabeln hör till könsfördelning.\ncatalog:variable_text:3214:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstall-fordel"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Fördelningen avser anställningar.\ncatalog:variable_text:3215:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstall-fordel"
+fields = { "tags" = ["employment"] }
+evidence = "Fördelningen avser anställningar.\ncatalog:variable_text:3215:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn avser förekomst av anställning.\ncatalog:variable_text:3216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn avser förekomst av anställning.\ncatalog:variable_text:3216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningar"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Antalet avser anställningar.\ncatalog:variable_text:3217:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningar"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet avser anställningar.\ncatalog:variable_text:3217:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid-grupperad"
+fields = { "sets" = [] }
+evidence = "Måttet avser anställningstid.\ncatalog:variable_text:3218:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid-grupperad"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet avser anställningstid.\ncatalog:variable_text:3218:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antagi"
+fields = { "sets" = [] }
+evidence = "Antal deklarationer är en uppgift om källa.\ncatalog:variable_text:3221:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antagi"
+fields = { "tags" = ["methods"] }
+evidence = "Antal deklarationer är en uppgift om källa.\ncatalog:variable_text:3221:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-ramen"
+fields = { "sets" = [] }
+evidence = "Antalet avser anställda.\ncatalog:variable_text:3222:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-ramen"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet avser anställda.\ncatalog:variable_text:3222:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antalet svarande beskriver undersökningens kvalitet.\ncatalog:variable_text:3223:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet svarande beskriver undersökningens kvalitet.\ncatalog:variable_text:3223:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbgivavg"
+fields = { "sets" = [] }
+evidence = "Arbetsgivaravgifter är avgifter av skattekaraktär.\ncatalog:variable_text:3224:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbgivavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Arbetsgivaravgifter är avgifter av skattekaraktär.\ncatalog:variable_text:3224:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-fou"
+fields = { "sets" = ["avdrag-for-fou-och-regionalt-stod"] }
+evidence = "Avdraget avser FoU.\ncatalog:variable_text:3225:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-fou"
+fields = { "tags" = ["research", "taxation"] }
+evidence = "Avdraget avser FoU.\ncatalog:variable_text:3225:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "sets" = ["avdrag-for-fou-och-regionalt-stod"] }
+evidence = "Avdraget avser arbetsgivaravgifter.\ncatalog:variable_text:3226:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdraget avser arbetsgivaravgifter.\ncatalog:variable_text:3226:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-offentlig"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgruppen är en näringsgrenskodning.\ncatalog:variable_text:3227:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-offentlig"
+fields = { "tags" = ["business"] }
+evidence = "Branschgruppen är en näringsgrenskodning.\ncatalog:variable_text:3227:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-privat"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgruppen är en näringsgrenskodning.\ncatalog:variable_text:3228:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-privat"
+fields = { "tags" = ["business"] }
+evidence = "Branschgruppen är en näringsgrenskodning.\ncatalog:variable_text:3228:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ersdagar"
+fields = { "sets" = [] }
+evidence = "Dagarna ersätts med sjuklön.\ncatalog:variable_text:3229:19723:20454\nregisters/scb/r408/curation.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:ersdagar"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Dagarna ersätts med sjuklön.\ncatalog:variable_text:3229:19723:20454\nregisters/scb/r408/curation.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:falltot"
+fields = { "sets" = [] }
+evidence = "Sjukfall under sjuklöneperioden avser sjukfrånvaro.\ncatalog:variable_text:3230:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:falltot"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Sjukfall under sjuklöneperioden avser sjukfrånvaro.\ncatalog:variable_text:3230:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "sets" = [] }
+evidence = "Förmånerna är ersättning för arbete.\ncatalog:variable_text:3231:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "tags" = ["income"] }
+evidence = "Förmånerna är ersättning för arbete.\ncatalog:variable_text:3231:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:glappdagar"
+fields = { "sets" = [] }
+evidence = "Dagarna avser arbete mellan sjukdagar.\ncatalog:variable_text:3232:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:glappdagar"
+fields = { "tags" = ["employment"] }
+evidence = "Dagarna avser arbete mellan sjukdagar.\ncatalog:variable_text:3232:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-ind"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger imputering av sjukfall.\ncatalog:variable_text:3233:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-ind"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger imputering av sjukfall.\ncatalog:variable_text:3233:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-ind-anst"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger imputering av anställningar.\ncatalog:variable_text:3234:19723:20454\nregisters/scb/r408/curation.toml:8"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-ind-anst"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger imputering av anställningar.\ncatalog:variable_text:3234:19723:20454\nregisters/scb/r408/curation.toml:8"
+
+[[statement]]
+kind = "set"
+subject = "var:imput"
+fields = { "sets" = [] }
+evidence = "Koden anger hur posten imputerats.\ncatalog:variable_text:3235:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imput"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger hur posten imputerats.\ncatalog:variable_text:3235:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger imputering.\ncatalog:variable_text:3236:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger imputering.\ncatalog:variable_text:3236:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputkalla"
+fields = { "sets" = [] }
+evidence = "Variabeln anger källa för imputerat värde.\ncatalog:variable_text:3237:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputkalla"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger källa för imputerat värde.\ncatalog:variable_text:3237:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indateravbruten"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3245:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indateravbruten"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3245:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indaterupptagen"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3246:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indaterupptagen"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3246:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indavbruten"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3247:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indavbruten"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen för anställningsförekomst och status.\ncatalog:variable_text:3247:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indeb"
+fields = { "sets" = [] }
+evidence = "EB är en bokstavskod för enkelt bolag.\ncatalog:variable_text:3248:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indeb"
+fields = { "tags" = ["business"] }
+evidence = "EB är en bokstavskod för enkelt bolag.\ncatalog:variable_text:3248:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indimputbas"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger imputering.\ncatalog:variable_text:3250:18262:18628\ncatalog:variable_text:3250:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indimputbas"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger imputering.\ncatalog:variable_text:3250:18262:18628\ncatalog:variable_text:3250:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; etiketten delas med andra variabler.\ncatalog:variable_text:3252:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; etiketten delas med andra variabler.\ncatalog:variable_text:3252:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman1"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3253:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman1"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3253:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman2"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3254:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman2"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3254:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202001"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3255:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202001"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3255:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202002"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3256:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202002"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3256:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202003"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3257:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202003"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3257:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202004"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3258:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202004"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3258:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202005"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3259:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202005"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3259:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202006"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3260:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202006"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3260:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202007"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3261:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202007"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3261:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202008"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3262:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202008"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3262:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202009"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3263:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202009"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3263:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202010"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3264:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202010"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3264:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202011"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3265:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202011"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3265:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202012"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3266:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202012"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3266:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202101"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3267:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202101"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3267:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202102"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3268:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202102"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3268:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202103"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3269:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202103"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3269:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202104"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3270:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202104"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3270:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202105"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3271:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202105"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3271:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202106"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3272:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202106"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3272:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202107"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3273:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202107"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3273:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202108"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3274:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202108"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3274:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202109"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3275:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202109"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3275:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202110"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3276:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202110"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3276:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202111"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3277:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202111"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3277:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202112"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3278:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202112"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3278:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202201"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3279:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202201"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3279:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202202"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3280:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202202"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3280:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202203"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3281:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202203"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3281:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202204"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3282:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202204"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3282:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202205"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3283:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202205"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3283:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202206"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3284:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202206"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3284:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202207"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3285:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202207"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3285:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202208"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3286:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202208"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3286:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202209"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3287:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202209"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3287:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202210"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3288:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202210"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3288:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202211"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3289:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202211"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3289:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202212"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3290:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202212"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3290:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202301"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3291:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202301"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3291:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202302"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3292:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202302"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3292:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202303"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3293:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202303"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3293:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202304"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3294:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202304"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3294:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202305"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3295:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202305"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3295:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202306"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3296:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202306"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3296:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202307"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3297:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202307"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3297:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202308"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3298:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202308"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3298:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202309"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3299:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202309"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3299:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202310"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202310"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3300:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202311"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3301:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202311"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3301:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202312"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3302:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman202312"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolumnen.\ncatalog:variable_text:3302:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:indman3"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3303:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman3"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3303:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman4"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3304:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman4"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3304:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman5"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3305:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman5"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3305:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman6"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3306:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indman6"
+fields = { "tags" = ["employment"] }
+evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3306:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indpaborjad"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn anger anställningens tillstånd.\ncatalog:variable_text:3307:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indpaborjad"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn anger anställningens tillstånd.\ncatalog:variable_text:3307:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indpagaende"
+fields = { "sets" = ["anstallningsforekomst-och-status"] }
+evidence = "Indikatorn anger anställningens tillstånd.\ncatalog:variable_text:3308:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indpagaende"
+fields = { "tags" = ["employment"] }
+evidence = "Indikatorn anger anställningens tillstånd.\ncatalog:variable_text:3308:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indsvprod"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser organisationens produktion.\ncatalog:variable_text:3309:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indsvprod"
+fields = { "tags" = ["business"] }
+evidence = "Indikatorn avser organisationens produktion.\ncatalog:variable_text:3309:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Kodningen anger institutionell sektor.\ncatalog:variable_text:3311:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen anger institutionell sektor.\ncatalog:variable_text:3311:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:3314:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:3314:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnr"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger tillgång till individuppgift i källan.\ncatalog:variable_text:3315:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnr"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger tillgång till individuppgift i källan.\ncatalog:variable_text:3315:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon-och-konsfordelning"] }
+evidence = "Kodningen avser kön.\ncatalog:variable_text:3316:18262:18628\ncatalog:variable_text:3316:18628:19723\ncatalog:variable_text:3316:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodningen avser kön.\ncatalog:variable_text:3316:18262:18628\ncatalog:variable_text:3316:18628:19723\ncatalog:variable_text:3316:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "sets" = ["kontant-bruttolon"] }
+evidence = "Beloppet avser kontant bruttolön.\ncatalog:variable_text:3317:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet avser kontant bruttolön.\ncatalog:variable_text:3317:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-agilon011"
+fields = { "sets" = ["kontant-bruttolon"] }
+evidence = "Beloppet avser kontant bruttolön.\ncatalog:variable_text:3318:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-agilon011"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet avser kontant bruttolön.\ncatalog:variable_text:3318:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "sets" = [] }
+evidence = "Avdraget gäller ersättning för arbetsutgifter i avgiftsunderlaget.\ncatalog:variable_text:3319:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdraget gäller ersättning för arbetsutgifter i avgiftsunderlaget.\ncatalog:variable_text:3319:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-lonegaranti"
+fields = { "sets" = [] }
+evidence = "Markeringen avser erhållen lönegaranti.\ncatalog:variable_text:3321:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-lonegaranti"
+fields = { "tags" = ["transfers"] }
+evidence = "Markeringen avser erhållen lönegaranti.\ncatalog:variable_text:3321:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Kodningen avser näringsgren.\ncatalog:variable_text:3323:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen avser näringsgren.\ncatalog:variable_text:3323:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Kodningen avser företagets näringsgren.\ncatalog:variable_text:3324:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen avser företagets näringsgren.\ncatalog:variable_text:3324:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-organisation"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Kodningen anger organisationens sektortillhörighet.\ncatalog:variable_text:3334:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-organisation"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen anger organisationens sektortillhörighet.\ncatalog:variable_text:3334:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt"
+fields = { "sets" = [] }
+evidence = "Beloppet avser avdragen preliminär skatt.\ncatalog:variable_text:3338:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet avser avdragen preliminär skatt.\ncatalog:variable_text:3338:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-anst"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3339:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-anst"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3339:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-ers"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3340:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-ers"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3340:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-fall"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3341:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvikt-fall"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:3341:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Koden anger observationens status och imputering.\ncatalog:valueset:10131\ncatalog:variable_text:3342:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger observationens status och imputering.\ncatalog:valueset:10131\ncatalog:variable_text:3342:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Storan är ett opakt källnamn för antal objekt per stratum.\ncatalog:variable_text:3343:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Storan är ett opakt källnamn för antal objekt per stratum.\ncatalog:variable_text:3343:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:strsektor"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Kodningen grupperar institutionell sektor.\ncatalog:variable_text:3344:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:strsektor"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen grupperar institutionell sektor.\ncatalog:variable_text:3344:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tillaggskod"
+fields = { "sets" = [] }
+evidence = "Koden beskriver bland annat övertäckning och nollrapportering.\ncatalog:valueset:7920\ncatalog:variable_text:3346:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tillaggskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden beskriver bland annat övertäckning och nollrapportering.\ncatalog:valueset:7920\ncatalog:variable_text:3346:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totulag"
+fields = { "sets" = [] }
+evidence = "Underlaget används för arbetsgivaravgifter.\ncatalog:variable_text:3347:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totulag"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlaget används för arbetsgivaravgifter.\ncatalog:variable_text:3347:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver urvalet.\ncatalog:variable_text:3348:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver urvalet.\ncatalog:variable_text:3348:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalets stratum.\ncatalog:variable_text:3349:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalets stratum.\ncatalog:variable_text:3349:19723:20454"

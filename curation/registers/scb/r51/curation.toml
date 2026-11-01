@@ -340,3 +340,939 @@ kind = "set"
 subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120'"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgrupper och ålder hör till samma kandidatgrupp.\ncatalog:variable_text:42941:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgrupper och ålder hör till samma kandidatgrupp.\ncatalog:variable_text:42941:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp2"
+fields = { "sets" = ["alder"] }
+evidence = "Kodade åldersgrupper hör till åldersgruppen.\ncatalog:variable_text:42942:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp2"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodade åldersgrupper hör till åldersgruppen.\ncatalog:variable_text:42942:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder hör till kandidatgruppen.\ncatalog:variable_text:42943:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder hör till kandidatgruppen.\ncatalog:variable_text:42943:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "sets" = [] }
+evidence = "Källan och värdemängderna beskriver anställningsform, som omfattas av gruppen och taggen arbetsmarknad.\ncatalog:valueset:1542\ncatalog:valueset:682\ncatalog:variable_text:42944:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "tags" = ["employment"] }
+evidence = "Källan och värdemängderna beskriver anställningsform, som omfattas av gruppen och taggen arbetsmarknad.\ncatalog:valueset:1542\ncatalog:valueset:682\ncatalog:variable_text:42944:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har en efterföljande ägare med annan etikett och definition. Coordinator group membership: Båda variablerna kodar anställningsform; den fasta definitionen omfattar uttryckligen heltid, deltid och övrigt. Avtalad veckoarbetstid, överenskommen sysselsättningsgrad och omfattningsklasser omfattas. Skyddat medlemskap för osys behålls trots den dokumenterade definitionskonflikten. Tjänstgöringsomfattning utesluts eftersom den uttryckligen mäter faktisk tjänstgöringstid.\ncatalog:occurrence:446808\ncatalog:occurrence:446858\ncatalog:variable_text:42944:9496:20089\ncatalog:variable_text:42945:10592:15340\ncatalog:variable_text:42956:18628:20089\ncatalog:variable_text:42967:15706:20089\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089\ncatalog:variable_text:42985:18628:20089\ncatalog:variable_text:43006:15706:16801\ncatalog:variable_text:43007:19358:20089\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "tags" = ["employment"] }
+evidence = "Samma kolumn har en efterföljande ägare med annan etikett och definition. Coordinator group membership: Båda variablerna kodar anställningsform; den fasta definitionen omfattar uttryckligen heltid, deltid och övrigt. Avtalad veckoarbetstid, överenskommen sysselsättningsgrad och omfattningsklasser omfattas. Skyddat medlemskap för osys behålls trots den dokumenterade definitionskonflikten. Tjänstgöringsomfattning utesluts eftersom den uttryckligen mäter faktisk tjänstgöringstid.\ncatalog:occurrence:446808\ncatalog:occurrence:446858\ncatalog:variable_text:42944:9496:20089\ncatalog:variable_text:42945:10592:15340\ncatalog:variable_text:42956:18628:20089\ncatalog:variable_text:42967:15706:20089\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089\ncatalog:variable_text:42985:18628:20089\ncatalog:variable_text:43006:15706:16801\ncatalog:variable_text:43007:19358:20089\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstp"
+fields = { "sets" = [] }
+evidence = "Id:t behålls enligt familjens gemensamma läsbarhetsbedömning. Variabeln anger om den anställde ingår i ett poängsystem.\ncatalog:occurrence:446458\ncatalog:variable_text:42946:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:anstp"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t behålls enligt familjens gemensamma läsbarhetsbedömning. Variabeln anger om den anställde ingår i ett poängsystem.\ncatalog:occurrence:446458\ncatalog:variable_text:42946:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = [] }
+evidence = "Variabeln summerar tjänster.\ncatalog:variable_text:42947:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln summerar tjänster.\ncatalog:variable_text:42947:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Samma källkolumner har angränsande ägare med olika populationsetiketter.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumner har angränsande ägare med olika populationsetiketter.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-manadsavlonade"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Den angränsande ägaren har en bredare etikett.\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-manadsavlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Den angränsande ägaren har en bredare etikett.\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-timavlonade"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Den angränsande ägaren har en annan populationsuppgift.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446414\ncatalog:occurrence:446460"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-timavlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Den angränsande ägaren har en annan populationsuppgift.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446414\ncatalog:occurrence:446460"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Övertidstimmar är en uttrycklig komponent av arbetade timmar.\ncatalog:variable_text:42951:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "tags" = ["employment"] }
+evidence = "Övertidstimmar är en uttrycklig komponent av arbetade timmar.\ncatalog:variable_text:42951:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "sets" = [] }
+evidence = "Semesterrätt är ett arbetsvillkor.\ncatalog:variable_text:42952:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "tags" = ["employment"] }
+evidence = "Semesterrätt är ett arbetsvillkor.\ncatalog:variable_text:42952:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtjm"
+fields = { "sets" = ["yrke"] }
+evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtjm"
+fields = { "tags" = ["employment"] }
+evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "sets" = ["avtalstillhorighet"] }
+evidence = "Avtalskod hör till avtalstillhörighet.\ncatalog:variable_text:42955:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalskod hör till avtalstillhörighet.\ncatalog:variable_text:42955:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-veckoarbetstid"
+fields = { "sets" = [] }
+evidence = "Avtalad arbetstid hör till kandidatgruppen.\ncatalog:variable_text:42956:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-veckoarbetstid"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalad arbetstid hör till kandidatgruppen.\ncatalog:variable_text:42956:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalsomrade"
+fields = { "sets" = ["avtalstillhorighet"] }
+evidence = "Avtalsområde hör till kandidatgruppen.\ncatalog:variable_text:42957:9496:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalsomrade"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalsområde hör till kandidatgruppen.\ncatalog:variable_text:42957:9496:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:beredskapstillagg"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:beredskapstillagg"
+fields = { "tags" = ["income"] }
+evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civvar"
+fields = { "sets" = [] }
+evidence = "Ersättningen gäller tjänstgöring inom totalförsvaret.\ncatalog:variable_text:42959:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civvar"
+fields = { "tags" = ["defence", "transfers"] }
+evidence = "Ersättningen gäller tjänstgöring inom totalförsvaret.\ncatalog:variable_text:42959:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vard-barn"
+fields = { "sets" = [] }
+evidence = "Ersättning för vård av sjukt barn är en transferering.\ncatalog:variable_text:42960:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vard-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Ersättning för vård av sjukt barn är en transferering.\ncatalog:variable_text:42960:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardtid"
+fields = { "sets" = [] }
+evidence = "Ersättning för färdtid är arbetsinkomst.\ncatalog:variable_text:42961:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardtid"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för färdtid är arbetsinkomst.\ncatalog:variable_text:42961:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fast-kontant-lon"
+fields = { "sets" = ["lon"] }
+evidence = "Fast kontant lön är ett lönebelopp.\ncatalog:variable_text:42962:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fast-kontant-lon"
+fields = { "tags" = ["income"] }
+evidence = "Fast kontant lön är ett lönebelopp.\ncatalog:variable_text:42962:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fasta-lonetillagg"
+fields = { "sets" = ["lon"] }
+evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:42963:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fasta-lonetillagg"
+fields = { "tags" = ["income"] }
+evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:42963:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "sets" = ["lon", "loneformaner"] }
+evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "tags" = ["income"] }
+evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fskarbtid"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fskarbtid"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlon"
+fields = { "sets" = ["lon"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42966:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlon"
+fields = { "tags" = ["income"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42966:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "sets" = [] }
+evidence = "Omfattningsklassen hör till kandidatgruppen.\ncatalog:variable_text:42967:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "tags" = ["employment"] }
+evidence = "Omfattningsklassen hör till kandidatgruppen.\ncatalog:variable_text:42967:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hlon"
+fields = { "sets" = ["lon"] }
+evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hlon"
+fields = { "tags" = ["income"] }
+evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:jourtillagg"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:jourtillagg"
+fields = { "tags" = ["income"] }
+evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:42970:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:42970:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Län är en regional tillhörighet.\ncatalog:variable_text:42971:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en regional tillhörighet.\ncatalog:variable_text:42971:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "sets" = [] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "tags" = ["employment"] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekod"
+fields = { "sets" = [] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekod"
+fields = { "tags" = ["employment"] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "sets" = [] }
+evidence = "Markeringen anger urval till statistikens lönepopulation.\ncatalog:variable_text:42974:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen anger urval till statistikens lönepopulation.\ncatalog:variable_text:42974:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "sets" = ["lon"] }
+evidence = "Definition och beräkningsbeskrivning skiljer sig om naturaförmåner ingår.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "tags" = ["income"] }
+evidence = "Definition och beräkningsbeskrivning skiljer sig om naturaförmåner ingår.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-grundlon-rorliga"
+fields = { "sets" = ["lon"] }
+evidence = "Angränsande perioders definitioner skiljer sig om naturaförmåner.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-grundlon-rorliga"
+fields = { "tags" = ["income"] }
+evidence = "Angränsande perioders definitioner skiljer sig om naturaförmåner.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsloneintervall"
+fields = { "sets" = ["lon"] }
+evidence = "Månadslöneintervall är ett löneintervall.\ncatalog:variable_text:42978:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsloneintervall"
+fields = { "tags" = ["income"] }
+evidence = "Månadslöneintervall är ett löneintervall.\ncatalog:variable_text:42978:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "sets" = ["lon", "loneformaner"] }
+evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "tags" = ["income"] }
+evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "NUTS-region är regional tillhörighet.\ncatalog:variable_text:42980:10592:15706\ncatalog:variable_text:42980:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS-region är regional tillhörighet.\ncatalog:variable_text:42980:10592:15706\ncatalog:variable_text:42980:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:obekvamtidstillagg"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:obekvamtidstillagg"
+fields = { "tags" = ["income"] }
+evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:offupp"
+fields = { "sets" = [] }
+evidence = "Ersättning för förtroendemannauppdrag är inkomst.\ncatalog:variable_text:42982:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:offupp"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för förtroendemannauppdrag är inkomst.\ncatalog:variable_text:42982:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "sets" = [] }
+evidence = "Senare beräkning anger faktisk sysselsättningsgrad medan tidigare etikett anger överenskommen grad.\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "tags" = ["employment"] }
+evidence = "Senare beräkning anger faktisk sysselsättningsgrad medan tidigare etikett anger överenskommen grad.\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommen-sysselsattningsgrad"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har en angränsande ägare med annan etikett.\ncatalog:occurrence:446808\ncatalog:occurrence:446858"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommen-sysselsattningsgrad"
+fields = { "tags" = ["employment"] }
+evidence = "Samma kolumn har en angränsande ägare med annan etikett.\ncatalog:occurrence:446808\ncatalog:occurrence:446858"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "tags" = ["income"] }
+evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:pcavdr"
+fields = { "sets" = [] }
+evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:pcavdr"
+fields = { "tags" = ["income"] }
+evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg"
+fields = { "tags" = ["income"] }
+evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rortup"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rortup"
+fields = { "tags" = ["income"] }
+evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-1"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-forsta-period.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-forsta-period.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-2"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-andra-period.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-andra-period.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-andra-period"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-2.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-andra-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-2.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-1.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-1.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007"
+fields = { "sets" = [] }
+evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "sets" = ["yrke"] }
+evidence = "Den angränsande etiketten saknar huvudsysslebegränsningen.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Den angränsande etiketten saknar huvudsysslebegränsningen.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:sun"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42997:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sun"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42997:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42998:11323:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42998:11323:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr1"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:42999:12418:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr1"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:42999:12418:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43000:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43000:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr1"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:43001:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr1"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:43001:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96fem"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43002:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96fem"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43002:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43003:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43003:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96tre"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96tre"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:suninr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43005:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:suninr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43005:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "sets" = [] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-osysly i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-osysly i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "sets" = [] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-manadsavlonade i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "tags" = ["employment"] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-manadsavlonade i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tant"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:tant"
+fields = { "tags" = ["income"] }
+evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-for-overtid"
+fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
+evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-for-overtid"
+fields = { "tags" = ["income"] }
+evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = [] }
+evidence = "Faktisk tjänstgöringstid ingår inte i kandidaten för överenskommen omfattning.\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Faktisk tjänstgöringstid ingår inte i kandidaten för överenskommen omfattning.\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighetskod i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighetskod i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet-scb"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighetskod-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet-scb"
+fields = { "tags" = ["employment"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighetskod-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighet i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighet i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod-scb"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighet-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod-scb"
+fields = { "tags" = ["employment"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighet-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetsomfattning"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Tjänstledighetens omfattning ingår i kandidatgruppen.\ncatalog:variable_text:43015:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstledighetens omfattning ingår i kandidatgruppen.\ncatalog:variable_text:43015:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ulon"
+fields = { "sets" = ["lon"] }
+evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ulon"
+fields = { "tags" = ["income"] }
+evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "sets" = [] }
+evidence = "Utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:43017:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:43017:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "Utbildningsgrupper hör till kandidatgruppen.\ncatalog:variable_text:43018:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsgrupper hör till kandidatgruppen.\ncatalog:variable_text:43018:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade"
+fields = { "sets" = [] }
+evidence = "Verksamhetsområde klassificerar verksamhet.\ncatalog:valueset:1169\ncatalog:variable_text:43019:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade"
+fields = { "tags" = ["business"] }
+evidence = "Verksamhetsområde klassificerar verksamhet.\ncatalog:valueset:1169\ncatalog:variable_text:43019:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "sets" = ["yrke"] }
+evidence = "Den tidigare ägarens etikett begränsar uppgiften till huvudsysslan.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "tags" = ["employment"] }
+evidence = "Den tidigare ägarens etikett begränsar uppgiften till huvudsysslan.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift-isco"
+fields = { "sets" = ["yrke"] }
+evidence = "ISCO klassificerar yrke.\ncatalog:variable_text:43021:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift-isco"
+fields = { "tags" = ["employment"] }
+evidence = "ISCO klassificerar yrke.\ncatalog:variable_text:43021:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2016-01-01..2016-12-31 where key = 'v36036'"
+fields = { "description" = "Sjuklön för första perioden." }
+evidence = "Rättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2017-01-01..2017-12-31 where key = 'v36036'"
+fields = { "description" = "Sjuklön för första perioden." }
+evidence = "Rättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"

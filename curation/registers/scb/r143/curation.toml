@@ -160,3 +160,171 @@ kind = "set"
 subject = "outhyrda-privatagda: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { "sets" = [] }
+evidence = "Ägarkategori beskriver fastighetsägandet.\ncatalog:valueset:213\ncatalog:variable_text:39545:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { "tags" = ["property"] }
+evidence = "Ägarkategori beskriver fastighetsägandet.\ncatalog:valueset:213\ncatalog:variable_text:39545:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bearbetade-svar"
+fields = { "sets" = [] }
+evidence = "Identitetsfakta visar motstridiga tilldelningar för Asv och Lillan.\ncatalog:occurrence:391286\ncatalog:occurrence:391311\ncatalog:occurrence:391316\ncatalog:occurrence:391317\ncatalog:occurrence:391328"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bearbetade-svar"
+fields = { "tags" = ["methods"] }
+evidence = "Identitetsfakta visar motstridiga tilldelningar för Asv och Lillan.\ncatalog:occurrence:391286\ncatalog:occurrence:391311\ncatalog:occurrence:391316\ncatalog:occurrence:391317\ncatalog:occurrence:391328"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter"
+fields = { "sets" = ["antal-bostadslagenheter"] }
+evidence = "Antal lägenheter och antal per lägenhetstyp är samma antalbegrepp uppdelat över perioder; den senare källan preciserar fördelningen.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter och antal per lägenhetstyp är samma antalbegrepp uppdelat över perioder; den senare källan preciserar fördelningen.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-per-lagenhetstyp"
+fields = { "sets" = ["antal-bostadslagenheter", "lagenhetstyp-och-bestandsklassificering"] }
+evidence = "Antalsuppgifterna är uttryckligen fördelade efter lägenhetstyp och beståndsklassificering; antalbegreppet fortsätter i scb/oha/antal-lagenheter.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-per-lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Antalsuppgifterna är uttryckligen fördelade efter lägenhetstyp och beståndsklassificering; antalbegreppet fortsätter i scb/oha/antal-lagenheter.\ncatalog:occurrence:391331\ncatalog:variable_text:39548:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificering-av-lagenhetsbestandet"
+fields = { "sets" = ["lagenhetstyp-och-bestandsklassificering"] }
+evidence = "Variabeln kodar lägenhetsbeståndets klassificering.\ncatalog:valueset:7272\ncatalog:variable_text:39550:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificering-av-lagenhetsbestandet"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar lägenhetsbeståndets klassificering.\ncatalog:valueset:7272\ncatalog:variable_text:39550:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning, men länsvärden förekommer i vissa perioders värdemängder.\ncatalog:valueset:7128\ncatalog:variable_text:39551:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning, men länsvärden förekommer i vissa perioders värdemängder.\ncatalog:valueset:7128\ncatalog:variable_text:39551:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografiska kommungrupper.\ncatalog:variable_text:39552:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografiska kommungrupper.\ncatalog:variable_text:39552:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "sets" = ["lagenhetstyp-och-bestandsklassificering"] }
+evidence = "Variabeln kodar lägenhetstyp.\ncatalog:valueset:9396\ncatalog:variable_text:39553:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar lägenhetstyp.\ncatalog:valueset:9396\ncatalog:variable_text:39553:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Storan är ett opakt källnamn; etiketten anger population.\ncatalog:variable_text:39554:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Storan är ett opakt källnamn; etiketten anger population.\ncatalog:variable_text:39554:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratifieringsgruppering är en undersökningsmetod.\ncatalog:variable_text:39555:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratifieringsgruppering är en undersökningsmetod.\ncatalog:variable_text:39555:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "sets" = [] }
+evidence = "Svarskoden beskriver undersökningens svars- och bearbetningsstatus.\ncatalog:valueset:6132\ncatalog:variable_text:39556:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "tags" = ["methods"] }
+evidence = "Svarskoden beskriver undersökningens svars- och bearbetningsstatus.\ncatalog:valueset:6132\ncatalog:variable_text:39556:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod"
+fields = { "sets" = ["ursprunglig-byggnadstid"] }
+evidence = "Variabeln anger ursprunglig byggnadsperiod.\ncatalog:variable_text:39562:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprunglig-byggnadsperiod"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln anger ursprunglig byggnadsperiod.\ncatalog:variable_text:39562:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprungligt-byggar"
+fields = { "sets" = ["ursprunglig-byggnadstid"] }
+evidence = "Variabeln anger ursprungligt byggår, även grupperat i vissa perioder.\ncatalog:valueset:4059\ncatalog:variable_text:39563:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprungligt-byggar"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln anger ursprungligt byggår, även grupperat i vissa perioder.\ncatalog:valueset:4059\ncatalog:variable_text:39563:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:urval"
+fields = { "sets" = [] }
+evidence = "Identitetsfakta visar överlappande och periodvis olika tilldelningar av samma källkolumn.\ncatalog:occurrence:391291\ncatalog:occurrence:391316\ncatalog:occurrence:391317\ncatalog:occurrence:391328"
+
+[[statement]]
+kind = "set"
+subject = "var:urval"
+fields = { "tags" = ["methods"] }
+evidence = "Identitetsfakta visar överlappande och periodvis olika tilldelningar av samma källkolumn.\ncatalog:occurrence:391291\ncatalog:occurrence:391316\ncatalog:occurrence:391317\ncatalog:occurrence:391328"

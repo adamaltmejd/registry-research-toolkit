@@ -898,3 +898,1719 @@ kind = "set"
 subject = "var:sektorkod-storsta-forvarvskalla"
 fields = { "classification" = "class/sektorkod/sektorkod" }
 evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\nreg_meta_build/curation/classifications/SEKTORKOD.toml:71\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:55585:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:55585:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstkl"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Storleksklass efter antal anställda avser företagets storlek.\ncatalog:variable_text:55586:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstkl"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklass efter antal anställda avser företagets storlek.\ncatalog:variable_text:55586:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-foretag-syssreg"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för huvudsaklig sysselsättning är korrekt uppdelat per period med antal-sysselsatta-foretaget.\ncatalog:occurrence:517860\ncatalog:occurrence:517915\ncatalog:variable_text:55587:17167:18993\ncatalog:variable_text:55588:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-foretag-syssreg"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för huvudsaklig sysselsättning är korrekt uppdelat per period med antal-sysselsatta-foretaget.\ncatalog:occurrence:517860\ncatalog:occurrence:517915\ncatalog:variable_text:55587:17167:18993\ncatalog:variable_text:55588:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-foretaget"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för huvudsaklig sysselsättning är korrekt uppdelat per period med antal-sysselsatta-foretag-syssreg.\ncatalog:occurrence:517860\ncatalog:occurrence:517915\ncatalog:variable_text:55587:17167:18993\ncatalog:variable_text:55588:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-foretaget"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för huvudsaklig sysselsättning är korrekt uppdelat per period med antal-sysselsatta-foretag-syssreg.\ncatalog:occurrence:517860\ncatalog:occurrence:517915\ncatalog:variable_text:55587:17167:18993\ncatalog:variable_text:55588:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-foretaget-enligt-ku1antalsyss"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Källkolumnen har en senare annan ägare och definitionerna skiljer sig åt.\ncatalog:occurrence:520272\ncatalog:occurrence:520749\ncatalog:variable_text:55589:13514:14245\ncatalog:variable_text:55597:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-foretaget-enligt-ku1antalsyss"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen har en senare annan ägare och definitionerna skiljer sig åt.\ncatalog:occurrence:520272\ncatalog:occurrence:520749\ncatalog:variable_text:55589:13514:14245\ncatalog:variable_text:55597:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-bisyssla"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-jobb2.\ncatalog:occurrence:519753\ncatalog:occurrence:519837\ncatalog:variable_text:55590:14245:18993\ncatalog:variable_text:55591:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-bisyssla"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-jobb2.\ncatalog:occurrence:519753\ncatalog:occurrence:519837\ncatalog:variable_text:55590:14245:18993\ncatalog:variable_text:55591:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-jobb2"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-bisyssla och antalsyss-jobb2-reg.\ncatalog:occurrence:517882\ncatalog:occurrence:517938\ncatalog:occurrence:519753\ncatalog:occurrence:519837\ncatalog:variable_text:55590:14245:18993\ncatalog:variable_text:55591:18993:20089\ncatalog:variable_text:55592:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-jobb2"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-bisyssla och antalsyss-jobb2-reg.\ncatalog:occurrence:517882\ncatalog:occurrence:517938\ncatalog:occurrence:519753\ncatalog:occurrence:519837\ncatalog:variable_text:55590:14245:18993\ncatalog:variable_text:55591:18993:20089\ncatalog:variable_text:55592:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-jobb2-reg"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-jobb2.\ncatalog:occurrence:517882\ncatalog:occurrence:517938\ncatalog:variable_text:55591:18993:20089\ncatalog:variable_text:55592:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-jobb2-reg"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för jobb två är korrekt uppdelat per period med antalsyss-jobb2.\ncatalog:occurrence:517882\ncatalog:occurrence:517938\ncatalog:variable_text:55591:18993:20089\ncatalog:variable_text:55592:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-nast"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för näst största förvärvskällan är korrekt uppdelat per period med antalsyss-nast-reg.\ncatalog:occurrence:519740\ncatalog:occurrence:519824\ncatalog:variable_text:55593:18993:20089\ncatalog:variable_text:55594:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-nast"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för näst största förvärvskällan är korrekt uppdelat per period med antalsyss-nast-reg.\ncatalog:occurrence:519740\ncatalog:occurrence:519824\ncatalog:variable_text:55593:18993:20089\ncatalog:variable_text:55594:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-nast-reg"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för näst största förvärvskällan är korrekt uppdelat per period med antalsyss-nast.\ncatalog:occurrence:519740\ncatalog:occurrence:519824\ncatalog:variable_text:55593:18993:20089\ncatalog:variable_text:55594:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-nast-reg"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för näst största förvärvskällan är korrekt uppdelat per period med antalsyss-nast.\ncatalog:occurrence:519740\ncatalog:occurrence:519824\ncatalog:variable_text:55593:18993:20089\ncatalog:variable_text:55594:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-ovrigt"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för övrigt jobb är korrekt uppdelat per period med antalsyss-ovrigt-reg.\ncatalog:occurrence:519765\ncatalog:occurrence:519849\ncatalog:variable_text:55595:18993:20089\ncatalog:variable_text:55596:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-ovrigt"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för övrigt jobb är korrekt uppdelat per period med antalsyss-ovrigt-reg.\ncatalog:occurrence:519765\ncatalog:occurrence:519849\ncatalog:variable_text:55595:18993:20089\ncatalog:variable_text:55596:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-ovrigt-reg"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för övrigt jobb är korrekt uppdelat per period med antalsyss-ovrigt.\ncatalog:occurrence:519765\ncatalog:occurrence:519849\ncatalog:variable_text:55595:18993:20089\ncatalog:variable_text:55596:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-ovrigt-reg"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för övrigt jobb är korrekt uppdelat per period med antalsyss-ovrigt.\ncatalog:occurrence:519765\ncatalog:occurrence:519849\ncatalog:variable_text:55595:18993:20089\ncatalog:variable_text:55596:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-storsta"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Den äldre ägaren av samma kolumn anger huvudsaklig sysselsättning; antalsyss-storsta-reg anger däremot samma största förvärvskälla.\ncatalog:occurrence:519724\ncatalog:occurrence:519808\ncatalog:occurrence:520272\ncatalog:occurrence:520749\ncatalog:variable_text:55589:13514:14245\ncatalog:variable_text:55597:18993:20089\ncatalog:variable_text:55598:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-storsta"
+fields = { "tags" = ["business"] }
+evidence = "Den äldre ägaren av samma kolumn anger huvudsaklig sysselsättning; antalsyss-storsta-reg anger däremot samma största förvärvskälla.\ncatalog:occurrence:519724\ncatalog:occurrence:519808\ncatalog:occurrence:520272\ncatalog:occurrence:520749\ncatalog:variable_text:55589:13514:14245\ncatalog:variable_text:55597:18993:20089\ncatalog:variable_text:55598:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-storsta-reg"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Samma antal för största förvärvskällan är korrekt uppdelat per period med antalsyss-storsta.\ncatalog:occurrence:519724\ncatalog:occurrence:519808\ncatalog:variable_text:55597:18993:20089\ncatalog:variable_text:55598:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antalsyss-storsta-reg"
+fields = { "tags" = ["business"] }
+evidence = "Samma antal för största förvärvskällan är korrekt uppdelat per period med antalsyss-storsta.\ncatalog:occurrence:519724\ncatalog:occurrence:519808\ncatalog:variable_text:55597:18993:20089\ncatalog:variable_text:55598:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Arbetsmarknadsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55599:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsmarknadsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55599:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Den alternativa arbetsmarknadsstatusen ingår i kandidatgruppen.\ncatalog:variable_text:55600:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { "tags" = ["employment"] }
+evidence = "Den alternativa arbetsmarknadsstatusen ingår i kandidatgruppen.\ncatalog:variable_text:55600:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arblos"
+fields = { "sets" = [] }
+evidence = "Variabeln anger mottagen arbetslöshetsersättning.\ncatalog:variable_text:55601:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arblos"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger mottagen arbetslöshetsersättning.\ncatalog:variable_text:55601:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arslonfinkast"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Källkolumnens kod är ogenomskinlig.\ncatalog:variable_text:55602:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arslonfinkast"
+fields = { "tags" = ["income"] }
+evidence = "Källkolumnens kod är ogenomskinlig.\ncatalog:variable_text:55602:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arssyk-egf"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55603:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arssyk-egf"
+fields = { "tags" = [] }
+evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55603:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astkommun"
+fields = { "sets" = ["arbetsstallets-kommun"] }
+evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55604:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55604:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astlan"
+fields = { "sets" = ["arbetsstallets-lan"] }
+evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55605:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astlan"
+fields = { "tags" = ["geography"] }
+evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55605:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astngs07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55606:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astngs07"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55606:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55608:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55608:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni0"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55609:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni0"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55609:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55610:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:astsni07"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod för näringsgrenen och ingår i samma förkortningsfamilj som övriga ast-variabler.\ncatalog:variable_text:55610:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttolon-foretagarink-huvud"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Beloppet avser lön eller företagarinkomst.\ncatalog:variable_text:55611:11323:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttolon-foretagarink-huvud"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet avser lön eller företagarinkomst.\ncatalog:variable_text:55611:11323:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Kolumnens andra ägare beskriver utbildningsinriktning trots distriktsvärdemängden.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55613:16436:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Kolumnens andra ägare beskriver utbildningsinriktning trots distriktsvärdemängden.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55613:16436:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:eseg"
+fields = { "sets" = ["europeisk-socioekonomisk-gruppering"] }
+evidence = "ESeG är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:55614:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eseg"
+fields = { "tags" = ["employment"] }
+evidence = "ESeG är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:55614:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eseg-egf"
+fields = { "sets" = ["europeisk-socioekonomisk-gruppering"] }
+evidence = "ESeG och EGF är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:55615:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eseg-egf"
+fields = { "tags" = ["employment"] }
+evidence = "ESeG och EGF är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:55615:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen anger bostadens geografiska nyckel.\ncatalog:variable_text:55616:11323:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen anger bostadens geografiska nyckel.\ncatalog:variable_text:55616:11323:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:55617:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:55617:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-medborgarskap"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland i stället för medborgarskap.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55618:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland i stället för medborgarskap.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55618:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församlingen anger geografisk tillhörighet.\ncatalog:variable_text:55619:11323:15340\ncatalog:variable_text:55619:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingen anger geografisk tillhörighet.\ncatalog:variable_text:55619:11323:15340\ncatalog:variable_text:55619:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidpens"
+fields = { "sets" = [] }
+evidence = "Variabeln anger mottagen ersättning.\ncatalog:variable_text:55620:12053:14245\ncatalog:variable_text:55620:14610:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidpens"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger mottagen ersättning.\ncatalog:variable_text:55620:12053:14245\ncatalog:variable_text:55620:14610:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-aktiv-enskild-naringsverksamhet"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Den senare variabelns summerade inkomst är inte dokumenterad som samma inkomstbegrepp.\ncatalog:occurrence:519279\ncatalog:occurrence:519365\ncatalog:variable_text:55621:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-aktiv-enskild-naringsverksamhet"
+fields = { "tags" = ["income"] }
+evidence = "Den senare variabelns summerade inkomst är inte dokumenterad som samma inkomstbegrepp.\ncatalog:occurrence:519279\ncatalog:occurrence:519365\ncatalog:variable_text:55621:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Inkomst av tjänst ingår i arbetsinkomstgruppen.\ncatalog:variable_text:55622:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-av-tjanst"
+fields = { "tags" = ["income"] }
+evidence = "Inkomst av tjänst ingår i arbetsinkomstgruppen.\ncatalog:variable_text:55622:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:jobbbyte"
+fields = { "sets" = [] }
+evidence = "Jobbbyte och in- och utflöde avser arbetsmarknaden.\ncatalog:valueset:12992\ncatalog:variable_text:55623:14245:15340\ncatalog:variable_text:55623:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:jobbbyte"
+fields = { "tags" = ["employment"] }
+evidence = "Jobbbyte och in- och utflöde avser arbetsmarknaden.\ncatalog:valueset:12992\ncatalog:variable_text:55623:14245:15340\ncatalog:variable_text:55623:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kallassyk-egf"
+fields = { "sets" = [] }
+evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kallassyk-egf"
+fields = { "tags" = ["methods"] }
+evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-bostaden"
+fields = { "sets" = [] }
+evidence = "Bostadskommun är geografisk tillhörighet.\ncatalog:variable_text:55625:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-bostaden"
+fields = { "tags" = ["geography"] }
+evidence = "Bostadskommun är geografisk tillhörighet.\ncatalog:variable_text:55625:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:55626:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:55626:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Kontant bruttolön är en lönekomponent.\ncatalog:variable_text:55627:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "tags" = ["income"] }
+evidence = "Kontant bruttolön är en lönekomponent.\ncatalog:variable_text:55627:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1anstkl"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "KU1 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55628:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1anstkl"
+fields = { "tags" = ["business"] }
+evidence = "KU1 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55628:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astkommun"
+fields = { "sets" = ["arbetsstallets-kommun"] }
+evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55629:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astkommun"
+fields = { "tags" = ["geography"] }
+evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55629:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astlan"
+fields = { "sets" = ["arbetsstallets-lan"] }
+evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55630:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astlan"
+fields = { "tags" = ["geography"] }
+evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55630:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astngs07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "KU1 och NgS är ogenomskinliga källkoder; etiketten delas med andra variabler.\ncatalog:variable_text:55631:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astngs07"
+fields = { "tags" = ["business"] }
+evidence = "KU1 och NgS är ogenomskinliga källkoder; etiketten delas med andra variabler.\ncatalog:variable_text:55631:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni"
+fields = { "sets" = ["naringsgren"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55633:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni"
+fields = { "tags" = ["business"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55633:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni0"
+fields = { "sets" = ["naringsgren"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55634:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni0"
+fields = { "tags" = ["business"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55634:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55635:13879:14245\ncatalog:variable_text:55635:14610:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astsni07"
+fields = { "tags" = ["business"] }
+evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabler.\ncatalog:variable_text:55635:13879:14245\ncatalog:variable_text:55635:14610:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ink"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "KU1 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:55637:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ink"
+fields = { "tags" = ["income"] }
+evidence = "KU1 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:55637:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1sektor"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "KU1 är en ogenomskinlig källkod och etiketten kolliderar.\ncatalog:occurrence:519979\ncatalog:variable_text:55639:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1sektor"
+fields = { "tags" = ["business"] }
+evidence = "KU1 är en ogenomskinlig källkod och etiketten kolliderar.\ncatalog:occurrence:519979\ncatalog:variable_text:55639:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1sektorkod"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Identitetsfakta och definitionerna lämnar sysselsättningens omfattning oklar.\ncatalog:occurrence:518617\ncatalog:occurrence:518703\ncatalog:occurrence:520530\ncatalog:occurrence:520565\ncatalog:variable_text:55640:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1sektorkod"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfakta och definitionerna lämnar sysselsättningens omfattning oklar.\ncatalog:occurrence:518617\ncatalog:occurrence:518703\ncatalog:occurrence:520530\ncatalog:occurrence:520565\ncatalog:variable_text:55640:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykar"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55641:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykar"
+fields = { "tags" = [] }
+evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55641:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykkalla"
+fields = { "sets" = [] }
+evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykkalla"
+fields = { "tags" = ["methods"] }
+evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2anstkl"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "KU2 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55643:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2anstkl"
+fields = { "tags" = ["business"] }
+evidence = "KU2 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55643:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ink"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "KU2 är en ogenomskinlig källkod.\ncatalog:variable_text:55646:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ink"
+fields = { "tags" = ["income"] }
+evidence = "KU2 är en ogenomskinlig källkod.\ncatalog:variable_text:55646:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssyk3-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-nast.\ncatalog:occurrence:519239\ncatalog:occurrence:519325\ncatalog:variable_text:55648:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssyk3-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-nast.\ncatalog:occurrence:519239\ncatalog:occurrence:519325\ncatalog:variable_text:55648:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssyk4-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-nast.\ncatalog:occurrence:519240\ncatalog:occurrence:519326\ncatalog:variable_text:55649:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssyk4-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-nast.\ncatalog:occurrence:519240\ncatalog:occurrence:519326\ncatalog:variable_text:55649:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykar"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55650:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykar"
+fields = { "tags" = [] }
+evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55650:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykkalla"
+fields = { "sets" = [] }
+evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykkalla"
+fields = { "tags" = ["methods"] }
+evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Bostadens län är geografisk tillhörighet.\ncatalog:variable_text:55652:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Bostadens län är geografisk tillhörighet.\ncatalog:variable_text:55652:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55653:16801:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55653:16801:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2arssyk"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55654:11323:14245\ncatalog:variable_text:55654:14245:17532\ncatalog:variable_text:55654:17532:17897\ncatalog:variable_text:55654:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2arssyk"
+fields = { "tags" = ["methods"] }
+evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55654:11323:14245\ncatalog:variable_text:55654:14245:17532\ncatalog:variable_text:55654:17532:17897\ncatalog:variable_text:55654:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ink"
+fields = { "sets" = ["arbets-och-foretagarinkomst"] }
+evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55657:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ink"
+fields = { "tags" = ["income"] }
+evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55657:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2kallassyk"
+fields = { "sets" = [] }
+evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55658:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2kallassyk"
+fields = { "tags" = ["methods"] }
+evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55658:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk3"
+fields = { "sets" = ["yrke"] }
+evidence = "Nov2 och SSYK är källkoder som inte återges i etiketten; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55660:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk3"
+fields = { "tags" = ["employment"] }
+evidence = "Nov2 och SSYK är källkoder som inte återges i etiketten; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55660:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk3-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Nov2 och SSYK är källkoder som inte återges i etiketten; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55661:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk3-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Nov2 och SSYK är källkoder som inte återges i etiketten; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55661:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk4-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk4-nov2.\ncatalog:occurrence:517562\ncatalog:occurrence:517617\ncatalog:variable_text:55662:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2ssyk4-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk4-nov2.\ncatalog:occurrence:517562\ncatalog:occurrence:517617\ncatalog:variable_text:55662:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2tjomf"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55663:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nov2tjomf"
+fields = { "tags" = ["employment"] }
+evidence = "Nov2 är en källförkortning för jobb två i november och familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55663:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovranstkl"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning. Variabeln anger storleksklass efter anställda.\ncatalog:valueset:4322\ncatalog:variable_text:55664:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovranstkl"
+fields = { "tags" = ["business"] }
+evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning. Variabeln anger storleksklass efter anställda.\ncatalog:valueset:4322\ncatalog:variable_text:55664:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrarssyk"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55665:11323:14245\ncatalog:variable_text:55665:14245:17532\ncatalog:variable_text:55665:17532:17897\ncatalog:variable_text:55665:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrarssyk"
+fields = { "tags" = ["methods"] }
+evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55665:11323:14245\ncatalog:variable_text:55665:14245:17532\ncatalog:variable_text:55665:17532:17897\ncatalog:variable_text:55665:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrkallassyk"
+fields = { "sets" = [] }
+evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrkallassyk"
+fields = { "tags" = ["methods"] }
+evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrssyk3-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-ovrigt.\ncatalog:occurrence:519263\ncatalog:occurrence:519349\ncatalog:variable_text:55669:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrssyk3-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-ovrigt.\ncatalog:occurrence:519263\ncatalog:occurrence:519349\ncatalog:variable_text:55669:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrssyk4-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-ovrigt.\ncatalog:occurrence:519264\ncatalog:occurrence:519350\ncatalog:variable_text:55670:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrssyk4-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-ovrigt.\ncatalog:occurrence:519264\ncatalog:occurrence:519350\ncatalog:variable_text:55670:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrtjomf"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55671:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrtjomf"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55671:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-huvud"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Variabeln kodar sektorn för huvudsaklig sysselsättning.\ncatalog:variable_text:55674:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-huvud"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar sektorn för huvudsaklig sysselsättning.\ncatalog:variable_text:55674:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-ku1"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Källorna ger motstridiga omfattningar för samma kolumn och perioddelning.\ncatalog:occurrence:519226\ncatalog:occurrence:519312\ncatalog:occurrence:519651\ncatalog:occurrence:519734\ncatalog:occurrence:520530\ncatalog:occurrence:520565"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-ku1"
+fields = { "tags" = ["business"] }
+evidence = "Källorna ger motstridiga omfattningar för samma kolumn och perioddelning.\ncatalog:occurrence:519226\ncatalog:occurrence:519312\ncatalog:occurrence:519651\ncatalog:occurrence:519734\ncatalog:occurrence:520530\ncatalog:occurrence:520565"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-1819"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Samma sektorkod är delad per period med scb/yrkesreg/sektorkod-2.\ncatalog:occurrence:519268\ncatalog:occurrence:519354\ncatalog:variable_text:55676:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-1819"
+fields = { "tags" = ["business"] }
+evidence = "Samma sektorkod är delad per period med scb/yrkesreg/sektorkod-2.\ncatalog:occurrence:519268\ncatalog:occurrence:519354\ncatalog:variable_text:55676:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-2"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Källorna ger olika omfattning för sektorkoden.\ncatalog:occurrence:517895\ncatalog:occurrence:519268\ncatalog:occurrence:519354\ncatalog:occurrence:519775"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-2"
+fields = { "tags" = ["business"] }
+evidence = "Källorna ger olika omfattning för sektorkoden.\ncatalog:occurrence:517895\ncatalog:occurrence:519268\ncatalog:occurrence:519354\ncatalog:occurrence:519775"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-storsta-forvarvskalla"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Identitetsfakta och motstridiga sektordefinitioner kräver samordning.\ncatalog:occurrence:518617\ncatalog:occurrence:518703\ncatalog:occurrence:519226\ncatalog:occurrence:519312\ncatalog:variable_text:55678:14245:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-storsta-forvarvskalla"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfakta och motstridiga sektordefinitioner kräver samordning.\ncatalog:occurrence:518617\ncatalog:occurrence:518703\ncatalog:occurrence:519226\ncatalog:occurrence:519312\ncatalog:variable_text:55678:14245:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-overensstammelse"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver yrkeskodens kvalitet och koppling.\ncatalog:valueset:11068\ncatalog:variable_text:55680:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-overensstammelse"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver yrkeskodens kvalitet och koppling.\ncatalog:valueset:11068\ncatalog:variable_text:55680:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-status"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver yrkeskodens koppling och imputering.\ncatalog:valueset:3438\ncatalog:variable_text:55681:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-status"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver yrkeskodens koppling och imputering.\ncatalog:valueset:3438\ncatalog:variable_text:55681:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk3-2012.\ncatalog:occurrence:517567\ncatalog:occurrence:517622\ncatalog:variable_text:55682:11323:16801\ncatalog:variable_text:55683:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3"
+fields = { "tags" = ["employment"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk3-2012.\ncatalog:occurrence:517567\ncatalog:occurrence:517622\ncatalog:variable_text:55682:11323:16801\ncatalog:variable_text:55683:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3.\ncatalog:occurrence:517567\ncatalog:occurrence:517622\ncatalog:variable_text:55683:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3.\ncatalog:occurrence:517567\ncatalog:occurrence:517622\ncatalog:variable_text:55683:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-egf"
+fields = { "sets" = ["yrke"] }
+evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55684:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-egf"
+fields = { "tags" = ["employment"] }
+evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55684:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ku2ssyk3-2012.\ncatalog:occurrence:519239\ncatalog:occurrence:519325\ncatalog:variable_text:55685:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-nast"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ku2ssyk3-2012.\ncatalog:occurrence:519239\ncatalog:occurrence:519325\ncatalog:variable_text:55685:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-ovrigt"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ovrssyk3-2012.\ncatalog:occurrence:519263\ncatalog:occurrence:519349\ncatalog:variable_text:55686:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-ovrigt"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ovrssyk3-2012.\ncatalog:occurrence:519263\ncatalog:occurrence:519349\ncatalog:variable_text:55686:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/yrke-ssyk3-storsta.\ncatalog:occurrence:519227\ncatalog:occurrence:519313\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-storsta"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/yrke-ssyk3-storsta.\ncatalog:occurrence:519227\ncatalog:occurrence:519313\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk4-2012.\ncatalog:occurrence:517569\ncatalog:occurrence:517624\ncatalog:variable_text:55688:11323:16801\ncatalog:variable_text:55689:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4"
+fields = { "tags" = ["employment"] }
+evidence = "Samma yrkesbegrepp är korrekt uppdelat per period mot scb/yrkesreg/ssyk4-2012.\ncatalog:occurrence:517569\ncatalog:occurrence:517624\ncatalog:variable_text:55688:11323:16801\ncatalog:variable_text:55689:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4.\ncatalog:occurrence:517569\ncatalog:occurrence:517624\ncatalog:variable_text:55689:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4.\ncatalog:occurrence:517569\ncatalog:occurrence:517624\ncatalog:variable_text:55689:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-egf"
+fields = { "sets" = ["yrke"] }
+evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55690:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-egf"
+fields = { "tags" = ["employment"] }
+evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55690:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ku2ssyk4-2012.\ncatalog:occurrence:519240\ncatalog:occurrence:519326\ncatalog:variable_text:55691:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nast"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ku2ssyk4-2012.\ncatalog:occurrence:519240\ncatalog:occurrence:519326\ncatalog:variable_text:55691:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nov2"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/nov2ssyk4-2012.\ncatalog:occurrence:517562\ncatalog:occurrence:517617\ncatalog:variable_text:55692:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-nov2"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/nov2ssyk4-2012.\ncatalog:occurrence:517562\ncatalog:occurrence:517617\ncatalog:variable_text:55692:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-ovrigt"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ovrssyk4-2012.\ncatalog:occurrence:519264\ncatalog:occurrence:519350\ncatalog:variable_text:55693:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-ovrigt"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ovrssyk4-2012.\ncatalog:occurrence:519264\ncatalog:occurrence:519350\ncatalog:variable_text:55693:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/yrke-ssyk4-storsta.\ncatalog:occurrence:519228\ncatalog:occurrence:519314\ncatalog:variable_text:55694:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-storsta"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/yrke-ssyk4-storsta.\ncatalog:occurrence:519228\ncatalog:occurrence:519314\ncatalog:variable_text:55694:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykar"
+fields = { "sets" = ["yrkesuppgiftens-matar"] }
+evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55695:11323:17897\ncatalog:variable_text:55695:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykar"
+fields = { "tags" = ["methods"] }
+evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55695:11323:17897\ncatalog:variable_text:55695:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykkalla"
+fields = { "sets" = [] }
+evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55696:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykkalla"
+fields = { "tags" = ["methods"] }
+evidence = "Id:t behålls enligt ssyk-familjens gemensamma läsbarhetsbedömning. Variabeln anger yrkesuppgiftens källa.\ncatalog:variable_text:55696:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:statusssyk-egf"
+fields = { "sets" = [] }
+evidence = "Källans etikett och definition står i konflikt med värdemängdens kodbetydelser. Coordinator group membership: Etiketter och definitioner anger yrkeskodens överensstämmelse med organisationsnummer, inklusive egna företagare. Statusssyk-egf behålls enligt detta stöd trots källbedömningens konflikt med värdemängden.\ncatalog:valueset:11068\ncatalog:valueset:3438\ncatalog:variable_text:55680:11323:20089\ncatalog:variable_text:55681:11323:20089\ncatalog:variable_text:55697:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:statusssyk-egf"
+fields = { "tags" = ["methods"] }
+evidence = "Källans etikett och definition står i konflikt med värdemängdens kodbetydelser. Coordinator group membership: Etiketter och definitioner anger yrkeskodens överensstämmelse med organisationsnummer, inklusive egna företagare. Statusssyk-egf behålls enligt detta stöd trots källbedömningens konflikt med värdemängden.\ncatalog:valueset:11068\ncatalog:valueset:3438\ncatalog:variable_text:55680:11323:20089\ncatalog:variable_text:55681:11323:20089\ncatalog:variable_text:55697:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-anst-nov2"
+fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
+evidence = "Storleksklass efter anställda ingår i kandidatgruppen.\ncatalog:variable_text:55698:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-anst-nov2"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklass efter anställda ingår i kandidatgruppen.\ncatalog:variable_text:55698:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stud"
+fields = { "sets" = [] }
+evidence = "Studiedeltagande är utbildning.\ncatalog:variable_text:55699:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:stud"
+fields = { "tags" = ["education"] }
+evidence = "Studiedeltagande är utbildning.\ncatalog:variable_text:55699:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:summerad-inkomst"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har en annan ägare med en snävare inkomstdefinition.\ncatalog:occurrence:519279\ncatalog:occurrence:519365\ncatalog:occurrence:520544\ncatalog:occurrence:520579\ncatalog:variable_text:55700:11323:16801\ncatalog:variable_text:55700:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summerad-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "Samma kolumn har en annan ägare med en snävare inkomstdefinition.\ncatalog:occurrence:519279\ncatalog:occurrence:519365\ncatalog:occurrence:520544\ncatalog:occurrence:520579\ncatalog:variable_text:55700:11323:16801\ncatalog:variable_text:55700:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = [] }
+evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med utbildnings-inriktning-sun-2000.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med utbildnings-inriktning-sun-2000.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma detaljerade SUN 2000-nivå är korrekt uppdelad per period med utbildningsniva-3-positioner.\ncatalog:occurrence:517576\ncatalog:occurrence:517631\ncatalog:variable_text:55702:16801:17897\ncatalog:variable_text:55717:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Samma detaljerade SUN 2000-nivå är korrekt uppdelad per period med utbildningsniva-3-positioner.\ncatalog:occurrence:517576\ncatalog:occurrence:517631\ncatalog:variable_text:55702:16801:17897\ncatalog:variable_text:55717:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma aggregerade nivå är korrekt uppdelad per period med sun2000niva-old-66.\ncatalog:occurrence:517577\ncatalog:occurrence:517632\ncatalog:valueset:4769\ncatalog:variable_text:55703:11323:16801\ncatalog:variable_text:55704:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "tags" = ["education"] }
+evidence = "Samma aggregerade nivå är korrekt uppdelad per period med sun2000niva-old-66.\ncatalog:occurrence:517577\ncatalog:occurrence:517632\ncatalog:valueset:4769\ncatalog:variable_text:55703:11323:16801\ncatalog:variable_text:55704:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Suffixet 66 är en räknare som inte finns i källkolumnen; samma aggregerade nivå är korrekt uppdelad per period med sun2000niva-old.\ncatalog:occurrence:517577\ncatalog:occurrence:517632\ncatalog:valueset:4769\ncatalog:variable_text:55703:11323:16801\ncatalog:variable_text:55704:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-66"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 66 är en räknare som inte finns i källkolumnen; samma aggregerade nivå är korrekt uppdelad per period med sun2000niva-old.\ncatalog:occurrence:517577\ncatalog:occurrence:517632\ncatalog:valueset:4769\ncatalog:variable_text:55703:11323:16801\ncatalog:variable_text:55704:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = [] }
+evidence = "Utbildningsinriktning ingår i kandidatgruppen.\ncatalog:variable_text:55705:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsinriktning ingår i kandidatgruppen.\ncatalog:variable_text:55705:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:55706:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:55706:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Aggregerad utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:55707:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "tags" = ["education"] }
+evidence = "Aggregerad utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:55707:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt-nordisk-inkomst"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Sysselsättningsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55708:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt-nordisk-inkomst"
+fields = { "tags" = ["employment"] }
+evidence = "Sysselsättningsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55708:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Sysselsättningsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55709:11323:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "tags" = ["employment"] }
+evidence = "Sysselsättningsstatus ingår i kandidatgruppen.\ncatalog:variable_text:55709:11323:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55710:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55710:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning-nast"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55711:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning-nast"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55711:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning-storst"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55712:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning-storst"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter tjänstgöringsomfattning i procent.\ncatalog:variable_text:55712:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildnings-inriktning-sun-2000"
+fields = { "sets" = [] }
+evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med sun2000inr.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildnings-inriktning-sun-2000"
+fields = { "tags" = ["education"] }
+evidence = "Samma SUN 2000-inriktning är korrekt uppdelad per period med sun2000inr.\ncatalog:occurrence:517575\ncatalog:occurrence:517630\ncatalog:variable_text:55701:16801:18262\ncatalog:variable_text:55713:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "sets" = ["utbildningsgrupp"] }
+evidence = "Samma utbildningsgruppsbegrepp är delat per period med scb/yrkesreg/utbildningsgrupp-enl-sun-2000; senare ändras SUN-versionen.\ncatalog:occurrence:517574\ncatalog:occurrence:517629\ncatalog:variable_text:55714:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "Samma utbildningsgruppsbegrepp är delat per period med scb/yrkesreg/utbildningsgrupp-enl-sun-2000; senare ändras SUN-versionen.\ncatalog:occurrence:517574\ncatalog:occurrence:517629\ncatalog:variable_text:55714:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-enl-sun-2000"
+fields = { "sets" = ["utbildningsgrupp"] }
+evidence = "Samma utbildningsgruppsbegrepp är delat per period med scb/yrkesreg/utbildningsgrupp.\ncatalog:occurrence:517574\ncatalog:occurrence:517629\ncatalog:variable_text:55715:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp-enl-sun-2000"
+fields = { "tags" = ["education"] }
+evidence = "Samma utbildningsgruppsbegrepp är delat per period med scb/yrkesreg/utbildningsgrupp.\ncatalog:occurrence:517574\ncatalog:occurrence:517629\ncatalog:variable_text:55715:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "sets" = [] }
+evidence = "Källkolumnen och värdemängden motsäger utbildningsetiketten; distrikt är motpart.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55716:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och värdemängden motsäger utbildningsetiketten; distrikt är motpart.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55716:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Samma detaljerade SUN 2000-nivå är korrekt uppdelad per period med sun2000niva.\ncatalog:occurrence:517576\ncatalog:occurrence:517631\ncatalog:variable_text:55702:16801:17897\ncatalog:variable_text:55717:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Samma detaljerade SUN 2000-nivå är korrekt uppdelad per period med sun2000niva.\ncatalog:occurrence:517576\ncatalog:occurrence:517631\ncatalog:variable_text:55702:16801:17897\ncatalog:variable_text:55717:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk3-storsta"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-storsta.\ncatalog:occurrence:519227\ncatalog:occurrence:519313\ncatalog:variable_text:55718:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk3-storsta"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk3-storsta.\ncatalog:occurrence:519227\ncatalog:occurrence:519313\ncatalog:variable_text:55718:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk4-storsta"
+fields = { "sets" = ["yrke"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-storsta.\ncatalog:occurrence:519228\ncatalog:occurrence:519314\ncatalog:variable_text:55719:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-ssyk4-storsta"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg/ssyk4-storsta.\ncatalog:occurrence:519228\ncatalog:occurrence:519314\ncatalog:variable_text:55719:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg"
+fields = { "sets" = ["yrkesbaserad-socioekonomisk-gruppering"] }
+evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:517416\ncatalog:occurrence:517417\ncatalog:variable_text:55720:15340:16071\ncatalog:variable_text:55728:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbaserad-seg"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:517416\ncatalog:occurrence:517417\ncatalog:variable_text:55720:15340:16071\ncatalog:variable_text:55728:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55721:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55721:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-huvud"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55722:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55722:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nast-forvarvskallan"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55723:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nast-forvarvskallan"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55723:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nov2"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55724:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nov2"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55724:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-storsta-forvarvskallan"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55725:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-storsta-forvarvskallan"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning ingår i kandidatgruppen.\ncatalog:variable_text:55725:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesverksam-under-aret"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Yrkesverksamhet under året ingår i kandidatgruppen.\ncatalog:variable_text:55726:11323:17897\ncatalog:variable_text:55726:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesverksam-under-aret"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesverksamhet under året ingår i kandidatgruppen.\ncatalog:variable_text:55726:11323:17897\ncatalog:variable_text:55726:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstallnkomb"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning för kombinatörer ingår i kandidatgruppen.\ncatalog:variable_text:55727:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstallnkomb"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning för kombinatörer ingår i kandidatgruppen.\ncatalog:variable_text:55727:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:yseg-egf"
+fields = { "sets" = ["yrkesbaserad-socioekonomisk-gruppering"] }
+evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:517416\ncatalog:occurrence:517417\ncatalog:variable_text:55720:15340:16071\ncatalog:variable_text:55728:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:yseg-egf"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:517416\ncatalog:occurrence:517417\ncatalog:variable_text:55720:15340:16071\ncatalog:variable_text:55728:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2001-01-01..2001-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2002-01-01..2002-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2003-01-01..2003-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2004-01-01..2004-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2005-01-01..2005-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2006-01-01..2006-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2007-01-01..2007-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2008-01-01..2008-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2009-01-01..2009-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2010-01-01..2010-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2011-01-01..2011-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2012-01-01..2012-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3 @2013-01-01..2013-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3_2012 @2014-01-01..2014-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: KU1Ssyk3_2012 @2015-01-01..2015-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2001-01-01..2001-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2002-01-01..2002-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2003-01-01..2003-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2004-01-01..2004-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2005-01-01..2005-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2006-01-01..2006-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2007-01-01..2007-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2008-01-01..2008-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2009-01-01..2009-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2010-01-01..2010-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2011-01-01..2011-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2012-01-01..2012-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3 @2013-01-01..2013-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3_2012 @2014-01-01..2014-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: KU1Ssyk3_2012 @2015-01-01..2015-12-31 where key = 'v1842'"
+fields = { "description" = "Yrkesuppgift för den största förvärvskällan under året." }
+evidence = "Definitionen anger egna företagare men etikett och operationell definition anger största förvärvskällan genom hela perioden.\ncatalog:occurrence:519227\ncatalog:variable_text:55687:11323:16801"

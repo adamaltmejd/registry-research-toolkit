@@ -1,90 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:antal-lagenheter-totalt"
-fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-lagenheter-totalt-a11"
-fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-lagenheter-totalt-a91"
-fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-lagenheter-totalt-a92"
-fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetsskatt"
-fields = { "sets" = ["legacy-fastighetsskatt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:144\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:garage-bilplatser-antal"
-fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:garage-bilplatser-antal-a41"
-fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:garage-bilplatser-antal-garf"
-fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-kommunnamn"
-fields = { "sets" = ["legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommunregion"
-fields = { "sets" = ["legacy-kommunregion"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:120\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:nybyggnadsar-faeaar"
-fields = { "sets" = ["legacy-nybyggnadsar"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:150\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:total-bostadsyta"
-fields = { "sets" = ["legacy-total-bostadsyta"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:132\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:total-bostadsyta-y11"
-fields = { "sets" = ["legacy-total-bostadsyta"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:132\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:vardear"
-fields = { "sets" = ["legacy-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:156\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "allmannyttiga-bostadsforetag: komid"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
@@ -229,72 +145,6 @@ evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "sets" = ["legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-lagenheter-totalt-a10"
-fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetsskatt-v4091"
-fields = { "sets" = ["legacy-fastighetsskatt"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:144\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:garage-och-bilplatser-antal-a40"
-fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-komkod"
-fields = { "sets" = ["legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-kommkod"
-fields = { "sets" = ["legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommunregion-regklass"
-fields = { "sets" = ["legacy-kommunregion"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:120\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kommunregion-regkod"
-fields = { "sets" = ["legacy-kommunregion"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:120\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:nybyggnadsar-nybyggar"
-fields = { "sets" = ["legacy-nybyggnadsar"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:150\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:total-bostadsyta-y10"
-fields = { "sets" = ["legacy-total-bostadsyta"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:132\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:vardear-vaeaar"
-fields = { "sets" = ["legacy-vardear"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:156\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "privatagda-flerbostadshus: a91 where key = 'v21695'"
 fields = { "variable" = "totalyta-a91-2" }
 evidence = "In 2009, A91 replaces Y91 in the private housing table with identical key, label, definition, unit and value set."
@@ -328,3 +178,1707 @@ kind = "set"
 subject = "privatagda-flerbostadshus: v4081 @2012,2015"
 fields = { "variable" = "hushallsel-kostnader-belopp" }
 evidence = "The 2013 item asks whether household electricity is included in property-electricity costs; the surrounding editions record monetary household-electricity costs."
+
+[[statement]]
+kind = "set"
+subject = "var:admi"
+fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
+evidence = "ADMI är en ogenomskinlig källförkortning för administration.\ncatalog:variable_text:27388:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:admi"
+fields = { "tags" = ["business", "housing"] }
+evidence = "ADMI är en ogenomskinlig källförkortning för administration.\ncatalog:variable_text:27388:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27389:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27389:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a10"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27390:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a10"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27390:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a11"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27391:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a11"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27391:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a91"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Identitetsfaktet kopplar A91 till totalyta i en annan period.\ncatalog:occurrence:243074\ncatalog:occurrence:243247"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a91"
+fields = { "tags" = ["housing"] }
+evidence = "Identitetsfaktet kopplar A91 till totalyta i en annan period.\ncatalog:occurrence:243074\ncatalog:occurrence:243247"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a92"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27393:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a92"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:27393:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avfond"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27394:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avfond"
+fields = { "tags" = ["business"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27394:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avsk"
+fields = { "sets" = ["avskrivningar"] }
+evidence = "Källkoden är en opak förkortning; posten hör till avskrivningar.\ncatalog:variable_text:27395:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avsk"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är en opak förkortning; posten hör till avskrivningar.\ncatalog:variable_text:27395:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:bolp"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27396:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bolp"
+fields = { "tags" = ["business"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27396:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbolag"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser ett bostadsbolag.\ncatalog:variable_text:27397:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbolag"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Uppgiften avser ett bostadsbolag.\ncatalog:variable_text:27397:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsrattsforening"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser en bostadsrättsförening.\ncatalog:variable_text:27398:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsrattsforening"
+fields = { "tags" = ["housing"] }
+evidence = "Uppgiften avser en bostadsrättsförening.\ncatalog:variable_text:27398:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-fastighetsskotsel"
+fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
+evidence = "Fastighetsskötsel hör till kandidatgruppen.\ncatalog:variable_text:27399:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-fastighetsskotsel"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Fastighetsskötsel hör till kandidatgruppen.\ncatalog:variable_text:27399:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-vatten-avlopp"
+fields = { "sets" = ["vatten-och-avloppskostnader"] }
+evidence = "Vatten- och avloppskostnader hör till kandidatgruppen.\ncatalog:variable_text:27400:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-vatten-avlopp"
+fields = { "tags" = ["business", "environment", "housing"] }
+evidence = "Vatten- och avloppskostnader hör till kandidatgruppen.\ncatalog:variable_text:27400:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-vatten-och-avlopp-v4050"
+fields = { "sets" = ["vatten-och-avloppskostnader"] }
+evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
+
+[[statement]]
+kind = "set"
+subject = "var:driftkostnader-vatten-och-avlopp-v4050"
+fields = { "tags" = ["business", "environment", "housing"] }
+evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-fastighetsel"
+fields = { "sets" = ["fastighetselkostnader"] }
+evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27402:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-fastighetsel"
+fields = { "tags" = ["energy"] }
+evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27402:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-fastighetsel-v4030"
+fields = { "sets" = ["fastighetselkostnader"] }
+evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27403:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-fastighetsel-v4030"
+fields = { "tags" = ["energy"] }
+evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27403:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-uppvarmning-v4020"
+fields = { "sets" = ["uppvarmningskostnader"] }
+evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27404:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-uppvarmning-v4020"
+fields = { "tags" = ["energy"] }
+evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27404:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt"
+fields = { "sets" = ["ovriga-driftkostnader"] }
+evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27405:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27405:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt-v4070"
+fields = { "sets" = ["ovriga-driftkostnader"] }
+evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27406:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt-v4070"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27406:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-reparationer"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Identitetsfakta visar överlapp och skilda kostnadsbegrepp i samma kolumn.\ncatalog:occurrence:243014\ncatalog:occurrence:243015\ncatalog:occurrence:243223"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-reparationer"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfakta visar överlapp och skilda kostnadsbegrepp i samma kolumn.\ncatalog:occurrence:243014\ncatalog:occurrence:243015\ncatalog:occurrence:243223"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-reparationer-underhall"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Identitetsfaktumet kopplar summan till en tidigare reparationspost.\ncatalog:occurrence:242835\ncatalog:occurrence:242886"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-reparationer-underhall"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet kopplar summan till en tidigare reparationspost.\ncatalog:occurrence:242835\ncatalog:occurrence:242886"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-underhall"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Identitetsfaktumet visar överlapp mellan underhåll och reparationer.\ncatalog:occurrence:243014\ncatalog:occurrence:243015"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-underhall"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet visar överlapp mellan underhåll och reparationer.\ncatalog:occurrence:243014\ncatalog:occurrence:243015"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-uppvarmning"
+fields = { "sets" = ["uppvarmningskostnader"] }
+evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27410:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-uppvarmning"
+fields = { "tags" = ["energy"] }
+evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27410:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:eubid"
+fields = { "sets" = [] }
+evidence = "Id är en källmnemonik och etiketten anger bidragens omfattning.\ncatalog:variable_text:27412:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:eubid"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik och etiketten anger bidragens omfattning.\ncatalog:variable_text:27412:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_text:27413:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_text:27413:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslan"
+fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
+evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:variable_text:27414:16436:16801\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslan"
+fields = { "tags" = ["finance"] }
+evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:variable_text:27414:16436:16801\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslan-v6010"
+fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
+evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslan-v6010"
+fields = { "tags" = ["finance"] }
+evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "sets" = ["fastighetsskatt"] }
+evidence = "Källan anger fastighetsskatt.\ncatalog:variable_text:27416:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Källan anger fastighetsskatt.\ncatalog:variable_text:27416:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-v4091"
+fields = { "sets" = ["fastighetsskatt"] }
+evidence = "Källan anger fastighetsskatt.\ncatalog:variable_text:27417:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt-v4091"
+fields = { "tags" = ["taxation"] }
+evidence = "Källan anger fastighetsskatt.\ncatalog:variable_text:27417:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:flansv"
+fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
+evidence = "Källan anger fastighetslån i svensk valuta.\ncatalog:variable_text:27418:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:flansv"
+fields = { "tags" = ["finance"] }
+evidence = "Källan anger fastighetslån i svensk valuta.\ncatalog:variable_text:27418:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:flanutl"
+fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
+evidence = "Källan anger fastighetslån i utländsk valuta.\ncatalog:variable_text:27419:14245:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:flanutl"
+fields = { "tags" = ["finance"] }
+evidence = "Källan anger fastighetslån i utländsk valuta.\ncatalog:variable_text:27419:14245:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:foreningens-taxeringsvarde"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Periodsplitten mot taxeringsvarde gäller samma taxeringsvärde i olika perioder.\ncatalog:occurrence:242670\ncatalog:occurrence:242864\ncatalog:variable_text:27420:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:foreningens-taxeringsvarde"
+fields = { "tags" = ["property"] }
+evidence = "Periodsplitten mot taxeringsvarde gäller samma taxeringsvärde i olika perioder.\ncatalog:occurrence:242670\ncatalog:occurrence:242864\ncatalog:variable_text:27420:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:fors"
+fields = { "sets" = [] }
+evidence = "Källan avser kostnad för fastighetsförsäkring.\ncatalog:variable_text:27421:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fors"
+fields = { "tags" = ["business"] }
+evidence = "Källan avser kostnad för fastighetsförsäkring.\ncatalog:variable_text:27421:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsk"
+fields = { "sets" = ["fastighetsskatt"] }
+evidence = "Id är en bokstavskod för fastighetsskatt.\ncatalog:variable_text:27422:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Id är en bokstavskod för fastighetsskatt.\ncatalog:variable_text:27422:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal"
+fields = { "sets" = ["antal-garage-och-bilplatser"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27423:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27423:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-a41"
+fields = { "sets" = ["antal-garage-och-bilplatser"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27424:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-a41"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27424:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-garf"
+fields = { "sets" = ["antal-garage-och-bilplatser"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27425:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-garf"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27425:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-och-bilplatser-antal-a40"
+fields = { "sets" = ["antal-garage-och-bilplatser"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27426:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:garage-och-bilplatser-antal-a40"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal garage och bilplatser.\ncatalog:variable_text:27426:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:gemund"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Gemensamt underhåll anges som del av reparations- och underhållskostnader.\ncatalog:variable_text:27427:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:gemund"
+fields = { "tags" = ["business"] }
+evidence = "Gemensamt underhåll anges som del av reparations- och underhållskostnader.\ncatalog:variable_text:27427:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hblo"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "HBLO är en ogenomskinlig bokstavskod för hyresbortfall för lokaler.\ncatalog:variable_text:27428:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hblo"
+fields = { "tags" = ["business", "housing"] }
+evidence = "HBLO är en ogenomskinlig bokstavskod för hyresbortfall för lokaler.\ncatalog:variable_text:27428:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hbov"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "HBOV är en ogenomskinlig bokstavskod för övrigt hyresbortfall.\ncatalog:variable_text:27429:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hbov"
+fields = { "tags" = ["business", "housing"] }
+evidence = "HBOV är en ogenomskinlig bokstavskod för övrigt hyresbortfall.\ncatalog:variable_text:27429:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hbto"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "HBTO är en ogenomskinlig bokstavskod för totalt hyresbortfall.\ncatalog:variable_text:27430:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hbto"
+fields = { "tags" = ["business", "housing"] }
+evidence = "HBTO är en ogenomskinlig bokstavskod för totalt hyresbortfall.\ncatalog:variable_text:27430:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-ingar-i-fastighetselkostnader"
+fields = { "sets" = ["hushallselkostnader"] }
+evidence = "Identitetsfaktumet kopplar en kodad uppgift till ett belopp.\ncatalog:occurrence:242894\ncatalog:occurrence:242942\ncatalog:valueset:12260"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-ingar-i-fastighetselkostnader"
+fields = { "tags" = ["energy"] }
+evidence = "Identitetsfaktumet kopplar en kodad uppgift till ett belopp.\ncatalog:occurrence:242894\ncatalog:occurrence:242942\ncatalog:valueset:12260"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1140"
+fields = { "sets" = ["hushallselintakter"] }
+evidence = "Källan anger ett belopp i en period och en ja/nej-uppgift i en annan.\ncatalog:variable_text:27432:15340:15706\ncatalog:variable_text:27432:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1140"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Källan anger ett belopp i en period och en ja/nej-uppgift i en annan.\ncatalog:variable_text:27432:15340:15706\ncatalog:variable_text:27432:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1141"
+fields = { "sets" = ["hushallselintakter"] }
+evidence = "Posten avser hushållselintäkter.\ncatalog:variable_text:27433:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v1141"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Posten avser hushållselintäkter.\ncatalog:variable_text:27433:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4080"
+fields = { "sets" = ["hushallselintakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4080"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4081"
+fields = { "sets" = ["hushallselintakter"] }
+evidence = "Identitetsfaktet kopplar intäkter och kostnader för hushållsel.\ncatalog:occurrence:242795\ncatalog:occurrence:242894\ncatalog:occurrence:243188\ncatalog:occurrence:243231"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-intakter-v4081"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "Identitetsfaktet kopplar intäkter och kostnader för hushållsel.\ncatalog:occurrence:242795\ncatalog:occurrence:242894\ncatalog:occurrence:243188\ncatalog:occurrence:243231"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-kostnader-belopp"
+fields = { "sets" = ["hushallselkostnader"] }
+evidence = "Identitetsfakta kopplar kostnadsbelopp till en ja/nej-uppgift och en intäkt.\ncatalog:occurrence:242795\ncatalog:occurrence:242894\ncatalog:occurrence:242942\ncatalog:occurrence:242988"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-kostnader-belopp"
+fields = { "tags" = ["energy"] }
+evidence = "Identitetsfakta kopplar kostnadsbelopp till en ja/nej-uppgift och en intäkt.\ncatalog:occurrence:242795\ncatalog:occurrence:242894\ncatalog:occurrence:242942\ncatalog:occurrence:242988"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-bostader"
+fields = { "sets" = ["bostadsintakter"] }
+evidence = "Källan anger Typkod i en period och KSEK i senare perioder.\ncatalog:variable_text:27437:13514:13879\ncatalog:variable_text:27437:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-bostader"
+fields = { "tags" = ["housing"] }
+evidence = "Källan anger Typkod i en period och KSEK i senare perioder.\ncatalog:variable_text:27437:13514:13879\ncatalog:variable_text:27437:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-bostader-v1010"
+fields = { "sets" = ["bostadsintakter"] }
+evidence = "Källan anger bostadsintäkter.\ncatalog:variable_text:27438:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-bostader-v1010"
+fields = { "tags" = ["housing"] }
+evidence = "Källan anger bostadsintäkter.\ncatalog:variable_text:27438:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-efter-avdrag"
+fields = { "sets" = ["intakter-efter-avdrag"] }
+evidence = "Identitetsfaktumet kopplar nettointäkt till en intäktsreduktion.\ncatalog:occurrence:243174\ncatalog:occurrence:243216"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-efter-avdrag"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet kopplar nettointäkt till en intäktsreduktion.\ncatalog:occurrence:243174\ncatalog:occurrence:243216"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-efter-avdrag-summa-v1120"
+fields = { "sets" = ["intakter-efter-avdrag"] }
+evidence = "Identitetsfaktumet visar överlapp mellan nettointäkt och reduktion.\ncatalog:occurrence:243048\ncatalog:occurrence:243049"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-efter-avdrag-summa-v1120"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet visar överlapp mellan nettointäkt och reduktion.\ncatalog:occurrence:243048\ncatalog:occurrence:243049"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-garage-bilplatser"
+fields = { "sets" = ["garage-och-bilplatsintakter"] }
+evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27441:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-garage-bilplatser"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27441:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-garage-och-bilplatser-v1030"
+fields = { "sets" = ["garage-och-bilplatsintakter"] }
+evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-garage-och-bilplatser-v1030"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler"
+fields = { "sets" = ["lokalintakter"] }
+evidence = "Lokalintäkter hör till kandidatgruppen.\ncatalog:variable_text:27443:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Lokalintäkter hör till kandidatgruppen.\ncatalog:variable_text:27443:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler-v1020"
+fields = { "sets" = ["lokalintakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler-v1020"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Källan anger övriga rörelseintäkter.\ncatalog:variable_text:27445:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger övriga rörelseintäkter.\ncatalog:variable_text:27445:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-ovvint"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Samma kolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-ovvint"
+fields = { "tags" = ["business"] }
+evidence = "Samma kolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-v1040"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-ovriga-v1040"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-rantebidrag"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27448:13514:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-rantebidrag"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27448:13514:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-rantebidrag-v2070"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27449:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-rantebidrag-v2070"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27449:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27450:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27450:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1050"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1050"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1070"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27452:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1070"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27452:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1080"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-bostader-v1080"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Identitetsfaktet kopplar olika mått till samma kolumn och period.\ncatalog:occurrence:243048\ncatalog:occurrence:243049\ncatalog:occurrence:243091\ncatalog:occurrence:243092"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet kopplar olika mått till samma kolumn och period.\ncatalog:occurrence:243048\ncatalog:occurrence:243049\ncatalog:occurrence:243091\ncatalog:occurrence:243092"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa-v1110"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Identitetsfaktet kopplar olika mått i angränsande perioder.\ncatalog:occurrence:243174\ncatalog:occurrence:243216"
+
+[[statement]]
+kind = "set"
+subject = "var:intaktsreduktioner-summa-v1110"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet kopplar olika mått i angränsande perioder.\ncatalog:occurrence:243174\ncatalog:occurrence:243216"
+
+[[statement]]
+kind = "set"
+subject = "var:kbid"
+fields = { "sets" = [] }
+evidence = "Id är en källmnemonik för kommunala bidrag.\ncatalog:variable_text:27456:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kbid"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik för kommunala bidrag.\ncatalog:variable_text:27456:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27457:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27457:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-komkod"
+fields = { "sets" = ["kommun"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27458:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-komkod"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27458:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommkod"
+fields = { "sets" = ["kommun"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27459:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommkod"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27459:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27460:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger kommunindelning.\ncatalog:variable_text:27460:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion"
+fields = { "sets" = ["kommunregion"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27461:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27461:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regklass"
+fields = { "sets" = ["kommunregion"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27462:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regklass"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27462:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regkod"
+fields = { "sets" = ["kommunregion"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27463:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion-regkod"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27463:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-tomtrattsavgald-v2020"
+fields = { "sets" = ["tomtrattsavgald"] }
+evidence = "Identitetsfaktumet visar överlapp med ett kombinationsbelopp.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-tomtrattsavgald-v2020"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet visar överlapp med ett kombinationsbelopp.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
+
+[[statement]]
+kind = "set"
+subject = "var:lagund"
+fields = { "sets" = [] }
+evidence = "Id saknar läsbara stammar från källans etikett.\ncatalog:variable_text:27466:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lagund"
+fields = { "tags" = ["taxation"] }
+evidence = "Id saknar läsbara stammar från källans etikett.\ncatalog:variable_text:27466:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a20"
+fields = { "sets" = ["antal-lokaler"] }
+evidence = "En operationell definition anger lokalyta trots etikett och enhet för antal.\ncatalog:occurrence:242663\ncatalog:occurrence:243030"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a20"
+fields = { "tags" = ["property"] }
+evidence = "En operationell definition anger lokalyta trots etikett och enhet för antal.\ncatalog:occurrence:242663\ncatalog:occurrence:243030"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a21"
+fields = { "sets" = ["antal-lokaler"] }
+evidence = "Källan anger antal lokaler.\ncatalog:variable_text:27468:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-a21"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal lokaler.\ncatalog:variable_text:27468:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-lokf"
+fields = { "sets" = ["antal-lokaler"] }
+evidence = "Källan anger antal lokaler.\ncatalog:variable_text:27469:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler-antal-lokf"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger antal lokaler.\ncatalog:variable_text:27469:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalund"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Källan anger lokalunderhåll som del av underhållskostnader.\ncatalog:variable_text:27470:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalund"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger lokalunderhåll som del av underhållskostnader.\ncatalog:variable_text:27470:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-faeaar"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Källan anger nybyggnadsår.\ncatalog:variable_text:27471:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-faeaar"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger nybyggnadsår.\ncatalog:variable_text:27471:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-nybyggar"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Källan anger nybyggnadsår.\ncatalog:variable_text:27472:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-nybyggar"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger nybyggnadsår.\ncatalog:variable_text:27472:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ofinink"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "OFININK är en källmnemonik som inte uttrycker etikettens kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna. Samtliga poster beskriver räntekostnader. Definitionen begränsar inte medlemskap till fastighetsanknutna lån och omfattar därför även OFININK:s räntor utanför fastighetsförvaltningen.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27481:16436:16801\ncatalog:variable_text:27482:16436:16801\ncatalog:variable_text:27517:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ofinink"
+fields = { "tags" = ["business", "housing"] }
+evidence = "OFININK är en källmnemonik som inte uttrycker etikettens kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna. Samtliga poster beskriver räntekostnader. Definitionen begränsar inte medlemskap till fastighetsanknutna lån och omfattar därför även OFININK:s räntor utanför fastighetsförvaltningen.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27481:16436:16801\ncatalog:variable_text:27482:16436:16801\ncatalog:variable_text:27517:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnad"
+fields = { "sets" = ["ombyggnad-under-rakenskapsperioden"] }
+evidence = "Källan anger ombyggnad under räkenskapsperioden.\ncatalog:variable_text:27474:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnad"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger ombyggnad under räkenskapsperioden.\ncatalog:variable_text:27474:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnad-under-aktuell-rakenskapsperiod-v7010"
+fields = { "sets" = ["ombyggnad-under-rakenskapsperioden"] }
+evidence = "Identitetsfaktumet kopplar ombyggnadsuppgiften till ett anskaffningsbelopp.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggnad-under-aktuell-rakenskapsperiod-v7010"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet kopplar ombyggnadsuppgiften till ett anskaffningsbelopp.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
+
+[[statement]]
+kind = "set"
+subject = "var:ovlsku"
+fields = { "sets" = ["langfristiga-lan"] }
+evidence = "Källan anger övriga långfristiga låneskulder.\ncatalog:variable_text:27476:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ovlsku"
+fields = { "tags" = ["finance"] }
+evidence = "Källan anger övriga långfristiga låneskulder.\ncatalog:variable_text:27476:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ovvint"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Samma kolumn har överlappande ägare med olika operationella avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
+
+[[statement]]
+kind = "set"
+subject = "var:ovvint"
+fields = { "tags" = ["business"] }
+evidence = "Samma kolumn har överlappande ägare med olika operationella avgränsningar.\ncatalog:occurrence:242599\ncatalog:occurrence:242600"
+
+[[statement]]
+kind = "set"
+subject = "var:ovvkos"
+fields = { "sets" = [] }
+evidence = "OVVKOS är en opak källmnemonik för kostnader från sidoverksamhet.\ncatalog:variable_text:27478:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ovvkos"
+fields = { "tags" = ["business"] }
+evidence = "OVVKOS är en opak källmnemonik för kostnader från sidoverksamhet.\ncatalog:variable_text:27478:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag"
+fields = { "sets" = ["rantebidrag"] }
+evidence = "Posten avser räntebidrag.\ncatalog:variable_text:27480:13514:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rantebidrag"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "Posten avser räntebidrag.\ncatalog:variable_text:27480:13514:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekos"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "Räntekostnader hör till kandidatgruppen.\ncatalog:variable_text:27481:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekos"
+fields = { "tags" = ["business", "finance", "housing"] }
+evidence = "Räntekostnader hör till kandidatgruppen.\ncatalog:variable_text:27481:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "Räntekostnader hör till kandidatgruppen.\ncatalog:variable_text:27482:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader"
+fields = { "tags" = ["business", "finance", "housing"] }
+evidence = "Räntekostnader hör till kandidatgruppen.\ncatalog:variable_text:27482:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisning"
+fields = { "sets" = [] }
+evidence = "Källan avser regelverk för årsredovisning.\ncatalog:variable_text:27483:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisning"
+fields = { "tags" = ["business"] }
+evidence = "Källan avser regelverk för årsredovisning.\ncatalog:variable_text:27483:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:repa"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Källan anger summan av reparations- och underhållskostnader.\ncatalog:variable_text:27484:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:repa"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger summan av reparations- och underhållskostnader.\ncatalog:variable_text:27484:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:reparati"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Källan anger reparationskostnader.\ncatalog:variable_text:27485:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:reparati"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger reparationskostnader.\ncatalog:variable_text:27485:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sbid"
+fields = { "sets" = ["ovriga-statliga-stod-och-bidrag"] }
+evidence = "SBID är en ogenomskinlig källmnemonik för statliga bidrag.\ncatalog:variable_text:27486:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sbid"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "SBID är en ogenomskinlig källmnemonik för statliga bidrag.\ncatalog:variable_text:27486:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sheo"
+fields = { "sets" = ["intakter-efter-avdrag"] }
+evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27487:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:sheo"
+fields = { "tags" = ["housing"] }
+evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27487:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:sophante"
+fields = { "sets" = ["sophanteringskostnader"] }
+evidence = "Sophämtning hör till kandidatgruppen.\ncatalog:variable_text:27488:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sophante"
+fields = { "tags" = ["business", "environment", "housing"] }
+evidence = "Sophämtning hör till kandidatgruppen.\ncatalog:variable_text:27488:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-intakter"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Finansiella intäkter hör till kandidatgruppen.\ncatalog:variable_text:27489:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-intakter"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Finansiella intäkter hör till kandidatgruppen.\ncatalog:variable_text:27489:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Periodsplitten mot foreningens-taxeringsvarde gäller samma taxeringsvärde i olika perioder.\ncatalog:occurrence:242670\ncatalog:occurrence:242864\ncatalog:variable_text:27490:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde"
+fields = { "tags" = ["property"] }
+evidence = "Periodsplitten mot foreningens-taxeringsvarde gäller samma taxeringsvärde i olika perioder.\ncatalog:occurrence:242670\ncatalog:occurrence:242864\ncatalog:variable_text:27490:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tbko"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27491:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tbko"
+fields = { "tags" = ["business"] }
+evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27491:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald"
+fields = { "sets" = ["tomtrattsavgald"] }
+evidence = "Källan anger kostnader för tomträttsavgäld.\ncatalog:variable_text:27493:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger kostnader för tomträttsavgäld.\ncatalog:variable_text:27493:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-och-arrendeavgifter"
+fields = { "sets" = ["tomtrattsavgald"] }
+evidence = "Identitetsfaktumet visar överlapp med en separat tomträttsavgäldspost.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-och-arrendeavgifter"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet visar överlapp med en separat tomträttsavgäldspost.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27495:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27495:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y10"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27496:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y10"
+fields = { "tags" = ["housing"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27496:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y11"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27497:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y11"
+fields = { "tags" = ["housing"] }
+evidence = "Källan anger total bostadsyta.\ncatalog:variable_text:27497:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-loyf"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Källan anger total lokalyta.\ncatalog:variable_text:27498:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-loyf"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger total lokalyta.\ncatalog:variable_text:27498:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-toyf"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Identitetsfaktumet visar överlapp med en annan yta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-toyf"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet visar överlapp med en annan yta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y20"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Periodsplitten mot y20 avser lokalarea i olika perioder.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y20"
+fields = { "tags" = ["property"] }
+evidence = "Periodsplitten mot y20 avser lokalarea i olika perioder.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y21"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Källan anger total lokalyta.\ncatalog:variable_text:27501:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-y21"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger total lokalyta.\ncatalog:variable_text:27501:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-a91-2"
+fields = { "sets" = ["totalyta"] }
+evidence = "Identitetsfaktumet kopplar en yta till ett antal lägenheter.\ncatalog:occurrence:243074\ncatalog:occurrence:243247"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-a91-2"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet kopplar en yta till ett antal lägenheter.\ncatalog:occurrence:243074\ncatalog:occurrence:243247"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-toyf"
+fields = { "sets" = ["totalyta"] }
+evidence = "Identitetsfaktumet visar överlapp mellan totalyta och lokalyta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-toyf"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet visar överlapp mellan totalyta och lokalyta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-y92"
+fields = { "sets" = ["totalyta"] }
+evidence = "Källan anger bostads- och lokalyta tillsammans.\ncatalog:variable_text:27504:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totalyta-y92"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger bostads- och lokalyta tillsammans.\ncatalog:variable_text:27504:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:underhal"
+fields = { "sets" = ["reparations-och-underhallskostnader"] }
+evidence = "Källan anger underhållskostnader.\ncatalog:variable_text:27505:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:underhal"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger underhållskostnader.\ncatalog:variable_text:27505:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:utgnyp"
+fields = { "sets" = [] }
+evidence = "Kostnader för nyproduktion av hyreslägenheter avser bostadsbyggande och företagskostnader.\ncatalog:occurrence:242613\ncatalog:variable_text:27506:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utgnyp"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Kostnader för nyproduktion av hyreslägenheter avser bostadsbyggande och företagskostnader.\ncatalog:occurrence:242613\ncatalog:variable_text:27506:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utgomb"
+fields = { "sets" = ["ombyggnads-och-forbattringsutgifter"] }
+evidence = "Utgifter för ombyggnad och standardhöjande åtgärder hör till den angivna gruppen och avser företagskostnader för bostäder.\ncatalog:occurrence:242614\ncatalog:variable_text:27507:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utgomb"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Utgifter för ombyggnad och standardhöjande åtgärder hör till den angivna gruppen och avser företagskostnader för bostäder.\ncatalog:occurrence:242614\ncatalog:variable_text:27507:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1020"
+fields = { "sets" = ["lokalintakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
+
+[[statement]]
+kind = "set"
+subject = "var:v1020"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
+
+[[statement]]
+kind = "set"
+subject = "var:v1035"
+fields = { "sets" = [] }
+evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1035"
+fields = { "tags" = ["energy", "housing"] }
+evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1040"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
+
+[[statement]]
+kind = "set"
+subject = "var:v1040"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
+
+[[statement]]
+kind = "set"
+subject = "var:v1050"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
+
+[[statement]]
+kind = "set"
+subject = "var:v1050"
+fields = { "tags" = ["housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
+
+[[statement]]
+kind = "set"
+subject = "var:v1060"
+fields = { "sets" = [] }
+evidence = "V1060 är en ogenomskinlig kolumnkod för summan av bruttointäkter.\ncatalog:variable_text:27512:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1060"
+fields = { "tags" = ["business", "housing"] }
+evidence = "V1060 är en ogenomskinlig kolumnkod för summan av bruttointäkter.\ncatalog:variable_text:27512:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1080"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
+
+[[statement]]
+kind = "set"
+subject = "var:v1080"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
+
+[[statement]]
+kind = "set"
+subject = "var:v1090"
+fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
+evidence = "V1090 är en ogenomskinlig kolumnkod för övriga intäktsreduktioner.\ncatalog:variable_text:27514:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1090"
+fields = { "tags" = ["business", "housing"] }
+evidence = "V1090 är en ogenomskinlig kolumnkod för övriga intäktsreduktioner.\ncatalog:variable_text:27514:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v1130"
+fields = { "sets" = [] }
+evidence = "V1130 är en ogenomskinlig kolumnkod för varmhyra eller kallhyra.\ncatalog:variable_text:27515:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v1130"
+fields = { "tags" = ["housing"] }
+evidence = "V1130 är en ogenomskinlig kolumnkod för varmhyra eller kallhyra.\ncatalog:variable_text:27515:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v2030"
+fields = { "sets" = ["avskrivningar"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27516:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v2030"
+fields = { "tags" = ["business"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27516:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v2050"
+fields = { "sets" = [] }
+evidence = "V2050 är en ogenomskinlig kolumnkod för övriga kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27517:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v2050"
+fields = { "tags" = ["business", "housing"] }
+evidence = "V2050 är en ogenomskinlig kolumnkod för övriga kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27517:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v2080"
+fields = { "sets" = ["ovriga-statliga-stod-och-bidrag"] }
+evidence = "V2080 är en ogenomskinlig kolumnkod för annat statligt stöd och bidrag.\ncatalog:variable_text:27518:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v2080"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "V2080 är en ogenomskinlig kolumnkod för annat statligt stöd och bidrag.\ncatalog:variable_text:27518:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v2090"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "V2090 är en ogenomskinlig kolumnkod för ränteintäkter och andra finansiella intäkter.\ncatalog:variable_text:27519:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v2090"
+fields = { "tags" = ["business", "finance"] }
+evidence = "V2090 är en ogenomskinlig kolumnkod för ränteintäkter och andra finansiella intäkter.\ncatalog:variable_text:27519:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4010"
+fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
+evidence = "V4010 är en ogenomskinlig kolumnkod för driftkostnader för skötsel, förvaltning och administration.\ncatalog:variable_text:27520:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4010"
+fields = { "tags" = ["business", "housing"] }
+evidence = "V4010 är en ogenomskinlig kolumnkod för driftkostnader för skötsel, förvaltning och administration.\ncatalog:variable_text:27520:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4040"
+fields = { "sets" = ["sophanteringskostnader"] }
+evidence = "V4040 är en ogenomskinlig kolumnkod för sophanteringskostnader.\ncatalog:variable_text:27521:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4040"
+fields = { "tags" = ["business", "environment", "housing"] }
+evidence = "V4040 är en ogenomskinlig kolumnkod för sophanteringskostnader.\ncatalog:variable_text:27521:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4050"
+fields = { "sets" = ["vatten-och-avloppskostnader"] }
+evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
+
+[[statement]]
+kind = "set"
+subject = "var:v4050"
+fields = { "tags" = ["business", "environment", "housing"] }
+evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
+
+[[statement]]
+kind = "set"
+subject = "var:v4080"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
+
+[[statement]]
+kind = "set"
+subject = "var:v4080"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
+
+[[statement]]
+kind = "set"
+subject = "var:v4085"
+fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
+evidence = "V4085 är en ogenomskinlig kolumnkod för central administration.\ncatalog:variable_text:27524:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4085"
+fields = { "tags" = ["business", "housing"] }
+evidence = "V4085 är en ogenomskinlig kolumnkod för central administration.\ncatalog:variable_text:27524:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4100"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27525:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4100"
+fields = { "tags" = ["taxation"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27525:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4120"
+fields = { "sets" = [] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27526:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v4120"
+fields = { "tags" = ["taxation"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27526:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v6020"
+fields = { "sets" = ["langfristiga-lan"] }
+evidence = "Id är en ogenomskinlig källkod; byggnadskreditiv ingår i summan långfristiga lån.\ncatalog:variable_text:27527:13514:16071\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v6020"
+fields = { "tags" = ["finance"] }
+evidence = "Id är en ogenomskinlig källkod; byggnadskreditiv ingår i summan långfristiga lån.\ncatalog:variable_text:27527:13514:16071\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v6030"
+fields = { "sets" = ["langfristiga-lan"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27528:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v6030"
+fields = { "tags" = ["finance"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27528:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:v6040"
+fields = { "sets" = ["langfristiga-lan"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v6040"
+fields = { "tags" = ["finance"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27529:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:v7010"
+fields = { "sets" = ["ombyggnads-och-forbattringsutgifter"] }
+evidence = "Identitetsfaktumet kopplar anskaffningsbelopp till en ombyggnadsuppgift.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
+
+[[statement]]
+kind = "set"
+subject = "var:v7010"
+fields = { "tags" = ["property"] }
+evidence = "Identitetsfaktumet kopplar anskaffningsbelopp till en ombyggnadsuppgift.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = ["vardear"] }
+evidence = "Källan anger värdeår för fastighetstaxering.\ncatalog:variable_text:27531:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger värdeår för fastighetstaxering.\ncatalog:variable_text:27531:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-vaeaar"
+fields = { "sets" = ["vardear"] }
+evidence = "Källan anger värdeår för fastighetstaxering.\ncatalog:variable_text:27532:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-vaeaar"
+fields = { "tags" = ["property"] }
+evidence = "Källan anger värdeår för fastighetstaxering.\ncatalog:variable_text:27532:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:y20"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Periodsplitten mot total-lokalyta-y20 avser lokalarea i olika perioder; id är en ogenomskinlig källkod.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112\ncatalog:variable_text:27533:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:y20"
+fields = { "tags" = ["property"] }
+evidence = "Periodsplitten mot total-lokalyta-y20 avser lokalarea i olika perioder; id är en ogenomskinlig källkod.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112\ncatalog:variable_text:27533:13879:14245"

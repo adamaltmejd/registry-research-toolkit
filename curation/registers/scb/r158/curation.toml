@@ -172,3 +172,351 @@ kind = "set"
 subject = "skyddad-natur: <none> @2016-12-31 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-databas"
+fields = { "sets" = ["registeransvarig"] }
+evidence = "Uppgiften gäller registeransvar.\ncatalog:occurrence:442735"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-databas"
+fields = { "tags" = ["environment"] }
+evidence = "Uppgiften gäller registeransvar.\ncatalog:occurrence:442735"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-skotsel"
+fields = { "sets" = ["forvaltare"] }
+evidence = "Uppgiften gäller områdets förvaltare.\ncatalog:occurrence:442736"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-skotsel"
+fields = { "tags" = ["environment"] }
+evidence = "Uppgiften gäller områdets förvaltare.\ncatalog:occurrence:442736"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442818"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["environment"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442818"
+
+[[statement]]
+kind = "set"
+subject = "var:areaha-scb"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442842"
+
+[[statement]]
+kind = "set"
+subject = "var:areaha-scb"
+fields = { "tags" = ["environment"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442842"
+
+[[statement]]
+kind = "set"
+subject = "var:areaprod"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442843"
+
+[[statement]]
+kind = "set"
+subject = "var:areaprod"
+fields = { "tags" = ["environment"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442843"
+
+[[statement]]
+kind = "set"
+subject = "var:areatot"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442844"
+
+[[statement]]
+kind = "set"
+subject = "var:areatot"
+fields = { "tags" = ["environment"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442844"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsmyndighet"
+fields = { "sets" = [] }
+evidence = "Beslutsfattare för skyddade områden.\ncatalog:occurrence:442845"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsmyndighet"
+fields = { "tags" = ["environment"] }
+evidence = "Beslutsfattare för skyddade områden.\ncatalog:occurrence:442845"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "sets" = [] }
+evidence = "Typ av beslut för skyddat område.\ncatalog:occurrence:442847"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "tags" = ["environment"] }
+evidence = "Typ av beslut för skyddat område.\ncatalog:occurrence:442847"
+
+[[statement]]
+kind = "set"
+subject = "var:beteckn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442848"
+
+[[statement]]
+kind = "set"
+subject = "var:beteckn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442848"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields = { "sets" = ["forvaltare"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442850\ncatalog:variable_text:42738:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields = { "tags" = ["environment"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442850\ncatalog:variable_text:42738:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:iucnkategori"
+fields = { "sets" = [] }
+evidence = "Internationell klassificering av skyddade områden.\ncatalog:occurrence:442851\ncatalog:valueset:5623"
+
+[[statement]]
+kind = "set"
+subject = "var:iucnkategori"
+fields = { "tags" = ["environment"] }
+evidence = "Internationell klassificering av skyddade områden.\ncatalog:occurrence:442851\ncatalog:valueset:5623"
+
+[[statement]]
+kind = "set"
+subject = "var:miljomal"
+fields = { "sets" = [] }
+evidence = "Nationella miljömål kopplade till objektet.\ncatalog:occurrence:442852"
+
+[[statement]]
+kind = "set"
+subject = "var:miljomal"
+fields = { "tags" = ["environment"] }
+evidence = "Nationella miljömål kopplade till objektet.\ncatalog:occurrence:442852"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442853"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442853"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-1"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442854"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-1"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442854"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-12"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442855"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-12"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442855"
+
+[[statement]]
+kind = "set"
+subject = "var:objektnamn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442829"
+
+[[statement]]
+kind = "set"
+subject = "var:objektnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442829"
+
+[[statement]]
+kind = "set"
+subject = "var:prec-syfte"
+fields = { "sets" = ["syfte-for-skyddat-omrade"] }
+evidence = "Preciserat syfte för skyddat område.\ncatalog:occurrence:442858"
+
+[[statement]]
+kind = "set"
+subject = "var:prec-syfte"
+fields = { "tags" = ["environment"] }
+evidence = "Preciserat syfte för skyddat område.\ncatalog:occurrence:442858"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-myndighet-43153"
+fields = { "sets" = ["registeransvarig"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-myndighet-43153"
+fields = { "tags" = ["environment"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sci-43151"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Innehållet ändras från SCI-indikator till kodning av områdestyp.\ncatalog:occurrence:442780\ncatalog:occurrence:442860\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:sci-43151"
+fields = { "tags" = ["environment"] }
+evidence = "Innehållet ändras från SCI-indikator till kodning av områdestyp.\ncatalog:occurrence:442780\ncatalog:occurrence:442860\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:site-name"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442756"
+
+[[statement]]
+kind = "set"
+subject = "var:site-name"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442756"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddstyp"
+fields = { "sets" = [] }
+evidence = "Typ av formellt skydd.\ncatalog:occurrence:442865"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddstyp"
+fields = { "tags" = ["environment"] }
+evidence = "Typ av formellt skydd.\ncatalog:occurrence:442865"
+
+[[statement]]
+kind = "set"
+subject = "var:spa"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Innehållet ändras från SPA-indikator till kodning av områdestyp.\ncatalog:occurrence:442786\ncatalog:occurrence:442868\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:spa"
+fields = { "tags" = ["environment"] }
+evidence = "Innehållet ändras från SPA-indikator till kodning av områdestyp.\ncatalog:occurrence:442786\ncatalog:occurrence:442868\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-registerobjekt"
+fields = { "sets" = [] }
+evidence = "Samma kolumn är mappad till både registerstatus och beslutsdatum.\ncatalog:occurrence:442768\ncatalog:occurrence:442769"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-registerobjekt"
+fields = { "tags" = ["environment"] }
+evidence = "Samma kolumn är mappad till både registerstatus och beslutsdatum.\ncatalog:occurrence:442768\ncatalog:occurrence:442769"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "sets" = ["syfte-for-skyddat-omrade"] }
+evidence = "Primärt syfte för skyddat område.\ncatalog:occurrence:442869"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "tags" = ["environment"] }
+evidence = "Primärt syfte för skyddat område.\ncatalog:occurrence:442869"
+
+[[statement]]
+kind = "set"
+subject = "var:total-areal"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442870"
+
+[[statement]]
+kind = "set"
+subject = "var:total-areal"
+fields = { "tags" = ["environment"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442870"
+
+[[statement]]
+kind = "set"
+subject = "var:totarea-scb"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442871"
+
+[[statement]]
+kind = "set"
+subject = "var:totarea-scb"
+fields = { "tags" = ["environment"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442871"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442872\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442872\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-1"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442873\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-1"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442873\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-12"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442874\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-12"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442874\ncatalog:valueset:7193"

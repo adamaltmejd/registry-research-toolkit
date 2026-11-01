@@ -1,0 +1,324 @@
+
+[[statement]]
+kind = "set"
+subject = "var:adoption-10-dagar"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser en ersättningsperiod för adoption; den hör till delförmånsindikatorerna.\ncatalog:occurrence:863\ncatalog:variable_text:499:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:adoption-10-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser en ersättningsperiod för adoption; den hör till delförmånsindikatorerna.\ncatalog:occurrence:863\ncatalog:variable_text:499:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarligt-sjukt-barn"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser en ersättningsperiod för allvarligt sjukt barn.\ncatalog:occurrence:864\ncatalog:variable_text:500:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarligt-sjukt-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser en ersättningsperiod för allvarligt sjukt barn.\ncatalog:occurrence:864\ncatalog:variable_text:500:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-avliden"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser ersättning i samband med att ett barn har avlidit.\ncatalog:occurrence:865\ncatalog:variable_text:501:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-avliden"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser ersättning i samband med att ett barn har avlidit.\ncatalog:occurrence:865\ncatalog:variable_text:501:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dab-asj"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak bokstavskod; källans unika etikett anger kolumnen.\ncatalog:occurrence:866\ncatalog:variable_text:502:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dab-asj"
+fields = { "tags" = ["transfers"] }
+evidence = "Id:t är en opak bokstavskod; källans unika etikett anger kolumnen.\ncatalog:occurrence:866\ncatalog:variable_text:502:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-barn"
+fields = { "sets" = [] }
+evidence = "Antalet avser barn som ersättning har betalats ut för.\ncatalog:occurrence:836\ncatalog:variable_text:503:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser barn som ersättning har betalats ut för.\ncatalog:occurrence:836\ncatalog:variable_text:503:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-mottagare"
+fields = { "sets" = [] }
+evidence = "Antalet avser mottagare under delfallet.\ncatalog:occurrence:850\ncatalog:variable_text:504:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-mottagare"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser mottagare under delfallet.\ncatalog:occurrence:850\ncatalog:variable_text:504:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-typ"
+fields = { "sets" = [] }
+evidence = "Antalet avser typer av tillfällig föräldrapenning.\ncatalog:occurrence:851\ncatalog:variable_text:505:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-ant-typ"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser typer av tillfällig föräldrapenning.\ncatalog:occurrence:851\ncatalog:variable_text:505:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet är utbetald tillfällig föräldrapenning.\ncatalog:occurrence:837\ncatalog:variable_text:506:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är utbetald tillfällig föräldrapenning.\ncatalog:occurrence:837\ncatalog:variable_text:506:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-bruttodagar"
+fields = { "sets" = [] }
+evidence = "Måttet avser ersatta bruttodagar.\ncatalog:occurrence:838\ncatalog:variable_text:507:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-bruttodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet avser ersatta bruttodagar.\ncatalog:occurrence:838\ncatalog:variable_text:507:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-nettodagar"
+fields = { "sets" = [] }
+evidence = "Måttet avser ersatta dagar omräknade till hela dagar.\ncatalog:occurrence:840\ncatalog:variable_text:509:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-nettodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet avser ersatta dagar omräknade till hela dagar.\ncatalog:occurrence:840\ncatalog:variable_text:509:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-1"
+fields = { "sets" = [] }
+evidence = "Koden anger en ersatt delförmån.\ncatalog:occurrence:842\ncatalog:variable_text:511:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger en ersatt delförmån.\ncatalog:occurrence:842\ncatalog:variable_text:511:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-2"
+fields = { "sets" = [] }
+evidence = "Koden anger en ytterligare ersatt delförmån.\ncatalog:occurrence:843\ncatalog:variable_text:512:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger en ytterligare ersatt delförmån.\ncatalog:occurrence:843\ncatalog:variable_text:512:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-3"
+fields = { "sets" = [] }
+evidence = "Koden anger en ytterligare ersatt delförmån.\ncatalog:occurrence:844\ncatalog:variable_text:513:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod-3"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger en ytterligare ersatt delförmån.\ncatalog:occurrence:844\ncatalog:variable_text:513:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delformaner"
+fields = { "sets" = [] }
+evidence = "Variabeln anger ersatta delförmåner.\ncatalog:occurrence:857\ncatalog:variable_text:514:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delformaner"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger ersatta delförmåner.\ncatalog:occurrence:857\ncatalog:variable_text:514:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-barn"
+fields = { "sets" = [] }
+evidence = "Antalet avser barn som ersättning har betalats ut för.\ncatalog:occurrence:868\ncatalog:variable_text:515:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser barn som ersättning har betalats ut för.\ncatalog:occurrence:868\ncatalog:variable_text:515:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-mottagare"
+fields = { "sets" = [] }
+evidence = "Antalet avser mottagare av tillfällig föräldrapenning.\ncatalog:occurrence:886\ncatalog:variable_text:516:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-mottagare"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser mottagare av tillfällig föräldrapenning.\ncatalog:occurrence:886\ncatalog:variable_text:516:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-typ"
+fields = { "sets" = [] }
+evidence = "Antalet avser ersatta delförmånstyper.\ncatalog:occurrence:869\ncatalog:variable_text:517:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-ant-typ"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet avser ersatta delförmånstyper.\ncatalog:occurrence:869\ncatalog:variable_text:517:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet är utbetald tillfällig föräldrapenning.\ncatalog:occurrence:870\ncatalog:variable_text:518:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är utbetald tillfällig föräldrapenning.\ncatalog:occurrence:870\ncatalog:variable_text:518:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-bruttodagar"
+fields = { "sets" = [] }
+evidence = "Måttet avser ersatta bruttodagar.\ncatalog:occurrence:871\ncatalog:variable_text:519:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-bruttodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet avser ersatta bruttodagar.\ncatalog:occurrence:871\ncatalog:variable_text:519:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-nettodagar"
+fields = { "sets" = [] }
+evidence = "Måttet avser ersatta dagar omräknade till hela dagar.\ncatalog:occurrence:873\ncatalog:variable_text:521:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-nettodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet avser ersatta dagar omräknade till hela dagar.\ncatalog:occurrence:873\ncatalog:variable_text:521:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodsel-10-dagar"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser en ersättningsperiod med tio dagar vid födsel.\ncatalog:occurrence:867\ncatalog:variable_text:523:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodsel-10-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser en ersättningsperiod med tio dagar vid födsel.\ncatalog:occurrence:867\ncatalog:variable_text:523:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktdagar"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser ersättning för kontaktdagar.\ncatalog:occurrence:875\ncatalog:variable_text:524:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktdagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser ersättning för kontaktdagar.\ncatalog:occurrence:875\ncatalog:variable_text:524:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-from"
+fields = { "sets" = [] }
+evidence = "Variabeln anger ersättningens omfattning vid fallets början.\ncatalog:occurrence:877\ncatalog:variable_text:528:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-from"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger ersättningens omfattning vid fallets början.\ncatalog:occurrence:877\ncatalog:variable_text:528:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-tom"
+fields = { "sets" = [] }
+evidence = "Variabeln anger ersättningens omfattning vid fallets sista ersatta dag.\ncatalog:occurrence:878\ncatalog:variable_text:529:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-tom"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger ersättningens omfattning vid fallets sista ersatta dag.\ncatalog:occurrence:878\ncatalog:variable_text:529:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den tillfälliga föräldrapenningens omfattning.\ncatalog:occurrence:849\ncatalog:variable_text:530:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger den tillfälliga föräldrapenningens omfattning.\ncatalog:occurrence:849\ncatalog:variable_text:530:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-vardares-sjukdom"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser ersättning vid ordinarie vårdares sjukdom.\ncatalog:occurrence:879\ncatalog:variable_text:531:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-vardares-sjukdom"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser ersättning vid ordinarie vårdares sjukdom.\ncatalog:occurrence:879\ncatalog:variable_text:531:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vard-av-barn"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser ersättning för vård av barn.\ncatalog:occurrence:880\ncatalog:variable_text:532:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vard-av-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn avser ersättning för vård av barn.\ncatalog:occurrence:880\ncatalog:variable_text:532:13149:2932897"

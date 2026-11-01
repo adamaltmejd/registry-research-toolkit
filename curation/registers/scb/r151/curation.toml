@@ -316,3 +316,933 @@ kind = "set"
 subject = "privata-stugor-lagenheter: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:aff"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aff"
+fields = { "tags" = [] }
+evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Måttet ingår i vistelsedygn.\ncatalog:variable_text:27785:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antdygn"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i vistelsedygn.\ncatalog:variable_text:27785:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atyp"
+fields = { "sets" = ["anlaggningstyp"] }
+evidence = "Kodningen hör till anläggningstyp.\ncatalog:valueset:1515\ncatalog:variable_text:27789:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atyp"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till anläggningstyp.\ncatalog:valueset:1515\ncatalog:variable_text:27789:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atypa"
+fields = { "sets" = ["anlaggningstyp"] }
+evidence = "Det ensamma A är en källkodsbokstav; kodningen hör till anläggningstyp.\ncatalog:valueset:11890\ncatalog:variable_text:27790:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:atypa"
+fields = { "tags" = ["business"] }
+evidence = "Det ensamma A är en källkodsbokstav; kodningen hör till anläggningstyp.\ncatalog:valueset:11890\ncatalog:variable_text:27790:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdh"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdh"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdtot"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdtot"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdv"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdv"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Måttet ingår i belagda bäddar.\ncatalog:variable_text:27794:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i belagda bäddar.\ncatalog:variable_text:27794:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belpostort"
+fields = { "sets" = [] }
+evidence = "Postorten anger geografisk tillhörighet.\ncatalog:variable_text:27795:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belpostort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten anger geografisk tillhörighet.\ncatalog:variable_text:27795:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brm"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brm"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brmh"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brmh"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brmv"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:brmv"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cn"
+fields = { "tags" = [] }
+evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbd"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbdh"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbdh"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbdv"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dbdv"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27808:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drm"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27808:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drmh"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drmh"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drmv"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drmv"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dstu"
+fields = { "sets" = ["stugkapacitet"] }
+evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:dstu"
+fields = { "tags" = [] }
+evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:dtom"
+fields = { "sets" = ["tomtkapacitet"] }
+evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:dtom"
+fields = { "tags" = [] }
+evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fritid"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Måttet ingår i resenärskategorier; turismin­kvartering saknar en tydlig tematagg.\ncatalog:variable_text:27813:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fritid"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i resenärskategorier; turismin­kvartering saknar en tydlig tematagg.\ncatalog:variable_text:27813:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "sets" = [] }
+evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grp"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grp"
+fields = { "tags" = [] }
+evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Källan beskriver både imputering och rapportering, med olika innehåll över perioderna.\ncatalog:variable_text:27816:13514:16071\ncatalog:variable_text:27816:16071:16436\ncatalog:variable_text:27816:16801:17897\ncatalog:variable_text:27816:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Källan beskriver både imputering och rapportering, med olika innehåll över perioderna.\ncatalog:variable_text:27816:13514:16071\ncatalog:variable_text:27816:16071:16436\ncatalog:variable_text:27816:16801:17897\ncatalog:variable_text:27816:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun anger anläggningens geografiska läge.\ncatalog:variable_text:27817:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun anger anläggningens geografiska läge.\ncatalog:variable_text:27817:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konf"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Måttet ingår i resenärskategorier.\ncatalog:variable_text:27818:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konf"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i resenärskategorier.\ncatalog:variable_text:27818:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län anger geografiskt läge.\ncatalog:variable_text:27819:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografiskt läge.\ncatalog:variable_text:27819:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiint"
+fields = { "sets" = [] }
+evidence = "Logiintäkt är en företagsintäkt.\ncatalog:variable_text:27820:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiint"
+fields = { "tags" = ["business"] }
+evidence = "Logiintäkt är en företagsintäkt.\ncatalog:variable_text:27820:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxbd"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxrm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxrm"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxstu"
+fields = { "sets" = ["stugkapacitet"] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxstu"
+fields = { "tags" = [] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxtom"
+fields = { "sets" = ["tomtkapacitet"] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mxtom"
+fields = { "tags" = [] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:natid"
+fields = { "sets" = [] }
+evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:natid"
+fields = { "tags" = ["geography"] }
+evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyin"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27827:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nyin"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27827:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinsve"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27828:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinsve"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27828:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinutl"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27829:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinutl"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27829:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oppen"
+fields = { "sets" = [] }
+evidence = "Öppenstatus beskriver anläggningens verksamhet.\ncatalog:variable_text:27830:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oppen"
+fields = { "tags" = ["business"] }
+evidence = "Öppenstatus beskriver anläggningens verksamhet.\ncatalog:variable_text:27830:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk postindelning.\ncatalog:variable_text:27832:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk postindelning.\ncatalog:variable_text:27832:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rapptyp"
+fields = { "sets" = [] }
+evidence = "Rapporteringssätt är en insamlingsmetod.\ncatalog:variable_text:27833:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rapptyp"
+fields = { "tags" = ["methods"] }
+evidence = "Rapporteringssätt är en insamlingsmetod.\ncatalog:variable_text:27833:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sgbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27834:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgbd"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27834:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27835:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxbd"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27835:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxcamp"
+fields = { "sets" = ["stugkapacitet", "tomtkapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxcamp"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxrm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27837:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxrm"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27837:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27838:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrm"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27838:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:snittantdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:snittantdygn"
+fields = { "tags" = [] }
+evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak"
+fields = { "sets" = ["stangningsorsak"] }
+evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak-datumupph"
+fields = { "sets" = ["stangningsorsak"] }
+evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak-datumupph"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsstatus"
+fields = { "sets" = [] }
+evidence = "Svarsstatus beskriver insamlingens kvalitet och bortfall.\ncatalog:valueset:4956\ncatalog:variable_text:27842:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Svarsstatus beskriver insamlingens kvalitet och bortfall.\ncatalog:valueset:4956\ncatalog:variable_text:27842:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Totalen ingår i vistelsedygn.\ncatalog:variable_text:27843:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantdygn"
+fields = { "tags" = [] }
+evidence = "Totalen ingår i vistelsedygn.\ncatalog:variable_text:27843:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:xbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:xbd"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2008-01-01..2008-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2009-01-01..2009-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2010-01-01..2010-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2011-01-01..2011-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2012-01-01..2012-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2013-01-01..2013-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2014-01-01..2014-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2015-01-01..2015-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2016-01-01..2016-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2017-01-01..2017-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2018-01-01..2018-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2019-01-01..2019-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2020-01-01..2020-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2021-01-01..2021-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2022-01-01..2022-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2023-01-01..2023-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "camping: Natid @2024-01-01..2024-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2007-01-01..2007-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2008-01-01..2008-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2009-01-01..2009-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2010-01-01..2010-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2011-01-01..2011-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2012-01-01..2012-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2013-01-01..2013-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2014-01-01..2014-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2015-01-01..2015-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2016-01-01..2016-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2017-01-01..2017-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2018-01-01..2018-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2019-01-01..2019-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2020-01-01..2020-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2021-01-01..2021-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2022-01-01..2022-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2023-01-01..2023-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: Natid @2024-01-01..2024-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2007-01-01..2007-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2008-01-01..2008-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2009-01-01..2009-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2010-01-01..2010-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2011-01-01..2011-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2012-01-01..2012-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2013-01-01..2013-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2014-01-01..2014-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2015-01-01..2015-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2016-01-01..2016-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2017-01-01..2017-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2018-01-01..2018-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2019-01-01..2019-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2020-01-01..2020-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2021-01-01..2021-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2022-01-01..2022-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2023-01-01..2023-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: Natid @2024-01-01..2024-12-31 where key = 'v27258'"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
+evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"

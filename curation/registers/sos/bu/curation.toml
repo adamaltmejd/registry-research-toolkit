@@ -586,3 +586,567 @@ kind = "set"
 subject = "bu-plac-pnrq0: pnrq"
 fields = { value_set = "db864fff94aabf1c766453d38085ae4050f27ecadf7a1f1b956ad315ff46154b" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!142. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-avslut-datum-insats"
+fields = { "sets" = ["korrigering-av-insatsdatum"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:variable_text:55729:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-avslut-datum-insats"
+fields = { "tags" = ["methods"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:variable_text:55729:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-beslut-datum-insats"
+fields = { "sets" = ["korrigering-av-insatsdatum"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:valueset:6902\ncatalog:variable_text:55730:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-beslut-datum-insats"
+fields = { "tags" = ["methods"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:valueset:6902\ncatalog:variable_text:55730:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avsldat"
+fields = { "sets" = ["placeringens-avslutsdatum"] }
+evidence = "Avslutsdatum för placering, inklusive sista placeringen.\ncatalog:variable_text:55731:-2557:11323\ncatalog:variable_text:55731:11323:16436\ncatalog:variable_text:55731:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avsldat"
+fields = { "tags" = [] }
+evidence = "Avslutsdatum för placering, inklusive sista placeringen.\ncatalog:variable_text:55731:-2557:11323\ncatalog:variable_text:55731:11323:16436\ncatalog:variable_text:55731:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55732:-3653:11323\ncatalog:variable_text:55732:11323:16436\ncatalog:variable_text:55732:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "tags" = [] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55732:-3653:11323\ncatalog:variable_text:55732:11323:16436\ncatalog:variable_text:55732:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-start-placering"
+fields = { "sets" = ["placeringens-startdatum"] }
+evidence = "Datum för placeringsstart.\ncatalog:variable_text:55733:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-start-placering"
+fields = { "tags" = [] }
+evidence = "Datum för placeringsstart.\ncatalog:variable_text:55733:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distriktskod beskriver geografisk indelning.\ncatalog:variable_text:55735:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktskod beskriver geografisk indelning.\ncatalog:variable_text:55735:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-insats"
+fields = { "sets" = ["situation-efter-insats"] }
+evidence = "Kodning av situation efter insatsen.\ncatalog:valueset:635\ncatalog:variable_text:55736:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-insats"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av situation efter insatsen.\ncatalog:valueset:635\ncatalog:variable_text:55736:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "sets" = [] }
+evidence = "Avser barn som anlänt från ett annat land utan förälder eller motsvarande vuxen.\ncatalog:variable_text:55737:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "tags" = ["migration"] }
+evidence = "Avser barn som anlänt från ett annat land utan förälder eller motsvarande vuxen.\ncatalog:variable_text:55737:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55738:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55738:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland-kod"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodla"
+fields = { "sets" = ["foraldrarnas-fodelseland"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55740:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodla"
+fields = { "tags" = ["demographics"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55740:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodland"
+fields = { "sets" = ["foraldrarnas-fodelseland"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55741:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55741:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-fod-datumn"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55742:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-fod-datumn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55742:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55743:-3653:11323\ncatalog:variable_text:55743:11323:16436\ncatalog:variable_text:55743:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55743:-3653:11323\ncatalog:variable_text:55743:11323:16436\ncatalog:variable_text:55743:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55744:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55744:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-namn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-namn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmor"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "Moderns födelseland i namnform.\ncatalog:variable_text:55747:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland i namnform.\ncatalog:variable_text:55747:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland-kod"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland i kodform.\ncatalog:variable_text:55748:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland i kodform.\ncatalog:variable_text:55748:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-avslut-datumn"
+fields = { "sets" = ["insatsens-avslutsdatum"] }
+evidence = "Datum för insatsens avslut, definierat som sista placeringens slut.\ncatalog:variable_text:55751:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Datum för insatsens avslut, definierat som sista placeringens slut.\ncatalog:variable_text:55751:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-beslut-datumn"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55752:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-beslut-datumn"
+fields = { "tags" = [] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55752:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "sets" = [] }
+evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-grund"
+fields = { "sets" = [] }
+evidence = "Grund för omhändertagande eller vård enligt LVU.\ncatalog:variable_text:55754:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-grund"
+fields = { "tags" = ["social-care"] }
+evidence = "Grund för omhändertagande eller vård enligt LVU.\ncatalog:variable_text:55754:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "sets" = [] }
+evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunindelning.\ncatalog:variable_text:55756:-3653:17167\ncatalog:variable_text:55756:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunindelning.\ncatalog:variable_text:55756:-3653:17167\ncatalog:variable_text:55756:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Barnets eller den ungas kön.\ncatalog:variable_text:55757:-3653:11323\ncatalog:variable_text:55757:11323:16436\ncatalog:variable_text:55757:16436:17167\ncatalog:variable_text:55757:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas kön.\ncatalog:variable_text:55757:-3653:11323\ncatalog:variable_text:55757:11323:16436\ncatalog:variable_text:55757:16436:17167\ncatalog:variable_text:55757:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland-kod"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-avslut-datumn"
+fields = { "sets" = ["insatsens-avslutsdatum"] }
+evidence = "Originaldatum för insatsens avslut.\ncatalog:variable_text:55760:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Originaldatum för insatsens avslut.\ncatalog:variable_text:55760:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-beslut-datumn"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Originaldatum för beslut om insatsen.\ncatalog:variable_text:55761:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-beslut-datumn"
+fields = { "tags" = [] }
+evidence = "Originaldatum för beslut om insatsen.\ncatalog:variable_text:55761:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pagins"
+fields = { "sets" = [] }
+evidence = "Uppgift om pågående insats.\ncatalog:variable_text:55762:3652:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:pagins"
+fields = { "tags" = ["social-care"] }
+evidence = "Uppgift om pågående insats.\ncatalog:variable_text:55762:3652:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55764:-3653:17167\ncatalog:variable_text:55764:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55764:-3653:17167\ncatalog:variable_text:55764:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-avslut-datumn"
+fields = { "sets" = ["placeringens-avslutsdatum"] }
+evidence = "Datum då placeringen avslutades.\ncatalog:variable_text:55765:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Datum då placeringen avslutades.\ncatalog:variable_text:55765:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-form"
+fields = { "sets" = ["placeringsform"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55766:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-form"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55766:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-lk"
+fields = { "sets" = ["placeringskommun"] }
+evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-lk"
+fields = { "tags" = ["geography"] }
+evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-start-datumn"
+fields = { "sets" = ["placeringens-startdatum"] }
+evidence = "Datum då placeringen påbörjades.\ncatalog:variable_text:55768:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-start-datumn"
+fields = { "tags" = [] }
+evidence = "Datum då placeringen påbörjades.\ncatalog:variable_text:55768:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placform"
+fields = { "sets" = ["placeringsform"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55769:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:placform"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55769:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:plackom"
+fields = { "sets" = ["placeringskommun"] }
+evidence = "Kommun där barnet eller den unga placerades.\ncatalog:variable_text:55770:-3653:3652\ncatalog:variable_text:55770:11323:17167\ncatalog:variable_text:55770:3652:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:plackom"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun där barnet eller den unga placerades.\ncatalog:variable_text:55770:-3653:3652\ncatalog:variable_text:55770:11323:17167\ncatalog:variable_text:55770:3652:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "sets" = [] }
+evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "tags" = ["social-care"] }
+evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:stadsdel"
+fields = { "sets" = [] }
+evidence = "Stadsdelsnämndens geografiska indelning.\ncatalog:variable_text:55774:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stadsdel"
+fields = { "tags" = ["geography"] }
+evidence = "Stadsdelsnämndens geografiska indelning.\ncatalog:variable_text:55774:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-insats"
+fields = { "sets" = ["varddagar"] }
+evidence = "Antal vårddagar för insatsen.\ncatalog:variable_text:55776:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-insats"
+fields = { "tags" = ["social-care"] }
+evidence = "Antal vårddagar för insatsen.\ncatalog:variable_text:55776:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-placering"
+fields = { "sets" = ["varddagar"] }
+evidence = "Antal vårddagar för placeringen.\ncatalog:variable_text:55777:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-placering"
+fields = { "tags" = ["social-care"] }
+evidence = "Antal vårddagar för placeringen.\ncatalog:variable_text:55777:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-efter"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare efter insatsens avslut.\ncatalog:variable_text:55778:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-efter"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare efter insatsens avslut.\ncatalog:variable_text:55778:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-fore"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare före beslut om insatsen.\ncatalog:variable_text:55779:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-fore"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare före beslut om insatsen.\ncatalog:variable_text:55779:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare vid insatsens slut; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55780:-3653:11323\ncatalog:variable_text:55780:11323:16436\ncatalog:variable_text:55780:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare vid insatsens slut; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55780:-3653:11323\ncatalog:variable_text:55780:11323:16436\ncatalog:variable_text:55780:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare vid insatsens början; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55781:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare vid insatsens början; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55781:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vartbarn"
+fields = { "sets" = ["situation-efter-insats"] }
+evidence = "Barnets eller den ungas situation efter insatsen.\ncatalog:valueset:3439\ncatalog:variable_text:55782:-3287:16436\ncatalog:variable_text:55782:-3653:-3287\ncatalog:variable_text:55782:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vartbarn"
+fields = { "tags" = ["social-care"] }
+evidence = "Barnets eller den ungas situation efter insatsen.\ncatalog:valueset:3439\ncatalog:variable_text:55782:-3287:16436\ncatalog:variable_text:55782:-3653:-3287\ncatalog:variable_text:55782:16436:17167"

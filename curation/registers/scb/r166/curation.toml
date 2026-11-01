@@ -1,0 +1,594 @@
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad10"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25845:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad10"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25845:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad100"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25846:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad100"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25846:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad101"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25847:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad101"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25847:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad11"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25848:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad11"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25848:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad20"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25849:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad20"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25849:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad200"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25850:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad200"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25850:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad201"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad201 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25851:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad201"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad201 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25851:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad21"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25852:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad21"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25852:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad30"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25853:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad30"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25853:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad31"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25854:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad31"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25854:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad40"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25855:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad40"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25855:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad41"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25856:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omvrad41"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25856:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar avvikande urvalsenheter.\ncatalog:variable_text:25857:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar avvikande urvalsenheter.\ncatalog:variable_text:25857:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad10"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25859:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad10"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25859:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad10-ib"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25860:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad10-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25860:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad100"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25861:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad100"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25861:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad101"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25862:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad101"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25862:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25863:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25863:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11-ib"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25864:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad11-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25864:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25865:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25865:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20-ib"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25866:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad20-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25866:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad200"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25867:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad200"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25867:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Etiketten anger ställning men definitionen anger omvärdering.\ncatalog:variable_text:25868:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "tags" = ["finance"] }
+evidence = "Etiketten anger ställning men definitionen anger omvärdering.\ncatalog:variable_text:25868:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad21"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25869:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad21"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25869:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad21-ib"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25870:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad21-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25870:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad30"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25871:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad30"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25871:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad30-ib"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25872:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad30-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25872:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad31"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25873:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad31"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25873:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad31-ib"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25874:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad31-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25874:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad40"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25875:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad40"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25875:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad40-ib"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25876:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad40-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25876:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad41"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25877:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad41"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25877:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad41-ib"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25878:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad41-ib"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25878:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:25879:16071:18628\ncatalog:variable_text:25879:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:25879:16071:18628\ncatalog:variable_text:25879:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:25880:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:25880:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: <none> @1997-01-01..1997-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @1998-01-01..1998-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @1999-01-01..1999-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2000-01-01..2000-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2001-01-01..2001-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2002-01-01..2002-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2003-01-01..2003-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2004-01-01..2004-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2005-01-01..2005-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2006-01-01..2006-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2007-01-01..2007-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2008-01-01..2008-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2009-01-01..2009-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2010-01-01..2010-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2011-01-01..2011-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2012-01-01..2012-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2013-01-01..2013-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2014-01-01..2014-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2015-01-01..2015-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2016-01-01..2016-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2017-01-01..2017-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2018-01-01..2018-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2019-01-01..2019-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2020-01-01..2020-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2021-01-01..2021-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2022-01-01..2022-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2023-01-01..2023-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2024-01-01..2024-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: Fax @2025-01-01..2025-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"

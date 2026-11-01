@@ -822,21 +822,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsdatum-1-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
-
-[[statement]]
-kind = "set"
 subject = "var:invandringsdatum-2"
 fields = { "sets" = ["invandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsdatum-2-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
 
 [[statement]]
 kind = "set"
@@ -846,21 +834,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsdatum-3-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
-
-[[statement]]
-kind = "set"
 subject = "var:invandringsdatum-4"
 fields = { "sets" = ["invandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsdatum-4-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
 
 [[statement]]
 kind = "set"
@@ -870,33 +846,15 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsdatum-5-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
-
-[[statement]]
-kind = "set"
 subject = "var:invandringsdatum-6"
 fields = { "sets" = ["invandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsdatum-6-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
-
-[[statement]]
-kind = "set"
 subject = "var:invandringsdatum-7"
 fields = { "sets" = ["invandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsdatum-7-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
 
 [[statement]]
 kind = "set"
@@ -912,69 +870,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsland-1"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-2"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-3"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-4"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-5"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-6"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-7"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-8"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
-subject = "var:invandringsland-9"
-fields = { "sets" = ["invandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsdatum-1"
 fields = { "sets" = ["utvandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsdatum-1-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
 
 [[statement]]
 kind = "set"
@@ -984,21 +882,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:utvandringsdatum-2-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsdatum-3"
 fields = { "sets" = ["utvandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsdatum-3-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
 
 [[statement]]
 kind = "set"
@@ -1008,21 +894,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:utvandringsdatum-4-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsdatum-5"
 fields = { "sets" = ["utvandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsdatum-5-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
 
 [[statement]]
 kind = "set"
@@ -1032,21 +906,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:utvandringsdatum-6-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsdatum-7"
 fields = { "sets" = ["utvandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsdatum-7-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
 
 [[statement]]
 kind = "set"
@@ -1056,75 +918,9 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:utvandringsdatum-8-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsdatum-9"
 fields = { "sets" = ["utvandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsdatum-9-numerisk"
-fields = { "sets" = ["utvarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-1"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-2"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-3"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-4"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-5"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-6"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-7"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-8"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
-
-[[statement]]
-kind = "set"
-subject = "var:utvandringsland-9"
-fields = { "sets" = ["utvandringsland"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
 
 [[statement]]
 kind = "set"
@@ -1227,3 +1023,1455 @@ kind = "set"
 subject = "lova-examen: examar"
 fields = { "variable" = "examensar-hogsta-examen" }
 evidence = "EXAMAR records the current degree in the HOSP and economy tables, but the highest degree in the EXAMEN table."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Kod för ägarkategori.\ncatalog:variable_text:56766:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "tags" = ["business"] }
+evidence = "Kod för ägarkategori.\ncatalog:variable_text:56766:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-klartext"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Klartext för ägarkategori.\ncatalog:variable_text:56767:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-klartext"
+fields = { "tags" = ["business"] }
+evidence = "Klartext för ägarkategori.\ncatalog:variable_text:56767:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-arets-slut"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:56768:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-arets-slut"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:56768:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "Arbetsmarknadsstatus.\ncatalog:variable_text:56770:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsmarknadsstatus.\ncatalog:variable_text:56770:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat-lisa"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "Arbetsmarknadsstatus.\ncatalog:variable_text:56771:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-mark-stat-lisa"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsmarknadsstatus.\ncatalog:variable_text:56771:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-klartext"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "Klartext för arbetsmarknadsstatus.\ncatalog:variable_text:56772:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-klartext"
+fields = { "tags" = ["employment"] }
+evidence = "Klartext för arbetsmarknadsstatus.\ncatalog:variable_text:56772:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-kod"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "Kod för arbetsmarknadsstatus.\ncatalog:variable_text:56773:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-kod"
+fields = { "tags" = ["employment"] }
+evidence = "Kod för arbetsmarknadsstatus.\ncatalog:variable_text:56773:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstellets-naringsgren-sni2007"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Arbetsställets näringsgren.\ncatalog:variable_text:56774:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstellets-naringsgren-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Arbetsställets näringsgren.\ncatalog:variable_text:56774:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbsoknov"
+fields = { "sets" = [] }
+evidence = "Arbetssökande är ett arbetsmarknadsmått.\ncatalog:variable_text:56775:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbsoknov"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetssökande är ett arbetsmarknadsmått.\ncatalog:variable_text:56775:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:artal-yrkesuppgift"
+fields = { "sets" = ["yrkesuppgiftens-ar"] }
+evidence = "År för yrkesuppgift.\ncatalog:variable_text:56776:14610:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:artal-yrkesuppgift"
+fields = { "tags" = [] }
+evidence = "År för yrkesuppgift.\ncatalog:variable_text:56776:14610:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:astkommun"
+fields = { "sets" = [] }
+evidence = "Arbetsställets geografiska läge.\ncatalog:variable_text:56777:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:astkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställets geografiska läge.\ncatalog:variable_text:56777:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avlidenar"
+fields = { "sets" = ["dodstidpunkt"] }
+evidence = "År för dödsdatum.\ncatalog:variable_text:56779:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avlidenar"
+fields = { "tags" = [] }
+evidence = "År för dödsdatum.\ncatalog:variable_text:56779:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsbegransningsdatum"
+fields = { "sets" = ["aterkallelse-av-legitimation-datum"] }
+evidence = "Datum då legitimationen upphör.\ncatalog:variable_text:56781:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsbegransningsdatum"
+fields = { "tags" = [] }
+evidence = "Datum då legitimationen upphör.\ncatalog:variable_text:56781:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsbegransningskod"
+fields = { "sets" = [] }
+evidence = "Kod för begränsning av förskrivningsrätt.\ncatalog:variable_text:56782:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsbegransningskod"
+fields = { "tags" = ["medicines"] }
+evidence = "Kod för begränsning av förskrivningsrätt.\ncatalog:variable_text:56782:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:desleg-datum"
+fields = { "sets" = ["aterkallelse-av-legitimation-datum"] }
+evidence = "Datum för beslut om återkallelse.\ncatalog:variable_text:56784:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:desleg-datum"
+fields = { "tags" = [] }
+evidence = "Datum för beslut om återkallelse.\ncatalog:variable_text:56784:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatum"
+fields = { "sets" = ["dodstidpunkt"] }
+evidence = "Dödsdatum.\ncatalog:variable_text:56785:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsdatum"
+fields = { "tags" = [] }
+evidence = "Dödsdatum.\ncatalog:variable_text:56785:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-ees"
+fields = { "sets" = [] }
+evidence = "Land för legitimation.\ncatalog:variable_text:56787:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-ees"
+fields = { "tags" = ["healthcare"] }
+evidence = "Land för legitimation.\ncatalog:variable_text:56787:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examen"
+fields = { "sets" = ["examen"] }
+evidence = "Examen i klartext.\ncatalog:variable_text:56788:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examen"
+fields = { "tags" = ["education"] }
+evidence = "Examen i klartext.\ncatalog:variable_text:56788:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examen-grov-gruppering-kod"
+fields = { "sets" = ["examen"] }
+evidence = "Etiketten anger kod men definitionen anger klartext.\ncatalog:variable_text:56789:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examen-grov-gruppering-kod"
+fields = { "tags" = ["education"] }
+evidence = "Etiketten anger kod men definitionen anger klartext.\ncatalog:variable_text:56789:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar-aktuell-examen"
+fields = { "sets" = ["examenstidpunkt"] }
+evidence = "Examensår.\ncatalog:variable_text:56790:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar-aktuell-examen"
+fields = { "tags" = [] }
+evidence = "Examensår.\ncatalog:variable_text:56790:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar-hogsta-examen"
+fields = { "sets" = ["examenstidpunkt"] }
+evidence = "Avslutningsår för högsta utbildning.\ncatalog:variable_text:56791:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar-hogsta-examen"
+fields = { "tags" = [] }
+evidence = "Avslutningsår för högsta utbildning.\ncatalog:variable_text:56791:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensdatum"
+fields = { "sets" = ["examenstidpunkt"] }
+evidence = "Examensdatum.\ncatalog:variable_text:56792:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examensdatum"
+fields = { "tags" = [] }
+evidence = "Examensdatum.\ncatalog:variable_text:56792:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examenskod"
+fields = { "sets" = ["examen"] }
+evidence = "Kod för examen.\ncatalog:variable_text:56793:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:examenskod"
+fields = { "tags" = ["education"] }
+evidence = "Kod för examen.\ncatalog:variable_text:56793:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:flagga-brytdatum-1-november"
+fields = { "sets" = [] }
+evidence = "Flaggan styr urvalet till statistiken.\ncatalog:variable_text:56794:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:flagga-brytdatum-1-november"
+fields = { "tags" = ["methods"] }
+evidence = "Flaggan styr urvalet till statistiken.\ncatalog:variable_text:56794:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:56795:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:56795:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = [] }
+evidence = "Födelseuppgift.\ncatalog:variable_text:56796:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseuppgift.\ncatalog:variable_text:56796:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:56797:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:56797:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forskrivningsratt"
+fields = { "sets" = [] }
+evidence = "Rätt att förskriva läkemedel.\ncatalog:variable_text:56798:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forskrivningsratt"
+fields = { "tags" = ["medicines"] }
+evidence = "Rätt att förskriva läkemedel.\ncatalog:variable_text:56798:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskola"
+fields = { "sets" = ["larosate"] }
+evidence = "Högskola för examen.\ncatalog:variable_text:56800:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Högskola för examen.\ncatalog:variable_text:56800:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hskoleort"
+fields = { "sets" = [] }
+evidence = "Högskolans ort.\ncatalog:variable_text:56801:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hskoleort"
+fields = { "tags" = ["geography"] }
+evidence = "Högskolans ort.\ncatalog:variable_text:56801:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:instkod"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Institutionell sektorkod.\ncatalog:variable_text:56802:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:instkod"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektorkod.\ncatalog:variable_text:56802:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-1-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56804:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-1-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56804:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-2-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56806:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-2-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56806:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-3-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56808:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-3-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56808:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-4-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56810:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-4-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56810:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-5-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56812:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-5-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56812:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-6-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56814:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-6-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56814:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-7-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56816:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-7-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56816:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-8-numerisk-invarn8"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56818:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-8-numerisk-invarn8"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56818:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-9-numerisk"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56820:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-9-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt invandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56820:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-1"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56821:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-1"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56821:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-2"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56822:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-2"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56822:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-3"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56823:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-3"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56823:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-4"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56824:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-4"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56824:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-5"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56825:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-5"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56825:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-6"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56826:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-6"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56826:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-7"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56827:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-7"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56827:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-8"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56828:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-8"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56828:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-9"
+fields = { "sets" = ["invandringsland"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56829:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-9"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid invandring.\ncatalog:variable_text:56829:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "sets" = [] }
+evidence = "Källa till uppgifterna.\ncatalog:variable_text:56830:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "tags" = ["methods"] }
+evidence = "Källa till uppgifterna.\ncatalog:variable_text:56830:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "sets" = [] }
+evidence = "Kategori för legitimation, specialitet eller examen.\ncatalog:occurrence:522092\ncatalog:variable_text:56831:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kategori för legitimation, specialitet eller examen.\ncatalog:occurrence:522092\ncatalog:variable_text:56831:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-lakarspecialitstyp"
+fields = { "sets" = ["lakarspecialitet"] }
+evidence = "Typ av läkarspecialitet.\ncatalog:variable_text:56832:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-lakarspecialitstyp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Typ av läkarspecialitet.\ncatalog:variable_text:56832:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-spec"
+fields = { "sets" = ["lakarspecialitet"] }
+evidence = "Specialitet i klartext.\ncatalog:variable_text:56833:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-spec"
+fields = { "tags" = ["healthcare"] }
+evidence = "Specialitet i klartext.\ncatalog:variable_text:56833:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-lakarspecialtetstyp"
+fields = { "sets" = ["lakarspecialitet"] }
+evidence = "Kod för typ av läkarspecialitet.\ncatalog:variable_text:56834:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-lakarspecialtetstyp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för typ av läkarspecialitet.\ncatalog:variable_text:56834:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-legitimationen"
+fields = { "sets" = ["legitimationsinriktning"] }
+evidence = "Kod för legitimation.\ncatalog:variable_text:56835:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-legitimationen"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för legitimation.\ncatalog:variable_text:56835:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["bostadskommun"] }
+evidence = "Bostadskommun.\ncatalog:variable_text:56839:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Bostadskommun.\ncatalog:variable_text:56839:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-lk"
+fields = { "sets" = ["bostadskommun"] }
+evidence = "Kommunkod i regionindelningen.\ncatalog:variable_text:56840:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-lk"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkod i regionindelningen.\ncatalog:variable_text:56840:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:56841:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:56841:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:land-klartext"
+fields = { "sets" = ["landklassificering"] }
+evidence = "Land i landskodstabellen.\ncatalog:variable_text:56842:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:land-klartext"
+fields = { "tags" = ["geography"] }
+evidence = "Land i landskodstabellen.\ncatalog:variable_text:56842:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landgrupp-klartext"
+fields = { "sets" = ["landklassificering"] }
+evidence = "Landgrupp i klartext.\ncatalog:variable_text:56843:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landgrupp-klartext"
+fields = { "tags" = ["geography"] }
+evidence = "Landgrupp i klartext.\ncatalog:variable_text:56843:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "sets" = ["landklassificering"] }
+evidence = "Landskod.\ncatalog:variable_text:56844:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "tags" = ["geography"] }
+evidence = "Landskod.\ncatalog:variable_text:56844:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:larare"
+fields = { "sets" = [] }
+evidence = "Markering för lärare.\ncatalog:variable_text:56845:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:larare"
+fields = { "tags" = ["employment"] }
+evidence = "Markering för lärare.\ncatalog:variable_text:56845:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate"
+fields = { "sets" = ["larosate"] }
+evidence = "Lärosäte för examen.\ncatalog:variable_text:56846:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate"
+fields = { "tags" = ["education"] }
+evidence = "Lärosäte för examen.\ncatalog:variable_text:56846:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-ar"
+fields = { "sets" = ["legitimation-specialitetsbevis-utfardandetidpunkt"] }
+evidence = "År för utfärdande.\ncatalog:variable_text:56847:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-ar"
+fields = { "tags" = [] }
+evidence = "År för utfärdande.\ncatalog:variable_text:56847:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-exam-kod"
+fields = { "sets" = ["utbildnings-eller-specialitetsklassificering"] }
+evidence = "Utbildnings- eller specialitetskod.\ncatalog:variable_text:56848:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-exam-kod"
+fields = { "tags" = ["healthcare"] }
+evidence = "Utbildnings- eller specialitetskod.\ncatalog:variable_text:56848:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-kat"
+fields = { "sets" = ["utbildnings-eller-specialitetsklassificering"] }
+evidence = "Gruppering av legitimations- och specialitetskoder.\ncatalog:variable_text:56850:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-kat"
+fields = { "tags" = ["healthcare"] }
+evidence = "Gruppering av legitimations- och specialitetskoder.\ncatalog:variable_text:56850:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-kat-grp"
+fields = { "sets" = ["utbildnings-eller-specialitetsklassificering"] }
+evidence = "Gruppering inom yrkeskategori.\ncatalog:variable_text:56851:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-kat-grp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Gruppering inom yrkeskategori.\ncatalog:variable_text:56851:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-specdatum"
+fields = { "sets" = ["legitimation-specialitetsbevis-utfardandetidpunkt"] }
+evidence = "Datum för utfärdande.\ncatalog:variable_text:56853:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:leg-specdatum"
+fields = { "tags" = [] }
+evidence = "Datum för utfärdande.\ncatalog:variable_text:56853:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:legitimationens-inriktning-i-klartext"
+fields = { "sets" = ["legitimationsinriktning"] }
+evidence = "Legitimationens inriktning.\ncatalog:variable_text:56854:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:legitimationens-inriktning-i-klartext"
+fields = { "tags" = ["healthcare"] }
+evidence = "Legitimationens inriktning.\ncatalog:variable_text:56854:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Näringsgruppering för hälso- och sjukvård.\ncatalog:variable_text:56856:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgruppering för hälso- och sjukvård.\ncatalog:variable_text:56856:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-storsta-forvarvskalla-sni2007"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Näringsgren för näst största förvärvskällan.\ncatalog:variable_text:56857:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-storsta-forvarvskalla-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren för näst största förvärvskällan.\ncatalog:variable_text:56857:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:provotidfran"
+fields = { "sets" = ["provotidsperiod"] }
+evidence = "Prövotidens början.\ncatalog:variable_text:56859:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provotidfran"
+fields = { "tags" = [] }
+evidence = "Prövotidens början.\ncatalog:variable_text:56859:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provotidtill"
+fields = { "sets" = ["provotidsperiod"] }
+evidence = "Prövotidens slut.\ncatalog:variable_text:56860:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provotidtill"
+fields = { "tags" = [] }
+evidence = "Prövotidens slut.\ncatalog:variable_text:56860:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:regi"
+fields = { "sets" = [] }
+evidence = "Privat eller offentlig regi.\ncatalog:variable_text:56861:11688:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:regi"
+fields = { "tags" = ["business"] }
+evidence = "Privat eller offentlig regi.\ncatalog:variable_text:56861:11688:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Institutionell sektor.\ncatalog:variable_text:56862:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor.\ncatalog:variable_text:56862:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-klartext"
+fields = { "sets" = ["institutionell-sektor"] }
+evidence = "Institutionell sektor i klartext.\ncatalog:variable_text:56863:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-klartext"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor i klartext.\ncatalog:variable_text:56863:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvardsregion"
+fields = { "sets" = [] }
+evidence = "Geografisk region.\ncatalog:variable_text:56865:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvardsregion"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk region.\ncatalog:variable_text:56865:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "SNI är en kod som inte förekommer i etiketten.\ncatalog:variable_text:56866:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en kod som inte förekommer i etiketten.\ncatalog:variable_text:56866:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sos-egen-kod-for-sjukskoterskors-specialistexamen"
+fields = { "sets" = ["examen"] }
+evidence = "Kod för sjuksköterskors specialistexamen.\ncatalog:variable_text:56867:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sos-egen-kod-for-sjukskoterskors-specialistexamen"
+fields = { "tags" = ["education"] }
+evidence = "Kod för sjuksköterskors specialistexamen.\ncatalog:variable_text:56867:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:specialitetsgrupp-klartext"
+fields = { "sets" = ["lakarspecialitet"] }
+evidence = "Specialitetsgrupp i klartext.\ncatalog:variable_text:56868:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:specialitetsgrupp-klartext"
+fields = { "tags" = ["healthcare"] }
+evidence = "Specialitetsgrupp i klartext.\ncatalog:variable_text:56868:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-3-foretagare"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56870:16071:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-3-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56870:16071:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-4-foretagare"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56871:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-4-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56871:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-4-foretagare-j16"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56872:16071:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk2012-4-foretagare-j16"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56872:16071:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56873:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56873:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk96-3-foretagare"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56875:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk96-3-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56875:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk96-4-foretagare"
+fields = { "sets" = ["yrke"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56877:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk96-4-foretagare"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56877:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykar"
+fields = { "sets" = ["yrkesuppgiftens-ar"] }
+evidence = "SSYK är en kod som saknas i etiketten.\ncatalog:variable_text:56878:11323:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ssykar"
+fields = { "tags" = [] }
+evidence = "SSYK är en kod som saknas i etiketten.\ncatalog:variable_text:56878:11323:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-klartext-beskrivning"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Sysselsättningsstatus i klartext.\ncatalog:variable_text:56881:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-klartext-beskrivning"
+fields = { "tags" = ["employment"] }
+evidence = "Sysselsättningsstatus i klartext.\ncatalog:variable_text:56881:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:syssstat"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "Sysselsättningsstatus i kod.\ncatalog:variable_text:56882:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:syssstat"
+fields = { "tags" = ["employment"] }
+evidence = "Sysselsättningsstatus i kod.\ncatalog:variable_text:56882:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsregion"
+fields = { "sets" = [] }
+evidence = "Utbildningsregion.\ncatalog:variable_text:56883:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsregion"
+fields = { "tags" = ["geography"] }
+evidence = "Utbildningsregion.\ncatalog:variable_text:56883:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tempbehorighetfran"
+fields = { "sets" = ["temporar-legitimationsperiod"] }
+evidence = "Tillfällig legitimationsperiods början.\ncatalog:variable_text:56884:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tempbehorighetfran"
+fields = { "tags" = [] }
+evidence = "Tillfällig legitimationsperiods början.\ncatalog:variable_text:56884:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tempbehorighettill"
+fields = { "sets" = ["temporar-legitimationsperiod"] }
+evidence = "Tillfällig legitimationsperiods slut.\ncatalog:variable_text:56885:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tempbehorighettill"
+fields = { "tags" = [] }
+evidence = "Tillfällig legitimationsperiods slut.\ncatalog:variable_text:56885:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tmgrpnamn"
+fields = { "sets" = ["examen"] }
+evidence = "TMGRP är en ogenomskinlig källkod.\ncatalog:variable_text:56886:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tmgrpnamn"
+fields = { "tags" = ["education"] }
+evidence = "TMGRP är en ogenomskinlig källkod.\ncatalog:variable_text:56886:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-spec-kod"
+fields = { "sets" = ["utbildnings-eller-specialitetsklassificering"] }
+evidence = "Kod för aktuell legitimation eller bevis.\ncatalog:variable_text:56888:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utb-spec-kod"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för aktuell legitimation eller bevis.\ncatalog:variable_text:56888:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun2000"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Utbildningsinriktning.\ncatalog:variable_text:56889:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun2000"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsinriktning.\ncatalog:variable_text:56889:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun2020"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Utbildningsinriktning.\ncatalog:variable_text:56890:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-sun2020"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsinriktning.\ncatalog:variable_text:56890:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsland"
+fields = { "sets" = ["utbildningsland"] }
+evidence = "Utbildningsland.\ncatalog:variable_text:56891:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsland"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsland.\ncatalog:variable_text:56891:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2000"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Utbildningsnivå.\ncatalog:variable_text:56892:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2000"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå.\ncatalog:variable_text:56892:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2020"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Utbildningsnivå.\ncatalog:variable_text:56893:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2020"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå.\ncatalog:variable_text:56893:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbland"
+fields = { "sets" = ["utbildningsland"] }
+evidence = "Utbildningsland i grupperingskod.\ncatalog:variable_text:56894:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbland"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsland i grupperingskod.\ncatalog:variable_text:56894:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-1-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56896:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-1-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56896:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-2-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56898:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-2-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56898:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-3-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56900:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-3-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56900:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-4-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56902:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-4-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56902:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-5-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56904:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-5-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56904:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-6-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56906:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-6-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56906:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-7-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56908:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-7-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56908:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-8-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56910:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-8-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56910:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-9-numerisk"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56912:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-9-numerisk"
+fields = { "tags" = [] }
+evidence = "Numeriskt utvandringsdatum ingår i datumgruppen.\ncatalog:variable_text:56912:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-1"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56913:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-1"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56913:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-2"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56914:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-2"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56914:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-3"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56915:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-3"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56915:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-4"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56916:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-4"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56916:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-5"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56917:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-5"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56917:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-6"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56918:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-6"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56918:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-7"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56919:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-7"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56919:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-8"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56920:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-8"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56920:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-9"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56921:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-9"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Land vid utvandring.\ncatalog:variable_text:56921:9131:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod"
+fields = { "sets" = ["yrke"] }
+evidence = "Källorna anger olika urval av legitimationsyrken och socionomer.\ncatalog:occurrence:522157\ncatalog:occurrence:522190\ncatalog:occurrence:522209"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod"
+fields = { "tags" = ["employment"] }
+evidence = "Källorna anger olika urval av legitimationsyrken och socionomer.\ncatalog:occurrence:522157\ncatalog:occurrence:522190\ncatalog:occurrence:522209"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-klartext"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning.\ncatalog:variable_text:56923:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-klartext"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning.\ncatalog:variable_text:56923:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstalln"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "Yrkesställning.\ncatalog:variable_text:56924:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstalln"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesställning.\ncatalog:variable_text:56924:9131:2932897"

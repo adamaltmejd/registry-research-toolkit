@@ -76,3 +76,99 @@ kind = "set"
 subject = "oljeleveranser-kommunvis-redovisning: lk @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "sets" = [] }
+evidence = "Bränsleslag och bransleslaget-i-klartext avser samma bränsleslag i olika perioder.\ncatalog:occurrence:391390\ncatalog:occurrence:391400"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleslag och bransleslaget-i-klartext avser samma bränsleslag i olika perioder.\ncatalog:occurrence:391390\ncatalog:occurrence:391400"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "sets" = [] }
+evidence = "Bränsleslaget i klartext och bransleslag avser samma begrepp i olika perioder.\ncatalog:occurrence:391390\ncatalog:occurrence:391400"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleslaget i klartext och bransleslag avser samma begrepp i olika perioder.\ncatalog:occurrence:391390\ncatalog:occurrence:391400"
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod"
+fields = { "sets" = [] }
+evidence = "Koden anger förbrukarkategorin för oljeleveransen.\ncatalog:valueset:3566\ncatalog:valueset:9496\ncatalog:variable_text:39570:15340:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod"
+fields = { "tags" = ["energy"] }
+evidence = "Koden anger förbrukarkategorin för oljeleveransen.\ncatalog:valueset:3566\ncatalog:valueset:9496\ncatalog:variable_text:39570:15340:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun och kommunnamn avser kommunens namn i olika perioder.\ncatalog:occurrence:391495\ncatalog:occurrence:391503"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och kommunnamn avser kommunens namn i olika perioder.\ncatalog:occurrence:391495\ncatalog:occurrence:391503"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-lk"
+fields = { "sets" = [] }
+evidence = "Kommun-lk och kommunkod avser samma kommunkod i olika perioder.\ncatalog:occurrence:391488\ncatalog:occurrence:391497"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-lk"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun-lk och kommunkod avser samma kommunkod i olika perioder.\ncatalog:occurrence:391488\ncatalog:occurrence:391497"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = [] }
+evidence = "Kommunkod och kommun-lk avser samma kommunkod i olika perioder.\ncatalog:occurrence:391488\ncatalog:occurrence:391497"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkod och kommun-lk avser samma kommunkod i olika perioder.\ncatalog:occurrence:391488\ncatalog:occurrence:391497"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = [] }
+evidence = "Kommunnamn och kommun avser kommunens namn i olika perioder.\ncatalog:occurrence:391495\ncatalog:occurrence:391503"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamn och kommun avser kommunens namn i olika perioder.\ncatalog:occurrence:391495\ncatalog:occurrence:391503"
+
+[[statement]]
+kind = "set"
+subject = "var:volym"
+fields = { "sets" = [] }
+evidence = "Volymen avser levererat bränsle.\ncatalog:occurrence:391500\ncatalog:register:217"
+
+[[statement]]
+kind = "set"
+subject = "var:volym"
+fields = { "tags" = ["energy"] }
+evidence = "Volymen avser levererat bränsle.\ncatalog:occurrence:391500\ncatalog:register:217"

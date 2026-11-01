@@ -1,0 +1,816 @@
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "sets" = ["referensar"] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387356\ncatalog:occurrence:387402\ncatalog:occurrence:387487\ncatalog:occurrence:387504"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "tags" = [] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387356\ncatalog:occurrence:387402\ncatalog:occurrence:387487\ncatalog:occurrence:387504"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadshus"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39141:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadshus"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39141:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:branslekod"
+fields = { "sets" = [] }
+evidence = "Koden avser bränsleprodukter.\ncatalog:variable_text:39142:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branslekod"
+fields = { "tags" = ["energy"] }
+evidence = "Koden avser bränsleprodukter.\ncatalog:variable_text:39142:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bunkring"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Bunkring ingår i bränsleleveranser.\ncatalog:variable_text:39143:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:bunkring"
+fields = { "tags" = ["energy"] }
+evidence = "Bunkring ingår i bränsleleveranser.\ncatalog:variable_text:39143:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:densitet"
+fields = { "sets" = [] }
+evidence = "Källan anger olika enheter för olika perioder.\ncatalog:variable_text:39145:17532:19723\ncatalog:variable_text:39145:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:densitet"
+fields = { "tags" = ["energy"] }
+evidence = "Källan anger olika enheter för olika perioder.\ncatalog:variable_text:39145:17532:19723\ncatalog:variable_text:39145:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:densitet-imp"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39146:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:densitet-imp"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39146:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:differens"
+fields = { "sets" = ["bransledifferenser"] }
+evidence = "Variabeln är en differenspost.\ncatalog:variable_text:39147:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:differens"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln är en differenspost.\ncatalog:variable_text:39147:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:differens-procent"
+fields = { "sets" = ["bransledifferenser"] }
+evidence = "Variabeln är en differenspost i procent.\ncatalog:variable_text:39148:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:differens-procent"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln är en differenspost i procent.\ncatalog:variable_text:39148:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:egenf"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter egen bränsleförbrukning.\ncatalog:variable_text:39149:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:egenf"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter egen bränsleförbrukning.\ncatalog:variable_text:39149:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:etanol-fame-volym"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har olika beskrivna innehåll i intilliggande perioder.\ncatalog:occurrence:387401\ncatalog:occurrence:387417"
+
+[[statement]]
+kind = "set"
+subject = "var:etanol-fame-volym"
+fields = { "tags" = ["energy"] }
+evidence = "Samma kolumn har olika beskrivna innehåll i intilliggande perioder.\ncatalog:occurrence:387401\ncatalog:occurrence:387417"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "sets" = ["utrikeshandel-med-branslen"] }
+evidence = "Variabeln mäter bränsleexport.\ncatalog:variable_text:39151:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Variabeln mäter bränsleexport.\ncatalog:variable_text:39151:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-cif"
+fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-cif"
+fields = { "tags" = ["energy", "prices", "trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-fob"
+fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-fob"
+fields = { "tags" = ["energy", "prices", "trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
+
+[[statement]]
+kind = "set"
+subject = "var:flerbostad"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39154:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:flerbostad"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39154:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:flode"
+fields = { "sets" = [] }
+evidence = "Koden beskriver bränsleredovisningens flöden.\ncatalog:variable_text:39155:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:flode"
+fields = { "tags" = ["energy"] }
+evidence = "Koden beskriver bränsleredovisningens flöden.\ncatalog:variable_text:39155:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsvaret"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39157:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:forsvaret"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39157:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:gruvind"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39158:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:gruvind"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39158:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:import"
+fields = { "sets" = ["utrikeshandel-med-branslen"] }
+evidence = "Variabeln mäter bränsleimport.\ncatalog:variable_text:39159:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:import"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Variabeln mäter bränsleimport.\ncatalog:variable_text:39159:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:importpris-cif"
+fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
+
+[[statement]]
+kind = "set"
+subject = "var:importpris-cif"
+fields = { "tags" = ["energy", "prices", "trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
+
+[[statement]]
+kind = "set"
+subject = "var:importpris-fob"
+fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
+
+[[statement]]
+kind = "set"
+subject = "var:importpris-fob"
+fields = { "tags" = ["energy", "prices", "trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
+
+[[statement]]
+kind = "set"
+subject = "var:inlager"
+fields = { "sets" = ["branslelager"] }
+evidence = "Variabeln mäter ingående bränslelager.\ncatalog:variable_text:39162:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inlager"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter ingående bränslelager.\ncatalog:variable_text:39162:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inrsjofart"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39163:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inrsjofart"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39163:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:insraff"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter bränsle för raffinering.\ncatalog:variable_text:39164:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:insraff"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsle för raffinering.\ncatalog:variable_text:39164:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:jarnvagar"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39165:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:jarnvagar"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39165:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:jordskog"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39166:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:jordskog"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39166:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kalenderar"
+fields = { "sets" = ["referensar"] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387356\ncatalog:occurrence:387402"
+
+[[statement]]
+kind = "set"
+subject = "var:kalenderar"
+fields = { "tags" = [] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387356\ncatalog:occurrence:387402"
+
+[[statement]]
+kind = "set"
+subject = "var:konsum"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39168:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:konsum"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39168:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftogasv"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39169:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftogasv"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39169:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaloverf"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter kvalitetsöverföring av bränsle.\ncatalog:variable_text:39170:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaloverf"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter kvalitetsöverföring av bränsle.\ncatalog:variable_text:39170:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvot"
+fields = { "sets" = ["bransledifferenser"] }
+evidence = "Variabeln är en differenspost i form av en kvot.\ncatalog:variable_text:39171:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvot"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln är en differenspost i form av en kvot.\ncatalog:variable_text:39171:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:land-for-import-export"
+fields = { "sets" = ["land-for-branslehandel"] }
+evidence = "Variabeln anger land för bränslehandel.\ncatalog:variable_text:39172:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:land-for-import-export"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Variabeln anger land för bränslehandel.\ncatalog:variable_text:39172:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "sets" = ["land-for-branslehandel"] }
+evidence = "Landkoden ingår i bränslehandelns landkodning.\ncatalog:register:205\ncatalog:variable_text:39173:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "tags" = ["geography"] }
+evidence = "Landkoden ingår i bränslehandelns landkodning.\ncatalog:register:205\ncatalog:variable_text:39173:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lev"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39174:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:lev"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39174:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-branslen-ovriga"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-branslen-ovriga"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-egna-aterforsaljare"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-egna-aterforsaljare"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-kol-koks-aterforsaljare"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-kol-koks-aterforsaljare"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Variabeln anger månad för uppgifterna.\ncatalog:variable_text:39179:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "tags" = [] }
+evidence = "Variabeln anger månad för uppgifterna.\ncatalog:variable_text:39179:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo1"
+fields = { "sets" = ["branslevolym-efter-miljoklass"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39180:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo1"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39180:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo2"
+fields = { "sets" = ["branslevolym-efter-miljoklass"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39181:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo2"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39181:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo3"
+fields = { "sets" = ["branslevolym-efter-miljoklass"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39182:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:miljo3"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln anger bränslevolym efter miljöklass.\ncatalog:variable_text:39182:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mot"
+fields = { "sets" = ["mottagna-branslekvantiteter"] }
+evidence = "Variabeln mäter mottaget bränsle.\ncatalog:variable_text:39183:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:mot"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter mottaget bränsle.\ncatalog:variable_text:39183:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovraterfors"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39185:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovraterfors"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39185:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrfastig"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39186:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrfastig"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39186:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-levererade-kvantiteter"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-levererade-kvantiteter"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigtverk"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39188:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigtverk"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39188:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrmot"
+fields = { "sets" = ["mottagna-branslekvantiteter"] }
+evidence = "Variabeln mäter mottaget bränsle.\ncatalog:variable_text:39189:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrmot"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter mottaget bränsle.\ncatalog:variable_text:39189:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter bränsleproduktion.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleproduktion.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rafforlust"
+fields = { "sets" = ["bransledifferenser"] }
+evidence = "Variabeln mäter produktdifferenser.\ncatalog:variable_text:39192:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:rafforlust"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter produktdifferenser.\ncatalog:variable_text:39192:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:summa"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter totala bränsleleveranser.\ncatalog:variable_text:39196:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:summa"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter totala bränsleleveranser.\ncatalog:variable_text:39196:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:svinn"
+fields = { "sets" = ["bransledifferenser"] }
+evidence = "Variabeln är en differenspost.\ncatalog:variable_text:39197:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:svinn"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln är en differenspost.\ncatalog:variable_text:39197:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar"
+fields = { "sets" = ["referensar"] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387487\ncatalog:occurrence:387504"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar"
+fields = { "tags" = [] }
+evidence = "Samma årsbegrepp är uppdelat mellan intilliggande perioder.\ncatalog:occurrence:387487\ncatalog:occurrence:387504"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsmanad"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Variabeln anger undersökningsmånad.\ncatalog:variable_text:39200:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsmanad"
+fields = { "tags" = [] }
+evidence = "Variabeln anger undersökningsmånad.\ncatalog:variable_text:39200:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utlager"
+fields = { "sets" = ["branslelager"] }
+evidence = "Variabeln mäter utgående bränslelager.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utlager"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter utgående bränslelager.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeverk"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39204:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeverk"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39204:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-imp"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39205:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-imp"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39205:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-ton"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter bränslets vikt.\ncatalog:register:205\ncatalog:variable_text:39206:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-ton"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter bränslets vikt.\ncatalog:register:205\ncatalog:variable_text:39206:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:volym"
+fields = { "sets" = ["bransleleveranser"] }
+evidence = "Samma kolumn har olika beskrivna innehåll i intilliggande perioder. Coordinator group membership: Medlemmarna mäter totala eller mottagarfördelade bränsleleveranser, inklusive bunkring. Även volym omfattas genom den granskade beskrivningen ”Levererad volym i m3”. Identitetsfrågorna ändrar inte dessa belagda begreppstillhörigheter. Mottagande, utrikeshandel, produktion och egen förbrukning utesluts.\ncatalog:occurrence:387401\ncatalog:occurrence:387417\ncatalog:variable_text:39141:13879:17532\ncatalog:variable_text:39143:14245:17532\ncatalog:variable_text:39154:13879:17532\ncatalog:variable_text:39157:13879:17532\ncatalog:variable_text:39158:13879:17532\ncatalog:variable_text:39163:14245:17532\ncatalog:variable_text:39165:13879:17532\ncatalog:variable_text:39166:13879:17532\ncatalog:variable_text:39168:13879:17532\ncatalog:variable_text:39169:13879:17532\ncatalog:variable_text:39174:13879:17532\ncatalog:variable_text:39175:13879:17532\ncatalog:variable_text:39176:13879:17532\ncatalog:variable_text:39177:13879:17532\ncatalog:variable_text:39185:13879:17532\ncatalog:variable_text:39186:13879:17532\ncatalog:variable_text:39187:13879:17532\ncatalog:variable_text:39188:13879:17532\ncatalog:variable_text:39196:13879:17532\ncatalog:variable_text:39204:13879:17532\ncatalog:variable_text:39207:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:volym"
+fields = { "tags" = ["energy"] }
+evidence = "Samma kolumn har olika beskrivna innehåll i intilliggande perioder. Coordinator group membership: Medlemmarna mäter totala eller mottagarfördelade bränsleleveranser, inklusive bunkring. Även volym omfattas genom den granskade beskrivningen ”Levererad volym i m3”. Identitetsfrågorna ändrar inte dessa belagda begreppstillhörigheter. Mottagande, utrikeshandel, produktion och egen förbrukning utesluts.\ncatalog:occurrence:387401\ncatalog:occurrence:387417\ncatalog:variable_text:39141:13879:17532\ncatalog:variable_text:39143:14245:17532\ncatalog:variable_text:39154:13879:17532\ncatalog:variable_text:39157:13879:17532\ncatalog:variable_text:39158:13879:17532\ncatalog:variable_text:39163:14245:17532\ncatalog:variable_text:39165:13879:17532\ncatalog:variable_text:39166:13879:17532\ncatalog:variable_text:39168:13879:17532\ncatalog:variable_text:39169:13879:17532\ncatalog:variable_text:39174:13879:17532\ncatalog:variable_text:39175:13879:17532\ncatalog:variable_text:39176:13879:17532\ncatalog:variable_text:39177:13879:17532\ncatalog:variable_text:39185:13879:17532\ncatalog:variable_text:39186:13879:17532\ncatalog:variable_text:39187:13879:17532\ncatalog:variable_text:39188:13879:17532\ncatalog:variable_text:39196:13879:17532\ncatalog:variable_text:39204:13879:17532\ncatalog:variable_text:39207:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:volym-imp"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39208:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:volym-imp"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsstatus.\ncatalog:valueset:267\ncatalog:variable_text:39208:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2008-01-01..2008-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2009-01-01..2009-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2010-01-01..2010-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2011-01-01..2011-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2012-01-01..2012-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2013-01-01..2013-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2014-01-01..2014-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2015-01-01..2015-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2016-01-01..2016-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: PRODUKTION @2017-01-01..2017-12-31 where key = 'v20503'"
+fields = { "description" = "Produktion av olika bränslen." }
+evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:39190:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2008-01-01..2008-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2009-01-01..2009-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2010-01-01..2010-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2011-01-01..2011-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2012-01-01..2012-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2013-01-01..2013-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2014-01-01..2014-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2015-01-01..2015-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2016-01-01..2016-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2017-01-01..2017-12-31 where key = 'v20504'"
+fields = { "description" = "Lager vid periodens slut." }
+evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"

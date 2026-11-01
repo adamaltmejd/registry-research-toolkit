@@ -10,3 +10,303 @@ kind = "set"
 subject = "ansokningar-beslut: diagnos_2"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:979\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-barn"
+fields = { "sets" = [] }
+evidence = "Barnets ålder är en demografisk uppgift.\ncatalog:variable_text:102:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets ålder är en demografisk uppgift.\ncatalog:variable_text:102:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande"
+fields = { "sets" = [] }
+evidence = "Den sökandes ålder är en demografisk uppgift.\ncatalog:variable_text:103:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-sokande"
+fields = { "tags" = ["demographics"] }
+evidence = "Den sökandes ålder är en demografisk uppgift.\ncatalog:variable_text:103:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassningskategori"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver anpassning av fordon vid funktionsnedsättning.\ncatalog:register:5\ncatalog:variable_text:104:16071:2932897\ncatalog:variable_text:105:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassningskategori"
+fields = { "tags" = ["disability", "transport"] }
+evidence = "Variabeln beskriver anpassning av fordon vid funktionsnedsättning.\ncatalog:register:5\ncatalog:variable_text:104:16071:2932897\ncatalog:variable_text:105:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassningstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver anpassning av fordon vid funktionsnedsättning.\ncatalog:register:5\ncatalog:variable_text:104:16071:2932897\ncatalog:variable_text:105:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassningstyp"
+fields = { "tags" = ["disability", "transport"] }
+evidence = "Variabeln beskriver anpassning av fordon vid funktionsnedsättning.\ncatalog:register:5\ncatalog:variable_text:104:16071:2932897\ncatalog:variable_text:105:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ansokan-period"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver ansökan om bilstöd under en begränsningsperiod.\ncatalog:variable_text:106:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ansokan-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln beskriver ansökan om bilstöd under en begränsningsperiod.\ncatalog:variable_text:106:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsorsak"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver skäl för avslag eller delvis beviljat bilstöd.\ncatalog:variable_text:108:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsorsak"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln beskriver skäl för avslag eller delvis beviljat bilstöd.\ncatalog:variable_text:108:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutat-belopp"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter beviljat bilstödsbelopp.\ncatalog:variable_text:109:18628:2932897\ncatalog:variable_text:131:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutat-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln mäter beviljat bilstödsbelopp.\ncatalog:variable_text:109:18628:2932897\ncatalog:variable_text:131:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsutfall"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver utfallet av ett bilstödsbeslut.\ncatalog:register:5\ncatalog:variable_text:111:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsutfall"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln beskriver utfallet av ett bilstödsbeslut.\ncatalog:register:5\ncatalog:variable_text:111:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljandeorsak-period"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver skäl för att bevilja bilstöd under en begränsningsperiod.\ncatalog:variable_text:112:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljandeorsak-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln beskriver skäl för att bevilja bilstöd under en begränsningsperiod.\ncatalog:variable_text:112:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragsgrupp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den sökandes bidragsgrupp för bilstöd.\ncatalog:register:5\ncatalog:variable_text:113:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragsgrupp"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger den sökandes bidragsgrupp för bilstöd.\ncatalog:register:5\ncatalog:variable_text:113:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger vilken typ av bidrag utbetalningen avser.\ncatalog:variable_text:114:6848:2932897\ncatalog:variable_text:128:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidragstyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger vilken typ av bidrag utbetalningen avser.\ncatalog:variable_text:114:6848:2932897\ncatalog:variable_text:128:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-1"
+fields = { "sets" = [] }
+evidence = "Variabeln innehåller en diagnoskod för sökanden eller barnet.\ncatalog:variable_text:115:16071:2932897\ncatalog:variable_text:116:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-1"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln innehåller en diagnoskod för sökanden eller barnet.\ncatalog:variable_text:115:16071:2932897\ncatalog:variable_text:116:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-2"
+fields = { "sets" = [] }
+evidence = "Variabeln innehåller en diagnoskod för sökanden eller barnet.\ncatalog:variable_text:115:16071:2932897\ncatalog:variable_text:116:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-2"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln innehåller en diagnoskod för sökanden eller barnet.\ncatalog:variable_text:115:16071:2932897\ncatalog:variable_text:116:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonsslag"
+fields = { "sets" = [] }
+evidence = "Variabeln anger fordonsslag.\ncatalog:variable_text:117:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonsslag"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger fordonsslag.\ncatalog:variable_text:117:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-barn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger barnets kommun.\ncatalog:variable_text:118:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-barn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger barnets kommun.\ncatalog:variable_text:118:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sokande"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den sökandes kommun.\ncatalog:variable_text:119:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-sokande"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger den sökandes kommun.\ncatalog:variable_text:119:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-barn"
+fields = { "sets" = [] }
+evidence = "Barnets kön är en demografisk uppgift.\ncatalog:variable_text:120:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets kön är en demografisk uppgift.\ncatalog:variable_text:120:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-sokande"
+fields = { "sets" = [] }
+evidence = "Den sökandes kön är en demografisk uppgift.\ncatalog:variable_text:121:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-sokande"
+fields = { "tags" = ["demographics"] }
+evidence = "Den sökandes kön är en demografisk uppgift.\ncatalog:variable_text:121:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-barn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger barnets län.\ncatalog:variable_text:122:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-barn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger barnets län.\ncatalog:variable_text:122:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-sokande"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den sökandes län.\ncatalog:variable_text:123:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-sokande"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger den sökandes län.\ncatalog:variable_text:123:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:reparation"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om ansökan gäller en reparation i bilstödet.\ncatalog:register:5\ncatalog:variable_text:126:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:reparation"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger om ansökan gäller en reparation i bilstödet.\ncatalog:register:5\ncatalog:variable_text:126:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sokande"
+fields = { "sets" = [] }
+evidence = "Variabeln anger vem bilstödsansökan gäller.\ncatalog:variable_text:127:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sokande"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger vem bilstödsansökan gäller.\ncatalog:variable_text:127:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-bidrag"
+fields = { "sets" = [] }
+evidence = "Variabeln anger vilka bidrag som sökts.\ncatalog:variable_text:114:6848:2932897\ncatalog:variable_text:128:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-bidrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger vilka bidrag som sökts.\ncatalog:variable_text:114:6848:2932897\ncatalog:variable_text:128:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter utbetalt bilstödsbelopp.\ncatalog:variable_text:109:18628:2932897\ncatalog:variable_text:131:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln mäter utbetalt bilstödsbelopp.\ncatalog:variable_text:109:18628:2932897\ncatalog:variable_text:131:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:villkorat-beslut"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om ett beviljande är förenat med villkor för kommande utbetalningar.\ncatalog:variable_text:132:6848:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:villkorat-beslut"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger om ett beviljande är förenat med villkor för kommande utbetalningar.\ncatalog:variable_text:132:6848:2932897"

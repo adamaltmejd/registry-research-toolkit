@@ -16,3 +16,879 @@ kind = "set"
 subject = "vagtrafikolyckor: {komm,lan} @2002"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:abelys"
+fields = { "sets" = ["ljusforhallanden"] }
+evidence = "Vägbelysning hör till ljusförhållanden vid olyckan.\ncatalog:variable_text:45854:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:abelys"
+fields = { "tags" = ["transport"] }
+evidence = "Vägbelysning hör till ljusförhållanden vid olyckan.\ncatalog:variable_text:45854:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ahast"
+fields = { "sets" = [] }
+evidence = "Hastighetsbegränsning är ett trafikmått.\ncatalog:variable_text:45855:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ahast"
+fields = { "tags" = ["transport"] }
+evidence = "Hastighetsbegränsning är ett trafikmått.\ncatalog:variable_text:45855:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:45856:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:45856:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:alkohol"
+fields = { "sets" = [] }
+evidence = "Misstänkt påverkan är ett hälsorelaterat tillstånd.\ncatalog:variable_text:45857:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:alkohol"
+fields = { "tags" = ["health"] }
+evidence = "Misstänkt påverkan är ett hälsorelaterat tillstånd.\ncatalog:variable_text:45857:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "sets" = [] }
+evidence = "Tillåtet passagerarantal beskriver fordonet.\ncatalog:variable_text:45858:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "tags" = ["transport"] }
+evidence = "Tillåtet passagerarantal beskriver fordonet.\ncatalog:variable_text:45858:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "sets" = [] }
+evidence = "Antalet avser personer i en trafikolycka.\ncatalog:variable_text:45859:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser personer i en trafikolycka.\ncatalog:variable_text:45859:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmod"
+fields = { "sets" = [] }
+evidence = "Årsmodell beskriver fordonet.\ncatalog:variable_text:45860:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmod"
+fields = { "tags" = ["transport"] }
+evidence = "Årsmodell beskriver fordonet.\ncatalog:variable_text:45860:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:atrafregl"
+fields = { "sets" = ["trafikreglering"] }
+evidence = "Väg A och B är komponenter av trafikreglering.\ncatalog:variable_text:45861:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:atrafregl"
+fields = { "tags" = ["transport"] }
+evidence = "Väg A och B är komponenter av trafikreglering.\ncatalog:variable_text:45861:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:atrafsign"
+fields = { "sets" = ["trafiksignal"] }
+evidence = "Väg A och B är komponenter av trafiksignal.\ncatalog:variable_text:45862:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:atrafsign"
+fields = { "tags" = ["transport"] }
+evidence = "Väg A och B är komponenter av trafiksignal.\ncatalog:variable_text:45862:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avagnr"
+fields = { "sets" = ["vagnummer"] }
+evidence = "Vägnummer för de två vägarna bildar en grupp.\ncatalog:variable_text:45863:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avagnr"
+fields = { "tags" = ["transport"] }
+evidence = "Vägnummer för de två vägarna bildar en grupp.\ncatalog:variable_text:45863:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avagtyp"
+fields = { "sets" = ["vagtyp"] }
+evidence = "Vägtyp för de två vägarna bildar en grupp.\ncatalog:variable_text:45864:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avagtyp"
+fields = { "tags" = ["transport"] }
+evidence = "Vägtyp för de två vägarna bildar en grupp.\ncatalog:variable_text:45864:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:axelantal"
+fields = { "sets" = [] }
+evidence = "Antalet hjulaxlar beskriver fordonet.\ncatalog:variable_text:45865:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:axelantal"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet hjulaxlar beskriver fordonet.\ncatalog:variable_text:45865:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet"
+fields = { "sets" = ["korkortsbehorighet"] }
+evidence = "Samma kolumn är samtidigt kopplad till behörighet och behörighetsdatum.\ncatalog:occurrence:467746\ncatalog:occurrence:467747\ncatalog:variable_text:45866:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn är samtidigt kopplad till behörighet och behörighetsdatum.\ncatalog:occurrence:467746\ncatalog:occurrence:467747\ncatalog:variable_text:45866:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsdatum-korkort"
+fields = { "sets" = ["korkortets-behorighetsdatum"] }
+evidence = "Samma kolumn är samtidigt kopplad till behörighetsdatum och behörighet.\ncatalog:occurrence:467746\ncatalog:occurrence:467747\ncatalog:variable_text:45867:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighetsdatum-korkort"
+fields = { "tags" = [] }
+evidence = "Samma kolumn är samtidigt kopplad till behörighetsdatum och behörighet.\ncatalog:occurrence:467746\ncatalog:occurrence:467747\ncatalog:variable_text:45867:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:besiktnstat"
+fields = { "sets" = [] }
+evidence = "Besiktningsstatus avser fordon.\ncatalog:variable_text:45869:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:besiktnstat"
+fields = { "tags" = ["transport"] }
+evidence = "Besiktningsstatus avser fordon.\ncatalog:variable_text:45869:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bredd"
+fields = { "sets" = ["fordonsdimensioner"] }
+evidence = "Bredd och längd är fordonsdimensioner.\ncatalog:variable_text:45870:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bredd"
+fields = { "tags" = ["transport"] }
+evidence = "Bredd och längd är fordonsdimensioner.\ncatalog:variable_text:45870:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:btrafregl"
+fields = { "sets" = ["trafikreglering"] }
+evidence = "Väg A och B är komponenter av trafikreglering.\ncatalog:variable_text:45871:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:btrafregl"
+fields = { "tags" = ["transport"] }
+evidence = "Väg A och B är komponenter av trafikreglering.\ncatalog:variable_text:45871:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:btrafsign"
+fields = { "sets" = ["trafiksignal"] }
+evidence = "Väg A och B är komponenter av trafiksignal.\ncatalog:variable_text:45872:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:btrafsign"
+fields = { "tags" = ["transport"] }
+evidence = "Väg A och B är komponenter av trafiksignal.\ncatalog:variable_text:45872:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bvagnr"
+fields = { "sets" = ["vagnummer"] }
+evidence = "Vägnummer för de två vägarna bildar en grupp.\ncatalog:variable_text:45873:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bvagnr"
+fields = { "tags" = ["transport"] }
+evidence = "Vägnummer för de två vägarna bildar en grupp.\ncatalog:variable_text:45873:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bvagtyp"
+fields = { "sets" = ["vagtyp"] }
+evidence = "Vägtyp för de två vägarna bildar en grupp.\ncatalog:variable_text:45874:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bvagtyp"
+fields = { "tags" = ["transport"] }
+evidence = "Vägtyp för de två vägarna bildar en grupp.\ncatalog:variable_text:45874:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:cylvol"
+fields = { "sets" = [] }
+evidence = "Cylindervolym beskriver motorcykeln.\ncatalog:variable_text:45875:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:cylvol"
+fields = { "tags" = ["transport"] }
+evidence = "Cylindervolym beskriver motorcykeln.\ncatalog:variable_text:45875:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "sets" = [] }
+evidence = "Fordonets drivmedel beskriver transport och energislag.\ncatalog:variable_text:45876:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Fordonets drivmedel beskriver transport och energislag.\ncatalog:variable_text:45876:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:effekt"
+fields = { "sets" = [] }
+evidence = "Motoreffekt beskriver fordonet.\ncatalog:variable_text:45877:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:effekt"
+fields = { "tags" = ["transport"] }
+evidence = "Motoreffekt beskriver fordonet.\ncatalog:variable_text:45877:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:elnat"
+fields = { "sets" = [] }
+evidence = "ELNAT är en källmnemonik; familjen eln* behandlas enhetligt som opak. Variabeln kodar fordonets nationalitet.\ncatalog:valueset:12444\ncatalog:variable_text:45878:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:elnat"
+fields = { "tags" = ["transport"] }
+evidence = "ELNAT är en källmnemonik; familjen eln* behandlas enhetligt som opak. Variabeln kodar fordonets nationalitet.\ncatalog:valueset:12444\ncatalog:variable_text:45878:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:eltyp"
+fields = { "sets" = ["trafikant-och-trafikelementtyp"] }
+evidence = "Trafikelementtyp och trafikantkategori är kandidatens kodningar.\ncatalog:variable_text:45881:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:eltyp"
+fields = { "tags" = ["transport"] }
+evidence = "Trafikelementtyp och trafikantkategori är kandidatens kodningar.\ncatalog:variable_text:45881:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat"
+fields = { "sets" = [] }
+evidence = "Fabrikat beskriver fordonet.\ncatalog:variable_text:45882:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat"
+fields = { "tags" = ["transport"] }
+evidence = "Fabrikat beskriver fordonet.\ncatalog:variable_text:45882:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:farg"
+fields = { "sets" = [] }
+evidence = "Färgen avser motorfordon.\ncatalog:variable_text:45883:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:farg"
+fields = { "tags" = ["transport"] }
+evidence = "Färgen avser motorfordon.\ncatalog:variable_text:45883:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fgods"
+fields = { "sets" = [] }
+evidence = "Den ensamma bokstaven f är en opak förkortning av farligt.\ncatalog:variable_text:45884:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fgods"
+fields = { "tags" = ["transport"] }
+evidence = "Den ensamma bokstaven f är en opak förkortning av farligt.\ncatalog:variable_text:45884:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:foljd"
+fields = { "sets" = ["personskadans-svarighetsgrad"] }
+evidence = "Olyckans svåraste följd och personskadekoden beskriver skadans svårighetsgrad.\ncatalog:valueset:9618\ncatalog:variable_text:45885:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:foljd"
+fields = { "tags" = ["health", "transport"] }
+evidence = "Olyckans svåraste följd och personskadekoden beskriver skadans svårighetsgrad.\ncatalog:valueset:9618\ncatalog:variable_text:45885:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forarehemvarn"
+fields = { "sets" = [] }
+evidence = "Hemvarn motsvarar inte adress eller postnummer och är en opak källförkortning.\ncatalog:variable_text:45886:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forarehemvarn"
+fields = { "tags" = ["geography"] }
+evidence = "Hemvarn motsvarar inte adress eller postnummer och är en opak källförkortning.\ncatalog:variable_text:45886:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonagare"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver ägarrelationen för ett fordon.\ncatalog:valueset:1919\ncatalog:variable_text:45887:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonagare"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen beskriver ägarrelationen för ett fordon.\ncatalog:valueset:1919\ncatalog:variable_text:45887:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forh"
+fields = { "sets" = [] }
+evidence = "Förh är en opak källkod för hinder på vägbanan.\ncatalog:variable_text:45888:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forh"
+fields = { "tags" = ["transport"] }
+evidence = "Förh är en opak källkod för hinder på vägbanan.\ncatalog:variable_text:45888:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forsbetald"
+fields = { "sets" = [] }
+evidence = "Kodningen avser fordonsförsäkring.\ncatalog:valueset:3387\ncatalog:variable_text:45889:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:forsbetald"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen avser fordonsförsäkring.\ncatalog:valueset:3387\ncatalog:variable_text:45889:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:handikappanp"
+fields = { "sets" = [] }
+evidence = "Anpassning för funktionsnedsättning avser ett fordon.\ncatalog:variable_text:45891:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:handikappanp"
+fields = { "tags" = ["disability", "transport"] }
+evidence = "Anpassning för funktionsnedsättning avser ett fordon.\ncatalog:variable_text:45891:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "sets" = [] }
+evidence = "Karosserikoden beskriver fordonet.\ncatalog:variable_text:45893:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "tags" = ["transport"] }
+evidence = "Karosserikoden beskriver fordonet.\ncatalog:variable_text:45893:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["administrativ-geografisk-indelning"] }
+evidence = "Kommun och län är administrativa geografiska indelningar.\ncatalog:variable_text:45895:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och län är administrativa geografiska indelningar.\ncatalog:variable_text:45895:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön är en demografisk variabel.\ncatalog:variable_text:45896:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön är en demografisk variabel.\ncatalog:variable_text:45896:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:krockkudde"
+fields = { "sets" = [] }
+evidence = "Krockkudde är fordonsutrustning.\ncatalog:variable_text:45897:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:krockkudde"
+fields = { "tags" = ["transport"] }
+evidence = "Krockkudde är fordonsutrustning.\ncatalog:variable_text:45897:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["administrativ-geografisk-indelning"] }
+evidence = "Kommun och län är administrativa geografiska indelningar.\ncatalog:variable_text:45898:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och län är administrativa geografiska indelningar.\ncatalog:variable_text:45898:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "sets" = ["fordonsdimensioner"] }
+evidence = "Längd och bredd är fordonsdimensioner.\ncatalog:variable_text:45899:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "tags" = ["transport"] }
+evidence = "Längd och bredd är fordonsdimensioner.\ncatalog:variable_text:45899:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:leasingfordon"
+fields = { "sets" = [] }
+evidence = "Leasing avser fordon.\ncatalog:variable_text:45900:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:leasingfordon"
+fields = { "tags" = ["transport"] }
+evidence = "Leasing avser fordon.\ncatalog:variable_text:45900:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ljusf"
+fields = { "sets" = ["ljusforhallanden"] }
+evidence = "Ljusförhållanden och vägbelysning ingår i kandidatgruppen.\ncatalog:variable_text:45901:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ljusf"
+fields = { "tags" = ["transport"] }
+evidence = "Ljusförhållanden och vägbelysning ingår i kandidatgruppen.\ncatalog:variable_text:45901:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:modell"
+fields = { "sets" = [] }
+evidence = "Modellkoden beskriver fordonet.\ncatalog:variable_text:45902:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:modell"
+fields = { "tags" = ["transport"] }
+evidence = "Modellkoden beskriver fordonet.\ncatalog:variable_text:45902:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:oar"
+fields = { "sets" = ["olyckstidpunkt"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45904:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:oar"
+fields = { "tags" = [] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45904:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:odatdag"
+fields = { "sets" = ["olyckstidpunkt"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45905:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:odatdag"
+fields = { "tags" = [] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45905:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:odatman"
+fields = { "sets" = ["olyckstidpunkt"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45906:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:odatman"
+fields = { "tags" = [] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45906:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:oklock"
+fields = { "sets" = ["olyckstidpunkt"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45908:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:oklock"
+fields = { "tags" = [] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45908:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omrade1"
+fields = { "sets" = ["olycksplatsens-trafikmiljo"] }
+evidence = "Områdeskoden beskriver olycksplatsens trafikmiljö.\ncatalog:variable_text:45909:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omrade1"
+fields = { "tags" = ["transport"] }
+evidence = "Områdeskoden beskriver olycksplatsens trafikmiljö.\ncatalog:variable_text:45909:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omrade2"
+fields = { "sets" = ["olycksplatsens-trafikmiljo"] }
+evidence = "Områdeskoden beskriver olycksplatsens trafikmiljö.\ncatalog:variable_text:45910:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omrade2"
+fields = { "tags" = ["transport"] }
+evidence = "Områdeskoden beskriver olycksplatsens trafikmiljö.\ncatalog:variable_text:45910:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:otyp"
+fields = { "sets" = ["olyckstyp"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45911:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:otyp"
+fields = { "tags" = ["transport"] }
+evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45911:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ovningskorning"
+fields = { "sets" = [] }
+evidence = "Kolumnernas ägare växlar mellan olika begrepp.\ncatalog:occurrence:467619\ncatalog:occurrence:467685\ncatalog:occurrence:467706\ncatalog:occurrence:467792"
+
+[[statement]]
+kind = "set"
+subject = "var:ovningskorning"
+fields = { "tags" = ["transport"] }
+evidence = "Kolumnernas ägare växlar mellan olika begrepp.\ncatalog:occurrence:467619\ncatalog:occurrence:467685\ncatalog:occurrence:467706\ncatalog:occurrence:467792"
+
+[[statement]]
+kind = "set"
+subject = "var:pddistr"
+fields = { "sets" = ["polisens-omradesindelning"] }
+evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45913:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pddistr"
+fields = { "tags" = ["geography"] }
+evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45913:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pdomr"
+fields = { "sets" = ["polisens-omradesindelning"] }
+evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45915:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pdomr"
+fields = { "tags" = ["geography"] }
+evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45915:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pskada"
+fields = { "sets" = ["personskadans-svarighetsgrad"] }
+evidence = "P är en ensam bokstavskod för person.\ncatalog:variable_text:45920:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pskada"
+fields = { "tags" = ["health"] }
+evidence = "P är en ensam bokstavskod för person.\ncatalog:variable_text:45920:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelse"
+fields = { "sets" = [] }
+evidence = "Rörelsekoden beskriver trafikelementets rörelseriktning.\ncatalog:variable_text:45922:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelse"
+fields = { "tags" = ["transport"] }
+evidence = "Rörelsekoden beskriver trafikelementets rörelseriktning.\ncatalog:variable_text:45922:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:stulet"
+fields = { "sets" = [] }
+evidence = "Kodningen avser ett anmält stulet fordon.\ncatalog:variable_text:45923:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:stulet"
+fields = { "tags" = ["crime", "transport"] }
+evidence = "Kodningen avser ett anmält stulet fordon.\ncatalog:variable_text:45923:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "sets" = ["fordonsvikt"] }
+evidence = "Tjänstevikt och totalvikt är lastbilens vikter.\ncatalog:variable_text:45925:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Tjänstevikt och totalvikt är lastbilens vikter.\ncatalog:variable_text:45925:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "sets" = ["fordonsvikt"] }
+evidence = "Tjänstevikt och totalvikt är lastbilens vikter.\ncatalog:variable_text:45926:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "tags" = ["transport"] }
+evidence = "Tjänstevikt och totalvikt är lastbilens vikter.\ncatalog:variable_text:45926:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:traf"
+fields = { "sets" = ["trafikant-och-trafikelementtyp"] }
+evidence = "Trafikantkategori och trafikelementtyp är kandidatens kodningar.\ncatalog:variable_text:45927:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:traf"
+fields = { "tags" = ["transport"] }
+evidence = "Trafikantkategori och trafikelementtyp är kandidatens kodningar.\ncatalog:variable_text:45927:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:traktorkort"
+fields = { "sets" = ["korkortsbehorighet"] }
+evidence = "Traktorkort är särskild körbehörighet.\ncatalog:variable_text:45928:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:traktorkort"
+fields = { "tags" = ["transport"] }
+evidence = "Traktorkort är särskild körbehörighet.\ncatalog:variable_text:45928:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:trfm"
+fields = { "sets" = ["olycksplatsens-trafikmiljo"] }
+evidence = "Trfm är en opak bokstavskod för trafikmiljö.\ncatalog:variable_text:45929:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:trfm"
+fields = { "tags" = ["transport"] }
+evidence = "Trfm är en opak bokstavskod för trafikmiljö.\ncatalog:variable_text:45929:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:u-behordatum"
+fields = { "sets" = ["korkortets-behorighetsdatum"] }
+evidence = "U är en ensam bokstavskod för ursprunglig.\ncatalog:variable_text:45930:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:u-behordatum"
+fields = { "tags" = [] }
+evidence = "U är en ensam bokstavskod för ursprunglig.\ncatalog:variable_text:45930:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:u-behorig"
+fields = { "sets" = ["korkortsbehorighet"] }
+evidence = "Samma kolumn är samtidigt kopplad till ursprunglig behörighet och utbytt körkort.\ncatalog:occurrence:467811\ncatalog:occurrence:467812\ncatalog:variable_text:45931:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:u-behorig"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn är samtidigt kopplad till ursprunglig behörighet och utbytt körkort.\ncatalog:occurrence:467811\ncatalog:occurrence:467812\ncatalog:variable_text:45931:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ugrupp"
+fields = { "sets" = ["olyckstyp"] }
+evidence = "U är en ensam bokstavskod för undergrupp.\ncatalog:variable_text:45932:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ugrupp"
+fields = { "tags" = ["transport"] }
+evidence = "U är en ensam bokstavskod för undergrupp.\ncatalog:variable_text:45932:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandskt-korkort-bytt"
+fields = { "sets" = [] }
+evidence = "Samma kolumn är samtidigt kopplad till utbytt körkort och ursprunglig behörighet.\ncatalog:occurrence:467811\ncatalog:occurrence:467812\ncatalog:variable_text:45933:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandskt-korkort-bytt"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn är samtidigt kopplad till utbytt körkort och ursprunglig behörighet.\ncatalog:occurrence:467811\ncatalog:occurrence:467812\ncatalog:variable_text:45933:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utryckningsfordon"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver fordonets användning.\ncatalog:variable_text:45934:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:utryckningsfordon"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen beskriver fordonets användning.\ncatalog:variable_text:45934:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vaglag"
+fields = { "sets" = [] }
+evidence = "Väglaget beskriver vägbanans tillstånd.\ncatalog:variable_text:45936:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vaglag"
+fields = { "tags" = ["transport"] }
+evidence = "Väglaget beskriver vägbanans tillstånd.\ncatalog:variable_text:45936:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxellada"
+fields = { "sets" = [] }
+evidence = "Växellådan beskriver fordonet.\ncatalog:variable_text:45938:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxellada"
+fields = { "tags" = ["transport"] }
+evidence = "Växellådan beskriver fordonet.\ncatalog:variable_text:45938:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vdago"
+fields = { "sets" = ["olyckstidpunkt"] }
+evidence = "VDAGO är en opak källkod för veckodag.\ncatalog:variable_text:45939:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vdago"
+fields = { "tags" = [] }
+evidence = "VDAGO är en opak källkod för veckodag.\ncatalog:variable_text:45939:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ymark"
+fields = { "sets" = [] }
+evidence = "Ymark är en opak källkod för yrkesmässig trafik.\ncatalog:variable_text:45940:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:ymark"
+fields = { "tags" = ["transport"] }
+evidence = "Ymark är en opak källkod för yrkesmässig trafik.\ncatalog:variable_text:45940:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2000-01-01..2000-12-31 where key = 'v2819'"
+fields = { "description" = "Kod för leasingfordon." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2001-01-01..2001-12-31 where key = 'v2819'"
+fields = { "description" = "Kod för leasingfordon." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: LEASINGFORDON @2002-01-01..2002-12-31 where key = 'v2819'"
+fields = { "description" = "Kod för leasingfordon." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:valueset:7352\ncatalog:variable_text:45900:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: EFFEKTNORM @2000-01-01..2000-12-31 where key = 'v2813'"
+fields = { "description" = "Normering för motoreffekt." }
+evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: EFFEKTNORM @2001-01-01..2001-12-31 where key = 'v2813'"
+fields = { "description" = "Normering för motoreffekt." }
+evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: EFFEKTNORM @2002-01-01..2002-12-31 where key = 'v2813'"
+fields = { "description" = "Normering för motoreffekt." }
+evidence = "Värdena anger normeringsstandard, inte en norm uttryckt i kilowatt.\ncatalog:valueset:7206\ncatalog:variable_text:45903:10957:12053"

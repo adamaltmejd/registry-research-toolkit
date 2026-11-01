@@ -1,0 +1,264 @@
+
+[[statement]]
+kind = "set"
+subject = "var:andring-av-elavtal"
+fields = { "sets" = [] }
+evidence = "Ändringen mäter hushållets elavtal; försök till ändring är ett närliggande mått.\ncatalog:variable_text:7324:13514:16071\ncatalog:variable_text:7341:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:andring-av-elavtal"
+fields = { "tags" = ["energy"] }
+evidence = "Ändringen mäter hushållets elavtal; försök till ändring är ett närliggande mått.\ncatalog:variable_text:7324:13514:16071\ncatalog:variable_text:7341:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-ej-byte-elleverantor"
+fields = { "sets" = [] }
+evidence = "Identitetsfakta visar angränsande mappningar till variabler för anledning till byte.\ncatalog:occurrence:54581\ncatalog:occurrence:54593\ncatalog:occurrence:54594"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-ej-byte-elleverantor"
+fields = { "tags" = ["energy"] }
+evidence = "Identitetsfakta visar angränsande mappningar till variabler för anledning till byte.\ncatalog:occurrence:54581\ncatalog:occurrence:54593\ncatalog:occurrence:54594"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-hushallet"
+fields = { "sets" = [] }
+evidence = "Antalet barn och antalet vuxna beskriver hushållets sammansättning.\ncatalog:variable_text:7326:13514:16071\ncatalog:variable_text:7327:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-i-hushallet"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet barn och antalet vuxna beskriver hushållets sammansättning.\ncatalog:variable_text:7326:13514:16071\ncatalog:variable_text:7327:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vuxna-i-hushallet"
+fields = { "sets" = [] }
+evidence = "Antalet vuxna och antalet barn beskriver hushållets sammansättning.\ncatalog:variable_text:7326:13514:16071\ncatalog:variable_text:7327:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vuxna-i-hushallet"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet vuxna och antalet barn beskriver hushållets sammansättning.\ncatalog:variable_text:7326:13514:16071\ncatalog:variable_text:7327:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver bostadstyp.\ncatalog:variable_text:7328:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln beskriver bostadstyp.\ncatalog:variable_text:7328:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:byte-av-elleverantor"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter byte av elleverantör.\ncatalog:variable_text:7329:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:byte-av-elleverantor"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter byte av elleverantör.\ncatalog:variable_text:7329:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-elavtal"
+fields = { "sets" = [] }
+evidence = "Eget avtal och avtalstyp är kodningar av hushållets elavtal.\ncatalog:variable_text:7330:13514:16071\ncatalog:variable_text:7332:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-elavtal"
+fields = { "tags" = ["energy"] }
+evidence = "Eget avtal och avtalstyp är kodningar av hushållets elavtal.\ncatalog:variable_text:7330:13514:16071\ncatalog:variable_text:7332:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elforbrukning"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter hushållets elförbrukning.\ncatalog:variable_text:7331:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elforbrukning"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter hushållets elförbrukning.\ncatalog:variable_text:7331:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f05"
+fields = { "sets" = [] }
+evidence = "F05 är en ogenomskinlig frågekod; etiketten anger elavtalets typ. Samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7332:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f05"
+fields = { "tags" = ["energy"] }
+evidence = "F05 är en ogenomskinlig frågekod; etiketten anger elavtalets typ. Samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7332:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f05-txt"
+fields = { "sets" = [] }
+evidence = "F05_txt är en ogenomskinlig källkod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7333:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f05-txt"
+fields = { "tags" = ["energy"] }
+evidence = "F05_txt är en ogenomskinlig källkod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7333:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f07b"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54579\ncatalog:occurrence:54593"
+
+[[statement]]
+kind = "set"
+subject = "var:f07b"
+fields = { "tags" = ["energy"] }
+evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54579\ncatalog:occurrence:54593"
+
+[[statement]]
+kind = "set"
+subject = "var:f07b-txt"
+fields = { "sets" = [] }
+evidence = "F07b_txt är en ogenomskinlig källkod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7335:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f07b-txt"
+fields = { "tags" = ["energy"] }
+evidence = "F07b_txt är en ogenomskinlig källkod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7335:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:f07c"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54581\ncatalog:occurrence:54594"
+
+[[statement]]
+kind = "set"
+subject = "var:f07c"
+fields = { "tags" = ["energy"] }
+evidence = "Identitetsfaktum visar en angränsande mappning till anledning att inte byta leverantör.\ncatalog:occurrence:54581\ncatalog:occurrence:54594"
+
+[[statement]]
+kind = "set"
+subject = "var:f09a"
+fields = { "sets" = [] }
+evidence = "F09a är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7337:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f09a"
+fields = { "tags" = ["energy"] }
+evidence = "F09a är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7337:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f09b"
+fields = { "sets" = [] }
+evidence = "F09b är en ogenomskinlig frågekod och etiketten anger önskemålet om gemensam faktura.\ncatalog:variable_text:7338:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f09b"
+fields = { "tags" = ["energy"] }
+evidence = "F09b är en ogenomskinlig frågekod och etiketten anger önskemålet om gemensam faktura.\ncatalog:variable_text:7338:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "sets" = [] }
+evidence = "F5 är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7339:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "tags" = ["energy"] }
+evidence = "F5 är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7339:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f7b"
+fields = { "sets" = [] }
+evidence = "F7b är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7340:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f7b"
+fields = { "tags" = ["energy"] }
+evidence = "F7b är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7340:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f8b"
+fields = { "sets" = [] }
+evidence = "F8b är en ogenomskinlig frågekod och etiketten anger försök till ändring av elavtal.\ncatalog:variable_text:7341:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f8b"
+fields = { "tags" = ["energy"] }
+evidence = "F8b är en ogenomskinlig frågekod och etiketten anger försök till ändring av elavtal.\ncatalog:variable_text:7341:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f9a"
+fields = { "sets" = [] }
+evidence = "F9a är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7342:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f9a"
+fields = { "tags" = ["energy"] }
+evidence = "F9a är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7342:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f9b"
+fields = { "sets" = [] }
+evidence = "F9b är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7343:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:f9b"
+fields = { "tags" = ["energy"] }
+evidence = "F9b är en ogenomskinlig frågekod; samma etikett förekommer för andra variabler och målnamnet behöver disambigueras enligt D-12.\ncatalog:variable_text:7343:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fodar"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalspersonens födelseår.\ncatalog:variable_text:7344:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fodar"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger urvalspersonens födelseår.\ncatalog:variable_text:7344:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-tre-manader-pa-adress"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver boendetid på nuvarande adress.\ncatalog:variable_text:7345:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-tre-manader-pa-adress"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln beskriver boendetid på nuvarande adress.\ncatalog:variable_text:7345:13514:16071"

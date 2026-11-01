@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "var:institut"
+fields = { "sets" = [] }
+evidence = "Rapporterande finansinstitut hör till finansmarknad.\ncatalog:register:94\ncatalog:variable_text:10909:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:institut"
+fields = { "tags" = ["finance"] }
+evidence = "Rapporterande finansinstitut hör till finansmarknad.\ncatalog:register:94\ncatalog:variable_text:10909:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kontopost"
+fields = { "sets" = [] }
+evidence = "Kontoposten specificerar finansinstitutens balans- och resultatposter.\ncatalog:register:94\ncatalog:variable_text:10910:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kontopost"
+fields = { "tags" = ["finance"] }
+evidence = "Kontoposten specificerar finansinstitutens balans- och resultatposter.\ncatalog:register:94\ncatalog:variable_text:10910:14245:17532"

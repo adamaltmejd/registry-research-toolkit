@@ -100,3 +100,441 @@ kind = "set"
 subject = "bonus-och-andra-oregelbundna-ersattningar: yrke @2014..2019"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = [] }
+evidence = "Antalet avser anställda.\ncatalog:variable_text:6208:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet avser anställda.\ncatalog:variable_text:6208:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Övertidstimmar är ett arbetstidsmått.\ncatalog:variable_text:6209:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "tags" = ["employment"] }
+evidence = "Övertidstimmar är ett arbetstidsmått.\ncatalog:variable_text:6209:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-enheter"
+fields = { "sets" = [] }
+evidence = "Antalet svarande företag är ett undersökningsmått.\ncatalog:variable_text:6210:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-enheter"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet svarande företag är ett undersökningsmått.\ncatalog:variable_text:6210:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtidart"
+fields = { "sets" = [] }
+evidence = "Arbetstidsart och skiftform hör till anställningen.\ncatalog:variable_text:6212:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtidart"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetstidsart och skiftform hör till anställningen.\ncatalog:variable_text:6212:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrstratum"
+fields = { "sets" = ["stratum"] }
+evidence = "Bgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6213:13149:13879\ncatalog:variable_text:6213:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Bgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6213:13149:13879\ncatalog:variable_text:6213:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bonusar"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Bonus och andra oregelbundna tillägg är lönebelopp.\ncatalog:variable_text:6214:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bonusar"
+fields = { "tags" = ["income"] }
+evidence = "Bonus och andra oregelbundna tillägg är lönebelopp.\ncatalog:variable_text:6214:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:faktiskt-arbetad-tid"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Faktiskt arbetade timmar är ett arbetstidsmått.\ncatalog:variable_text:6215:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:faktiskt-arbetad-tid"
+fields = { "tags" = ["employment"] }
+evidence = "Faktiskt arbetade timmar är ett arbetstidsmått.\ncatalog:variable_text:6215:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:frsnigrp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "FrSNIgrp är en källmnemonik för näringsgrupp.\ncatalog:variable_text:6216:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:frsnigrp"
+fields = { "tags" = ["business"] }
+evidence = "FrSNIgrp är en källmnemonik för näringsgrupp.\ncatalog:variable_text:6216:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln kodar en kommun.\ncatalog:variable_text:6217:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar en kommun.\ncatalog:variable_text:6217:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln kodar arbetsställets kommun.\ncatalog:variable_text:6218:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar arbetsställets kommun.\ncatalog:variable_text:6218:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lanf"
+fields = { "sets" = [] }
+evidence = "Det avslutande F är en enbokstavskod i källkolumnen. Variabeln kodar län.\ncatalog:variable_text:6221:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lanf"
+fields = { "tags" = ["geography"] }
+evidence = "Det avslutande F är en enbokstavskod i källkolumnen. Variabeln kodar län.\ncatalog:variable_text:6221:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-enligt-kontrolluppgifterna"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Summan är ett lönebelopp.\ncatalog:variable_text:6222:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-enligt-kontrolluppgifterna"
+fields = { "tags" = ["income"] }
+evidence = "Summan är ett lönebelopp.\ncatalog:variable_text:6222:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "sets" = [] }
+evidence = "Löneform beskriver anställningens löneform.\ncatalog:valueset:11413\ncatalog:variable_text:6223:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "tags" = ["employment"] }
+evidence = "Löneform beskriver anställningens löneform.\ncatalog:valueset:11413\ncatalog:variable_text:6223:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-jour-beredskap"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Jour- och beredskapsersättning är lönebelopp.\ncatalog:variable_text:6224:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-jour-beredskap"
+fields = { "tags" = ["income"] }
+evidence = "Jour- och beredskapsersättning är lönebelopp.\ncatalog:variable_text:6224:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Skift- och OB-tillägg är lönebelopp.\ncatalog:variable_text:6225:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "tags" = ["income"] }
+evidence = "Skift- och OB-tillägg är lönebelopp.\ncatalog:variable_text:6225:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:6227:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:variable_text:6227:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidsersattning"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Övertidsersättning är ett lönebelopp.\ncatalog:variable_text:6230:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidsersattning"
+fields = { "tags" = ["income"] }
+evidence = "Övertidsersättning är ett lönebelopp.\ncatalog:variable_text:6230:13149:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ovklon"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Ovk är en källmnemonik som inte är en läsbar stam av grundlön.\ncatalog:variable_text:6231:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovklon"
+fields = { "tags" = ["income"] }
+evidence = "Ovk är en källmnemonik som inte är en läsbar stam av grundlön.\ncatalog:variable_text:6231:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktid"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Ovk är en källmnemonik som inte är en läsbar stam av överenskommen.\ncatalog:variable_text:6232:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktid"
+fields = { "tags" = ["employment"] }
+evidence = "Ovk är en källmnemonik som inte är en läsbar stam av överenskommen.\ncatalog:variable_text:6232:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktidh"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Ovk och det avslutande H är källkoder, inte läsbara stammar av etiketten.\ncatalog:variable_text:6233:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktidh"
+fields = { "tags" = ["employment"] }
+evidence = "Ovk och det avslutande H är källkoder, inte läsbara stammar av etiketten.\ncatalog:variable_text:6233:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "sets" = [] }
+evidence = "Personalkategori beskriver anställningen.\ncatalog:variable_text:6235:13149:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "tags" = ["employment"] }
+evidence = "Personalkategori beskriver anställningen.\ncatalog:variable_text:6235:13149:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:prestationslon"
+fields = { "sets" = ["lonebelopp"] }
+evidence = "Prestationslön är ett lönebelopp.\ncatalog:variable_text:6237:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:prestationslon"
+fields = { "tags" = ["income"] }
+evidence = "Prestationslön är ett lönebelopp.\ncatalog:variable_text:6237:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrstratum"
+fields = { "sets" = ["stratum"] }
+evidence = "Sgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6238:13149:13879\ncatalog:variable_text:6238:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Sgr är en källkod som inte är en läsbar stam av etiketten. Stratum är en urvalskod; den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:6238:13149:13879\ncatalog:variable_text:6238:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Koden anger observationens godkännandestatus.\ncatalog:variable_text:6239:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger observationens godkännandestatus.\ncatalog:variable_text:6239:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "sets" = [] }
+evidence = "Stora N är ett populationsantal för urvalet.\ncatalog:variable_text:6240:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "tags" = ["methods"] }
+evidence = "Stora N är ett populationsantal för urvalet.\ncatalog:variable_text:6240:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag"
+fields = { "sets" = [] }
+evidence = "Storleksklass beskriver företagsstruktur.\ncatalog:variable_text:6241:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklass beskriver företagsstruktur.\ncatalog:variable_text:6241:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { "sets" = [] }
+evidence = "Koden anger observationens godkännandestatus.\ncatalog:variable_text:6242:13149:14610\ncatalog:variable_text:6242:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger observationens godkännandestatus.\ncatalog:variable_text:6242:13149:14610\ncatalog:variable_text:6242:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en undersökningsvikt.\ncatalog:variable_text:6243:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en undersökningsvikt.\ncatalog:variable_text:6243:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstorlek är ett undersökningsmått.\ncatalog:variable_text:6244:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek är ett undersökningsmått.\ncatalog:variable_text:6244:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar yrke.\ncatalog:variable_text:6245:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln klassificerar yrke.\ncatalog:variable_text:6245:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2006-01-01..2006-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2007-01-01..2007-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2008-01-01..2008-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2009-01-01..2009-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2010-01-01..2010-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2011-01-01..2011-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2012-01-01..2012-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2013-01-01..2013-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2014-01-01..2014-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2015-01-01..2015-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2016-01-01..2016-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2017-01-01..2017-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: PersKat @2018-01-01..2018-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:6235:13149:17167\ncatalog:variable_text:6235:17167:17897"

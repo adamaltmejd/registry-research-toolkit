@@ -1,0 +1,1056 @@
+
+[[statement]]
+kind = "set"
+subject = "var:abonnemang-pris"
+fields = { "sets" = [] }
+evidence = "Priset avser abonnemangstandvård.\ncatalog:variable_text:376:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:abonnemang-pris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Priset avser abonnemangstandvård.\ncatalog:variable_text:376:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:akut-fordragsvard"
+fields = { "sets" = [] }
+evidence = "Vårdformen gäller fördragsvård.\ncatalog:variable_text:378:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:akut-fordragsvard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Vårdformen gäller fördragsvård.\ncatalog:variable_text:378:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-patient"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter patientens ålder.\ncatalog:variable_text:379:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-patient"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter patientens ålder.\ncatalog:variable_text:379:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-fordragsvard"
+fields = { "sets" = ["anledning-till-fordragsvard"] }
+evidence = "Anledning till fördragsvård.\ncatalog:variable_text:380:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-fordragsvard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Anledning till fördragsvård.\ncatalog:variable_text:380:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-korrigering-besk"
+fields = { "sets" = ["korrigeringsanledning"] }
+evidence = "Beskrivning av korrigeringsanledning.\ncatalog:variable_text:381:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-korrigering-besk"
+fields = { "tags" = ["transfers"] }
+evidence = "Beskrivning av korrigeringsanledning.\ncatalog:variable_text:381:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-korrigering-kod"
+fields = { "sets" = ["korrigeringsanledning"] }
+evidence = "Kod för korrigeringsanledning i ärendet.\ncatalog:variable_text:382:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-korrigering-kod"
+fields = { "tags" = ["transfers"] }
+evidence = "Kod för korrigeringsanledning i ärendet.\ncatalog:variable_text:382:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arenden"
+fields = { "sets" = [] }
+evidence = "Antal tandvårdsärenden inom ersättningsperioden.\ncatalog:variable_text:383:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arenden"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal tandvårdsärenden inom ersättningsperioden.\ncatalog:variable_text:383:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-besok"
+fields = { "sets" = [] }
+evidence = "Antal patientbesök inom abonnemangsavtalet.\ncatalog:variable_text:384:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-besok"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal patientbesök inom abonnemangsavtalet.\ncatalog:variable_text:384:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar"
+fields = { "sets" = ["abonnemangsavtalets-langd"] }
+evidence = "Antal dagar i abonnemangsavtalet. Coordinator group membership: Samtliga mäter abonnemangsavtalets längd i dagar eller månader; avtalsdatum ingår inte.\ncatalog:variable_text:385:13879:2932897\ncatalog:variable_text:453:13879:2932897\ncatalog:variable_text:454:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar"
+fields = { "tags" = ["healthcare"] }
+evidence = "Antal dagar i abonnemangsavtalet. Coordinator group membership: Samtliga mäter abonnemangsavtalets längd i dagar eller månader; avtalsdatum ingår inte.\ncatalog:variable_text:385:13879:2932897\ncatalog:variable_text:453:13879:2932897\ncatalog:variable_text:454:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada"
+fields = { "sets" = [] }
+evidence = "Markeringen avser behandling för arbetsskada eller olycksfall.\ncatalog:variable_text:386:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada"
+fields = { "tags" = ["health", "healthcare"] }
+evidence = "Markeringen avser behandling för arbetsskada eller olycksfall.\ncatalog:variable_text:386:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status"
+fields = { "sets" = ["arendestatus"] }
+evidence = "Ärendets huvudstatus.\ncatalog:variable_text:389:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status"
+fields = { "tags" = ["transfers"] }
+evidence = "Ärendets huvudstatus.\ncatalog:variable_text:389:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status-besk"
+fields = { "sets" = ["arendestatus"] }
+evidence = "Beskrivning av ärendets huvudstatus.\ncatalog:variable_text:390:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status-besk"
+fields = { "tags" = ["transfers"] }
+evidence = "Beskrivning av ärendets huvudstatus.\ncatalog:variable_text:390:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-besk"
+fields = { "sets" = ["arendetyp"] }
+evidence = "Beskrivning av ärendetyp.\ncatalog:variable_text:391:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-besk"
+fields = { "tags" = ["transfers"] }
+evidence = "Beskrivning av ärendetyp.\ncatalog:variable_text:391:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-kod"
+fields = { "sets" = ["arendetyp"] }
+evidence = "Kod för ärendetyp.\ncatalog:variable_text:392:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-kod"
+fields = { "tags" = ["transfers"] }
+evidence = "Kod för ärendetyp.\ncatalog:variable_text:392:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-original-besk"
+fields = { "sets" = ["arendetyp"] }
+evidence = "Beskrivning av originalärendets typ.\ncatalog:variable_text:393:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-original-besk"
+fields = { "tags" = ["transfers"] }
+evidence = "Beskrivning av originalärendets typ.\ncatalog:variable_text:393:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-original-kod"
+fields = { "sets" = ["arendetyp"] }
+evidence = "Originalärendets typ för betalningen.\ncatalog:variable_text:394:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-original-kod"
+fields = { "tags" = ["transfers"] }
+evidence = "Originalärendets typ för betalningen.\ncatalog:variable_text:394:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-ursprung"
+fields = { "sets" = ["arendetyp"] }
+evidence = "Ursprungsärendets typ.\ncatalog:variable_text:395:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arendetyp-ursprung"
+fields = { "tags" = ["transfers"] }
+evidence = "Ursprungsärendets typ.\ncatalog:variable_text:395:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atb-ers"
+fields = { "sets" = ["allmant-tandvardsbidrag", "tandvardsstodets-belopp"] }
+evidence = "Utnyttjat allmänt tandvårdsbidrag. Coordinator group membership: Utnyttjat ATB och dess korrigeringsbelopp mäter samma bidragsform. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atb-ers"
+fields = { "tags" = ["transfers"] }
+evidence = "Utnyttjat allmänt tandvårdsbidrag. Coordinator group membership: Utnyttjat ATB och dess korrigeringsbelopp mäter samma bidragsform. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-besk"
+fields = { "sets" = ["tandvardsatgard"] }
+evidence = "Beskrivning av tandvårdsåtgärd.\ncatalog:variable_text:398:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-besk"
+fields = { "tags" = ["healthcare"] }
+evidence = "Beskrivning av tandvårdsåtgärd.\ncatalog:variable_text:398:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-kod"
+fields = { "sets" = ["tandvardsatgard"] }
+evidence = "Kod för utförd tandvårdsåtgärd.\ncatalog:variable_text:399:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-kod"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för utförd tandvårdsåtgärd.\ncatalog:variable_text:399:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-status-besk"
+fields = { "sets" = ["atgardsstatus"] }
+evidence = "Beskrivning av åtgärdens status.\ncatalog:variable_text:400:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-status-besk"
+fields = { "tags" = ["healthcare"] }
+evidence = "Beskrivning av åtgärdens status.\ncatalog:variable_text:400:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-status-kod"
+fields = { "sets" = ["atgardsstatus"] }
+evidence = "Kod för åtgärdens status.\ncatalog:variable_text:401:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-status-kod"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för åtgärdens status.\ncatalog:variable_text:401:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardspaket"
+fields = { "sets" = [] }
+evidence = "Markering för registrering via åtgärdspaket.\ncatalog:variable_text:402:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardspaket"
+fields = { "tags" = ["healthcare"] }
+evidence = "Markering för registrering via åtgärdspaket.\ncatalog:variable_text:402:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsanledning-atgard"
+fields = { "sets" = [] }
+evidence = "Anledning till avslag på en tandvårdsåtgärd.\ncatalog:variable_text:404:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsanledning-atgard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Anledning till avslag på en tandvårdsåtgärd.\ncatalog:variable_text:404:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsorsak-egfordragsvard"
+fields = { "sets" = ["avslagsorsak-for-fordragsvard"] }
+evidence = "Avslagsorsak för fördragsvård.\ncatalog:variable_text:405:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsorsak-egfordragsvard"
+fields = { "tags" = ["healthcare"] }
+evidence = "Avslagsorsak för fördragsvård.\ncatalog:variable_text:405:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Utbetalt ersättningsbelopp.\ncatalog:variable_text:409:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetalt ersättningsbelopp.\ncatalog:variable_text:409:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besk-korranledning"
+fields = { "sets" = ["korrigeringsanledning"] }
+evidence = "Beskrivning av korrigeringsanledning.\ncatalog:variable_text:410:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besk-korranledning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beskrivning av korrigeringsanledning.\ncatalog:variable_text:410:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-anledning"
+fields = { "sets" = ["anledning-till-fordragsvard"] }
+evidence = "Anledning till fördragsvård.\ncatalog:variable_text:417:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-anledning"
+fields = { "tags" = ["healthcare"] }
+evidence = "Anledning till fördragsvård.\ncatalog:variable_text:417:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-avslagsorsak"
+fields = { "sets" = ["avslagsorsak-for-fordragsvard"] }
+evidence = "Avslagsorsak för fördragsvård.\ncatalog:variable_text:418:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-avslagsorsak"
+fields = { "tags" = ["healthcare"] }
+evidence = "Avslagsorsak för fördragsvård.\ncatalog:variable_text:418:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-form"
+fields = { "sets" = [] }
+evidence = "Planerad eller akut fördragsvård.\ncatalog:variable_text:419:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-form"
+fields = { "tags" = ["healthcare"] }
+evidence = "Planerad eller akut fördragsvård.\ncatalog:variable_text:419:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-land"
+fields = { "sets" = ["land-for-fordragsvard"] }
+evidence = "Land där fördragsvård gavs.\ncatalog:variable_text:420:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:egfordragsvard-land"
+fields = { "tags" = ["geography"] }
+evidence = "Land där fördragsvård gavs.\ncatalog:variable_text:420:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-typ"
+fields = { "sets" = [] }
+evidence = "Ersättningstyp för betalning.\ncatalog:variable_text:421:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-typ"
+fields = { "tags" = ["transfers"] }
+evidence = "Ersättningstyp för betalning.\ncatalog:variable_text:421:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Ersättningsgrundande belopp under perioden.\ncatalog:variable_text:422:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ersättningsgrundande belopp under perioden.\ncatalog:variable_text:422:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp-efter-korr"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Ersättningsgrundande belopp efter korrigering.\ncatalog:variable_text:423:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp-efter-korr"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ersättningsgrundande belopp efter korrigering.\ncatalog:variable_text:423:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp-fore-korr"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Ersättningsgrundande belopp före korrigering.\ncatalog:variable_text:424:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgr-belopp-fore-korr"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ersättningsgrundande belopp före korrigering.\ncatalog:variable_text:424:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgrund-belopp"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Ersättningsgrundande belopp.\ncatalog:variable_text:425:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersgrund-belopp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ersättningsgrundande belopp.\ncatalog:variable_text:425:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-patient"
+fields = { "sets" = [] }
+evidence = "Markeringen avser en patientkategori för vård i Sverige.\ncatalog:variable_text:428:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-patient"
+fields = { "tags" = ["healthcare"] }
+evidence = "Markeringen avser en patientkategori för vård i Sverige.\ncatalog:variable_text:428:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-ers"
+fields = { "sets" = ["hogkostnadsersattning", "tandvardsstodets-belopp"] }
+evidence = "Tandvårdsersättning inom högkostnadsskyddet. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-ers"
+fields = { "tags" = ["transfers"] }
+evidence = "Tandvårdsersättning inom högkostnadsskyddet. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-intervall-besk"
+fields = { "sets" = ["hogkostnadsintervall"] }
+evidence = "Beskrivning av högkostnadsintervallet.\ncatalog:variable_text:431:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-intervall-besk"
+fields = { "tags" = ["healthcare"] }
+evidence = "Beskrivning av högkostnadsintervallet.\ncatalog:variable_text:431:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-intervall-kod"
+fields = { "sets" = ["hogkostnadsintervall"] }
+evidence = "Kod för högkostnadsintervallet.\ncatalog:variable_text:432:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hcp-intervall-kod"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kod för högkostnadsintervallet.\ncatalog:variable_text:432:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudstatus-ehk"
+fields = { "sets" = [] }
+evidence = "Efterhandskontrollens huvudstatus.\ncatalog:variable_text:433:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudstatus-ehk"
+fields = { "tags" = ["transfers"] }
+evidence = "Efterhandskontrollens huvudstatus.\ncatalog:variable_text:433:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ing-ersgr-belopp"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Ingående ersättningsgrundande belopp.\ncatalog:variable_text:434:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ing-ersgr-belopp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ingående ersättningsgrundande belopp.\ncatalog:variable_text:434:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-mottagning"
+fields = { "sets" = [] }
+evidence = "Mottagningens kommun.\ncatalog:variable_text:436:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-mottagning"
+fields = { "tags" = ["geography"] }
+evidence = "Mottagningens kommun.\ncatalog:variable_text:436:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient"
+fields = { "sets" = ["patientens-kommun"] }
+evidence = "Patientens folkbokföringskommun.\ncatalog:variable_text:437:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient"
+fields = { "tags" = ["geography"] }
+evidence = "Patientens folkbokföringskommun.\ncatalog:variable_text:437:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient-besk"
+fields = { "sets" = ["patientens-kommun"] }
+evidence = "Patientens kommun i klartext.\ncatalog:variable_text:438:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient-besk"
+fields = { "tags" = ["geography"] }
+evidence = "Patientens kommun i klartext.\ncatalog:variable_text:438:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient-kod"
+fields = { "sets" = ["patientens-kommun"] }
+evidence = "Kod för patientens folkbokföringskommun.\ncatalog:variable_text:439:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-patient-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för patientens folkbokföringskommun.\ncatalog:variable_text:439:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-patient"
+fields = { "sets" = [] }
+evidence = "Patientens kön.\ncatalog:variable_text:440:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-patient"
+fields = { "tags" = ["demographics"] }
+evidence = "Patientens kön.\ncatalog:variable_text:440:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-atb-ers"
+fields = { "sets" = ["allmant-tandvardsbidrag", "tandvardsstodets-belopp"] }
+evidence = "Korrigeringsbelopp för allmänt tandvårdsbidrag. Coordinator group membership: Utnyttjat ATB och dess korrigeringsbelopp mäter samma bidragsform. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-atb-ers"
+fields = { "tags" = ["transfers"] }
+evidence = "Korrigeringsbelopp för allmänt tandvårdsbidrag. Coordinator group membership: Utnyttjat ATB och dess korrigeringsbelopp mäter samma bidragsform. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-belopp"
+fields = { "sets" = ["tandvardsstodets-belopp"] }
+evidence = "Förändring av tandvårdsstöd i ett korrigeringsärende. Coordinator group membership: Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Förändring av tandvårdsstöd i ett korrigeringsärende. Coordinator group membership: Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-hcp-ers"
+fields = { "sets" = ["hogkostnadsersattning", "tandvardsstodets-belopp"] }
+evidence = "Korrigeringsbelopp för högkostnadsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-hcp-ers"
+fields = { "tags" = ["transfers"] }
+evidence = "Korrigeringsbelopp för högkostnadsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-man-tandvardsstod"
+fields = { "sets" = ["tandvardsstodets-belopp"] }
+evidence = "Korrigering av manuellt tandvårdsstöd.\ncatalog:variable_text:444:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korr-man-tandvardsstod"
+fields = { "tags" = ["transfers"] }
+evidence = "Korrigering av manuellt tandvårdsstöd.\ncatalog:variable_text:444:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerat"
+fields = { "sets" = [] }
+evidence = "Markering för korrigeringsärende.\ncatalog:variable_text:445:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerat"
+fields = { "tags" = ["transfers"] }
+evidence = "Markering för korrigeringsärende.\ncatalog:variable_text:445:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["mottagningens-lan"] }
+evidence = "Mottagningens län. Coordinator group membership: Samtliga anger mottagningens län, även variabeln LAN vars beskrivning uttryckligen identifierar mottagningen.\ncatalog:variable_text:447:13879:2932897\ncatalog:variable_text:448:13879:2932897\ncatalog:variable_text:466:13879:2932897\ncatalog:variable_text:467:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Mottagningens län. Coordinator group membership: Samtliga anger mottagningens län, även variabeln LAN vars beskrivning uttryckligen identifierar mottagningen.\ncatalog:variable_text:447:13879:2932897\ncatalog:variable_text:448:13879:2932897\ncatalog:variable_text:466:13879:2932897\ncatalog:variable_text:467:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-mottagning"
+fields = { "sets" = ["mottagningens-lan"] }
+evidence = "Mottagningens län.\ncatalog:variable_text:448:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-mottagning"
+fields = { "tags" = ["geography"] }
+evidence = "Mottagningens län.\ncatalog:variable_text:448:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient"
+fields = { "sets" = ["patientens-lan"] }
+evidence = "Patientens folkbokföringslän.\ncatalog:variable_text:449:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient"
+fields = { "tags" = ["geography"] }
+evidence = "Patientens folkbokföringslän.\ncatalog:variable_text:449:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient-besk"
+fields = { "sets" = ["patientens-lan"] }
+evidence = "Patientens folkbokföringslän i beskrivande form.\ncatalog:variable_text:450:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient-besk"
+fields = { "tags" = ["geography"] }
+evidence = "Patientens folkbokföringslän i beskrivande form.\ncatalog:variable_text:450:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient-kod"
+fields = { "sets" = ["patientens-lan"] }
+evidence = "Kod för patientens folkbokföringslän.\ncatalog:variable_text:451:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-patient-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för patientens folkbokföringslän.\ncatalog:variable_text:451:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:land-fordragsvard"
+fields = { "sets" = ["land-for-fordragsvard"] }
+evidence = "Land där fördragsvård gavs.\ncatalog:variable_text:452:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:land-fordragsvard"
+fields = { "tags" = ["geography"] }
+evidence = "Land där fördragsvård gavs.\ncatalog:variable_text:452:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:langd-avtal-dagar"
+fields = { "sets" = ["abonnemangsavtalets-langd"] }
+evidence = "Abonnemangsavtalets längd i dagar.\ncatalog:variable_text:453:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:langd-avtal-dagar"
+fields = { "tags" = ["healthcare"] }
+evidence = "Abonnemangsavtalets längd i dagar.\ncatalog:variable_text:453:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:langd-avtal-manad"
+fields = { "sets" = ["abonnemangsavtalets-langd"] }
+evidence = "Abonnemangsavtalets längd i månader.\ncatalog:variable_text:454:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:langd-avtal-manad"
+fields = { "tags" = ["healthcare"] }
+evidence = "Abonnemangsavtalets längd i månader.\ncatalog:variable_text:454:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-korr-ersgr-belopp"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Manuell korrigering av ersättningsgrundande belopp.\ncatalog:variable_text:461:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-korr-ersgr-belopp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Manuell korrigering av ersättningsgrundande belopp.\ncatalog:variable_text:461:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-tandvardsstod"
+fields = { "sets" = ["tandvardsstodets-belopp"] }
+evidence = "Manuell justering av tandvårdsstöd.\ncatalog:variable_text:462:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-tandvardsstod"
+fields = { "tags" = ["transfers"] }
+evidence = "Manuell justering av tandvårdsstöd.\ncatalog:variable_text:462:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-vardgivarpris"
+fields = { "sets" = ["vardgivarpris"] }
+evidence = "Manuellt angivet vårdgivarpris.\ncatalog:variable_text:463:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:man-vardgivarpris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Manuellt angivet vårdgivarpris.\ncatalog:variable_text:463:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagning-lan-kod"
+fields = { "sets" = ["mottagningens-lan"] }
+evidence = "Kod för mottagningens län.\ncatalog:variable_text:466:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagning-lan-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för mottagningens län.\ncatalog:variable_text:466:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mottaning-lan-besk"
+fields = { "sets" = ["mottagningens-lan"] }
+evidence = "Beskrivning av mottagningens län.\ncatalog:variable_text:467:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mottaning-lan-besk"
+fields = { "tags" = ["geography"] }
+evidence = "Beskrivning av mottagningens län.\ncatalog:variable_text:467:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patientens-pris"
+fields = { "sets" = [] }
+evidence = "Patientens pris för tandvård efter stöd.\ncatalog:variable_text:468:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patientens-pris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Patientens pris för tandvård efter stöd.\ncatalog:variable_text:468:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris"
+fields = { "sets" = ["referenspris"] }
+evidence = "Referenspris för tandvård.\ncatalog:register:24\ncatalog:variable_text:470:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Referenspris för tandvård.\ncatalog:register:24\ncatalog:variable_text:470:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris-atgard"
+fields = { "sets" = ["referenspris"] }
+evidence = "Referenspris för åtgärden.\ncatalog:variable_text:471:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris-atgard"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Referenspris för åtgärden.\ncatalog:variable_text:471:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris-specialist"
+fields = { "sets" = ["referenspris"] }
+evidence = "Markering för specialistreferenspris.\ncatalog:variable_text:472:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:referenspris-specialist"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Markering för specialistreferenspris.\ncatalog:variable_text:472:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:remiss"
+fields = { "sets" = [] }
+evidence = "Remiss i tandvårdsärendet.\ncatalog:register:24\ncatalog:variable_text:473:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:remiss"
+fields = { "tags" = ["healthcare"] }
+evidence = "Remiss i tandvårdsärendet.\ncatalog:register:24\ncatalog:variable_text:473:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:statistik-relevant"
+fields = { "sets" = [] }
+evidence = "Markerar om betalningsposten ingår i officiell statistik.\ncatalog:variable_text:476:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:statistik-relevant"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar om betalningsposten ingår i officiell statistik.\ncatalog:variable_text:476:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-anledning"
+fields = { "sets" = [] }
+evidence = "Anledning till särskilt tandvårdsbidrag.\ncatalog:variable_text:477:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-anledning"
+fields = { "tags" = ["transfers"] }
+evidence = "Anledning till särskilt tandvårdsbidrag.\ncatalog:variable_text:477:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-ers"
+fields = { "sets" = ["sarskilt-tandvardsbidrag", "tandvardsstodets-belopp"] }
+evidence = "Ersättning för särskilt tandvårdsbidrag. Coordinator group membership: Variablerna mäter ersättning respektive kvarvarande tillgängligt STB; bidragsanledning ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:register:24\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:477:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-ers"
+fields = { "tags" = ["transfers"] }
+evidence = "Ersättning för särskilt tandvårdsbidrag. Coordinator group membership: Variablerna mäter ersättning respektive kvarvarande tillgängligt STB; bidragsanledning ingår inte. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:register:24\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:477:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-tillgangligt"
+fields = { "sets" = ["sarskilt-tandvardsbidrag"] }
+evidence = "Tillgängligt särskilt tandvårdsbidrag.\ncatalog:variable_text:479:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stb-tillgangligt"
+fields = { "tags" = ["transfers"] }
+evidence = "Tillgängligt särskilt tandvårdsbidrag.\ncatalog:variable_text:479:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandnummer"
+fields = { "sets" = ["tandlokalisering"] }
+evidence = "Tandnummer där åtgärden gjorts.\ncatalog:variable_text:480:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandnummer"
+fields = { "tags" = ["healthcare"] }
+evidence = "Tandnummer där åtgärden gjorts.\ncatalog:variable_text:480:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandposition"
+fields = { "sets" = ["tandlokalisering"] }
+evidence = "Tandposition där åtgärden gjorts.\ncatalog:variable_text:481:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandposition"
+fields = { "tags" = ["healthcare"] }
+evidence = "Tandposition där åtgärden gjorts.\ncatalog:variable_text:481:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-0"
+fields = { "sets" = ["hogkostnadsersattning", "hogkostnadsskyddets-intervallkvantiteter", "tandvardsstodets-belopp"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-0"
+fields = { "tags" = ["transfers"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-1"
+fields = { "sets" = ["hogkostnadsersattning", "hogkostnadsskyddets-intervallkvantiteter", "tandvardsstodets-belopp"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-2"
+fields = { "sets" = ["hogkostnadsersattning", "hogkostnadsskyddets-intervallkvantiteter", "tandvardsstodets-belopp"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-ersattning-intervall-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Intervallvis tandvårdsersättning. Coordinator group membership: Omfattar total, korrigerad och utbetald högkostnadsersättning samt de uttryckligen beskrivna intervallvisa ersättningsdelarna. Intervallklassificering ingår inte. Samtliga mäter uttryckligen ersättningsdelar för intervall 0, 1 och 2. Dokumenterade fel vid korrigering ändrar inte medlemskapet. Omfattar totalt tandvårdsstöd, tidigare belopp och korrigeringar samt källans namngivna ATB-, STB- och HCP-komponenter och deras ersättningsdelar. Tillgängligt STB är inte utnyttjat stöd; det generella betalningsbeloppet är inte identifierat som totalt tandvårdsstöd.\ncatalog:variable_text:397:13879:2932897\ncatalog:variable_text:409:13879:2932897\ncatalog:variable_text:430:13879:2932897\ncatalog:variable_text:441:13879:2932897\ncatalog:variable_text:442:13879:2932897\ncatalog:variable_text:443:13879:2932897\ncatalog:variable_text:444:13879:2932897\ncatalog:variable_text:462:13879:2932897\ncatalog:variable_text:478:13879:2932897\ncatalog:variable_text:479:13879:2932897\ncatalog:variable_text:482:13879:2932897\ncatalog:variable_text:483:13879:2932897\ncatalog:variable_text:484:13879:2932897\ncatalog:variable_text:485:13879:2932897\ncatalog:variable_text:486:13879:2932897\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsstod"
+fields = { "sets" = ["tandvardsstodets-belopp"] }
+evidence = "Totalt tandvårdsstöd för ärendet.\ncatalog:variable_text:485:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsstod"
+fields = { "tags" = ["transfers"] }
+evidence = "Totalt tandvårdsstöd för ärendet.\ncatalog:variable_text:485:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsstod-fore-korr"
+fields = { "sets" = ["tandvardsstodets-belopp"] }
+evidence = "Tandvårdsstöd före korrigering.\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tandvardsstod-fore-korr"
+fields = { "tags" = ["transfers"] }
+evidence = "Tandvårdsstöd före korrigering.\ncatalog:variable_text:486:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstand"
+fields = { "sets" = [] }
+evidence = "Tillstånd som ligger till grund för åtgärden.\ncatalog:variable_text:487:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstand"
+fields = { "tags" = ["health"] }
+evidence = "Tillstånd som ligger till grund för åtgärden.\ncatalog:variable_text:487:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-hcp-belopp"
+fields = { "sets" = ["hogkostnadsersattning"] }
+evidence = "Utbetald högkostnadsersättning.\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-hcp-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetald högkostnadsersättning.\ncatalog:variable_text:492:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utg-ersgr-belopp"
+fields = { "sets" = ["ersattningsgrundande-belopp"] }
+evidence = "Utgående ersättningsgrundande belopp.\ncatalog:variable_text:493:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utg-ersgr-belopp"
+fields = { "tags" = ["healthcare"] }
+evidence = "Utgående ersättningsgrundande belopp.\ncatalog:variable_text:493:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivare-kategori"
+fields = { "sets" = ["vardgivarkategori"] }
+evidence = "Vårdgivarens kategori.\ncatalog:variable_text:495:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivare-kategori"
+fields = { "tags" = ["healthcare"] }
+evidence = "Vårdgivarens kategori.\ncatalog:variable_text:495:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarens-pris"
+fields = { "sets" = ["vardgivarpris"] }
+evidence = "Vårdgivarens pris för ärendet.\ncatalog:variable_text:496:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarens-pris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Vårdgivarens pris för ärendet.\ncatalog:variable_text:496:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarkat"
+fields = { "sets" = ["vardgivarkategori"] }
+evidence = "Vårdgivarens kategori.\ncatalog:variable_text:497:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarkat"
+fields = { "tags" = ["healthcare"] }
+evidence = "Vårdgivarens kategori.\ncatalog:variable_text:497:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarpris"
+fields = { "sets" = ["vardgivarpris"] }
+evidence = "Vårdgivarens pris för åtgärden.\ncatalog:variable_text:498:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivarpris"
+fields = { "tags" = ["healthcare", "prices"] }
+evidence = "Vårdgivarens pris för åtgärden.\ncatalog:variable_text:498:13879:2932897"

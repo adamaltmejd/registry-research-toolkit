@@ -394,3 +394,63 @@ kind = "set"
 subject = "konkurser-offentliga-ackord: startar @2022..2024"
 fields = { "operational_definition" = "hämtas från FDB" }
 evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:106\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = [] }
+evidence = "Antalet anställda mäter sysselsättning.\ncatalog:variable_text:34858:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda mäter sysselsättning.\ncatalog:variable_text:34858:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:34861:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:34861:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:34862:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:34862:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:34863:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:34863:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-5siffror"
+fields = { "sets" = [] }
+evidence = "Id:t stämmer för SNI 2007 men äldre perioders värdemängder anger andra SNI-versioner.\ncatalog:valueset:12187\ncatalog:valueset:2242\ncatalog:valueset:3354\ncatalog:variable_text:34869:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-5siffror"
+fields = { "tags" = ["business"] }
+evidence = "Id:t stämmer för SNI 2007 men äldre perioders värdemängder anger andra SNI-versioner.\ncatalog:valueset:12187\ncatalog:valueset:2242\ncatalog:valueset:3354\ncatalog:variable_text:34869:9496:20089"

@@ -106,3 +106,99 @@ kind = "set"
 subject = "fordonsgas: kommun @2026"
 fields = { "classification" = "class/lkf/lkf2026" }
 evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-publika-tankstallen"
+fields = { "sets" = [] }
+evidence = "Antalet avser tankinfrastruktur för fordonsgas; jämförbara antal finns för andra typer av tankställen.\ncatalog:register:102\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-publika-tankstallen"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser tankinfrastruktur för fordonsgas; jämförbara antal finns för andra typer av tankställen.\ncatalog:register:102\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tankstallen-bussar"
+fields = { "sets" = [] }
+evidence = "Antalet avser tankinfrastruktur för bussar; jämförbara antal finns för andra typer av tankställen.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tankstallen-bussar"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser tankinfrastruktur för bussar; jämförbara antal finns för andra typer av tankställen.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpub"
+fields = { "sets" = [] }
+evidence = "Ejpub är en källmnemonik som inte uttrycker den levererade gasvolymen. Leveranserna är energimängder.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpub"
+fields = { "tags" = ["energy"] }
+evidence = "Ejpub är en källmnemonik som inte uttrycker den levererade gasvolymen. Leveranserna är energimängder.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpubant"
+fields = { "sets" = [] }
+evidence = "Ejpubant är en källmnemonik vars delar inte återger etikettens ord. Tankställena är transportinfrastruktur.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpubant"
+fields = { "tags" = ["transport"] }
+evidence = "Ejpubant är en källmnemonik vars delar inte återger etikettens ord. Tankställena är transportinfrastruktur.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:gas-publika-tankstallen"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter levererad fordonsgas, med motsvarande mängder för andra mottagare.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:gas-publika-tankstallen"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter levererad fordonsgas, med motsvarande mängder för andra mottagare.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:gas-till-bussar"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter levererad fordonsgas, med motsvarande mängder för andra mottagare.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:gas-till-bussar"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter levererad fordonsgas, med motsvarande mängder för andra mottagare.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "sets" = [] }
+evidence = "Bränslekoden anger vilken typ av fordonsgas uppgifterna avser.\ncatalog:valueset:11541\ncatalog:valueset:1564\ncatalog:variable_text:11757:16436:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "tags" = ["energy"] }
+evidence = "Bränslekoden anger vilken typ av fordonsgas uppgifterna avser.\ncatalog:valueset:11541\ncatalog:valueset:1564\ncatalog:variable_text:11757:16436:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk kommun.\ncatalog:variable_text:11758:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk kommun.\ncatalog:variable_text:11758:14975:20819"

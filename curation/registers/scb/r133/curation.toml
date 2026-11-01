@@ -220,3 +220,267 @@ kind = "set"
 subject = "bransch-kommun-ar: ng169"
 fields = { "classification" = "class/sni/sni1969" }
 evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Arbetsställets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41398:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsställets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41398:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsstallet-anst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Arbetsställets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41399:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsstallet-anst"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsställets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41399:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Företagets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41400:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "tags" = ["employment"] }
+evidence = "Företagets antal anställda hör till gruppen för anställda och arbetsmarknad.\ncatalog:variable_text:41400:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Antalet arbetsställen är ett mått på företagsstruktur.\ncatalog:variable_text:41401:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen"
+fields = { "tags" = ["business"] }
+evidence = "Antalet arbetsställen är ett mått på företagsstruktur.\ncatalog:variable_text:41401:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-antal-ae"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Antalet arbetsställen är ett mått på företagsstruktur.\ncatalog:variable_text:41402:10592:17897\ncatalog:variable_text:41402:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-antal-ae"
+fields = { "tags" = ["business"] }
+evidence = "Antalet arbetsställen är ett mått på företagsstruktur.\ncatalog:variable_text:41402:10592:17897\ncatalog:variable_text:41402:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsgill-ingaende-moms"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Beloppet är avdragsgill ingående moms.\ncatalog:variable_text:41405:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsgill-ingaende-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet är avdragsgill ingående moms.\ncatalog:variable_text:41405:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "sets" = [] }
+evidence = "Postnumret anger arbetsställets geografiska läge.\ncatalog:variable_text:41406:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret anger arbetsställets geografiska läge.\ncatalog:variable_text:41406:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:euexport"
+fields = { "sets" = ["omsattning"] }
+evidence = "Exportvärdet är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41408:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:euexport"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Exportvärdet är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41408:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "sets" = ["omsattning"] }
+evidence = "Exportvärdet är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41409:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Exportvärdet är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41409:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-oms"
+fields = { "sets" = ["omsattning"] }
+evidence = "Exportomsättning är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41410:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-oms"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Exportomsättning är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41410:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-varor-eg-land"
+fields = { "sets" = ["omsattning"] }
+evidence = "Export av varor till annat EG-land är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41411:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-varor-eg-land"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Export av varor till annat EG-land är en exportrelaterad omsättningskomponent.\ncatalog:variable_text:41411:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-oms-exkl-moms"
+fields = { "sets" = ["omsattning"] }
+evidence = "Inrikes omsättning är en omsättningskomponent.\ncatalog:variable_text:41412:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-oms-exkl-moms"
+fields = { "tags" = ["business"] }
+evidence = "Inrikes omsättning är en omsättningskomponent.\ncatalog:variable_text:41412:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunindelningen anger geografiskt läge.\ncatalog:variable_text:41413:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunindelningen anger geografiskt läge.\ncatalog:variable_text:41413:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:m12-utgaende-moms-6"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Beloppet är utgående moms vid sex procents skattesats.\ncatalog:variable_text:41414:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:m12-utgaende-moms-6"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet är utgående moms vid sex procents skattesats.\ncatalog:variable_text:41414:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:moms"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Momsvärdet hör till gruppen för mervärdesskatt.\ncatalog:variable_text:41415:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Momsvärdet hör till gruppen för mervärdesskatt.\ncatalog:variable_text:41415:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsfri-omsattning"
+fields = { "sets" = ["omsattning"] }
+evidence = "Momsfri omsättning är en omsättningskomponent.\ncatalog:variable_text:41416:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsfri-omsattning"
+fields = { "tags" = ["business"] }
+evidence = "Momsfri omsättning är en omsättningskomponent.\ncatalog:variable_text:41416:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Arbetsställets näringsgren är en företagsklassifikation.\ncatalog:variable_text:41417:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "tags" = ["business"] }
+evidence = "Arbetsställets näringsgren är en företagsklassifikation.\ncatalog:variable_text:41417:1826:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Företagets näringsgren är en företagsklassifikation.\ncatalog:variable_text:41418:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Företagets näringsgren är en företagsklassifikation.\ncatalog:variable_text:41418:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omssverige"
+fields = { "sets" = ["omsattning"] }
+evidence = "Omsättning i Sverige är en omsättningskomponent.\ncatalog:variable_text:41419:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omssverige"
+fields = { "tags" = ["business"] }
+evidence = "Omsättning i Sverige är en omsättningskomponent.\ncatalog:variable_text:41419:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Summan av utgående moms hör till gruppen för mervärdesskatt.\ncatalog:variable_text:41422:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Summan av utgående moms hör till gruppen för mervärdesskatt.\ncatalog:variable_text:41422:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12-m11"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Beloppet är utgående moms vid tolv procents skattesats.\ncatalog:variable_text:41423:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12-m11"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet är utgående moms vid tolv procents skattesats.\ncatalog:variable_text:41423:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25-m10"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "Beloppet är utgående moms vid 25 procents skattesats.\ncatalog:variable_text:41424:8766:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25-m10"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet är utgående moms vid 25 procents skattesats.\ncatalog:variable_text:41424:8766:20454"

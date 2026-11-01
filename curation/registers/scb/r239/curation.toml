@@ -168,3 +168,483 @@ kind = "set"
 subject = "riksdagsval: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:occurrence-locators:variable:2762\ncatalog:variable_text:2762:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:occurrence-locators:variable:2762\ncatalog:variable_text:2762:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "Samma kolumn har olika ägare och olika beskrivningar i observerade perioder.\ncatalog:occurrence:19189\ncatalog:occurrence:19253\ncatalog:variable_text:2763:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-disponibel-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "Samma kolumn har olika ägare och olika beskrivningar i observerade perioder.\ncatalog:occurrence:19189\ncatalog:occurrence:19253\ncatalog:variable_text:2763:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd beskriver familjerelationer.\ncatalog:occurrence-locators:variable:2764\ncatalog:variable_text:2764:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd beskriver familjerelationer.\ncatalog:occurrence-locators:variable:2764\ncatalog:variable_text:2764:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "Samma kolumn har olika ägare och olika beskrivningar i observerade perioder.\ncatalog:occurrence:19189\ncatalog:occurrence:19253\ncatalog:variable_text:2765:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "tags" = ["income"] }
+evidence = "Samma kolumn har olika ägare och olika beskrivningar i observerade perioder.\ncatalog:occurrence:19189\ncatalog:occurrence:19253\ncatalog:variable_text:2765:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpers-vald"
+fields = { "sets" = ["vald-kandidat"] }
+evidence = "Hypotetiskt val och faktiskt val är kandidatutfall.\ncatalog:occurrence-locators:variable:2767\ncatalog:variable_text:2767:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ejpers-vald"
+fields = { "tags" = ["democracy"] }
+evidence = "Hypotetiskt val och faktiskt val är kandidatutfall.\ncatalog:occurrence-locators:variable:2767\ncatalog:variable_text:2767:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "sets" = [] }
+evidence = "Familjetyp beskriver familjens sammansättning.\ncatalog:occurrence-locators:variable:2768\ncatalog:variable_text:2768:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "Familjetyp beskriver familjens sammansättning.\ncatalog:occurrence-locators:variable:2768\ncatalog:variable_text:2768:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland och dess aggregering hör ihop.\ncatalog:occurrence-locators:variable:2769\ncatalog:variable_text:2769:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland och dess aggregering hör ihop.\ncatalog:occurrence-locators:variable:2769\ncatalog:variable_text:2769:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln grupperar födelseländer.\ncatalog:occurrence-locators:variable:2770\ncatalog:variable_text:2770:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar födelseländer.\ncatalog:occurrence-locators:variable:2770\ncatalog:variable_text:2770:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst"
+fields = { "sets" = [] }
+evidence = "Summan är en inkomstuppgift.\ncatalog:occurrence-locators:variable:2771\ncatalog:variable_text:2771:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Summan är en inkomstuppgift.\ncatalog:occurrence-locators:variable:2771\ncatalog:variable_text:2771:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Kvintilgruppen är härledd från sammanräknad förvärvsinkomst.\ncatalog:occurrence-locators:variable:2772\ncatalog:variable_text:2772:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "tags" = ["income"] }
+evidence = "Kvintilgruppen är härledd från sammanräknad förvärvsinkomst.\ncatalog:occurrence-locators:variable:2772\ncatalog:variable_text:2772:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunens namn och kod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:2773\ncatalog:variable_text:2773:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunens namn och kod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:2773\ncatalog:variable_text:2773:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets"
+fields = { "sets" = ["kommunvalkrets"] }
+evidence = "Variabeln anger en kommunvalkrets.\ncatalog:occurrence-locators:variable:2774\ncatalog:variable_text:2774:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln anger en kommunvalkrets.\ncatalog:occurrence-locators:variable:2774\ncatalog:variable_text:2774:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "sets" = ["kommunvalkrets"] }
+evidence = "Variabeln kodar kommunvalkrets.\ncatalog:occurrence-locators:variable:2775\ncatalog:variable_text:2775:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln kodar kommunvalkrets.\ncatalog:occurrence-locators:variable:2775\ncatalog:variable_text:2775:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kommunvalkrets"
+fields = { "sets" = ["kommunvalkrets"] }
+evidence = "Variabeln kodar kommunvalkrets.\ncatalog:occurrence-locators:variable:2776\ncatalog:variable_text:2776:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kommunvalkrets"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln kodar kommunvalkrets.\ncatalog:occurrence-locators:variable:2776\ncatalog:variable_text:2776:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:2777\ncatalog:variable_text:2777:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:2777\ncatalog:variable_text:2777:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Länsnamn och länskod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:2778\ncatalog:variable_text:2778:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länsnamn och länskod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:2778\ncatalog:variable_text:2778:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "sets" = ["landsting"] }
+evidence = "Namn och kod anger landstinget.\ncatalog:occurrence-locators:variable:2779\ncatalog:variable_text:2779:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn och kod anger landstinget.\ncatalog:occurrence-locators:variable:2779\ncatalog:variable_text:2779:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod"
+fields = { "sets" = ["landsting"] }
+evidence = "Namn och kod anger landstinget.\ncatalog:occurrence-locators:variable:2780\ncatalog:variable_text:2780:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod"
+fields = { "tags" = ["geography"] }
+evidence = "Namn och kod anger landstinget.\ncatalog:occurrence-locators:variable:2780\ncatalog:variable_text:2780:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "sets" = ["landstingsvalkrets"] }
+evidence = "Variabeln kodar landstingsvalkrets.\ncatalog:occurrence-locators:variable:2781\ncatalog:variable_text:2781:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln kodar landstingsvalkrets.\ncatalog:occurrence-locators:variable:2781\ncatalog:variable_text:2781:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "sets" = ["landstingsvalkrets"] }
+evidence = "Variabeln anger landstingsvalkretsens namn.\ncatalog:occurrence-locators:variable:2782\ncatalog:variable_text:2782:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln anger landstingsvalkretsens namn.\ncatalog:occurrence-locators:variable:2782\ncatalog:variable_text:2782:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ll"
+fields = { "sets" = ["lan"] }
+evidence = "LL är en opak källkod för län; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2784\ncatalog:variable_text:2784:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ll"
+fields = { "tags" = ["geography"] }
+evidence = "LL är en opak källkod för län; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2784\ncatalog:variable_text:2784:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:llkk"
+fields = { "sets" = ["kommun"] }
+evidence = "LLKK är en opak källkod för kommun; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2785\ncatalog:variable_text:2785:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:llkk"
+fields = { "tags" = ["geography"] }
+evidence = "LLKK är en opak källkod för kommun; etiketten ger namnunderlag.\ncatalog:occurrence-locators:variable:2785\ncatalog:variable_text:2785:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:mandatparti"
+fields = { "sets" = [] }
+evidence = "Uppgiften anger om partiet har mandat.\ncatalog:occurrence-locators:variable:2786\ncatalog:valueset:6743"
+
+[[statement]]
+kind = "set"
+subject = "var:mandatparti"
+fields = { "tags" = ["democracy"] }
+evidence = "Uppgiften anger om partiet har mandat.\ncatalog:occurrence-locators:variable:2786\ncatalog:valueset:6743"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Variabeln grupperar medborgarskapsländer.\ncatalog:occurrence-locators:variable:2787\ncatalog:variable_text:2787:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar medborgarskapsländer.\ncatalog:occurrence-locators:variable:2787\ncatalog:variable_text:2787:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Medborgarskapsland och dess aggregering hör ihop.\ncatalog:occurrence-locators:variable:2788\ncatalog:variable_text:2788:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland och dess aggregering hör ihop.\ncatalog:occurrence-locators:variable:2788\ncatalog:variable_text:2788:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-kort"
+fields = { "sets" = ["parti"] }
+evidence = "Kortbeteckning, kod och namn anger parti.\ncatalog:occurrence-locators:variable:2790\ncatalog:variable_text:2790:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-kort"
+fields = { "tags" = ["democracy"] }
+evidence = "Kortbeteckning, kod och namn anger parti.\ncatalog:occurrence-locators:variable:2790\ncatalog:variable_text:2790:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "sets" = ["parti"] }
+evidence = "Partikoden anger parti.\ncatalog:occurrence-locators:variable:2791\ncatalog:variable_text:2791:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "tags" = ["democracy"] }
+evidence = "Partikoden anger parti.\ncatalog:occurrence-locators:variable:2791\ncatalog:variable_text:2791:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "sets" = ["parti"] }
+evidence = "Partinamnet anger parti.\ncatalog:occurrence-locators:variable:2792\ncatalog:variable_text:2792:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "tags" = ["democracy"] }
+evidence = "Partinamnet anger parti.\ncatalog:occurrence-locators:variable:2792\ncatalog:variable_text:2792:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-totalt"
+fields = { "sets" = [] }
+evidence = "Personröster är ett valresultat.\ncatalog:occurrence-locators:variable:2794\ncatalog:variable_text:2794:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-totalt"
+fields = { "tags" = ["democracy"] }
+evidence = "Personröster är ett valresultat.\ncatalog:occurrence-locators:variable:2794\ncatalog:variable_text:2794:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln kodar riksdagsvalkrets.\ncatalog:occurrence-locators:variable:2795\ncatalog:variable_text:2795:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln kodar riksdagsvalkrets.\ncatalog:occurrence-locators:variable:2795\ncatalog:variable_text:2795:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-namn"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:occurrence-locators:variable:2796\ncatalog:variable_text:2796:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-namn"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:occurrence-locators:variable:2796\ncatalog:variable_text:2796:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-riksdagsvalkrets"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln kodar riksdagsvalkrets.\ncatalog:occurrence-locators:variable:2797\ncatalog:variable_text:2797:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-riksdagsvalkrets"
+fields = { "tags" = ["democracy", "geography"] }
+evidence = "Variabeln kodar riksdagsvalkrets.\ncatalog:occurrence-locators:variable:2797\ncatalog:variable_text:2797:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:ripartikod"
+fields = { "sets" = ["parti"] }
+evidence = "Koden anger parti.\ncatalog:occurrence-locators:variable:2798\ncatalog:variable_text:2798:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ripartikod"
+fields = { "tags" = ["democracy"] }
+evidence = "Koden anger parti.\ncatalog:occurrence-locators:variable:2798\ncatalog:variable_text:2798:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Beloppet och dess kvintilgrupp beskriver samma inkomstbegrepp.\ncatalog:occurrence-locators:variable:2799\ncatalog:variable_text:2799:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet och dess kvintilgrupp beskriver samma inkomstbegrepp.\ncatalog:occurrence-locators:variable:2799\ncatalog:variable_text:2799:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "sets" = [] }
+evidence = "Variabeln anger utbildningens inriktning.\ncatalog:occurrence-locators:variable:2803\ncatalog:variable_text:2803:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningens inriktning.\ncatalog:occurrence-locators:variable:2803\ncatalog:variable_text:2803:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Detaljerad och grov utbildningsnivå anger samma begrepp.\ncatalog:occurrence-locators:variable:2804\ncatalog:variable_text:2804:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Detaljerad och grov utbildningsnivå anger samma begrepp.\ncatalog:occurrence-locators:variable:2804\ncatalog:variable_text:2804:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger en grovt aggregerad utbildningsnivå.\ncatalog:occurrence-locators:variable:2805\ncatalog:variable_text:2805:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger en grovt aggregerad utbildningsnivå.\ncatalog:occurrence-locators:variable:2805\ncatalog:variable_text:2805:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncatalog:occurrence-locators:variable:2806\ncatalog:variable_text:2806:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncatalog:occurrence-locators:variable:2806\ncatalog:variable_text:2806:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vald"
+fields = { "sets" = ["vald-kandidat"] }
+evidence = "Faktiskt och hypotetiskt val är kandidatutfall.\ncatalog:occurrence-locators:variable:2807\ncatalog:variable_text:2807:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vald"
+fields = { "tags" = ["democracy"] }
+evidence = "Faktiskt och hypotetiskt val är kandidatutfall.\ncatalog:occurrence-locators:variable:2807\ncatalog:variable_text:2807:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:valgrund"
+fields = { "sets" = [] }
+evidence = "Valgrund beskriver hur kandidaten valdes.\ncatalog:occurrence-locators:variable:2808\ncatalog:variable_text:2808:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:valgrund"
+fields = { "tags" = ["democracy"] }
+evidence = "Valgrund beskriver hur kandidaten valdes.\ncatalog:occurrence-locators:variable:2808\ncatalog:variable_text:2808:18993:19358"

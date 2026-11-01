@@ -263,3 +263,2559 @@ kind = "set"
 subject = "inskrivningsinformation: lankod @2025-12-31"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomrade"
+fields = { "sets" = [] }
+evidence = "Adressområdet anger geografisk lokalisering.\ncatalog:occurrence-locators:variable:10147"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Adressområdet anger geografisk lokalisering.\ncatalog:occurrence-locators:variable:10147"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomradestyp"
+fields = { "sets" = [] }
+evidence = "Typen beskriver en geografisk adressindelning.\ncatalog:occurrence-locators:variable:10148"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomradestyp"
+fields = { "tags" = ["geography"] }
+evidence = "Typen beskriver en geografisk adressindelning.\ncatalog:occurrence-locators:variable:10148"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "sets" = [] }
+evidence = "Adressplatsen anger geografisk lokalisering.\ncatalog:occurrence-locators:variable:10149"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "tags" = ["geography"] }
+evidence = "Adressplatsen anger geografisk lokalisering.\ncatalog:occurrence-locators:variable:10149"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplatstyp"
+fields = { "sets" = [] }
+evidence = "Typen beskriver en geografisk adressplats.\ncatalog:occurrence-locators:variable:10150"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplatstyp"
+fields = { "tags" = ["geography"] }
+evidence = "Typen beskriver en geografisk adressplats.\ncatalog:occurrence-locators:variable:10150"
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10151"
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10151"
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10152"
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10152"
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10153"
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10153"
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10154"
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10154"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatus"
+fields = { "sets" = [] }
+evidence = "Statusen gäller en geografisk adress.\ncatalog:occurrence-locators:variable:10155"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatus"
+fields = { "tags" = ["geography"] }
+evidence = "Statusen gäller en geografisk adress.\ncatalog:occurrence-locators:variable:10155"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10156"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10156"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10157"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10157"
+
+[[statement]]
+kind = "set"
+subject = "var:agarlag"
+fields = { "sets" = ["tredimensionell-fastighetsindelning"] }
+evidence = "Markeringen gäller ägarlägenhetsfastighet och ingår i tredimensionell fastighetsindelning.\ncatalog:occurrence-locators:variable:10159"
+
+[[statement]]
+kind = "set"
+subject = "var:agarlag"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller ägarlägenhetsfastighet och ingår i tredimensionell fastighetsindelning.\ncatalog:occurrence-locators:variable:10159"
+
+[[statement]]
+kind = "set"
+subject = "var:agarlagurholk"
+fields = { "sets" = ["tredimensionell-fastighetsindelning"] }
+evidence = "Markeringen gäller urholkning av ägarlägenhetsfastigheter.\ncatalog:occurrence-locators:variable:10160"
+
+[[statement]]
+kind = "set"
+subject = "var:agarlagurholk"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller urholkning av ägarlägenhetsfastigheter.\ncatalog:occurrence-locators:variable:10160"
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdat"
+fields = { "sets" = ["ajourforingsdatum"] }
+evidence = "Datum för ajourföring.\ncatalog:occurrence-locators:variable:10161"
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdat"
+fields = { "tags" = [] }
+evidence = "Datum för ajourföring.\ncatalog:occurrence-locators:variable:10161"
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdatum"
+fields = { "sets" = ["ajourforingsdatum"] }
+evidence = "Datum för ajourföring.\ncatalog:occurrence-locators:variable:10162"
+
+[[statement]]
+kind = "set"
+subject = "var:ajourdatum"
+fields = { "tags" = [] }
+evidence = "Datum för ajourföring.\ncatalog:occurrence-locators:variable:10162"
+
+[[statement]]
+kind = "set"
+subject = "var:aldretomtratt"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver tomträtt.\ncatalog:occurrence-locators:variable:10166"
+
+[[statement]]
+kind = "set"
+subject = "var:aldretomtratt"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver tomträtt.\ncatalog:occurrence-locators:variable:10166"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarligtfelir"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller registerkvalitet.\ncatalog:occurrence-locators:variable:10167"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarligtfelir"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen gäller registerkvalitet.\ncatalog:occurrence-locators:variable:10167"
+
+[[statement]]
+kind = "set"
+subject = "var:altnamn"
+fields = { "sets" = [] }
+evidence = "Namnet beskriver en byggnad.\ncatalog:occurrence-locators:variable:10168"
+
+[[statement]]
+kind = "set"
+subject = "var:altnamn"
+fields = { "tags" = ["property"] }
+evidence = "Namnet beskriver en byggnad.\ncatalog:occurrence-locators:variable:10168"
+
+[[statement]]
+kind = "set"
+subject = "var:andamal"
+fields = { "sets" = [] }
+evidence = "Texten gäller ändamålet med tomträtt.\ncatalog:occurrence-locators:variable:10169"
+
+[[statement]]
+kind = "set"
+subject = "var:andamal"
+fields = { "tags" = ["property"] }
+evidence = "Texten gäller ändamålet med tomträtt.\ncatalog:occurrence-locators:variable:10169"
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangnamnare"
+fields = { "sets" = ["lagfarts-och-tomtrattsandel"] }
+evidence = "Nämnare för förvärvad andel.\ncatalog:occurrence-locators:variable:10170"
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangnamnare"
+fields = { "tags" = ["property"] }
+evidence = "Nämnare för förvärvad andel.\ncatalog:occurrence-locators:variable:10170"
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangtaljare"
+fields = { "sets" = ["lagfarts-och-tomtrattsandel"] }
+evidence = "Täljare för förvärvad andel.\ncatalog:occurrence-locators:variable:10171"
+
+[[statement]]
+kind = "set"
+subject = "var:andelfangtaljare"
+fields = { "tags" = ["property"] }
+evidence = "Täljare för förvärvad andel.\ncatalog:occurrence-locators:variable:10171"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggning"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar adressatta anläggningar.\ncatalog:occurrence-locators:variable:10172"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggning"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar adressatta anläggningar.\ncatalog:occurrence-locators:variable:10172"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar anläggningar.\ncatalog:occurrence-locators:variable:10173"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstyp"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar anläggningar.\ncatalog:occurrence-locators:variable:10173"
+
+[[statement]]
+kind = "set"
+subject = "var:anmarkning"
+fields = { "sets" = [] }
+evidence = "Anmärkningen gäller tomträttsupplåtelse.\ncatalog:occurrence-locators:variable:10174"
+
+[[statement]]
+kind = "set"
+subject = "var:anmarkning"
+fields = { "tags" = ["property"] }
+evidence = "Anmärkningen gäller tomträttsupplåtelse.\ncatalog:occurrence-locators:variable:10174"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext1"
+fields = { "sets" = ["andelstalens-andamal"] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10175"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext1"
+fields = { "tags" = ["property"] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10175"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext2"
+fields = { "sets" = [] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10176"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext2"
+fields = { "tags" = ["property"] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10176"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext3"
+fields = { "sets" = ["andelstalens-andamal"] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10177"
+
+[[statement]]
+kind = "set"
+subject = "var:anmtext3"
+fields = { "tags" = ["property"] }
+evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10177"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver punkter som används vid geografisk beräkning.\ncatalog:occurrence-locators:variable:10179"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "tags" = ["geography"] }
+evidence = "Antalet beskriver punkter som används vid geografisk beräkning.\ncatalog:occurrence-locators:variable:10179"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "sets" = [] }
+evidence = "Antalet rum beskriver bostadens utrymme.\ncatalog:occurrence-locators:variable:10180"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet rum beskriver bostadens utrymme.\ncatalog:occurrence-locators:variable:10180"
+
+[[statement]]
+kind = "set"
+subject = "var:antrumdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10181"
+
+[[statement]]
+kind = "set"
+subject = "var:antrumdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10181"
+
+[[statement]]
+kind = "set"
+subject = "var:antrumursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10182"
+
+[[statement]]
+kind = "set"
+subject = "var:antrumursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10182"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldavgiftvaluta"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Valutakod för avgäld eller avgift.\ncatalog:occurrence-locators:variable:10183"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldavgiftvaluta"
+fields = { "tags" = ["property"] }
+evidence = "Valutakod för avgäld eller avgift.\ncatalog:occurrence-locators:variable:10183"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldperiodlangd"
+fields = { "sets" = ["avgaldsperiodlangd"] }
+evidence = "Avgäldsperiodens längd.\ncatalog:occurrence-locators:variable:10184"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldperiodlangd"
+fields = { "tags" = ["property"] }
+evidence = "Avgäldsperiodens längd.\ncatalog:occurrence-locators:variable:10184"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldstartdatum"
+fields = { "sets" = ["avgaldsperiodens-startdatum"] }
+evidence = "Avgäldsperiodens startdatum.\ncatalog:occurrence-locators:variable:10185"
+
+[[statement]]
+kind = "set"
+subject = "var:avgaldstartdatum"
+fields = { "tags" = [] }
+evidence = "Avgäldsperiodens startdatum.\ncatalog:occurrence-locators:variable:10185"
+
+[[statement]]
+kind = "set"
+subject = "var:avregatgard"
+fields = { "sets" = [] }
+evidence = "Åtgärd vid avregistrering av fastighet.\ncatalog:occurrence-locators:variable:10187"
+
+[[statement]]
+kind = "set"
+subject = "var:avregatgard"
+fields = { "tags" = ["property"] }
+evidence = "Åtgärd vid avregistrering av fastighet.\ncatalog:occurrence-locators:variable:10187"
+
+[[statement]]
+kind = "set"
+subject = "var:avregistreringsorsak"
+fields = { "sets" = [] }
+evidence = "Orsak till avregistrering av byggnad.\ncatalog:occurrence-locators:variable:10189\ncatalog:valueset:2018"
+
+[[statement]]
+kind = "set"
+subject = "var:avregistreringsorsak"
+fields = { "tags" = ["property"] }
+evidence = "Orsak till avregistrering av byggnad.\ncatalog:occurrence-locators:variable:10189\ncatalog:valueset:2018"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "sets" = [] }
+evidence = "Avståndet beskriver fastighetspunkternas geografiska spridning.\ncatalog:occurrence-locators:variable:10191"
+
+[[statement]]
+kind = "set"
+subject = "var:avst"
+fields = { "tags" = ["geography"] }
+evidence = "Avståndet beskriver fastighetspunkternas geografiska spridning.\ncatalog:occurrence-locators:variable:10191"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikerfranstandard"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver adressens standardavvikelse.\ncatalog:occurrence-locators:variable:10192"
+
+[[statement]]
+kind = "set"
+subject = "var:avvikerfranstandard"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen beskriver adressens standardavvikelse.\ncatalog:occurrence-locators:variable:10192"
+
+[[statement]]
+kind = "set"
+subject = "var:berorstatus"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller fastighetens relation till planområdet.\ncatalog:occurrence-locators:variable:10194"
+
+[[statement]]
+kind = "set"
+subject = "var:berorstatus"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller fastighetens relation till planområdet.\ncatalog:occurrence-locators:variable:10194"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "sets" = [] }
+evidence = "Beslut i inskrivningsinformation.\ncatalog:occurrence-locators:variable:10196"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "tags" = ["property"] }
+evidence = "Beslut i inskrivningsinformation.\ncatalog:occurrence-locators:variable:10196"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandelnamnare"
+fields = { "sets" = ["lagfarts-och-tomtrattsandel"] }
+evidence = "Nämnare för beviljad andel.\ncatalog:occurrence-locators:variable:10197"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandelnamnare"
+fields = { "tags" = ["property"] }
+evidence = "Nämnare för beviljad andel.\ncatalog:occurrence-locators:variable:10197"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandeltaljare"
+fields = { "sets" = ["lagfarts-och-tomtrattsandel"] }
+evidence = "Täljare för beviljad andel.\ncatalog:occurrence-locators:variable:10198"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljadandeltaljare"
+fields = { "tags" = ["property"] }
+evidence = "Täljare för beviljad andel.\ncatalog:occurrence-locators:variable:10198"
+
+[[statement]]
+kind = "set"
+subject = "var:block"
+fields = { "sets" = [] }
+evidence = "Block är en del av fastighetsindelningen.\ncatalog:occurrence-locators:variable:10199"
+
+[[statement]]
+kind = "set"
+subject = "var:block"
+fields = { "tags" = ["property"] }
+evidence = "Block är en del av fastighetsindelningen.\ncatalog:occurrence-locators:variable:10199"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Lägenhetens bostadsarea hör till gruppen bostadsarea.\ncatalog:occurrence-locators:variable:10202"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "tags" = ["housing"] }
+evidence = "Lägenhetens bostadsarea hör till gruppen bostadsarea.\ncatalog:occurrence-locators:variable:10202"
+
+[[statement]]
+kind = "set"
+subject = "var:boareadat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10203"
+
+[[statement]]
+kind = "set"
+subject = "var:boareadat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10203"
+
+[[statement]]
+kind = "set"
+subject = "var:boareaursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10204"
+
+[[statement]]
+kind = "set"
+subject = "var:boareaursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10204"
+
+[[statement]]
+kind = "set"
+subject = "var:byggardat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10205\ncatalog:occurrence:82446\ncatalog:variable_text:10205:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggardat"
+fields = { "tags" = ["methods"] }
+evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10205\ncatalog:occurrence:82446\ncatalog:variable_text:10205:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggarursp"
+fields = { "sets" = [] }
+evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10206\ncatalog:occurrence:82447\ncatalog:variable_text:10206:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggarursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10206\ncatalog:occurrence:82447\ncatalog:variable_text:10206:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsservitut"
+fields = { "sets" = [] }
+evidence = "Byggnadsservitut är en rättighet knuten till fastighet.\ncatalog:occurrence-locators:variable:10208\ncatalog:variable_text:10208:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsservitut"
+fields = { "tags" = ["property"] }
+evidence = "Byggnadsservitut är en rättighet knuten till fastighet.\ncatalog:occurrence-locators:variable:10208\ncatalog:variable_text:10208:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln klassificerar byggnadens typ och detaljerade ändamål.\ncatalog:occurrence-locators:variable:10209\ncatalog:variable_text:10209:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar byggnadens typ och detaljerade ändamål.\ncatalog:occurrence-locators:variable:10209\ncatalog:variable_text:10209:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnstat"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver byggnadens status och ingår i det läsbara familjemönstret bygg.\ncatalog:occurrence-locators:variable:10210\ncatalog:valueset:9490\ncatalog:variable_text:10210:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnstat"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver byggnadens status och ingår i det läsbara familjemönstret bygg.\ncatalog:occurrence-locators:variable:10210\ncatalog:valueset:9490\ncatalog:variable_text:10210:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10211\ncatalog:occurrence:82452\ncatalog:variable_text:10211:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypdat"
+fields = { "tags" = ["methods"] }
+evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10211\ncatalog:occurrence:82452\ncatalog:variable_text:10211:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypursp"
+fields = { "sets" = [] }
+evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10212\ncatalog:occurrence:82453\ncatalog:variable_text:10212:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10212\ncatalog:occurrence:82453\ncatalog:variable_text:10212:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:delfredo"
+fields = { "sets" = ["rattighetsredovisningens-fullstandighet"] }
+evidence = "Markeringen gäller ofullständig redovisning av delägande fastigheter.\ncatalog:occurrence-locators:variable:10216"
+
+[[statement]]
+kind = "set"
+subject = "var:delfredo"
+fields = { "tags" = ["methods", "property"] }
+evidence = "Markeringen gäller ofullständig redovisning av delägande fastigheter.\ncatalog:occurrence-locators:variable:10216"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = ["distrikt"] }
+evidence = "Distrikt uttryckt som kod.\ncatalog:occurrence-locators:variable:10217"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt uttryckt som kod.\ncatalog:occurrence-locators:variable:10217"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "sets" = ["distrikt"] }
+evidence = "Distrikt uttryckt som namn.\ncatalog:occurrence-locators:variable:10218"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt uttryckt som namn.\ncatalog:occurrence-locators:variable:10218"
+
+[[statement]]
+kind = "set"
+subject = "var:enhet"
+fields = { "sets" = [] }
+evidence = "Enheten är en del av fastighetsbeteckningen.\ncatalog:occurrence-locators:variable:10220"
+
+[[statement]]
+kind = "set"
+subject = "var:enhet"
+fields = { "tags" = ["property"] }
+evidence = "Enheten är en del av fastighetsbeteckningen.\ncatalog:occurrence-locators:variable:10220"
+
+[[statement]]
+kind = "set"
+subject = "var:entrestat"
+fields = { "sets" = [] }
+evidence = "Entréns status.\ncatalog:occurrence-locators:variable:10221"
+
+[[statement]]
+kind = "set"
+subject = "var:entrestat"
+fields = { "tags" = ["property"] }
+evidence = "Entréns status.\ncatalog:occurrence-locators:variable:10221"
+
+[[statement]]
+kind = "set"
+subject = "var:entretyp"
+fields = { "sets" = [] }
+evidence = "Entréns typ.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "var:entretyp"
+fields = { "tags" = ["property"] }
+evidence = "Entréns typ.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "var:entretypdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10223"
+
+[[statement]]
+kind = "set"
+subject = "var:entretypdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10223"
+
+[[statement]]
+kind = "set"
+subject = "var:entretypursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10224"
+
+[[statement]]
+kind = "set"
+subject = "var:entretypursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10224"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesart"
+fields = { "sets" = ["forvarvssatt"] }
+evidence = "Klassificering av förvärv.\ncatalog:occurrence-locators:variable:10226"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesart"
+fields = { "tags" = ["property"] }
+evidence = "Klassificering av förvärv.\ncatalog:occurrence-locators:variable:10226"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagar"
+fields = { "sets" = ["fangestidpunkt"] }
+evidence = "Fångestidpunkt med årsprecision.\ncatalog:occurrence-locators:variable:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagar"
+fields = { "tags" = [] }
+evidence = "Fångestidpunkt med årsprecision.\ncatalog:occurrence-locators:variable:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagdag"
+fields = { "sets" = ["fangestidpunkt"] }
+evidence = "Fångestidpunkt med dagsprecision.\ncatalog:occurrence-locators:variable:10228"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagdag"
+fields = { "tags" = [] }
+evidence = "Fångestidpunkt med dagsprecision.\ncatalog:occurrence-locators:variable:10228"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagmanad"
+fields = { "sets" = ["fangestidpunkt"] }
+evidence = "Fångestidpunkt med månadsprecision.\ncatalog:occurrence-locators:variable:10229"
+
+[[statement]]
+kind = "set"
+subject = "var:fangesdagmanad"
+fields = { "tags" = [] }
+evidence = "Fångestidpunkt med månadsprecision.\ncatalog:occurrence-locators:variable:10229"
+
+[[statement]]
+kind = "set"
+subject = "var:fangeskod"
+fields = { "sets" = ["forvarvssatt"] }
+evidence = "Kodning av förvärv.\ncatalog:occurrence-locators:variable:10230"
+
+[[statement]]
+kind = "set"
+subject = "var:fangeskod"
+fields = { "tags" = ["property"] }
+evidence = "Kodning av förvärv.\ncatalog:occurrence-locators:variable:10230"
+
+[[statement]]
+kind = "set"
+subject = "var:felfr"
+fields = { "sets" = [] }
+evidence = "Markeringen avser registerkvalitet.\ncatalog:occurrence-locators:variable:10233"
+
+[[statement]]
+kind = "set"
+subject = "var:felfr"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen avser registerkvalitet.\ncatalog:occurrence-locators:variable:10233"
+
+[[statement]]
+kind = "set"
+subject = "var:fnrdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10236"
+
+[[statement]]
+kind = "set"
+subject = "var:fnrdat"
+fields = { "tags" = [] }
+evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10236"
+
+[[statement]]
+kind = "set"
+subject = "var:fnrursp"
+fields = { "sets" = [] }
+evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10237"
+
+[[statement]]
+kind = "set"
+subject = "var:fnrursp"
+fields = { "tags" = ["methods"] }
+evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10237"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvstyp"
+fields = { "sets" = ["forvarvssatt"] }
+evidence = "Klassificering av förvärv.\ncatalog:occurrence-locators:variable:10239"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvstyp"
+fields = { "tags" = ["property"] }
+evidence = "Klassificering av förvärv.\ncatalog:occurrence-locators:variable:10239"
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsgles"
+fields = { "sets" = ["krav-pa-forvarvstillstand"] }
+evidence = "Krav på förvärvstillstånd.\ncatalog:occurrence-locators:variable:10240"
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsgles"
+fields = { "tags" = ["property"] }
+evidence = "Krav på förvärvstillstånd.\ncatalog:occurrence-locators:variable:10240"
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsomarr"
+fields = { "sets" = ["krav-pa-forvarvstillstand"] }
+evidence = "Krav på förvärvstillstånd.\ncatalog:occurrence-locators:variable:10241"
+
+[[statement]]
+kind = "set"
+subject = "var:forvtillsomarr"
+fields = { "tags" = ["property"] }
+evidence = "Krav på förvärvstillstånd.\ncatalog:occurrence-locators:variable:10241"
+
+[[statement]]
+kind = "set"
+subject = "var:frajdatum"
+fields = { "sets" = ["ajourforingsdatum"] }
+evidence = "Datum för ajourföring hör till kandidatgruppen.\ncatalog:variable_text:10242:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:frajdatum"
+fields = { "tags" = [] }
+evidence = "Datum för ajourföring hör till kandidatgruppen.\ncatalog:variable_text:10242:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgperiod"
+fields = { "sets" = ["avgaldsperiodlangd"] }
+evidence = "Framtida avgäldsperiods längd.\ncatalog:occurrence-locators:variable:10243"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgperiod"
+fields = { "tags" = ["property"] }
+evidence = "Framtida avgäldsperiods längd.\ncatalog:occurrence-locators:variable:10243"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgstartdat"
+fields = { "sets" = ["avgaldsperiodens-startdatum"] }
+evidence = "Framtida avgäldsperiods startdatum.\ncatalog:occurrence-locators:variable:10244"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgstartdat"
+fields = { "tags" = [] }
+evidence = "Framtida avgäldsperiods startdatum.\ncatalog:occurrence-locators:variable:10244"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgsumma"
+fields = { "sets" = ["tomtrattsavgald-och-arrendeavgifter"] }
+evidence = "Framtida tomträttsavgäld.\ncatalog:occurrence-locators:variable:10245"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgsumma"
+fields = { "tags" = ["property"] }
+evidence = "Framtida tomträttsavgäld.\ncatalog:occurrence-locators:variable:10245"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgvaluta"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Valutakod för framtida avgäld.\ncatalog:occurrence-locators:variable:10246"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidaavgvaluta"
+fields = { "tags" = ["property"] }
+evidence = "Valutakod för framtida avgäld.\ncatalog:occurrence-locators:variable:10246"
+
+[[statement]]
+kind = "set"
+subject = "var:gardsnamn"
+fields = { "sets" = [] }
+evidence = "Gårdsnamnet ingår i en adress.\ncatalog:occurrence-locators:variable:10249"
+
+[[statement]]
+kind = "set"
+subject = "var:gardsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Gårdsnamnet ingår i en adress.\ncatalog:occurrence-locators:variable:10249"
+
+[[statement]]
+kind = "set"
+subject = "var:gemensambostadsambo"
+fields = { "sets" = [] }
+evidence = "Texten beskriver sammanboende och gemensam bostad.\ncatalog:occurrence-locators:variable:10252"
+
+[[statement]]
+kind = "set"
+subject = "var:gemensambostadsambo"
+fields = { "tags" = ["family-household"] }
+evidence = "Texten beskriver sammanboende och gemensam bostad.\ncatalog:occurrence-locators:variable:10252"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp"
+fields = { "sets" = [] }
+evidence = "Gruppkoden klassificerar planer och bestämmelser.\ncatalog:occurrence-locators:variable:10253\ncatalog:valueset:8567"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp"
+fields = { "tags" = ["property"] }
+evidence = "Gruppkoden klassificerar planer och bestämmelser.\ncatalog:occurrence-locators:variable:10253\ncatalog:valueset:8567"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppinfotext"
+fields = { "sets" = [] }
+evidence = "Text om fastighetens rättighetsuppgifter.\ncatalog:occurrence-locators:variable:10254"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppinfotext"
+fields = { "tags" = ["property"] }
+evidence = "Text om fastighetens rättighetsuppgifter.\ncatalog:occurrence-locators:variable:10254"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppinfotyp"
+fields = { "sets" = [] }
+evidence = "Typ av rättighetsinformation.\ncatalog:occurrence-locators:variable:10255"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppinfotyp"
+fields = { "tags" = ["property"] }
+evidence = "Typ av rättighetsinformation.\ncatalog:occurrence-locators:variable:10255"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudbyggnad"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver en byggnads egenskap.\ncatalog:occurrence-locators:variable:10258"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudbyggnad"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen beskriver en byggnads egenskap.\ncatalog:occurrence-locators:variable:10258"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "sets" = [] }
+evidence = "Variabeln anger insamlingsmetod.\ncatalog:occurrence-locators:variable:10263\ncatalog:valueset:4979"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger insamlingsmetod.\ncatalog:occurrence-locators:variable:10263\ncatalog:valueset:4979"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrankning"
+fields = { "sets" = [] }
+evidence = "Inskränkning i upplåtelse av tomträtt.\ncatalog:occurrence-locators:variable:10264"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrankning"
+fields = { "tags" = ["property"] }
+evidence = "Inskränkning i upplåtelse av tomträtt.\ncatalog:occurrence-locators:variable:10264"
+
+[[statement]]
+kind = "set"
+subject = "var:kdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10271"
+
+[[statement]]
+kind = "set"
+subject = "var:kdat"
+fields = { "tags" = [] }
+evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10271"
+
+[[statement]]
+kind = "set"
+subject = "var:kdatum"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10272"
+
+[[statement]]
+kind = "set"
+subject = "var:kdatum"
+fields = { "tags" = [] }
+evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10272"
+
+[[statement]]
+kind = "set"
+subject = "var:kdatumursp"
+fields = { "sets" = [] }
+evidence = "K är en enbokstavskod men den senaste operativa definitionen är motstridig.\ncatalog:occurrence:82463\ncatalog:variable_text:10273:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kdatumursp"
+fields = { "tags" = ["methods"] }
+evidence = "K är en enbokstavskod men den senaste operativa definitionen är motstridig.\ncatalog:occurrence:82463\ncatalog:variable_text:10273:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgem"
+fields = { "sets" = ["koksutrustning"] }
+evidence = "Gemensamt kök är en aspekt av köksutrustning.\ncatalog:occurrence-locators:variable:10274"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgem"
+fields = { "tags" = ["housing"] }
+evidence = "Gemensamt kök är en aspekt av köksutrustning.\ncatalog:occurrence-locators:variable:10274"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10275"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10275"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10276"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10276"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "sets" = ["koksutrustning"] }
+evidence = "Kökstyp ingår i köksutrustning.\ncatalog:occurrence-locators:variable:10277\ncatalog:valueset:10447"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kökstyp ingår i köksutrustning.\ncatalog:occurrence-locators:variable:10277\ncatalog:valueset:10447"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10278"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10278"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10279"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10279"
+
+[[statement]]
+kind = "set"
+subject = "var:komdellage"
+fields = { "sets" = [] }
+evidence = "Kommundelen är en geografisk indelning.\ncatalog:occurrence-locators:variable:10280"
+
+[[statement]]
+kind = "set"
+subject = "var:komdellage"
+fields = { "tags" = ["geography"] }
+evidence = "Kommundelen är en geografisk indelning.\ncatalog:occurrence-locators:variable:10280"
+
+[[statement]]
+kind = "set"
+subject = "var:komkod"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunkod och kommunnamn beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:10281\ncatalog:occurrence-locators:variable:10282"
+
+[[statement]]
+kind = "set"
+subject = "var:komkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkod och kommunnamn beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:10281\ncatalog:occurrence-locators:variable:10282"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunnamn och kommunkod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:10281\ncatalog:occurrence-locators:variable:10282"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamn och kommunkod beskriver samma geografiska indelning.\ncatalog:occurrence-locators:variable:10281\ncatalog:occurrence-locators:variable:10282"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastsum"
+fields = { "sets" = ["kopeskilling"] }
+evidence = "Köpeskillingsbelopp för fast egendom eller tomträtt.\ncatalog:occurrence-locators:variable:10284"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastsum"
+fields = { "tags" = ["property"] }
+evidence = "Köpeskillingsbelopp för fast egendom eller tomträtt.\ncatalog:occurrence-locators:variable:10284"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastval"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Köpeskillingens valuta.\ncatalog:occurrence-locators:variable:10285"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingfastval"
+fields = { "tags" = ["property"] }
+evidence = "Köpeskillingens valuta.\ncatalog:occurrence-locators:variable:10285"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglossum"
+fields = { "sets" = ["kopeskilling"] }
+evidence = "Namngiven köpeskillingskomponent.\ncatalog:occurrence-locators:variable:10286"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglossum"
+fields = { "tags" = ["property"] }
+evidence = "Namngiven köpeskillingskomponent.\ncatalog:occurrence-locators:variable:10286"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglosval"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Valuta för lös egendom.\ncatalog:occurrence-locators:variable:10287"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillinglosval"
+fields = { "tags" = ["property"] }
+evidence = "Valuta för lös egendom.\ncatalog:occurrence-locators:variable:10287"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingstyp"
+fields = { "sets" = [] }
+evidence = "Klassificeringen gäller köpeskilling vid fastighetsöverlåtelse.\ncatalog:occurrence-locators:variable:10288\ncatalog:valueset:11396"
+
+[[statement]]
+kind = "set"
+subject = "var:kopeskillingstyp"
+fields = { "tags" = ["property"] }
+evidence = "Klassificeringen gäller köpeskilling vid fastighetsöverlåtelse.\ncatalog:occurrence-locators:variable:10288\ncatalog:valueset:11396"
+
+[[statement]]
+kind = "set"
+subject = "var:krono"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller kronomark.\ncatalog:occurrence-locators:variable:10289"
+
+[[statement]]
+kind = "set"
+subject = "var:krono"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller kronomark.\ncatalog:occurrence-locators:variable:10289"
+
+[[statement]]
+kind = "set"
+subject = "var:kvkod"
+fields = { "sets" = [] }
+evidence = "Koden anger kartans kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10291\ncatalog:valueset:11195"
+
+[[statement]]
+kind = "set"
+subject = "var:kvkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger kartans kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10291\ncatalog:valueset:11195"
+
+[[statement]]
+kind = "set"
+subject = "var:lagfartsanmarkning"
+fields = { "sets" = [] }
+evidence = "Anmärkningen gäller lagfart.\ncatalog:occurrence-locators:variable:10293"
+
+[[statement]]
+kind = "set"
+subject = "var:lagfartsanmarkning"
+fields = { "tags" = ["property"] }
+evidence = "Anmärkningen gäller lagfart.\ncatalog:occurrence-locators:variable:10293"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:occurrence-locators:variable:10294\ncatalog:valueset:7128"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:occurrence-locators:variable:10294\ncatalog:valueset:7128"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = ["land"] }
+evidence = "Landnamn och landskod hör till samma geografiska begrepp.\ncatalog:occurrence-locators:variable:10295\ncatalog:occurrence-locators:variable:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography"] }
+evidence = "Landnamn och landskod hör till samma geografiska begrepp.\ncatalog:occurrence-locators:variable:10295\ncatalog:occurrence-locators:variable:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "sets" = ["fastighetsareal"] }
+evidence = "Landarealen är en komponent av fastighetens areal.\ncatalog:occurrence-locators:variable:10296"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "tags" = ["property"] }
+evidence = "Landarealen är en komponent av fastighetens areal.\ncatalog:occurrence-locators:variable:10296"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "sets" = ["land"] }
+evidence = "Landskod och landnamn hör till samma geografiska begrepp.\ncatalog:occurrence-locators:variable:10295\ncatalog:occurrence-locators:variable:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "tags" = ["geography"] }
+evidence = "Landskod och landnamn hör till samma geografiska begrepp.\ncatalog:occurrence-locators:variable:10295\ncatalog:occurrence-locators:variable:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkat"
+fields = { "sets" = [] }
+evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10299:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkat"
+fields = { "tags" = ["housing"] }
+evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10299:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10300"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10300"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10301"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10301"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10303"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10303"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10304"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10304"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatus"
+fields = { "sets" = [] }
+evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10305:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatus"
+fields = { "tags" = ["housing"] }
+evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10305:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10306"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10306"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10307"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10307"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-totalt"
+fields = { "sets" = [] }
+evidence = "Lokalarean beskriver byggnaders golvutrymme.\ncatalog:occurrence-locators:variable:10309"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-totalt"
+fields = { "tags" = ["property"] }
+evidence = "Lokalarean beskriver byggnaders golvutrymme.\ncatalog:occurrence-locators:variable:10309"
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftsum"
+fields = { "sets" = ["kopeskilling"] }
+evidence = "Mellangift vid fastighets- eller tomträttsbyte.\ncatalog:occurrence-locators:variable:10310"
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftsum"
+fields = { "tags" = ["property"] }
+evidence = "Mellangift vid fastighets- eller tomträttsbyte.\ncatalog:occurrence-locators:variable:10310"
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftval"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Mellangiftens valuta.\ncatalog:occurrence-locators:variable:10311"
+
+[[statement]]
+kind = "set"
+subject = "var:mellangiftval"
+fields = { "tags" = ["property"] }
+evidence = "Mellangiftens valuta.\ncatalog:occurrence-locators:variable:10311"
+
+[[statement]]
+kind = "set"
+subject = "var:namntyp"
+fields = { "sets" = [] }
+evidence = "Namntypen gäller byggnader.\ncatalog:occurrence-locators:variable:10314"
+
+[[statement]]
+kind = "set"
+subject = "var:namntyp"
+fields = { "tags" = ["property"] }
+evidence = "Namntypen gäller byggnader.\ncatalog:occurrence-locators:variable:10314"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-i-system-sweref-xr"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Nordlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10315"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-i-system-sweref-xr"
+fields = { "tags" = ["geography"] }
+evidence = "Nordlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10315"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Nordlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10316"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Nordlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10316"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Nybyggnadsår.\ncatalog:occurrence-locators:variable:10317"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "tags" = ["property"] }
+evidence = "Nybyggnadsår.\ncatalog:occurrence-locators:variable:10317"
+
+[[statement]]
+kind = "set"
+subject = "var:nyregors"
+fields = { "sets" = [] }
+evidence = "Orsaken gäller registrering av byggnad.\ncatalog:occurrence-locators:variable:10318"
+
+[[statement]]
+kind = "set"
+subject = "var:nyregors"
+fields = { "tags" = ["property"] }
+evidence = "Orsaken gäller registrering av byggnad.\ncatalog:occurrence-locators:variable:10318"
+
+[[statement]]
+kind = "set"
+subject = "var:ofrigrund"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver byggnad på annans mark.\ncatalog:occurrence-locators:variable:10323"
+
+[[statement]]
+kind = "set"
+subject = "var:ofrigrund"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver byggnad på annans mark.\ncatalog:occurrence-locators:variable:10323"
+
+[[statement]]
+kind = "set"
+subject = "var:oklarainskrforh"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller felaktig eller outredd inskrivningsinformation.\ncatalog:occurrence-locators:variable:10324"
+
+[[statement]]
+kind = "set"
+subject = "var:oklarainskrforh"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen gäller felaktig eller outredd inskrivningsinformation.\ncatalog:occurrence-locators:variable:10324"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggardat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10326"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggardat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10326"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggarursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10327"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggarursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10327"
+
+[[statement]]
+kind = "set"
+subject = "var:omradesbeskrivning"
+fields = { "sets" = [] }
+evidence = "Beskrivning av område som ska frånskiljas en fastighet.\ncatalog:occurrence-locators:variable:10329"
+
+[[statement]]
+kind = "set"
+subject = "var:omradesbeskrivning"
+fields = { "tags" = ["property"] }
+evidence = "Beskrivning av område som ska frånskiljas en fastighet.\ncatalog:occurrence-locators:variable:10329"
+
+[[statement]]
+kind = "set"
+subject = "var:omrtyp"
+fields = { "sets" = [] }
+evidence = "Områdestypen gäller planinformation.\ncatalog:occurrence-locators:variable:10331"
+
+[[statement]]
+kind = "set"
+subject = "var:omrtyp"
+fields = { "tags" = ["property"] }
+evidence = "Områdestypen gäller planinformation.\ncatalog:occurrence-locators:variable:10331"
+
+[[statement]]
+kind = "set"
+subject = "var:oskod"
+fields = { "sets" = [] }
+evidence = "Koden markerar osäkerhet i uppgiften.\ncatalog:occurrence-locators:variable:10333\ncatalog:valueset:5854"
+
+[[statement]]
+kind = "set"
+subject = "var:oskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden markerar osäkerhet i uppgiften.\ncatalog:occurrence-locators:variable:10333\ncatalog:valueset:5854"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-i-system-sweref-yr"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Ostlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10334"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-i-system-sweref-yr"
+fields = { "tags" = ["geography"] }
+evidence = "Ostlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10334"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Ostlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10335"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Ostlig koordinat ingår i geografiska koordinater.\ncatalog:occurrence-locators:variable:10335"
+
+[[statement]]
+kind = "set"
+subject = "var:overklagande"
+fields = { "sets" = [] }
+evidence = "Texten gäller överklagande av beslut.\ncatalog:occurrence-locators:variable:10336"
+
+[[statement]]
+kind = "set"
+subject = "var:overklagande"
+fields = { "tags" = ["property"] }
+evidence = "Texten gäller överklagande av beslut.\ncatalog:occurrence-locators:variable:10336"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriganmarkning"
+fields = { "sets" = [] }
+evidence = "Anmärkningen hör till inskrivningsinformation.\ncatalog:occurrence-locators:variable:10337"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriganmarkning"
+fields = { "tags" = ["property"] }
+evidence = "Anmärkningen hör till inskrivningsinformation.\ncatalog:occurrence-locators:variable:10337"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaendearendetyp"
+fields = { "sets" = [] }
+evidence = "Ärendetypen gäller fastighetens handläggning.\ncatalog:occurrence-locators:variable:10339"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaendearendetyp"
+fields = { "tags" = ["property"] }
+evidence = "Ärendetypen gäller fastighetens handläggning.\ncatalog:occurrence-locators:variable:10339"
+
+[[statement]]
+kind = "set"
+subject = "var:pkttyp"
+fields = { "sets" = ["punkttyp"] }
+evidence = "Koden anger typ av geografisk punkt.\ncatalog:occurrence-locators:variable:10342\ncatalog:valueset:4777"
+
+[[statement]]
+kind = "set"
+subject = "var:pkttyp"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger typ av geografisk punkt.\ncatalog:occurrence-locators:variable:10342\ncatalog:valueset:4777"
+
+[[statement]]
+kind = "set"
+subject = "var:planforkortning"
+fields = { "sets" = [] }
+evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
+
+[[statement]]
+kind = "set"
+subject = "var:planforkortning"
+fields = { "tags" = ["property"] }
+evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
+
+[[statement]]
+kind = "set"
+subject = "var:planforkortning-naturvard"
+fields = { "sets" = [] }
+evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
+
+[[statement]]
+kind = "set"
+subject = "var:planforkortning-naturvard"
+fields = { "tags" = ["environment", "property"] }
+evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
+
+[[statement]]
+kind = "set"
+subject = "var:plnamn"
+fields = { "sets" = [] }
+evidence = "Namnet gäller ett planbeslut.\ncatalog:occurrence-locators:variable:10345"
+
+[[statement]]
+kind = "set"
+subject = "var:plnamn"
+fields = { "tags" = ["property"] }
+evidence = "Namnet gäller ett planbeslut.\ncatalog:occurrence-locators:variable:10345"
+
+[[statement]]
+kind = "set"
+subject = "var:popnamndat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10346"
+
+[[statement]]
+kind = "set"
+subject = "var:popnamndat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10346"
+
+[[statement]]
+kind = "set"
+subject = "var:popnamnursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10347"
+
+[[statement]]
+kind = "set"
+subject = "var:popnamnursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10347"
+
+[[statement]]
+kind = "set"
+subject = "var:popularnamn"
+fields = { "sets" = [] }
+evidence = "Populärnamnet anger en plats i adressinformationen.\ncatalog:occurrence-locators:variable:10348"
+
+[[statement]]
+kind = "set"
+subject = "var:popularnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Populärnamnet anger en plats i adressinformationen.\ncatalog:occurrence-locators:variable:10348"
+
+[[statement]]
+kind = "set"
+subject = "var:postkod"
+fields = { "sets" = ["postnummer"] }
+evidence = "Utländsk postkod.\ncatalog:occurrence-locators:variable:10349"
+
+[[statement]]
+kind = "set"
+subject = "var:postkod"
+fields = { "tags" = ["geography"] }
+evidence = "Utländsk postkod.\ncatalog:occurrence-locators:variable:10349"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postnummer"] }
+evidence = "Postnummer.\ncatalog:occurrence-locators:variable:10350"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer.\ncatalog:occurrence-locators:variable:10350"
+
+[[statement]]
+kind = "set"
+subject = "var:postnrdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10351"
+
+[[statement]]
+kind = "set"
+subject = "var:postnrdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10351"
+
+[[statement]]
+kind = "set"
+subject = "var:postnrursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10352"
+
+[[statement]]
+kind = "set"
+subject = "var:postnrursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10352"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["postort"] }
+evidence = "Svensk postort.\ncatalog:occurrence-locators:variable:10353"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Svensk postort.\ncatalog:occurrence-locators:variable:10353"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-utland"
+fields = { "sets" = ["postort"] }
+evidence = "Utländsk postort.\ncatalog:occurrence-locators:variable:10354"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-utland"
+fields = { "tags" = ["geography"] }
+evidence = "Utländsk postort.\ncatalog:occurrence-locators:variable:10354"
+
+[[statement]]
+kind = "set"
+subject = "var:postortdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10355"
+
+[[statement]]
+kind = "set"
+subject = "var:postortdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10355"
+
+[[statement]]
+kind = "set"
+subject = "var:postortursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10356"
+
+[[statement]]
+kind = "set"
+subject = "var:postortursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10356"
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastsum"
+fields = { "sets" = ["kopeskilling"] }
+evidence = "Preliminär köpeskilling.\ncatalog:occurrence-locators:variable:10357"
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastsum"
+fields = { "tags" = ["property"] }
+evidence = "Preliminär köpeskilling.\ncatalog:occurrence-locators:variable:10357"
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastval"
+fields = { "sets" = ["beloppsvaluta"] }
+evidence = "Preliminär köpeskillings valuta.\ncatalog:occurrence-locators:variable:10358"
+
+[[statement]]
+kind = "set"
+subject = "var:prelkopskillfastval"
+fields = { "tags" = ["property"] }
+evidence = "Preliminär köpeskillings valuta.\ncatalog:occurrence-locators:variable:10358"
+
+[[statement]]
+kind = "set"
+subject = "var:pstat"
+fields = { "sets" = [] }
+evidence = "P är en enbokstavskod för plan.\ncatalog:variable_text:10359:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pstat"
+fields = { "tags" = ["property"] }
+evidence = "P är en enbokstavskod för plan.\ncatalog:variable_text:10359:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ptypkod"
+fields = { "sets" = ["fastighetstypkod"] }
+evidence = "P är en opak bokstavskod för preliminär.\ncatalog:occurrence-locators:variable:10360"
+
+[[statement]]
+kind = "set"
+subject = "var:ptypkod"
+fields = { "tags" = ["property"] }
+evidence = "P är en opak bokstavskod för preliminär.\ncatalog:occurrence-locators:variable:10360"
+
+[[statement]]
+kind = "set"
+subject = "var:punkttyp"
+fields = { "sets" = ["punkttyp"] }
+evidence = "Koden anger typ av geografisk punkt.\ncatalog:occurrence-locators:variable:10361\ncatalog:valueset:8297"
+
+[[statement]]
+kind = "set"
+subject = "var:punkttyp"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger typ av geografisk punkt.\ncatalog:occurrence-locators:variable:10361\ncatalog:valueset:8297"
+
+[[statement]]
+kind = "set"
+subject = "var:regbybetursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för registerbyggnadsbeteckning.\ncatalog:occurrence-locators:variable:10364"
+
+[[statement]]
+kind = "set"
+subject = "var:regbybetursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för registerbyggnadsbeteckning.\ncatalog:occurrence-locators:variable:10364"
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "sets" = ["upplaggningsdatum"] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10365"
+
+[[statement]]
+kind = "set"
+subject = "var:regdat"
+fields = { "tags" = [] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10365"
+
+[[statement]]
+kind = "set"
+subject = "var:regkart"
+fields = { "sets" = [] }
+evidence = "Kartbladets geografiska läge.\ncatalog:occurrence-locators:variable:10366"
+
+[[statement]]
+kind = "set"
+subject = "var:regkart"
+fields = { "tags" = ["geography"] }
+evidence = "Kartbladets geografiska läge.\ncatalog:occurrence-locators:variable:10366"
+
+[[statement]]
+kind = "set"
+subject = "var:ruta"
+fields = { "sets" = [] }
+evidence = "Geografisk indexruta.\ncatalog:occurrence-locators:variable:10377"
+
+[[statement]]
+kind = "set"
+subject = "var:ruta"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk indexruta.\ncatalog:occurrence-locators:variable:10377"
+
+[[statement]]
+kind = "set"
+subject = "var:sajdat"
+fields = { "sets" = ["ajourforingsdatum"] }
+evidence = "Inledande S är en källkod, inte en läsbar etikettstam; etiketten delas och målet kräver kollisionsprövning.\ncatalog:occurrence-locators:variable:10378"
+
+[[statement]]
+kind = "set"
+subject = "var:sajdat"
+fields = { "tags" = [] }
+evidence = "Inledande S är en källkod, inte en läsbar etikettstam; etiketten delas och målet kräver kollisionsprövning.\ncatalog:occurrence-locators:variable:10378"
+
+[[statement]]
+kind = "set"
+subject = "var:samfut"
+fields = { "sets" = ["rattighetsredovisningens-fullstandighet"] }
+evidence = "Markeringen gäller outredda samfällighetsandelar.\ncatalog:occurrence-locators:variable:10379"
+
+[[statement]]
+kind = "set"
+subject = "var:samfut"
+fields = { "tags" = ["methods", "property"] }
+evidence = "Markeringen gäller outredda samfällighetsandelar.\ncatalog:occurrence-locators:variable:10379"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Nybyggnadsår kompletterat med SCB:s statistik.\ncatalog:occurrence-locators:variable:10380"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "tags" = ["property"] }
+evidence = "Nybyggnadsår kompletterat med SCB:s statistik.\ncatalog:occurrence-locators:variable:10380"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-felavst"
+fields = { "sets" = [] }
+evidence = "Avstånd vid geografiskt objektfel är en kvalitetsuppgift.\ncatalog:occurrence-locators:variable:10381"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-felavst"
+fields = { "tags" = ["methods"] }
+evidence = "Avstånd vid geografiskt objektfel är en kvalitetsuppgift.\ncatalog:occurrence-locators:variable:10381"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-felkod"
+fields = { "sets" = [] }
+evidence = "Felkod för geografisk kvalitet.\ncatalog:occurrence-locators:variable:10382\ncatalog:valueset:12464"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-felkod"
+fields = { "tags" = ["methods"] }
+evidence = "Felkod för geografisk kvalitet.\ncatalog:occurrence-locators:variable:10382\ncatalog:valueset:12464"
+
+[[statement]]
+kind = "set"
+subject = "var:senasteandringinskr"
+fields = { "sets" = ["ajourforingsdatum"] }
+evidence = "Coordinator group membership: Samtliga anger senaste ändring av registeruppgifter, inklusive inskrivningsinformationens datum och tid.\ncatalog:variable_text:10161:20453:20454\ncatalog:variable_text:10162:20453:20454\ncatalog:variable_text:10242:20453:20454\ncatalog:variable_text:10378:20453:20454\ncatalog:variable_text:10383:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:senasteandringinskr"
+fields = { "tags" = [] }
+evidence = "Coordinator group membership: Samtliga anger senaste ändring av registeruppgifter, inklusive inskrivningsinformationens datum och tid.\ncatalog:variable_text:10161:20453:20454\ncatalog:variable_text:10162:20453:20454\ncatalog:variable_text:10242:20453:20454\ncatalog:variable_text:10378:20453:20454\ncatalog:variable_text:10383:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:servut"
+fields = { "sets" = ["rattighetsredovisningens-fullstandighet"] }
+evidence = "SERVUT är en opak källkod; etiketten anger ofullständig rättighetsredovisning.\ncatalog:variable_text:10361:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:servut"
+fields = { "tags" = ["methods", "property"] }
+evidence = "SERVUT är en opak källkod; etiketten anger ofullständig rättighetsredovisning.\ncatalog:variable_text:10361:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Fastighetens status.\ncatalog:occurrence-locators:variable:10385\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["property"] }
+evidence = "Fastighetens status.\ncatalog:occurrence-locators:variable:10385\ncatalog:valueset:9836"
+
+[[statement]]
+kind = "set"
+subject = "var:sumandelstal"
+fields = { "sets" = [] }
+evidence = "Summa andelstal för fastighet.\ncatalog:occurrence-locators:variable:10386"
+
+[[statement]]
+kind = "set"
+subject = "var:sumandelstal"
+fields = { "tags" = ["property"] }
+evidence = "Summa andelstal för fastighet.\ncatalog:occurrence-locators:variable:10386"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-och-arrendeavgifter"
+fields = { "sets" = ["tomtrattsavgald-och-arrendeavgifter"] }
+evidence = "Nuvarande tomträttsavgäld.\ncatalog:occurrence-locators:variable:10389"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsavgald-och-arrendeavgifter"
+fields = { "tags" = ["property"] }
+evidence = "Nuvarande tomträttsavgäld.\ncatalog:occurrence-locators:variable:10389"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehavsanmarkning"
+fields = { "sets" = [] }
+evidence = "Anmärkning om tomträttsupplåtelse.\ncatalog:occurrence-locators:variable:10391"
+
+[[statement]]
+kind = "set"
+subject = "var:tomtrattsinnehavsanmarkning"
+fields = { "tags" = ["property"] }
+evidence = "Anmärkning om tomträttsupplåtelse.\ncatalog:occurrence-locators:variable:10391"
+
+[[statement]]
+kind = "set"
+subject = "var:totalareal"
+fields = { "sets" = ["fastighetsareal"] }
+evidence = "Totalarealen och dess land- och vattenkomponenter ingår i fastighetsareal.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "var:totalareal"
+fields = { "tags" = ["property"] }
+evidence = "Totalarealen och dess land- och vattenkomponenter ingår i fastighetsareal.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "var:totboarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Total bostadsarea hör till gruppen bostadsarea.\ncatalog:occurrence-locators:variable:10394"
+
+[[statement]]
+kind = "set"
+subject = "var:totboarea"
+fields = { "tags" = ["housing"] }
+evidence = "Total bostadsarea hör till gruppen bostadsarea.\ncatalog:occurrence-locators:variable:10394"
+
+[[statement]]
+kind = "set"
+subject = "var:totboareadat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10395"
+
+[[statement]]
+kind = "set"
+subject = "var:totboareadat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10395"
+
+[[statement]]
+kind = "set"
+subject = "var:totboareaursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10396"
+
+[[statement]]
+kind = "set"
+subject = "var:totboareaursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10396"
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareadat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10397"
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareadat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10397"
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareaursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10398"
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareaursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10398"
+
+[[statement]]
+kind = "set"
+subject = "var:trakt"
+fields = { "sets" = [] }
+evidence = "Geografisk trakt.\ncatalog:occurrence-locators:variable:10399"
+
+[[statement]]
+kind = "set"
+subject = "var:trakt"
+fields = { "tags" = ["geography"] }
+evidence = "Geografisk trakt.\ncatalog:occurrence-locators:variable:10399"
+
+[[statement]]
+kind = "set"
+subject = "var:tredimensionell-urholkning"
+fields = { "sets" = ["tredimensionell-fastighetsindelning"] }
+evidence = "Markeringen gäller tredimensionell urholkning.\ncatalog:occurrence-locators:variable:10401"
+
+[[statement]]
+kind = "set"
+subject = "var:tredimensionell-urholkning"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller tredimensionell urholkning.\ncatalog:occurrence-locators:variable:10401"
+
+[[statement]]
+kind = "set"
+subject = "var:tredimensionellt-omrade"
+fields = { "sets" = ["tredimensionell-fastighetsindelning"] }
+evidence = "Markeringen gäller tredimensionellt fastighetsområde.\ncatalog:occurrence-locators:variable:10402"
+
+[[statement]]
+kind = "set"
+subject = "var:tredimensionellt-omrade"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen gäller tredimensionellt fastighetsområde.\ncatalog:occurrence-locators:variable:10402"
+
+[[statement]]
+kind = "set"
+subject = "var:tvistavgjordtillformanfor"
+fields = { "sets" = [] }
+evidence = "Tvist om fastighetsinskrivning.\ncatalog:occurrence-locators:variable:10403"
+
+[[statement]]
+kind = "set"
+subject = "var:tvistavgjordtillformanfor"
+fields = { "tags" = ["property"] }
+evidence = "Tvist om fastighetsinskrivning.\ncatalog:occurrence-locators:variable:10403"
+
+[[statement]]
+kind = "set"
+subject = "var:txtanm"
+fields = { "sets" = [] }
+evidence = "Textanmärkning om fastighet.\ncatalog:occurrence-locators:variable:10404"
+
+[[statement]]
+kind = "set"
+subject = "var:txtanm"
+fields = { "tags" = ["property"] }
+evidence = "Textanmärkning om fastighet.\ncatalog:occurrence-locators:variable:10404"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Klassificering av byggnadstyp.\ncatalog:occurrence-locators:variable:10405"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "tags" = ["property"] }
+evidence = "Klassificering av byggnadstyp.\ncatalog:occurrence-locators:variable:10405"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10406"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10406"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10407"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10407"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "sets" = ["fastighetstypkod"] }
+evidence = "Fastighetstaxeringens typkod.\ncatalog:occurrence-locators:variable:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "tags" = ["property"] }
+evidence = "Fastighetstaxeringens typkod.\ncatalog:occurrence-locators:variable:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodsk"
+fields = { "sets" = ["fastighetstypkod"] }
+evidence = "Tidigare kopplad fastighetstypkod.\ncatalog:occurrence-locators:variable:10409"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodsk"
+fields = { "tags" = ["property"] }
+evidence = "Tidigare kopplad fastighetstypkod.\ncatalog:occurrence-locators:variable:10409"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskdat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10410"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskdat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10410"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10411"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10411"
+
+[[statement]]
+kind = "set"
+subject = "var:ukod"
+fields = { "sets" = [] }
+evidence = "U är en opak bokstavskod för ursprung.\ncatalog:occurrence-locators:variable:10413"
+
+[[statement]]
+kind = "set"
+subject = "var:ukod"
+fields = { "tags" = ["property"] }
+evidence = "U är en opak bokstavskod för ursprung.\ncatalog:occurrence-locators:variable:10413"
+
+[[statement]]
+kind = "set"
+subject = "var:undanadr"
+fields = { "sets" = [] }
+evidence = "Markering för byggnad undantagen från adressättning.\ncatalog:occurrence-locators:variable:10414"
+
+[[statement]]
+kind = "set"
+subject = "var:undanadr"
+fields = { "tags" = ["property"] }
+evidence = "Markering för byggnad undantagen från adressättning.\ncatalog:occurrence-locators:variable:10414"
+
+[[statement]]
+kind = "set"
+subject = "var:uppldat"
+fields = { "sets" = ["upplaggningsdatum"] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10417"
+
+[[statement]]
+kind = "set"
+subject = "var:uppldat"
+fields = { "tags" = [] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10417"
+
+[[statement]]
+kind = "set"
+subject = "var:uppldatum"
+fields = { "sets" = ["upplaggningsdatum"] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10418"
+
+[[statement]]
+kind = "set"
+subject = "var:uppldatum"
+fields = { "tags" = [] }
+evidence = "Datum då registerpost skapats.\ncatalog:occurrence-locators:variable:10418"
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsperiodar"
+fields = { "sets" = [] }
+evidence = "Period för uppsägning av tomträttsavtal.\ncatalog:occurrence-locators:variable:10420"
+
+[[statement]]
+kind = "set"
+subject = "var:uppsagningsperiodar"
+fields = { "tags" = ["property"] }
+evidence = "Period för uppsägning av tomträttsavtal.\ncatalog:occurrence-locators:variable:10420"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "sets" = [] }
+evidence = "Adressens geografiska läge.\ncatalog:occurrence-locators:variable:10423"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressens geografiska läge.\ncatalog:occurrence-locators:variable:10423"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = [] }
+evidence = "Värdeår för fastighetstaxering.\ncatalog:occurrence-locators:variable:10437"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Värdeår för fastighetstaxering.\ncatalog:occurrence-locators:variable:10437"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeardat"
+fields = { "sets" = ["kvalitetsmarkningens-datum"] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10438"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeardat"
+fields = { "tags" = [] }
+evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10438"
+
+[[statement]]
+kind = "set"
+subject = "var:vardearursp"
+fields = { "sets" = [] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10439"
+
+[[statement]]
+kind = "set"
+subject = "var:vardearursp"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10439"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenareal"
+fields = { "sets" = ["fastighetsareal"] }
+evidence = "Vattenarealen är en komponent av fastighetens areal.\ncatalog:occurrence-locators:variable:10440"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenareal"
+fields = { "tags" = ["property"] }
+evidence = "Vattenarealen är en komponent av fastighetens areal.\ncatalog:occurrence-locators:variable:10440"
+
+[[statement]]
+kind = "set"
+subject = "var:xl"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "XL är en opak koordinatkod.\ncatalog:variable_text:10443:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:xl"
+fields = { "tags" = ["geography"] }
+evidence = "XL är en opak koordinatkod.\ncatalog:variable_text:10443:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yl"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "YL är en opak koordinatkod.\ncatalog:variable_text:10444:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yl"
+fields = { "tags" = ["geography"] }
+evidence = "YL är en opak koordinatkod.\ncatalog:variable_text:10444:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2015-12-31..2015-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2016-12-31..2016-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2017-12-31..2017-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2018-12-31..2018-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2019-12-31..2019-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2020-12-31..2020-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2021-12-31..2021-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2022-12-31..2022-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2023-12-31..2023-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2024-12-31..2024-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: ENTRETYP @2025-12-31..2025-12-31 where key = 'v24163'"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2015-12-31..2015-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2016-12-31..2016-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2017-12-31..2017-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2018-12-31..2018-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2019-12-31..2019-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2020-12-31..2020-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2021-12-31..2021-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2022-12-31..2022-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2023-12-31..2023-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2024-12-31..2024-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: TOTAR @2025-12-31..2025-12-31 where key = 'v2888'"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"

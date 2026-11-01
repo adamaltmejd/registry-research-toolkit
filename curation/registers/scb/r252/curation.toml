@@ -46,3 +46,1443 @@ kind = "set"
 subject = "skord-av-potatis: {epot_ordlan,lan,mpot_ordlan,sta_ordlan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "sets" = [] }
+evidence = "Åkermark är jordbruksmark.\ncatalog:variable_text:42056:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åkermark är jordbruksmark.\ncatalog:variable_text:42056:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42057:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42057:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42058:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42058:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42059:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42059:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42060:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42060:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42061:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42061:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42062:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42062:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42063:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42063:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42064:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42064:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42065:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42065:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42066:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42066:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42067:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42067:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42068:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42068:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42069:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42069:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42070:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42070:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-arealenlsam"
+fields = { "sets" = ["potatisareal-enligt-sam"] }
+evidence = "SAM-arealen för ekologisk matpotatis hör till gruppen och jordbruk.\ncatalog:variable_text:42071:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-arealenlsam"
+fields = { "tags" = ["agriculture"] }
+evidence = "SAM-arealen för ekologisk matpotatis hör till gruppen och jordbruk.\ncatalog:variable_text:42071:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-bortfallskod"
+fields = { "sets" = ["objektsbortfall"] }
+evidence = "Koden avser objektsbortfall och undersökningsmetod.\ncatalog:valueset:10509\ncatalog:variable_text:42072:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden avser objektsbortfall och undersökningsmetod.\ncatalog:valueset:10509\ncatalog:variable_text:42072:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42073:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42073:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42074:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42074:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ingenekoodling"
+fields = { "sets" = ["ingen-ekologisk-areal"] }
+evidence = "Indikatorn gäller avsaknad av ekologisk odling.\ncatalog:variable_text:42075:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ingenekoodling"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn gäller avsaknad av ekologisk odling.\ncatalog:variable_text:42075:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-lillan"
+fields = { "sets" = ["lilla-n"] }
+evidence = "Antalet utvalda företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42076:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet utvalda företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42076:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42077:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42077:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordlan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kodningen anger länstillhörighet.\ncatalog:valueset:7128\ncatalog:variable_text:42078:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordlan"
+fields = { "tags" = ["geography"] }
+evidence = "Kodningen anger länstillhörighet.\ncatalog:valueset:7128\ncatalog:variable_text:42078:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordpo8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Koden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42079:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordpo8"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42079:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordsko"
+fields = { "sets" = ["skordeomrade"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42080:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordsko"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42080:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42081:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42081:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42082:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42082:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42083:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42083:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-skotsavannanbrukare"
+fields = { "sets" = ["annan-brukare"] }
+evidence = "Indikatorn gäller om potatisarealen sköts av annan brukare.\ncatalog:valueset:1340\ncatalog:variable_text:42084:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-skotsavannanbrukare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn gäller om potatisarealen sköts av annan brukare.\ncatalog:valueset:1340\ncatalog:variable_text:42084:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-storan"
+fields = { "sets" = ["stora-n"] }
+evidence = "Antalet företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42085:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42085:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-stratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Variabeln anger undersökningens urvalsstratum.\ncatalog:valueset:2392\ncatalog:variable_text:42086:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger undersökningens urvalsstratum.\ncatalog:valueset:2392\ncatalog:variable_text:42086:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42087:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42087:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42088:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42088:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42090:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42090:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42091:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42091:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42092:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42092:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42093:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42093:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42095:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42095:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Den senaste operationella definitionen anger total mängd, medan etikett och enhet anger skörd per hektar.\ncatalog:variable_text:42096:16801:19358\ncatalog:variable_text:42096:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den senaste operationella definitionen anger total mängd, medan etikett och enhet anger skörd per hektar.\ncatalog:variable_text:42096:16801:19358\ncatalog:variable_text:42096:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-obargadareal"
+fields = { "sets" = [] }
+evidence = "Den senaste operationella definitionen motsäger etikettens potatisslag.\ncatalog:variable_text:42097:16801:19358\ncatalog:variable_text:42097:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den senaste operationella definitionen motsäger etikettens potatisslag.\ncatalog:variable_text:42097:16801:19358\ncatalog:variable_text:42097:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42098:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42098:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42099:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42099:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42100:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42100:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42101:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42101:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Länskoden hör till länstillhörighet och geografi.\ncatalog:variable_text:42103:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden hör till länstillhörighet och geografi.\ncatalog:variable_text:42103:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-arealenlsam"
+fields = { "sets" = ["potatisareal-enligt-sam"] }
+evidence = "SAM-arealen för matpotatis hör till gruppen och jordbruk.\ncatalog:variable_text:42104:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-arealenlsam"
+fields = { "tags" = ["agriculture"] }
+evidence = "SAM-arealen för matpotatis hör till gruppen och jordbruk.\ncatalog:variable_text:42104:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-bortfallskod"
+fields = { "sets" = ["objektsbortfall"] }
+evidence = "Koden avser objektsbortfall och undersökningsmetod.\ncatalog:valueset:10509\ncatalog:variable_text:42105:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden avser objektsbortfall och undersökningsmetod.\ncatalog:valueset:10509\ncatalog:variable_text:42105:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42106:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42106:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Den senaste operationella definitionen anger total mängd, medan etikett och enhet anger skörd per hektar.\ncatalog:variable_text:42107:16801:19358\ncatalog:variable_text:42107:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den senaste operationella definitionen anger total mängd, medan etikett och enhet anger skörd per hektar.\ncatalog:variable_text:42107:16801:19358\ncatalog:variable_text:42107:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-lillan"
+fields = { "sets" = ["lilla-n"] }
+evidence = "Antalet utvalda företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42108:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet utvalda företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42108:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-obargadareal"
+fields = { "sets" = [] }
+evidence = "Den senaste operationella definitionen motsäger etikettens skördestatus.\ncatalog:variable_text:42109:16801:19358\ncatalog:variable_text:42109:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den senaste operationella definitionen motsäger etikettens skördestatus.\ncatalog:variable_text:42109:16801:19358\ncatalog:variable_text:42109:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordlan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kodningen anger länstillhörighet.\ncatalog:valueset:7128\ncatalog:variable_text:42110:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordlan"
+fields = { "tags" = ["geography"] }
+evidence = "Kodningen anger länstillhörighet.\ncatalog:valueset:7128\ncatalog:variable_text:42110:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordpo8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Koden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42111:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordpo8"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42111:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordsko"
+fields = { "sets" = ["skordeomrade"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42112:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordsko"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42112:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42113:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42113:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42114:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42114:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42115:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42115:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-skotsavannanbrukare"
+fields = { "sets" = ["annan-brukare"] }
+evidence = "Indikatorn gäller om potatisarealen sköts av annan brukare.\ncatalog:valueset:1340\ncatalog:variable_text:42116:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-skotsavannanbrukare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn gäller om potatisarealen sköts av annan brukare.\ncatalog:valueset:1340\ncatalog:variable_text:42116:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-storan"
+fields = { "sets" = ["stora-n"] }
+evidence = "Antalet företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42117:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42117:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-stratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Variabeln anger undersökningens urvalsstratum.\ncatalog:valueset:7792\ncatalog:variable_text:42118:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger undersökningens urvalsstratum.\ncatalog:valueset:7792\ncatalog:variable_text:42118:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42119:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42119:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr-ingenekoodling"
+fields = { "sets" = ["ingen-ekologisk-areal"] }
+evidence = "Indikatorn gäller avsaknad av areal under omställning till ekologisk odling.\ncatalog:variable_text:42120:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr-ingenekoodling"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn gäller avsaknad av areal under omställning till ekologisk odling.\ncatalog:variable_text:42120:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42121:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42121:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42123:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42123:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42124:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42124:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42125:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42125:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42126:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42126:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42128:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk.\ncatalog:variable_text:42128:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42129:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42129:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-obargadareal"
+fields = { "sets" = [] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42130:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42130:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42131:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Osatt potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42131:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42132:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen av partiellt undersökningsbortfall hör till gruppen och metoder.\ncatalog:valueset:10571\ncatalog:variable_text:42132:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42133:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Skördad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42133:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42134:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variable_text:42134:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42135:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "tags" = ["geography"] }
+evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42135:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42136:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "tags" = ["geography"] }
+evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42136:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:reduceringstal"
+fields = { "sets" = [] }
+evidence = "Reduceringstalet avser korrigering av potatisskörd.\ncatalog:variable_text:42137:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:reduceringstal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Reduceringstalet avser korrigering av potatisskörd.\ncatalog:variable_text:42137:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2"
+fields = { "sets" = [] }
+evidence = "NUTS2 är en geografisk indelning.\ncatalog:variable_text:42138:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS2 är en geografisk indelning.\ncatalog:variable_text:42138:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "sets" = [] }
+evidence = "Regionkoden anger geografisk indelning.\ncatalog:variable_text:42139:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "tags" = ["geography"] }
+evidence = "Regionkoden anger geografisk indelning.\ncatalog:variable_text:42139:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "sets" = ["skordeomrade"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42140:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger skördeområde.\ncatalog:variable_text:42140:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-arealenlsam"
+fields = { "sets" = ["potatisareal-enligt-sam"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger areal enligt SAM.\ncatalog:occurrence:438143\ncatalog:variable_text:42141:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-arealenlsam"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger areal enligt SAM.\ncatalog:occurrence:438143\ncatalog:variable_text:42141:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-bortfallskod"
+fields = { "sets" = ["objektsbortfall"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger objektsbortfall.\ncatalog:occurrence:438144\ncatalog:variable_text:42142:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger objektsbortfall.\ncatalog:occurrence:438144\ncatalog:variable_text:42142:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-fordeladareal"
+fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger brukarens totala stärkelsepotatisareal.\ncatalog:occurrence:438145\ncatalog:variable_text:42143:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-fordeladareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger brukarens totala stärkelsepotatisareal.\ncatalog:occurrence:438145\ncatalog:variable_text:42143:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-hektarskordkg"
+fields = { "sets" = [] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-hektarskordkg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-lillan"
+fields = { "sets" = ["lilla-n"] }
+evidence = "Familjens prefix sta är en källkod; LillaN är antalet utvalda företag i stratumet.\ncatalog:occurrence:438147\ncatalog:variable_text:42145:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Familjens prefix sta är en källkod; LillaN är antalet utvalda företag i stratumet.\ncatalog:occurrence:438147\ncatalog:variable_text:42145:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-obargadareal"
+fields = { "sets" = [] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stärkelsepotatisareal.\ncatalog:occurrence:438148\ncatalog:variable_text:42146:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-obargadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stärkelsepotatisareal.\ncatalog:occurrence:438148\ncatalog:variable_text:42146:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordlan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och klassificeringen anger län.\ncatalog:occurrence:438149\ncatalog:valueset:7128\ncatalog:variable_text:42147:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordlan"
+fields = { "tags" = ["geography"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och klassificeringen anger län.\ncatalog:occurrence:438149\ncatalog:valueset:7128\ncatalog:variable_text:42147:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordpo8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger produktionsområde.\ncatalog:occurrence:438150\ncatalog:valueset:10438\ncatalog:variable_text:42148:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordpo8"
+fields = { "tags" = ["geography"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger produktionsområde.\ncatalog:occurrence:438150\ncatalog:valueset:10438\ncatalog:variable_text:42148:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordsko"
+fields = { "sets" = ["skordeomrade"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger skördeområde.\ncatalog:occurrence:438151\ncatalog:variable_text:42149:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-ordsko"
+fields = { "tags" = ["geography"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger skördeområde.\ncatalog:occurrence:438151\ncatalog:variable_text:42149:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-osattareal"
+fields = { "sets" = ["osatt-potatisareal"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger osatt stärkelsepotatisareal.\ncatalog:occurrence:438152\ncatalog:variable_text:42150:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-osattareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger osatt stärkelsepotatisareal.\ncatalog:occurrence:438152\ncatalog:variable_text:42150:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-partielltbortfall"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger partiellt bortfall.\ncatalog:occurrence:438153\ncatalog:variable_text:42151:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-partielltbortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger partiellt bortfall.\ncatalog:occurrence:438153\ncatalog:variable_text:42151:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-skordadareal"
+fields = { "sets" = ["skordad-potatisareal"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger skördad stärkelsepotatisareal.\ncatalog:occurrence:438154\ncatalog:variable_text:42152:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-skordadareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger skördad stärkelsepotatisareal.\ncatalog:occurrence:438154\ncatalog:variable_text:42152:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-skotsavannanbrukare"
+fields = { "sets" = ["annan-brukare"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger om arealen brukas av annan brukare.\ncatalog:occurrence:438155\ncatalog:valueset:1340\ncatalog:variable_text:42153:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-skotsavannanbrukare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger om arealen brukas av annan brukare.\ncatalog:occurrence:438155\ncatalog:valueset:1340\ncatalog:variable_text:42153:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-storan"
+fields = { "sets" = ["stora-n"] }
+evidence = "Familjens prefix sta är en källkod; StoraN är antalet företag i stratumet.\ncatalog:occurrence:438156\ncatalog:variable_text:42154:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-storan"
+fields = { "tags" = ["methods"] }
+evidence = "Familjens prefix sta är en källkod; StoraN är antalet företag i stratumet.\ncatalog:occurrence:438156\ncatalog:variable_text:42154:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-stratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger urvalsstratum.\ncatalog:occurrence:438157\ncatalog:variable_text:42155:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger urvalsstratum.\ncatalog:occurrence:438157\ncatalog:variable_text:42155:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-totalskordton"
+fields = { "sets" = ["total-potatisskord"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger total stärkelsepotatisskörd.\ncatalog:occurrence:438158\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sta-totalskordton"
+fields = { "tags" = ["agriculture"] }
+evidence = "Familjens prefix sta är en källkod; etiketten anger total stärkelsepotatisskörd.\ncatalog:occurrence:438158\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2016-01-01..2016-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2017-01-01..2017-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2018-01-01..2018-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2019-01-01..2019-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2020-01-01..2020-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2021-01-01..2021-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2022-01-01..2022-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_HektarskordKg @2024-01-01..2024-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2016-01-01..2016-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2017-01-01..2017-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2018-01-01..2018-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2019-01-01..2019-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2020-01-01..2020-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2021-01-01..2021-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2022-01-01..2022-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: eptf_TotalskordTon @2024-01-01..2024-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2016-01-01..2016-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2017-01-01..2017-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2018-01-01..2018-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2019-01-01..2019-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2020-01-01..2020-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2021-01-01..2021-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2022-01-01..2022-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_HektarskordKg @2024-01-01..2024-12-31 where key = 'v20658'"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2016-01-01..2016-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2017-01-01..2017-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2018-01-01..2018-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2019-01-01..2019-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2020-01-01..2020-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2021-01-01..2021-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2022-01-01..2022-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: ovrf_TotalskordTon @2024-01-01..2024-12-31 where key = 'v20651'"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2016-01-01..2016-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2017-01-01..2017-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2018-01-01..2018-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2019-01-01..2019-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2020-01-01..2020-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2021-01-01..2021-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2022-01-01..2022-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: sta_TotalskordTon @2024-01-01..2024-12-31 where key = 'v43101'"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"

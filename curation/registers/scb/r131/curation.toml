@@ -28,3 +28,753 @@ kind = "set"
 subject = "kvartalsomsattning-tjanstesektorn: {ng1,ngs1,sni92}"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:anst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda enligt FDB är en kandidatdefinierad grupp.\ncatalog:variable_text:32085:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:anst"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda enligt FDB är en kandidatdefinierad grupp.\ncatalog:variable_text:32085:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Året avser urvalet.\ncatalog:variable_text:32086:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "tags" = ["methods"] }
+evidence = "Året avser urvalet.\ncatalog:variable_text:32086:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "B är en bokstavskod och etiketten anger branschgrupp.\ncatalog:variable_text:32088:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrupp"
+fields = { "tags" = ["business"] }
+evidence = "B är en bokstavskod och etiketten anger branschgrupp.\ncatalog:variable_text:32088:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp"
+fields = { "sets" = ["blankettyp"] }
+evidence = "Kodning av blankettyp hör till kandidatgruppen.\ncatalog:variable_text:32089:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp"
+fields = { "tags" = ["methods"] }
+evidence = "Kodning av blankettyp hör till kandidatgruppen.\ncatalog:variable_text:32089:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp-svalt"
+fields = { "sets" = ["blankettyp"] }
+evidence = "Kodning av blankettyp hör till kandidatgruppen.\ncatalog:variable_text:32090:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp-svalt"
+fields = { "tags" = ["methods"] }
+evidence = "Kodning av blankettyp hör till kandidatgruppen.\ncatalog:variable_text:32090:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln kodar företagets bransch.\ncatalog:variable_text:32091:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar företagets bransch.\ncatalog:variable_text:32091:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgrupp ingår i kandidatgruppen.\ncatalog:variable_text:32092:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgr"
+fields = { "tags" = ["business"] }
+evidence = "Branschgrupp ingår i kandidatgruppen.\ncatalog:variable_text:32092:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgrupper ingår i kandidatgruppen.\ncatalog:variable_text:32093:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupper"
+fields = { "tags" = ["business"] }
+evidence = "Branschgrupper ingår i kandidatgruppen.\ncatalog:variable_text:32093:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:cfaranst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "CFAR är en källkod som inte återges i etiketten; id är en källmnemonik.\ncatalog:variable_text:32094:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:cfaranst"
+fields = { "tags" = ["employment"] }
+evidence = "CFAR är en källkod som inte återges i etiketten; id är en källmnemonik.\ncatalog:variable_text:32094:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:deflatorgrupp"
+fields = { "sets" = [] }
+evidence = "Deflatorgruppen klassificerar företag för prisdeflatering.\ncatalog:variable_text:32095:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:deflatorgrupp"
+fields = { "tags" = ["methods"] }
+evidence = "Deflatorgruppen klassificerar företag för prisdeflatering.\ncatalog:variable_text:32095:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-urvalsar"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Första urvalsår ingår i kandidatgruppen.\ncatalog:variable_text:32099:12784:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-urvalsar"
+fields = { "tags" = ["methods"] }
+evidence = "Första urvalsår ingår i kandidatgruppen.\ncatalog:variable_text:32099:12784:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "sets" = [] }
+evidence = "Imputeringsstatus är en statistisk kvalitetsmarkör.\ncatalog:variable_text:32100:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsstatus är en statistisk kvalitetsmarkör.\ncatalog:variable_text:32100:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-omsattning"
+fields = { "sets" = ["omsattning"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:287727\ncatalog:occurrence:287728\ncatalog:occurrence:287769\ncatalog:occurrence:287770"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-omsattning"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:287727\ncatalog:occurrence:287728\ncatalog:occurrence:287769\ncatalog:occurrence:287770"
+
+[[statement]]
+kind = "set"
+subject = "var:intyp"
+fields = { "sets" = [] }
+evidence = "Intyp är en källmnemonik vars in inte återger etikettens ord.\ncatalog:variable_text:32102:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:intyp"
+fields = { "tags" = ["methods"] }
+evidence = "Intyp är en källmnemonik vars in inte återger etikettens ord.\ncatalog:variable_text:32102:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "sets" = ["foretagets-kommun"] }
+evidence = "Suffixet 36 finns inte i källkolumnen.\ncatalog:variable_text:32104:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 36 finns inte i källkolumnen.\ncatalog:variable_text:32104:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsate"
+fields = { "sets" = ["foretagets-kommun"] }
+evidence = "Säteskommun ingår i kandidatgruppen.\ncatalog:variable_text:32105:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunsate"
+fields = { "tags" = ["geography"] }
+evidence = "Säteskommun ingår i kandidatgruppen.\ncatalog:variable_text:32105:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernmarkering"
+fields = { "sets" = [] }
+evidence = "Koncernanknytning beskriver företagsstruktur.\ncatalog:variable_text:32106:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernmarkering"
+fields = { "tags" = ["business"] }
+evidence = "Koncernanknytning beskriver företagsstruktur.\ncatalog:variable_text:32106:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:lager"
+fields = { "sets" = ["lagervarde"] }
+evidence = "Lagervärde i anskaffningsvärde ingår i kandidatgruppen.\ncatalog:variable_text:32109:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lager"
+fields = { "tags" = ["business"] }
+evidence = "Lagervärde i anskaffningsvärde ingår i kandidatgruppen.\ncatalog:variable_text:32109:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lagervarde"
+fields = { "sets" = ["lagervarde"] }
+evidence = "Lagervärde ingår i kandidatgruppen.\ncatalog:variable_text:32110:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lagervarde"
+fields = { "tags" = ["business"] }
+evidence = "Lagervärde ingår i kandidatgruppen.\ncatalog:variable_text:32110:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "LillaN ingår i kandidatgruppen och beskriver urvalets företagsantal.\ncatalog:variable_text:32112:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "LillaN ingår i kandidatgruppen och beskriver urvalets företagsantal.\ncatalog:variable_text:32112:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nsvar"
+fields = { "sets" = [] }
+evidence = "Definitionen anger företagsantal men den senare operationella definitionen anger en faktor.\ncatalog:variable_text:32113:12784:16436\ncatalog:variable_text:32113:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nsvar"
+fields = { "tags" = ["methods"] }
+evidence = "Definitionen anger företagsantal men den senare operationella definitionen anger en faktor.\ncatalog:variable_text:32113:12784:16436\ncatalog:variable_text:32113:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodning ingår i kandidatgruppen.\ncatalog:variable_text:32116:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodning ingår i kandidatgruppen.\ncatalog:variable_text:32116:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:32117:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:32117:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "NgS är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:32118:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "tags" = ["business"] }
+evidence = "NgS är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:32118:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsvarde"
+fields = { "sets" = ["omsattning"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:287727\ncatalog:occurrence:287728\ncatalog:occurrence:287769\ncatalog:occurrence:287770"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:287727\ncatalog:occurrence:287728\ncatalog:occurrence:287769\ncatalog:occurrence:287770"
+
+[[statement]]
+kind = "set"
+subject = "var:omsmoms"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Momsbelopp ingår i kandidatgruppen.\ncatalog:variable_text:32120:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:omsmoms"
+fields = { "tags" = ["taxation"] }
+evidence = "Momsbelopp ingår i kandidatgruppen.\ncatalog:variable_text:32120:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:omstyp"
+fields = { "sets" = [] }
+evidence = "Omsättningstyp beskriver företagets omsättning.\ncatalog:variable_text:32121:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:omstyp"
+fields = { "tags" = ["business"] }
+evidence = "Omsättningstyp beskriver företagets omsättning.\ncatalog:variable_text:32121:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:period-1"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32123:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32123:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-2"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32124:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-2"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32124:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-3"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32125:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-3"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32125:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-1"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32126:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32126:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-2"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32127:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-2"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32127:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-3"
+fields = { "sets" = ["momsbelopp"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32128:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:period-x-3"
+fields = { "tags" = ["taxation"] }
+evidence = "Period anger inte det momsbelopp som mäts.\ncatalog:variable_text:32128:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "sets" = [] }
+evidence = "Postadressen anger företagets geografiska adress.\ncatalog:variable_text:32131:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Postadressen anger företagets geografiska adress.\ncatalog:variable_text:32131:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger ett geografiskt postområde.\ncatalog:variable_text:32132:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger ett geografiskt postområde.\ncatalog:variable_text:32132:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger ett geografiskt postområde.\ncatalog:variable_text:32133:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger ett geografiskt postområde.\ncatalog:variable_text:32133:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrupp"
+fields = { "sets" = ["storleksgrupp"] }
+evidence = "S är en bokstavskod för storlek.\ncatalog:variable_text:32134:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrupp"
+fields = { "tags" = ["business"] }
+evidence = "S är en bokstavskod för storlek.\ncatalog:variable_text:32134:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:32135:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:32135:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Företagsstatus beskriver företagsstruktur.\ncatalog:variable_text:32137:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["business"] }
+evidence = "Företagsstatus beskriver företagsstruktur.\ncatalog:variable_text:32137:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "StoraN beskriver antal företag i ett urvalsstratum.\ncatalog:variable_text:32138:12784:16436\ncatalog:variable_text:32138:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "StoraN beskriver antal företag i ett urvalsstratum.\ncatalog:variable_text:32138:12784:16436\ncatalog:variable_text:32138:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgr"
+fields = { "sets" = ["storleksgrupp"] }
+evidence = "Företagets storleksgrupp ingår i kandidatgruppen.\ncatalog:variable_text:32139:13149:13879\ncatalog:variable_text:32139:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgr"
+fields = { "tags" = ["business"] }
+evidence = "Företagets storleksgrupp ingår i kandidatgruppen.\ncatalog:variable_text:32139:13149:13879\ncatalog:variable_text:32139:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum avser stratifierat urval.\ncatalog:variable_text:32140:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum avser stratifierat urval.\ncatalog:variable_text:32140:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:taggbranschgr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschindikatorn ingår i kandidatgruppen.\ncatalog:variable_text:32141:13879:15706\ncatalog:variable_text:32141:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:taggbranschgr"
+fields = { "tags" = ["business"] }
+evidence = "Branschindikatorn ingår i kandidatgruppen.\ncatalog:variable_text:32141:13879:15706\ncatalog:variable_text:32141:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixfast"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32144:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixfast"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32144:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixfastkal"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32145:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixfastkal"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32145:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixlopande"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32146:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixlopande"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32146:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixlopandekal"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32147:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixlopandekal"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32147:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixsasongsrensad"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32148:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixsasongsrensad"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32148:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixtrend"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32149:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixtrend"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32149:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvfast"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvfast"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvfastkal"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32151:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvfastkal"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32151:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvlopande"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32152:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvlopande"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32152:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvlopandekal"
+fields = { "sets" = ["tjansteproduktionsindex"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32153:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tixutvlopandekal"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32153:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "sets" = [] }
+evidence = "Granskningskod är en kvalitetsmarkör.\ncatalog:variable_text:32155:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Granskningskod är en kvalitetsmarkör.\ncatalog:variable_text:32155:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "sets" = [] }
+evidence = "Uppräkningsfaktor är en urvalsvikt.\ncatalog:variable_text:32156:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsfaktor är en urvalsvikt.\ncatalog:variable_text:32156:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-2921"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Suffixet 2921 finns inte i källkolumnen.\ncatalog:variable_text:32157:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-2921"
+fields = { "tags" = ["methods"] }
+evidence = "Suffixet 2921 finns inte i källkolumnen.\ncatalog:variable_text:32157:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "sets" = [] }
+evidence = "Urvalsversion beskriver urvalets version.\ncatalog:variable_text:32159:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsversion beskriver urvalets version.\ncatalog:variable_text:32159:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:vgr"
+fields = { "sets" = [] }
+evidence = "V är en bokstavskod för vara.\ncatalog:variable_text:32162:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:vgr"
+fields = { "tags" = ["business"] }
+evidence = "V är en bokstavskod för vara.\ncatalog:variable_text:32162:12784:18993"
+
+[[statement]]
+kind = "set"
+subject = "kvartalsomsattning-tjanstesektorn: fax @2006-01-01..2006-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rätta stavfelet i samma betydelse.\ncatalog:variable_text:32096:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "kvartalsomsattning-tjanstesektorn: fax @2007-01-01..2007-12-31 where key = 'v814'"
+fields = { "description" = "Faxnummer" }
+evidence = "Rätta stavfelet i samma betydelse.\ncatalog:variable_text:32096:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2008-01-01..2008-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2009-01-01..2009-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2010-01-01..2010-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2011-01-01..2011-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2012-01-01..2012-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2013-01-01..2013-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: TixUtvFast @2014-01-01..2014-12-31 where key = 'v17096'"
+fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
+evidence = "Definitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"

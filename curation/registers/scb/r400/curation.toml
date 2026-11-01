@@ -1,0 +1,396 @@
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen och demografi.\ncatalog:variable_text:44626:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årets slut hör till åldersgruppen och demografi.\ncatalog:variable_text:44626:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid händelsen hör till åldersgruppen och demografi.\ncatalog:variable_text:44627:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid händelsen hör till åldersgruppen och demografi.\ncatalog:variable_text:44627:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhd"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder i dagar hör till åldersgruppen och demografi.\ncatalog:variable_text:44628:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhd"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder i dagar hör till åldersgruppen och demografi.\ncatalog:variable_text:44628:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorslut"
+fields = { "sets" = ["alder"] }
+evidence = "Moderns ålder hör till åldersgruppen och demografi.\ncatalog:variable_text:44629:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorslut"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns ålder hör till åldersgruppen och demografi.\ncatalog:variable_text:44629:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "sets" = [] }
+evidence = "Antalet hemmaboende barn beskriver hushållets sammansättning.\ncatalog:variable_text:44630:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet hemmaboende barn beskriver hushållets sammansättning.\ncatalog:variable_text:44630:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostyta"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Bostadsarea hör till boende och har en motsvarande variabel för tidigare boende.\ncatalog:variable_text:44632:20088:20089\ncatalog:variable_text:44633:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostyta"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarea hör till boende och har en motsvarande variabel för tidigare boende.\ncatalog:variable_text:44632:20088:20089\ncatalog:variable_text:44633:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostytag"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44633:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostytag"
+fields = { "tags" = ["housing"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44633:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggperg"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44634:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggperg"
+fields = { "tags" = ["housing"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44634:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetg"
+fields = { "sets" = ["fastighetsbeteckning"] }
+evidence = "Fastbet är en igenkännbar sammandragning av fastighetsbeteckning; G skiljer källkolumnen från Fastbet. Båda variablerna mäter fastighetsbeteckning för folkbokföring och hör till samma grupp och geografitema.\ncatalog:occurrence:461574\ncatalog:occurrence:461575\ncatalog:variable_text:44636:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetg"
+fields = { "tags" = ["geography"] }
+evidence = "Fastbet är en igenkännbar sammandragning av fastighetsbeteckning; G skiljer källkolumnen från Fastbet. Båda variablerna mäter fastighetsbeteckning för folkbokföring och hör till samma grupp och geografitema.\ncatalog:occurrence:461574\ncatalog:occurrence:461575\ncatalog:variable_text:44636:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = ["fastighetsbeteckning"] }
+evidence = "Fastighetsbeteckning är korrekt för samtliga belagda perioder och tabeller. Variabeln och FastbetG hör till samma grupp och geografitema.\ncatalog:occurrence:461513\ncatalog:variable_text:44636:19723:20089\ncatalog:variable_text:44638:19723:20088\ncatalog:variable_text:44638:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckning är korrekt för samtliga belagda perioder och tabeller. Variabeln och FastbetG hör till samma grupp och geografitema.\ncatalog:occurrence:461513\ncatalog:variable_text:44636:19723:20089\ncatalog:variable_text:44638:19723:20088\ncatalog:variable_text:44638:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans"
+fields = { "sets" = [] }
+evidence = "Koden beskriver flyttningens geografiska räckvidd.\ncatalog:valueset:9038\ncatalog:variable_text:44639:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans"
+fields = { "tags" = ["migration"] }
+evidence = "Koden beskriver flyttningens geografiska räckvidd.\ncatalog:valueset:9038\ncatalog:variable_text:44639:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Personens och moderns födelselän är jämförbara födelseuppgifter.\ncatalog:variable_text:44640:19723:20089\ncatalog:variable_text:44643:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens och moderns födelselän är jämförbara födelseuppgifter.\ncatalog:variable_text:44640:19723:20089\ncatalog:variable_text:44643:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland är en demografisk födelseuppgift.\ncatalog:variable_text:44641:19723:20089\ncatalog:variable_text:44642:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland är en demografisk födelseuppgift.\ncatalog:variable_text:44641:19723:20089\ncatalog:variable_text:44642:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland är en demografisk födelseuppgift.\ncatalog:variable_text:44641:19723:20089\ncatalog:variable_text:44642:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk födelseuppgift.\ncatalog:variable_text:44641:19723:20089\ncatalog:variable_text:44642:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanmor"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Moderns födelselän är en demografisk födelseuppgift.\ncatalog:variable_text:44643:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelselän är en demografisk födelseuppgift.\ncatalog:variable_text:44643:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "sets" = ["forsamling-stockholm"] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:valueset:9399\ncatalog:variable_text:44645:20088:20089\ncatalog:variable_text:44659:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:valueset:9399\ncatalog:variable_text:44645:20088:20089\ncatalog:variable_text:44659:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "sets" = [] }
+evidence = "Personens ställning i hushållet beskriver familj och hushåll.\ncatalog:variable_text:44646:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Personens ställning i hushållet beskriver familj och hushåll.\ncatalog:variable_text:44646:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "sets" = [] }
+evidence = "Antalet personer beskriver hushållets storlek.\ncatalog:variable_text:44647:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet personer beskriver hushållets storlek.\ncatalog:variable_text:44647:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "sets" = [] }
+evidence = "Hushållstypen beskriver hushållets sammansättning.\ncatalog:valueset:12659\ncatalog:variable_text:44648:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Hushållstypen beskriver hushållets sammansättning.\ncatalog:valueset:12659\ncatalog:variable_text:44648:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "sets" = [] }
+evidence = "Imputeringsmarkeringen är en statistisk kvalitetsmarkör.\ncatalog:valueset:3249\ncatalog:variable_text:44649:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsmarkeringen är en statistisk kvalitetsmarkör.\ncatalog:valueset:3249\ncatalog:variable_text:44649:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunkoden anger geografisk tillhörighet.\ncatalog:variable_text:44650:20088:20089\ncatalog:variable_text:44651:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkoden anger geografisk tillhörighet.\ncatalog:variable_text:44650:20088:20089\ncatalog:variable_text:44651:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln anger kommun för tidigare boende.\ncatalog:occurrence:461581\ncatalog:variable_text:44651:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommun för tidigare boende.\ncatalog:occurrence:461581\ncatalog:variable_text:44651:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:44652:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:44652:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Länskoden anger geografisk tillhörighet.\ncatalog:variable_text:44653:20088:20089\ncatalog:variable_text:44654:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden anger geografisk tillhörighet.\ncatalog:variable_text:44653:20088:20089\ncatalog:variable_text:44654:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lang"
+fields = { "sets" = ["lan"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44654:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lang"
+fields = { "tags" = ["geography"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44654:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "sets" = ["nybyggnadsar"] }
+evidence = "Bostadens nybyggnadsår har en motsvarighet för tidigare boende.\ncatalog:variable_text:44634:19723:20089\ncatalog:variable_text:44656:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadens nybyggnadsår har en motsvarighet för tidigare boende.\ncatalog:variable_text:44634:19723:20089\ncatalog:variable_text:44656:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "sets" = ["nyckelkodsomrade"] }
+evidence = "NYKO anger ett geografiskt område.\ncatalog:variable_text:44657:20088:20089\ncatalog:variable_text:44658:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "tags" = ["geography"] }
+evidence = "NYKO anger ett geografiskt område.\ncatalog:variable_text:44657:20088:20089\ncatalog:variable_text:44658:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nykog"
+fields = { "sets" = ["nyckelkodsomrade"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44658:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nykog"
+fields = { "tags" = ["geography"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44658:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nykoprefixg"
+fields = { "sets" = ["forsamling-stockholm"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44659:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nykoprefixg"
+fields = { "tags" = ["geography"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44659:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tyko"
+fields = { "sets" = ["typomrade"] }
+evidence = "TYKO beskriver en typområdesindelning.\ncatalog:variable_text:44663:20088:20089\ncatalog:variable_text:44664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tyko"
+fields = { "tags" = ["geography"] }
+evidence = "TYKO beskriver en typområdesindelning.\ncatalog:variable_text:44663:20088:20089\ncatalog:variable_text:44664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykog"
+fields = { "sets" = ["typomrade"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykog"
+fields = { "tags" = ["property"] }
+evidence = "Slutbokstaven G är en källkod som inte finns i etiketten.\ncatalog:variable_text:44664:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykousk"
+fields = { "sets" = ["typomrade"] }
+evidence = "Variabeln anger en TYKO-variant; källhistoriken bevarar skillnaderna mellan tillfällen och tabeller.\ncatalog:occurrence:461565\ncatalog:occurrence:461634\ncatalog:variable_text:44665:19723:20088\ncatalog:variable_text:44665:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykousk"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger en TYKO-variant; källhistoriken bevarar skillnaderna mellan tillfällen och tabeller.\ncatalog:occurrence:461565\ncatalog:occurrence:461634\ncatalog:variable_text:44665:19723:20088\ncatalog:variable_text:44665:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykouskg"
+fields = { "sets" = ["typomrade"] }
+evidence = "USK och G är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:44666:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tykouskg"
+fields = { "tags" = ["property"] }
+evidence = "USK och G är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:44666:19723:20089"

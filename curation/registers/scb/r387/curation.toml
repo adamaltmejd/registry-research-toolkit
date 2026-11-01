@@ -4,3 +4,123 @@ kind = "set"
 subject = "riksbankens-kreditdatabas-krita: legalform"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:countrymap"
+fields = { "sets" = [] }
+evidence = "The counterparty's address country is a geographic location.\ncatalog:variable_text:34880:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:countrymap"
+fields = { "tags" = ["geography"] }
+evidence = "The counterparty's address country is a geographic location.\ncatalog:variable_text:34880:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:enterprisesize"
+fields = { "sets" = [] }
+evidence = "Enterprise size is a business structure measure.\ncatalog:valueset:8254\ncatalog:variable_text:34881:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:enterprisesize"
+fields = { "tags" = ["business"] }
+evidence = "Enterprise size is a business structure measure.\ncatalog:valueset:8254\ncatalog:variable_text:34881:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gdbeconomicactivitysubgroupl5"
+fields = { "sets" = [] }
+evidence = "Gdb is an opaque source mnemonic in the identifier; the source label names the group-part industry.\ncatalog:variable_text:34882:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gdbeconomicactivitysubgroupl5"
+fields = { "tags" = ["business"] }
+evidence = "Gdb is an opaque source mnemonic in the identifier; the source label names the group-part industry.\ncatalog:variable_text:34882:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insekt"
+fields = { "sets" = [] }
+evidence = "Institutional sector classifies the debtor's organizational sector.\ncatalog:variable_text:34884:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insekt"
+fields = { "tags" = ["business"] }
+evidence = "Institutional sector classifies the debtor's organizational sector.\ncatalog:variable_text:34884:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:interestratetype"
+fields = { "sets" = [] }
+evidence = "The variable classifies the interest rate on a loan.\ncatalog:valueset:7007\ncatalog:variable_text:34887:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:interestratetype"
+fields = { "tags" = ["finance"] }
+evidence = "The variable classifies the interest rate on a loan.\ncatalog:valueset:7007\ncatalog:variable_text:34887:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:legalform"
+fields = { "sets" = [] }
+evidence = "Legal form describes organizational structure.\ncatalog:valueset:5541\ncatalog:variable_text:34889:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:legalform"
+fields = { "tags" = ["business"] }
+evidence = "Legal form describes organizational structure.\ncatalog:valueset:5541\ncatalog:variable_text:34889:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outstandingnominalamount"
+fields = { "sets" = [] }
+evidence = "The two variables measure the same credit amount at instrument and borrower allocation levels.\ncatalog:variable_text:34891:17532:20089\ncatalog:variable_text:34892:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outstandingnominalamount"
+fields = { "tags" = ["finance"] }
+evidence = "The two variables measure the same credit amount at instrument and borrower allocation levels.\ncatalog:variable_text:34891:17532:20089\ncatalog:variable_text:34892:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outstandingnominalamountcreditorview"
+fields = { "sets" = [] }
+evidence = "The two variables measure the same credit amount at instrument and borrower allocation levels.\ncatalog:variable_text:34891:17532:20089\ncatalog:variable_text:34892:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outstandingnominalamountcreditorview"
+fields = { "tags" = ["finance"] }
+evidence = "The two variables measure the same credit amount at instrument and borrower allocation levels.\ncatalog:variable_text:34891:17532:20089\ncatalog:variable_text:34892:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:purpose"
+fields = { "sets" = [] }
+evidence = "The variable classifies credit by purpose.\ncatalog:valueset:12834\ncatalog:variable_text:34893:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:purpose"
+fields = { "tags" = ["finance"] }
+evidence = "The variable classifies credit by purpose.\ncatalog:valueset:12834\ncatalog:variable_text:34893:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typeofinstrument"
+fields = { "sets" = [] }
+evidence = "The variable classifies credit instruments.\ncatalog:valueset:12613\ncatalog:variable_text:34897:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typeofinstrument"
+fields = { "tags" = ["finance"] }
+evidence = "The variable classifies credit instruments.\ncatalog:valueset:12613\ncatalog:variable_text:34897:17532:20089"

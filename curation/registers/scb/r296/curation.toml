@@ -1,13 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:produktgruppsnamn"
-fields = { "sets" = ["legacy-produktgruppsnamn"] }
-evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:237\nreg_meta_build/curation/registers/scb/prisindex.toml:245\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json.\n\nSame complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
-caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
-
-[[statement]]
-kind = "set"
 subject = "ppi: beskrivnsv @2013..2016"
 fields = { "coded" = false }
 evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
@@ -207,31 +200,1170 @@ evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy ex
 
 [[statement]]
 kind = "set"
+subject = "var:ararindex"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Indexnivå med årsbunden bas.\ncatalog:variable_text:40785:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ararindex"
+fields = { "tags" = ["prices"] }
+evidence = "Indexnivå med årsbunden bas.\ncatalog:variable_text:40785:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:armanindex"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Indexnivå med årsbunden bas.\ncatalog:variable_text:40786:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:armanindex"
+fields = { "tags" = ["prices"] }
+evidence = "Indexnivå med årsbunden bas.\ncatalog:variable_text:40786:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:arsforandring"
+fields = { "sets" = ["arlig-prisforandring"] }
+evidence = "Årlig förändring av prisindex.\ncatalog:variable_text:40787:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:arsforandring"
+fields = { "tags" = ["prices"] }
+evidence = "Årlig förändring av prisindex.\ncatalog:variable_text:40787:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:arsforandring-tpi"
+fields = { "sets" = ["arlig-prisforandring"] }
+evidence = "Årlig förändring av tjänsteprisindex.\ncatalog:variable_text:40788:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:arsforandring-tpi"
+fields = { "tags" = ["prices"] }
+evidence = "Årlig förändring av tjänsteprisindex.\ncatalog:variable_text:40788:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:baspris"
+fields = { "sets" = ["baspris"] }
+evidence = "Baspriset hör till gruppen för ursprungliga och omräknade baspriser.\ncatalog:variable_text:40789:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:baspris"
+fields = { "tags" = ["prices"] }
+evidence = "Baspriset hör till gruppen för ursprungliga och omräknade baspriser.\ncatalog:variable_text:40789:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:baspris-fv-baspris"
+fields = { "sets" = ["baspris"] }
+evidence = "Baspriset ingår i kandidatgruppen för ursprungliga och omräknade baspriser och mäter pris.\ncatalog:variable_text:40790:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:baspris-fv-baspris"
+fields = { "tags" = ["prices"] }
+evidence = "Baspriset ingår i kandidatgruppen för ursprungliga och omräknade baspriser och mäter pris.\ncatalog:variable_text:40790:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:beraknat-pris"
+fields = { "sets" = ["produktpris"] }
+evidence = "Variabeln mäter ett beräknat produktpris.\ncatalog:variable_text:40791:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:beraknat-pris"
+fields = { "tags" = ["prices"] }
+evidence = "Variabeln mäter ett beräknat produktpris.\ncatalog:variable_text:40791:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:branschproduktgruppsvikt"
+fields = { "sets" = ["produktgruppsvikt"] }
+evidence = "Källkolumnen har överlappande ägare; båda beskrivs som produktgruppsvikter.\ncatalog:occurrence:399958\ncatalog:occurrence:399959\ncatalog:variable_text:40796:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:branschproduktgruppsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnen har överlappande ägare; båda beskrivs som produktgruppsvikter.\ncatalog:occurrence:399958\ncatalog:occurrence:399959\ncatalog:variable_text:40796:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:effekt"
+fields = { "sets" = [] }
+evidence = "Bidrag till prisindexförändring.\ncatalog:variable_text:40798:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:effekt"
+fields = { "tags" = ["prices"] }
+evidence = "Bidrag till prisindexförändring.\ncatalog:variable_text:40798:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-aktkod"
+fields = { "sets" = [] }
+evidence = "Status för produkterbjudandet beskriver företagets produktutbud.\ncatalog:valueset:1445\ncatalog:variable_text:40806:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-aktkod"
+fields = { "tags" = ["business"] }
+evidence = "Status för produkterbjudandet beskriver företagets produktutbud.\ncatalog:valueset:1445\ncatalog:variable_text:40806:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-beskrivning"
+fields = { "sets" = [] }
+evidence = "Beskrivningen avser ett produkterbjudande.\ncatalog:variable_text:40808:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-beskrivning"
+fields = { "tags" = ["business"] }
+evidence = "Beskrivningen avser ett produkterbjudande.\ncatalog:variable_text:40808:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-indextal"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Id:t är läsbart och indextalet hör till prisindexnivåer.\ncatalog:variable_text:40810:11323:15340\ncatalog:variable_text:40810:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-indextal"
+fields = { "tags" = ["prices"] }
+evidence = "Id:t är läsbart och indextalet hör till prisindexnivåer.\ncatalog:variable_text:40810:11323:15340\ncatalog:variable_text:40810:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-pris"
+fields = { "sets" = ["produktpris"] }
+evidence = "Produkterbjudandets pris ingår i kandidatgruppen för produktpriser.\ncatalog:variable_text:40814:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-pris"
+fields = { "tags" = ["prices"] }
+evidence = "Produkterbjudandets pris ingår i kandidatgruppen för produktpriser.\ncatalog:variable_text:40814:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-skattkod"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger om varan är en skattevara.\ncatalog:variable_text:40815:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-skattkod"
+fields = { "tags" = ["taxation"] }
+evidence = "Indikatorn anger om varan är en skattevara.\ncatalog:variable_text:40815:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-utlpris"
+fields = { "sets" = ["produktpris"] }
+evidence = "Priset i utländsk valuta ingår i kandidatgruppen för produktpriser.\ncatalog:variable_text:40816:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-utlpris"
+fields = { "tags" = ["prices"] }
+evidence = "Priset i utländsk valuta ingår i kandidatgruppen för produktpriser.\ncatalog:variable_text:40816:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-vikt"
+fields = { "sets" = ["produkterbjudandevikt"] }
+evidence = "Produkterbjudandets vägningstal ingår i kandidatgruppen och är en statistisk vikt.\ncatalog:variable_text:40817:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Produkterbjudandets vägningstal ingår i kandidatgruppen och är en statistisk vikt.\ncatalog:variable_text:40817:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2010"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40819:15706:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2010"
+fields = { "tags" = ["prices"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40819:15706:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2010eur"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40820:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2010eur"
+fields = { "tags" = ["prices"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40820:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2015"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Den tidigare generella indexvariabeln omfattar flera källkolumner; perioddelningen för IB2015 behöver bekräftas.\ncatalog:occurrence:401088\ncatalog:occurrence:401123"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2015"
+fields = { "tags" = ["prices"] }
+evidence = "Den tidigare generella indexvariabeln omfattar flera källkolumner; perioddelningen för IB2015 behöver bekräftas.\ncatalog:occurrence:401088\ncatalog:occurrence:401123"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2020"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40822:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2020"
+fields = { "tags" = ["prices"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40822:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2021"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40823:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ib2021"
+fields = { "tags" = ["prices"] }
+evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40823:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "sets" = ["imputering"] }
+evidence = "Imputeringsindikator.\ncatalog:variable_text:40838:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsindikator.\ncatalog:variable_text:40838:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod"
+fields = { "sets" = ["imputering"] }
+evidence = "Vald imputeringsmetod.\ncatalog:variable_text:40839:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Vald imputeringsmetod.\ncatalog:variable_text:40839:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:index-bas-foregaende-ar"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Prisindexnivå med föregående år som bas.\ncatalog:variable_text:40840:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:index-bas-foregaende-ar"
+fields = { "tags" = ["prices"] }
+evidence = "Prisindexnivå med föregående år som bas.\ncatalog:variable_text:40840:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:index-dec-foregaende-ar"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Källkolumnen har olika ägare och senare definition omfattar även kvartalsproduktion.\ncatalog:occurrence:400847\ncatalog:occurrence:400952"
+
+[[statement]]
+kind = "set"
+subject = "var:index-dec-foregaende-ar"
+fields = { "tags" = ["prices"] }
+evidence = "Källkolumnen har olika ägare och senare definition omfattar även kvartalsproduktion.\ncatalog:occurrence:400847\ncatalog:occurrence:400952"
+
+[[statement]]
+kind = "set"
+subject = "var:index-foregaende-ar"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Prisindexnivå med föregående år som bas.\ncatalog:variable_text:40842:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-foregaende-ar"
+fields = { "tags" = ["prices"] }
+evidence = "Prisindexnivå med föregående år som bas.\ncatalog:variable_text:40842:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-med-bas-2005"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder och beskrivningarna skiljer sig.\ncatalog:occurrence:401468\ncatalog:occurrence:401504"
+
+[[statement]]
+kind = "set"
+subject = "var:index-med-bas-2005"
+fields = { "tags" = ["prices"] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder och beskrivningarna skiljer sig.\ncatalog:occurrence:401468\ncatalog:occurrence:401504"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Källkolumnen har olika ägare och senare definition omfattar även kvartalsproduktion.\ncatalog:occurrence:400847\ncatalog:occurrence:400952"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas"
+fields = { "tags" = ["prices"] }
+evidence = "Källkolumnen har olika ägare och senare definition omfattar även kvartalsproduktion.\ncatalog:occurrence:400847\ncatalog:occurrence:400952"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas1980"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Prisindexnivå med basår 1980.\ncatalog:variable_text:40845:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas1980"
+fields = { "tags" = ["prices"] }
+evidence = "Prisindexnivå med basår 1980.\ncatalog:variable_text:40845:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas2005"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder och beskrivningarna skiljer sig.\ncatalog:occurrence:401468\ncatalog:occurrence:401504"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbas2005"
+fields = { "tags" = ["prices"] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder och beskrivningarna skiljer sig.\ncatalog:occurrence:401468\ncatalog:occurrence:401504"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbaseur"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Prisindexnivå i euro.\ncatalog:variable_text:40847:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbaseur"
+fields = { "tags" = ["prices"] }
+evidence = "Prisindexnivå i euro.\ncatalog:variable_text:40847:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbermetod"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver indexberäkningsmetod.\ncatalog:variable_text:40848:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbermetod"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver indexberäkningsmetod.\ncatalog:variable_text:40848:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexrev"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Reviderad prisindexnivå.\ncatalog:variable_text:40849:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexrev"
+fields = { "tags" = ["prices"] }
+evidence = "Reviderad prisindexnivå.\ncatalog:variable_text:40849:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ins-id"
+fields = { "sets" = [] }
+evidence = "Insamlingsmetod är undersökningsmetodik.\ncatalog:variable_text:40853:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:ins-id"
+fields = { "tags" = ["methods"] }
+evidence = "Insamlingsmetod är undersökningsmetodik.\ncatalog:variable_text:40853:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificering-av-konsumtion-coicop"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:399953\ncatalog:occurrence:399954"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificering-av-konsumtion-coicop"
+fields = { "tags" = ["consumption"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:399953\ncatalog:occurrence:399954"
+
+[[statement]]
+kind = "set"
 subject = "var:kn4kod"
 fields = { "sets" = ["kn4"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:26"
+evidence = "KN4-kod för varuklassificering.\ncatalog:variable_text:40857:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kn4kod"
+fields = { "tags" = ["trade"] }
+evidence = "KN4-kod för varuklassificering.\ncatalog:variable_text:40857:18993:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:kn4namn"
 fields = { "sets" = ["kn4"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:26"
+evidence = "KN4-benämning för varuklassificering.\ncatalog:variable_text:40858:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kn4namn"
+fields = { "tags" = ["trade"] }
+evidence = "KN4-benämning för varuklassificering.\ncatalog:variable_text:40858:18993:20819"
 
 [[statement]]
 kind = "set"
 subject = "var:kn8beskrivning"
 fields = { "sets" = ["kn8"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:33"
+evidence = "KN8-benämning för varuklassificering.\ncatalog:variable_text:40859:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8beskrivning"
+fields = { "tags" = ["trade"] }
+evidence = "KN8-benämning för varuklassificering.\ncatalog:variable_text:40859:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8kod"
+fields = { "sets" = ["kn8"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8kod"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
 
 [[statement]]
 kind = "set"
 subject = "var:kn8kod-2"
 fields = { "sets" = ["kn8"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:33"
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8kod-2"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
+
+[[statement]]
+kind = "set"
+subject = "var:kodid"
+fields = { "sets" = ["prissignal"] }
+evidence = "Källkolumnen har olika ägare med olika beskrivningar.\ncatalog:occurrence:400890\ncatalog:occurrence:401176"
+
+[[statement]]
+kind = "set"
+subject = "var:kodid"
+fields = { "tags" = ["prices"] }
+evidence = "Källkolumnen har olika ägare med olika beskrivningar.\ncatalog:occurrence:400890\ncatalog:occurrence:401176"
+
+[[statement]]
+kind = "set"
+subject = "var:kodnamn"
+fields = { "sets" = ["prissignal"] }
+evidence = "Samma prissignal som prissignal är delad mellan angränsande perioder.\ncatalog:occurrence:400958\ncatalog:occurrence:400992"
+
+[[statement]]
+kind = "set"
+subject = "var:kodnamn"
+fields = { "tags" = ["prices"] }
+evidence = "Samma prissignal som prissignal är delad mellan angränsande perioder.\ncatalog:occurrence:400958\ncatalog:occurrence:400992"
+
+[[statement]]
+kind = "set"
+subject = "var:konsbeloppforegar"
+fields = { "sets" = [] }
+evidence = "Familjen kons* behålls samlat; produktionsvärdet avser företagens produktion.\ncatalog:variable_text:40866:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:konsbeloppforegar"
+fields = { "tags" = ["business"] }
+evidence = "Familjen kons* behålls samlat; produktionsvärdet avser företagens produktion.\ncatalog:variable_text:40866:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsprodukt"
+fields = { "sets" = [] }
+evidence = "Konsumtionsprodukt är ett läsbart id för en vara eller tjänst i privat konsumtion.\ncatalog:variable_text:40867:13514:17167\ncatalog:variable_text:40867:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsprodukt"
+fields = { "tags" = ["consumption"] }
+evidence = "Konsumtionsprodukt är ett läsbart id för en vara eller tjänst i privat konsumtion.\ncatalog:variable_text:40867:13514:17167\ncatalog:variable_text:40867:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalbel"
+fields = { "sets" = [] }
+evidence = "Belopp för kvalitetsjustering av pris.\ncatalog:variable_text:40868:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalbel"
+fields = { "tags" = ["prices"] }
+evidence = "Belopp för kvalitetsjustering av pris.\ncatalog:variable_text:40868:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod"
+fields = { "sets" = ["kvalitetsjusteringsmetod"] }
+evidence = "Kodning av kvalitetsjusteringsmetod.\ncatalog:variable_text:40869:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod"
+fields = { "tags" = ["prices"] }
+evidence = "Kodning av kvalitetsjusteringsmetod.\ncatalog:variable_text:40869:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod-kval-kod"
+fields = { "sets" = ["kvalitetsjusteringsmetod"] }
+evidence = "Kodning av kvalitetsjusteringsmetod.\ncatalog:variable_text:40870:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsjusteringsmetod-kval-kod"
+fields = { "tags" = ["prices"] }
+evidence = "Kodning av kvalitetsjusteringsmetod.\ncatalog:variable_text:40870:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsriktning"
+fields = { "sets" = [] }
+evidence = "Kvalitetsriktning vid prisjustering.\ncatalog:variable_text:40871:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsriktning"
+fields = { "tags" = ["prices"] }
+evidence = "Kvalitetsriktning vid prisjustering.\ncatalog:variable_text:40871:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = [] }
+evidence = "Land med vilket handel sker.\ncatalog:variable_text:40873:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Land med vilket handel sker.\ncatalog:variable_text:40873:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lev-kod"
+fields = { "sets" = [] }
+evidence = "Leveransvillkor i handel.\ncatalog:variable_text:40874:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lev-kod"
+fields = { "tags" = ["trade"] }
+evidence = "Leveransvillkor i handel.\ncatalog:variable_text:40874:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manforandring"
+fields = { "sets" = [] }
+evidence = "Förändring i prisindex.\ncatalog:variable_text:40875:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:manforandring"
+fields = { "tags" = ["prices"] }
+evidence = "Förändring i prisindex.\ncatalog:variable_text:40875:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kod"
+fields = { "sets" = ["ppi-marknad"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40876:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kod"
+fields = { "tags" = ["trade"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40876:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kortnamn"
+fields = { "sets" = ["ppi-marknad"] }
+evidence = "Benämning av PPI-marknad.\ncatalog:variable_text:40877:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-kortnamn"
+fields = { "tags" = ["trade"] }
+evidence = "Benämning av PPI-marknad.\ncatalog:variable_text:40877:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-marknid"
+fields = { "sets" = ["ppi-marknad"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40878:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:marknad-marknid"
+fields = { "tags" = ["trade"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40878:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadskod"
+fields = { "sets" = ["ppi-marknad"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40879:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadskod"
+fields = { "tags" = ["trade"] }
+evidence = "Kodning av PPI-marknad.\ncatalog:variable_text:40879:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-5siffer"
+fields = { "sets" = [] }
+evidence = "Källans nivå och värdemängd skiljer sig.\ncatalog:valueset:5516\ncatalog:variable_text:40881:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-5siffer"
+fields = { "tags" = ["business"] }
+evidence = "Källans nivå och värdemängd skiljer sig.\ncatalog:valueset:5516\ncatalog:variable_text:40881:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:normvikt"
+fields = { "sets" = ["produkterbjudandevikt"] }
+evidence = "Det normerade vägningstalet är en produkterbjudandevikt.\ncatalog:variable_text:40882:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:normvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Det normerade vägningstalet är en produkterbjudandevikt.\ncatalog:variable_text:40882:16071:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:observerat-pris"
+fields = { "sets" = ["produktpris"] }
+evidence = "Variabeln mäter observerat produktpris.\ncatalog:variable_text:40884:20454:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:observerat-pris"
+fields = { "tags" = ["prices"] }
+evidence = "Variabeln mäter observerat produktpris.\ncatalog:variable_text:40884:20454:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:obskurs"
+fields = { "sets" = [] }
+evidence = "Valutakurs.\ncatalog:variable_text:40885:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:obskurs"
+fields = { "tags" = ["finance"] }
+evidence = "Valutakurs.\ncatalog:variable_text:40885:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknat-baspris"
+fields = { "sets" = ["baspris"] }
+evidence = "Variabeln mäter omräknat baspris.\ncatalog:variable_text:40886:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknat-baspris"
+fields = { "tags" = ["prices"] }
+evidence = "Variabeln mäter omräknat baspris.\ncatalog:variable_text:40886:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-pris"
+fields = { "sets" = ["produktpris"] }
+evidence = "Variabeln mäter ordinarie produktpris.\ncatalog:variable_text:40887:13514:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-pris"
+fields = { "tags" = ["prices"] }
+evidence = "Variabeln mäter ordinarie produktpris.\ncatalog:variable_text:40887:13514:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:40894:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:40894:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:40895:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:40895:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:prisindex"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Den generella indexvariabeln omfattar flera källkolumner; perioddelningen för IB2015 behöver bekräftas.\ncatalog:occurrence:401088\ncatalog:occurrence:401123"
+
+[[statement]]
+kind = "set"
+subject = "var:prisindex"
+fields = { "tags" = ["prices"] }
+evidence = "Den generella indexvariabeln omfattar flera källkolumner; perioddelningen för IB2015 behöver bekräftas.\ncatalog:occurrence:401088\ncatalog:occurrence:401123"
+
+[[statement]]
+kind = "set"
+subject = "var:prisnotid"
+fields = { "sets" = ["produktpris"] }
+evidence = "Definitionen anger prisuppgift vid en prisobservation.\ncatalog:variable_text:40897:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:prisnotid"
+fields = { "tags" = ["prices"] }
+evidence = "Definitionen anger prisuppgift vid en prisobservation.\ncatalog:variable_text:40897:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:prissignal"
+fields = { "sets" = ["prissignal"] }
+evidence = "Samma prissignalbegrepp är perioduppdelat mot kodnamn.\ncatalog:occurrence:400958\ncatalog:occurrence:400992"
+
+[[statement]]
+kind = "set"
+subject = "var:prissignal"
+fields = { "tags" = ["prices"] }
+evidence = "Samma prissignalbegrepp är perioduppdelat mot kodnamn.\ncatalog:occurrence:400958\ncatalog:occurrence:400992"
+
+[[statement]]
+kind = "set"
+subject = "var:proderbjvikt"
+fields = { "sets" = ["produkterbjudandevikt"] }
+evidence = "Variabeln mäter produkterbjudandets vikt.\ncatalog:variable_text:40899:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:proderbjvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter produkterbjudandets vikt.\ncatalog:variable_text:40899:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:proderbjviktrev"
+fields = { "sets" = ["produkterbjudandevikt"] }
+evidence = "Variabeln mäter reviderad produkterbjudandevikt.\ncatalog:variable_text:40900:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:proderbjviktrev"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter reviderad produkterbjudandevikt.\ncatalog:variable_text:40900:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodnamn"
+fields = { "sets" = ["produktgrupp-sjusifferniva-tpi"] }
+evidence = "Benämning för TPI-produktgrupp på sjusiffernivå.\ncatalog:variable_text:40904:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodnamn"
+fields = { "tags" = [] }
+evidence = "Benämning för TPI-produktgrupp på sjusiffernivå.\ncatalog:variable_text:40904:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar en allmän produktgrupp.\ncatalog:variable_text:40908:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar en allmän produktgrupp.\ncatalog:variable_text:40908:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-beskrivnsv"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40909:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-beskrivnsv"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40909:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namn"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en efterföljande annan ägare och den sista periodens definition avser sammanvägda klasser.\ncatalog:occurrence:401098\ncatalog:occurrence:401135\ncatalog:variable_text:40910:15706:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namn"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen har en efterföljande annan ägare och den sista periodens definition avser sammanvägda klasser.\ncatalog:occurrence:401098\ncatalog:occurrence:401135\ncatalog:variable_text:40910:15706:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namnsv"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40911:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namnsv"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver allmän produktgrupp.\ncatalog:variable_text:40911:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-pg"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar produktgrupp enligt källans definition.\ncatalog:variable_text:40912:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-pg"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar produktgrupp enligt källans definition.\ncatalog:variable_text:40912:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-prodgrpkod"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare i två tabeller.\ncatalog:occurrence:399953\ncatalog:occurrence:399954\ncatalog:occurrence:401145\ncatalog:occurrence:401147\ncatalog:variable_text:40913:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-prodgrpkod"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare i två tabeller.\ncatalog:occurrence:399953\ncatalog:occurrence:399954\ncatalog:occurrence:401145\ncatalog:occurrence:401147\ncatalog:variable_text:40913:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda"
+fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda"
+fields = { "tags" = [] }
+evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
+fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sju-tpi"
+fields = { "sets" = ["produktgrupp-sjusifferniva-tpi"] }
+evidence = "Kod för TPI-produktgrupp på sjusiffernivå.\ncatalog:variable_text:40916:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-sju-tpi"
+fields = { "tags" = [] }
+evidence = "Kod för TPI-produktgrupp på sjusiffernivå.\ncatalog:variable_text:40916:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn"
+fields = { "sets" = [] }
+evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40917:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn"
+fields = { "tags" = ["business"] }
+evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40917:16071:16436"
 
 [[statement]]
 kind = "set"
 subject = "var:produktgruppsnamn-namnsv"
-fields = { "sets" = ["legacy-produktgruppsnamn"] }
-evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:237\nreg_meta_build/curation/registers/scb/prisindex.toml:245\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json.\n\nSame complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
-caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+fields = { "sets" = [] }
+evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40918:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn-namnsv"
+fields = { "tags" = ["business"] }
+evidence = "Produktgruppsnamnet hör till den allmänna produktgruppsindelningen.\ncatalog:variable_text:40918:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt"
+fields = { "sets" = ["produktgruppsvikt"] }
+evidence = "Variabeln mäter produktgruppens vikt.\ncatalog:variable_text:40919:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter produktgruppens vikt.\ncatalog:variable_text:40919:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt-prodgrpvikt"
+fields = { "sets" = ["produktgruppsvikt"] }
+evidence = "Variabeln mäter produktgruppens vikt.\ncatalog:variable_text:40920:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt-prodgrpvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter produktgruppens vikt.\ncatalog:variable_text:40920:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt-vikt"
+fields = { "sets" = ["produktgruppsvikt"] }
+evidence = "Källkolumnen har överlappande ägare; båda beskrivs som produktgruppsvikter.\ncatalog:occurrence:399958\ncatalog:occurrence:399959\ncatalog:variable_text:40921:16436:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsvikt-vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnen har överlappande ägare; båda beskrivs som produktgruppsvikter.\ncatalog:occurrence:399958\ncatalog:occurrence:399959\ncatalog:variable_text:40921:16436:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prund-kod"
+fields = { "sets" = [] }
+evidence = "Underlag för prisuppgift.\ncatalog:variable_text:40924:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:prund-kod"
+fields = { "tags" = ["prices"] }
+evidence = "Underlag för prisuppgift.\ncatalog:variable_text:40924:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rapporteringsvaluta"
+fields = { "sets" = ["rapporteringsvaluta"] }
+evidence = "Kodning av rapporteringsvaluta.\ncatalog:variable_text:40925:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rapporteringsvaluta"
+fields = { "tags" = [] }
+evidence = "Kodning av rapporteringsvaluta.\ncatalog:variable_text:40925:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretess"
+fields = { "sets" = ["sekretess"] }
+evidence = "Sekretessmarkering.\ncatalog:variable_text:40926:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretess"
+fields = { "tags" = [] }
+evidence = "Sekretessmarkering.\ncatalog:variable_text:40926:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretesskod"
+fields = { "sets" = ["sekretess"] }
+evidence = "Kodning av sekretessnivå.\ncatalog:variable_text:40927:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretesskod"
+fields = { "tags" = [] }
+evidence = "Kodning av sekretessnivå.\ncatalog:variable_text:40927:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stat-id"
+fields = { "sets" = ["kn8"] }
+evidence = "Stat-id är en opak källbeteckning för KN8-varukod.\ncatalog:variable_text:40928:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:stat-id"
+fields = { "tags" = ["trade"] }
+evidence = "Stat-id är en opak källbeteckning för KN8-varukod.\ncatalog:variable_text:40928:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalssannolikhet"
+fields = { "sets" = [] }
+evidence = "Värdemängden beskriver urvalsstatus under observerade perioder.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalssannolikhet"
+fields = { "tags" = ["methods"] }
+evidence = "Värdemängden beskriver urvalsstatus under observerade perioder.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:valutaid"
+fields = { "sets" = ["rapporteringsvaluta"] }
+evidence = "Valuta som ligger till grund för priset.\ncatalog:variable_text:40933:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:valutaid"
+fields = { "tags" = [] }
+evidence = "Valuta som ligger till grund för priset.\ncatalog:variable_text:40933:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:varde2005eur"
+fields = { "sets" = ["prisindexniva"] }
+evidence = "Prisindexnivå med bas 2005 i euro.\ncatalog:variable_text:40934:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varde2005eur"
+fields = { "tags" = ["prices"] }
+evidence = "Prisindexnivå med bas 2005 i euro.\ncatalog:variable_text:40934:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:viktrev"
+fields = { "sets" = ["produktgruppsvikt"] }
+evidence = "Variabeln mäter reviderad produktgruppsvikt.\ncatalog:variable_text:40936:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:viktrev"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter reviderad produktgruppsvikt.\ncatalog:variable_text:40936:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2015-01-01..2015-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2016-01-01..2016-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2017-01-01..2017-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2018-01-01..2018-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2019-01-01..2019-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2020-01-01..2020-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2021-01-01..2021-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2022-01-01..2022-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2023-01-01..2023-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2024-01-01..2024-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "ppi: UrvStatus @2025-01-01..2025-12-31 where key = 'v6415'"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"

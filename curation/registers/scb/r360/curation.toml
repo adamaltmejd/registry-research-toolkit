@@ -1,0 +1,96 @@
+
+[[statement]]
+kind = "set"
+subject = "var:avreg"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver avregistrering av ett fordon.\ncatalog:variable_text:34870:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avreg"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln beskriver avregistrering av ett fordon.\ncatalog:variable_text:34870:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avstalld"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver ett fordons avställning; den daterade definitionshistoriken behålls.\ncatalog:variable_text:34871:10592:18993\ncatalog:variable_text:34871:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avstalld"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln beskriver ett fordons avställning; den daterade definitionshistoriken behålls.\ncatalog:variable_text:34871:10592:18993\ncatalog:variable_text:34871:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fordon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om fordonet varit i trafik under året.\ncatalog:variable_text:34872:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fordon"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger om fordonet varit i trafik under året.\ncatalog:variable_text:34872:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaendears-stracka"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter föregående års körsträcka och har en jämförbar körsträckevariabel i registret.\ncatalog:variable_text:34873:12784:13149\ncatalog:variable_text:34875:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaendears-stracka"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln mäter föregående års körsträcka och har en jämförbar körsträckevariabel i registret.\ncatalog:variable_text:34873:12784:13149\ncatalog:variable_text:34875:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:korstdagartrafik"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal dagar i trafik.\ncatalog:variable_text:34874:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:korstdagartrafik"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln mäter antal dagar i trafik.\ncatalog:variable_text:34874:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:korstracka"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter körsträcka; enheten anges som kilometer under en period och mil under övriga perioder.\ncatalog:variable_text:34873:12784:13149\ncatalog:variable_text:34875:10592:16436\ncatalog:variable_text:34875:16436:16801\ncatalog:variable_text:34875:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:korstracka"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln mäter körsträcka; enheten anges som kilometer under en period och mil under övriga perioder.\ncatalog:variable_text:34873:12784:13149\ncatalog:variable_text:34875:10592:16436\ncatalog:variable_text:34875:16436:16801\ncatalog:variable_text:34875:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:modellkategori"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kategori för modellskattad körsträcka.\ncatalog:variable_text:34876:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:modellkategori"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger kategori för modellskattad körsträcka.\ncatalog:variable_text:34876:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:modellskatt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om körsträckan är modellskattad.\ncatalog:variable_text:34877:10592:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:modellskatt"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger om körsträckan är modellskattad.\ncatalog:variable_text:34877:10592:19723"

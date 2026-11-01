@@ -1278,3 +1278,4035 @@ kind = "set"
 subject = "fek-slutdata: fsum901 @1990..1996"
 fields = { "operational_definition" = "Uppgifterna kan vara beräknade (imputerade)." }
 evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerade-overavskrivningar"
+fields = { "sets" = ["obeskattade-reserver", "overavskrivningar"] }
+evidence = "Ackumulerade överavskrivningar hör till överavskrivningar och företagsredovisning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte ackumulerade eller årliga överavskrivningar. membership-0118: Definitionen omfattar både ackumulerade överavskrivningar och årets överavskrivningar inklusive upplösning. membership-0119: Bokslutsdispositionernas totalsumma innehåller fler poster än överavskrivningar och är inte en separat sådan komponent. membership-0120: Ingen vald variabel i sektionen avser överavskrivningar. membership-0121: Ingen sektionsvariabel anger ackumulerade eller årliga överavskrivningar. membership-0122: Ingen vald variabel avser ackumulerade eller årets överavskrivningar; den valda ordinarie av- och nedskrivningssumman omfattas inte. membership-0123: Den valda av- och nedskrivningssumman anger inte ackumulerade eller årliga överavskrivningar.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10667:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10864:17167:18993\ncatalog:variable_text:10865:18993:19723\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulerade-overavskrivningar"
+fields = { "tags" = ["business"] }
+evidence = "Ackumulerade överavskrivningar hör till överavskrivningar och företagsredovisning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte ackumulerade eller årliga överavskrivningar. membership-0118: Definitionen omfattar både ackumulerade överavskrivningar och årets överavskrivningar inklusive upplösning. membership-0119: Bokslutsdispositionernas totalsumma innehåller fler poster än överavskrivningar och är inte en separat sådan komponent. membership-0120: Ingen vald variabel i sektionen avser överavskrivningar. membership-0121: Ingen sektionsvariabel anger ackumulerade eller årliga överavskrivningar. membership-0122: Ingen vald variabel avser ackumulerade eller årets överavskrivningar; den valda ordinarie av- och nedskrivningssumman omfattas inte. membership-0123: Den valda av- och nedskrivningssumman anger inte ackumulerade eller årliga överavskrivningar.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10667:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10864:17167:18993\ncatalog:variable_text:10865:18993:19723\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:10562:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:10562:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:aktieagartillskott-bokslutsdispositioner"
+fields = { "sets" = ["aktieagartillskott", "bokslutsdispositioner"] }
+evidence = "Posten är både aktieägartillskott och bokslutsdisposition.\ncatalog:variable_text:10563:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:aktieagartillskott-bokslutsdispositioner"
+fields = { "tags" = ["business"] }
+evidence = "Posten är både aktieägartillskott och bokslutsdisposition.\ncatalog:variable_text:10563:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:aktieagartillskott-eget-kapital"
+fields = { "sets" = ["aktieagartillskott", "forandringar-av-eget-kapital"] }
+evidence = "Posten är aktieägartillskott redovisat i eget kapital. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte aktieägartillskott. membership-0118: Båda posterna avser aktieägartillskott i de redovisningar som definitionen omfattar. membership-0119: Inget valt id i denna sektion avser aktieägartillskott. membership-0120: Ingen vald variabel i sektionen avser aktieägartillskott. membership-0121: Ingen variabel i denna sektion avser aktieägartillskott. membership-0122: Ingen vald variabel i sektionen avser aktieägartillskott. membership-0123: Ingen vald variabel i denna sektion mäter aktieägartillskott. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0118: Poster för kapitalförändringar, ägartransaktioner och fondjusteringar omfattas enligt den fasta definitionen. membership-0119: De valda kapitalvariablerna är bestånd, inte kapitalförändringar eller ägartransaktioner. membership-0120: Ingen vald variabel i sektionen avser förändringar av eget kapital. membership-0121: Sektionens intäkter, kostnader och avyttringsresultat är inte uttryckliga kapitalförändringar eller ägartransaktioner. membership-0122: Ingen vald variabel i sektionen avser kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0123: Ingen vald variabel i denna sektion mäter kapitalförändringar eller kandidatens ägartransaktioner.\ncatalog:variable_text:10563:12053:18993\ncatalog:variable_text:10564:12053:18993\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10647:12053:18993\ncatalog:variable_text:10648:12053:18993\ncatalog:variable_text:10663:13149:18993\ncatalog:variable_text:10674:12053:18993\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10742:12053:18993\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10777:12053:18993\ncatalog:variable_text:10778:12053:18993\ncatalog:variable_text:10809:12053:18993\ncatalog:variable_text:10810:12053:18993\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10895:12053:18993\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktieagartillskott-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten är aktieägartillskott redovisat i eget kapital. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte aktieägartillskott. membership-0118: Båda posterna avser aktieägartillskott i de redovisningar som definitionen omfattar. membership-0119: Inget valt id i denna sektion avser aktieägartillskott. membership-0120: Ingen vald variabel i sektionen avser aktieägartillskott. membership-0121: Ingen variabel i denna sektion avser aktieägartillskott. membership-0122: Ingen vald variabel i sektionen avser aktieägartillskott. membership-0123: Ingen vald variabel i denna sektion mäter aktieägartillskott. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0118: Poster för kapitalförändringar, ägartransaktioner och fondjusteringar omfattas enligt den fasta definitionen. membership-0119: De valda kapitalvariablerna är bestånd, inte kapitalförändringar eller ägartransaktioner. membership-0120: Ingen vald variabel i sektionen avser förändringar av eget kapital. membership-0121: Sektionens intäkter, kostnader och avyttringsresultat är inte uttryckliga kapitalförändringar eller ägartransaktioner. membership-0122: Ingen vald variabel i sektionen avser kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0123: Ingen vald variabel i denna sektion mäter kapitalförändringar eller kandidatens ägartransaktioner.\ncatalog:variable_text:10563:12053:18993\ncatalog:variable_text:10564:12053:18993\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10647:12053:18993\ncatalog:variable_text:10648:12053:18993\ncatalog:variable_text:10663:13149:18993\ncatalog:variable_text:10674:12053:18993\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10742:12053:18993\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10777:12053:18993\ncatalog:variable_text:10778:12053:18993\ncatalog:variable_text:10809:12053:18993\ncatalog:variable_text:10810:12053:18993\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10895:12053:18993\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiekapital"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Aktiekapital är en beståndsdel av eget kapital.\ncatalog:variable_text:10565:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiekapital"
+fields = { "tags" = ["business"] }
+evidence = "Aktiekapital är en beståndsdel av eget kapital.\ncatalog:variable_text:10565:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-och-andelar"
+fields = { "sets" = [] }
+evidence = "Källan anger innehav av aktier och andelar.\ncatalog:variable_text:10566:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-och-andelar"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källan anger innehav av aktier och andelar.\ncatalog:variable_text:10566:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-koncern-intresse"
+fields = { "sets" = [] }
+evidence = "Källan anger aktieinnehav i svenska koncern- och intresseföretag.\ncatalog:variable_text:10567:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-koncern-intresse"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källan anger aktieinnehav i svenska koncern- och intresseföretag.\ncatalog:variable_text:10567:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-koncern-intresse"
+fields = { "sets" = [] }
+evidence = "Källan anger aktieinnehav i utländska koncern- och intresseföretag.\ncatalog:variable_text:10568:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-koncern-intresse"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källan anger aktieinnehav i utländska koncern- och intresseföretag.\ncatalog:variable_text:10568:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagsredovisning.\ncatalog:variable_text:10569:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagsredovisning.\ncatalog:variable_text:10569:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antalet är ett anställningsmått.\ncatalog:variable_text:10570:12784:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet är ett anställningsmått.\ncatalog:variable_text:10570:12784:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-intresseforetag"
+fields = { "sets" = [] }
+evidence = "Källan anger ägarandelar i intresseföretag.\ncatalog:variable_text:10571:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-intresseforetag"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källan anger ägarandelar i intresseföretag.\ncatalog:variable_text:10571:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-koncernforetag"
+fields = { "sets" = [] }
+evidence = "Källan anger ägarandelar i koncernföretag.\ncatalog:variable_text:10572:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-koncernforetag"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källan anger ägarandelar i koncernföretag.\ncatalog:variable_text:10572:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-finansiella-anlaggningstillgangar"
+fields = { "sets" = ["finansiella-anlaggningstillgangar"] }
+evidence = "Restposten hör till finansiella anläggningstillgångar i företagsredovisningen.\ncatalog:variable_text:10573:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-finansiella-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Restposten hör till finansiella anläggningstillgångar i företagsredovisningen.\ncatalog:variable_text:10573:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-langfristiga-fordringar"
+fields = { "sets" = [] }
+evidence = "Fordringarna är en företagsbalanspost.\ncatalog:variable_text:10574:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-langfristiga-fordringar"
+fields = { "tags" = ["business"] }
+evidence = "Fordringarna är en företagsbalanspost.\ncatalog:variable_text:10574:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anger-om-foretaget-har-kostnadsslagsindelat-eller"
+fields = { "sets" = [] }
+evidence = "Variabeln avser företagets bokslutsform.\ncatalog:variable_text:10575:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anger-om-foretaget-har-kostnadsslagsindelat-eller"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser företagets bokslutsform.\ncatalog:variable_text:10575:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstillgangar"
+fields = { "sets" = [] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10576:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10576:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:variable_text:10577:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:variable_text:10577:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anstkl"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:variable_text:10578:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anstkl"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:variable_text:10578:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10579:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10579:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-lgr6102"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10580:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-lgr6102"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10580:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-statistiskt-matt"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10581:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-statistiskt-matt"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10581:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-vgr6102"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10582:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-vgr6102"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:10582:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-juridiska-enheter"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver företagsstruktur.\ncatalog:variable_text:10583:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-juridiska-enheter"
+fields = { "tags" = ["business"] }
+evidence = "Antalet beskriver företagsstruktur.\ncatalog:variable_text:10583:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lokala-ve"
+fields = { "sets" = [] }
+evidence = "Antalet avser lokala verksamhetsenheter.\ncatalog:variable_text:10584:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lokala-ve"
+fields = { "tags" = ["business"] }
+evidence = "Antalet avser lokala verksamhetsenheter.\ncatalog:variable_text:10584:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bokslut"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver företagets bokslut.\ncatalog:variable_text:10585:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-bokslut"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver företagets bokslut.\ncatalog:variable_text:10585:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10586:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10586:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-lgr6103"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10587:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-lgr6103"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10587:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-vgr6103"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10588:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-vgr6103"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter sysselsatta.\ncatalog:variable_text:10588:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "sets" = [] }
+evidence = "Antalet avser verksamma verksamhetsenheter.\ncatalog:variable_text:10589:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "tags" = ["business"] }
+evidence = "Antalet avser verksamma verksamhetsenheter.\ncatalog:variable_text:10589:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antalas"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Antalet beskriver företagsstruktur.\ncatalog:variable_text:10590:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antalas"
+fields = { "tags" = ["business"] }
+evidence = "Antalet beskriver företagsstruktur.\ncatalog:variable_text:10590:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antalasminst1"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Antalet beskriver arbetsställen.\ncatalog:variable_text:10591:12053:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:antalasminst1"
+fields = { "tags" = ["business"] }
+evidence = "Antalet beskriver arbetsställen.\ncatalog:variable_text:10591:12053:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Summan hör till avsättningsgruppen och är en företagsekonomisk balanspost.\ncatalog:variable_text:10592:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar"
+fields = { "tags" = ["business"] }
+evidence = "Summan hör till avsättningsgruppen och är en företagsekonomisk balanspost.\ncatalog:variable_text:10592:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-garantier"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Garantiposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10593:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-garantier"
+fields = { "tags" = ["business"] }
+evidence = "Garantiposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10593:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-pensioner"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Pensionsposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10594:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-pensioner"
+fields = { "tags" = ["business"] }
+evidence = "Pensionsposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10594:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-skatter"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Skatteposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10595:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avsattningar-for-skatter"
+fields = { "tags" = ["business"] }
+evidence = "Skatteposten är en del av avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10595:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-byggnader-fast-egendom"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10596:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-byggnader-fast-egendom"
+fields = { "tags" = ["business"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10596:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-immateriella-tillgangar"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10597:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-immateriella-tillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10597:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-maskiner-inventarier"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10598:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:avskrivningar-maskiner-inventarier"
+fields = { "tags" = ["business"] }
+evidence = "Avskrivningen är en tillgångsslagskomponent av företagets av- och nedskrivningar.\ncatalog:variable_text:10598:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten"
+fields = { "sets" = ["bidrag-for-verksamheten"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10599:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten"
+fields = { "tags" = ["business"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10599:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-lgr0445"
+fields = { "sets" = ["bidrag-for-verksamheten"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10600:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-lgr0445"
+fields = { "tags" = ["business"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10600:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-vgr0445"
+fields = { "sets" = ["bidrag-for-verksamheten"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10601:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-for-verksamheten-vgr0445"
+fields = { "tags" = ["business"] }
+evidence = "Bidraget är en intäkt för verksamheten.\ncatalog:variable_text:10601:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bokslutsdispositioner"
+fields = { "sets" = ["bokslutsdispositioner"] }
+evidence = "Källan anger totala bokslutsdispositioner.\ncatalog:variable_text:10602:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bokslutsdispositioner"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger totala bokslutsdispositioner.\ncatalog:variable_text:10602:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat mellan perioder med scb/fek/naringsgren-3.\ncatalog:occurrence:94807\ncatalog:occurrence:94825"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "tags" = ["business"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat mellan perioder med scb/fek/naringsgren-3.\ncatalog:occurrence:94807\ncatalog:occurrence:94825"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinv-ny-ombygg-byggnader-mark"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10605:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinv-ny-ombygg-byggnader-mark"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10605:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-lga142"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Köpposten ingår i investeringar i byggnader, markanläggningar och mark.\ncatalog:variable_text:10606:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-lga142"
+fields = { "tags" = ["business"] }
+evidence = "Köpposten ingår i investeringar i byggnader, markanläggningar och mark.\ncatalog:variable_text:10606:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-och-vga122"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser köp av byggnader och markanläggningar.\ncatalog:variable_text:10607:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-och-vga122"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser köp av byggnader och markanläggningar.\ncatalog:variable_text:10607:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-vga142"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Köpposten ingår i investeringar i byggnader, markanläggningar och mark.\ncatalog:variable_text:10608:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-av-kopta-byggnader-vga142"
+fields = { "tags" = ["business"] }
+evidence = "Köpposten ingår i investeringar i byggnader, markanläggningar och mark.\ncatalog:variable_text:10608:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Bostäder är en uttrycklig delpost för byggnadsinvesteringar.\ncatalog:variable_text:10609:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Bostäder är en uttrycklig delpost för byggnadsinvesteringar.\ncatalog:variable_text:10609:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader-vga1211"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Bostäder är en uttrycklig delpost för byggnadsinvesteringar.\ncatalog:variable_text:10610:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-bostader-vga1211"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Bostäder är en uttrycklig delpost för byggnadsinvesteringar.\ncatalog:variable_text:10610:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Källan anger bruttoinvesteringar i byggnader.\ncatalog:variable_text:10611:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger bruttoinvesteringar i byggnader.\ncatalog:variable_text:10611:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-kga12"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Källan anger bruttoinvesteringar i byggnader.\ncatalog:variable_text:10612:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-kga12"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger bruttoinvesteringar i byggnader.\ncatalog:variable_text:10612:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-mark"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10613:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-mark"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10613:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-kga14"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10614:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-kga14"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10614:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-lga14"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10615:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-lga14"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10615:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-vga14"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10616:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar-och-vga14"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10616:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en uttrycklig delpost av maskininvesteringar.\ncatalog:variable_text:10617:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en uttrycklig delpost av maskininvesteringar.\ncatalog:variable_text:10617:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-lga1102"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en delpost av maskininvesteringar.\ncatalog:variable_text:10618:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-lga1102"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en delpost av maskininvesteringar.\ncatalog:variable_text:10618:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-vga1102"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en delpost av maskininvesteringar.\ncatalog:variable_text:10619:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-fartyg-vga1102"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en delpost av maskininvesteringar.\ncatalog:variable_text:10619:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10620:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10620:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-lga1101"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10621:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-lga1101"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10621:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-vga1101"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10622:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-flygplan-vga1101"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en delpost av maskininvesteringar.\ncatalog:variable_text:10622:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser köp av byggnader och markanläggningar.\ncatalog:variable_text:10623:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser köp av byggnader och markanläggningar.\ncatalog:variable_text:10623:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader-mark"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Köpposten ingår i sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10624:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-kopta-byggnader-mark"
+fields = { "tags" = ["business"] }
+evidence = "Köpposten ingår i sammanslagna bruttoinvesteringar.\ncatalog:variable_text:10624:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark"
+fields = { "sets" = ["bruttoinvesteringar-mark"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10625:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10625:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-kga13"
+fields = { "sets" = ["bruttoinvesteringar-mark"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10626:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-kga13"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10626:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-vga13"
+fields = { "sets" = ["bruttoinvesteringar-mark"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10627:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-mark-vga13"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter markinvesteringar.\ncatalog:variable_text:10627:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-inventarier"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10628:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-inventarier"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10628:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-kga11"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10629:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-kga11"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10629:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-lga11"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10630:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-lga11"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10630:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-vga11"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10631:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-maskiner-och-inventarier-vga11"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser maskininvesteringar.\ncatalog:variable_text:10631:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-fga141"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10632:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-fga141"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10632:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga141"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10633:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga141"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10633:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga1411"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser bostadsdelen av byggnadsinvesteringar.\ncatalog:variable_text:10634:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-lga1411"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Måttet avser bostadsdelen av byggnadsinvesteringar.\ncatalog:variable_text:10634:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga121"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10635:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga121"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10635:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga141"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10636:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga141"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser byggnadsarbeten och markanläggningar.\ncatalog:variable_text:10636:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga1411"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser bostadsdelen av byggnadsinvesteringar.\ncatalog:variable_text:10637:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ny-till-och-ombyggnad-av-vga1411"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Måttet avser bostadsdelen av byggnadsinvesteringar.\ncatalog:variable_text:10637:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10638:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10638:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-lga1103"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10639:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-lga1103"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10639:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-vga1103"
+fields = { "sets" = ["bruttoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10640:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvesteringar-ralsfordon-vga1103"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en delpost av maskininvesteringar.\ncatalog:variable_text:10640:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bundet-eget-kapital"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Bundet eget kapital är en beståndsdel av eget kapital.\ncatalog:variable_text:10641:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bundet-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Bundet eget kapital är en beståndsdel av eget kapital.\ncatalog:variable_text:10641:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader"
+fields = { "sets" = ["byggnader-mark-och-markanlaggningar"] }
+evidence = "Posten avser bokförda materiella tillgångar.\ncatalog:variable_text:10642:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser bokförda materiella tillgångar.\ncatalog:variable_text:10642:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-mark-markanlaggningar"
+fields = { "sets" = ["byggnader-mark-och-markanlaggningar"] }
+evidence = "Posten avser bokförda materiella tillgångar.\ncatalog:variable_text:10643:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnader-mark-markanlaggningar"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser bokförda materiella tillgångar.\ncatalog:variable_text:10643:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-kapital-hb-kb"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Källan anger eget kapital för dessa företagsformer.\ncatalog:variable_text:10645:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-kapital-hb-kb"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger eget kapital för dessa företagsformer.\ncatalog:variable_text:10645:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-kapital-och-skulder"
+fields = { "sets" = [] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10646:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:eget-kapital-och-skulder"
+fields = { "tags" = ["business"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10646:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:egna-insattningar-hb-kb"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Egna insättningar är en ägartransaktion.\ncatalog:variable_text:10647:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:egna-insattningar-hb-kb"
+fields = { "tags" = ["business"] }
+evidence = "Egna insättningar är en ägartransaktion.\ncatalog:variable_text:10647:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:egna-uttag-hb-kb"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Egna uttag är en ägartransaktion.\ncatalog:variable_text:10648:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:egna-uttag-hb-kb"
+fields = { "tags" = ["business"] }
+evidence = "Egna uttag är en ägartransaktion.\ncatalog:variable_text:10648:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter"
+fields = { "sets" = [] }
+evidence = "Intäkterna är en företagsredovisningspost.\ncatalog:variable_text:10649:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Intäkterna är en företagsredovisningspost.\ncatalog:variable_text:10649:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader"
+fields = { "sets" = [] }
+evidence = "Kostnaderna är en företagsredovisningspost.\ncatalog:variable_text:10650:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:extraordinara-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Kostnaderna är en företagsredovisningspost.\ncatalog:variable_text:10650:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "sets" = [] }
+evidence = "Måttet avser fastighetstaxeringsvärde.\ncatalog:variable_text:10651:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser fastighetstaxeringsvärde.\ncatalog:variable_text:10651:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fetyp"
+fields = { "sets" = [] }
+evidence = "Koden beskriver företagsstruktur.\ncatalog:variable_text:10653:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fetyp"
+fields = { "tags" = ["business"] }
+evidence = "Koden beskriver företagsstruktur.\ncatalog:variable_text:10653:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fga1411"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Källkoden är ogenomskinlig; etiketten anger bostadsdelen av bruttoinvesteringarna.\ncatalog:variable_text:10654:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fga1411"
+fields = { "tags" = ["business", "housing"] }
+evidence = "Källkoden är ogenomskinlig; etiketten anger bostadsdelen av bruttoinvesteringarna.\ncatalog:variable_text:10654:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0111"
+fields = { "sets" = ["redovisat-slutresultat"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger årets resultat.\ncatalog:variable_text:10655:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0111"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger årets resultat.\ncatalog:variable_text:10655:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0113"
+fields = { "sets" = ["obeskattade-reserver", "periodiseringsfond"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger periodiseringsfond. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte periodiseringsfondens belopp eller förändring. membership-0118: Både periodiseringsfondens belopp och dess förändring omfattas uttryckligen. membership-0119: Bokslutsdispositionernas totalsumma innehåller även andra poster och är inte ett separat fondbelopp eller en separat fondförändring. membership-0120: Ingen vald variabel i sektionen avser periodiseringsfond. membership-0121: Ingen sektionsvariabel mäter periodiseringsfond eller dess förändring. membership-0122: Ingen vald variabel i sektionen avser periodiseringsfondens belopp eller förändring. membership-0123: Ingen vald variabel i denna sektion mäter periodiseringsfondens belopp eller förändring.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10677:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0113"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger periodiseringsfond. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte periodiseringsfondens belopp eller förändring. membership-0118: Både periodiseringsfondens belopp och dess förändring omfattas uttryckligen. membership-0119: Bokslutsdispositionernas totalsumma innehåller även andra poster och är inte ett separat fondbelopp eller en separat fondförändring. membership-0120: Ingen vald variabel i sektionen avser periodiseringsfond. membership-0121: Ingen sektionsvariabel mäter periodiseringsfond eller dess förändring. membership-0122: Ingen vald variabel i sektionen avser periodiseringsfondens belopp eller förändring. membership-0123: Ingen vald variabel i denna sektion mäter periodiseringsfondens belopp eller förändring.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10677:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0122"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger långfristiga skulder till koncern- och intresseföretag.\ncatalog:variable_text:10657:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0122"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger långfristiga skulder till koncern- och intresseföretag.\ncatalog:variable_text:10657:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0124"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger kortfristiga skulder hos koncern- och intresseföretag.\ncatalog:variable_text:10658:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb0124"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger kortfristiga skulder hos koncern- och intresseföretag.\ncatalog:variable_text:10658:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb232"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier och andelar.\ncatalog:variable_text:10659:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb232"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier och andelar.\ncatalog:variable_text:10659:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb239"
+fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för maskiner och inventarier.\ncatalog:variable_text:10660:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb239"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för maskiner och inventarier.\ncatalog:variable_text:10660:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb240"
+fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för byggnader och mark.\ncatalog:variable_text:10661:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb240"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för byggnader och mark.\ncatalog:variable_text:10661:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb243"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger andra långfristiga värdepappersinnehav. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte innehav av aktier eller andelar. membership-0118: De inkluderade posterna anger uttryckligen aktier eller ägarandelar. Fgb243 omfattar även andra värdepapper och hålls utanför den fasta avgränsningen. membership-0119: Den historiska leveranskolumnen anger långfristiga aktier och andelar och omfattas av innehavsdefinitionen. membership-0120: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0121: Ingen variabel i denna sektion avser innehav av aktier eller andelar. membership-0122: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0123: Ingen vald variabel i denna sektion mäter innehav av aktier eller andelar.\ncatalog:variable_text:10566:12053:13514\ncatalog:variable_text:10567:12053:13514\ncatalog:variable_text:10568:12053:13514\ncatalog:variable_text:10571:18993:19723\ncatalog:variable_text:10572:18993:19723\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10659:18993:19723\ncatalog:variable_text:10662:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10760:9862:12053\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb243"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger andra långfristiga värdepappersinnehav. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte innehav av aktier eller andelar. membership-0118: De inkluderade posterna anger uttryckligen aktier eller ägarandelar. Fgb243 omfattar även andra värdepapper och hålls utanför den fasta avgränsningen. membership-0119: Den historiska leveranskolumnen anger långfristiga aktier och andelar och omfattas av innehavsdefinitionen. membership-0120: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0121: Ingen variabel i denna sektion avser innehav av aktier eller andelar. membership-0122: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0123: Ingen vald variabel i denna sektion mäter innehav av aktier eller andelar.\ncatalog:variable_text:10566:12053:13514\ncatalog:variable_text:10567:12053:13514\ncatalog:variable_text:10568:12053:13514\ncatalog:variable_text:10571:18993:19723\ncatalog:variable_text:10572:18993:19723\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10659:18993:19723\ncatalog:variable_text:10662:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10760:9862:12053\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb369-01"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger en annan känd kapitalförändring.\ncatalog:variable_text:10663:13149:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fgb369-01"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger en annan känd kapitalförändring.\ncatalog:variable_text:10663:13149:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr550"
+fields = { "sets" = [] }
+evidence = "Källkolumnens kod är opak; etiketten anger vinst eller förlust vid avyttring av värdepapper.\ncatalog:variable_text:10664:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr550"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkolumnens kod är opak; etiketten anger vinst eller förlust vid avyttring av värdepapper.\ncatalog:variable_text:10664:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr553"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10665:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr553"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10665:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr570"
+fields = { "sets" = ["nedskrivningar-av-finansiella-tillgangar"] }
+evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av finansiella tillgångar inklusive återföring.\ncatalog:variable_text:10666:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr570"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av finansiella tillgångar inklusive återföring.\ncatalog:variable_text:10666:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr578"
+fields = { "sets" = ["bokslutsdispositioner", "overavskrivningar"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger överavskrivningar inklusive upplösning.\ncatalog:variable_text:10667:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr578"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger överavskrivningar inklusive upplösning.\ncatalog:variable_text:10667:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr579"
+fields = { "sets" = ["resultat-fran-agarandelar"] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från andelar i koncernföretag.\ncatalog:variable_text:10668:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr579"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från andelar i koncernföretag.\ncatalog:variable_text:10668:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr581"
+fields = { "sets" = [] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga finansiella anläggningstillgångar. Kandidatgruppen för ägarandelar omfattar inte detta resultat.\ncatalog:variable_text:10669:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr581"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga finansiella anläggningstillgångar. Kandidatgruppen för ägarandelar omfattar inte detta resultat.\ncatalog:variable_text:10669:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr583"
+fields = { "sets" = ["nedskrivningar-av-finansiella-tillgangar"] }
+evidence = "Id:t är en källkod; etiketten anger nedskrivningar av finansiella tillgångar och placeringar.\ncatalog:variable_text:10670:13514:18993\ncatalog:variable_text:10670:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr583"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en källkod; etiketten anger nedskrivningar av finansiella tillgångar och placeringar.\ncatalog:variable_text:10670:13514:18993\ncatalog:variable_text:10670:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr587"
+fields = { "sets" = ["resultat-fran-agarandelar"] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga företag med ägarintresse.\ncatalog:variable_text:10671:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr587"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga företag med ägarintresse.\ncatalog:variable_text:10671:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr594"
+fields = { "sets" = ["bokslutsdispositioner"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger en delpost till övriga bokslutsdispositioner.\ncatalog:variable_text:10672:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fgr594"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger en delpost till övriga bokslutsdispositioner.\ncatalog:variable_text:10672:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-anlaggningstillgangar"
+fields = { "sets" = ["finansiella-anlaggningstillgangar"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10673:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10673:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fondemission"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Fondemission är en kapitalförändring.\ncatalog:variable_text:10674:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fondemission"
+fields = { "tags" = ["business"] }
+evidence = "Fondemission är en kapitalförändring.\ncatalog:variable_text:10674:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "sets" = [] }
+evidence = "Förädlingsvärde mäter företagsproduktion.\ncatalog:variable_text:10675:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Förädlingsvärde mäter företagsproduktion.\ncatalog:variable_text:10675:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete"
+fields = { "sets" = [] }
+evidence = "Lagerförändringen är en företagsredovisningspost.\ncatalog:variable_text:10676:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete"
+fields = { "tags" = ["business"] }
+evidence = "Lagerförändringen är en företagsredovisningspost.\ncatalog:variable_text:10676:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-periodiseringsfond"
+fields = { "sets" = ["bokslutsdispositioner", "periodiseringsfond"] }
+evidence = "Förändringen är en bokslutsdisposition och avser periodiseringsfond.\ncatalog:variable_text:10677:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-periodiseringsfond"
+fields = { "tags" = ["business"] }
+evidence = "Förändringen är en bokslutsdisposition och avser periodiseringsfond.\ncatalog:variable_text:10677:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde"
+fields = { "sets" = [] }
+evidence = "Förbrukningsvärde mäter företagsproduktion.\ncatalog:variable_text:10678:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Förbrukningsvärde mäter företagsproduktion.\ncatalog:variable_text:10678:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fordringar-koncern-intresseforetag"
+fields = { "sets" = ["fordringar-pa-koncern-och-intresseforetag"] }
+evidence = "Den tidigare posten saknar löptidsangivelse medan efterföljaren anger långfristiga fordringar.\ncatalog:occurrence:88816\ncatalog:occurrence:89677\ncatalog:variable_text:10679:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fordringar-koncern-intresseforetag"
+fields = { "tags" = ["business"] }
+evidence = "Den tidigare posten saknar löptidsangivelse medan efterföljaren anger långfristiga fordringar.\ncatalog:occurrence:88816\ncatalog:occurrence:89677\ncatalog:variable_text:10679:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetens-status"
+fields = { "sets" = [] }
+evidence = "Statusen beskriver företagsstruktur.\ncatalog:variable_text:10680:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetens-status"
+fields = { "tags" = ["business"] }
+evidence = "Statusen beskriver företagsstruktur.\ncatalog:variable_text:10680:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-avyttring-anlaggningstillgangar"
+fields = { "sets" = ["forlust-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10681:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-avyttring-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10681:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-kgr556"
+fields = { "sets" = ["forlust-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10682:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-kgr556"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10682:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-vgr556"
+fields = { "sets" = ["forlust-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10683:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forlust-vid-avyttring-av-anlaggningstillgangar-ej-vgr556"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter avyttringsförlust.\ncatalog:variable_text:10683:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-anlaggningstillgangar"
+fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
+evidence = "Källan anger förskott för materiella anläggningstillgångar.\ncatalog:variable_text:10684:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Källan anger förskott för materiella anläggningstillgångar.\ncatalog:variable_text:10684:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-fran-kunder"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Kundförskott är en kortfristig skuldpost.\ncatalog:variable_text:10685:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forskott-fran-kunder"
+fields = { "tags" = ["business"] }
+evidence = "Kundförskott är en kortfristig skuldpost.\ncatalog:variable_text:10685:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-upplupna-intakter"
+fields = { "sets" = ["kortfristiga-fordringar"] }
+evidence = "Posten är en komponent av kortfristiga fordringar.\ncatalog:variable_text:10686:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:forutbetalda-kostnader-upplupna-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Posten är en komponent av kortfristiga fordringar.\ncatalog:variable_text:10686:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum801"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger den sammanslagna intäktsposten.\ncatalog:variable_text:10687:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum801"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger den sammanslagna intäktsposten.\ncatalog:variable_text:10687:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum802"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella plusposter.\ncatalog:variable_text:10688:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum802"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella plusposter.\ncatalog:variable_text:10688:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum803"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella minusposter.\ncatalog:variable_text:10689:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum803"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella minusposter.\ncatalog:variable_text:10689:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum901"
+fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av pågående nyanläggningar och förskott.\ncatalog:variable_text:10690:18993:19723\ncatalog:variable_text:10690:7305:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum901"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summan av pågående nyanläggningar och förskott.\ncatalog:variable_text:10690:18993:19723\ncatalog:variable_text:10690:7305:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum903"
+fields = { "sets" = [] }
+evidence = "Källkolumnens kod är opak; etiketten anger varulager och kortfristiga fordringar. Kandidatgruppen för kortfristiga fordringar utesluter denna sammanslagning.\ncatalog:variable_text:10691:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum903"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är opak; etiketten anger varulager och kortfristiga fordringar. Kandidatgruppen för kortfristiga fordringar utesluter denna sammanslagning.\ncatalog:variable_text:10691:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum904"
+fields = { "sets" = [] }
+evidence = "Källkolumnens kod är opak; etiketten anger summan av kortfristiga placeringar och kassa eller bank. Kandidatgruppen för kortfristiga placeringar utesluter kassa och bank.\ncatalog:variable_text:10692:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum904"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Källkolumnens kod är opak; etiketten anger summan av kortfristiga placeringar och kassa eller bank. Kandidatgruppen för kortfristiga placeringar utesluter kassa och bank.\ncatalog:variable_text:10692:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum906"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summa fritt eget kapital.\ncatalog:variable_text:10693:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum906"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger summa fritt eget kapital.\ncatalog:variable_text:10693:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum907"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Källkolumnens kod är opak; etiketten anger övriga avsättningar inklusive skatter och garantier.\ncatalog:variable_text:10694:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fsum907"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är opak; etiketten anger övriga avsättningar inklusive skatter och garantier.\ncatalog:variable_text:10694:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gemkalla"
+fields = { "sets" = [] }
+evidence = "Variabeln anger datakälla.\ncatalog:variable_text:10695:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:gemkalla"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger datakälla.\ncatalog:variable_text:10695:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:hjenhet"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver företagsenhetens funktion.\ncatalog:variable_text:10696:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hjenhet"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen beskriver företagsenhetens funktion.\ncatalog:variable_text:10696:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:huvar"
+fields = { "sets" = [] }
+evidence = "Källkolumnens kod är opak; etiketten beskriver summeringen.\ncatalog:variable_text:10697:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:huvar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnens kod är opak; etiketten beskriver summeringen.\ncatalog:variable_text:10697:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-524"
+fields = { "sets" = ["pensionskostnader"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade pensionskostnader.\ncatalog:variable_text:10698:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-524"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade pensionskostnader.\ncatalog:variable_text:10698:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-527"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade övriga personalkostnader. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler anger inte sociala avgifter eller sociala och andra personalkostnader. membership-0118: Övriga sociala avgifter och det sammanslagna måttet omfattas. Enbart övriga personalkostnader är inte ett belagt socialt eller sammanslaget mått enligt definitionen. membership-0119: Den historiska kolumnen anger övriga sociala avgifter tillsammans med pensionskostnader, vilket definitionen omfattar. membership-0120: Det valda pensionskostnadsvärdet mäter enbart pensioner, inte sociala avgifter eller ett sammanslaget socialt personalkostnadsmått. membership-0121: Övriga sociala avgifter ingår uttryckligen. Separat pensionskostnad och totala personalkostnader motsvarar inte gruppens sammanslagna mått. membership-0122: Etiketten och beskrivningen anger övriga sociala avgifter, som uttryckligen ingår i kandidaten. membership-0123: Övriga sociala avgifter och det imputerade värdet för övriga personalkostnader stöds av kandidatens fasta omfattning; imputering ändrar inte sakbegreppet.\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10749:12053:13514\ncatalog:variable_text:10756:12053:13514\ncatalog:variable_text:10757:9862:12053\ncatalog:variable_text:10765:12784:13514\ncatalog:variable_text:10827:12053:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10859:18993:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-527"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade övriga personalkostnader. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler anger inte sociala avgifter eller sociala och andra personalkostnader. membership-0118: Övriga sociala avgifter och det sammanslagna måttet omfattas. Enbart övriga personalkostnader är inte ett belagt socialt eller sammanslaget mått enligt definitionen. membership-0119: Den historiska kolumnen anger övriga sociala avgifter tillsammans med pensionskostnader, vilket definitionen omfattar. membership-0120: Det valda pensionskostnadsvärdet mäter enbart pensioner, inte sociala avgifter eller ett sammanslaget socialt personalkostnadsmått. membership-0121: Övriga sociala avgifter ingår uttryckligen. Separat pensionskostnad och totala personalkostnader motsvarar inte gruppens sammanslagna mått. membership-0122: Etiketten och beskrivningen anger övriga sociala avgifter, som uttryckligen ingår i kandidaten. membership-0123: Övriga sociala avgifter och det imputerade värdet för övriga personalkostnader stöds av kandidatens fasta omfattning; imputering ändrar inte sakbegreppet.\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10749:12053:13514\ncatalog:variable_text:10756:12053:13514\ncatalog:variable_text:10757:9862:12053\ncatalog:variable_text:10765:12784:13514\ncatalog:variable_text:10827:12053:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10859:18993:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Variabeln är en imputeringsmarkör för ett värde. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Den skyddade fasta inkluderingen behålls trots att r110 beskriver imputering av ett variabelvärde. Övriga valda variabler är inte imputeringsmarkörer. membership-0118: Ingen vald post är en imputeringsmarkör. Det valda imputerade råvarukostnadsvärdet är ett sakvärde och utesluts uttryckligen. membership-0119: Båda variablerna markerar imputering av företag eller ingående juridiska enheter. membership-0120: Det valda imputerade värdet mäter pensionskostnader, inte imputeringsstatus. membership-0121: Ingen sektionsvariabel är en markör för imputerat företag eller juridisk enhet. membership-0122: Ingen vald variabel i sektionen är en markör för imputerat företag eller juridisk enhet. membership-0123: Det valda imputerade personalkostnadsvärdet är ett sakbelopp, inte en markör för imputerat företag.\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10701:7305:20089\ncatalog:variable_text:10702:19358:19723\ncatalog:variable_text:10703:12053:18993\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsmarkör för ett värde. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Den skyddade fasta inkluderingen behålls trots att r110 beskriver imputering av ett variabelvärde. Övriga valda variabler är inte imputeringsmarkörer. membership-0118: Ingen vald post är en imputeringsmarkör. Det valda imputerade råvarukostnadsvärdet är ett sakvärde och utesluts uttryckligen. membership-0119: Båda variablerna markerar imputering av företag eller ingående juridiska enheter. membership-0120: Det valda imputerade värdet mäter pensionskostnader, inte imputeringsstatus. membership-0121: Ingen sektionsvariabel är en markör för imputerat företag eller juridisk enhet. membership-0122: Ingen vald variabel i sektionen är en markör för imputerat företag eller juridisk enhet. membership-0123: Det valda imputerade personalkostnadsvärdet är ett sakbelopp, inte en markör för imputerat företag.\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10701:7305:20089\ncatalog:variable_text:10702:19358:19723\ncatalog:variable_text:10703:12053:18993\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerade-foretag"
+fields = { "sets" = [] }
+evidence = "Variabeln anger imputerade företag.\ncatalog:variable_text:10701:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerade-foretag"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger imputerade företag.\ncatalog:variable_text:10701:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeradje"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar imputerade juridiska enheter.\ncatalog:variable_text:10702:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeradje"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar imputerade juridiska enheter.\ncatalog:variable_text:10702:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-kostnader-ravaror"
+fields = { "sets" = ["kostnader-for-ravaror"] }
+evidence = "Värdet avser råvarukostnader och är uttryckligen imputerat.\ncatalog:variable_text:10703:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-kostnader-ravaror"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Värdet avser råvarukostnader och är uttryckligen imputerat.\ncatalog:variable_text:10703:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:infi"
+fields = { "sets" = [] }
+evidence = "INFI är en opak akronym som inte förekommer i etiketten.\ncatalog:variable_text:10704:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:infi"
+fields = { "tags" = ["methods"] }
+evidence = "INFI är en opak akronym som inte förekommer i etiketten.\ncatalog:variable_text:10704:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-varor-tjanster-totalt"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets inköp.\ncatalog:variable_text:10705:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-varor-tjanster-totalt"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets inköp.\ncatalog:variable_text:10705:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel"
+fields = { "sets" = [] }
+evidence = "Intäkterna avser försäljning av handelsvaror.\ncatalog:variable_text:10706:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Intäkterna avser försäljning av handelsvaror.\ncatalog:variable_text:10706:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri"
+fields = { "sets" = [] }
+evidence = "Intäkterna avser industriverksamhet.\ncatalog:variable_text:10707:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri"
+fields = { "tags" = ["business"] }
+evidence = "Intäkterna avser industriverksamhet.\ncatalog:variable_text:10707:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt"
+fields = { "sets" = [] }
+evidence = "Intäkterna avser övrig verksamhet.\ncatalog:variable_text:10708:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt"
+fields = { "tags" = ["business"] }
+evidence = "Intäkterna avser övrig verksamhet.\ncatalog:variable_text:10708:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-annan"
+fields = { "sets" = ["intakter-fran-internt-levererade-fardiga-varor"] }
+evidence = "Intäkterna avser varor från annan verksamhet i företaget.\ncatalog:variable_text:10709:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-annan"
+fields = { "tags" = ["business"] }
+evidence = "Intäkterna avser varor från annan verksamhet i företaget.\ncatalog:variable_text:10709:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-som-levererats-fran-vgr1023"
+fields = { "sets" = ["intakter-fran-internt-levererade-fardiga-varor"] }
+evidence = "Intäkterna avser varor från annan verksamhet i företaget.\ncatalog:variable_text:10710:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-fardiga-varor-som-levererats-fran-vgr1023"
+fields = { "tags" = ["business"] }
+evidence = "Intäkterna avser varor från annan verksamhet i företaget.\ncatalog:variable_text:10710:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-lgr432"
+fields = { "sets" = ["intakter-fran-kommissionarsverksamhet"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10711:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-lgr432"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10711:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-vgr432"
+fields = { "sets" = ["intakter-fran-kommissionarsverksamhet"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10712:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-kommissionarsverksamhet-vgr432"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10712:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-lgr431"
+fields = { "sets" = ["intakter-fran-koncernintern-hjalpverksamhet"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10713:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-lgr431"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10713:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-vgr431"
+fields = { "sets" = ["intakter-fran-koncernintern-hjalpverksamhet"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10714:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-koncernintern-hjalpverksamhet-vgr431"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10714:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision"
+fields = { "sets" = ["provisionsintakter"] }
+evidence = "Variabeln avser provisionsintäkter.\ncatalog:variable_text:10715:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser provisionsintäkter.\ncatalog:variable_text:10715:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision-vgr425"
+fields = { "sets" = ["provisionsintakter"] }
+evidence = "Variabeln avser provisionsintäkter.\ncatalog:variable_text:10716:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-fran-provision-vgr425"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser provisionsintäkter.\ncatalog:variable_text:10716:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-hjalpverksamhet-holdingbolag"
+fields = { "sets" = ["intakter-fran-koncernintern-hjalpverksamhet"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10717:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-hjalpverksamhet-holdingbolag"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser koncernintern hjälpverksamhet.\ncatalog:variable_text:10717:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-kommissionarsverksamhet"
+fields = { "sets" = ["intakter-fran-kommissionarsverksamhet"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10718:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-kommissionarsverksamhet"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser kommissionärsintäkter.\ncatalog:variable_text:10718:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-egenproducerade-varor-vgr0872"
+fields = { "sets" = ["interna-kop-av-egenproducerade-varor"] }
+evidence = "Variabeln avser interna köp av egenproducerade varor.\ncatalog:variable_text:10719:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-egenproducerade-varor-vgr0872"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna köp av egenproducerade varor.\ncatalog:variable_text:10719:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-handelsvaror-vgr0873"
+fields = { "sets" = ["interna-kop-av-handelsvaror"] }
+evidence = "Variabeln avser interna köp av handelsvaror.\ncatalog:variable_text:10720:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-handelsvaror-vgr0873"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna köp av handelsvaror.\ncatalog:variable_text:10720:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror"
+fields = { "sets" = ["interna-kop-av-ravaror"] }
+evidence = "Variabeln avser interna råvaruköp.\ncatalog:variable_text:10721:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna råvaruköp.\ncatalog:variable_text:10721:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror-vgr0871"
+fields = { "sets" = ["interna-kop-av-ravaror"] }
+evidence = "Variabeln avser interna råvaruköp.\ncatalog:variable_text:10722:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-ravaror-vgr0871"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna råvaruköp.\ncatalog:variable_text:10722:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster"
+fields = { "sets" = ["interna-kop-av-tjanster"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10723:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10723:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgr0874"
+fields = { "sets" = ["interna-kop-av-tjanster"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10724:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgr0874"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10724:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgrk0873"
+fields = { "sets" = ["interna-kop-av-tjanster"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10725:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-av-tjanster-vgrk0873"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna tjänsteköp.\ncatalog:variable_text:10725:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-egenproducerade-varor"
+fields = { "sets" = ["interna-kop-av-egenproducerade-varor"] }
+evidence = "Variabeln avser interna köp av egenproducerade varor.\ncatalog:variable_text:10726:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-egenproducerade-varor"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna köp av egenproducerade varor.\ncatalog:variable_text:10726:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-handelsvaror"
+fields = { "sets" = ["interna-kop-av-handelsvaror"] }
+evidence = "Variabeln avser interna köp av handelsvaror.\ncatalog:variable_text:10727:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-kop-handelsvaror"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser interna köp av handelsvaror.\ncatalog:variable_text:10727:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-egenproducerade-fardiga-varor-vgr0472"
+fields = { "sets" = ["internleveranser-av-egenproducerade-varor"] }
+evidence = "Variabeln avser internleveranser av egenproducerade varor.\ncatalog:variable_text:10728:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-egenproducerade-fardiga-varor-vgr0472"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser internleveranser av egenproducerade varor.\ncatalog:variable_text:10728:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-handelsvaror-och-tjanster-vgr0473"
+fields = { "sets" = ["internleveranser-av-handelsvaror-och-tjanster"] }
+evidence = "Variabeln avser internleveranser av handelsvaror och tjänster.\ncatalog:variable_text:10729:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-handelsvaror-och-tjanster-vgr0473"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser internleveranser av handelsvaror och tjänster.\ncatalog:variable_text:10729:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-ravaror-och-halvfabrikat-for-vgr0471"
+fields = { "sets" = ["internleveranser-av-ravaror-och-halvfabrikat"] }
+evidence = "Källan beskriver internleveranser av råvaror och halvfabrikat; en annan nivå mäter samma begrepp.\ncatalog:variable_text:10730:12053:18993\ncatalog:variable_text:10733:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-av-ravaror-och-halvfabrikat-for-vgr0471"
+fields = { "tags" = ["business"] }
+evidence = "Källan beskriver internleveranser av råvaror och halvfabrikat; en annan nivå mäter samma begrepp.\ncatalog:variable_text:10730:12053:18993\ncatalog:variable_text:10733:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-egenproducerade-varor"
+fields = { "sets" = ["internleveranser-av-egenproducerade-varor"] }
+evidence = "Variabeln avser internleveranser av egenproducerade varor.\ncatalog:variable_text:10731:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-egenproducerade-varor"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser internleveranser av egenproducerade varor.\ncatalog:variable_text:10731:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-handelsvaror-tjanster"
+fields = { "sets" = ["internleveranser-av-handelsvaror-och-tjanster"] }
+evidence = "Variabeln avser internleveranser av handelsvaror och tjänster.\ncatalog:variable_text:10732:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-handelsvaror-tjanster"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser internleveranser av handelsvaror och tjänster.\ncatalog:variable_text:10732:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-ravaror-halvfabrikat"
+fields = { "sets" = ["internleveranser-av-ravaror-och-halvfabrikat"] }
+evidence = "Källan beskriver samma internleveranser som verksamhetsenhetens mått.\ncatalog:variable_text:10730:12053:18993\ncatalog:variable_text:10733:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:internleveranser-ravaror-halvfabrikat"
+fields = { "tags" = ["business"] }
+evidence = "Källan beskriver samma internleveranser som verksamhetsenhetens mått.\ncatalog:variable_text:10730:12053:18993\ncatalog:variable_text:10733:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:invenkat"
+fields = { "sets" = [] }
+evidence = "Värdemängderna skiljer deltagande från population och urval medan definitionen anger godkänd enkät.\ncatalog:valueset:12026\ncatalog:valueset:6259\ncatalog:variable_text:10734:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:invenkat"
+fields = { "tags" = ["methods"] }
+evidence = "Värdemängderna skiljer deltagande från population och urval medan definitionen anger godkänd enkät.\ncatalog:valueset:12026\ncatalog:valueset:6259\ncatalog:variable_text:10734:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:invkalla"
+fields = { "sets" = [] }
+evidence = "Variabeln anger uppgiftskälla.\ncatalog:variable_text:10735:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:invkalla"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger uppgiftskälla.\ncatalog:variable_text:10735:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ivp"
+fields = { "sets" = [] }
+evidence = "IVP är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10736:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ivp"
+fields = { "tags" = ["methods"] }
+evidence = "IVP är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10736:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:10737:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:10737:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank"
+fields = { "sets" = [] }
+evidence = "Kassa och bank är en företagstillgång.\ncatalog:variable_text:10738:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kassa-och-bank"
+fields = { "tags" = ["business"] }
+evidence = "Kassa och bank är en företagstillgång.\ncatalog:variable_text:10738:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kgr0128"
+fields = { "sets" = ["personalkostnader"] }
+evidence = "Källkolumnen är en opak kod; etiketten anger personalkostnader på kommunnivå.\ncatalog:variable_text:10739:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kgr0128"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen är en opak kod; etiketten anger personalkostnader på kommunnivå.\ncatalog:variable_text:10739:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Kommun och säteskommun är två former av kommunanknytning.\ncatalog:variable_text:10740:12053:18993\ncatalog:variable_text:10854:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och säteskommun är två former av kommunanknytning.\ncatalog:variable_text:10740:12053:18993\ncatalog:variable_text:10854:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-bokslutsdispositioner"
+fields = { "sets" = ["bokslutsdispositioner", "koncernbidrag"] }
+evidence = "Posten är koncernbidrag inom bokslutsdispositioner.\ncatalog:variable_text:10741:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-bokslutsdispositioner"
+fields = { "tags" = ["business"] }
+evidence = "Posten är koncernbidrag inom bokslutsdispositioner.\ncatalog:variable_text:10741:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-eget-kapital"
+fields = { "sets" = ["forandringar-av-eget-kapital", "koncernbidrag"] }
+evidence = "Posten är koncernbidrag redovisat i eget kapital. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0118: Poster för kapitalförändringar, ägartransaktioner och fondjusteringar omfattas enligt den fasta definitionen. membership-0119: De valda kapitalvariablerna är bestånd, inte kapitalförändringar eller ägartransaktioner. membership-0120: Ingen vald variabel i sektionen avser förändringar av eget kapital. membership-0121: Sektionens intäkter, kostnader och avyttringsresultat är inte uttryckliga kapitalförändringar eller ägartransaktioner. membership-0122: Ingen vald variabel i sektionen avser kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0123: Ingen vald variabel i denna sektion mäter kapitalförändringar eller kandidatens ägartransaktioner. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte koncernbidrag. membership-0118: Båda posterna avser koncernbidrag i de redovisningar som definitionen omfattar. membership-0119: Den valda totalsumman för bokslutsdispositioner är inte ett separat koncernbidragsmått. membership-0120: Ingen vald variabel i sektionen avser koncernbidrag. membership-0121: Ingen sektionsvariabel anger koncernbidrag. membership-0122: Ingen vald variabel i sektionen avser koncernbidrag. membership-0123: Ingen vald variabel i denna sektion mäter koncernbidrag.\ncatalog:variable_text:10564:12053:18993\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10647:12053:18993\ncatalog:variable_text:10648:12053:18993\ncatalog:variable_text:10663:13149:18993\ncatalog:variable_text:10674:12053:18993\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10741:18993:19723\ncatalog:variable_text:10742:12053:18993\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10777:12053:18993\ncatalog:variable_text:10778:12053:18993\ncatalog:variable_text:10809:12053:18993\ncatalog:variable_text:10810:12053:18993\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10895:12053:18993\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernbidrag-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten är koncernbidrag redovisat i eget kapital. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0118: Poster för kapitalförändringar, ägartransaktioner och fondjusteringar omfattas enligt den fasta definitionen. membership-0119: De valda kapitalvariablerna är bestånd, inte kapitalförändringar eller ägartransaktioner. membership-0120: Ingen vald variabel i sektionen avser förändringar av eget kapital. membership-0121: Sektionens intäkter, kostnader och avyttringsresultat är inte uttryckliga kapitalförändringar eller ägartransaktioner. membership-0122: Ingen vald variabel i sektionen avser kapitalförändringar, ägartransaktioner eller fondjusteringar. membership-0123: Ingen vald variabel i denna sektion mäter kapitalförändringar eller kandidatens ägartransaktioner. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte koncernbidrag. membership-0118: Båda posterna avser koncernbidrag i de redovisningar som definitionen omfattar. membership-0119: Den valda totalsumman för bokslutsdispositioner är inte ett separat koncernbidragsmått. membership-0120: Ingen vald variabel i sektionen avser koncernbidrag. membership-0121: Ingen sektionsvariabel anger koncernbidrag. membership-0122: Ingen vald variabel i sektionen avser koncernbidrag. membership-0123: Ingen vald variabel i denna sektion mäter koncernbidrag.\ncatalog:variable_text:10564:12053:18993\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10647:12053:18993\ncatalog:variable_text:10648:12053:18993\ncatalog:variable_text:10663:13149:18993\ncatalog:variable_text:10674:12053:18993\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10741:18993:19723\ncatalog:variable_text:10742:12053:18993\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10777:12053:18993\ncatalog:variable_text:10778:12053:18993\ncatalog:variable_text:10809:12053:18993\ncatalog:variable_text:10810:12053:18993\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10895:12053:18993\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:konsolideringssparr"
+fields = { "sets" = [] }
+evidence = "Markören beskriver manuell hantering av en statistisk modell.\ncatalog:variable_text:10743:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:konsolideringssparr"
+fields = { "tags" = ["methods"] }
+evidence = "Markören beskriver manuell hantering av en statistisk modell.\ncatalog:variable_text:10743:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kortfristiga-fordringar-koncern"
+fields = { "sets" = ["fordringar-pa-koncern-och-intresseforetag", "kortfristiga-fordringar"] }
+evidence = "Posten är kortfristiga fordringar på koncern- och intresseföretag.\ncatalog:variable_text:10744:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kortfristiga-fordringar-koncern"
+fields = { "tags" = ["business"] }
+evidence = "Posten är kortfristiga fordringar på koncern- och intresseföretag.\ncatalog:variable_text:10744:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-justerat-for-vhar502-jmf"
+fields = { "sets" = ["kostnader-for-handelsvaror"] }
+evidence = "Det merchantingjusterade måttet hör till kostnader för handelsvaror.\ncatalog:variable_text:10745:18993:19723\ncatalog:variable_text:10753:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-justerat-for-vhar502-jmf"
+fields = { "tags" = ["business"] }
+evidence = "Det merchantingjusterade måttet hör till kostnader för handelsvaror.\ncatalog:variable_text:10745:18993:19723\ncatalog:variable_text:10753:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-lgr502"
+fields = { "sets" = ["kostnader-for-handelsvaror"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10746:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-lgr502"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10746:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-vgr502"
+fields = { "sets" = ["kostnader-for-handelsvaror"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10747:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-handelsvaror-vgr502"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10747:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
+fields = { "sets" = [] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10748:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10748:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-vgr520"
+fields = { "sets" = [] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10749:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-vgr520"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10749:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror"
+fields = { "sets" = ["kostnader-for-ravaror"] }
+evidence = "Variabeln mäter företagets råvarukostnader.\ncatalog:variable_text:10750:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter företagets råvarukostnader.\ncatalog:variable_text:10750:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-lgr503"
+fields = { "sets" = ["kostnader-for-ravaror"] }
+evidence = "Variabeln mäter råvarukostnader.\ncatalog:variable_text:10751:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-lgr503"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter råvarukostnader.\ncatalog:variable_text:10751:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-vgr503"
+fields = { "sets" = ["kostnader-for-ravaror"] }
+evidence = "Variabeln mäter råvarukostnader.\ncatalog:variable_text:10752:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ravaror-vgr503"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter råvarukostnader.\ncatalog:variable_text:10752:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror"
+fields = { "sets" = ["kostnader-for-handelsvaror"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10753:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text:10753:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror-merchanting"
+fields = { "sets" = ["kostnader-for-handelsvaror"] }
+evidence = "Det merchantingjusterade måttet hör till kostnader för handelsvaror.\ncatalog:variable_text:10754:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-handelsvaror-merchanting"
+fields = { "tags" = ["business"] }
+evidence = "Det merchantingjusterade måttet hör till kostnader för handelsvaror.\ncatalog:variable_text:10754:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-loner-ersattningar"
+fields = { "sets" = ["loner-och-andra-ersattningar"] }
+evidence = "Måttet hör till kostnader för löner och andra ersättningar.\ncatalog:variable_text:10755:19358:19723\ncatalog:variable_text:10766:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-loner-ersattningar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet hör till kostnader för löner och andra ersättningar.\ncatalog:variable_text:10755:19358:19723\ncatalog:variable_text:10766:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-ovriga-sociala-avgifter"
+fields = { "sets" = [] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10756:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-ovriga-sociala-avgifter"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10756:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnaderforovrigasocialaavgifterochpensionskostnader"
+fields = { "sets" = [] }
+evidence = "Den historiska kolumnen anger sociala avgifter och pensionskostnader.\ncatalog:variable_text:10757:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnaderforovrigasocialaavgifterochpensionskostnader"
+fields = { "tags" = ["business"] }
+evidence = "Den historiska kolumnen anger sociala avgifter och pensionskostnader.\ncatalog:variable_text:10757:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar"
+fields = { "sets" = ["kortfristiga-fordringar"] }
+evidence = "Kundfordringar är en kortfristig balanspost.\ncatalog:variable_text:10758:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar"
+fields = { "tags" = ["business"] }
+evidence = "Kundfordringar är en kortfristig balanspost.\ncatalog:variable_text:10758:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-fordringar-koncern"
+fields = { "sets" = ["fordringar-pa-koncern-och-intresseforetag"] }
+evidence = "Den tidigare posten saknar löptidsangivelse medan denna anger långfristiga fordringar.\ncatalog:occurrence:88816\ncatalog:occurrence:89677\ncatalog:variable_text:10759:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-fordringar-koncern"
+fields = { "tags" = ["business"] }
+evidence = "Den tidigare posten saknar löptidsangivelse medan denna anger långfristiga fordringar.\ncatalog:occurrence:88816\ncatalog:occurrence:89677\ncatalog:variable_text:10759:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristigaaktierochandelar"
+fields = { "sets" = [] }
+evidence = "Den historiska kolumnen anger långfristiga aktier och andelar.\ncatalog:variable_text:10760:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristigaaktierochandelar"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Den historiska kolumnen anger långfristiga aktier och andelar.\ncatalog:variable_text:10760:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-kgr501"
+fields = { "sets" = ["legoarbeten-och-underentreprenorer"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer på kommunnivå.\ncatalog:variable_text:10761:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-kgr501"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer på kommunnivå.\ncatalog:variable_text:10761:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-vgr501"
+fields = { "sets" = ["legoarbeten-och-underentreprenorer"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer på verksamhetsenhetsnivå.\ncatalog:variable_text:10762:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-och-underentreprenorer-vgr501"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer på verksamhetsenhetsnivå.\ncatalog:variable_text:10762:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-underentreprenorer"
+fields = { "sets" = ["legoarbeten-och-underentreprenorer"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer.\ncatalog:variable_text:10763:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:legoarbeten-underentreprenorer"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter legoarbeten och underentreprenörer.\ncatalog:variable_text:10763:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Leverantörsskulder är en kortfristig skuldpost.\ncatalog:variable_text:10764:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder"
+fields = { "tags" = ["business"] }
+evidence = "Leverantörsskulder är en kortfristig skuldpost.\ncatalog:variable_text:10764:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lgr520"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger övriga sociala avgifter.\ncatalog:variable_text:10765:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lgr520"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger övriga sociala avgifter.\ncatalog:variable_text:10765:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-och-andra-ersattningar"
+fields = { "sets" = ["loner-och-andra-ersattningar"] }
+evidence = "Måttet hör till löner och andra ersättningar på olika redovisningsnivåer.\ncatalog:variable_text:10755:19358:19723\ncatalog:variable_text:10766:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-och-andra-ersattningar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet hör till löner och andra ersättningar på olika redovisningsnivåer.\ncatalog:variable_text:10755:19358:19723\ncatalog:variable_text:10766:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mark"
+fields = { "sets" = ["byggnader-mark-och-markanlaggningar"] }
+evidence = "Posten avser materiella anläggningstillgångar i form av mark.\ncatalog:variable_text:10768:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:mark"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser materiella anläggningstillgångar i form av mark.\ncatalog:variable_text:10768:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier"
+fields = { "sets" = [] }
+evidence = "Måttet är ett bokfört företagstillgångsvärde.\ncatalog:variable_text:10769:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:maskiner-och-inventarier"
+fields = { "tags" = ["business"] }
+evidence = "Måttet är ett bokfört företagstillgångsvärde.\ncatalog:variable_text:10769:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter medelantal anställda.\ncatalog:variable_text:10770:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter medelantal anställda.\ncatalog:variable_text:10770:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln klassificerar näringsgren.\ncatalog:variable_text:10772:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar näringsgren.\ncatalog:variable_text:10772:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn är mappad till scb/fek/naringsgren-statistiken i nästa period.\ncatalog:occurrence:94135\ncatalog:occurrence:94153"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn är mappad till scb/fek/naringsgren-statistiken i nästa period.\ncatalog:occurrence:94135\ncatalog:occurrence:94153"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-3"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat mellan perioder med scb/fek/bransch.\ncatalog:occurrence:94807\ncatalog:occurrence:94825"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-3"
+fields = { "tags" = ["business"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat mellan perioder med scb/fek/bransch.\ncatalog:occurrence:94807\ncatalog:occurrence:94825"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln klassificerar näringsgren för statistiken.\ncatalog:variable_text:10775:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar näringsgren för statistiken.\ncatalog:variable_text:10775:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-statistiken"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn är mappad till scb/fek/naringsgren-2 i föregående period.\ncatalog:occurrence:94135\ncatalog:occurrence:94153"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn är mappad till scb/fek/naringsgren-2 i föregående period.\ncatalog:occurrence:94135\ncatalog:occurrence:94153"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattning-aktiekapital"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Nedsättning är en kapitalförändring.\ncatalog:variable_text:10777:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattning-aktiekapital"
+fields = { "tags" = ["business"] }
+evidence = "Nedsättning är en kapitalförändring.\ncatalog:variable_text:10777:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nedskrivning-mot-uppskrivningsfond"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Posten avser justering mot uppskrivningsfond.\ncatalog:variable_text:10778:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nedskrivning-mot-uppskrivningsfond"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser justering mot uppskrivningsfond.\ncatalog:variable_text:10778:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-mark"
+fields = { "sets" = ["nettoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet omfattar byggnader, markanläggningar och mark sammanslaget.\ncatalog:variable_text:10779:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-mark"
+fields = { "tags" = ["business"] }
+evidence = "Måttet omfattar byggnader, markanläggningar och mark sammanslaget.\ncatalog:variable_text:10779:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanl"
+fields = { "sets" = ["nettoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10780:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanl"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10780:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-kga24"
+fields = { "sets" = ["nettoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10781:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-kga24"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10781:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-lga24"
+fields = { "sets" = ["nettoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10782:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-lga24"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10782:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-vga24"
+fields = { "sets" = ["nettoinvesteringar-byggnader-markanlaggningar-och-mark"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10783:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-markanlaggningar-och-mark-vga24"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser den sammanslagna investeringskategorin.\ncatalog:variable_text:10783:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-kga22"
+fields = { "sets" = ["nettoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10784:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-kga22"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10784:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-vga22"
+fields = { "sets" = ["nettoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10785:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-byggnader-och-markanlaggningar-vga22"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10785:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent av nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10786:12053:18993\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent av nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10786:12053:18993\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-lga2102"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent.\ncatalog:variable_text:10787:17167:18993\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-lga2102"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent.\ncatalog:variable_text:10787:17167:18993\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-vga2102"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent.\ncatalog:variable_text:10788:18993:19723\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-fartyg-vga2102"
+fields = { "tags" = ["business"] }
+evidence = "Fartyg är en namngiven transportmedelskomponent.\ncatalog:variable_text:10788:18993:19723\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10789:12053:18993\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10789:12053:18993\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-lga2101"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10790:17167:18993\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-lga2101"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10790:17167:18993\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-vga2101"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10791:18993:19723\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-flygplan-vga2101"
+fields = { "tags" = ["business"] }
+evidence = "Flygplan är en namngiven transportmedelskomponent.\ncatalog:variable_text:10791:18993:19723\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-i-aktier"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagsinvesteringar i aktier.\ncatalog:variable_text:10792:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-i-aktier"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Måttet avser företagsinvesteringar i aktier.\ncatalog:variable_text:10792:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark"
+fields = { "sets" = ["nettoinvesteringar-mark"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10793:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10793:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-kga23"
+fields = { "sets" = ["nettoinvesteringar-mark"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10794:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-kga23"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10794:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-vga23"
+fields = { "sets" = ["nettoinvesteringar-mark"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10795:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-mark-vga23"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i mark.\ncatalog:variable_text:10795:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-inventarier"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-inventarier"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10796:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-kga21"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10797:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-kga21"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10797:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-lga21"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-lga21"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10798:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-vga21"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-maskiner-och-inventarier-vga21"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser nettoinvesteringar i maskiner och inventarier.\ncatalog:variable_text:10799:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10796:18993:19723\ncatalog:variable_text:10800:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10796:18993:19723\ncatalog:variable_text:10800:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-lga2103"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10798:17167:18993\ncatalog:variable_text:10801:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-lga2103"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10798:17167:18993\ncatalog:variable_text:10801:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-vga2103"
+fields = { "sets" = ["nettoinvesteringar-maskiner-och-inventarier"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10799:18993:19723\ncatalog:variable_text:10802:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoinvesteringar-ralsfordon-vga2103"
+fields = { "tags" = ["business"] }
+evidence = "Rälsfordon är en namngiven transportmedelskomponent.\ncatalog:variable_text:10799:18993:19723\ncatalog:variable_text:10802:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Samma lokala källkolumn är mappad till nettoomsättning och merchantingjusterad nettoomsättning i angränsande perioder.\ncatalog:occurrence:94803\ncatalog:occurrence:94821"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning"
+fields = { "tags" = ["business"] }
+evidence = "Samma lokala källkolumn är mappad till nettoomsättning och merchantingjusterad nettoomsättning i angränsande perioder.\ncatalog:occurrence:94803\ncatalog:occurrence:94821"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-justerad-merchanting"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Samma lokala källkolumn är mappad till nettoomsättning och merchantingjusterad nettoomsättning i angränsande perioder.\ncatalog:occurrence:94803\ncatalog:occurrence:94821"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-justerad-merchanting"
+fields = { "tags" = ["business"] }
+evidence = "Samma lokala källkolumn är mappad till nettoomsättning och merchantingjusterad nettoomsättning i angränsande perioder.\ncatalog:occurrence:94803\ncatalog:occurrence:94821"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-ej-aktuell"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10805:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-ej-aktuell"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10805:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-styr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10806:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-styr"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10806:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-styr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ngs är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10807:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-styr"
+fields = { "tags" = ["business"] }
+evidence = "Ngs är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10807:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nrbr-upd"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger nationalräkenskapernas branschindelning.\ncatalog:variable_text:10808:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nrbr-upd"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger nationalräkenskapernas branschindelning.\ncatalog:variable_text:10808:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nyemission-inkl-overkurs"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Nyemission är en ägartransaktion som förändrar eget kapital.\ncatalog:variable_text:10809:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nyemission-inkl-overkurs"
+fields = { "tags" = ["business"] }
+evidence = "Nyemission är en ägartransaktion som förändrar eget kapital.\ncatalog:variable_text:10809:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:oforklarade-forandringar-eget-kapital"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Posten avser oförklarade kapitalförändringar.\ncatalog:variable_text:10810:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:oforklarade-forandringar-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser oförklarade kapitalförändringar.\ncatalog:variable_text:10810:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:omrakn"
+fields = { "sets" = [] }
+evidence = "Koden beskriver bearbetning av räkenskapsuppgifter.\ncatalog:variable_text:10811:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:omrakn"
+fields = { "tags" = ["methods"] }
+evidence = "Koden beskriver bearbetning av räkenskapsuppgifter.\ncatalog:variable_text:10811:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "sets" = [] }
+evidence = "Outlierkoden är en statistisk kvalitetsmarkör.\ncatalog:variable_text:10812:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "tags" = ["methods"] }
+evidence = "Outlierkoden är en statistisk kvalitetsmarkör.\ncatalog:variable_text:10812:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:overkursfond"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Överkursfond är en beståndsdel av eget kapital.\ncatalog:variable_text:10813:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:overkursfond"
+fields = { "tags" = ["business"] }
+evidence = "Överkursfond är en beståndsdel av eget kapital.\ncatalog:variable_text:10813:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar"
+fields = { "sets" = ["avsattningar"] }
+evidence = "Övriga avsättningar är en delpost i avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10814:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-avsattningar"
+fields = { "tags" = ["business"] }
+evidence = "Övriga avsättningar är en delpost i avsättningar och en företagsekonomisk balanspost.\ncatalog:variable_text:10814:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-bokslutsdispositioner"
+fields = { "sets" = ["bokslutsdispositioner"] }
+evidence = "Posten avser övriga bokslutsdispositioner.\ncatalog:variable_text:10815:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-bokslutsdispositioner"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga bokslutsdispositioner.\ncatalog:variable_text:10815:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader"
+fields = { "sets" = [] }
+evidence = "Måttet avser företags externa kostnader.\ncatalog:variable_text:10816:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företags externa kostnader.\ncatalog:variable_text:10816:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-intakter"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets finansiella intäkter.\ncatalog:variable_text:10817:12053:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets finansiella intäkter.\ncatalog:variable_text:10817:12053:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-kostnader"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets finansiella kostnader.\ncatalog:variable_text:10818:12053:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets finansiella kostnader.\ncatalog:variable_text:10818:12053:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Kandidaten omfattar lokalt benämnda övriga intäkter.\ncatalog:variable_text:10819:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Kandidaten omfattar lokalt benämnda övriga intäkter.\ncatalog:variable_text:10819:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar"
+fields = { "sets" = ["kortfristiga-fordringar"] }
+evidence = "Posten är en komponent av kortfristiga fordringar.\ncatalog:variable_text:10820:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-fordringar"
+fields = { "tags" = ["business"] }
+evidence = "Posten är en komponent av kortfristiga fordringar.\ncatalog:variable_text:10820:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-placeringar"
+fields = { "sets" = ["kortfristiga-placeringar"] }
+evidence = "Övriga placeringar är en namngiven delpost till summan.\ncatalog:variable_text:10821:12053:13514\ncatalog:variable_text:10872:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-placeringar"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Övriga placeringar är en namngiven delpost till summan.\ncatalog:variable_text:10821:12053:13514\ncatalog:variable_text:10872:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-skulder"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Posten avser övriga kortfristiga skulder.\ncatalog:variable_text:10822:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kortfristiga-skulder"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga kortfristiga skulder.\ncatalog:variable_text:10822:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "sets" = ["ovriga-rorelsekostnader"] }
+evidence = "Källan visar samma begrepp i perioder som korrekt delats med scb/fek/ovriga-kostnader-2.\ncatalog:occurrence:94798\ncatalog:occurrence:94816\ncatalog:occurrence:94911\ncatalog:occurrence:94930\ncatalog:occurrence:94949"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Källan visar samma begrepp i perioder som korrekt delats med scb/fek/ovriga-kostnader-2.\ncatalog:occurrence:94798\ncatalog:occurrence:94816\ncatalog:occurrence:94911\ncatalog:occurrence:94930\ncatalog:occurrence:94949"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-2"
+fields = { "sets" = ["ovriga-rorelsekostnader"] }
+evidence = "Sifferändelsen är en tillagd räknare; källan visar samma begrepp i perioder som delats med scb/fek/ovriga-kostnader.\ncatalog:occurrence:94798\ncatalog:occurrence:94816\ncatalog:occurrence:94911\ncatalog:occurrence:94930\ncatalog:occurrence:94949"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-2"
+fields = { "tags" = ["business"] }
+evidence = "Sifferändelsen är en tillagd räknare; källan visar samma begrepp i perioder som delats med scb/fek/ovriga-kostnader.\ncatalog:occurrence:94798\ncatalog:occurrence:94816\ncatalog:occurrence:94911\ncatalog:occurrence:94930\ncatalog:occurrence:94949"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-langfristiga-skulder"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "Posten avser övriga långfristiga skulder.\ncatalog:variable_text:10825:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-langfristiga-skulder"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga långfristiga skulder.\ncatalog:variable_text:10825:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-obeskattade-reserver"
+fields = { "sets" = ["obeskattade-reserver"] }
+evidence = "Posten avser övriga obeskattade reserver.\ncatalog:variable_text:10826:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-obeskattade-reserver"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga obeskattade reserver.\ncatalog:variable_text:10826:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader"
+fields = { "sets" = [] }
+evidence = "Posten avser företagets övriga personalkostnader.\ncatalog:variable_text:10827:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser företagets övriga personalkostnader.\ncatalog:variable_text:10827:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelseintakter"
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Posten avser övriga rörelseintäkter.\ncatalog:variable_text:10828:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelseintakter"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser övriga rörelseintäkter.\ncatalog:variable_text:10828:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelsekostnader"
+fields = { "sets" = ["ovriga-rorelsekostnader"] }
+evidence = "Kandidaten omfattar även lokalt benämnda övriga kostnader.\ncatalog:variable_text:10823:15706:16071\ncatalog:variable_text:10829:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelsekostnader"
+fields = { "tags" = ["business"] }
+evidence = "Kandidaten omfattar även lokalt benämnda övriga kostnader.\ncatalog:variable_text:10823:15706:16071\ncatalog:variable_text:10829:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-bundet-eget-kapital"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Posten är en beståndsdel av eget kapital.\ncatalog:variable_text:10830:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-bundet-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten är en beståndsdel av eget kapital.\ncatalog:variable_text:10830:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-fritt-eget-kapital"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Posten är en beståndsdel av eget kapital.\ncatalog:variable_text:10831:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-fritt-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten är en beståndsdel av eget kapital.\ncatalog:variable_text:10831:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader"
+fields = { "sets" = ["pensionskostnader"] }
+evidence = "Posten avser företagets pensionskostnader.\ncatalog:variable_text:10832:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser företagets pensionskostnader.\ncatalog:variable_text:10832:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-kgr524"
+fields = { "sets" = ["pensionskostnader"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10833:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-kgr524"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10833:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-lgr524"
+fields = { "sets" = ["pensionskostnader"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10834:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-lgr524"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10834:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-vgr524"
+fields = { "sets" = ["pensionskostnader"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10835:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnader-vgr524"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser pensionskostnader.\ncatalog:variable_text:10835:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader"
+fields = { "sets" = ["personalkostnader"] }
+evidence = "Måttet avser totala personalkostnader på lokal nivå.\ncatalog:variable_text:10837:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser totala personalkostnader på lokal nivå.\ncatalog:variable_text:10837:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader-vgr0128"
+fields = { "sets" = ["personalkostnader"] }
+evidence = "Måttet avser totala personalkostnader på verksamhetsenhetsnivå.\ncatalog:variable_text:10838:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkostnader-vgr0128"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser totala personalkostnader på verksamhetsenhetsnivå.\ncatalog:variable_text:10838:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:privat-publikt-foretag"
+fields = { "sets" = [] }
+evidence = "Koden beskriver företagsform och notering.\ncatalog:valueset:11619\ncatalog:variable_text:10839:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:privat-publikt-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Koden beskriver företagsform och notering.\ncatalog:valueset:11619\ncatalog:variable_text:10839:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde"
+fields = { "sets" = [] }
+evidence = "Produktionsvärde är ett företagsmått.\ncatalog:variable_text:10840:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Produktionsvärde är ett företagsmått.\ncatalog:variable_text:10840:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter"
+fields = { "sets" = ["ranteintakter"] }
+evidence = "Posten avser ränteintäkter.\ncatalog:variable_text:10841:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser ränteintäkter.\ncatalog:variable_text:10841:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-fran-ovriga"
+fields = { "sets" = ["ranteintakter"] }
+evidence = "Posten avser ränteintäkter från övriga.\ncatalog:variable_text:10842:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-fran-ovriga"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser ränteintäkter från övriga.\ncatalog:variable_text:10842:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-koncernforetag"
+fields = { "sets" = ["ranteintakter"] }
+evidence = "Posten avser ränteintäkter från koncernföretag.\ncatalog:variable_text:10843:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-koncernforetag"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser ränteintäkter från koncernföretag.\ncatalog:variable_text:10843:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "Posten avser räntekostnader.\ncatalog:variable_text:10844:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser räntekostnader.\ncatalog:variable_text:10844:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-koncernforetag"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "Posten avser räntekostnader till koncernföretag.\ncatalog:variable_text:10845:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-koncernforetag"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser räntekostnader till koncernföretag.\ncatalog:variable_text:10845:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-till-ovriga"
+fields = { "sets" = ["rantekostnader"] }
+evidence = "Posten avser räntekostnader till övriga.\ncatalog:variable_text:10846:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-till-ovriga"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser räntekostnader till övriga.\ncatalog:variable_text:10846:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisat-resultat"
+fields = { "sets" = ["redovisat-slutresultat"] }
+evidence = "Posten avser redovisat resultat.\ncatalog:variable_text:10847:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisat-resultat"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser redovisat resultat.\ncatalog:variable_text:10847:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-finansiella-poster"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets resultat.\ncatalog:variable_text:10848:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-finansiella-poster"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets resultat.\ncatalog:variable_text:10848:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-fran-andelar-i-intresseforetag"
+fields = { "sets" = ["resultat-fran-agarandelar"] }
+evidence = "Resultatet från andelar i intresseföretag ingår i kandidatgruppen för resultat från ägarandelar.\ncatalog:variable_text:10849:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-fran-andelar-i-intresseforetag"
+fields = { "tags" = ["business"] }
+evidence = "Resultatet från andelar i intresseföretag ingår i kandidatgruppen för resultat från ägarandelar.\ncatalog:variable_text:10849:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat"
+fields = { "sets" = ["rorelseresultat"] }
+evidence = "Rörelseresultat och resultat före avskrivningar är kandidatens mått.\ncatalog:variable_text:10850:18993:19723\ncatalog:variable_text:10851:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat"
+fields = { "tags" = ["business"] }
+evidence = "Rörelseresultat och resultat före avskrivningar är kandidatens mått.\ncatalog:variable_text:10850:18993:19723\ncatalog:variable_text:10851:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar"
+fields = { "sets" = ["rorelseresultat"] }
+evidence = "Måttet är rörelseresultat före avskrivningar.\ncatalog:variable_text:10851:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet är rörelseresultat före avskrivningar.\ncatalog:variable_text:10851:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-lgr0130"
+fields = { "sets" = ["rorelseresultat"] }
+evidence = "Måttet är rörelseresultat före avskrivningar på lokal nivå.\ncatalog:variable_text:10852:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-lgr0130"
+fields = { "tags" = ["business"] }
+evidence = "Måttet är rörelseresultat före avskrivningar på lokal nivå.\ncatalog:variable_text:10852:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-vgr0130"
+fields = { "sets" = ["rorelseresultat"] }
+evidence = "Måttet är rörelseresultat före avskrivningar på verksamhetsenhetsnivå.\ncatalog:variable_text:10853:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseresultat-fore-avskrivningar-vgr0130"
+fields = { "tags" = ["business"] }
+evidence = "Måttet är rörelseresultat före avskrivningar på verksamhetsenhetsnivå.\ncatalog:variable_text:10853:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Säteskommun och kommun är två former av kommunanknytning.\ncatalog:variable_text:10740:12053:18993\ncatalog:variable_text:10854:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Säteskommun och kommun är två former av kommunanknytning.\ncatalog:variable_text:10740:12053:18993\ncatalog:variable_text:10854:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Institutionell sektor beskriver enhetens struktur.\ncatalog:variable_text:10855:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor beskriver enhetens struktur.\ncatalog:variable_text:10855:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattekostnader"
+fields = { "sets" = [] }
+evidence = "Posten avser skattekostnader.\ncatalog:variable_text:10856:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattekostnader"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Posten avser skattekostnader.\ncatalog:variable_text:10856:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteskulder"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Posten avser skatteskulder.\ncatalog:variable_text:10857:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteskulder"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Posten avser skatteskulder.\ncatalog:variable_text:10857:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Den levererade kolumnens namn anger SNI92 men någon sakdefinition saknas.\ncatalog:variable_text:10858:7305:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92"
+fields = { "tags" = ["business"] }
+evidence = "Den levererade kolumnens namn anger SNI92 men någon sakdefinition saknas.\ncatalog:variable_text:10858:7305:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader"
+fields = { "sets" = [] }
+evidence = "Posten omfattar sociala och andra personalkostnader.\ncatalog:variable_text:10859:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader"
+fields = { "tags" = ["business"] }
+evidence = "Posten omfattar sociala och andra personalkostnader.\ncatalog:variable_text:10859:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stg-gem"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:10861:15340:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:stg-gem"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:10861:15340:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-anger-om-foretaget-ingar-i-ett-totalraknat"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Variabeln anger tillhörighet till totalräknat stratum.\ncatalog:variable_text:10862:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-anger-om-foretaget-ingar-i-ett-totalraknat"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger tillhörighet till totalräknat stratum.\ncatalog:variable_text:10862:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Summan och de namngivna komponenterna ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10863:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar"
+fields = { "tags" = ["business"] }
+evidence = "Summan och de namngivna komponenterna ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10863:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-lgr558"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Summan ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10864:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-lgr558"
+fields = { "tags" = ["business"] }
+evidence = "Summan ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10864:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-vgr558"
+fields = { "sets" = ["av-och-nedskrivningar"] }
+evidence = "Summan ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10865:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-av-och-nedskrivningar-vgr558"
+fields = { "tags" = ["business"] }
+evidence = "Summan ingår i kandidatgruppen för av- och nedskrivningar.\ncatalog:variable_text:10865:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bruttoinvesteringar"
+fields = { "sets" = ["sammanlagda-investeringar"] }
+evidence = "Brutto- och nettoinvesteringar är alternativa sammanlagda investeringsmått.\ncatalog:variable_text:10866:18993:19723\ncatalog:variable_text:10879:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bruttoinvesteringar"
+fields = { "tags" = ["business"] }
+evidence = "Brutto- och nettoinvesteringar är alternativa sammanlagda investeringsmått.\ncatalog:variable_text:10866:18993:19723\ncatalog:variable_text:10879:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-eget-kapital"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Posten är summan av eget kapital.\ncatalog:variable_text:10867:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-eget-kapital"
+fields = { "tags" = ["business"] }
+evidence = "Posten är summan av eget kapital.\ncatalog:variable_text:10867:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-summafinansiellatillg"
+fields = { "sets" = ["finansiella-anlaggningstillgangar"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10868:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-summafinansiellatillg"
+fields = { "tags" = ["business"] }
+evidence = "Summan är en företagsbalanspost.\ncatalog:variable_text:10868:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-immateriella-anlaggningstillgangar"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets immateriella tillgångar.\ncatalog:variable_text:10869:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-immateriella-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets immateriella tillgångar.\ncatalog:variable_text:10869:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar"
+fields = { "sets" = ["kortfristiga-fordringar"] }
+evidence = "Variabeln är summan av kortfristiga fordringar.\ncatalog:variable_text:10870:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln är summan av kortfristiga fordringar.\ncatalog:variable_text:10870:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar-summakortfristigafordringar"
+fields = { "sets" = ["kortfristiga-fordringar"] }
+evidence = "Variabeln är summan av kortfristiga fordringar; suffixet återger källkolumnen.\ncatalog:variable_text:10871:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-fordringar-summakortfristigafordringar"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln är summan av kortfristiga fordringar; suffixet återger källkolumnen.\ncatalog:variable_text:10871:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-placeringar"
+fields = { "sets" = ["kortfristiga-placeringar"] }
+evidence = "Summan och övriga kortfristiga placeringar hör till samma begrepp.\ncatalog:variable_text:10821:12053:13514\ncatalog:variable_text:10872:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-placeringar"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Summan och övriga kortfristiga placeringar hör till samma begrepp.\ncatalog:variable_text:10821:12053:13514\ncatalog:variable_text:10872:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-placeringar-summakortfristigaplaceringar"
+fields = { "sets" = ["kortfristiga-placeringar"] }
+evidence = "Måttet är en summa kortfristiga placeringar.\ncatalog:variable_text:10873:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-placeringar-summakortfristigaplaceringar"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Måttet är en summa kortfristiga placeringar.\ncatalog:variable_text:10873:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-skulder"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Posten är summan av kortfristiga skulder.\ncatalog:variable_text:10874:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kortfristiga-skulder"
+fields = { "tags" = ["business"] }
+evidence = "Posten är summan av kortfristiga skulder.\ncatalog:variable_text:10874:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kostnader-ravaror-handelsvaror"
+fields = { "sets" = ["kostnader-for-ravaror-och-handelsvaror"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95316\ncatalog:occurrence:95343\ncatalog:occurrence:95373"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-kostnader-ravaror-handelsvaror"
+fields = { "tags" = ["business"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95316\ncatalog:occurrence:95343\ncatalog:occurrence:95373"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-langfristiga-skulder"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "Posten är summan av långfristiga skulder.\ncatalog:variable_text:10876:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-langfristiga-skulder"
+fields = { "tags" = ["business"] }
+evidence = "Posten är summan av långfristiga skulder.\ncatalog:variable_text:10876:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-materiella-anlaggningstillgangar"
+fields = { "sets" = ["materiella-anlaggningstillgangar"] }
+evidence = "Två variabler redovisar summan materiella anläggningstillgångar.\ncatalog:variable_text:10877:18993:19723\ncatalog:variable_text:10878:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-materiella-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Två variabler redovisar summan materiella anläggningstillgångar.\ncatalog:variable_text:10877:18993:19723\ncatalog:variable_text:10878:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-materiella-summamateriellaanlaggningstillgangar"
+fields = { "sets" = ["materiella-anlaggningstillgangar"] }
+evidence = "Variabeln redovisar summan materiella anläggningstillgångar.\ncatalog:variable_text:10878:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-materiella-summamateriellaanlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln redovisar summan materiella anläggningstillgångar.\ncatalog:variable_text:10878:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-nettoinvesteringar"
+fields = { "sets" = ["sammanlagda-investeringar"] }
+evidence = "Brutto- och nettoinvesteringar är alternativa sammanlagda investeringsmått.\ncatalog:variable_text:10866:18993:19723\ncatalog:variable_text:10879:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-nettoinvesteringar"
+fields = { "tags" = ["business"] }
+evidence = "Brutto- och nettoinvesteringar är alternativa sammanlagda investeringsmått.\ncatalog:variable_text:10866:18993:19723\ncatalog:variable_text:10879:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-obeskattade-reserver"
+fields = { "sets" = ["obeskattade-reserver"] }
+evidence = "Posten är summan av obeskattade reserver.\ncatalog:variable_text:10880:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-obeskattade-reserver"
+fields = { "tags" = ["business"] }
+evidence = "Posten är summan av obeskattade reserver.\ncatalog:variable_text:10880:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-omsattningstillgangar"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets omsättningstillgångar.\ncatalog:variable_text:10881:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-omsattningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets omsättningstillgångar.\ncatalog:variable_text:10881:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-personalkostnader"
+fields = { "sets" = ["personalkostnader"] }
+evidence = "Summan är ett totalt personalkostnadsmått.\ncatalog:variable_text:10882:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-personalkostnader"
+fields = { "tags" = ["business"] }
+evidence = "Summan är ett totalt personalkostnadsmått.\ncatalog:variable_text:10882:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror"
+fields = { "sets" = ["kostnader-for-ravaror-och-handelsvaror"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95316\ncatalog:occurrence:95343"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror"
+fields = { "tags" = ["business"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95316\ncatalog:occurrence:95343"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror-merchanting"
+fields = { "sets" = ["kostnader-for-ravaror-och-handelsvaror"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95343\ncatalog:occurrence:95373"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror-merchanting"
+fields = { "tags" = ["business"] }
+evidence = "Samma lokala källkolumn har angränsande mappningar till olika variabler.\ncatalog:occurrence:95343\ncatalog:occurrence:95373"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-tillgangar"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagets samlade tillgångar.\ncatalog:variable_text:10885:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-tillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagets samlade tillgångar.\ncatalog:variable_text:10885:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatta-rams"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Variabeln mäter antal sysselsatta enligt RAMS.\ncatalog:variable_text:10886:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatta-rams"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal sysselsatta enligt RAMS.\ncatalog:variable_text:10886:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:tff"
+fields = { "sets" = [] }
+evidence = "TFF är en opak källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10887:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:tff"
+fields = { "tags" = ["methods"] }
+evidence = "TFF är en opak källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10887:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagsintäkter på kommunnivå.\ncatalog:variable_text:10888:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagsintäkter på kommunnivå.\ncatalog:variable_text:10888:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader"
+fields = { "sets" = [] }
+evidence = "Måttet avser företagens totala kostnader.\ncatalog:variable_text:10889:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser företagens totala kostnader.\ncatalog:variable_text:10889:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:upplupna-kostnader-forutbetalda-intakter"
+fields = { "sets" = ["kortfristiga-skulder"] }
+evidence = "Posten avser upplupna kostnader och förutbetalda intäkter.\ncatalog:variable_text:10891:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:upplupna-kostnader-forutbetalda-intakter"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser upplupna kostnader och förutbetalda intäkter.\ncatalog:variable_text:10891:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:uppskrivningsfond"
+fields = { "sets" = ["eget-kapital"] }
+evidence = "Uppskrivningsfond är en beståndsdel av eget kapital.\ncatalog:variable_text:10892:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:uppskrivningsfond"
+fields = { "tags" = ["business"] }
+evidence = "Uppskrivningsfond är en beståndsdel av eget kapital.\ncatalog:variable_text:10892:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:10893:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:10893:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsvikt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en urvalsvikt.\ncatalog:variable_text:10894:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger en urvalsvikt.\ncatalog:variable_text:10894:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning"
+fields = { "sets" = ["forandringar-av-eget-kapital"] }
+evidence = "Utdelning redovisas som kapitalförändring.\ncatalog:variable_text:10895:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning"
+fields = { "tags" = ["business"] }
+evidence = "Utdelning redovisas som kapitalförändring.\ncatalog:variable_text:10895:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-koncern"
+fields = { "sets" = ["utdelningsintakter"] }
+evidence = "Måttet avser mottagen utdelning efter företagsrelation.\ncatalog:variable_text:10896:12053:13514\ncatalog:variable_text:10897:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-koncern"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Måttet avser mottagen utdelning efter företagsrelation.\ncatalog:variable_text:10896:12053:13514\ncatalog:variable_text:10897:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-ovriga-foretag"
+fields = { "sets" = ["utdelningsintakter"] }
+evidence = "Måttet avser mottagen utdelning efter företagsrelation.\ncatalog:variable_text:10896:12053:13514\ncatalog:variable_text:10897:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-ovriga-foretag"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Måttet avser mottagen utdelning efter företagsrelation.\ncatalog:variable_text:10896:12053:13514\ncatalog:variable_text:10897:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:valutakursforluster"
+fields = { "sets" = ["valutakursresultat"] }
+evidence = "Posten avser valutakursförluster.\ncatalog:variable_text:10898:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:valutakursforluster"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser valutakursförluster.\ncatalog:variable_text:10898:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:valutakursvinster"
+fields = { "sets" = ["valutakursresultat"] }
+evidence = "Posten avser valutakursvinster.\ncatalog:variable_text:10899:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:valutakursvinster"
+fields = { "tags" = ["business", "finance"] }
+evidence = "Posten avser valutakursvinster.\ncatalog:variable_text:10899:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:varulager"
+fields = { "sets" = [] }
+evidence = "Posten avser företagets varulager.\ncatalog:variable_text:10901:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varulager"
+fields = { "tags" = ["business"] }
+evidence = "Posten avser företagets varulager.\ncatalog:variable_text:10901:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vga12"
+fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger bruttoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10904:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vga12"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger bruttoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10904:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-avyttring-anlaggningstillgangar"
+fields = { "sets" = ["vinst-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10905:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-avyttring-anlaggningstillgangar"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10905:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-kgr552"
+fields = { "sets" = ["vinst-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-kgr552"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10906:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-vgr552"
+fields = { "sets" = ["vinst-vid-avyttring-av-anlaggningstillgangar"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10907:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-vgr552"
+fields = { "tags" = ["business"] }
+evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10907:12053:13514"

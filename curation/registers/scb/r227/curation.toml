@@ -16,3 +16,735 @@ kind = "set"
 subject = "ravaror: vengs @1999..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:externa-kostnader-vatten-avlopp"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Vatten och avlopp är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27719:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:externa-kostnader-vatten-avlopp"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Vatten och avlopp är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27719:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd11"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27720:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd11"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27720:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd12"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27721:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd12"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27721:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd13"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27722:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd13"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27722:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd2"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27723:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd2"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27723:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd3"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27724:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:impavd3"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27724:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-kostnader-ravaror"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Imputerade råvarukostnader ingår i kandidatgruppen och avser företag och metod.\ncatalog:variable_text:27725:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-kostnader-ravaror"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Imputerade råvarukostnader ingår i kandidatgruppen och avser företag och metod.\ncatalog:variable_text:27725:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = [] }
+evidence = "Näringsgren är en företagsklassificering.\ncatalog:variable_text:27727:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren är en företagsklassificering.\ncatalog:variable_text:27727:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v1101"
+fields = { "sets" = ["kostnader-for-transportmedel"] }
+evidence = "Källkoden är opak; drivmedel är en angiven transportmedelskostnad.\ncatalog:variable_text:27729:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1101"
+fields = { "tags" = ["business", "energy", "transport"] }
+evidence = "Källkoden är opak; drivmedel är en angiven transportmedelskostnad.\ncatalog:variable_text:27729:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1102"
+fields = { "sets" = ["kostnader-for-transportmedel"] }
+evidence = "Källkoden är opak; försäkringar och skatt är angivna transportmedelskostnader.\ncatalog:variable_text:27730:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1102"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Källkoden är opak; försäkringar och skatt är angivna transportmedelskostnader.\ncatalog:variable_text:27730:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1103"
+fields = { "sets" = ["kostnader-for-transportmedel"] }
+evidence = "Källkoden är opak; reparation och underhåll är angivna transportmedelskostnader.\ncatalog:variable_text:27731:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1103"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Källkoden är opak; reparation och underhåll är angivna transportmedelskostnader.\ncatalog:variable_text:27731:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1104"
+fields = { "sets" = ["kostnader-for-transportmedel"] }
+evidence = "Källkoden är opak; posten är en angiven transportmedelskostnad.\ncatalog:variable_text:27732:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1104"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Källkoden är opak; posten är en angiven transportmedelskostnad.\ncatalog:variable_text:27732:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1105"
+fields = { "sets" = ["kostnader-for-transportmedel"] }
+evidence = "Källkoden är opak; posten är summan av transportmedelskostnader.\ncatalog:variable_text:27733:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1105"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Källkoden är opak; posten är summan av transportmedelskostnader.\ncatalog:variable_text:27733:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1201"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; posten är en angiven förvaltningskostnad.\ncatalog:variable_text:27734:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1201"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven förvaltningskostnad.\ncatalog:variable_text:27734:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1202"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent av köpta tjänster.\ncatalog:variable_text:27735:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1202"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent av köpta tjänster.\ncatalog:variable_text:27735:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1203"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; IT-tjänster är en angiven komponent.\ncatalog:variable_text:27736:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1203"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; IT-tjänster är en angiven komponent.\ncatalog:variable_text:27736:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1204"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; bankkostnader är en angiven komponent.\ncatalog:variable_text:27737:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1204"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; bankkostnader är en angiven komponent.\ncatalog:variable_text:27737:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1205"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; köpta FoU-tjänster är en angiven komponent.\ncatalog:variable_text:27738:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1205"
+fields = { "tags" = ["business", "research"] }
+evidence = "Källkoden är opak; köpta FoU-tjänster är en angiven komponent.\ncatalog:variable_text:27738:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1206"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27739:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1206"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27739:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1207"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; posten är totalen. Etikettens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27740:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1207"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är totalen. Etikettens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27740:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1208"
+fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
+evidence = "Källkoden är opak; konsultarvoden är en angiven komponent.\ncatalog:variable_text:27741:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1208"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; konsultarvoden är en angiven komponent.\ncatalog:variable_text:27741:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1302"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27742:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1302"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27742:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1303"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; dataprogram är en angiven komponent.\ncatalog:variable_text:27743:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1303"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; dataprogram är en angiven komponent.\ncatalog:variable_text:27743:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v1304"
+fields = { "sets" = ["emballagekostnader", "ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1304"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1305"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27745:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1305"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27745:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1306"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; resekostnader är en angiven komponent.\ncatalog:variable_text:27746:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1306"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Källkoden är opak; resekostnader är en angiven komponent.\ncatalog:variable_text:27746:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1307"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27747:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1307"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27747:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1308"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27748:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1308"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27748:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1309"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; postbefordran är en angiven komponent.\ncatalog:variable_text:27749:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1309"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; postbefordran är en angiven komponent.\ncatalog:variable_text:27749:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1310"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; garantikostnader är en angiven komponent.\ncatalog:variable_text:27750:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1310"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; garantikostnader är en angiven komponent.\ncatalog:variable_text:27750:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1311"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27751:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1311"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27751:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1312"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; restposten är en angiven komponent.\ncatalog:variable_text:27752:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1312"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; restposten är en angiven komponent.\ncatalog:variable_text:27752:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1313"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är totalen.\ncatalog:variable_text:27753:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1313"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är totalen.\ncatalog:variable_text:27753:10592:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1314"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; försäljningskostnader är en angiven komponent.\ncatalog:variable_text:27754:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1314"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; försäljningskostnader är en angiven komponent.\ncatalog:variable_text:27754:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1315"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27755:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1315"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27755:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1316"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Källkoden är opak; posten är en angiven komponent. Definitionens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27756:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v1316"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven komponent. Definitionens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27756:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:v2001"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; trä är en angiven emballagekomponent.\ncatalog:variable_text:27757:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2001"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; trä är en angiven emballagekomponent.\ncatalog:variable_text:27757:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2002"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; wellpapp är en angiven emballagekomponent.\ncatalog:variable_text:27758:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2002"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; wellpapp är en angiven emballagekomponent.\ncatalog:variable_text:27758:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2003"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; posten är en angiven emballagekomponent.\ncatalog:variable_text:27759:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2003"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven emballagekomponent.\ncatalog:variable_text:27759:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2004"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; plast är en angiven emballagekomponent.\ncatalog:variable_text:27760:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2004"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; plast är en angiven emballagekomponent.\ncatalog:variable_text:27760:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2005"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; glas är en angiven emballagekomponent.\ncatalog:variable_text:27761:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2005"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; glas är en angiven emballagekomponent.\ncatalog:variable_text:27761:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2006"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; aluminium är en angiven emballagekomponent.\ncatalog:variable_text:27762:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2006"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; aluminium är en angiven emballagekomponent.\ncatalog:variable_text:27762:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2007"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; stål är en angiven emballagekomponent.\ncatalog:variable_text:27763:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2007"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; stål är en angiven emballagekomponent.\ncatalog:variable_text:27763:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2008"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; annat material är en angiven emballagekomponent.\ncatalog:variable_text:27764:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2008"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; annat material är en angiven emballagekomponent.\ncatalog:variable_text:27764:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2009"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; posten är totalen för emballageslag.\ncatalog:variable_text:27765:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v2009"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är totalen för emballageslag.\ncatalog:variable_text:27765:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v3201"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; trä är en angiven produktemballagekomponent.\ncatalog:variable_text:27766:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3201"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; trä är en angiven produktemballagekomponent.\ncatalog:variable_text:27766:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3202"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; wellpapp är en angiven produktemballagekomponent.\ncatalog:variable_text:27767:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3202"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; wellpapp är en angiven produktemballagekomponent.\ncatalog:variable_text:27767:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3203"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; posten är en angiven produktemballagekomponent.\ncatalog:variable_text:27768:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3203"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är en angiven produktemballagekomponent.\ncatalog:variable_text:27768:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3204"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; plast är en angiven produktemballagekomponent.\ncatalog:variable_text:27769:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3204"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; plast är en angiven produktemballagekomponent.\ncatalog:variable_text:27769:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3205"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; glas är en angiven produktemballagekomponent.\ncatalog:variable_text:27770:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3205"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; glas är en angiven produktemballagekomponent.\ncatalog:variable_text:27770:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3206"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; aluminium är en angiven produktemballagekomponent.\ncatalog:variable_text:27771:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3206"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; aluminium är en angiven produktemballagekomponent.\ncatalog:variable_text:27771:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3207"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; stål är en angiven produktemballagekomponent.\ncatalog:variable_text:27772:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3207"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; stål är en angiven produktemballagekomponent.\ncatalog:variable_text:27772:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3208"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; annat material är en angiven produktemballagekomponent.\ncatalog:variable_text:27773:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v3208"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; annat material är en angiven produktemballagekomponent.\ncatalog:variable_text:27773:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v4000"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Källkoden är opak; direkta inköpskostnader är ett angivet tillägg.\ncatalog:variable_text:27774:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v4000"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; direkta inköpskostnader är ett angivet tillägg.\ncatalog:variable_text:27774:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v5000"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Källkoden är opak; lagerförändring ingår uttryckligen i kandidatgruppen.\ncatalog:variable_text:27775:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v5000"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; lagerförändring ingår uttryckligen i kandidatgruppen.\ncatalog:variable_text:27775:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v6000"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Källkoden är opak; restposten ingår i kandidatgruppen.\ncatalog:variable_text:27776:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v6000"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; restposten ingår i kandidatgruppen.\ncatalog:variable_text:27776:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v7000"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Källkoden är opak; den icke varufördelade restposten ingår i kandidatgruppen.\ncatalog:variable_text:27777:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v7000"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; den icke varufördelade restposten ingår i kandidatgruppen.\ncatalog:variable_text:27777:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:v9000"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Källkoden är opak; posten är totalen för råvaror och förnödenheter.\ncatalog:variable_text:27778:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:v9000"
+fields = { "tags" = ["business"] }
+evidence = "Källkoden är opak; posten är totalen för råvaror och förnödenheter.\ncatalog:variable_text:27778:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varde"
+fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
+evidence = "Värdet avser råvarukostnader.\ncatalog:variable_text:27779:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varde"
+fields = { "tags" = ["business"] }
+evidence = "Värdet avser råvarukostnader.\ncatalog:variable_text:27779:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrtext"
+fields = { "sets" = [] }
+evidence = "Råvarugruppen beskriver företagens produktion.\ncatalog:variable_text:27780:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrtext"
+fields = { "tags" = ["business"] }
+evidence = "Råvarugruppen beskriver företagens produktion.\ncatalog:variable_text:27780:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "sets" = [] }
+evidence = "Varukoden klassificerar varor för företagsstatistiken.\ncatalog:variable_text:27781:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "tags" = ["business"] }
+evidence = "Varukoden klassificerar varor för företagsstatistiken.\ncatalog:variable_text:27781:19358:19723"

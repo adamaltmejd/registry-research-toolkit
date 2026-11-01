@@ -100,3 +100,699 @@ kind = "set"
 subject = "industrins-varuproduktion: {asni,vsni} @2003..2007"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "var:anger-vilken-kvantitetsenhet-som-galler-for-levererad-och"
+fields = { "sets" = ["kvantitetsenhet"] }
+evidence = "Anger kvantitetsenhet för produktion och leveranser.\ncatalog:variable_text:33812:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anger-vilken-kvantitetsenhet-som-galler-for-levererad-och"
+fields = { "tags" = ["business"] }
+evidence = "Anger kvantitetsenhet för produktion och leveranser.\ncatalog:variable_text:33812:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33813:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33813:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-vid-rapportenheten-antanst"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33814:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-vid-rapportenheten-antanst"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33814:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:asni"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/naringsgren-arbetsstalle.\ncatalog:occurrence:293311\ncatalog:occurrence:293340\ncatalog:variable_text:33815:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:asni"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/naringsgren-arbetsstalle.\ncatalog:occurrence:293311\ncatalog:occurrence:293340\ncatalog:variable_text:33815:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "sets" = [] }
+evidence = "Markerar undersökningens insamlingsdel.\ncatalog:variable_text:33816:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar undersökningens insamlingsdel.\ncatalog:variable_text:33816:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blstatus"
+fields = { "sets" = [] }
+evidence = "Blankettens hanteringsstatus är undersökningsmetadata.\ncatalog:variable_text:33817:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Blankettens hanteringsstatus är undersökningsmetadata.\ncatalog:variable_text:33817:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet1"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Bortfallskod för levererad kvantitet i första enheten.\ncatalog:variable_text:33818:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet1"
+fields = { "tags" = ["methods"] }
+evidence = "Bortfallskod för levererad kvantitet i första enheten.\ncatalog:variable_text:33818:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet2"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levb2.\ncatalog:occurrence:293774\ncatalog:occurrence:293808\ncatalog:variable_text:33819:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-leverad-kvantitet-enhet2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levb2.\ncatalog:occurrence:293774\ncatalog:occurrence:293808\ncatalog:variable_text:33819:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-total-kvantitet-enhet2"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb2.\ncatalog:occurrence:293788\ncatalog:occurrence:293822\ncatalog:variable_text:33820:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall-total-kvantitet-enhet2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb2.\ncatalog:occurrence:293788\ncatalog:occurrence:293822\ncatalog:variable_text:33820:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "sets" = [] }
+evidence = "Kod för undersökningens objektsbortfall.\ncatalog:variable_text:33821:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Kod för undersökningens objektsbortfall.\ncatalog:variable_text:33821:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:delpop"
+fields = { "sets" = [] }
+evidence = "Undersökningens delpopulation och svarskategori.\ncatalog:variable_text:33822:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:delpop"
+fields = { "tags" = ["methods"] }
+evidence = "Undersökningens delpopulation och svarskategori.\ncatalog:variable_text:33822:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-pbf-levkvant"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33823:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-pbf-levkvant"
+fields = { "tags" = ["methods"] }
+evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33823:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-pbf-totkvant"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33824:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-pbf-totkvant"
+fields = { "tags" = ["methods"] }
+evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33824:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:impstatus"
+fields = { "sets" = [] }
+evidence = "Anger imputering och dess orsak.\ncatalog:valueset:2023\ncatalog:variable_text:33825:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:impstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Anger imputering och dess orsak.\ncatalog:valueset:2023\ncatalog:variable_text:33825:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/metlev.\ncatalog:occurrence:293777\ncatalog:occurrence:293811\ncatalog:variable_text:33826:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/metlev.\ncatalog:occurrence:293777\ncatalog:occurrence:293811\ncatalog:variable_text:33826:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev-enhet2"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/metlev2.\ncatalog:occurrence:293778\ncatalog:occurrence:293812\ncatalog:variable_text:33827:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-lev-enhet2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/metlev2.\ncatalog:occurrence:293778\ncatalog:occurrence:293812\ncatalog:variable_text:33827:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/mettot.\ncatalog:occurrence:293779\ncatalog:occurrence:293813\ncatalog:variable_text:33828:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/mettot.\ncatalog:occurrence:293779\ncatalog:occurrence:293813\ncatalog:variable_text:33828:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot-enhet2"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/mettot2.\ncatalog:occurrence:293780\ncatalog:occurrence:293814\ncatalog:variable_text:33829:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsmetod-tot-enhet2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/mettot2.\ncatalog:occurrence:293780\ncatalog:occurrence:293814\ncatalog:variable_text:33829:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputkalla"
+fields = { "sets" = [] }
+evidence = "Källa för imputerade värden.\ncatalog:variable_text:33830:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputkalla"
+fields = { "tags" = ["methods"] }
+evidence = "Källa för imputerade värden.\ncatalog:variable_text:33830:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommen"
+fields = { "sets" = [] }
+evidence = "Markerar inkommen undersökningsenhet.\ncatalog:variable_text:33831:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommen"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar inkommen undersökningsenhet.\ncatalog:variable_text:33831:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ivp-typkod"
+fields = { "sets" = ["typkod"] }
+evidence = "Identitetsfaktet gäller en äldre typkod med annan och odokumenterad innebörd.\ncatalog:occurrence:293506\ncatalog:occurrence:293542\ncatalog:variable_text:33867:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ivp-typkod"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet gäller en äldre typkod med annan och odokumenterad innebörd.\ncatalog:occurrence:293506\ncatalog:occurrence:293542\ncatalog:variable_text:33867:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet"
+fields = { "sets" = ["kvantitetsenhet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/kvantenhet-4969.\ncatalog:occurrence:293771\ncatalog:occurrence:293805\ncatalog:variable_text:33834:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/kvantenhet-4969.\ncatalog:occurrence:293771\ncatalog:occurrence:293805\ncatalog:variable_text:33834:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet-4969"
+fields = { "sets" = ["kvantitetsenhet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/kvantenhet, med parallell täckning av returråvara.\ncatalog:occurrence:293771\ncatalog:occurrence:293805\ncatalog:variable_text:33835:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet-4969"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/kvantenhet, med parallell täckning av returråvara.\ncatalog:occurrence:293771\ncatalog:occurrence:293805\ncatalog:variable_text:33835:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet2"
+fields = { "sets" = ["kvantitetsenhet"] }
+evidence = "Kvantitetsenhet för varuproduktion.\ncatalog:variable_text:33836:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvantenhet2"
+fields = { "tags" = ["business"] }
+evidence = "Kvantitetsenhet för varuproduktion.\ncatalog:variable_text:33836:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:levb2"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/bortfall-leverad-kvantitet-enhet2.\ncatalog:occurrence:293774\ncatalog:occurrence:293808\ncatalog:variable_text:33837:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:levb2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/bortfall-leverad-kvantitet-enhet2.\ncatalog:occurrence:293774\ncatalog:occurrence:293808\ncatalog:variable_text:33837:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet"
+fields = { "sets" = ["levererad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levkvant.\ncatalog:occurrence:293775\ncatalog:occurrence:293809\ncatalog:variable_text:33838:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levkvant.\ncatalog:occurrence:293775\ncatalog:occurrence:293809\ncatalog:variable_text:33838:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet-enhet2"
+fields = { "sets" = ["levererad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levkvant2.\ncatalog:occurrence:293776\ncatalog:occurrence:293810\ncatalog:variable_text:33839:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leverad-kvantitet-enhet2"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/levkvant2.\ncatalog:occurrence:293776\ncatalog:occurrence:293810\ncatalog:variable_text:33839:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leverans"
+fields = { "sets" = [] }
+evidence = "Markerar om leveransvärde efterfrågas.\ncatalog:valueset:5458\ncatalog:variable_text:33840:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leverans"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar om leveransvärde efterfrågas.\ncatalog:valueset:5458\ncatalog:variable_text:33840:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant"
+fields = { "sets" = ["levererad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/leverad-kvantitet.\ncatalog:occurrence:293775\ncatalog:occurrence:293809\ncatalog:variable_text:33841:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/leverad-kvantitet.\ncatalog:occurrence:293775\ncatalog:occurrence:293809\ncatalog:variable_text:33841:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant2"
+fields = { "sets" = ["levererad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/leverad-kvantitet-enhet2.\ncatalog:occurrence:293776\ncatalog:occurrence:293810\ncatalog:variable_text:33842:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant2"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/leverad-kvantitet-enhet2.\ncatalog:occurrence:293776\ncatalog:occurrence:293810\ncatalog:variable_text:33842:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metlev"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-lev.\ncatalog:occurrence:293777\ncatalog:occurrence:293811\ncatalog:variable_text:33843:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metlev"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-lev.\ncatalog:occurrence:293777\ncatalog:occurrence:293811\ncatalog:variable_text:33843:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metlev2"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-lev-enhet2.\ncatalog:occurrence:293778\ncatalog:occurrence:293812\ncatalog:variable_text:33844:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metlev2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-lev-enhet2.\ncatalog:occurrence:293778\ncatalog:occurrence:293812\ncatalog:variable_text:33844:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mettot"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-tot.\ncatalog:occurrence:293779\ncatalog:occurrence:293813\ncatalog:variable_text:33845:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mettot"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-tot.\ncatalog:occurrence:293779\ncatalog:occurrence:293813\ncatalog:variable_text:33845:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mettot2"
+fields = { "sets" = ["imputeringsmetod"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-tot-enhet2.\ncatalog:occurrence:293780\ncatalog:occurrence:293814\ncatalog:variable_text:33846:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:mettot2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/imputeringsmetod-tot-enhet2.\ncatalog:occurrence:293780\ncatalog:occurrence:293814\ncatalog:variable_text:33846:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/asni.\ncatalog:occurrence:293311\ncatalog:occurrence:293340\ncatalog:variable_text:33848:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/asni.\ncatalog:occurrence:293311\ncatalog:occurrence:293340\ncatalog:variable_text:33848:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle-enligt-nr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren enligt NR för arbetsställe.\ncatalog:variable_text:33849:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle-enligt-nr"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren enligt NR för arbetsställe.\ncatalog:variable_text:33849:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-enligt-nr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren enligt nationalräkenskaperna.\ncatalog:variable_text:33850:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-enligt-nr"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren enligt nationalräkenskaperna.\ncatalog:variable_text:33850:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-verksamhetsenhet-enligt-nr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren enligt NR för verksamhetsenhet.\ncatalog:variable_text:33851:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-verksamhetsenhet-enligt-nr"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren enligt NR för verksamhetsenhet.\ncatalog:variable_text:33851:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en opak bokstavskod för näringsgren; siffran kommer från källkolumnen.\ncatalog:variable_text:33852:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en opak bokstavskod för näringsgren; siffran kommer från källkolumnen.\ncatalog:variable_text:33852:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknad"
+fields = { "sets" = [] }
+evidence = "Markerar om redovisningsperioden räknats om till helår.\ncatalog:variable_text:33853:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknad"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar om redovisningsperioden räknats om till helår.\ncatalog:variable_text:33853:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:partbort"
+fields = { "sets" = ["partiellt-bortfall"] }
+evidence = "Markerar partiellt undersökningsbortfall.\ncatalog:variable_text:33854:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:partbort"
+fields = { "tags" = ["methods"] }
+evidence = "Markerar partiellt undersökningsbortfall.\ncatalog:variable_text:33854:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodcomkod"
+fields = { "sets" = ["varuklassificering"] }
+evidence = "PRODCOM-koden är en varuklassificering inom industriproduktion.\ncatalog:register:167\ncatalog:variable_text:33856:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodcomkod"
+fields = { "tags" = ["business"] }
+evidence = "PRODCOM-koden är en varuklassificering inom industriproduktion.\ncatalog:register:167\ncatalog:variable_text:33856:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om uppgift om total produktionskvantitet efterfrågas och hör till industriproduktion.\ncatalog:valueset:6113\ncatalog:variable_text:33857:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln anger om uppgift om total produktionskvantitet efterfrågas och hör till industriproduktion.\ncatalog:valueset:6113\ncatalog:variable_text:33857:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodvarde"
+fields = { "sets" = [] }
+evidence = "Produktionsvärde per vara är ett mått på företagsproduktion.\ncatalog:variable_text:33858:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodvarde"
+fields = { "tags" = ["business"] }
+evidence = "Produktionsvärde per vara är ett mått på företagsproduktion.\ncatalog:variable_text:33858:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Institutionell sektortillhörighet beskriver företagsstruktur.\ncatalog:variable_text:33859:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektortillhörighet beskriver företagsstruktur.\ncatalog:variable_text:33859:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet"
+fields = { "sets" = ["total-producerad-kvantitet"] }
+evidence = "Total producerad kvantitet; den kurerade beskrivningen behålls.\ncatalog:variable_text:33860:19358:20089\nregisters/scb/r135/curation.toml:50"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet"
+fields = { "tags" = ["business"] }
+evidence = "Total producerad kvantitet; den kurerade beskrivningen behålls.\ncatalog:variable_text:33860:19358:20089\nregisters/scb/r135/curation.toml:50"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet-enhet2"
+fields = { "sets" = ["total-producerad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totkvant2.\ncatalog:occurrence:293790\ncatalog:occurrence:293824\ncatalog:variable_text:33861:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kvantitet-enhet2"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totkvant2.\ncatalog:occurrence:293790\ncatalog:occurrence:293824\ncatalog:variable_text:33861:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totb"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb-kvant1.\ncatalog:occurrence:293787\ncatalog:occurrence:293821\ncatalog:variable_text:33862:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totb"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb-kvant1.\ncatalog:occurrence:293787\ncatalog:occurrence:293821\ncatalog:variable_text:33862:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totb-kvant1"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb.\ncatalog:occurrence:293787\ncatalog:occurrence:293821\ncatalog:variable_text:33863:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totb-kvant1"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/totb.\ncatalog:occurrence:293787\ncatalog:occurrence:293821\ncatalog:variable_text:33863:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totb2"
+fields = { "sets" = ["kvantitetsbortfall"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/bortfall-total-kvantitet-enhet2.\ncatalog:occurrence:293788\ncatalog:occurrence:293822\ncatalog:variable_text:33864:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totb2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/bortfall-total-kvantitet-enhet2.\ncatalog:occurrence:293788\ncatalog:occurrence:293822\ncatalog:variable_text:33864:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totkvant2"
+fields = { "sets" = ["total-producerad-kvantitet"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/total-kvantitet-enhet2.\ncatalog:occurrence:293790\ncatalog:occurrence:293824\ncatalog:variable_text:33865:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totkvant2"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/total-kvantitet-enhet2.\ncatalog:occurrence:293790\ncatalog:occurrence:293824\ncatalog:variable_text:33865:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-returravara"
+fields = { "sets" = [] }
+evidence = "Typ av producerad returråvara.\ncatalog:variable_text:33866:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-returravara"
+fields = { "tags" = ["business"] }
+evidence = "Typ av producerad returråvara.\ncatalog:variable_text:33866:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-lonbearbetning"
+fields = { "sets" = ["typkod"] }
+evidence = "Identitetsfaktet gäller en senare typkod med annan innebörd; den äldre innebörden är odokumenterad.\ncatalog:occurrence:293506\ncatalog:occurrence:293542\ncatalog:variable_text:33867:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-lonbearbetning"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktet gäller en senare typkod med annan innebörd; den äldre innebörden är odokumenterad.\ncatalog:occurrence:293506\ncatalog:occurrence:293542\ncatalog:variable_text:33867:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprung"
+fields = { "sets" = [] }
+evidence = "Ursprung och metod för observationsvärden.\ncatalog:valueset:10232\ncatalog:variable_text:33869:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprung"
+fields = { "tags" = ["methods"] }
+evidence = "Ursprung och metod för observationsvärden.\ncatalog:valueset:10232\ncatalog:variable_text:33869:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "sets" = ["varuklassificering"] }
+evidence = "Varuklassificering enligt kombinerade nomenklaturen.\ncatalog:variable_text:33870:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "tags" = ["business"] }
+evidence = "Varuklassificering enligt kombinerade nomenklaturen.\ncatalog:variable_text:33870:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vengs"
+fields = { "sets" = ["naringsgren"] }
+evidence = "VEngs är en opak källmnemonik; den generella etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33871:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vengs"
+fields = { "tags" = ["business"] }
+evidence = "VEngs är en opak källmnemonik; den generella etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33871:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vsni"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/vsni-4027.\ncatalog:occurrence:293339\ncatalog:occurrence:293369\ncatalog:variable_text:33873:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vsni"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/vsni-4027.\ncatalog:occurrence:293339\ncatalog:occurrence:293369\ncatalog:variable_text:33873:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:vsni-4027"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/vsni.\ncatalog:occurrence:293339\ncatalog:occurrence:293369\ncatalog:variable_text:33874:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vsni-4027"
+fields = { "tags" = ["business"] }
+evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/vsni.\ncatalog:occurrence:293339\ncatalog:occurrence:293369\ncatalog:variable_text:33874:17532:20089"

@@ -1,0 +1,252 @@
+
+[[statement]]
+kind = "set"
+subject = "var:alder-barn"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:533:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:533:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-bs"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:534:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-bs"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:534:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstand-beslut"
+fields = { "sets" = [] }
+evidence = "Beslutet gäller anstånd i underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:535:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anstand-beslut"
+fields = { "tags" = ["transfers"] }
+evidence = "Beslutet gäller anstånd i underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:535:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status"
+fields = { "sets" = [] }
+evidence = "Ärendets status avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:536:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arende-status"
+fields = { "tags" = ["transfers"] }
+evidence = "Ärendets status avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:536:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet avser utbetalning eller inbetalning inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:537:9831:2932897\ncatalog:variable_text:561:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser utbetalning eller inbetalning inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:537:9831:2932897\ncatalog:variable_text:561:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-barn"
+fields = { "sets" = [] }
+evidence = "Beloppet är en del av månadens underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en del av månadens underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-bm"
+fields = { "sets" = [] }
+evidence = "Beloppet är månadens utbetalda underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-bm"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är månadens utbetalda underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-retro"
+fields = { "sets" = [] }
+evidence = "Det retroaktiva beloppet avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897\ncatalog:variable_text:540:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp-retro"
+fields = { "tags" = ["transfers"] }
+evidence = "Det retroaktiva beloppet avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:538:9862:2932897\ncatalog:variable_text:539:9862:2932897\ncatalog:variable_text:540:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:eftergift-beslut"
+fields = { "sets" = [] }
+evidence = "Beslutet gäller eftergift inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:545:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:eftergift-beslut"
+fields = { "tags" = ["transfers"] }
+evidence = "Beslutet gäller eftergift inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:545:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-barn"
+fields = { "sets" = [] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:548:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:548:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-bm"
+fields = { "sets" = [] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:549:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-bm"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:549:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-bs"
+fields = { "sets" = [] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:550:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad-bs"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsemånad är en demografisk uppgift.\ncatalog:variable_text:550:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "sets" = [] }
+evidence = "Koden anger typ av underhållsstöd.\ncatalog:variable_text:552:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger typ av underhållsstöd.\ncatalog:variable_text:552:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-bs"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:553:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-bs"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:553:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bm"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:554:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bm"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:554:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bs"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:555:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-bs"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:555:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nettobelopp"
+fields = { "sets" = [] }
+evidence = "Nettobeloppet finns i beslut om underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:537:9831:2932897\ncatalog:variable_text:561:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nettobelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Nettobeloppet finns i beslut om underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:537:9831:2932897\ncatalog:variable_text:561:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skuld"
+fields = { "sets" = [] }
+evidence = "Ursprunglig skuld är en skuld inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:562:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skuld"
+fields = { "tags" = ["transfers", "wealth"] }
+evidence = "Ursprunglig skuld är en skuld inom underhållsstödet.\ncatalog:register:26\ncatalog:variable_text:562:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "sets" = [] }
+evidence = "Koden anger typ av underhållsstöd.\ncatalog:variable_text:563:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger typ av underhållsstöd.\ncatalog:variable_text:563:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-beslut"
+fields = { "sets" = [] }
+evidence = "Beslutstypen avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:564:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-beslut"
+fields = { "tags" = ["transfers"] }
+evidence = "Beslutstypen avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:564:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-inbet"
+fields = { "sets" = [] }
+evidence = "Inbetalningstypen avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:565:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-inbet"
+fields = { "tags" = ["transfers"] }
+evidence = "Inbetalningstypen avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:565:9831:2932897"

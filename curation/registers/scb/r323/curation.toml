@@ -16,3 +16,399 @@ kind = "set"
 subject = "rantebarande: <none> @2014,2016..2019 where key = 'v33'"
 fields = { "classification" = "class/sektor/sektor2000" }
 evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedincomecreditorcomputed"
+fields = { "sets" = ["upplupen-ranta"] }
+evidence = "Innehavarens upplupna ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44793:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedincomecreditorcomputed"
+fields = { "tags" = ["finance"] }
+evidence = "Innehavarens upplupna ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44793:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedincomedebtorcomputed"
+fields = { "sets" = ["upplupen-ranta"] }
+evidence = "Emittentens upplupna ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44794:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedincomedebtorcomputed"
+fields = { "tags" = ["finance"] }
+evidence = "Emittentens upplupna ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44794:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedinterest"
+fields = { "sets" = ["upplupen-ranta"] }
+evidence = "Upplupen ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44795:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:accruedinterest"
+fields = { "tags" = ["finance"] }
+evidence = "Upplupen ränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44795:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountissued"
+fields = { "sets" = ["emissionsvolym"] }
+evidence = "Emitterat belopp är emissionsvolym och ett finansmarknadsmått.\ncatalog:variable_text:44796:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountissued"
+fields = { "tags" = ["finance"] }
+evidence = "Emitterat belopp är emissionsvolym och ett finansmarknadsmått.\ncatalog:variable_text:44796:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountoutstanding"
+fields = { "sets" = ["emissionsvolym"] }
+evidence = "Utestående belopp hör till emissionsvolym och finansmarknaden.\ncatalog:variable_text:44797:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountoutstanding"
+fields = { "tags" = ["finance"] }
+evidence = "Utestående belopp hör till emissionsvolym och finansmarknaden.\ncatalog:variable_text:44797:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountoutstandingprogram"
+fields = { "sets" = ["emissionsvolym"] }
+evidence = "Programmets volym hör till emissionsvolym och finansmarknaden.\ncatalog:variable_text:44798:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amountoutstandingprogram"
+fields = { "tags" = ["finance"] }
+evidence = "Programmets volym hör till emissionsvolym och finansmarknaden.\ncatalog:variable_text:44798:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:collateraltype"
+fields = { "sets" = [] }
+evidence = "Säkerhet för värdepapper hör till finansmarknaden.\ncatalog:variable_text:44800:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:collateraltype"
+fields = { "tags" = ["finance"] }
+evidence = "Säkerhet för värdepapper hör till finansmarknaden.\ncatalog:variable_text:44800:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponcurrency"
+fields = { "sets" = ["vardepappersvaluta"] }
+evidence = "Kupongvaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44801:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponcurrency"
+fields = { "tags" = ["finance"] }
+evidence = "Kupongvaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44801:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponratebase"
+fields = { "sets" = ["kupongranta"] }
+evidence = "Referensräntan är en komponent i kupongräntan.\ncatalog:variable_text:44802:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponratebase"
+fields = { "tags" = ["finance"] }
+evidence = "Referensräntan är en komponent i kupongräntan.\ncatalog:variable_text:44802:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponratebasemargin"
+fields = { "sets" = ["kupongranta"] }
+evidence = "Räntepåslaget är en komponent i kupongräntan.\ncatalog:variable_text:44803:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:couponratebasemargin"
+fields = { "tags" = ["finance"] }
+evidence = "Räntepåslaget är en komponent i kupongräntan.\ncatalog:variable_text:44803:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:coupontype"
+fields = { "sets" = [] }
+evidence = "Kupongtyp hör till finansmarknaden.\ncatalog:variable_text:44804:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:coupontype"
+fields = { "tags" = ["finance"] }
+evidence = "Kupongtyp hör till finansmarknaden.\ncatalog:variable_text:44804:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:daycountconvention"
+fields = { "sets" = [] }
+evidence = "Räntebasen är ett villkor för finansiella instrument.\ncatalog:variable_text:44807:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:daycountconvention"
+fields = { "tags" = ["finance"] }
+evidence = "Räntebasen är ett villkor för finansiella instrument.\ncatalog:variable_text:44807:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:denomination"
+fields = { "sets" = [] }
+evidence = "Poststorleken beskriver ett värdepappers nominella belopp.\ncatalog:variable_text:44809:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:denomination"
+fields = { "tags" = ["finance"] }
+evidence = "Poststorleken beskriver ett värdepappers nominella belopp.\ncatalog:variable_text:44809:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fixedcouponrate"
+fields = { "sets" = ["kupongranta"] }
+evidence = "Fast kupongränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44811:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fixedcouponrate"
+fields = { "tags" = ["finance"] }
+evidence = "Fast kupongränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44811:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:issueprice"
+fields = { "sets" = ["vardepapperspris"] }
+evidence = "Emissionspris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44818:15706:19358\ncatalog:variable_text:44818:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:issueprice"
+fields = { "tags" = ["finance"] }
+evidence = "Emissionspris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44818:15706:19358\ncatalog:variable_text:44818:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:issuerdomicilecountry"
+fields = { "sets" = [] }
+evidence = "Emittentens hemvist är en geografisk tillhörighet.\ncatalog:variable_text:44819:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:issuerdomicilecountry"
+fields = { "tags" = ["geography"] }
+evidence = "Emittentens hemvist är en geografisk tillhörighet.\ncatalog:variable_text:44819:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lastcouponfrequency"
+fields = { "sets" = [] }
+evidence = "Kupongbetalningens frekvens hör till finansmarknaden.\ncatalog:variable_text:44822:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lastcouponfrequency"
+fields = { "tags" = ["finance"] }
+evidence = "Kupongbetalningens frekvens hör till finansmarknaden.\ncatalog:variable_text:44822:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lastcouponrate"
+fields = { "sets" = ["kupongranta"] }
+evidence = "Senaste kupongränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44823:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lastcouponrate"
+fields = { "tags" = ["finance"] }
+evidence = "Senaste kupongränta hör till gruppen och finansmarknaden.\ncatalog:variable_text:44823:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marketcapitalisation"
+fields = { "sets" = [] }
+evidence = "Marknadsvärdet av utestående värdepapper hör till finansmarknaden.\ncatalog:variable_text:44824:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marketcapitalisation"
+fields = { "tags" = ["finance"] }
+evidence = "Marknadsvärdet av utestående värdepapper hör till finansmarknaden.\ncatalog:variable_text:44824:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadspris"
+fields = { "sets" = ["vardepapperspris"] }
+evidence = "Marknadspris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44825:15706:19358\ncatalog:variable_text:44825:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadspris"
+fields = { "tags" = ["finance"] }
+evidence = "Marknadspris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44825:15706:19358\ncatalog:variable_text:44825:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren hör till företag och produktion.\ncatalog:variable_text:44827:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren hör till företag och produktion.\ncatalog:variable_text:44827:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nominalcurrency"
+fields = { "sets" = ["vardepappersvaluta"] }
+evidence = "Denomineringsvaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44828:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nominalcurrency"
+fields = { "tags" = ["finance"] }
+evidence = "Denomineringsvaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44828:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:originalmaturity"
+fields = { "sets" = ["loptid"] }
+evidence = "Ursprunglig löptid hör till gruppen och finansmarknaden.\ncatalog:variable_text:44830:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:originalmaturity"
+fields = { "tags" = ["finance"] }
+evidence = "Ursprunglig löptid hör till gruppen och finansmarknaden.\ncatalog:variable_text:44830:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:quotationbasis"
+fields = { "sets" = [] }
+evidence = "Kvoteringsbasen beskriver hur ett finansiellt instrument kvoteras.\ncatalog:valueset:9280\ncatalog:variable_text:44833:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:quotationbasis"
+fields = { "tags" = ["finance"] }
+evidence = "Kvoteringsbasen beskriver hur ett finansiellt instrument kvoteras.\ncatalog:valueset:9280\ncatalog:variable_text:44833:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptionamount"
+fields = { "sets" = ["forfallobelopp"] }
+evidence = "Förfallobelopp hör till gruppen och finansmarknaden.\ncatalog:variable_text:44834:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptionamount"
+fields = { "tags" = ["finance"] }
+evidence = "Förfallobelopp hör till gruppen och finansmarknaden.\ncatalog:variable_text:44834:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptioncurrency"
+fields = { "sets" = ["vardepappersvaluta"] }
+evidence = "Förfallovaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44835:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptioncurrency"
+fields = { "tags" = ["finance"] }
+evidence = "Förfallovaluta hör till värdepappersvalutor och finansmarknaden.\ncatalog:variable_text:44835:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptionprice"
+fields = { "sets" = ["vardepapperspris"] }
+evidence = "Förfallopris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44836:15706:19358\ncatalog:variable_text:44836:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptionprice"
+fields = { "tags" = ["finance"] }
+evidence = "Förfallopris hör till värdepapperspriser och finansmarknaden; källans enheter bevaras i historiken.\ncatalog:variable_text:44836:15706:19358\ncatalog:variable_text:44836:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptiontotalamount"
+fields = { "sets" = ["forfallobelopp"] }
+evidence = "Totalt förfallobelopp hör till gruppen och finansmarknaden.\ncatalog:variable_text:44837:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redemptiontotalamount"
+fields = { "tags" = ["finance"] }
+evidence = "Totalt förfallobelopp hör till gruppen och finansmarknaden.\ncatalog:variable_text:44837:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:remainingmaturity"
+fields = { "sets" = ["loptid"] }
+evidence = "Återstående löptid hör till gruppen och finansmarknaden.\ncatalog:variable_text:44838:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:remainingmaturity"
+fields = { "tags" = ["finance"] }
+evidence = "Återstående löptid hör till gruppen och finansmarknaden.\ncatalog:variable_text:44838:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:repoposition"
+fields = { "sets" = [] }
+evidence = "Repoposition är ett finansiellt transaktionsbelopp.\ncatalog:variable_text:44839:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:repoposition"
+fields = { "tags" = ["finance"] }
+evidence = "Repoposition är ett finansiellt transaktionsbelopp.\ncatalog:variable_text:44839:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalcouponpayment"
+fields = { "sets" = [] }
+evidence = "Kupongbetalningen hör till finansmarknaden.\ncatalog:variable_text:44841:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalcouponpayment"
+fields = { "tags" = ["finance"] }
+evidence = "Kupongbetalningen hör till finansmarknaden.\ncatalog:variable_text:44841:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperstyp"
+fields = { "sets" = [] }
+evidence = "Värdepapperstyp hör till finansmarknaden.\ncatalog:variable_text:44842:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperstyp"
+fields = { "tags" = ["finance"] }
+evidence = "Värdepapperstyp hör till finansmarknaden.\ncatalog:variable_text:44842:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yieldtomaturity"
+fields = { "sets" = [] }
+evidence = "Avkastning till förfall hör till finansmarknaden.\ncatalog:variable_text:44844:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yieldtomaturity"
+fields = { "tags" = ["finance"] }
+evidence = "Avkastning till förfall hör till finansmarknaden.\ncatalog:variable_text:44844:20089:20454"

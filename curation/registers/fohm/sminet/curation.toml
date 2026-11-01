@@ -4,3 +4,99 @@ kind = "set"
 subject = "sminet: diagnos"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fohm.toml:76\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:anledningtillundersokning"
+fields = { "sets" = [] }
+evidence = "Undersökningens anledning avser provtagning.\ncatalog:occurrence:992"
+
+[[statement]]
+kind = "set"
+subject = "var:anledningtillundersokning"
+fields = { "tags" = ["healthcare"] }
+evidence = "Undersökningens anledning avser provtagning.\ncatalog:occurrence:992"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "sets" = [] }
+evidence = "Variabeln anger anmäld smittsam sjukdom.\ncatalog:occurrence:993"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger anmäld smittsam sjukdom.\ncatalog:occurrence:993"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-diagnos"
+fields = { "sets" = [] }
+evidence = "Variabeln anger grunden för diagnostisering.\ncatalog:occurrence:996"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-diagnos"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger grunden för diagnostisering.\ncatalog:occurrence:996"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger juridiskt kön.\ncatalog:occurrence:998"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger juridiskt kön.\ncatalog:occurrence:998"
+
+[[statement]]
+kind = "set"
+subject = "var:smittland"
+fields = { "sets" = [] }
+evidence = "Variabeln anger landet där smittan sannolikt förvärvades.\ncatalog:occurrence:1002"
+
+[[statement]]
+kind = "set"
+subject = "var:smittland"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger landet där smittan sannolikt förvärvades.\ncatalog:occurrence:1002"
+
+[[statement]]
+kind = "set"
+subject = "var:smittvag"
+fields = { "sets" = [] }
+evidence = "Fältet beskriver sannolik väg för smitta.\ncatalog:occurrence:1005"
+
+[[statement]]
+kind = "set"
+subject = "var:smittvag"
+fields = { "tags" = ["health"] }
+evidence = "Fältet beskriver sannolik väg för smitta.\ncatalog:occurrence:1005"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-infektion"
+fields = { "sets" = [] }
+evidence = "Fältet beskriver infektionens typ.\ncatalog:occurrence:1007"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-infektion"
+fields = { "tags" = ["health"] }
+evidence = "Fältet beskriver infektionens typ.\ncatalog:occurrence:1007"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccinationsstatus"
+fields = { "sets" = [] }
+evidence = "Fältet beskriver vaccinationsstatus.\ncatalog:occurrence:1008"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccinationsstatus"
+fields = { "tags" = ["medicines"] }
+evidence = "Fältet beskriver vaccinationsstatus.\ncatalog:occurrence:1008"

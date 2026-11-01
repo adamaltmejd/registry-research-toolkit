@@ -4,3 +4,423 @@ kind = "assert"
 subject = "table:lss"
 fact = { entity = "table", fields = { name = "LSS", description = "Uppgifter om kommunalt beslutade och verkställda insatser enligt lagen (1993:387) om stöd och service till vissa funktionshindrade", coverage = "1992.." } }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx#Metadata-Datamängd (DCAT-AP) !2,3,4. The dataset documents the register, description and 1992-start coverage. Metadata - Variabelnivå!2-38 names LSS throughout; no tables sheet declares it. Assert only this documented table; occurrence bounds remain as stated."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56925:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:56925:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dygn-man-lss-6"
+fields = { "sets" = [] }
+evidence = "Antalet dygn avser korttidsvistelse enligt LSS.\ncatalog:variable_text:56926:13514:2932897\ncatalog:variable_text:56942:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dygn-man-lss-6"
+fields = { "tags" = ["social-care"] }
+evidence = "Antalet dygn avser korttidsvistelse enligt LSS.\ncatalog:variable_text:56926:13514:2932897\ncatalog:variable_text:56942:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-2"
+fields = { "sets" = [] }
+evidence = "Antalet timmar avser personlig assistans enligt LSS.\ncatalog:variable_text:56927:13514:2932897\ncatalog:variable_text:56945:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-2"
+fields = { "tags" = ["social-care"] }
+evidence = "Antalet timmar avser personlig assistans enligt LSS.\ncatalog:variable_text:56927:13514:2932897\ncatalog:variable_text:56945:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-3"
+fields = { "sets" = [] }
+evidence = "Antalet timmar avser ledsagarservice enligt LSS.\ncatalog:variable_text:56928:13514:2932897\ncatalog:variable_text:56943:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-3"
+fields = { "tags" = ["social-care"] }
+evidence = "Antalet timmar avser ledsagarservice enligt LSS.\ncatalog:variable_text:56928:13514:2932897\ncatalog:variable_text:56943:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-5"
+fields = { "sets" = [] }
+evidence = "Antalet timmar avser avlösarservice enligt LSS.\ncatalog:variable_text:56929:13514:2932897\ncatalog:variable_text:56931:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-man-lss-5"
+fields = { "tags" = ["social-care"] }
+evidence = "Antalet timmar avser avlösarservice enligt LSS.\ncatalog:variable_text:56929:13514:2932897\ncatalog:variable_text:56931:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosarservice"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56929:13514:2932897\ncatalog:variable_text:56931:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosarservice"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56929:13514:2932897\ncatalog:variable_text:56931:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-vuxna-lss-9-9"
+fields = { "sets" = [] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-vuxna-lss-9-9"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendekommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk hemvist.\ncatalog:variable_text:56933:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendekommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk hemvist.\ncatalog:variable_text:56933:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad-sarskild-service-barn-lss-8"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56934:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad-sarskild-service-barn-lss-8"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56934:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad-sarskild-service-vuxna-lss-9"
+fields = { "sets" = [] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad-sarskild-service-vuxna-lss-9"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daglig-verksamhet-lss-10"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56936:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daglig-verksamhet-lss-10"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56936:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:familjehem-barn-ungdomar-lss"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56937:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:familjehem-barn-ungdomar-lss"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56937:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = [] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56938:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56938:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:56939:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:56939:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-lss"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56940:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-lss"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56940:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttidstillsyn"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56941:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttidstillsyn"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56941:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttidsvistelse"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56926:13514:2932897\ncatalog:variable_text:56942:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttidsvistelse"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56926:13514:2932897\ncatalog:variable_text:56942:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsagarservice"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56928:13514:2932897\ncatalog:variable_text:56943:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsagarservice"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56928:13514:2932897\ncatalog:variable_text:56943:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personkrets"
+fields = { "sets" = [] }
+evidence = "Personkretsen anger tillhörighet till LSS personkretsar.\ncatalog:variable_text:56944:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personkrets"
+fields = { "tags" = ["disability"] }
+evidence = "Personkretsen anger tillhörighet till LSS personkretsar.\ncatalog:variable_text:56944:8035:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personlig-assistans-9-2-lss"
+fields = { "sets" = [] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56927:13514:2932897\ncatalog:variable_text:56945:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personlig-assistans-9-2-lss"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser en LSS-insats.\ncatalog:variable_text:56927:13514:2932897\ncatalog:variable_text:56945:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter personnumrets kodningskvalitet.\ncatalog:variable_text:56947:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln mäter personnumrets kodningskvalitet.\ncatalog:variable_text:56947:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rapporterande-kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en kommun.\ncatalog:variable_text:56948:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:rapporterande-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger en kommun.\ncatalog:variable_text:56948:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-anpassad-bostad-vuxna-lss-9"
+fields = { "sets" = [] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-anpassad-bostad-vuxna-lss-9"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser boende som LSS-insats.\ncatalog:variable_text:56932:10592:12418\ncatalog:variable_text:56935:12418:2932897\ncatalog:variable_text:56949:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-10"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56951:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-10"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56951:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-2"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56951:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-2"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56951:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-3"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56952:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-3"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56952:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-4"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56953:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-4"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56953:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-5"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56954:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-5"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56954:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-6"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56955:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-6"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56955:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-7"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56956:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-7"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56956:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-8-familjehem"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56957:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-8-familjehem"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56957:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-8-sarskild"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56958:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-8-sarskild"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56958:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-bostad"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56959:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-bostad"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56959:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-sarskild"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56960:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-sarskild"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56960:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-vuxna"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56961:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utforande-kommun-lss-9-9-vuxna"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunen som beslutat och verkställt insatsen.\ncatalog:variable_text:56950:10592:2932897\ncatalog:variable_text:56961:10592:12418"

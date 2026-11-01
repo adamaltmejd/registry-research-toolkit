@@ -46,3 +46,669 @@ kind = "set"
 subject = "godselmedelsanvandning-2016: lan @2015-07-01..2016-06-30"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:akerekol"
+fields = { "sets" = [] }
+evidence = "Kodning av ekologisk odling.\ncatalog:variable_text:21582:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:akerekol"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kodning av ekologisk odling.\ncatalog:variable_text:21582:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = ["djur-med-godselhanteringssatt"] }
+evidence = "Antal djur med angivet gödselhanteringssätt.\ncatalog:variable_text:21583:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antal djur med angivet gödselhanteringssätt.\ncatalog:variable_text:21583:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-djur"
+fields = { "sets" = ["djurbestandets-storlek"] }
+evidence = "Antal djur ingår i djurbeståndets storlek.\ncatalog:variable_text:21584:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-djur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antal djur ingår i djurbeståndets storlek.\ncatalog:variable_text:21584:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-enheter"
+fields = { "sets" = [] }
+evidence = "Antal svarande är ett undersökningsmått.\ncatalog:variable_text:21585:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-enheter"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande är ett undersökningsmått.\ncatalog:variable_text:21585:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan"
+fields = { "sets" = ["akerareal"] }
+evidence = "Grödans delareal ingår i åkerarealgruppen.\ncatalog:variable_text:21586:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödans delareal ingår i åkerarealgruppen.\ncatalog:variable_text:21586:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-am-dikor"
+fields = { "sets" = ["betesperiod"] }
+evidence = "Betesperiod för am- och dikor.\ncatalog:variable_text:21587:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-am-dikor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesperiod för am- och dikor.\ncatalog:variable_text:21587:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-kalvar"
+fields = { "sets" = ["betesperiod"] }
+evidence = "Betesperiod för kalvar.\ncatalog:variable_text:21588:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-kalvar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesperiod för kalvar.\ncatalog:variable_text:21588:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-kvigor"
+fields = { "sets" = ["betesperiod"] }
+evidence = "Betesperiod för kvigor.\ncatalog:variable_text:21589:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-kvigor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesperiod för kvigor.\ncatalog:variable_text:21589:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-mjolkkor"
+fields = { "sets" = ["betesperiod"] }
+evidence = "Betesperiod för mjölkkor.\ncatalog:variable_text:21590:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-mjolkkor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesperiod för mjölkkor.\ncatalog:variable_text:21590:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-stutar-tjurar"
+fields = { "sets" = ["betesperiod"] }
+evidence = "Betesperiod för stutar och tjurar.\ncatalog:variable_text:21591:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betesperiod-stutar-tjurar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesperiod för stutar och tjurar.\ncatalog:variable_text:21591:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-resultatkod"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "Samma resultatkod som objektkod-2, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198573\ncatalog:occurrence:198621"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-resultatkod"
+fields = { "tags" = ["methods"] }
+evidence = "Samma resultatkod som objektkod-2, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198573\ncatalog:occurrence:198621"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-statuskod"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "Samma statuskod som objektkod, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198545\ncatalog:occurrence:198593"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettens-statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Samma statuskod som objektkod, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198545\ncatalog:occurrence:198593"
+
+[[statement]]
+kind = "set"
+subject = "var:djur"
+fields = { "sets" = ["djurkategori"] }
+evidence = "Benämning av djurslag.\ncatalog:variable_text:21594:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:djur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Benämning av djurslag.\ncatalog:variable_text:21594:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:djurenh"
+fields = { "sets" = ["djurbestandets-storlek"] }
+evidence = "Standardiserade djurenheter beskriver djurbeståndet.\ncatalog:variable_text:21595:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:djurenh"
+fields = { "tags" = ["agriculture"] }
+evidence = "Standardiserade djurenheter beskriver djurbeståndet.\ncatalog:variable_text:21595:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:djurid"
+fields = { "sets" = ["djurkategori"] }
+evidence = "Värdekoderna avser djurslag.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:djurid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Värdekoderna avser djurslag.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:egenaker"
+fields = { "sets" = [] }
+evidence = "Fråga om brukarens egen åkerareal.\ncatalog:variable_text:21597:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:egenaker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fråga om brukarens egen åkerareal.\ncatalog:variable_text:21597:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ettarsvall"
+fields = { "sets" = [] }
+evidence = "Kodning av ettårsvall.\ncatalog:variable_text:21598:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ettarsvall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kodning av ettårsvall.\ncatalog:variable_text:21598:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:fyll"
+fields = { "sets" = [] }
+evidence = "Fyllning av gödselbehållare.\ncatalog:variable_text:21599:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:fyll"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fyllning av gödselbehållare.\ncatalog:variable_text:21599:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:gardareal"
+fields = { "sets" = ["akerareal"] }
+evidence = "Gårdens totala åkerareal.\ncatalog:variable_text:21600:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:gardareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Gårdens totala åkerareal.\ncatalog:variable_text:21600:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:grp-gid"
+fields = { "sets" = ["grodgrupp"] }
+evidence = "Grp och gid är koder; källan beskriver en grödgruppskod. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21602\ncatalog:valueset:3267\ncatalog:variable_text:21602:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:grp-gid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grp och gid är koder; källan beskriver en grödgruppskod. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21602\ncatalog:valueset:3267\ncatalog:variable_text:21602:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:grp-groda"
+fields = { "sets" = ["grodgrupp"] }
+evidence = "Grp är en kod; familjens variabler får samma läsbarhetsbedömning. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21603\ncatalog:variable_text:21603:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:grp-groda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grp är en kod; familjens variabler får samma läsbarhetsbedömning. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21603\ncatalog:variable_text:21603:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:hkod"
+fields = { "sets" = [] }
+evidence = "Hkod är en opak källkod.\ncatalog:variable_text:21603:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:hkod"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hkod är en opak källkod.\ncatalog:variable_text:21603:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:i1"
+fields = { "sets" = [] }
+evidence = "I1 är en opak källkod.\ncatalog:variable_text:21605:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:i1"
+fields = { "tags" = ["agriculture"] }
+evidence = "I1 är en opak källkod.\ncatalog:variable_text:21605:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ingadjur"
+fields = { "sets" = ["djurbestandets-storlek"] }
+evidence = "Kodning av avsaknad av djur på gården.\ncatalog:variable_text:21606:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ingadjur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kodning av avsaknad av djur på gården.\ncatalog:variable_text:21606:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kap"
+fields = { "sets" = [] }
+evidence = "Lagringskapacitet för stallgödsel.\ncatalog:variable_text:21608:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kap"
+fields = { "tags" = ["agriculture"] }
+evidence = "Lagringskapacitet för stallgödsel.\ncatalog:variable_text:21608:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kgivahg"
+fields = { "sets" = ["kaliumgiva"] }
+evidence = "K och HG är opaka bokstavskoder.\ncatalog:variable_text:21609:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kgivahg"
+fields = { "tags" = ["agriculture"] }
+evidence = "K och HG är opaka bokstavskoder.\ncatalog:variable_text:21609:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kgivasg"
+fields = { "sets" = ["kaliumgiva"] }
+evidence = "K och SG är opaka bokstavskoder.\ncatalog:variable_text:21610:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kgivasg"
+fields = { "tags" = ["agriculture"] }
+evidence = "K och SG är opaka bokstavskoder.\ncatalog:variable_text:21610:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "sets" = [] }
+evidence = "Lambda är en opak källbeteckning för inklusionssannolikhet.\ncatalog:variable_text:21611:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "tags" = ["methods"] }
+evidence = "Lambda är en opak källbeteckning för inklusionssannolikhet.\ncatalog:variable_text:21611:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län för brukningscentrum är en geografisk uppgift.\ncatalog:variable_text:21612:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län för brukningscentrum är en geografisk uppgift.\ncatalog:variable_text:21612:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:mjolkkors-nattvistelse"
+fields = { "sets" = [] }
+evidence = "Mjölkkornas nattvistelse under betesperioden.\ncatalog:variable_text:21613:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:mjolkkors-nattvistelse"
+fields = { "tags" = ["agriculture"] }
+evidence = "Mjölkkornas nattvistelse under betesperioden.\ncatalog:variable_text:21613:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ngivahg"
+fields = { "sets" = ["kvavegiva"] }
+evidence = "N och HG är opaka bokstavskoder.\ncatalog:variable_text:21614:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ngivahg"
+fields = { "tags" = ["agriculture"] }
+evidence = "N och HG är opaka bokstavskoder.\ncatalog:variable_text:21614:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ngivasg"
+fields = { "sets" = ["kvavegiva"] }
+evidence = "N och SG är opaka bokstavskoder.\ncatalog:variable_text:21615:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ngivasg"
+fields = { "tags" = ["agriculture"] }
+evidence = "N och SG är opaka bokstavskoder.\ncatalog:variable_text:21615:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "Samma statuskod som blankettens-statuskod, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198545\ncatalog:occurrence:198593"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod"
+fields = { "tags" = ["methods"] }
+evidence = "Samma statuskod som blankettens-statuskod, korrekt uppdelad efter observerad period.\ncatalog:occurrence:198545\ncatalog:occurrence:198593"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-2"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "Samma resultatkod som blankettens-resultatkod, korrekt uppdelad mellan observerade perioder. Siffran finns i källetiketten.\ncatalog:occurrence:198573\ncatalog:occurrence:198621\ncatalog:variable_text:21617:14061:14426"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-2"
+fields = { "tags" = ["methods"] }
+evidence = "Samma resultatkod som blankettens-resultatkod, korrekt uppdelad mellan observerade perioder. Siffran finns i källetiketten.\ncatalog:occurrence:198573\ncatalog:occurrence:198621\ncatalog:variable_text:21617:14061:14426"
+
+[[statement]]
+kind = "set"
+subject = "var:pgivahg"
+fields = { "sets" = ["fosforgiva"] }
+evidence = "P och HG är opaka bokstavskoder.\ncatalog:variable_text:21619:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:pgivahg"
+fields = { "tags" = ["agriculture"] }
+evidence = "P och HG är opaka bokstavskoder.\ncatalog:variable_text:21619:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:pgivasg"
+fields = { "sets" = ["fosforgiva"] }
+evidence = "P och SG är opaka bokstavskoder.\ncatalog:variable_text:21620:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:pgivasg"
+fields = { "tags" = ["agriculture"] }
+evidence = "P och SG är opaka bokstavskoder.\ncatalog:variable_text:21620:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:po"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21621:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:po"
+fields = { "tags" = ["geography"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21621:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21622:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "tags" = ["geography"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21622:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21623:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "tags" = ["geography"] }
+evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar med andra variabler och målet behöver hållas för D-12.\ncatalog:variable_text:21623:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek-per-stratum"
+fields = { "sets" = [] }
+evidence = "Populationsstorlek per urvalsstratum är ett metodmått.\ncatalog:variable_text:21624:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek per urvalsstratum är ett metodmått.\ncatalog:variable_text:21624:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:procent"
+fields = { "sets" = ["djur-med-godselhanteringssatt"] }
+evidence = "Andel djur med angivet gödselhanteringssätt.\ncatalog:variable_text:21625:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:procent"
+fields = { "tags" = ["agriculture"] }
+evidence = "Andel djur med angivet gödselhanteringssätt.\ncatalog:variable_text:21625:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade-ro"
+fields = { "sets" = [] }
+evidence = "Riksområde är en geografisk indelning.\ncatalog:variable_text:21626:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade-ro"
+fields = { "tags" = ["geography"] }
+evidence = "Riksområde är en geografisk indelning.\ncatalog:variable_text:21626:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmangd"
+fields = { "sets" = [] }
+evidence = "SG är en opak bokstavskod för stallgödsel.\ncatalog:variable_text:21628:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmangd"
+fields = { "tags" = ["agriculture"] }
+evidence = "SG är en opak bokstavskod för stallgödsel.\ncatalog:variable_text:21628:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = ["blankettstatus"] }
+evidence = "Blankettens statuskod är en undersökningsstatus.\ncatalog:variable_text:21629:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["methods"] }
+evidence = "Blankettens statuskod är en undersökningsstatus.\ncatalog:variable_text:21629:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstratum är ett metodmått.\ncatalog:variable_text:21630:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstratum är ett metodmått.\ncatalog:variable_text:21630:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:strlklass"
+fields = { "sets" = ["akerareal"] }
+evidence = "Storleksklass efter gårdens åkerareal.\ncatalog:variable_text:21631:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:strlklass"
+fields = { "tags" = ["agriculture"] }
+evidence = "Storleksklass efter gårdens åkerareal.\ncatalog:variable_text:21631:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:suggring"
+fields = { "sets" = [] }
+evidence = "Deltagande i suggring.\ncatalog:variable_text:21632:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:suggring"
+fields = { "tags" = ["agriculture"] }
+evidence = "Deltagande i suggring.\ncatalog:variable_text:21632:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:tack"
+fields = { "sets" = [] }
+evidence = "Täckning av gödselbehållare.\ncatalog:variable_text:21633:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:tack"
+fields = { "tags" = ["agriculture"] }
+evidence = "Täckning av gödselbehållare.\ncatalog:variable_text:21633:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstorlek per stratum är ett metodmått.\ncatalog:variable_text:21635:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum är ett metodmått.\ncatalog:variable_text:21635:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:utanskydd"
+fields = { "sets" = [] }
+evidence = "Kodning av sådd utan skyddsgröda.\ncatalog:variable_text:21636:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:utanskydd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kodning av sådd utan skyddsgröda.\ncatalog:variable_text:21636:15522:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:vtngivahg"
+fields = { "sets" = ["kvavegiva"] }
+evidence = "VT, N och HG är opaka bokstavskoder.\ncatalog:variable_text:21637:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:vtngivahg"
+fields = { "tags" = ["agriculture"] }
+evidence = "VT, N och HG är opaka bokstavskoder.\ncatalog:variable_text:21637:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:vtngivasg"
+fields = { "sets" = ["kvavegiva"] }
+evidence = "VT, N och SG är opaka bokstavskoder.\ncatalog:variable_text:21638:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:vtngivasg"
+fields = { "tags" = ["agriculture"] }
+evidence = "VT, N och SG är opaka bokstavskoder.\ncatalog:variable_text:21638:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-po8-lan"
+fields = { "sets" = ["kalibreringsvikt"] }
+evidence = "Id:ts angivna indelning stämmer bara med en av perioderna.\ncatalog:variable_text:21639:17713:18078\ncatalog:variable_text:21639:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-po8-lan"
+fields = { "tags" = ["methods"] }
+evidence = "Id:ts angivna indelning stämmer bara med en av perioderna.\ncatalog:variable_text:21639:17713:18078\ncatalog:variable_text:21639:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-strl"
+fields = { "sets" = ["kalibreringsvikt"] }
+evidence = "Id:ts angivna indelning stämmer bara med en av perioderna.\ncatalog:variable_text:21640:17713:18078\ncatalog:variable_text:21640:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:wkout-strl"
+fields = { "tags" = ["methods"] }
+evidence = "Id:ts angivna indelning stämmer bara med en av perioderna.\ncatalog:variable_text:21640:17713:18078\ncatalog:variable_text:21640:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning-2016: DjurId @2015-07-01..2016-06-30 where key = 'v37478'"
+fields = { "description" = "Identitetsnummer för djurslag." }
+evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning-2016: DjurId @2018-07-01..2019-06-30 where key = 'v37478'"
+fields = { "description" = "Identitetsnummer för djurslag." }
+evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning-2016: DjurId @2021-07-01..2022-06-30 where key = 'v37478'"
+fields = { "description" = "Identitetsnummer för djurslag." }
+evidence = "Värdena identifierar djurslag, inte enskilda djur.\ncatalog:valueset:2980\ncatalog:variable_text:21596:18809:19174"

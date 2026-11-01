@@ -10,3 +10,111 @@ kind = "set"
 subject = "valresultat: {ll,llkk}"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avgivna-roster"
+fields = { "sets" = [] }
+evidence = "Antalet avser avgivna röster vid folkomröstningen.\ncatalog:variable_text:11739:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avgivna-roster"
+fields = { "tags" = ["democracy"] }
+evidence = "Antalet avser avgivna röster vid folkomröstningen.\ncatalog:variable_text:11739:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = [] }
+evidence = "Variabeln avser födelsedatum.\ncatalog:variable_text:11740:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln avser födelsedatum.\ncatalog:variable_text:11740:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en geografisk valkretsindelning.\ncatalog:variable_text:11741:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger en geografisk valkretsindelning.\ncatalog:variable_text:11741:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln avser personens kön.\ncatalog:variable_text:11742:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln avser personens kön.\ncatalog:variable_text:11742:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:ll"
+fields = { "sets" = [] }
+evidence = "LL är en ogenomskinlig källkod för län.\ncatalog:valueset:2748\ncatalog:variable_text:11743:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:ll"
+fields = { "tags" = ["geography"] }
+evidence = "LL är en ogenomskinlig källkod för län.\ncatalog:valueset:2748\ncatalog:variable_text:11743:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:llkk"
+fields = { "sets" = [] }
+evidence = "LLkk är en ogenomskinlig källkod för kommun.\ncatalog:variable_text:11744:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:llkk"
+fields = { "tags" = ["geography"] }
+evidence = "LLkk är en ogenomskinlig källkod för kommun.\ncatalog:variable_text:11744:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "sets" = [] }
+evidence = "Id:et anger partikod, men variabeln kodar röstningsalternativ inklusive blanka och ogiltiga röster.\ncatalog:valueset:8252\ncatalog:variable_text:11745:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:et anger partikod, men variabeln kodar röstningsalternativ inklusive blanka och ogiltiga röster.\ncatalog:valueset:8252\ncatalog:variable_text:11745:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "sets" = [] }
+evidence = "Koden beskriver röstberättigade personers kategori.\ncatalog:valueset:9721\ncatalog:variable_text:11747:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "tags" = ["democracy"] }
+evidence = "Koden beskriver röstberättigade personers kategori.\ncatalog:valueset:9721\ncatalog:variable_text:11747:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en geografisk valdistriktsindelning.\ncatalog:variable_text:11748:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger en geografisk valdistriktsindelning.\ncatalog:variable_text:11748:12053:12418"

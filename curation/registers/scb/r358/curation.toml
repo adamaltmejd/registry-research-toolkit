@@ -4,3 +4,483 @@ kind = "set"
 subject = "oforadlat-tradbransle: {ng1,ng2007}"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "sets" = [] }
+evidence = "Bränsleslag klassificerar trädbränslet.\ncatalog:register:261\ncatalog:valueset:5733\ncatalog:variable_text:45798:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleslag klassificerar trädbränslet.\ncatalog:register:261\ncatalog:valueset:5733\ncatalog:variable_text:45798:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:btyp"
+fields = { "sets" = [] }
+evidence = "Btyp är en opak källförkortning; etiketten anger kategorityp.\ncatalog:valueset:5733\ncatalog:variable_text:45799:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:btyp"
+fields = { "tags" = ["energy"] }
+evidence = "Btyp är en opak källförkortning; etiketten anger kategorityp.\ncatalog:valueset:5733\ncatalog:variable_text:45799:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:cutoff"
+fields = { "sets" = [] }
+evidence = "Cutoff avser urvalets cutoffgräns.\ncatalog:variable_text:45800:18262:19723\ncatalog:variable_text:45807:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:cutoff"
+fields = { "tags" = ["methods"] }
+evidence = "Cutoff avser urvalets cutoffgräns.\ncatalog:variable_text:45800:18262:19723\ncatalog:variable_text:45807:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter exporterad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45802:15706:19723\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:export"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Variabeln mäter exporterad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45802:15706:19723\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gotaland"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser trädbränslets råvara från Götaland.\ncatalog:register:261\ncatalog:variable_text:45803:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:gotaland"
+fields = { "tags" = ["energy"] }
+evidence = "Kvantiteten avser trädbränslets råvara från Götaland.\ncatalog:register:261\ncatalog:variable_text:45803:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:impexp-1-2"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om företaget importerat eller exporterat.\ncatalog:register:261\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:impexp-1-2"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Variabeln anger om företaget importerat eller exporterat.\ncatalog:register:261\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:import"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter importerad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45806:15706:19723\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:import"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Variabeln mäter importerad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45806:15706:19723\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "sets" = [] }
+evidence = "Kategorin gäller urvalets cutoffgräns.\ncatalog:variable_text:45800:18262:19723\ncatalog:variable_text:45807:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "tags" = ["methods"] }
+evidence = "Kategorin gäller urvalets cutoffgräns.\ncatalog:variable_text:45800:18262:19723\ncatalog:variable_text:45807:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-gwh"
+fields = { "sets" = [] }
+evidence = "Enheterna i id:t anger omvandlingen; omvandlingsfaktorn hör till energi.\ncatalog:occurrence-locators:variable:45810\ncatalog:variable_text:45809:16801:19723\ncatalog:variable_text:45810:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-gwh"
+fields = { "tags" = ["energy"] }
+evidence = "Enheterna i id:t anger omvandlingen; omvandlingsfaktorn hör till energi.\ncatalog:occurrence-locators:variable:45810\ncatalog:variable_text:45809:16801:19723\ncatalog:variable_text:45810:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3f"
+fields = { "sets" = [] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45809:16801:19723\ncatalog:variable_text:45810:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3f"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45809:16801:19723\ncatalog:variable_text:45810:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3s"
+fields = { "sets" = [] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45811:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-m3s"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45811:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tonra"
+fields = { "sets" = [] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45812:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tonra"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45812:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tontorr"
+fields = { "sets" = [] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45813:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:mwh-tontorr"
+fields = { "tags" = ["energy"] }
+evidence = "Enhetskoderna är opaka i förhållande till etiketten. Etiketten delas av flera faktorer och målnamnet behöver disambigueras.\ncatalog:variable_text:45810:16801:19723\ncatalog:variable_text:45813:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "sets" = [] }
+evidence = "Ng är en opak bokstavskod. Etiketten delas med NG2007 och målnamnet behöver disambigueras.\ncatalog:variable_text:45814:16801:17532\ncatalog:variable_text:45815:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en opak bokstavskod. Etiketten delas med NG2007 och målnamnet behöver disambigueras.\ncatalog:variable_text:45814:16801:17532\ncatalog:variable_text:45815:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ng2007"
+fields = { "sets" = [] }
+evidence = "Ng är en opak bokstavskod. Etiketten delas med Ng1 och målnamnet behöver disambigueras.\ncatalog:variable_text:45814:16801:17532\ncatalog:variable_text:45815:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ng2007"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en opak bokstavskod. Etiketten delas med Ng1 och målnamnet behöver disambigueras.\ncatalog:variable_text:45814:16801:17532\ncatalog:variable_text:45815:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nnorrland"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser trädbränslets råvara från norra Norrland.\ncatalog:register:261\ncatalog:variable_text:45816:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nnorrland"
+fields = { "tags" = ["energy"] }
+evidence = "Kvantiteten avser trädbränslets råvara från norra Norrland.\ncatalog:register:261\ncatalog:variable_text:45816:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:okand"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser trädbränslets råvara med okänd landsdel.\ncatalog:register:261\ncatalog:variable_text:45817:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:okand"
+fields = { "tags" = ["energy"] }
+evidence = "Kvantiteten avser trädbränslets råvara med okänd landsdel.\ncatalog:register:261\ncatalog:variable_text:45817:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prod-1"
+fields = { "sets" = [] }
+evidence = "Svarsalternativen beskriver företagets produktion och handel med trädbränsle.\ncatalog:register:261\ncatalog:valueset:11330\ncatalog:variable_text:45819:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prod-1"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Svarsalternativen beskriver företagets produktion och handel med trädbränsle.\ncatalog:register:261\ncatalog:valueset:11330\ncatalog:variable_text:45819:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prod-2"
+fields = { "sets" = [] }
+evidence = "Frågan gäller företagets produktion av trädbränsle.\ncatalog:register:261\ncatalog:variable_text:45820:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:prod-2"
+fields = { "tags" = ["business", "energy"] }
+evidence = "Frågan gäller företagets produktion av trädbränsle.\ncatalog:register:261\ncatalog:variable_text:45820:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ravarakat"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar trädbränslets råvara.\ncatalog:register:261\ncatalog:variable_text:45821:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ravarakat"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln klassificerar trädbränslets råvara.\ncatalog:register:261\ncatalog:variable_text:45821:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:snorrland"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser trädbränslets råvara från södra Norrland.\ncatalog:register:261\ncatalog:variable_text:45823:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:snorrland"
+fields = { "tags" = ["energy"] }
+evidence = "Kvantiteten avser trädbränslets råvara från södra Norrland.\ncatalog:register:261\ncatalog:variable_text:45823:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum avser stratifierat urval.\ncatalog:variable_text:45824:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum avser stratifierat urval.\ncatalog:variable_text:45824:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svealand"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser trädbränslets råvara från Svealand.\ncatalog:register:261\ncatalog:variable_text:45825:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svealand"
+fields = { "tags" = ["energy"] }
+evidence = "Kvantiteten avser trädbränslets råvara från Svealand.\ncatalog:register:261\ncatalog:variable_text:45825:15706:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sverige"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter producerad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45826:15706:19723\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sverige"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter producerad trädbränslekvantitet.\ncatalog:register:261\ncatalog:variable_text:45826:15706:19723\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-exp-gwh"
+fields = { "sets" = [] }
+evidence = "Id:t anger total export i GWh; måttet gäller energi och handel.\ncatalog:register:261\ncatalog:variable_text:45802:15706:19723\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-exp-gwh"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Id:t anger total export i GWh; måttet gäller energi och handel.\ncatalog:register:261\ncatalog:variable_text:45802:15706:19723\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-imp-gwh"
+fields = { "sets" = [] }
+evidence = "Id:t anger total import i GWh; måttet gäller energi och handel.\ncatalog:register:261\ncatalog:variable_text:45806:15706:19723\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-imp-gwh"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "Id:t anger total import i GWh; måttet gäller energi och handel.\ncatalog:register:261\ncatalog:variable_text:45806:15706:19723\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-prod-gwh"
+fields = { "sets" = [] }
+evidence = "Id:t anger total produktion i GWh; måttet gäller energi.\ncatalog:register:261\ncatalog:variable_text:45826:15706:19723\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:total-prod-gwh"
+fields = { "tags" = ["energy"] }
+evidence = "Id:t anger total produktion i GWh; måttet gäller energi.\ncatalog:register:261\ncatalog:variable_text:45826:15706:19723\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en urvalsvikt.\ncatalog:variable_text:45830:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en urvalsvikt.\ncatalog:variable_text:45830:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2018-01-01..2018-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2019-01-01..2019-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2020-01-01..2020-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2021-01-01..2021-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2022-01-01..2022-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: ImpExp_1-2 @2023-01-01..2023-12-31 where key = 'v44430'"
+fields = { "description" = "Anger om företaget importerat eller exporterat." }
+evidence = "Rättar en stavning utan att ändra betydelsen.\ncatalog:variable_text:45805:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_exp_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt exporterad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger exporterad kvantitet under hela perioden.\ncatalog:variable_text:45827:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_imp_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt importerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger importerad kvantitet under hela perioden.\ncatalog:variable_text:45828:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2018-01-01..2018-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2019-01-01..2019-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2020-01-01..2020-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2021-01-01..2021-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2022-01-01..2022-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "oforadlat-tradbransle: Total_prod_GWh @2023-01-01..2023-12-31 where key = 'v1721'"
+fields = { "description" = "Totalt producerad kvantitet av oförädlat trädbränsle i GWh." }
+evidence = "Beskrivningen anger förbrukning, men den operativa definitionen anger producerad kvantitet under hela perioden.\ncatalog:variable_text:45829:17532:19723"

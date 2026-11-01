@@ -4,3 +4,867 @@ kind = "set"
 subject = "forskarexaminerades-arbetsmarknad: lan"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:12812:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:12812:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:amneomr"
+fields = { "sets" = ["forskarutbildningens-amnesinriktning"] }
+evidence = "Inriktningen hör till forskarutbildningens ämnesområde.\ncatalog:variable_text:12813:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:amneomr"
+fields = { "tags" = ["education"] }
+evidence = "Inriktningen hör till forskarutbildningens ämnesområde.\ncatalog:variable_text:12813:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "sets" = [] }
+evidence = "Anställningsform är en arbetsmarknadsuppgift.\ncatalog:variable_text:12814:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsform är en arbetsmarknadsuppgift.\ncatalog:variable_text:12814:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "sets" = ["arbetets-omfattning"] }
+evidence = "Arbetade timmar mäter arbetets omfattning.\ncatalog:variable_text:12815:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetade timmar mäter arbetets omfattning.\ncatalog:variable_text:12815:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-arbetslos"
+fields = { "sets" = ["arbetsloshet-efter-forskarutbildning"] }
+evidence = "Antalet månader mäter arbetslöshetens varaktighet.\ncatalog:variable_text:12816:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-arbetslos"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet månader mäter arbetslöshetens varaktighet.\ncatalog:variable_text:12816:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-univ"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter arbete vid universitet eller högskola.\ncatalog:variable_text:12817:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arb-univ"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter arbete vid universitet eller högskola.\ncatalog:variable_text:12817:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbets-overensstammelse-forskning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser arbetets ämnesmässiga överensstämmelse med utbildningen.\ncatalog:variable_text:12818:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbets-overensstammelse-forskning"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Variabeln avser arbetets ämnesmässiga överensstämmelse med utbildningen.\ncatalog:variable_text:12818:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "Faktisk sektor hör ihop med önskad sektor.\ncatalog:variable_text:12819:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "tags" = ["employment"] }
+evidence = "Faktisk sektor hör ihop med önskad sektor.\ncatalog:variable_text:12819:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd är en familjeuppgift.\ncatalog:variable_text:12820:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd är en familjeuppgift.\ncatalog:variable_text:12820:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:examenstyp"
+fields = { "sets" = [] }
+evidence = "Examenstyp avser utbildning.\ncatalog:variable_text:12821:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:examenstyp"
+fields = { "tags" = ["education"] }
+evidence = "Examenstyp avser utbildning.\ncatalog:variable_text:12821:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14a"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14A är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12822:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14a"
+fields = { "tags" = ["employment"] }
+evidence = "F14A är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12822:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14b"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14B är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12823:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14b"
+fields = { "tags" = ["employment"] }
+evidence = "F14B är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12823:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14c"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14C är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12824:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14c"
+fields = { "tags" = ["employment"] }
+evidence = "F14C är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12824:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14d"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14D är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12825:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14d"
+fields = { "tags" = ["employment"] }
+evidence = "F14D är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12825:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14e"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14E är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12826:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14e"
+fields = { "tags" = ["employment"] }
+evidence = "F14E är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12826:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14f"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14F är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12827:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14f"
+fields = { "tags" = ["employment"] }
+evidence = "F14F är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12827:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14g"
+fields = { "sets" = ["arbetsuppgifternas-krav"] }
+evidence = "F14G är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12828:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f14g"
+fields = { "tags" = ["employment"] }
+evidence = "F14G är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12828:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f15"
+fields = { "sets" = ["tillracklig-utbildningsniva"] }
+evidence = "F15 är en opak frågekod.\ncatalog:variable_text:12829:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f15"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F15 är en opak frågekod.\ncatalog:variable_text:12829:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f16"
+fields = { "sets" = ["tillracklig-utbildningsniva"] }
+evidence = "F16 är en opak frågekod.\ncatalog:variable_text:12830:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f16"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F16 är en opak frågekod.\ncatalog:variable_text:12830:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f17"
+fields = { "sets" = ["bisyssla"] }
+evidence = "F17 är en opak frågekod.\ncatalog:variable_text:12831:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f17"
+fields = { "tags" = ["employment"] }
+evidence = "F17 är en opak frågekod.\ncatalog:variable_text:12831:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f18"
+fields = { "sets" = ["bisyssla"] }
+evidence = "F18 är en opak frågekod.\ncatalog:variable_text:12832:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f18"
+fields = { "tags" = ["employment"] }
+evidence = "F18 är en opak frågekod.\ncatalog:variable_text:12832:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f19"
+fields = { "sets" = [] }
+evidence = "F19 är en opak frågekod.\ncatalog:variable_text:12833:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f19"
+fields = { "tags" = ["income"] }
+evidence = "F19 är en opak frågekod.\ncatalog:variable_text:12833:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f21"
+fields = { "sets" = ["arbetsloshet-efter-forskarutbildning"] }
+evidence = "F21 är en opak frågekod.\ncatalog:variable_text:12834:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f21"
+fields = { "tags" = ["employment"] }
+evidence = "F21 är en opak frågekod.\ncatalog:variable_text:12834:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23"
+fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
+evidence = "F23 är en opak frågekod.\ncatalog:variable_text:12835:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23"
+fields = { "tags" = ["research"] }
+evidence = "F23 är en opak frågekod.\ncatalog:variable_text:12835:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23-1"
+fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
+evidence = "F23_1 är en opak frågekod.\ncatalog:variable_text:12836:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23-1"
+fields = { "tags" = ["research"] }
+evidence = "F23_1 är en opak frågekod.\ncatalog:variable_text:12836:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23-2"
+fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
+evidence = "F23_2 är en opak frågekod.\ncatalog:variable_text:12837:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f23-2"
+fields = { "tags" = ["research"] }
+evidence = "F23_2 är en opak frågekod.\ncatalog:variable_text:12837:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-1"
+fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
+evidence = "F24_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12838:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-1"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F24_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12838:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-2"
+fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
+evidence = "F24_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12839:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-2"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F24_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12839:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-3"
+fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
+evidence = "F24_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12840:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f24-3"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F24_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12840:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F25 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12841:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25"
+fields = { "tags" = ["employment"] }
+evidence = "F25 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12841:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F25_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12842:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "tags" = ["employment"] }
+evidence = "F25_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12842:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F25_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12843:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "tags" = ["employment"] }
+evidence = "F25_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12843:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-4"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F25_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12844:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-4"
+fields = { "tags" = ["employment"] }
+evidence = "F25_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12844:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-5"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F25_5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12845:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-5"
+fields = { "tags" = ["employment"] }
+evidence = "F25_5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12845:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F26 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12846:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26"
+fields = { "tags" = ["employment"] }
+evidence = "F26 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12846:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-2"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F26_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12847:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-2"
+fields = { "tags" = ["employment"] }
+evidence = "F26_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12847:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-3"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F26_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12848:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-3"
+fields = { "tags" = ["employment"] }
+evidence = "F26_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12848:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-4"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F26_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12849:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-4"
+fields = { "tags" = ["employment"] }
+evidence = "F26_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12849:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-5"
+fields = { "sets" = ["arbete-utomlands"] }
+evidence = "F26_5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12850:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f26-5"
+fields = { "tags" = ["employment"] }
+evidence = "F26_5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12850:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-1"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12851:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-1"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12851:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-2"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12852:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-2"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12852:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-2ant"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_2ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12853:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-2ant"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_2ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12853:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-3"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12854:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-3"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12854:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-3ant"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_3ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12855:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-3ant"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_3ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12855:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-4"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12856:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-4"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12856:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-4ant"
+fields = { "sets" = ["hemmavarande-barn"] }
+evidence = "F28_4ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12857:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f28-4ant"
+fields = { "tags" = ["family-household"] }
+evidence = "F28_4ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12857:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f29"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "F29 är en opak frågekod.\ncatalog:variable_text:12858:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f29"
+fields = { "tags" = ["employment"] }
+evidence = "F29 är en opak frågekod.\ncatalog:variable_text:12858:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "sets" = ["arbete-efter-utbildning"] }
+evidence = "F5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12859:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12859:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-1"
+fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
+evidence = "F6_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12860:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-1"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F6_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12860:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-2"
+fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
+evidence = "F6_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12861:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-2"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F6_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12861:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-3"
+fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
+evidence = "F6_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12862:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-3"
+fields = { "tags" = ["employment", "research"] }
+evidence = "F6_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12862:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-4"
+fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
+evidence = "F6_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12863:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f6-4"
+fields = { "tags" = ["employment"] }
+evidence = "F6_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12863:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f8"
+fields = { "sets" = ["arbete-efter-utbildning"] }
+evidence = "F8 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12864:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f8"
+fields = { "tags" = ["employment"] }
+evidence = "F8 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12864:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-1"
+fields = { "sets" = ["arbete-inom-olika-omraden"] }
+evidence = "F9_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12865:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-1"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F9_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12865:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-2"
+fields = { "sets" = ["arbete-inom-olika-omraden"] }
+evidence = "F9_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12866:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F9_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12866:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-3"
+fields = { "sets" = ["arbete-inom-olika-omraden"] }
+evidence = "F9_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12867:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:f9-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F9_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12867:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:12868:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:12868:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:formell-tjanstgoringsomfattning"
+fields = { "sets" = ["arbetets-omfattning"] }
+evidence = "Tjänstgöringsomfattning mäter arbetets omfattning.\ncatalog:variable_text:12869:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:formell-tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstgöringsomfattning mäter arbetets omfattning.\ncatalog:variable_text:12869:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskole-universitetskod"
+fields = { "sets" = [] }
+evidence = "Koden anger universitet eller högskola.\ncatalog:variable_text:12870:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskole-universitetskod"
+fields = { "tags" = ["education"] }
+evidence = "Koden anger universitet eller högskola.\ncatalog:variable_text:12870:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning"
+fields = { "sets" = [] }
+evidence = "Huvudsaklig sysselsättning är en arbetsmarknadsuppgift.\ncatalog:variable_text:12871:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning"
+fields = { "tags" = ["employment"] }
+evidence = "Huvudsaklig sysselsättning är en arbetsmarknadsuppgift.\ncatalog:variable_text:12871:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:12872:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:12872:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:la2ex2ko"
+fields = { "sets" = [] }
+evidence = "LA2EX2KO är en opak sammansatt kod.\ncatalog:variable_text:12873:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:la2ex2ko"
+fields = { "tags" = ["demographics", "education"] }
+evidence = "LA2EX2KO är en opak sammansatt kod.\ncatalog:variable_text:12873:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:la2konn2"
+fields = { "sets" = [] }
+evidence = "LA2KONN2 är en opak sammansatt kod.\ncatalog:variable_text:12874:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:la2konn2"
+fields = { "tags" = ["demographics", "education"] }
+evidence = "LA2KONN2 är en opak sammansatt kod.\ncatalog:variable_text:12874:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:12875:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:12875:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstorlek per stratum är en metoduppgift.\ncatalog:variable_text:12877:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum är en metoduppgift.\ncatalog:variable_text:12877:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-en-timmes-arbete-under-matveckan"
+fields = { "sets" = [] }
+evidence = "Förekomst av arbete är en arbetsmarknadsuppgift.\ncatalog:variable_text:12878:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-en-timmes-arbete-under-matveckan"
+fields = { "tags" = ["employment"] }
+evidence = "Förekomst av arbete är en arbetsmarknadsuppgift.\ncatalog:variable_text:12878:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren avser företagsverksamhet.\ncatalog:variable_text:12879:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren avser företagsverksamhet.\ncatalog:variable_text:12879:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Populationsstorlek per stratum är en metoduppgift.\ncatalog:variable_text:12881:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek per stratum är en metoduppgift.\ncatalog:variable_text:12881:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum anger urvalsindelning.\ncatalog:variable_text:12882:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum anger urvalsindelning.\ncatalog:variable_text:12882:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valet-idag-av-utbildning"
+fields = { "sets" = [] }
+evidence = "Frågan avser valet av forskarutbildning.\ncatalog:variable_text:12883:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valet-idag-av-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Frågan avser valet av forskarutbildning.\ncatalog:variable_text:12883:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:vetomr"
+fields = { "sets" = ["forskarutbildningens-amnesinriktning"] }
+evidence = "Vetenskapsområdet avser forskarutbildningens inriktning.\ncatalog:variable_text:12884:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:vetomr"
+fields = { "tags" = ["education"] }
+evidence = "Vetenskapsområdet avser forskarutbildningens inriktning.\ncatalog:variable_text:12884:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "sets" = [] }
+evidence = "Kalibrerad vikt är en metoduppgift.\ncatalog:variable_text:12885:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad vikt är en metoduppgift.\ncatalog:variable_text:12885:12053:12418"

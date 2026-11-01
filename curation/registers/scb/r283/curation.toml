@@ -1,0 +1,84 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = [] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med antal omförhandlade avtal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["energy"] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med antal omförhandlade avtal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fastavgift"
+fields = { "sets" = [] }
+evidence = "Fast och rörlig avgift är komponenter i avgiften för el.\ncatalog:variable_text:7427:13149:15706\ncatalog:variable_text:7434:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:fastavgift"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Fast och rörlig avgift är komponenter i avgiften för el.\ncatalog:variable_text:7427:13149:15706\ncatalog:variable_text:7434:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger form för elavtal.\ncatalog:variable_text:7428:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningstyp"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln anger form för elavtal.\ncatalog:variable_text:7428:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omfavtalhushall"
+fields = { "sets" = [] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med övriga avtalsantal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omfavtalhushall"
+fields = { "tags" = ["energy"] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med övriga avtalsantal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omfavtalovriga"
+fields = { "sets" = [] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med övriga avtalsantal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omfavtalovriga"
+fields = { "tags" = ["energy"] }
+evidence = "Antalet avser elavtal; källan stöder en grupp med övriga avtalsantal.\ncatalog:variable_text:7425:13149:15706\ncatalog:variable_text:7429:13149:15706\ncatalog:variable_text:7430:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rad"
+fields = { "sets" = [] }
+evidence = "Rad är ett källkolumnnamn som inte uttrycker etikettens typ av elkund.\ncatalog:valueset:6325\ncatalog:variable_text:7432:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rad"
+fields = { "tags" = ["energy"] }
+evidence = "Rad är ett källkolumnnamn som inte uttrycker etikettens typ av elkund.\ncatalog:valueset:6325\ncatalog:variable_text:7432:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rorligavgift"
+fields = { "sets" = [] }
+evidence = "Fast och rörlig avgift är komponenter i avgiften för el.\ncatalog:variable_text:7427:13149:15706\ncatalog:variable_text:7434:13149:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:rorligavgift"
+fields = { "tags" = ["energy", "prices"] }
+evidence = "Fast och rörlig avgift är komponenter i avgiften för el.\ncatalog:variable_text:7427:13149:15706\ncatalog:variable_text:7434:13149:15706"

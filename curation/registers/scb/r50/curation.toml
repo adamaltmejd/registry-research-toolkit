@@ -226,3 +226,759 @@ kind = "set"
 subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a @1996..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder hör till åldersgruppen och mäter demografi.\ncatalog:variable_text:42890:17532:20089\ncatalog:variable_text:42891:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder hör till åldersgruppen och mäter demografi.\ncatalog:variable_text:42890:17532:20089\ncatalog:variable_text:42891:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgruppering hör ihop med ålder och mäter demografi.\ncatalog:variable_text:42890:17532:20089\ncatalog:variable_text:42891:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgruppering hör ihop med ålder och mäter demografi.\ncatalog:variable_text:42890:17532:20089\ncatalog:variable_text:42891:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "sets" = ["anstallningsform"] }
+evidence = "Heltid och deltid är kodningar av anställningens omfattning.\ncatalog:valueset:4971\ncatalog:variable_text:42892:16071:20089\ncatalog:variable_text:42893:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "tags" = ["employment"] }
+evidence = "Heltid och deltid är kodningar av anställningens omfattning.\ncatalog:valueset:4971\ncatalog:variable_text:42892:16071:20089\ncatalog:variable_text:42893:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstyp"
+fields = { "sets" = ["anstallningsform"] }
+evidence = "Anställningstyp är en kodning av anställningens form.\ncatalog:variable_text:42892:16071:20089\ncatalog:variable_text:42893:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstyp"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningstyp är en kodning av anställningens form.\ncatalog:variable_text:42892:16071:20089\ncatalog:variable_text:42893:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = ["storlek-efter-antal-anstallda"] }
+evidence = "Antal anställda mäter företagsstorlek.\ncatalog:variable_text:42894:18628:20089\ncatalog:variable_text:42932:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["business"] }
+evidence = "Antal anställda mäter företagsstorlek.\ncatalog:variable_text:42894:18628:20089\ncatalog:variable_text:42932:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "sets" = ["arbetad-tid"] }
+evidence = "Övertid är en komponent av arbetad tid.\ncatalog:variable_text:42895:13149:20089\ncatalog:variable_text:42899:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "tags" = ["employment"] }
+evidence = "Övertid är en komponent av arbetad tid.\ncatalog:variable_text:42895:13149:20089\ncatalog:variable_text:42899:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "sets" = [] }
+evidence = "Semesterrätt är ett anställningsvillkor.\ncatalog:variable_text:42896:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "tags" = ["employment"] }
+evidence = "Semesterrätt är ett anställningsvillkor.\ncatalog:variable_text:42896:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtidart"
+fields = { "sets" = [] }
+evidence = "Skiftform beskriver arbetstidens förläggning.\ncatalog:variable_text:42897:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbtidart"
+fields = { "tags" = ["employment"] }
+evidence = "Skiftform beskriver arbetstidens förläggning.\ncatalog:variable_text:42897:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:faktiskt-arbetad-tid"
+fields = { "sets" = ["arbetad-tid"] }
+evidence = "Faktiskt arbetad tid och övertid är relaterade tidsmått.\ncatalog:variable_text:42895:13149:20089\ncatalog:variable_text:42899:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:faktiskt-arbetad-tid"
+fields = { "tags" = ["employment"] }
+evidence = "Faktiskt arbetad tid och övertid är relaterade tidsmått.\ncatalog:variable_text:42895:13149:20089\ncatalog:variable_text:42899:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "sets" = [] }
+evidence = "Imputering är en statistisk kvalitetsmarkör.\ncatalog:variable_text:42900:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "tags" = ["methods"] }
+evidence = "Imputering är en statistisk kvalitetsmarkör.\ncatalog:variable_text:42900:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kollavt"
+fields = { "sets" = ["kollektivavtal"] }
+evidence = "Förekomst och andel av kollektivavtal hör till samma begrepp.\ncatalog:variable_text:42901:18993:20089\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kollavt"
+fields = { "tags" = ["employment"] }
+evidence = "Förekomst och andel av kollektivavtal hör till samma begrepp.\ncatalog:variable_text:42901:18993:20089\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kollavt-proc"
+fields = { "sets" = ["kollektivavtal"] }
+evidence = "Andelen och förekomsten av kollektivavtal hör till samma begrepp.\ncatalog:variable_text:42901:18993:20089\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kollavt-proc"
+fields = { "tags" = ["employment"] }
+evidence = "Andelen och förekomsten av kollektivavtal hör till samma begrepp.\ncatalog:variable_text:42901:18993:20089\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["geografisk-tillhorighet"] }
+evidence = "Kommun och län kodar geografisk tillhörighet.\ncatalog:variable_text:42903:17167:20089\ncatalog:variable_text:42905:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun och län kodar geografisk tillhörighet.\ncatalog:variable_text:42903:17167:20089\ncatalog:variable_text:42905:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter kön.\ncatalog:variable_text:42904:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter kön.\ncatalog:variable_text:42904:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["geografisk-tillhorighet"] }
+evidence = "Län och kommun kodar geografisk tillhörighet.\ncatalog:variable_text:42903:17167:20089\ncatalog:variable_text:42905:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län och kommun kodar geografisk tillhörighet.\ncatalog:variable_text:42903:17167:20089\ncatalog:variable_text:42905:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillanarb"
+fields = { "sets" = ["lilla-n"] }
+evidence = "LillaN anger antal utvalda företag i urvalet.\ncatalog:variable_text:42906:9496:20089\ncatalog:variable_text:42907:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillanarb"
+fields = { "tags" = ["methods"] }
+evidence = "LillaN anger antal utvalda företag i urvalet.\ncatalog:variable_text:42906:9496:20089\ncatalog:variable_text:42907:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillanovr"
+fields = { "sets" = ["lilla-n"] }
+evidence = "Definitionen anger företagsantal men äldre perioder har en oförenlig enhet.\ncatalog:variable_text:42907:13149:20089\ncatalog:variable_text:42907:9496:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:lillanovr"
+fields = { "tags" = ["methods"] }
+evidence = "Definitionen anger företagsantal men äldre perioder har en oförenlig enhet.\ncatalog:variable_text:42907:13149:20089\ncatalog:variable_text:42907:9496:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "sets" = [] }
+evidence = "Löneform beskriver anställningens löneperiod.\ncatalog:valueset:1546\ncatalog:variable_text:42908:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "tags" = ["employment"] }
+evidence = "Löneform beskriver anställningens löneperiod.\ncatalog:valueset:1546\ncatalog:variable_text:42908:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-formaner"
+fields = { "sets" = [] }
+evidence = "Identitetskopplingen har motstridiga definitioner för angränsande perioder.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-formaner"
+fields = { "tags" = ["income"] }
+evidence = "Identitetskopplingen har motstridiga definitioner för angränsande perioder.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-jour-beredskap"
+fields = { "sets" = [] }
+evidence = "Beloppet är en komponent av lönesumman.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-jour-beredskap"
+fields = { "tags" = ["income"] }
+evidence = "Beloppet är en komponent av lönesumman.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "sets" = [] }
+evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42911:12784:13149\ncatalog:variable_text:42911:17167:20089\ncatalog:variable_text:42911:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "tags" = ["income"] }
+evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42911:12784:13149\ncatalog:variable_text:42911:17167:20089\ncatalog:variable_text:42911:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-totalt"
+fields = { "sets" = [] }
+evidence = "Totalen hör ihop med lönesummans komponenter.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-totalt"
+fields = { "tags" = ["income"] }
+evidence = "Totalen hör ihop med lönesummans komponenter.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsforman"
+fields = { "sets" = ["manadslon"] }
+evidence = "Samma månadslöneförmån är uppdelad mellan perioder; definition och källkolumn stöder kopplingen till manadslon-formaner.\ncatalog:occurrence:445631\ncatalog:occurrence:445676"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsforman"
+fields = { "tags" = ["income"] }
+evidence = "Samma månadslöneförmån är uppdelad mellan perioder; definition och källkolumn stöder kopplingen till manadslon-formaner.\ncatalog:occurrence:445631\ncatalog:occurrence:445676"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-formaner"
+fields = { "sets" = ["manadslon"] }
+evidence = "Samma månadslöneförmån är uppdelad mellan perioder; definition och källkolumn stöder kopplingen till manadsforman.\ncatalog:occurrence:445631\ncatalog:occurrence:445676"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-formaner"
+fields = { "tags" = ["income"] }
+evidence = "Samma månadslöneförmån är uppdelad mellan perioder; definition och källkolumn stöder kopplingen till manadsforman.\ncatalog:occurrence:445631\ncatalog:occurrence:445676"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-totallon"
+fields = { "sets" = ["manadslon"] }
+evidence = "Totallönen hör ihop med månadslönens komponenter.\ncatalog:variable_text:42916:17167:20089\ncatalog:variable_text:42918:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-totallon"
+fields = { "tags" = ["income"] }
+evidence = "Totallönen hör ihop med månadslönens komponenter.\ncatalog:variable_text:42916:17167:20089\ncatalog:variable_text:42918:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjourber"
+fields = { "sets" = ["manadslon"] }
+evidence = "M är en källkod för månadslön och utgör en otydlig ensam bokstav i id:t.\ncatalog:variable_text:42917:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mjourber"
+fields = { "tags" = ["income"] }
+evidence = "M är en källkod för månadslön och utgör en otydlig ensam bokstav i id:t.\ncatalog:variable_text:42917:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlong"
+fields = { "sets" = ["manadslon"] }
+evidence = "M och G är enbokstavskoder för månadslön respektive grundlön.\ncatalog:variable_text:42918:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mlong"
+fields = { "tags" = ["income"] }
+evidence = "M och G är enbokstavskoder för månadslön respektive grundlön.\ncatalog:variable_text:42918:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mskift"
+fields = { "sets" = ["manadslon"] }
+evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42919:12784:13149\ncatalog:variable_text:42919:17167:20089\ncatalog:variable_text:42919:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:mskift"
+fields = { "tags" = ["income"] }
+evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42919:12784:13149\ncatalog:variable_text:42919:17167:20089\ncatalog:variable_text:42919:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodning hör till företagsstruktur.\ncatalog:variable_text:42920:13879:20089\ncatalog:variable_text:42921:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodning hör till företagsstruktur.\ncatalog:variable_text:42920:13879:20089\ncatalog:variable_text:42921:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodning hör till företagsstruktur.\ncatalog:variable_text:42920:13879:20089\ncatalog:variable_text:42921:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodning hör till företagsstruktur.\ncatalog:variable_text:42920:13879:20089\ncatalog:variable_text:42921:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvararb"
+fields = { "sets" = ["antal-svarande-foretag"] }
+evidence = "Antal svarande företag är ett undersökningsmått.\ncatalog:variable_text:42922:9496:20089\ncatalog:variable_text:42923:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvararb"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande företag är ett undersökningsmått.\ncatalog:variable_text:42922:9496:20089\ncatalog:variable_text:42923:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvarovr"
+fields = { "sets" = ["antal-svarande-foretag"] }
+evidence = "Antal svarande företag är ett undersökningsmått.\ncatalog:variable_text:42922:9496:20089\ncatalog:variable_text:42923:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvarovr"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande företag är ett undersökningsmått.\ncatalog:variable_text:42922:9496:20089\ncatalog:variable_text:42923:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktid"
+fields = { "sets" = ["avtalad-arbetstid"] }
+evidence = "Överenskommen tid och heltidsmåttet hör till avtalad arbetstid.\ncatalog:variable_text:42924:9496:20089\ncatalog:variable_text:42925:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktid"
+fields = { "tags" = ["employment"] }
+evidence = "Överenskommen tid och heltidsmåttet hör till avtalad arbetstid.\ncatalog:variable_text:42924:9496:20089\ncatalog:variable_text:42925:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktidh"
+fields = { "sets" = ["avtalad-arbetstid"] }
+evidence = "Den avslutande bokstaven H är en källkod för heltid.\ncatalog:variable_text:42925:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovktidh"
+fields = { "tags" = ["employment"] }
+evidence = "Den avslutande bokstaven H är en källkod för heltid.\ncatalog:variable_text:42925:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "sets" = [] }
+evidence = "Personalkategori är en arbetsmarknadsuppgift.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "tags" = ["employment"] }
+evidence = "Personalkategori är en arbetsmarknadsuppgift.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storanarb"
+fields = { "sets" = ["stora-n"] }
+evidence = "Antalet företag i urvalsramen är ett undersökningsmått.\ncatalog:variable_text:42929:9496:20089\ncatalog:variable_text:42930:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storanarb"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet företag i urvalsramen är ett undersökningsmått.\ncatalog:variable_text:42929:9496:20089\ncatalog:variable_text:42930:13149:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storanovr"
+fields = { "sets" = ["stora-n"] }
+evidence = "Definitionen anger företagsantal men äldre perioder har en oförenlig enhet.\ncatalog:variable_text:42930:12784:13149\ncatalog:variable_text:42930:13149:20089\ncatalog:variable_text:42930:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:storanovr"
+fields = { "tags" = ["methods"] }
+evidence = "Definitionen anger företagsantal men äldre perioder har en oförenlig enhet.\ncatalog:variable_text:42930:12784:13149\ncatalog:variable_text:42930:13149:20089\ncatalog:variable_text:42930:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-arbetsstallet"
+fields = { "sets" = ["storlek-efter-antal-anstallda"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:valueset:11252\ncatalog:variable_text:42931:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-arbetsstallet"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:valueset:11252\ncatalog:variable_text:42931:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag"
+fields = { "sets" = ["storlek-efter-antal-anstallda"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:valueset:10750\ncatalog:variable_text:42932:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-pa-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklassen baseras på antal anställda.\ncatalog:valueset:10750\ncatalog:variable_text:42932:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:42933:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:42933:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sumforman"
+fields = { "sets" = [] }
+evidence = "Källkolumnen är densamma som för lonesumma-formaner men den äldre definitionen anger månadslön.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
+
+[[statement]]
+kind = "set"
+subject = "var:sumforman"
+fields = { "tags" = ["income"] }
+evidence = "Källkolumnen är densamma som för lonesumma-formaner men den äldre definitionen anger månadslön.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhelglon"
+fields = { "sets" = [] }
+evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable_text:42935:12418:12784\ncatalog:variable_text:42935:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhelglon"
+fields = { "tags" = ["income"] }
+evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable_text:42935:12418:12784\ncatalog:variable_text:42935:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sumlong"
+fields = { "sets" = [] }
+evidence = "Den avslutande bokstaven G är en källkod för grundlön.\ncatalog:variable_text:42936:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sumlong"
+fields = { "tags" = ["income"] }
+evidence = "Den avslutande bokstaven G är en källkod för grundlön.\ncatalog:variable_text:42936:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = ["avtalad-arbetstid"] }
+evidence = "Omfattningen härleds från överenskommen veckoarbetstid och heltidsmåttet.\ncatalog:variable_text:42924:9496:20089\ncatalog:variable_text:42925:9496:20089\ncatalog:variable_text:42937:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Omfattningen härleds från överenskommen veckoarbetstid och heltidsmåttet.\ncatalog:variable_text:42924:9496:20089\ncatalog:variable_text:42925:9496:20089\ncatalog:variable_text:42937:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar utbildningens inriktning.\ncatalog:variable_text:42938:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln klassificerar utbildningens inriktning.\ncatalog:variable_text:42938:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar utbildningens nivå.\ncatalog:variable_text:42939:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln klassificerar utbildningens nivå.\ncatalog:variable_text:42939:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar yrke.\ncatalog:variable_text:42940:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln klassificerar yrke.\ncatalog:variable_text:42940:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2022-01-01..2022-12-31 where key = 'v46225'"
+fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
+evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2023-01-01..2023-12-31 where key = 'v46225'"
+fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
+evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: kollavt_proc @2024-01-01..2024-12-31 where key = 'v46225'"
+fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
+evidence = "Korrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1996-01-01..1996-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1997-01-01..1997-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1998-01-01..1998-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @1999-01-01..1999-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2000-01-01..2000-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2001-01-01..2001-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2002-01-01..2002-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2003-01-01..2003-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2004-01-01..2004-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2005-01-01..2005-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2006-01-01..2006-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2007-01-01..2007-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2008-01-01..2008-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2009-01-01..2009-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2010-01-01..2010-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2011-01-01..2011-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2012-01-01..2012-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2013-01-01..2013-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2014-01-01..2014-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2015-01-01..2015-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2016-01-01..2016-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2017-01-01..2017-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2018-01-01..2018-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2019-01-01..2019-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2020-01-01..2020-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2021-01-01..2021-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2022-01-01..2022-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2023-01-01..2023-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2024-01-01..2024-12-31 where key = 'v3117'"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"

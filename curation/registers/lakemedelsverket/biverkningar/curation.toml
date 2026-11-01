@@ -10,3 +10,135 @@ kind = "set"
 subject = "handlagda: atc4pos"
 fields = { "classification" = "class/atc/atc" }
 evidence = "reg_meta_build/curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarlig"
+fields = { "sets" = [] }
+evidence = "Allvarlighetsindikator för en misstänkt läkemedelsbiverkning.\ncatalog:occurrence:1009"
+
+[[statement]]
+kind = "set"
+subject = "var:allvarlig"
+fields = { "tags" = ["medicines"] }
+evidence = "Allvarlighetsindikator för en misstänkt läkemedelsbiverkning.\ncatalog:occurrence:1009"
+
+[[statement]]
+kind = "set"
+subject = "var:atc-kod-4-pos"
+fields = { "sets" = [] }
+evidence = "ATC-koden anger vaccinets läkemedelsklass.\ncatalog:occurrence:1010"
+
+[[statement]]
+kind = "set"
+subject = "var:atc-kod-4-pos"
+fields = { "tags" = ["medicines"] }
+evidence = "ATC-koden anger vaccinets läkemedelsklass.\ncatalog:occurrence:1010"
+
+[[statement]]
+kind = "set"
+subject = "var:daystoonset"
+fields = { "sets" = [] }
+evidence = "Antalet dagar beskriver tiden till en vaccinsbiverkning.\ncatalog:occurrence:1012"
+
+[[statement]]
+kind = "set"
+subject = "var:daystoonset"
+fields = { "tags" = ["medicines"] }
+evidence = "Antalet dagar beskriver tiden till en vaccinsbiverkning.\ncatalog:occurrence:1012"
+
+[[statement]]
+kind = "set"
+subject = "var:event-reported-term"
+fields = { "sets" = [] }
+evidence = "Fältet anger den rapporterade misstänkta biverkningen.\ncatalog:occurrence:1013"
+
+[[statement]]
+kind = "set"
+subject = "var:event-reported-term"
+fields = { "tags" = ["medicines"] }
+evidence = "Fältet anger den rapporterade misstänkta biverkningen.\ncatalog:occurrence:1013"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = [] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:occurrence:1011"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:occurrence:1011"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-hlgt"
+fields = { "sets" = [] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-hlgt"
+fields = { "tags" = ["medicines"] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-hlt"
+fields = { "sets" = [] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-hlt"
+fields = { "tags" = ["medicines"] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-pt"
+fields = { "sets" = [] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-pt"
+fields = { "tags" = ["medicines"] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-soc"
+fields = { "sets" = [] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:meddra-soc"
+fields = { "tags" = ["medicines"] }
+evidence = "MedDRA-nivåerna kodar samma rapporterade biverkning och är möjliga gruppmedlemmar.\ncatalog:occurrence:1015\ncatalog:occurrence:1016\ncatalog:occurrence:1021\ncatalog:occurrence:1024"
+
+[[statement]]
+kind = "set"
+subject = "var:outcome"
+fields = { "sets" = [] }
+evidence = "Utfallet avser den rapporterade biverkningen.\ncatalog:occurrence:1020"
+
+[[statement]]
+kind = "set"
+subject = "var:outcome"
+fields = { "tags" = ["medicines"] }
+evidence = "Utfallet avser den rapporterade biverkningen.\ncatalog:occurrence:1020"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccin"
+fields = { "sets" = [] }
+evidence = "Fältet anger vaccinnamn.\ncatalog:occurrence:1025"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccin"
+fields = { "tags" = ["medicines"] }
+evidence = "Fältet anger vaccinnamn.\ncatalog:occurrence:1025"

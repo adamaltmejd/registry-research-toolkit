@@ -1,12 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:167\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
-
-[[statement]]
-kind = "set"
 subject = "elevpanel-8: {kommun,nykommun} @2018-01-01..2018-06-30"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -109,42 +103,1008 @@ evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLega
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak6"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+subject = "var:aldersint"
+fields = { "sets" = [] }
+evidence = "Undervisningsformen hör till utbildning.\ncatalog:variable_text:7346:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak8"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+subject = "var:aldersint"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningsformen hör till utbildning.\ncatalog:variable_text:7346:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak9"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+subject = "var:anpassad-studigang"
+fields = { "sets" = [] }
+evidence = "Anpassad studiegång är en utbildningsinsats.\ncatalog:variable_text:7347:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak4"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:179\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+subject = "var:anpassad-studigang"
+fields = { "tags" = ["education"] }
+evidence = "Anpassad studiegång är en utbildningsinsats.\ncatalog:variable_text:7347:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak5"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:191\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+subject = "var:arskurs"
+fields = { "sets" = [] }
+evidence = "Årskurs är en utbildningsuppgift.\ncatalog:variable_text:7348:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-viktak7"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:203\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+subject = "var:arskurs"
+fields = { "tags" = ["education"] }
+evidence = "Årskurs är en utbildningsuppgift.\ncatalog:variable_text:7348:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "sets" = ["atgardsprogram"] }
+evidence = "Åtgärdsprogrammen hör till samma grupp och utbildning.\ncatalog:variable_text:7349:13879:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "tags" = ["education"] }
+evidence = "Åtgärdsprogrammen hör till samma grupp och utbildning.\ncatalog:variable_text:7349:13879:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram-atgprom"
+fields = { "sets" = ["atgardsprogram"] }
+evidence = "Åtgärdsprogrammen hör till samma grupp och utbildning.\ncatalog:variable_text:7350:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram-atgprom"
+fields = { "tags" = ["education"] }
+evidence = "Åtgärdsprogrammen hör till samma grupp och utbildning.\ncatalog:variable_text:7350:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-bild"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7351:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-bild"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7351:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-religion"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7352:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-religion"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7352:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-samhallskunskap"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7353:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-samhallskunskap"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7353:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-slojd"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7354:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-slojd"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7354:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-svenska"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7355:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-svenska"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7355:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-teckensprak"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7356:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-teckensprak"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7356:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-teknik"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7357:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-teknik"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7357:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:bi"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "BI är en ämneskod; källan anger betyg i biologi.\ncatalog:variable_text:7358:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:bi"
+fields = { "tags" = ["education"] }
+evidence = "BI är en ämneskod; källan anger betyg i biologi.\ncatalog:variable_text:7358:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-engelska"
+fields = { "sets" = [] }
+evidence = "Undervisningsdeltagande hör till utbildning.\ncatalog:variable_text:7359:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-engelska"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningsdeltagande hör till utbildning.\ncatalog:variable_text:7359:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-modersmalsundervisning"
+fields = { "sets" = [] }
+evidence = "Undervisningsdeltagande hör till utbildning.\ncatalog:variable_text:7360:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-modersmalsundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningsdeltagande hör till utbildning.\ncatalog:variable_text:7360:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-sva"
+fields = { "sets" = [] }
+evidence = "SVA är en bokstavsförkortning; familjen ges samma läsbarhetsbedömning.\ncatalog:variable_text:7361:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-sva"
+fields = { "tags" = ["education"] }
+evidence = "SVA är en bokstavsförkortning; familjen ges samma läsbarhetsbedömning.\ncatalog:variable_text:7361:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalht"
+fields = { "sets" = ["elevens-val"] }
+evidence = "Terminskodning av elevens val hör till utbildning.\ncatalog:variable_text:7363:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalht"
+fields = { "tags" = ["education"] }
+evidence = "Terminskodning av elevens val hör till utbildning.\ncatalog:variable_text:7363:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalvt"
+fields = { "sets" = ["elevens-val"] }
+evidence = "Terminskodning av elevens val hör till utbildning.\ncatalog:variable_text:7364:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvalvt"
+fields = { "tags" = ["education"] }
+evidence = "Terminskodning av elevens val hör till utbildning.\ncatalog:variable_text:7364:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:en"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "EN är en ämneskod; källan anger betyg i engelska.\ncatalog:variable_text:7365:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:en"
+fields = { "tags" = ["education"] }
+evidence = "EN är en ämneskod; källan anger betyg i engelska.\ncatalog:variable_text:7365:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-utbildningsniva"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas utbildningsnivåer hör till samma grupp.\ncatalog:variable_text:7366:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas utbildningsnivåer hör till samma grupp.\ncatalog:variable_text:7366:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttat"
+fields = { "sets" = [] }
+evidence = "Källan visar olika innehåll över perioderna.\ncatalog:variable_text:7367:11688:11869\ncatalog:variable_text:7367:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttat"
+fields = { "tags" = ["education"] }
+evidence = "Källan visar olika innehåll över perioderna.\ncatalog:variable_text:7367:11688:11869\ncatalog:variable_text:7367:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-i-sverige-utomlands"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelselandets indelning är demografisk.\ncatalog:variable_text:7368:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-i-sverige-utomlands"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselandets indelning är demografisk.\ncatalog:variable_text:7368:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland är demografiskt.\ncatalog:variable_text:7369:13879:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är demografiskt.\ncatalog:variable_text:7369:13879:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:forek"
+fields = { "sets" = [] }
+evidence = "Betygsförekomst är ett utbildningsresultat.\ncatalog:variable_text:7370:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:forek"
+fields = { "tags" = ["education"] }
+evidence = "Betygsförekomst är ett utbildningsresultat.\ncatalog:variable_text:7370:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:fy"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "FY är en ämneskod; källan anger betyg i fysik.\ncatalog:variable_text:7371:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:fy"
+fields = { "tags" = ["education"] }
+evidence = "FY är en ämneskod; källan anger betyg i fysik.\ncatalog:variable_text:7371:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ge"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "GE är en ämneskod; källan anger betyg i geografi.\ncatalog:variable_text:7372:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ge"
+fields = { "tags" = ["education"] }
+evidence = "GE är en ämneskod; källan anger betyg i geografi.\ncatalog:variable_text:7372:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:hi"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "HI är en ämneskod; källan anger betyg i historia.\ncatalog:variable_text:7373:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:hi"
+fields = { "tags" = ["education"] }
+evidence = "HI är en ämneskod; källan anger betyg i historia.\ncatalog:variable_text:7373:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:hkk"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "HKK är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7374:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:hkk"
+fields = { "tags" = ["education"] }
+evidence = "HKK är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7374:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-for-skolan"
+fields = { "sets" = [] }
+evidence = "Skolhuvudman beskriver utbildningens organisation.\ncatalog:variable_text:7375:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-for-skolan"
+fields = { "tags" = ["education"] }
+evidence = "Skolhuvudman beskriver utbildningens organisation.\ncatalog:variable_text:7375:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:idh"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "IDH är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7376:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:idh"
+fields = { "tags" = ["education"] }
+evidence = "IDH är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7376:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ke"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "KE är en ämneskod; källan anger betyg i kemi.\ncatalog:variable_text:7377:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ke"
+fields = { "tags" = ["education"] }
+evidence = "KE är en ämneskod; källan anger betyg i kemi.\ncatalog:variable_text:7377:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är demografiskt.\ncatalog:variable_text:7379:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är demografiskt.\ncatalog:variable_text:7379:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:ma"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "MA är en ämneskod; källan anger betyg i matematik.\ncatalog:variable_text:7380:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ma"
+fields = { "tags" = ["education"] }
+evidence = "MA är en ämneskod; källan anger betyg i matematik.\ncatalog:variable_text:7380:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:medfranak"
+fields = { "sets" = [] }
+evidence = "Första årskurs i klassen hör till utbildning.\ncatalog:variable_text:7381:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:medfranak"
+fields = { "tags" = ["education"] }
+evidence = "Första årskurs i klassen hör till utbildning.\ncatalog:variable_text:7381:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-betyg"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Modersmålsbetyget hör till ämnesbetyg och utbildning.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Modersmålsbetyget hör till ämnesbetyg och utbildning.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-sprak"
+fields = { "sets" = [] }
+evidence = "Språket i undervisningen hör till utbildning.\ncatalog:variable_text:7383:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ml-sprak"
+fields = { "tags" = ["education"] }
+evidence = "Språket i undervisningen hör till utbildning.\ncatalog:variable_text:7383:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-betyg"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Betyget hör till ämnesbetyg och utbildning.\ncatalog:variable_text:7384:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Betyget hör till ämnesbetyg och utbildning.\ncatalog:variable_text:7384:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak"
+fields = { "sets" = ["sprak-i-moderna-sprak"] }
+evidence = "Språkkoderna hör till samma grupp och utbildning.\ncatalog:variable_text:7385:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-elevens-val-sprak"
+fields = { "tags" = ["education"] }
+evidence = "Språkkoderna hör till samma grupp och utbildning.\ncatalog:variable_text:7385:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval"
+fields = { "sets" = ["sprak-i-moderna-sprak"] }
+evidence = "Språkkoderna hör till samma grupp och utbildning.\ncatalog:variable_text:7386:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval"
+fields = { "tags" = ["education"] }
+evidence = "Språkkoderna hör till samma grupp och utbildning.\ncatalog:variable_text:7386:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-betyg"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "Betyget hör till ämnesbetyg och utbildning.\ncatalog:variable_text:7387:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-sprakval-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Betyget hör till ämnesbetyg och utbildning.\ncatalog:variable_text:7387:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:mu"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "MU är en ämneskod; källan anger betyg i musik.\ncatalog:variable_text:7388:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:mu"
+fields = { "tags" = ["education"] }
+evidence = "MU är en ämneskod; källan anger betyg i musik.\ncatalog:variable_text:7388:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ny-skolenhetskod"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Skolenhetskod efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7389:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:ny-skolenhetskod"
+fields = { "tags" = [] }
+evidence = "Skolenhetskod efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7389:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:nykommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "Skolkommun efter flytt är geografisk tillhörighet.\ncatalog:variable_text:7390:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:nykommun"
+fields = { "tags" = ["geography"] }
+evidence = "Skolkommun efter flytt är geografisk tillhörighet.\ncatalog:variable_text:7390:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:nyskolid"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Skolidentitet efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7391:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:nyskolid"
+fields = { "tags" = [] }
+evidence = "Skolidentitet efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7391:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:nyskolkod"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Skolkod efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7392:12418:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:nyskolkod"
+fields = { "tags" = [] }
+evidence = "Skolkod efter flytt hör till skoltillhörighet.\ncatalog:variable_text:7392:12418:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "OVR är en källkod för betyg i övrigt ämne.\ncatalog:variable_text:7393:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "tags" = ["education"] }
+evidence = "OVR är en källkod för betyg i övrigt ämne.\ncatalog:variable_text:7393:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:panel"
+fields = { "sets" = [] }
+evidence = "Panelbeteckningen beskriver undersökningens urval.\ncatalog:variable_text:7394:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:panel"
+fields = { "tags" = ["methods"] }
+evidence = "Panelbeteckningen beskriver undersökningens urval.\ncatalog:variable_text:7394:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sarund"
+fields = { "sets" = ["stod-och-specialundervisning"] }
+evidence = "Särskild undervisningsgrupp hör till stödinsatser i utbildning.\ncatalog:variable_text:7397:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sarund"
+fields = { "tags" = ["education"] }
+evidence = "Särskild undervisningsgrupp hör till stödinsatser i utbildning.\ncatalog:variable_text:7397:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Skolidentiteten hör till skoltillhörighet.\ncatalog:variable_text:7398:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer"
+fields = { "tags" = [] }
+evidence = "Skolidentiteten hör till skoltillhörighet.\ncatalog:variable_text:7398:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Skolenhetskoden hör till skoltillhörighet.\ncatalog:variable_text:7399:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "tags" = [] }
+evidence = "Skolenhetskoden hör till skoltillhörighet.\ncatalog:variable_text:7399:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod-2"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Suffixet 2 är en tilldelad räknare som inte finns i källkolumnen.\ncatalog:variable_text:7400:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod-2"
+fields = { "tags" = [] }
+evidence = "Suffixet 2 är en tilldelad räknare som inte finns i källkolumnen.\ncatalog:variable_text:7400:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "sets" = ["skoltillhorighet"] }
+evidence = "Samma kolumn är överlappande mappad till skolkod och rektorsområdeskod; skolidentiteten hör till skoltillhörighet.\ncatalog:occurrence:54617\ncatalog:occurrence:54618"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "tags" = [] }
+evidence = "Samma kolumn är överlappande mappad till skolkod och rektorsområdeskod; skolidentiteten hör till skoltillhörighet.\ncatalog:occurrence:54617\ncatalog:occurrence:54618"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "Skolkommun är geografisk tillhörighet.\ncatalog:variable_text:7402:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Skolkommun är geografisk tillhörighet.\ncatalog:variable_text:7402:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:specannatsatt"
+fields = { "sets" = ["stod-och-specialundervisning"] }
+evidence = "Specialundervisningen hör till stödinsatser i utbildning.\ncatalog:variable_text:7403:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:specannatsatt"
+fields = { "tags" = ["education"] }
+evidence = "Specialundervisningen hör till stödinsatser i utbildning.\ncatalog:variable_text:7403:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakval"
+fields = { "sets" = [] }
+evidence = "Deltagande i undervisning hör till utbildning.\ncatalog:variable_text:7404:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:sprakval"
+fields = { "tags" = ["education"] }
+evidence = "Deltagande i undervisning hör till utbildning.\ncatalog:variable_text:7404:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "sets" = ["stod-och-specialundervisning"] }
+evidence = "Stödundervisning hör till stödinsatser i utbildning.\ncatalog:variable_text:7405:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Stödundervisning hör till stödinsatser i utbildning.\ncatalog:variable_text:7405:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas utbildningsnivåer hör till samma grupp.\ncatalog:variable_text:7406:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas utbildningsnivåer hör till samma grupp.\ncatalog:variable_text:7406:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:sva"
+fields = { "sets" = ["amnesbetyg"] }
+evidence = "SVA är en bokstavsförkortning; variabeln mäter ämnesbetyg och hör till gruppen ämnesbetyg.\ncatalog:valueset:296\ncatalog:variable_text:7407:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:sva"
+fields = { "tags" = ["education"] }
+evidence = "SVA är en bokstavsförkortning; variabeln mäter ämnesbetyg och hör till gruppen ämnesbetyg.\ncatalog:valueset:296\ncatalog:variable_text:7407:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:svarandeskola"
+fields = { "sets" = [] }
+evidence = "Svarskällan är undersökningsmetodik.\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:svarandeskola"
+fields = { "tags" = ["methods"] }
+evidence = "Svarskällan är undersökningsmetodik.\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7409:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7409:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak3"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7410:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak3"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7410:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak4"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7411:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak4"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7411:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak5"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7412:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak5"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7412:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak6"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7413:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak6"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7413:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak7"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7414:17532:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak7"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7414:17532:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak9"
+fields = { "sets" = ["svarsstatus"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7415:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod-statuselevak9"
+fields = { "tags" = ["methods"] }
+evidence = "Elevens svarsstatus är undersökningsmetodik.\ncatalog:variable_text:7415:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7416:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7416:16071:16252"
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-elevvikt"
-fields = { "sets" = ["legacy-upprakningstal"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:167\nreg_meta_build/curation/registers/scb/elevpaneler.toml:179\nreg_meta_build/curation/registers/scb/elevpaneler.toml:191\nreg_meta_build/curation/registers/scb/elevpaneler.toml:203\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Elevvikten är ett uppräkningstal.\ncatalog:variable_text:7417:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-elevvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Elevvikten är ett uppräkningstal.\ncatalog:variable_text:7417:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak4"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7418:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak4"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7418:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak5"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7419:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak5"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7419:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak6"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7420:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak6"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7420:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak7"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7421:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak7"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7421:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak8"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7422:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak8"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7422:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak9"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7423:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak9"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är undersökningsvikter.\ncatalog:variable_text:7423:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstratum hör till undersökningsmetodik.\ncatalog:variable_text:7424:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstratum hör till undersökningsmetodik.\ncatalog:variable_text:7424:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: ML_betyg @2013-01-01..2013-06-30 where key = 'v25188'"
+fields = { "description" = "Betyg i ämnet modersmål." }
+evidence = "Beskrivningen anger ämnet men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: ML_spr @2013-01-01..2013-06-30 where key = 'v25188'"
+fields = { "description" = "Språk i ämnet modersmål." }
+evidence = "Beskrivningen anger ämnet men variabeln mäter vilket språk som läses.\ncatalog:valueset:2344\ncatalog:variable_text:7383:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: M1_betyg @2013-01-01..2013-06-30 where key = 'v25186'"
+fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
+evidence = "Beskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7384:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: M1_spr @2013-01-01..2013-06-30 where key = 'v25186'"
+fields = { "description" = "Språk i moderna språk inom ramen för elevens val." }
+evidence = "Beskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7385:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: M2_spr @2013-01-01..2013-06-30 where key = 'v34103'"
+fields = { "description" = "Språk i moderna språk inom ramen för språkval." }
+evidence = "Beskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7386:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: M2_betyg @2013-01-01..2013-06-30 where key = 'v34103'"
+fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
+evidence = "Beskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7387:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: Sprakval @2005-01-01..2005-06-30 where key = 'v34103'"
+fields = { "description" = "Deltagande i moderna språk inom ramen för språkval." }
+evidence = "Beskrivningen anger undervisningen men variabeln mäter deltagande.\ncatalog:valueset:6405\ncatalog:variable_text:7404:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: SvarandeSkola @2011-01-01..2011-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: SvarandeSkola @2012-01-01..2012-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: SvarandeSkola @2013-01-01..2013-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: SvarandeSkola @2014-01-01..2014-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2014-01-01..2014-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2015-01-01..2015-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2016-01-01..2016-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2017-01-01..2017-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2018-01-01..2018-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2019-01-01..2019-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: SvarandeSkola @2020-01-01..2020-06-30 where key = 'v25831'"
+fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
+evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"

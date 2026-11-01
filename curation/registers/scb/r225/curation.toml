@@ -296,3 +296,219 @@ kind = "set"
 subject = "land-och-vattenarealer: {kommunkod,lanskod} @2026"
 fields = { "classification" = "class/lkf/lkf2026" }
 evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:area-km2"
+fields = { "sets" = [] }
+evidence = "Totalarealen är en geografisk areal.\ncatalog:register:193\ncatalog:variable_text:35267:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:area-km2"
+fields = { "tags" = ["geography"] }
+evidence = "Totalarealen är en geografisk areal.\ncatalog:register:193\ncatalog:variable_text:35267:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:areakm2"
+fields = { "sets" = [] }
+evidence = "Totalarealen är en geografisk areal.\ncatalog:register:193\ncatalog:variable_text:35268:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:areakm2"
+fields = { "tags" = ["geography"] }
+evidence = "Totalarealen är en geografisk areal.\ncatalog:register:193\ncatalog:variable_text:35268:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "sets" = [] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:35270:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "tags" = ["geography"] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:35270:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om objektet är en havsö.\ncatalog:valueset:10571\ncatalog:variable_text:35272:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger om objektet är en havsö.\ncatalog:valueset:10571\ncatalog:variable_text:35272:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "sets" = [] }
+evidence = "Variabelns värdemängd anger förekomst av havsvatten.\ncatalog:valueset:10571\ncatalog:variable_text:35273:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Variabelns värdemängd anger förekomst av havsvatten.\ncatalog:valueset:10571\ncatalog:variable_text:35273:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ivatten"
+fields = { "sets" = [] }
+evidence = "Variabelns värdemängd anger förekomst av insjövatten.\ncatalog:valueset:10571\ncatalog:variable_text:35274:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ivatten"
+fields = { "tags" = ["environment"] }
+evidence = "Variabelns värdemängd anger förekomst av insjövatten.\ncatalog:valueset:10571\ncatalog:variable_text:35274:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:knkod"
+fields = { "sets" = [] }
+evidence = "Kn är en ogenomskinlig källförkortning för kommun.\ncatalog:variable_text:35275:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:knkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kn är en ogenomskinlig källförkortning för kommun.\ncatalog:variable_text:35275:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "sets" = [] }
+evidence = "Suffixet 36 är en räknare som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:35276\ncatalog:variable_text:35276:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 36 är en räknare som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:35276\ncatalog:variable_text:35276:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:35277:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:35277:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-49"
+fields = { "sets" = [] }
+evidence = "Suffixet 49 är en räknare som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:35278\ncatalog:variable_text:35278:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-49"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 49 är en räknare som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:35278\ncatalog:variable_text:35278:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "sets" = [] }
+evidence = "Värdemängden anger förekomst av land.\ncatalog:valueset:10571\ncatalog:variable_text:35279:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "tags" = ["geography"] }
+evidence = "Värdemängden anger förekomst av land.\ncatalog:valueset:10571\ncatalog:variable_text:35279:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:35280:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lanskod"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:35280:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:lnkod"
+fields = { "sets" = [] }
+evidence = "Ln är en ogenomskinlig källförkortning för län.\ncatalog:variable_text:35281:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lnkod"
+fields = { "tags" = ["geography"] }
+evidence = "Ln är en ogenomskinlig källförkortning för län.\ncatalog:variable_text:35281:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:regso"
+fields = { "sets" = [] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:35283:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regso"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:35283:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "sets" = [] }
+evidence = "RegSO-koden anger en geografisk områdesindelning.\ncatalog:variable_text:35284:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO-koden anger en geografisk områdesindelning.\ncatalog:variable_text:35284:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sjonamn"
+fields = { "sets" = [] }
+evidence = "Sjönamnet anger ett geografiskt objekt.\ncatalog:variable_text:35285:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sjonamn"
+fields = { "tags" = ["geography"] }
+evidence = "Sjönamnet anger ett geografiskt objekt.\ncatalog:variable_text:35285:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:storasjo"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om objektet tillhör en av de fyra stora sjöarna.\ncatalog:valueset:10571\ncatalog:variable_text:35286:18262:18628\ncatalog:variable_text:35286:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:storasjo"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger om objektet tillhör en av de fyra stora sjöarna.\ncatalog:valueset:10571\ncatalog:variable_text:35286:18262:18628\ncatalog:variable_text:35286:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:totalareal-land-vatten"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har angränsande kopplingar till totalareal och geometri.\ncatalog:occurrence:323785\ncatalog:occurrence:323796"
+
+[[statement]]
+kind = "set"
+subject = "var:totalareal-land-vatten"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har angränsande kopplingar till totalareal och geometri.\ncatalog:occurrence:323785\ncatalog:occurrence:323796"

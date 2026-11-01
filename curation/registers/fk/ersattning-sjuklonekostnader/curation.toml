@@ -1,0 +1,36 @@
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Ersättningsbeloppet avser en transferering till arbetsgivaren.\ncatalog:register:11\ncatalog:variable_text:160:18353:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Ersättningsbeloppet avser en transferering till arbetsgivaren.\ncatalog:register:11\ncatalog:variable_text:160:18353:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekostnad"
+fields = { "sets" = [] }
+evidence = "Lönekostnaden är en arbetsgivarkostnad och underlag för ersättningen.\ncatalog:register:11\ncatalog:variable_text:161:18353:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekostnad"
+fields = { "tags" = ["business"] }
+evidence = "Lönekostnaden är en arbetsgivarkostnad och underlag för ersättningen.\ncatalog:register:11\ncatalog:variable_text:161:18353:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklonekostnad"
+fields = { "sets" = [] }
+evidence = "Sjuklönekostnaden är en arbetsgivarkostnad.\ncatalog:register:11\ncatalog:variable_text:163:18353:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklonekostnad"
+fields = { "tags" = ["business"] }
+evidence = "Sjuklönekostnaden är en arbetsgivarkostnad.\ncatalog:register:11\ncatalog:variable_text:163:18353:2932897"

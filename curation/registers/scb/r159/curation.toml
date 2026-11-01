@@ -66,3 +66,189 @@ kind = "set"
 subject = "tatorter: {kommun,lan} @2015"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = [] }
+evidence = "Arealen beskriver geografisk yta.\ncatalog:variable_text:44885:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["geography"] }
+evidence = "Arealen beskriver geografisk yta.\ncatalog:variable_text:44885:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "sets" = [] }
+evidence = "Folkmängd mäter befolkningens storlek.\ncatalog:variable_text:44887:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "tags" = ["demographics"] }
+evidence = "Folkmängd mäter befolkningens storlek.\ncatalog:variable_text:44887:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunens kod är en geografisk indelning; kommunnamn är en motsvarande kodning av samma begrepp.\ncatalog:variable_text:44888:19358:19723\ncatalog:variable_text:44889:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunens kod är en geografisk indelning; kommunnamn är en motsvarande kodning av samma begrepp.\ncatalog:variable_text:44888:19358:19723\ncatalog:variable_text:44889:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = [] }
+evidence = "Kommunnamnet är en geografisk indelning och hör ihop med kommunens kod.\ncatalog:variable_text:44888:19358:19723\ncatalog:variable_text:44889:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamnet är en geografisk indelning och hör ihop med kommunens kod.\ncatalog:variable_text:44888:19358:19723\ncatalog:variable_text:44889:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Länskoden är en geografisk indelning och hör ihop med länsnamnet.\ncatalog:variable_text:44890:19358:19723\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden är en geografisk indelning och hör ihop med länsnamnet.\ncatalog:variable_text:44890:19358:19723\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "sets" = [] }
+evidence = "Länsnamnet är en geografisk indelning och hör ihop med länskoden.\ncatalog:variable_text:44890:19358:19723\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "tags" = ["geography"] }
+evidence = "Länsnamnet är en geografisk indelning och hör ihop med länskoden.\ncatalog:variable_text:44890:19358:19723\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "sets" = [] }
+evidence = "Nordlig och ostlig koordinat är komponenter av samma geografiska position.\ncatalog:variable_text:44892:18262:18628\ncatalog:variable_text:44894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Nordlig och ostlig koordinat är komponenter av samma geografiska position.\ncatalog:variable_text:44892:18262:18628\ncatalog:variable_text:44894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "sets" = [] }
+evidence = "Nordlig och ostlig koordinat är komponenter av samma geografiska position.\ncatalog:variable_text:44892:18262:18628\ncatalog:variable_text:44894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Nordlig och ostlig koordinat är komponenter av samma geografiska position.\ncatalog:variable_text:44892:18262:18628\ncatalog:variable_text:44894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "sets" = [] }
+evidence = "Tätort är en geografisk indelning och har tillhörande kodvariabler.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "tags" = ["geography"] }
+evidence = "Tätort är en geografisk indelning och har tillhörande kodvariabler.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "sets" = [] }
+evidence = "Tätortskoden är en geografisk indelning och hör ihop med tätort och äldre tätortskod.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortskoden är en geografisk indelning och hör ihop med tätort och äldre tätortskod.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod-old"
+fields = { "sets" = [] }
+evidence = "Den äldre tätortskoden är en geografisk indelning och hör ihop med tätort och nyare kod.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod-old"
+fields = { "tags" = ["geography"] }
+evidence = "Den äldre tätortskoden är en geografisk indelning och hör ihop med tätort och nyare kod.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @1990-01-01..1990-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @1995-01-01..1995-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2000-01-01..2000-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2005-01-01..2005-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2010-01-01..2010-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2015-01-01..2015-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2018-01-01..2018-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2020-01-01..2020-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "tatorter: LANNAMN @2023-01-01..2023-12-31 where key = 'v49'"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"

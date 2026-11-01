@@ -572,3 +572,4053 @@ kind = "set"
 subject = "uppdragsregistret: {forsamling,lan} @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:agdaker"
+fields = { "sets" = ["akerareal"] }
+evidence = "Ägd åkermark ingår i åkerarealens ägarindelning.\ncatalog:variable_text:35728:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:agdaker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ägd åkermark ingår i åkerarealens ägarindelning.\ncatalog:variable_text:35728:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:agoslag"
+fields = { "sets" = [] }
+evidence = "Variabeln avser markareal efter ägoslag.\ncatalog:variable_text:35729:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:agoslag"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln avser markareal efter ägoslag.\ncatalog:variable_text:35729:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aker"
+fields = { "sets" = ["akerareal"] }
+evidence = "Samma åkerarealbegrepp är uppdelat mellan perioder med total-akerareal-i-hektar.\ncatalog:occurrence:332749\ncatalog:occurrence:332849\ncatalog:occurrence:332943\ncatalog:variable_text:35730:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:aker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma åkerarealbegrepp är uppdelat mellan perioder med total-akerareal-i-hektar.\ncatalog:occurrence:332749\ncatalog:occurrence:332849\ncatalog:occurrence:332943\ncatalog:variable_text:35730:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:akerospec"
+fields = { "sets" = ["akerareal"] }
+evidence = "Ospecificerad åkermark är ett arealmått för åker.\ncatalog:variable_text:35731:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:akerospec"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ospecificerad åkermark är ett arealmått för åker.\ncatalog:variable_text:35731:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-havre"
+fields = { "sets" = ["havreareal"] }
+evidence = "Måttet avser havreareal och har en motsvarande arealvariabel.\ncatalog:variable_text:35732:11688:20454\ncatalog:variable_text:35733:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-havre"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser havreareal och har en motsvarande arealvariabel.\ncatalog:variable_text:35732:11688:20454\ncatalog:variable_text:35733:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-havre-i-havre"
+fields = { "sets" = ["havreareal"] }
+evidence = "Måttet avser havreareal.\ncatalog:variable_text:35732:11688:20454\ncatalog:variable_text:35733:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-havre-i-havre"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser havreareal.\ncatalog:variable_text:35732:11688:20454\ncatalog:variable_text:35733:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-slattervall"
+fields = { "sets" = ["vallareal"] }
+evidence = "Slåttervall är en del av vallareal.\ncatalog:variable_text:35734:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-slattervall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slåttervall är en del av vallareal.\ncatalog:variable_text:35734:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-slattervall-i-slatt"
+fields = { "sets" = ["vallareal"] }
+evidence = "Slåttervall är en del av vallareal.\ncatalog:variable_text:35735:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-slattervall-i-slatt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slåttervall är en del av vallareal.\ncatalog:variable_text:35735:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn"
+fields = { "sets" = [] }
+evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn-varkorn"
+fields = { "sets" = [] }
+evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn-varkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amkor"
+fields = { "sets" = ["antal-kor"] }
+evidence = "Korna ingår i gruppen för antal kor.\ncatalog:variable_text:35738:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:amkor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Korna ingår i gruppen för antal kor.\ncatalog:variable_text:35738:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag"
+fields = { "sets" = ["ovriga-vaxtslag-areal"] }
+evidence = "Måttet avser areal av andra växtslag.\ncatalog:variable_text:35739:7305:10227\ncatalog:variable_text:35741:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser areal av andra växtslag.\ncatalog:variable_text:35739:7305:10227\ncatalog:variable_text:35741:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-andravaxtslag"
+fields = { "sets" = ["ovriga-vaxtslag-areal"] }
+evidence = "Samma arealbegrepp för andra eller övriga växtslag är uppdelat mellan perioder med andravaxtslag och ovriga-vaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:occurrence:332753\ncatalog:occurrence:332852"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-andravaxtslag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma arealbegrepp för andra eller övriga växtslag är uppdelat mellan perioder med andravaxtslag och ovriga-vaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:occurrence:332753\ncatalog:occurrence:332852"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-i-andrav"
+fields = { "sets" = ["ovriga-vaxtslag-areal"] }
+evidence = "Måttet avser areal av andra växtslag.\ncatalog:variable_text:35739:7305:10227\ncatalog:variable_text:35741:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-i-andrav"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser areal av andra växtslag.\ncatalog:variable_text:35739:7305:10227\ncatalog:variable_text:35741:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:andravaxtslag"
+fields = { "sets" = ["ovriga-vaxtslag-areal"] }
+evidence = "Samma arealbegrepp är uppdelat mellan perioder med andra-vaxtslag-andravaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:variable_text:35742:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:andravaxtslag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma arealbegrepp är uppdelat mellan perioder med andra-vaxtslag-andravaxtslag.\ncatalog:occurrence:332402\ncatalog:occurrence:332488\ncatalog:occurrence:332580\ncatalog:variable_text:35742:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "sets" = ["ovrig-markareal"] }
+evidence = "Annan areal hör till mått för övrig mark.\ncatalog:variable_text:35743:10227:10957\ncatalog:variable_text:35777:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "tags" = ["property"] }
+evidence = "Annan areal hör till mått för övrig mark.\ncatalog:variable_text:35743:10227:10957\ncatalog:variable_text:35777:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-obrukad-mark"
+fields = { "sets" = ["obrukad-areal"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35745:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-obrukad-mark"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35745:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-obrukad-mark-annanobrukad"
+fields = { "sets" = ["obrukad-areal"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35745:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-obrukad-mark-annanobrukad"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35745:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agda-fastigheter"
+fields = { "sets" = ["antal-fastigheter"] }
+evidence = "Antal ägda fastigheter är en del av fastighetsantalet.\ncatalog:variable_text:35746:10227:10957\ncatalog:variable_text:35747:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agda-fastigheter"
+fields = { "tags" = ["property"] }
+evidence = "Antal ägda fastigheter är en del av fastighetsantalet.\ncatalog:variable_text:35746:10227:10957\ncatalog:variable_text:35747:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arrenderade-fastigheter"
+fields = { "sets" = ["antal-fastigheter"] }
+evidence = "Antal arrenderade fastigheter är en del av fastighetsantalet.\ncatalog:variable_text:35746:10227:10957\ncatalog:variable_text:35747:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arrenderade-fastigheter"
+fields = { "tags" = ["property"] }
+evidence = "Antal arrenderade fastigheter är en del av fastighetsantalet.\ncatalog:variable_text:35746:10227:10957\ncatalog:variable_text:35747:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-djur"
+fields = { "sets" = [] }
+evidence = "Måttet avser antal lantbruksdjur per djurslag.\ncatalog:variable_text:35748:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-djur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser antal lantbruksdjur per djurslag.\ncatalog:variable_text:35748:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-gyltor"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Gyltor ingår i gruppen för suggor och gyltor.\ncatalog:variable_text:35749:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-gyltor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Gyltor ingår i gruppen för suggor och gyltor.\ncatalog:variable_text:35749:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-hons"
+fields = { "sets" = ["antal-hons"] }
+evidence = "SumHons har överlappande ägare; antalet höns hör till hönsgruppen.\ncatalog:occurrence:334196\ncatalog:occurrence:334197"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-hons"
+fields = { "tags" = ["agriculture"] }
+evidence = "SumHons har överlappande ägare; antalet höns hör till hönsgruppen.\ncatalog:occurrence:334196\ncatalog:occurrence:334197"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalvar-ovriga"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Samma begrepp är uppdelat på icke överlappande perioder med scb/lbr/antal-ovriga-kalvar; kalvarna hör till kalvgruppen.\ncatalog:variable_text:35751:8401:8766\ncatalog:variable_text:35751:9131:10227\ncatalog:variable_text:35756:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalvar-ovriga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma begrepp är uppdelat på icke överlappande perioder med scb/lbr/antal-ovriga-kalvar; kalvarna hör till kalvgruppen.\ncatalog:variable_text:35751:8401:8766\ncatalog:variable_text:35751:9131:10227\ncatalog:variable_text:35756:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvigor"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35752:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvigor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35752:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvigor-kviga"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35753:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvigor-kviga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35753:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mjolkkor"
+fields = { "sets" = ["antal-kor"] }
+evidence = "Mjölkkor är en del av antalet kor.\ncatalog:variable_text:35754:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mjolkkor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Mjölkkor är en del av antalet kor.\ncatalog:variable_text:35754:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mjolkkor-lbr"
+fields = { "sets" = ["antal-kor"] }
+evidence = "LBR är en registerförkortning i den gemensamma förkortningsfamiljen. Antalet mjölkkor hör till gruppen för koantal.\ncatalog:register:197\ncatalog:variable_text:35755:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mjolkkor-lbr"
+fields = { "tags" = ["agriculture"] }
+evidence = "LBR är en registerförkortning i den gemensamma förkortningsfamiljen. Antalet mjölkkor hör till gruppen för koantal.\ncatalog:register:197\ncatalog:variable_text:35755:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-kalvar"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Samma begrepp är uppdelat på icke överlappande perioder med scb/lbr/antal-kalvar-ovriga; kalvarna hör till kalvgruppen.\ncatalog:variable_text:35751:8401:8766\ncatalog:variable_text:35751:9131:10227\ncatalog:variable_text:35756:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-kalvar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma begrepp är uppdelat på icke överlappande perioder med scb/lbr/antal-kalvar-ovriga; kalvarna hör till kalvgruppen.\ncatalog:variable_text:35751:8401:8766\ncatalog:variable_text:35751:9131:10227\ncatalog:variable_text:35756:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktkalvar"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Slaktkalvar är en del av antalet kalvar.\ncatalog:variable_text:35757:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktkalvar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktkalvar är en del av antalet kalvar.\ncatalog:variable_text:35757:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-110-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35758:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-110-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35758:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-50-79-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35759:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-50-79-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35759:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-80-109-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35760:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-slaktsvin-80-109-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktsvin efter vikt hör till antal svin.\ncatalog:variable_text:35760:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-suggor-ovriga"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Övriga suggor är en del av antalet suggor.\ncatalog:variable_text:35761:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-suggor-ovriga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Övriga suggor är en del av antalet suggor.\ncatalog:variable_text:35761:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-20-49-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35762:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-20-49-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35762:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35763:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35763:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg-svino-2"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Suffixet 2 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:330281\ncatalog:variable_text:35764:8035:8766"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg-svino-2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Suffixet 2 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:330281\ncatalog:variable_text:35764:8035:8766"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg-svino-3"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Suffixet 3 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:331889\ncatalog:variable_text:35765:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg-svino-3"
+fields = { "tags" = ["agriculture"] }
+evidence = "Suffixet 3 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:331889\ncatalog:variable_text:35765:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-49-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35766:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-49-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35766:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-under-20-kg"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35767:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-under-20-kg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35767:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-under-20-kg-svinu"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35768:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-under-20-kg-svinu"
+fields = { "tags" = ["agriculture"] }
+evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35768:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "sets" = ["akermarksstatus"] }
+evidence = "Astat delas med en annan identitet och värdemängden beskriver en statuskod.\ncatalog:occurrence:332582\ncatalog:occurrence:332667\ncatalog:occurrence:332755\ncatalog:valueset:8387"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Astat delas med en annan identitet och värdemängden beskriver en statuskod.\ncatalog:occurrence:332582\ncatalog:occurrence:332667\ncatalog:occurrence:332755\ncatalog:valueset:8387"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35771:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35771:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan-2"
+fields = { "sets" = ["grodareal"] }
+evidence = "Suffixet 2 är en tilldelad räknare och inte källkolumnens slotnummer 1.\ncatalog:occurrence:328994\ncatalog:variable_text:35772:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-av-grodan-2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Suffixet 2 är en tilldelad räknare och inte källkolumnens slotnummer 1.\ncatalog:occurrence:328994\ncatalog:variable_text:35772:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:332858\ncatalog:occurrence:332859"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:332858\ncatalog:occurrence:332859"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-frovall"
+fields = { "sets" = ["frovallsareal"] }
+evidence = "Måttet avser frövallsareal.\ncatalog:variable_text:35774:10592:10957\ncatalog:variable_text:35854:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-frovall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser frövallsareal.\ncatalog:variable_text:35774:10592:10957\ncatalog:variable_text:35854:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-hostraps"
+fields = { "sets" = [] }
+evidence = "Hektar för höstraps hör till höstrapsareal.\ncatalog:variable_text:35775:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-hostraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektar för höstraps hör till höstrapsareal.\ncatalog:variable_text:35775:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-oljelin"
+fields = { "sets" = [] }
+evidence = "Måttet avser oljelinsareal.\ncatalog:variable_text:35776:10592:10957\ncatalog:variable_text:35958:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-oljelin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser oljelinsareal.\ncatalog:variable_text:35776:10592:10957\ncatalog:variable_text:35958:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "sets" = ["ovrig-markareal"] }
+evidence = "Samma källkolumner har även mappats till ovriga-vaxtslag, vars betydelse skiljer sig.\ncatalog:occurrence:332800\ncatalog:occurrence:332801\ncatalog:occurrence:333409\ncatalog:occurrence:333840"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumner har även mappats till ovriga-vaxtslag, vars betydelse skiljer sig.\ncatalog:occurrence:332800\ncatalog:occurrence:332801\ncatalog:occurrence:333409\ncatalog:occurrence:333840"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-rag"
+fields = { "sets" = [] }
+evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-rag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "sets" = ["skogsmarksareal"] }
+evidence = "Samma skogsmarksareal är uppdelad mellan perioder med skogsareal.\ncatalog:occurrence:330874\ncatalog:occurrence:330953\ncatalog:occurrence:332083\ncatalog:occurrence:332211"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma skogsmarksareal är uppdelad mellan perioder med skogsareal.\ncatalog:occurrence:330874\ncatalog:occurrence:330953\ncatalog:occurrence:332083\ncatalog:occurrence:332211"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-total"
+fields = { "sets" = ["totalareal"] }
+evidence = "Total areal har ett motsvarande totalmått.\ncatalog:variable_text:35780:7305:10227\ncatalog:variable_text:36032:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-total"
+fields = { "tags" = ["property"] }
+evidence = "Total areal har ett motsvarande totalmått.\ncatalog:variable_text:35780:7305:10227\ncatalog:variable_text:36032:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varraps"
+fields = { "sets" = [] }
+evidence = "Hektar för vårraps hör till vårrapsareal.\ncatalog:variable_text:35781:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hektar för vårraps hör till vårrapsareal.\ncatalog:variable_text:35781:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varvete"
+fields = { "sets" = [] }
+evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:areal10"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35783:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal10"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35783:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal11"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35784:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal11"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35784:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal12"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35785:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal12"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35785:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal13"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35786:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal13"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35786:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal14"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35787:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal14"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35787:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal15"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35788:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal15"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35788:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal16"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35789:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal16"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35789:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal17"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35790:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal17"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35790:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal18"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till gruppen grodareal och mäter jordbruksareal. Familjens läsbara stammar behålls.\ncatalog:occurrence:329003\ncatalog:variable_text:35791:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal18"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till gruppen grodareal och mäter jordbruksareal. Familjens läsbara stammar behålls.\ncatalog:occurrence:329003\ncatalog:variable_text:35791:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal19"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35792:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal19"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35792:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal2"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35793:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35793:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal20"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35794:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal20"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35794:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal3"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35795:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal3"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35795:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal4"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35796:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal4"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35796:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal5"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35797:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal5"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35797:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal6"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35798:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal6"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35798:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal7"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35799:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal7"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35799:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal8"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35800:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal8"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35800:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal9"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35801:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:areal9"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35801:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark"
+fields = { "sets" = ["akerareal"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35802:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35802:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-akerarend"
+fields = { "sets" = ["akerareal"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35803:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-akerarend"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35803:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-akerarrend"
+fields = { "sets" = ["akerareal"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35804:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-akerarrend"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35804:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-arraker"
+fields = { "sets" = ["akerareal"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35805:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-akermark-arraker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35805:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-betesmark"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Arrenderad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35806:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arrenderad-betesmark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Arrenderad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35806:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arter-akerbonor"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har olika beskrivna mått i olika perioder.\ncatalog:occurrence:331992\ncatalog:occurrence:332101"
+
+[[statement]]
+kind = "set"
+subject = "var:arter-akerbonor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnen har olika beskrivna mått i olika perioder.\ncatalog:occurrence:331992\ncatalog:occurrence:332101"
+
+[[statement]]
+kind = "set"
+subject = "var:astat-akermark"
+fields = { "sets" = ["akermarksstatus"] }
+evidence = "Samma kolumn har en annan ägare och värdemängderna beskriver statuskodningar.\ncatalog:occurrence:332582\ncatalog:occurrence:332667\ncatalog:occurrence:332755\ncatalog:valueset:12169\ncatalog:valueset:8387"
+
+[[statement]]
+kind = "set"
+subject = "var:astat-akermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma kolumn har en annan ägare och värdemängderna beskriver statuskodningar.\ncatalog:occurrence:332582\ncatalog:occurrence:332667\ncatalog:occurrence:332755\ncatalog:valueset:12169\ncatalog:valueset:8387"
+
+[[statement]]
+kind = "set"
+subject = "var:astat-eu"
+fields = { "sets" = ["akermarksstatus"] }
+evidence = "Astat är en källkod och labeln ger en benämning; kodlistan visar åkermarksstatus.\ncatalog:valueset:8387\ncatalog:variable_text:35809:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:astat-eu"
+fields = { "tags" = ["agriculture"] }
+evidence = "Astat är en källkod och labeln ger en benämning; kodlistan visar åkermarksstatus.\ncatalog:valueset:8387\ncatalog:variable_text:35809:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:avlidna"
+fields = { "sets" = [] }
+evidence = "Id:t anger avlidna medan källan genomgående anger att jordbruksföretaget har upphört.\ncatalog:valueset:11298\ncatalog:variable_text:35811:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avlidna"
+fields = { "tags" = ["agriculture", "business"] }
+evidence = "Id:t anger avlidna medan källan genomgående anger att jordbruksföretaget har upphört.\ncatalog:valueset:11298\ncatalog:variable_text:35811:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:baggar"
+fields = { "sets" = ["antal-far"] }
+evidence = "Baggar är en namngiven del av fårantalet.\ncatalog:variable_text:35812:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:baggar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Baggar är en namngiven del av fårantalet.\ncatalog:variable_text:35812:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:beteospec"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Ospecificerad betesmark ingår i kandidatgruppen.\ncatalog:variable_text:35813:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:beteospec"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ospecificerad betesmark ingår i kandidatgruppen.\ncatalog:variable_text:35813:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvall"
+fields = { "sets" = ["vallareal"] }
+evidence = "Betesvall ingår i vallareal.\ncatalog:variable_text:35814:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesvall ingår i vallareal.\ncatalog:variable_text:35814:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvall-i-betva"
+fields = { "sets" = ["vallareal"] }
+evidence = "Betesvall ingår i vallareal.\ncatalog:variable_text:35815:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:betesvall-i-betva"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betesvall ingår i vallareal.\ncatalog:variable_text:35815:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:bevattnad-areal"
+fields = { "sets" = [] }
+evidence = "Bevattnad areal beskriver jordbrukets markanvändning.\ncatalog:variable_text:35816:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bevattnad-areal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Bevattnad areal beskriver jordbrukets markanvändning.\ncatalog:variable_text:35816:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:blandsad-areal-i-ha"
+fields = { "sets" = ["blandsadsareal"] }
+evidence = "Måttet avser blandsädsareal.\ncatalog:variable_text:35817:11688:20454\ncatalog:variable_text:35818:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:blandsad-areal-i-ha"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser blandsädsareal.\ncatalog:variable_text:35817:11688:20454\ncatalog:variable_text:35818:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:blandsad-i-bland"
+fields = { "sets" = ["blandsadsareal"] }
+evidence = "Måttet avser blandsädsareal.\ncatalog:variable_text:35817:11688:20454\ncatalog:variable_text:35818:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:blandsad-i-bland"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser blandsädsareal.\ncatalog:variable_text:35817:11688:20454\ncatalog:variable_text:35818:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori"
+fields = { "sets" = ["brukarkategori"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35820:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35820:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-brukkat"
+fields = { "sets" = ["brukarkategori"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35820:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-brukkat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35820:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-bruknr"
+fields = { "sets" = ["brukarkategori"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35821:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-bruknr"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35821:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-ftgkat"
+fields = { "sets" = ["brukarkategori"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35822:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-ftgkat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35822:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor"
+fields = { "sets" = ["bruna-bonor-areal"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35823:8401:10227\ncatalog:variable_text:35824:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35823:8401:10227\ncatalog:variable_text:35824:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-brunabonor"
+fields = { "sets" = ["bruna-bonor-areal"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35823:8401:10227\ncatalog:variable_text:35824:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-brunabonor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35823:8401:10227\ncatalog:variable_text:35824:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-i-bruna"
+fields = { "sets" = ["bruna-bonor-areal"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35824:11688:20454\ncatalog:variable_text:35825:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-i-bruna"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser areal bruna bönor.\ncatalog:variable_text:35824:11688:20454\ncatalog:variable_text:35825:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "sets" = ["co-adress"] }
+evidence = "Samma kolumn har olika adressled i angränsande perioder.\ncatalog:occurrence:331983\ncatalog:occurrence:332073"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "tags" = [] }
+evidence = "Samma kolumn har olika adressled i angränsande perioder.\ncatalog:occurrence:331983\ncatalog:occurrence:332073"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adr1"
+fields = { "sets" = ["co-adress"] }
+evidence = "Samma kolumn har olika adressled i angränsande perioder.\ncatalog:occurrence:331982\ncatalog:occurrence:332072"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adr1"
+fields = { "tags" = [] }
+evidence = "Samma kolumn har olika adressled i angränsande perioder.\ncatalog:occurrence:331982\ncatalog:occurrence:332072"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress1"
+fields = { "sets" = ["co-adress"] }
+evidence = "Samma kolumn växlar mellan adressled.\ncatalog:occurrence:329922\ncatalog:occurrence:329933\ncatalog:occurrence:329944"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress1"
+fields = { "tags" = [] }
+evidence = "Samma kolumn växlar mellan adressled.\ncatalog:occurrence:329922\ncatalog:occurrence:329933\ncatalog:occurrence:329944"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress2"
+fields = { "sets" = ["co-adress"] }
+evidence = "Samma kolumn växlar mellan adressled.\ncatalog:occurrence:329923\ncatalog:occurrence:329934\ncatalog:occurrence:329945"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress-adress2"
+fields = { "tags" = [] }
+evidence = "Samma kolumn växlar mellan adressled.\ncatalog:occurrence:329923\ncatalog:occurrence:329934\ncatalog:occurrence:329945"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = ["distrikt"] }
+evidence = "Distriktskod och distriktsnamn beskriver samma indelning.\ncatalog:variable_text:35830:16801:20454\ncatalog:variable_text:35831:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktskod och distriktsnamn beskriver samma indelning.\ncatalog:variable_text:35830:16801:20454\ncatalog:variable_text:35831:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "sets" = ["distrikt"] }
+evidence = "Distriktsnamn och distriktskod beskriver samma indelning.\ncatalog:variable_text:35830:16801:20454\ncatalog:variable_text:35831:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktsnamn och distriktskod beskriver samma indelning.\ncatalog:variable_text:35830:16801:20454\ncatalog:variable_text:35831:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:djur-djurnamn"
+fields = { "sets" = ["djurslag"] }
+evidence = "Djurnamn och djurslagskod beskriver samma djurslag.\ncatalog:variable_text:35832:14610:20089\ncatalog:variable_text:35833:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:djur-djurnamn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Djurnamn och djurslagskod beskriver samma djurslag.\ncatalog:variable_text:35832:14610:20089\ncatalog:variable_text:35833:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:djurid"
+fields = { "sets" = ["djurslag"] }
+evidence = "Koden och djurnamnet beskriver djurslag.\ncatalog:variable_text:35832:14610:20089\ncatalog:variable_text:35833:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:djurid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Koden och djurnamnet beskriver djurslag.\ncatalog:variable_text:35832:14610:20089\ncatalog:variable_text:35833:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:dstat"
+fields = { "sets" = ["djurskotselstatus"] }
+evidence = "Dstat är en källmnemonik; etiketten anger djurskötsel och värdemängderna kodar status.\ncatalog:valueset:3309\ncatalog:valueset:8076\ncatalog:variable_text:35834:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dstat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Dstat är en källmnemonik; etiketten anger djurskötsel och värdemängderna kodar status.\ncatalog:valueset:3309\ncatalog:valueset:8076\ncatalog:variable_text:35834:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dstat-eu"
+fields = { "sets" = ["djurskotselstatus"] }
+evidence = "Dstat-eu är en källmnemonik; etiketten anger djurskötsel och värdemängden kodar status.\ncatalog:valueset:8076\ncatalog:variable_text:35835:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:dstat-eu"
+fields = { "tags" = ["agriculture"] }
+evidence = "Dstat-eu är en källmnemonik; etiketten anger djurskötsel och värdemängden kodar status.\ncatalog:valueset:8076\ncatalog:variable_text:35835:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-betesmark"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Outnyttjad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35836:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-betesmark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Outnyttjad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35836:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-vallareal"
+fields = { "sets" = ["vallareal"] }
+evidence = "Outnyttjad vall ingår i vallareal.\ncatalog:variable_text:35837:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-utnyttjad-vallareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Outnyttjad vall ingår i vallareal.\ncatalog:variable_text:35837:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:eko"
+fields = { "sets" = [] }
+evidence = "Markeringen avser ekologisk jordbruksareal.\ncatalog:variable_text:35838:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eko"
+fields = { "tags" = ["agriculture"] }
+evidence = "Markeringen avser ekologisk jordbruksareal.\ncatalog:variable_text:35838:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:energiskog"
+fields = { "sets" = ["energiskogsareal"] }
+evidence = "Måttet avser odlad energiskog.\ncatalog:variable_text:35839:11688:20454\ncatalog:variable_text:35840:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:energiskog"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser odlad energiskog.\ncatalog:variable_text:35839:11688:20454\ncatalog:variable_text:35840:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:energiskog-i-energi"
+fields = { "sets" = ["energiskogsareal"] }
+evidence = "Måttet avser odlad energiskog.\ncatalog:variable_text:35839:11688:20454\ncatalog:variable_text:35840:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:energiskog-i-energi"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser odlad energiskog.\ncatalog:variable_text:35839:11688:20454\ncatalog:variable_text:35840:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikspotatis-ej-bevattnad"
+fields = { "sets" = ["starkelsepotatisareal"] }
+evidence = "Ej bevattnad fabrikspotatis är en del av stärkelsepotatisarealen.\ncatalog:variable_text:35842:10592:10957\ncatalog:variable_text:35972:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikspotatis-ej-bevattnad"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ej bevattnad fabrikspotatis är en del av stärkelsepotatisarealen.\ncatalog:variable_text:35842:10592:10957\ncatalog:variable_text:35972:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:far"
+fields = { "sets" = ["antal-far"] }
+evidence = "Fårantalet hör till kandidatgruppen.\ncatalog:variable_text:35843:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:far"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fårantalet hör till kandidatgruppen.\ncatalog:variable_text:35843:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_text:35844:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_text:35844:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fdsugga"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Fd är en ogenomskinlig förkortning av foder.\ncatalog:variable_text:35846:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fdsugga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fd är en ogenomskinlig förkortning av foder.\ncatalog:variable_text:35846:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:foderarter"
+fields = { "sets" = [] }
+evidence = "Foderärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:foderarter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Foderärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:fol"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Föl ingår i hästantalen.\ncatalog:variable_text:35848:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:fol"
+fields = { "tags" = ["agriculture"] }
+evidence = "Föl ingår i hästantalen.\ncatalog:variable_text:35848:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:folegna"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Egna föl ingår i hästantalen.\ncatalog:variable_text:35849:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:folegna"
+fields = { "tags" = ["agriculture"] }
+evidence = "Egna föl ingår i hästantalen.\ncatalog:variable_text:35849:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:folinst"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Installade föl ingår i hästantalen.\ncatalog:variable_text:35850:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:folinst"
+fields = { "tags" = ["agriculture"] }
+evidence = "Installade föl ingår i hästantalen.\ncatalog:variable_text:35850:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["forsamling"] }
+evidence = "Kod och namn beskriver församling.\ncatalog:variable_text:35851:13149:20454\ncatalog:variable_text:35852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Kod och namn beskriver församling.\ncatalog:variable_text:35851:13149:20454\ncatalog:variable_text:35852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingsnamn"
+fields = { "sets" = ["forsamling"] }
+evidence = "Namn och kod beskriver församling.\ncatalog:variable_text:35851:13149:20454\ncatalog:variable_text:35852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn och kod beskriver församling.\ncatalog:variable_text:35851:13149:20454\ncatalog:variable_text:35852:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:friland"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Frilandsarealen är en del av trädgårdsarealen.\ncatalog:variable_text:35853:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:friland"
+fields = { "tags" = ["agriculture"] }
+evidence = "Frilandsarealen är en del av trädgårdsarealen.\ncatalog:variable_text:35853:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:frovall"
+fields = { "sets" = ["frovallsareal"] }
+evidence = "Måttet avser frövallsareal.\ncatalog:variable_text:35774:10592:10957\ncatalog:variable_text:35854:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:frovall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser frövallsareal.\ncatalog:variable_text:35774:10592:10957\ncatalog:variable_text:35854:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:galtar"
+fields = { "sets" = [] }
+evidence = "Måttet avser lantbruksdjur.\ncatalog:variable_text:35855:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:galtar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser lantbruksdjur.\ncatalog:variable_text:35855:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gardregion"
+fields = { "sets" = [] }
+evidence = "Gårdsregion är en geografisk indelning.\ncatalog:variable_text:35856:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gardregion"
+fields = { "tags" = ["geography"] }
+evidence = "Gårdsregion är en geografisk indelning.\ncatalog:variable_text:35856:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "sets" = ["gatuadress"] }
+evidence = "Adr1 har en annan ägare i en angränsande period; etiketten anger gatuadress.\ncatalog:occurrence:331982\ncatalog:occurrence:332072\ncatalog:variable_text:35857:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "tags" = ["geography"] }
+evidence = "Adr1 har en annan ägare i en angränsande period; etiketten anger gatuadress.\ncatalog:occurrence:331982\ncatalog:occurrence:332072\ncatalog:variable_text:35857:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adr2"
+fields = { "sets" = ["gatuadress"] }
+evidence = "Adr2 har en annan ägare i en angränsande period; etiketten anger gatuadress.\ncatalog:occurrence:331983\ncatalog:occurrence:332073\ncatalog:variable_text:35858:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adr2"
+fields = { "tags" = ["geography"] }
+evidence = "Adr2 har en annan ägare i en angränsande period; etiketten anger gatuadress.\ncatalog:occurrence:331983\ncatalog:occurrence:332073\ncatalog:variable_text:35858:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress"
+fields = { "sets" = ["gatuadress"] }
+evidence = "Fältet anger gatuadress.\ncatalog:variable_text:35859:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet anger gatuadress.\ncatalog:variable_text:35859:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress1"
+fields = { "sets" = ["gatuadress"] }
+evidence = "Samma adresskolumn växlar ägare mellan perioder.\ncatalog:occurrence:329922\ncatalog:occurrence:329933\ncatalog:occurrence:329944"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress1"
+fields = { "tags" = ["geography"] }
+evidence = "Samma adresskolumn växlar ägare mellan perioder.\ncatalog:occurrence:329922\ncatalog:occurrence:329933\ncatalog:occurrence:329944"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress2"
+fields = { "sets" = ["gatuadress"] }
+evidence = "Samma adresskolumn växlar ägare mellan perioder.\ncatalog:occurrence:329923\ncatalog:occurrence:329934\ncatalog:occurrence:329945"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress-adress2"
+fields = { "tags" = ["geography"] }
+evidence = "Samma adresskolumn växlar ägare mellan perioder.\ncatalog:occurrence:329923\ncatalog:occurrence:329934\ncatalog:occurrence:329945"
+
+[[statement]]
+kind = "set"
+subject = "var:getter"
+fields = { "sets" = ["antal-getter"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:330330\ncatalog:occurrence:330331"
+
+[[statement]]
+kind = "set"
+subject = "var:getter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:330330\ncatalog:occurrence:330331"
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen för gröda.\ncatalog:variable_text:35863:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen för gröda.\ncatalog:variable_text:35863:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda10"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35864:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda10"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35864:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda11"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35865:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda11"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35865:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda12"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35866:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda12"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35866:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda13"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35867:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda13"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35867:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda14"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35868:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda14"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35868:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda15"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35869:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda15"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35869:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda16"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35870:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda16"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35870:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda17"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35871:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda17"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35871:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda18"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkoden hör till gruppen groda och beskriver jordbruksgröda. Familjens läsbara stammar behålls.\ncatalog:occurrence:329025\ncatalog:variable_text:35872:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda18"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkoden hör till gruppen groda och beskriver jordbruksgröda. Familjens läsbara stammar behålls.\ncatalog:occurrence:329025\ncatalog:variable_text:35872:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda19"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35873:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda19"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35873:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda2"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35874:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35874:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda20"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35875:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda20"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35875:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda3"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35876:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda3"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35876:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda4"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35877:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda4"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35877:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda5"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35878:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda5"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35878:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda6"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35879:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda6"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35879:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda7"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35880:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda7"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35880:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda8"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35881:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda8"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35881:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda9"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35882:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda9"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod ingår i kandidatgruppen.\ncatalog:variable_text:35882:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-id-nummer"
+fields = { "sets" = ["groda"] }
+evidence = "Grödans id är en kodning av gröda.\ncatalog:variable_text:35883:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-id-nummer"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödans id är en kodning av gröda.\ncatalog:variable_text:35883:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-namn"
+fields = { "sets" = ["groda"] }
+evidence = "Grödans namn är en representation av gröda.\ncatalog:variable_text:35884:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-namn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödans namn är en representation av gröda.\ncatalog:variable_text:35884:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodareal"
+fields = { "sets" = ["grodareal"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35885:10957:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Generisk grödareal hör till kandidatgruppen.\ncatalog:variable_text:35885:10957:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "sets" = ["groda"] }
+evidence = "Grödkoden hör till kandidatgruppen.\ncatalog:variable_text:35886:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkoden hör till kandidatgruppen.\ncatalog:variable_text:35886:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "sets" = ["groda"] }
+evidence = "Grödnamn är en representation av gröda.\ncatalog:variable_text:35887:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödnamn är en representation av gröda.\ncatalog:variable_text:35887:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoder"
+fields = { "sets" = ["gronfoderareal"] }
+evidence = "Fältet anger grönfoderareal.\ncatalog:variable_text:35888:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoder"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger grönfoderareal.\ncatalog:variable_text:35888:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoder-i-gronfo"
+fields = { "sets" = ["gronfoderareal"] }
+evidence = "Fältet anger grönfoderareal.\ncatalog:variable_text:35889:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoder-i-gronfo"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger grönfoderareal.\ncatalog:variable_text:35889:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hastar"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Fältet anger antal hästar.\ncatalog:variable_text:35890:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hastar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger antal hästar.\ncatalog:variable_text:35890:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hastegna"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Egna hästar ingår i hästantalen.\ncatalog:variable_text:35891:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:hastegna"
+fields = { "tags" = ["agriculture"] }
+evidence = "Egna hästar ingår i hästantalen.\ncatalog:variable_text:35891:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:hastinst"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Installade hästar ingår i hästantalen.\ncatalog:variable_text:35892:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:hastinst"
+fields = { "tags" = ["agriculture"] }
+evidence = "Installade hästar ingår i hästantalen.\ncatalog:variable_text:35892:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:honsaggprod"
+fields = { "sets" = ["antal-hons"] }
+evidence = "Höns för äggproduktion ingår i hönsgruppen.\ncatalog:variable_text:35893:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:honsaggprod"
+fields = { "tags" = ["agriculture"] }
+evidence = "Höns för äggproduktion ingår i hönsgruppen.\ncatalog:variable_text:35893:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:honsuppfslaktkyckl"
+fields = { "sets" = ["antal-hons"] }
+evidence = "Höns för uppfödning ingår i hönsgruppen.\ncatalog:variable_text:35894:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:honsuppfslaktkyckl"
+fields = { "tags" = ["agriculture"] }
+evidence = "Höns för uppfödning ingår i hönsgruppen.\ncatalog:variable_text:35894:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostkorn"
+fields = { "sets" = ["hostkornsareal"] }
+evidence = "Fältet anger höstkornsareal.\ncatalog:variable_text:35895:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstkornsareal.\ncatalog:variable_text:35895:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostkorn-i-hkorn"
+fields = { "sets" = ["hostkornsareal"] }
+evidence = "Fältet anger höstkornsareal.\ncatalog:variable_text:35896:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hostkorn-i-hkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstkornsareal.\ncatalog:variable_text:35896:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hostragvete"
+fields = { "sets" = ["ragveteareal"] }
+evidence = "Höstrågvete är en del av rågvetearealen.\ncatalog:variable_text:35897:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostragvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Höstrågvete är en del av rågvetearealen.\ncatalog:variable_text:35897:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps"
+fields = { "sets" = [] }
+evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:35898:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:35898:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps-hostraps"
+fields = { "sets" = [] }
+evidence = "Fältet anger höstrapsareal.\ncatalog:variable_text:35899:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps-hostraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstrapsareal.\ncatalog:variable_text:35899:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs"
+fields = { "sets" = ["hostrybsareal"] }
+evidence = "Fältet anger höstrybsareal.\ncatalog:variable_text:35900:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstrybsareal.\ncatalog:variable_text:35900:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs-i-hrybs"
+fields = { "sets" = ["hostrybsareal"] }
+evidence = "Fältet anger höstrybsareal.\ncatalog:variable_text:35901:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hostrybs-i-hrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstrybsareal.\ncatalog:variable_text:35901:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hostvete"
+fields = { "sets" = ["hostveteareal"] }
+evidence = "Fältet anger höstveteareal.\ncatalog:variable_text:35902:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstveteareal.\ncatalog:variable_text:35902:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hostvete-i-hvete"
+fields = { "sets" = ["hostveteareal"] }
+evidence = "Fältet anger höstveteareal.\ncatalog:variable_text:35903:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hostvete-i-hvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger höstveteareal.\ncatalog:variable_text:35903:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:hvbr"
+fields = { "sets" = [] }
+evidence = "Hvbr är en bokstavskod för huvudbrukare.\ncatalog:variable_text:35904:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hvbr"
+fields = { "tags" = ["agriculture"] }
+evidence = "Hvbr är en bokstavskod för huvudbrukare.\ncatalog:variable_text:35904:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:i-aker"
+fields = { "sets" = ["akerareal"] }
+evidence = "Det ensamma i är en källkod och inte en ordstam i etiketten.\ncatalog:variable_text:35905:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:i-aker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Det ensamma i är en källkod och inte en ordstam i etiketten.\ncatalog:variable_text:35905:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:i-tradg"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Ensam bokstav i från källkolumnen är en kod och trädgård kan anges med källans etikett.\ncatalog:variable_text:35906:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:i-tradg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ensam bokstav i från källkolumnen är en kod och trädgård kan anges med källans etikett.\ncatalog:variable_text:35906:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Imputering är en statistisk kvalitetsmarkering.\ncatalog:variable_text:35907:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Imputering är en statistisk kvalitetsmarkering.\ncatalog:variable_text:35907:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jkod"
+fields = { "sets" = ["driftsinriktning"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35908:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jkod"
+fields = { "tags" = ["agriculture", "business"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35908:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jtext"
+fields = { "sets" = ["driftsinriktning"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35909:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jtext"
+fields = { "tags" = ["agriculture", "business"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35909:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jtim-41877"
+fields = { "sets" = ["standardtimmar"] }
+evidence = "Siffersuffixet finns inte i källkolumnen och är en löpnummerdisambiguering.\ncatalog:variable_text:35910:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jtim-41877"
+fields = { "tags" = ["agriculture", "employment"] }
+evidence = "Siffersuffixet finns inte i källkolumnen och är en löpnummerdisambiguering.\ncatalog:variable_text:35910:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jtim-ny"
+fields = { "sets" = ["standardtimmar"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35911:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:jtim-ny"
+fields = { "tags" = ["agriculture", "employment"] }
+evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35911:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kalkon"
+fields = { "sets" = [] }
+evidence = "Antalet kalkoner är ett jordbruksmått utan passande gruppkandidat.\ncatalog:variable_text:35912:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalkon"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antalet kalkoner är ett jordbruksmått utan passande gruppkandidat.\ncatalog:variable_text:35912:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-669"
+fields = { "sets" = ["uppgiftskalla"] }
+evidence = "Siffersuffixet finns inte i källkolumnen och är en löpnummerdisambiguering.\ncatalog:variable_text:35913:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla-669"
+fields = { "tags" = ["methods"] }
+evidence = "Siffersuffixet finns inte i källkolumnen och är en löpnummerdisambiguering.\ncatalog:variable_text:35913:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallhast"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Kallblodshästar ingår i hästantalen.\ncatalog:variable_text:35914:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:kallhast"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kallblodshästar ingår i hästantalen.\ncatalog:variable_text:35914:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:kalv"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Fältet anger antal kalvar.\ncatalog:variable_text:35915:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kalv"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger antal kalvar.\ncatalog:variable_text:35915:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:killingar"
+fields = { "sets" = ["antal-getter"] }
+evidence = "Killingar är en namngiven del av getter.\ncatalog:variable_text:35916:12053:12784\ncatalog:variable_text:36038:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:killingar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Killingar är en namngiven del av getter.\ncatalog:variable_text:35916:12053:12784\ncatalog:variable_text:36038:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-undergroda"
+fields = { "sets" = ["undergroda"] }
+evidence = "Samma undergrödekod är uppdelad mellan perioder med underkod.\ncatalog:occurrence:329644\ncatalog:occurrence:329669\ncatalog:variable_text:35917:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-undergroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma undergrödekod är uppdelad mellan perioder med underkod.\ncatalog:occurrence:329644\ncatalog:occurrence:329669\ncatalog:variable_text:35917:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunkod och kommunnamn beskriver samma geografiska indelning.\ncatalog:variable_text:35918:13149:20454\ncatalog:variable_text:35919:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkod och kommunnamn beskriver samma geografiska indelning.\ncatalog:variable_text:35918:13149:20454\ncatalog:variable_text:35919:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunnamn och kommunkod beskriver samma geografiska indelning.\ncatalog:variable_text:35918:13149:20454\ncatalog:variable_text:35919:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamn och kommunkod beskriver samma geografiska indelning.\ncatalog:variable_text:35918:13149:20454\ncatalog:variable_text:35919:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter"
+fields = { "sets" = ["konservartersareal"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35920:10227:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35920:10227:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-i-konser"
+fields = { "sets" = ["konservartersareal"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35921:10592:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-i-konser"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35921:10592:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-konsarter"
+fields = { "sets" = ["konservartersareal"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35920:10227:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konservarter-konsarter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser konservärtsareal.\ncatalog:variable_text:35920:10227:10957\ncatalog:variable_text:35922:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korn"
+fields = { "sets" = [] }
+evidence = "Måttet avser korn i hektar.\ncatalog:variable_text:35923:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:korn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser korn i hektar.\ncatalog:variable_text:35923:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kvig12"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35927:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvig12"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35927:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvig2"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35928:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvig2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35928:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigkalv"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Kvigkalvar ingår i kalvantalen.\ncatalog:variable_text:35929:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigkalv"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kvigkalvar ingår i kalvantalen.\ncatalog:variable_text:35929:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-liv-1-2-ar"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35930:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-liv-1-2-ar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35930:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-liv-2-ar-over"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35931:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-liv-2-ar-over"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35931:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-slakt-1-2-ar"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35932:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigor-slakt-1-2-ar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ändamåls- och åldersindelade kvigor ingår i kandidatgruppen.\ncatalog:variable_text:35932:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigs2"
+fields = { "sets" = ["antal-kvigor"] }
+evidence = "Ensam bokstav s är en källkod för slakt och inte en läsbar ordstam.\ncatalog:variable_text:35933:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigs2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ensam bokstav s är en källkod för slakt och inte en läsbar ordstam.\ncatalog:variable_text:35933:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigtjurstut"
+fields = { "sets" = [] }
+evidence = "Måttet avser antal lantbruksdjur.\ncatalog:variable_text:35934:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kvigtjurstut"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser antal lantbruksdjur.\ncatalog:variable_text:35934:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kyckling-normomgang"
+fields = { "sets" = ["antal-kycklingar"] }
+evidence = "Källkolumnen har angränsande ägare med olika specifika etiketter.\ncatalog:occurrence:330577\ncatalog:occurrence:330603\ncatalog:variable_text:35935:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:kyckling-normomgang"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnen har angränsande ägare med olika specifika etiketter.\ncatalog:occurrence:330577\ncatalog:occurrence:330603\ncatalog:variable_text:35935:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:lamm"
+fields = { "sets" = ["antal-far"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
+
+[[statement]]
+kind = "set"
+subject = "var:lamm"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Länskod och länsnamn beskriver samma geografiska indelning.\ncatalog:variable_text:35937:13149:20454\ncatalog:variable_text:35939:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskod och länsnamn beskriver samma geografiska indelning.\ncatalog:variable_text:35937:13149:20454\ncatalog:variable_text:35939:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Källorna beskriver samma regionala kod som scb/lbr/regionkod-regkod i angränsande perioder.\ncatalog:occurrence:332447\ncatalog:occurrence:332539\ncatalog:variable_text:35938:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Källorna beskriver samma regionala kod som scb/lbr/regionkod-regkod i angränsande perioder.\ncatalog:occurrence:332447\ncatalog:occurrence:332539\ncatalog:variable_text:35938:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lansnamn"
+fields = { "sets" = ["lan"] }
+evidence = "Länsnamn och länskod beskriver samma geografiska indelning.\ncatalog:variable_text:35937:13149:20454\ncatalog:variable_text:35939:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lansnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Länsnamn och länskod beskriver samma geografiska indelning.\ncatalog:variable_text:35937:13149:20454\ncatalog:variable_text:35939:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lbr"
+fields = { "sets" = [] }
+evidence = "LBR är en registerförkortning som inte anger variabelns innebörd. Variabeln avser tillhörighet till populationen.\ncatalog:variable_text:35941:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lbr"
+fields = { "tags" = ["methods"] }
+evidence = "LBR är en registerförkortning som inte anger variabelns innebörd. Variabeln avser tillhörighet till populationen.\ncatalog:variable_text:35941:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:majs"
+fields = { "sets" = ["majsareal"] }
+evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:majs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:majs-lamm"
+fields = { "sets" = ["majsareal"] }
+evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
+
+[[statement]]
+kind = "set"
+subject = "var:majs-lamm"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
+
+[[statement]]
+kind = "set"
+subject = "var:matarter"
+fields = { "sets" = [] }
+evidence = "Matärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35944:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:matarter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Matärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35944:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotatis"
+fields = { "sets" = ["matpotatisareal"] }
+evidence = "Matpotatisareal och dess ej bevattnade del hör ihop.\ncatalog:variable_text:35945:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotatis"
+fields = { "tags" = ["agriculture"] }
+evidence = "Matpotatisareal och dess ej bevattnade del hör ihop.\ncatalog:variable_text:35945:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotatis-i-matpot"
+fields = { "sets" = ["matpotatisareal"] }
+evidence = "Matpotatisareal hör till kandidatgruppen.\ncatalog:variable_text:35946:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotatis-i-matpot"
+fields = { "tags" = ["agriculture"] }
+evidence = "Matpotatisareal hör till kandidatgruppen.\ncatalog:variable_text:35946:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotejbev"
+fields = { "sets" = ["matpotatisareal"] }
+evidence = "Ej bevattnad matpotatis är en del av matpotatisarealen.\ncatalog:variable_text:35947:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:matpotejbev"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ej bevattnad matpotatis är en del av matpotatisarealen.\ncatalog:variable_text:35947:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:modersugga"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Modersuggor är ett antal suggor.\ncatalog:variable_text:35948:9131:9496\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:modersugga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Modersuggor är ett antal suggor.\ncatalog:variable_text:35948:9131:9496\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nedlagt"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser jordbruksföretagets produktion.\ncatalog:variable_text:35950:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nedlagt"
+fields = { "tags" = ["agriculture", "business"] }
+evidence = "Uppgiften avser jordbruksföretagets produktion.\ncatalog:variable_text:35950:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:njo"
+fields = { "sets" = [] }
+evidence = "Njo är en bokstavskod för naturliga jordbruksområden.\ncatalog:variable_text:35951:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:njo"
+fields = { "tags" = ["geography"] }
+evidence = "Njo är en bokstavskod för naturliga jordbruksområden.\ncatalog:variable_text:35951:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:normsvin"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Normal uppfödningsomgång ingår i kandidatgruppen.\ncatalog:variable_text:35952:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:normsvin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Normal uppfödningsomgång ingår i kandidatgruppen.\ncatalog:variable_text:35952:8035:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:nykalla"
+fields = { "sets" = ["uppgiftskalla"] }
+evidence = "Variabeln anger uppgiftskälla.\ncatalog:variable_text:35953:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nykalla"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger uppgiftskälla.\ncatalog:variable_text:35953:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:obrukad"
+fields = { "sets" = ["obrukad-areal"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35954:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:obrukad"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser obrukad mark.\ncatalog:variable_text:35744:10592:10957\ncatalog:variable_text:35954:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:obsugga"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Måttet avser antal suggor.\ncatalog:variable_text:35955:9131:10227\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:obsugga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser antal suggor.\ncatalog:variable_text:35955:9131:10227\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-trada"
+fields = { "sets" = [] }
+evidence = "Variabeln avser odling på träda.\ncatalog:variable_text:35956:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:odling-trada"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln avser odling på träda.\ncatalog:variable_text:35956:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin"
+fields = { "sets" = [] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35957:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35957:8766:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin-oljelin"
+fields = { "sets" = [] }
+evidence = "Definitionen anger oljelinsareal genom perioderna.\ncatalog:variable_text:35958:11688:18993\ncatalog:variable_text:35958:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin-oljelin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Definitionen anger oljelinsareal genom perioderna.\ncatalog:variable_text:35958:11688:18993\ncatalog:variable_text:35958:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhast"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Övriga hästar ingår i hästantalen.\ncatalog:variable_text:35961:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhast"
+fields = { "tags" = ["agriculture"] }
+evidence = "Övriga hästar ingår i hästantalen.\ncatalog:variable_text:35961:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhastegna"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Egna övriga hästar ingår i hästantalen.\ncatalog:variable_text:35962:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhastegna"
+fields = { "tags" = ["agriculture"] }
+evidence = "Egna övriga hästar ingår i hästantalen.\ncatalog:variable_text:35962:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhastinst"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Installade övriga hästar ingår i hästantalen.\ncatalog:variable_text:35963:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrhastinst"
+fields = { "tags" = ["agriculture"] }
+evidence = "Installade övriga hästar ingår i hästantalen.\ncatalog:variable_text:35963:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-vaxtslag"
+fields = { "sets" = ["ovriga-vaxtslag-areal"] }
+evidence = "Samma källkolumner har även mappats till areal-ovrig-mark, vars betydelse skiljer sig.\ncatalog:occurrence:332800\ncatalog:occurrence:332801\ncatalog:occurrence:333409\ncatalog:occurrence:333840"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-vaxtslag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumner har även mappats till areal-ovrig-mark, vars betydelse skiljer sig.\ncatalog:occurrence:332800\ncatalog:occurrence:332801\ncatalog:occurrence:333409\ncatalog:occurrence:333840"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Produktionsområdesindelningen hör till gruppen produktionsomrade och beskriver ett geografiskt område för jordbruksstatistik. Familjen behålls samlat.\ncatalog:variable_text:35966:13514:19723\ncatalog:variable_text:35966:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "tags" = ["agriculture", "geography"] }
+evidence = "Produktionsområdesindelningen hör till gruppen produktionsomrade och beskriver ett geografiskt område för jordbruksstatistik. Familjen behålls samlat.\ncatalog:variable_text:35966:13514:19723\ncatalog:variable_text:35966:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "Po är en bokstavskod för produktionsområde.\ncatalog:variable_text:35967:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "tags" = ["geography"] }
+evidence = "Po är en bokstavskod för produktionsområde.\ncatalog:variable_text:35967:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "sets" = ["postort"] }
+evidence = "Postadress är en möjlig representation av postort enligt gruppkandidaten.\ncatalog:variable_text:35968:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Postadress är en möjlig representation av postort enligt gruppkandidaten.\ncatalog:variable_text:35968:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet och ingår inte i postortsgruppen.\ncatalog:variable_text:35969:6940:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet och ingår inte i postortsgruppen.\ncatalog:variable_text:35969:6940:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["postort"] }
+evidence = "Fältet anger postort.\ncatalog:variable_text:35970:10227:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet anger postort.\ncatalog:variable_text:35970:10227:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-postadress"
+fields = { "sets" = ["postort"] }
+evidence = "Fältet anger postort.\ncatalog:variable_text:35971:10957:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet anger postort.\ncatalog:variable_text:35971:10957:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:potatis-for-starkelse"
+fields = { "sets" = ["starkelsepotatisareal"] }
+evidence = "Måttet avser stärkelsepotatisareal.\ncatalog:variable_text:35842:10592:10957\ncatalog:variable_text:35972:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:potatis-for-starkelse"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser stärkelsepotatisareal.\ncatalog:variable_text:35842:10592:10957\ncatalog:variable_text:35972:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rag"
+fields = { "sets" = [] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35973:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35973:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rag-rag"
+fields = { "sets" = [] }
+evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rag-rag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ragvete"
+fields = { "sets" = ["ragveteareal"] }
+evidence = "Samma kolumn har överlappande ägare; fältet beskrivs som rågveteareal.\ncatalog:occurrence:332135\ncatalog:occurrence:332136\ncatalog:variable_text:35975:11688:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ragvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma kolumn har överlappande ägare; fältet beskrivs som rågveteareal.\ncatalog:occurrence:332135\ncatalog:occurrence:332136\ncatalog:variable_text:35975:11688:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ragvete-i-ragvet"
+fields = { "sets" = ["ragveteareal"] }
+evidence = "Fältet anger rågveteareal.\ncatalog:variable_text:35976:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:ragvete-i-ragvet"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger rågveteareal.\ncatalog:variable_text:35976:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2"
+fields = { "sets" = [] }
+evidence = "NUTS2 är en geografisk indelning.\ncatalog:variable_text:35977:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-nuts2"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS2 är en geografisk indelning.\ncatalog:variable_text:35977:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35978:6940:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "tags" = ["geography"] }
+evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35978:6940:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-ragvete"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-ragvete"
+fields = { "tags" = ["geography"] }
+evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Källorna beskriver samma regionala kod som scb/lbr/lan-kommun-forsamling i angränsande perioder.\ncatalog:occurrence:332447\ncatalog:occurrence:332539\ncatalog:variable_text:35980:8035:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod"
+fields = { "tags" = ["geography"] }
+evidence = "Källorna beskriver samma regionala kod som scb/lbr/lan-kommun-forsamling i angränsande perioder.\ncatalog:occurrence:332447\ncatalog:occurrence:332539\ncatalog:variable_text:35980:8035:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod2000"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35981:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod-regkod2000"
+fields = { "tags" = ["geography"] }
+evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35981:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regkod2013"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Koden anger län, kommun och församling.\ncatalog:variable_text:35982:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:regkod2013"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger län, kommun och församling.\ncatalog:variable_text:35982:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade"
+fields = { "sets" = ["riksomrade"] }
+evidence = "Samma riksområdesindelning är uppdelad mellan perioder med riksomrade-ro.\ncatalog:occurrence:332036\ncatalog:occurrence:332363\ncatalog:variable_text:35983:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Samma riksområdesindelning är uppdelad mellan perioder med riksomrade-ro.\ncatalog:occurrence:332036\ncatalog:occurrence:332363\ncatalog:variable_text:35983:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade-ro"
+fields = { "sets" = ["riksomrade"] }
+evidence = "Samma riksområdesindelning är uppdelad mellan perioder med riksomrade.\ncatalog:occurrence:332036\ncatalog:occurrence:332363\ncatalog:variable_text:35984:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrade-ro"
+fields = { "tags" = ["geography"] }
+evidence = "Samma riksområdesindelning är uppdelad mellan perioder med riksomrade.\ncatalog:occurrence:332036\ncatalog:occurrence:332363\ncatalog:variable_text:35984:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "sets" = [] }
+evidence = "Sko är en bokstavskod för skördeområde.\ncatalog:variable_text:35985:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "tags" = ["geography"] }
+evidence = "Sko är en bokstavskod för skördeområde.\ncatalog:variable_text:35985:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skogsareal"
+fields = { "sets" = ["skogsmarksareal"] }
+evidence = "Samma skogsmarksareal är uppdelad mellan perioder med areal-skogsmark.\ncatalog:occurrence:330874\ncatalog:occurrence:330953\ncatalog:occurrence:332083\ncatalog:occurrence:332211"
+
+[[statement]]
+kind = "set"
+subject = "var:skogsareal"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Samma skogsmarksareal är uppdelad mellan perioder med areal-skogsmark.\ncatalog:occurrence:330874\ncatalog:occurrence:330953\ncatalog:occurrence:332083\ncatalog:occurrence:332211"
+
+[[statement]]
+kind = "set"
+subject = "var:skord-arter-ej-konserv"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har olika beskrivna mått i olika perioder och källans enhet skiljer sig från definitionen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Foderärter och matärter är namngivna delgrödor. Åkerböneposten behålls enligt den fasta hektarbaserade definitionen trots källans skördtext. membership-0378: Inget valt fält mäter ärt- eller åkerbönsareal i denna sektion. membership-0379: Inget valt fält mäter ärt- eller åkerbönareal. membership-0380: Ingen vald variabel mäter ärt- eller åkerbönsareal. membership-0381: Ingen vald variabel anger areal för ärter eller åkerbönor. membership-0382: Ingen vald variabel avser ärters eller åkerbönors areal. membership-0383: Grödidentiteterna mäter inte areal av ärter eller åkerbönor; imputering är en kvalitetsmarkör. membership-0384: Båda är hektarredovisade mått för de angivna grödorna enligt den fasta kandidaten. Skördebeskrivningen och tidigare bedömningen kräver granskning men upphäver inte kandidatens stödda inkludering.\ncatalog:occurrence:331992\ncatalog:occurrence:332101\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957\ncatalog:variable_text:35886:14610:14975\ncatalog:variable_text:35887:16071:20454\ncatalog:variable_text:35907:17532:20454\ncatalog:variable_text:35944:7305:7670\ncatalog:variable_text:35987:10227:10957\ncatalog:variable_text:36021:10592:11323\ncatalog:variable_text:36031:8401:10227\ncatalog:variable_text:36044:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skord-arter-ej-konserv"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnen har olika beskrivna mått i olika perioder och källans enhet skiljer sig från definitionen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Foderärter och matärter är namngivna delgrödor. Åkerböneposten behålls enligt den fasta hektarbaserade definitionen trots källans skördtext. membership-0378: Inget valt fält mäter ärt- eller åkerbönsareal i denna sektion. membership-0379: Inget valt fält mäter ärt- eller åkerbönareal. membership-0380: Ingen vald variabel mäter ärt- eller åkerbönsareal. membership-0381: Ingen vald variabel anger areal för ärter eller åkerbönor. membership-0382: Ingen vald variabel avser ärters eller åkerbönors areal. membership-0383: Grödidentiteterna mäter inte areal av ärter eller åkerbönor; imputering är en kvalitetsmarkör. membership-0384: Båda är hektarredovisade mått för de angivna grödorna enligt den fasta kandidaten. Skördebeskrivningen och tidigare bedömningen kräver granskning men upphäver inte kandidatens stödda inkludering.\ncatalog:occurrence:331992\ncatalog:occurrence:332101\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957\ncatalog:variable_text:35886:14610:14975\ncatalog:variable_text:35887:16071:20454\ncatalog:variable_text:35907:17532:20454\ncatalog:variable_text:35944:7305:7670\ncatalog:variable_text:35987:10227:10957\ncatalog:variable_text:36021:10592:11323\ncatalog:variable_text:36031:8401:10227\ncatalog:variable_text:36044:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skordetroska"
+fields = { "sets" = [] }
+evidence = "Antalet skördetröskor är ett jordbruksmått.\ncatalog:variable_text:35988:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:skordetroska"
+fields = { "tags" = ["agriculture"] }
+evidence = "Antalet skördetröskor är ett jordbruksmått.\ncatalog:variable_text:35988:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktkyckl"
+fields = { "sets" = ["antal-kycklingar"] }
+evidence = "Slaktkycklingar är en del av kycklingantalet.\ncatalog:variable_text:35989:11688:20454\ncatalog:variable_text:36055:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktkyckl"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktkycklingar är en del av kycklingantalet.\ncatalog:variable_text:35989:11688:20454\ncatalog:variable_text:36055:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktkyckling-normomgang"
+fields = { "sets" = ["antal-kycklingar"] }
+evidence = "Källkolumnen har angränsande ägare med olika specifika etiketter.\ncatalog:occurrence:330577\ncatalog:occurrence:330603\ncatalog:variable_text:35990:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktkyckling-normomgang"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnen har angränsande ägare med olika specifika etiketter.\ncatalog:occurrence:330577\ncatalog:occurrence:330603\ncatalog:variable_text:35990:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktsvin"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Slaktsvin ingår i kandidatgruppen.\ncatalog:variable_text:35991:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktsvin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slaktsvin ingår i kandidatgruppen.\ncatalog:variable_text:35991:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktsvin-normomgang"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Normal uppfödningsomgång ingår i kandidatgruppen.\ncatalog:variable_text:35992:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slaktsvin-normomgang"
+fields = { "tags" = ["agriculture"] }
+evidence = "Normal uppfödningsomgång ingår i kandidatgruppen.\ncatalog:variable_text:35992:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slatbetvall"
+fields = { "sets" = ["vallareal"] }
+evidence = "Slåtter- och betesvall ingår i kandidatgruppen.\ncatalog:variable_text:35993:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slatbetvall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Slåtter- och betesvall ingår i kandidatgruppen.\ncatalog:variable_text:35993:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:smagrisar"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Smågrisar ingår i antal svin.\ncatalog:variable_text:35994:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:smagrisar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Smågrisar ingår i antal svin.\ncatalog:variable_text:35994:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sockerbetor"
+fields = { "sets" = ["sockerbetsareal"] }
+evidence = "Sockerbetsareal har en motsvarande källa i IAKS.\ncatalog:variable_text:35995:11688:20454\ncatalog:variable_text:35996:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sockerbetor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sockerbetsareal har en motsvarande källa i IAKS.\ncatalog:variable_text:35995:11688:20454\ncatalog:variable_text:35996:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sockerbetor-i-socbet"
+fields = { "sets" = ["sockerbetsareal"] }
+evidence = "Sockerbetsareal hör till kandidatgruppen.\ncatalog:variable_text:35996:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sockerbetor-i-socbet"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sockerbetsareal hör till kandidatgruppen.\ncatalog:variable_text:35996:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:stgjord"
+fields = { "sets" = [] }
+evidence = "Stgjord är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stgjord"
+fields = { "tags" = ["agriculture"] }
+evidence = "Stgjord är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr"
+fields = { "sets" = ["stodomrade"] }
+evidence = "Fältet anger geografiskt stödområde för jordbruk.\ncatalog:variable_text:35998:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr"
+fields = { "tags" = ["agriculture", "geography"] }
+evidence = "Fältet anger geografiskt stödområde för jordbruk.\ncatalog:variable_text:35998:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2014"
+fields = { "sets" = ["stodomrade"] }
+evidence = "Fältet anger stödområdesindelningen för 2014.\ncatalog:valueset:11620\ncatalog:variable_text:35999:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2014"
+fields = { "tags" = ["agriculture", "geography"] }
+evidence = "Fältet anger stödområdesindelningen för 2014.\ncatalog:valueset:11620\ncatalog:variable_text:35999:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2015"
+fields = { "sets" = ["stodomrade"] }
+evidence = "Fältet anger stödområdesindelningen för 2015.\ncatalog:valueset:7835\ncatalog:variable_text:36000:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomr2015"
+fields = { "tags" = ["agriculture", "geography"] }
+evidence = "Fältet anger stödområdesindelningen för 2015.\ncatalog:valueset:7835\ncatalog:variable_text:36000:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-akerareal"
+fields = { "sets" = ["akerareal"] }
+evidence = "Storleksgrupp är en kodad indelning av åkerareal.\ncatalog:variable_text:36002:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-akerareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Storleksgrupp är en kodad indelning av åkerareal.\ncatalog:variable_text:36002:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:suggor"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Måttet avser antal suggor.\ncatalog:variable_text:35749:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:suggor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser antal suggor.\ncatalog:variable_text:35749:9131:10957\ncatalog:variable_text:36003:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:suggorfg"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Fg är en bokstavskod för första gången.\ncatalog:variable_text:36004:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:suggorfg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fg är en bokstavskod för första gången.\ncatalog:variable_text:36004:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:suggorob"
+fields = { "sets" = ["antal-suggor-och-gyltor"] }
+evidence = "Ob är en bokstavskod för övriga betäckta.\ncatalog:variable_text:36005:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:suggorob"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ob är en bokstavskod för övriga betäckta.\ncatalog:variable_text:36005:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sumfar"
+fields = { "sets" = ["antal-far"] }
+evidence = "Totalt antal får hör till kandidatgruppen.\ncatalog:variable_text:36006:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sumfar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalt antal får hör till kandidatgruppen.\ncatalog:variable_text:36006:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sumfriland"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Frilandsarealen är en del av trädgårdsarealen.\ncatalog:variable_text:36007:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sumfriland"
+fields = { "tags" = ["agriculture"] }
+evidence = "Frilandsarealen är en del av trädgårdsarealen.\ncatalog:variable_text:36007:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sumgrod"
+fields = { "sets" = ["akerareal", "grodareal"] }
+evidence = "Summan av generiska grödarealer ingår i kandidatgruppen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Åkerareal och utarrenderad åkermark omfattas av definitionen. membership-0378: Inget valt fält mäter åkerareal; Astat kodar status. membership-0379: Inget valt fält mäter åkerareal enligt definitionen. membership-0380: Arrenderad åker, total åkerareal och åkerarealens storleksgrupp omfattas. Stgjord avser kombinerad åker- och betesareal och omfattas inte. membership-0381: Fältet mäter åkermarksareal och omfattas av definitionen. membership-0382: Ingen vald variabel avser åkerareal. membership-0383: Sektionen innehåller grödidentiteter och imputering, inga åkermarksarealer. membership-0384: Ägd, ospecificerad och arrenderad åkermark ingår. Sumgrod anges uttryckligen vara total åkerareal och stöder därför också medlemskap. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Samtliga är generiska grödarealer utan uttryckligen namngiven gröda; ägoslagsareal omfattas inte. membership-0378: Inget valt fält mäter generisk grödareal i denna sektion. membership-0379: Inget valt fält mäter generisk grödareal. membership-0380: Ingen vald variabel mäter generisk grödareal eller summan av grödarealer. De valda arealmåtten avser markslag eller särskilda odlingsdelar. membership-0381: Fältet mäter generisk grödareal; övriga valda grödarealer anger bestämda grödor. membership-0382: Ingen vald variabel avser grödareal. membership-0383: Grödkoder och grödnamn anger grödidentitet, inte grödareal; imputering anger kvalitetsstatus. membership-0384: Sumgrod är uttryckligen summan av samtliga grödarealer.\ncatalog:variable_text:35728:10227:10592\ncatalog:variable_text:35729:14610:20454\ncatalog:variable_text:35730:14975:15340\ncatalog:variable_text:35731:11688:20454\ncatalog:variable_text:35771:11688:20454\ncatalog:variable_text:35772:6940:7305\ncatalog:variable_text:35783:6940:7305\ncatalog:variable_text:35784:6940:7305\ncatalog:variable_text:35785:6940:7305\ncatalog:variable_text:35786:6940:7305\ncatalog:variable_text:35787:6940:7305\ncatalog:variable_text:35788:6940:7305\ncatalog:variable_text:35789:6940:7305\ncatalog:variable_text:35790:6940:7305\ncatalog:variable_text:35791:6940:7305\ncatalog:variable_text:35792:6940:7305\ncatalog:variable_text:35793:6940:7305\ncatalog:variable_text:35794:6940:7305\ncatalog:variable_text:35795:6940:7305\ncatalog:variable_text:35796:6940:7305\ncatalog:variable_text:35797:6940:7305\ncatalog:variable_text:35798:6940:7305\ncatalog:variable_text:35799:6940:7305\ncatalog:variable_text:35800:6940:7305\ncatalog:variable_text:35801:6940:7305\ncatalog:variable_text:35802:16801:20454\ncatalog:variable_text:35803:13514:13879\ncatalog:variable_text:35804:13514:13879\ncatalog:variable_text:35805:12053:12418\ncatalog:variable_text:35806:16801:20454\ncatalog:variable_text:35808:10957:20454\ncatalog:variable_text:35885:10957:20454\ncatalog:variable_text:35886:14610:14975\ncatalog:variable_text:35887:16071:20454\ncatalog:variable_text:35905:10592:10957\ncatalog:variable_text:35907:17532:20454\ncatalog:variable_text:35986:12053:20454\ncatalog:variable_text:35997:14610:20454\ncatalog:variable_text:36002:14610:20454\ncatalog:variable_text:36008:11688:20454\ncatalog:variable_text:36021:10592:11323\ncatalog:variable_text:36029:12053:20454\ncatalog:variable_text:36036:16071:20454\ncatalog:variable_text:36037:19358:20454\ncatalog:variable_text:36044:15706:20454\ncatalog:variable_text:36051:8035:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sumgrod"
+fields = { "tags" = ["agriculture"] }
+evidence = "Summan av generiska grödarealer ingår i kandidatgruppen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Åkerareal och utarrenderad åkermark omfattas av definitionen. membership-0378: Inget valt fält mäter åkerareal; Astat kodar status. membership-0379: Inget valt fält mäter åkerareal enligt definitionen. membership-0380: Arrenderad åker, total åkerareal och åkerarealens storleksgrupp omfattas. Stgjord avser kombinerad åker- och betesareal och omfattas inte. membership-0381: Fältet mäter åkermarksareal och omfattas av definitionen. membership-0382: Ingen vald variabel avser åkerareal. membership-0383: Sektionen innehåller grödidentiteter och imputering, inga åkermarksarealer. membership-0384: Ägd, ospecificerad och arrenderad åkermark ingår. Sumgrod anges uttryckligen vara total åkerareal och stöder därför också medlemskap. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Samtliga är generiska grödarealer utan uttryckligen namngiven gröda; ägoslagsareal omfattas inte. membership-0378: Inget valt fält mäter generisk grödareal i denna sektion. membership-0379: Inget valt fält mäter generisk grödareal. membership-0380: Ingen vald variabel mäter generisk grödareal eller summan av grödarealer. De valda arealmåtten avser markslag eller särskilda odlingsdelar. membership-0381: Fältet mäter generisk grödareal; övriga valda grödarealer anger bestämda grödor. membership-0382: Ingen vald variabel avser grödareal. membership-0383: Grödkoder och grödnamn anger grödidentitet, inte grödareal; imputering anger kvalitetsstatus. membership-0384: Sumgrod är uttryckligen summan av samtliga grödarealer.\ncatalog:variable_text:35728:10227:10592\ncatalog:variable_text:35729:14610:20454\ncatalog:variable_text:35730:14975:15340\ncatalog:variable_text:35731:11688:20454\ncatalog:variable_text:35771:11688:20454\ncatalog:variable_text:35772:6940:7305\ncatalog:variable_text:35783:6940:7305\ncatalog:variable_text:35784:6940:7305\ncatalog:variable_text:35785:6940:7305\ncatalog:variable_text:35786:6940:7305\ncatalog:variable_text:35787:6940:7305\ncatalog:variable_text:35788:6940:7305\ncatalog:variable_text:35789:6940:7305\ncatalog:variable_text:35790:6940:7305\ncatalog:variable_text:35791:6940:7305\ncatalog:variable_text:35792:6940:7305\ncatalog:variable_text:35793:6940:7305\ncatalog:variable_text:35794:6940:7305\ncatalog:variable_text:35795:6940:7305\ncatalog:variable_text:35796:6940:7305\ncatalog:variable_text:35797:6940:7305\ncatalog:variable_text:35798:6940:7305\ncatalog:variable_text:35799:6940:7305\ncatalog:variable_text:35800:6940:7305\ncatalog:variable_text:35801:6940:7305\ncatalog:variable_text:35802:16801:20454\ncatalog:variable_text:35803:13514:13879\ncatalog:variable_text:35804:13514:13879\ncatalog:variable_text:35805:12053:12418\ncatalog:variable_text:35806:16801:20454\ncatalog:variable_text:35808:10957:20454\ncatalog:variable_text:35885:10957:20454\ncatalog:variable_text:35886:14610:14975\ncatalog:variable_text:35887:16071:20454\ncatalog:variable_text:35905:10592:10957\ncatalog:variable_text:35907:17532:20454\ncatalog:variable_text:35986:12053:20454\ncatalog:variable_text:35997:14610:20454\ncatalog:variable_text:36002:14610:20454\ncatalog:variable_text:36008:11688:20454\ncatalog:variable_text:36021:10592:11323\ncatalog:variable_text:36029:12053:20454\ncatalog:variable_text:36036:16071:20454\ncatalog:variable_text:36037:19358:20454\ncatalog:variable_text:36044:15706:20454\ncatalog:variable_text:36051:8035:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhast"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Fältet anger totalt antal hästar.\ncatalog:variable_text:36009:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhast"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger totalt antal hästar.\ncatalog:variable_text:36009:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhastegna"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Fältet anger totalt antal egna hästar.\ncatalog:variable_text:36010:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhastegna"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger totalt antal egna hästar.\ncatalog:variable_text:36010:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhastinst"
+fields = { "sets" = ["antal-hastar"] }
+evidence = "Fältet anger totalt antal installade hästar.\ncatalog:variable_text:36011:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhastinst"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger totalt antal installade hästar.\ncatalog:variable_text:36011:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhons"
+fields = { "sets" = ["antal-hons"] }
+evidence = "SumHons har överlappande ägare; totalen hör till hönsgruppen enligt kandidaten.\ncatalog:occurrence:334196\ncatalog:occurrence:334197\ncatalog:variable_text:36012:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhons"
+fields = { "tags" = ["agriculture"] }
+evidence = "SumHons har överlappande ägare; totalen hör till hönsgruppen enligt kandidaten.\ncatalog:occurrence:334196\ncatalog:occurrence:334197\ncatalog:variable_text:36012:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sumkor"
+fields = { "sets" = ["antal-kor"] }
+evidence = "Fältet anger totalt antal kor.\ncatalog:variable_text:36013:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:sumkor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger totalt antal kor.\ncatalog:variable_text:36013:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:sumsvin"
+fields = { "sets" = ["antal-svin"] }
+evidence = "Totalt antal svin hör till kandidatgruppen.\ncatalog:variable_text:36014:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sumsvin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalt antal svin hör till kandidatgruppen.\ncatalog:variable_text:36014:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tackbagg"
+fields = { "sets" = ["antal-far"] }
+evidence = "Tackor och baggar är delar av fårantalet.\ncatalog:variable_text:36015:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tackbagg"
+fields = { "tags" = ["agriculture"] }
+evidence = "Tackor och baggar är delar av fårantalet.\ncatalog:variable_text:36015:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tackor"
+fields = { "sets" = ["antal-far"] }
+evidence = "Tackor är en del av fårantalet.\ncatalog:variable_text:36016:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tackor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Tackor är en del av fårantalet.\ncatalog:variable_text:36016:12784:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefon-1"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Första kontakttelefonen ingår i kandidatgruppen.\ncatalog:variable_text:36017:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefon-1"
+fields = { "tags" = [] }
+evidence = "Första kontakttelefonen ingår i kandidatgruppen.\ncatalog:variable_text:36017:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefon-2"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Andra kontakttelefonen ingår i kandidatgruppen.\ncatalog:variable_text:36018:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefon-2"
+fields = { "tags" = [] }
+evidence = "Andra kontakttelefonen ingår i kandidatgruppen.\ncatalog:variable_text:36018:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer-1"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Första telefonnumret ingår i kandidatgruppen.\ncatalog:variable_text:36019:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer-1"
+fields = { "tags" = [] }
+evidence = "Första telefonnumret ingår i kandidatgruppen.\ncatalog:variable_text:36019:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer-2"
+fields = { "sets" = ["telefonnummer"] }
+evidence = "Andra telefonnumret ingår i kandidatgruppen.\ncatalog:variable_text:36020:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer-2"
+fields = { "tags" = [] }
+evidence = "Andra telefonnumret ingår i kandidatgruppen.\ncatalog:variable_text:36020:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tfid"
+fields = { "sets" = ["groda"] }
+evidence = "TF är en källkod och inte en läsbar stam av etiketten.\ncatalog:variable_text:36021:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:tfid"
+fields = { "tags" = ["agriculture"] }
+evidence = "TF är en källkod och inte en läsbar stam av etiketten.\ncatalog:variable_text:36021:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur-stutkalvar"
+fields = { "sets" = ["antal-kalvar"] }
+evidence = "Tjur- och stutkalvar ingår i kalvantalen.\ncatalog:variable_text:36022:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur-stutkalvar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Tjur- och stutkalvar ingår i kalvantalen.\ncatalog:variable_text:36022:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur12"
+fields = { "sets" = ["antal-tjurar-och-stutar"] }
+evidence = "Åldersindelade tjurar ingår i kandidatgruppen.\ncatalog:variable_text:36023:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur12"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade tjurar ingår i kandidatgruppen.\ncatalog:variable_text:36023:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur2"
+fields = { "sets" = ["antal-tjurar-och-stutar"] }
+evidence = "Åldersindelade tjurar ingår i kandidatgruppen.\ncatalog:variable_text:36024:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tjur2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade tjurar ingår i kandidatgruppen.\ncatalog:variable_text:36024:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurar-stutar-1-2-ar"
+fields = { "sets" = ["antal-tjurar-och-stutar"] }
+evidence = "Åldersindelade tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36025:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurar-stutar-1-2-ar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36025:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurar-stutar-2-ar-over"
+fields = { "sets" = ["antal-tjurar-och-stutar"] }
+evidence = "Åldersindelade tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36026:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurar-stutar-2-ar-over"
+fields = { "tags" = ["agriculture"] }
+evidence = "Åldersindelade tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36026:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurstut"
+fields = { "sets" = ["antal-tjurar-och-stutar"] }
+evidence = "Tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36027:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tjurstut"
+fields = { "tags" = ["agriculture"] }
+evidence = "Tjurar och stutar ingår i kandidatgruppen.\ncatalog:variable_text:36027:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tkod"
+fields = { "sets" = ["tradgardsodlingsstatus"] }
+evidence = "T är en ensam källbokstav och id:t anger kod medan etiketten anger areal.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:tkod"
+fields = { "tags" = ["agriculture"] }
+evidence = "T är en ensam källbokstav och id:t anger kod medan etiketten anger areal.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:total-akerareal-i-hektar"
+fields = { "sets" = ["akerareal"] }
+evidence = "Samma åkerarealbegrepp är uppdelat mellan perioder med aker.\ncatalog:occurrence:332749\ncatalog:occurrence:332849\ncatalog:occurrence:332943\ncatalog:variable_text:36029:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:total-akerareal-i-hektar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma åkerarealbegrepp är uppdelat mellan perioder med aker.\ncatalog:occurrence:332749\ncatalog:occurrence:332849\ncatalog:occurrence:332943\ncatalog:variable_text:36029:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:total-betesmark"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Samma kolumner har överlappande ägare.\ncatalog:occurrence:332858\ncatalog:occurrence:332859\ncatalog:occurrence:333879\ncatalog:occurrence:333880"
+
+[[statement]]
+kind = "set"
+subject = "var:total-betesmark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma kolumner har överlappande ägare.\ncatalog:occurrence:332858\ncatalog:occurrence:332859\ncatalog:occurrence:333879\ncatalog:occurrence:333880"
+
+[[statement]]
+kind = "set"
+subject = "var:total-skord-akerbonor"
+fields = { "sets" = [] }
+evidence = "Kandidaten omfattar hektarredovisade mått för åkerbönor; källans enhet och definition skiljer sig.\ncatalog:variable_text:36031:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:total-skord-akerbonor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kandidaten omfattar hektarredovisade mått för åkerbönor; källans enhet och definition skiljer sig.\ncatalog:variable_text:36031:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-areal"
+fields = { "sets" = ["totalareal"] }
+evidence = "Måttet avser total areal.\ncatalog:variable_text:35780:7305:10227\ncatalog:variable_text:36032:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-areal"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser total areal.\ncatalog:variable_text:35780:7305:10227\ncatalog:variable_text:36032:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Källorna visar samma begrepp som scb/lbr/total-betesmark i angränsande perioder.\ncatalog:occurrence:332325\ncatalog:occurrence:332407\ncatalog:variable_text:36033:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källorna visar samma begrepp som scb/lbr/total-betesmark i angränsande perioder.\ncatalog:occurrence:332325\ncatalog:occurrence:332407\ncatalog:variable_text:36033:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal-i-hektar-bete-tot"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Total betesareal ingår i kandidatgruppen.\ncatalog:variable_text:36034:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal-i-hektar-bete-tot"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total betesareal ingår i kandidatgruppen.\ncatalog:variable_text:36034:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal-i-hektar-totbete"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:333879\ncatalog:occurrence:333880"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-betesareal-i-hektar-totbete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:333879\ncatalog:occurrence:333880"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-frilandssareal"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Frilandsareal och trädgårdsareal kan ha olika omfattning.\ncatalog:occurrence:332933\ncatalog:occurrence:333031"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-frilandssareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Frilandsareal och trädgårdsareal kan ha olika omfattning.\ncatalog:occurrence:332933\ncatalog:occurrence:333031"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-vaxthusyta"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Källhistoriken anger både kvadratmeter och kvadratkilometer.\ncatalog:variable_text:36037:16071:19358\ncatalog:variable_text:36037:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-vaxthusyta"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källhistoriken anger både kvadratmeter och kvadratkilometer.\ncatalog:variable_text:36037:16071:19358\ncatalog:variable_text:36037:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-getter"
+fields = { "sets" = ["antal-getter"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:330330\ncatalog:occurrence:330331"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-getter"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:330330\ncatalog:occurrence:330331"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-not"
+fields = { "sets" = ["antal-notdjur"] }
+evidence = "Totalt antal nötdjur hör till kandidatgruppen.\ncatalog:variable_text:36039:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-not"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalt antal nötdjur hör till kandidatgruppen.\ncatalog:variable_text:36039:6940:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-notdjur"
+fields = { "sets" = ["antal-notdjur"] }
+evidence = "Totalt antal nötdjur hör till kandidatgruppen.\ncatalog:variable_text:36040:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-notdjur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Totalt antal nötdjur hör till kandidatgruppen.\ncatalog:variable_text:36040:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:trada"
+fields = { "sets" = ["tradesareal"] }
+evidence = "Fältet anger trädesareal.\ncatalog:variable_text:36041:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:trada"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger trädesareal.\ncatalog:variable_text:36041:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:trada-i-trada"
+fields = { "sets" = ["tradesareal"] }
+evidence = "Fältet anger trädesareal.\ncatalog:variable_text:36042:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:trada-i-trada"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger trädesareal.\ncatalog:variable_text:36042:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:tradgard-areal-i-ha"
+fields = { "sets" = ["tradgardsareal"] }
+evidence = "Trädgårdsareal och frilandsareal kan ha olika omfattning.\ncatalog:occurrence:332933\ncatalog:occurrence:333031"
+
+[[statement]]
+kind = "set"
+subject = "var:tradgard-areal-i-ha"
+fields = { "tags" = ["agriculture"] }
+evidence = "Trädgårdsareal och frilandsareal kan ha olika omfattning.\ncatalog:occurrence:332933\ncatalog:occurrence:333031"
+
+[[statement]]
+kind = "set"
+subject = "var:tradid"
+fields = { "sets" = ["groda"] }
+evidence = "Värdena kodar trädgårdsgrödor.\ncatalog:valueset:1036\ncatalog:valueset:12290\ncatalog:variable_text:36044:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tradid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Värdena kodar trädgårdsgrödor.\ncatalog:valueset:1036\ncatalog:valueset:12290\ncatalog:variable_text:36044:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:traktor"
+fields = { "sets" = [] }
+evidence = "Fältet anger antal traktorer i jordbruksföretag.\ncatalog:variable_text:36045:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:traktor"
+fields = { "tags" = ["agriculture", "transport"] }
+evidence = "Fältet anger antal traktorer i jordbruksföretag.\ncatalog:variable_text:36045:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:tstat"
+fields = { "sets" = ["tradgardsodlingsstatus"] }
+evidence = "T är en ensam källbokstav och stat är en källmnemonik för odlingsstatus.\ncatalog:valueset:8984\ncatalog:variable_text:36046:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tstat"
+fields = { "tags" = ["agriculture"] }
+evidence = "T är en ensam källbokstav och stat är en källmnemonik för odlingsstatus.\ncatalog:valueset:8984\ncatalog:variable_text:36046:12053:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:undergroda"
+fields = { "sets" = ["undergroda"] }
+evidence = "Undergröda och dess kod beskriver samma begrepp.\ncatalog:variable_text:35917:17532:20454\ncatalog:variable_text:36048:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:undergroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Undergröda och dess kod beskriver samma begrepp.\ncatalog:variable_text:35917:17532:20454\ncatalog:variable_text:36048:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:underkod"
+fields = { "sets" = ["undergroda"] }
+evidence = "Samma undergrödekod är uppdelad mellan perioder med kod-for-undergroda.\ncatalog:occurrence:329644\ncatalog:occurrence:329669\ncatalog:variable_text:36049:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:underkod"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma undergrödekod är uppdelad mellan perioder med kod-for-undergroda.\ncatalog:occurrence:329644\ncatalog:occurrence:329669\ncatalog:variable_text:36049:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:uphtxt"
+fields = { "sets" = [] }
+evidence = "Uphtxt är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:36050:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:uphtxt"
+fields = { "tags" = ["business"] }
+evidence = "Uphtxt är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:36050:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:utarrenderad-akermark"
+fields = { "sets" = ["akerareal"] }
+evidence = "Utarrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:36051:8035:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utarrenderad-akermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Utarrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:36051:8035:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:utnyttjad-betesmark"
+fields = { "sets" = ["betesmarksareal"] }
+evidence = "Utnyttjad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:36052:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:utnyttjad-betesmark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Utnyttjad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:36052:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vallejutn"
+fields = { "sets" = ["vallareal"] }
+evidence = "Outnyttjad vall ingår i vallareal.\ncatalog:variable_text:36053:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:vallejutn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Outnyttjad vall ingår i vallareal.\ncatalog:variable_text:36053:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:varkorn"
+fields = { "sets" = [] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36054:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36054:8401:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varpkyckl"
+fields = { "sets" = ["antal-kycklingar"] }
+evidence = "Värpkycklingar är en del av kycklingantalet.\ncatalog:variable_text:35989:11688:20454\ncatalog:variable_text:36055:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varpkyckl"
+fields = { "tags" = ["agriculture"] }
+evidence = "Värpkycklingar är en del av kycklingantalet.\ncatalog:variable_text:35989:11688:20454\ncatalog:variable_text:36055:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varragvete"
+fields = { "sets" = ["ragveteareal"] }
+evidence = "Vårrågvete är en del av rågvetearealen.\ncatalog:variable_text:36056:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varragvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Vårrågvete är en del av rågvetearealen.\ncatalog:variable_text:36056:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps"
+fields = { "sets" = [] }
+evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:36057:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:36057:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps-varraps"
+fields = { "sets" = [] }
+evidence = "Fältet anger vårrapsareal.\ncatalog:variable_text:36058:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps-varraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger vårrapsareal.\ncatalog:variable_text:36058:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varrybs"
+fields = { "sets" = ["varrybsareal"] }
+evidence = "Fältet anger vårrybsareal.\ncatalog:variable_text:36059:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger vårrybsareal.\ncatalog:variable_text:36059:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varrybs-i-vrybs"
+fields = { "sets" = ["varrybsareal"] }
+evidence = "Fältet anger vårrybsareal.\ncatalog:variable_text:36060:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:varrybs-i-vrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältet anger vårrybsareal.\ncatalog:variable_text:36060:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete"
+fields = { "sets" = [] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36061:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36061:7305:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete-varvete"
+fields = { "sets" = [] }
+evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete-varvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2010-01-01..2010-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2011-01-01..2011-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2012-01-01..2012-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2013-01-01..2013-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2014-01-01..2014-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2015-01-01..2015-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2016-01-01..2016-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2017-01-01..2017-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2018-01-01..2018-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2019-01-01..2019-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2020-01-01..2020-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2021-01-01..2021-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2022-01-01..2022-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2023-01-01..2023-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2024-01-01..2024-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "foretag: stgjord @2025-01-01..2025-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2010-01-01..2010-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2011-01-01..2011-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2012-01-01..2012-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2013-01-01..2013-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2014-01-01..2014-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2015-01-01..2015-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2016-01-01..2016-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2017-01-01..2017-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2018-01-01..2018-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2019-01-01..2019-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2020-01-01..2020-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2021-01-01..2021-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2022-01-01..2022-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2023-01-01..2023-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2024-01-01..2024-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: stgjord @2025-01-01..2025-12-31 where key = 'v41866'"
+fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
+evidence = "Värdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: Tkod @1998-01-01..1998-12-31 where key = 'v44427'"
+fields = { "description" = "Kod för typ av trädgårdsodling." }
+evidence = "Värdena anger odlingstyp och inte areal i hektar.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"

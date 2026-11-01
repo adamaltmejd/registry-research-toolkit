@@ -52,96 +52,6 @@ evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Va
 
 [[statement]]
 kind = "set"
-subject = "var:lan-astlan"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-lan"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-lan98"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-lan98t"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-lan98u"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-lanf"
-fields = { "sets" = ["legacy-lan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svarande-objekt"
-fields = { "sets" = ["legacy-antal-svarande-objekt"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1160\nreg_meta_build/curation/registers/scb/ksju.toml:651\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsstalle-storleksklass"
-fields = { "sets" = ["legacy-arbetsstalle-storleksklass"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1069\nreg_meta_build/curation/registers/scb/ksju.toml:639\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:cfar-nummer"
-fields = { "sets" = ["legacy-cfar-nummer"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:609\nreg_meta_build/curation/registers/scb/ksju.toml:861\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:lopnummer-sjukfall"
-fields = { "sets" = ["legacy-lopnummer-sjukfall"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:676\nreg_meta_build/curation/registers/scb/ksju.toml:965\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgrupp"
-fields = { "sets" = ["legacy-naringsgrupp"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:663\nreg_meta_build/curation/registers/scb/ksju.toml:900\nreg_meta_build/curation/registers/scb/ksju.toml:913\nreg_meta_build/curation/registers/scb/ksju.toml:926\nreg_meta_build/curation/registers/scb/ksju.toml:939\nreg_meta_build/curation/registers/scb/ksju.toml:952\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:referensmanad"
-fields = { "sets" = ["legacy-referensmanad"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1173\nreg_meta_build/curation/registers/scb/ksju.toml:1186\nreg_meta_build/curation/registers/scb/ksju.toml:1199\nreg_meta_build/curation/registers/scb/ksju.toml:1212\nreg_meta_build/curation/registers/scb/ksju.toml:1225\nreg_meta_build/curation/registers/scb/ksju.toml:1238\nreg_meta_build/curation/registers/scb/ksju.toml:621\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:storan"
-fields = { "sets" = ["legacy-storan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:657\nreg_meta_build/curation/registers/scb/ksju.toml:874\nreg_meta_build/curation/registers/scb/ksju.toml:887\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-per-stratum"
-fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1056\nreg_meta_build/curation/registers/scb/ksju.toml:633\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: delantdagar @2015"
 fields = { "sensitive" = true, "identifier" = false }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1379\n\nSCB states neither flag for scb/ksju/delantdagar-2015 and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
@@ -477,120 +387,6 @@ fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
 
 [[statement]]
-kind = "set"
-subject = "var:naringsgren"
-fields = { "sets" = ["naringsgren"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-2siffer"
-fields = { "sets" = ["naringsgren"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-grupperad-2009"
-fields = { "sets" = ["naringsgren"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-rams"
-fields = { "sets" = ["naringsgren"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-anstje"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-syssf"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-syssf98"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-syssa"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-syssa98"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda-syssa98u"
-fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svarande-objekt-nsvarrfv"
-fields = { "sets" = ["legacy-antal-svarande-objekt"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1160\nreg_meta_build/curation/registers/scb/ksju.toml:651\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsstallets-storleksklass-stkl"
-fields = { "sets" = ["legacy-arbetsstalle-storleksklass"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1069\nreg_meta_build/curation/registers/scb/ksju.toml:639\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:cfar-nummer-idnr"
-fields = { "sets" = ["legacy-cfar-nummer"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:609\nreg_meta_build/curation/registers/scb/ksju.toml:861\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:lopnummer-sjukfall-id"
-fields = { "sets" = ["legacy-lopnummer-sjukfall"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:676\nreg_meta_build/curation/registers/scb/ksju.toml:965\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgrupp-snigrupp"
-fields = { "sets" = ["legacy-naringsgrupp"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:663\nreg_meta_build/curation/registers/scb/ksju.toml:900\nreg_meta_build/curation/registers/scb/ksju.toml:913\nreg_meta_build/curation/registers/scb/ksju.toml:926\nreg_meta_build/curation/registers/scb/ksju.toml:939\nreg_meta_build/curation/registers/scb/ksju.toml:952\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:referensmanad-matmanad"
-fields = { "sets" = ["legacy-referensmanad"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1173\nreg_meta_build/curation/registers/scb/ksju.toml:1186\nreg_meta_build/curation/registers/scb/ksju.toml:1199\nreg_meta_build/curation/registers/scb/ksju.toml:1212\nreg_meta_build/curation/registers/scb/ksju.toml:1225\nreg_meta_build/curation/registers/scb/ksju.toml:1238\nreg_meta_build/curation/registers/scb/ksju.toml:621\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
-fields = { "sets" = ["legacy-storan"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:657\nreg_meta_build/curation/registers/scb/ksju.toml:874\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-per-stratum-lillanks"
-fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1004\nreg_meta_build/curation/registers/scb/ksju.toml:1017\nreg_meta_build/curation/registers/scb/ksju.toml:1030\nreg_meta_build/curation/registers/scb/ksju.toml:1043\nreg_meta_build/curation/registers/scb/ksju.toml:633\nreg_meta_build/curation/registers/scb/ksju.toml:978\nreg_meta_build/curation/registers/scb/ksju.toml:991\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-per-stratum-lillanrfv"
-fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1004\nreg_meta_build/curation/registers/scb/ksju.toml:1017\nreg_meta_build/curation/registers/scb/ksju.toml:1030\nreg_meta_build/curation/registers/scb/ksju.toml:1043\nreg_meta_build/curation/registers/scb/ksju.toml:633\nreg_meta_build/curation/registers/scb/ksju.toml:978\nreg_meta_build/curation/registers/scb/ksju.toml:991\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
 kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2015-01-01..2015-12-31 where key = 'v49' and release = 'r12641'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
@@ -649,3 +445,1341 @@ kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: ksjulan @2015..2023"
 fields = { "operational_definition" = "Anger individens bostadslän. Om individen har ett annat arbetslän skrivs det över bostadslän." }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34933:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34933:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-anstje"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34934:13149:14245\ncatalog:variable_text:34934:14245:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-anstje"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34934:13149:14245\ncatalog:variable_text:34934:14245:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34935:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34936:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34936:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98u"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34937:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98u"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:34937:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34938:13149:14245\ncatalog:variable_text:34938:14245:15065\ncatalog:variable_text:34938:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34938:13149:14245\ncatalog:variable_text:34938:14245:15065\ncatalog:variable_text:34938:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf98"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34939:13149:14245\ncatalog:variable_text:34939:14245:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf98"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda; omfattningen varierar mellan perioderna.\ncatalog:variable_text:34939:13149:14245\ncatalog:variable_text:34939:14245:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder ingår med åldersgruppering.\ncatalog:variable_text:34940:13149:15065\ncatalog:variable_text:35018:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder ingår med åldersgruppering.\ncatalog:variable_text:34940:13149:15065\ncatalog:variable_text:35018:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-for-kvinna-oviktade-0-for-man"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34942:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-for-kvinna-oviktade-0-for-man"
+fields = { "tags" = ["transfers"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34942:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-for-man-oviktade-0-for-kvinna"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34943:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-for-man-oviktade-0-for-kvinna"
+fields = { "tags" = ["transfers"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34943:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-oviktade"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34944:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ersattningsdagar-oviktade"
+fields = { "tags" = ["transfers"] }
+evidence = "Oviktade ersättningsdagar ingår med övriga ersättningsdagar.\ncatalog:variable_text:34944:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalenderdagar-for-kvinna-0-for-man-oviktade"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Kalenderdagar i sjukfall ingår i sjukdagar.\ncatalog:register:187\ncatalog:variable_text:34945:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalenderdagar-for-kvinna-0-for-man-oviktade"
+fields = { "tags" = ["health"] }
+evidence = "Kalenderdagar i sjukfall ingår i sjukdagar.\ncatalog:register:187\ncatalog:variable_text:34945:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalenderdagar-for-man-0-for-kvinna-oviktade"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Kalenderdagar i sjukfall ingår i sjukdagar.\ncatalog:register:187\ncatalog:variable_text:34946:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kalenderdagar-for-man-0-for-kvinna-oviktade"
+fields = { "tags" = ["health"] }
+evidence = "Kalenderdagar i sjukfall ingår i sjukdagar.\ncatalog:register:187\ncatalog:variable_text:34946:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
+fields = { "sets" = ["antal-objekt-per-stratum"] }
+evidence = "Antal objekt per stratum enligt FDB.\ncatalog:variable_text:34947:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
+fields = { "tags" = ["methods"] }
+evidence = "Antal objekt per stratum enligt FDB.\ncatalog:variable_text:34947:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-delantdagar"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Deldagar är en komponent av sjukdagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-delantdagar"
+fields = { "tags" = ["health"] }
+evidence = "Deldagar är en komponent av sjukdagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-helantdagar"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Heldagar är en komponent av sjukdagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukdagar-helantdagar"
+fields = { "tags" = ["health"] }
+evidence = "Heldagar är en komponent av sjukdagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt"
+fields = { "sets" = ["antal-svarande-objekt"] }
+evidence = "Antal svarande objekt i stratum.\ncatalog:variable_text:34950:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande objekt i stratum.\ncatalog:variable_text:34950:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-nsvarrfv"
+fields = { "sets" = ["antal-svarande-objekt"] }
+evidence = "Antal svarande objekt i stratum.\ncatalog:variable_text:34951:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-nsvarrfv"
+fields = { "tags" = ["methods"] }
+evidence = "Antal svarande objekt i stratum.\ncatalog:variable_text:34951:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalle-storleksklass"
+fields = { "sets" = ["arbetsstallets-storleksklass"] }
+evidence = "Storleksklass efter antal anställda.\ncatalog:variable_text:34953:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalle-storleksklass"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklass efter antal anställda.\ncatalog:variable_text:34953:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallets-storleksklass-stkl"
+fields = { "sets" = ["arbetsstallets-storleksklass"] }
+evidence = "Storleksklass efter antal anställda.\ncatalog:variable_text:34954:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallets-storleksklass-stkl"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklass efter antal anställda.\ncatalog:variable_text:34954:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn har en angränsande annan ägare; nivåerna skiljer sig.\ncatalog:occurrence:317854\ncatalog:occurrence:317900"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har en angränsande annan ägare; nivåerna skiljer sig.\ncatalog:occurrence:317854\ncatalog:occurrence:317900"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-idnr"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-idnr"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:cut-off-komp"
+fields = { "sets" = ["upprakningsvikt"] }
+evidence = "Vikt för kompensation av cut-off.\ncatalog:variable_text:34959:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:cut-off-komp"
+fields = { "tags" = ["methods"] }
+evidence = "Vikt för kompensation av cut-off.\ncatalog:variable_text:34959:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ersdagar"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Id:t är läsbart. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:13149:15065\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34961:13149:15065\ncatalog:variable_text:34962:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:ersdagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Id:t är läsbart. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:13149:15065\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34961:13149:15065\ncatalog:variable_text:34962:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:ersk"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Familjen ers* behålls samstämmigt. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34961:13149:15065\ncatalog:variable_text:34961:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ersk"
+fields = { "tags" = ["transfers"] }
+evidence = "Familjen ers* behålls samstämmigt. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34961:13149:15065\ncatalog:variable_text:34961:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ersm"
+fields = { "sets" = ["ersattningsdagar"] }
+evidence = "Familjen ers* behålls samstämmigt. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34962:13149:15065\ncatalog:variable_text:34962:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ersm"
+fields = { "tags" = ["transfers"] }
+evidence = "Familjen ers* behålls samstämmigt. Måttet ingår i gruppen ersättningsdagar och avser dagar som ersätts med sjuklön.\ncatalog:variable_text:34960:19358:19723\ncatalog:variable_text:34962:13149:15065\ncatalog:variable_text:34962:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallangd"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Antal kalenderdagar i ett sjukfall ingår i gruppen sjukdagar och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:variable_text:34963:13149:15065\ncatalog:variable_text:34963:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallangd"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Antal kalenderdagar i ett sjukfall ingår i gruppen sjukdagar och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:variable_text:34963:13149:15065\ncatalog:variable_text:34963:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallgrp"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Identitetsfaktens motpart har en bredare angiven definition. Måttet ingår i gruppen sjukdagar och beskriver sjukfrånvaro.\ncatalog:occurrence:317860\ncatalog:occurrence:317942\ncatalog:variable_text:34964:15340:15706\ncatalog:variable_text:35020:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:fallgrp"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Identitetsfaktens motpart har en bredare angiven definition. Måttet ingår i gruppen sjukdagar och beskriver sjukfrånvaro.\ncatalog:occurrence:317860\ncatalog:occurrence:317942\ncatalog:variable_text:34964:15340:15706\ncatalog:variable_text:35020:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:fallk"
+fields = { "sets" = ["sjukfallsantal"] }
+evidence = "Familjen fall* behålls samstämmigt. Markeringen används för att summera sjukfall och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:valueset:7759\ncatalog:variable_text:34965:13149:15065\ncatalog:variable_text:34965:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallk"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Familjen fall* behålls samstämmigt. Markeringen används för att summera sjukfall och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:valueset:7759\ncatalog:variable_text:34965:13149:15065\ncatalog:variable_text:34965:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallm"
+fields = { "sets" = ["sjukfallsantal"] }
+evidence = "Familjen fall* behålls samstämmigt. Markeringen används för att summera sjukfall och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:valueset:10354\ncatalog:variable_text:34966:13149:15065\ncatalog:variable_text:34966:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fallm"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Familjen fall* behålls samstämmigt. Markeringen används för att summera sjukfall och beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:valueset:10354\ncatalog:variable_text:34966:13149:15065\ncatalog:variable_text:34966:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:falltot"
+fields = { "sets" = ["sjukfallsantal"] }
+evidence = "Markeringen används för att summera sjukfall och ingår i gruppen sjukfallsantal. Den beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:variable_text:34967:13149:15065\ncatalog:variable_text:34967:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:falltot"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Markeringen används för att summera sjukfall och ingår i gruppen sjukfallsantal. Den beskriver sjukfrånvaro.\ncatalog:register:187\ncatalog:variable_text:34967:13149:15065\ncatalog:variable_text:34967:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdag"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Glappdagar är en komponent av sjukfallets dagar.\ncatalog:variable_text:34968:15065:16801\nregisters/scb/r195/curation.toml:353"
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdag"
+fields = { "tags" = ["health"] }
+evidence = "Glappdagar är en komponent av sjukfallets dagar.\ncatalog:variable_text:34968:15065:16801\nregisters/scb/r195/curation.toml:353"
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdagar"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Glappdagar är en komponent av sjukfallets dagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:glappantdagar"
+fields = { "tags" = ["health"] }
+evidence = "Glappdagar är en komponent av sjukfallets dagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:godkanda-manader"
+fields = { "sets" = [] }
+evidence = "Antal inkomna och godkända månader är ett kvalitetsmått.\ncatalog:variable_text:34970:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:godkanda-manader"
+fields = { "tags" = ["methods"] }
+evidence = "Antal inkomna och godkända månader är ett kvalitetsmått.\ncatalog:variable_text:34970:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:grov-sektorindelning"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Grov klassificering av sektortillhörighet.\ncatalog:variable_text:34971:15065:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:grov-sektorindelning"
+fields = { "tags" = ["business"] }
+evidence = "Grov klassificering av sektortillhörighet.\ncatalog:variable_text:34971:15065:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde"
+fields = { "sets" = [] }
+evidence = "Markering för imputering.\ncatalog:variable_text:34972:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde"
+fields = { "tags" = ["methods"] }
+evidence = "Markering för imputering.\ncatalog:variable_text:34972:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Institutionell sektortillhörighet.\ncatalog:variable_text:34974:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektortillhörighet.\ncatalog:variable_text:34974:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:kdagk"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34975:18993:19723\nregisters/scb/r195/curation.toml:41"
+
+[[statement]]
+kind = "set"
+subject = "var:kdagk"
+fields = { "tags" = ["health"] }
+evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34975:18993:19723\nregisters/scb/r195/curation.toml:41"
+
+[[statement]]
+kind = "set"
+subject = "var:kdagm"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34976:18993:19723\nregisters/scb/r195/curation.toml:47"
+
+[[statement]]
+kind = "set"
+subject = "var:kdagm"
+fields = { "tags" = ["health"] }
+evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34976:18993:19723\nregisters/scb/r195/curation.toml:47"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön.\ncatalog:variable_text:34977:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön.\ncatalog:variable_text:34977:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-astlan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34978:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-astlan"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34978:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-ksjulan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34979:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-ksjulan"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34979:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34980:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34980:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34981:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34981:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98t"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34982:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98t"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34982:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98u"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34983:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98u"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34983:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lanf"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34984:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lanf"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för länstillhörighet.\ncatalog:variable_text:34984:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:lansgrupp"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
+
+[[statement]]
+kind = "set"
+subject = "var:lansgrupp"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall-id"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall-id"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-for-sjukfall-kvinna-oviktade"
+fields = { "sets" = ["sjukfallsantal"] }
+evidence = "Oviktad antalsmarkering för sjukfall.\ncatalog:variable_text:34988:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-for-sjukfall-kvinna-oviktade"
+fields = { "tags" = ["health"] }
+evidence = "Oviktad antalsmarkering för sjukfall.\ncatalog:variable_text:34988:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-for-sjukfall-man-oviktade"
+fields = { "sets" = ["sjukfallsantal"] }
+evidence = "Oviktad antalsmarkering för sjukfall.\ncatalog:variable_text:34989:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-for-sjukfall-man-oviktade"
+fields = { "tags" = ["health"] }
+evidence = "Oviktad antalsmarkering för sjukfall.\ncatalog:variable_text:34989:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34990:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34990:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2siffer"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn har en angränsande annan ägare; nivåerna skiljer sig.\ncatalog:occurrence:317854\ncatalog:occurrence:317900"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2siffer"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har en angränsande annan ägare; nivåerna skiljer sig.\ncatalog:occurrence:317854\ncatalog:occurrence:317900"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34992:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34992:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98n"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34993:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98n"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34993:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98t"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34994:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98t"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34994:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34995:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98u"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34995:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98x"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34996:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-bgr98x"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34996:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-grupperad-2009"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-grupperad-2009"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ng1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34998:15065:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ng1"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34998:15065:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34999:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34999:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1-2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35000:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr1-2002"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35000:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35001:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35001:14610:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2-2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35002:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nggr2-2002"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35002:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35003:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35003:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1-2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35004:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-ngs1-2002"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35004:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-rams"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren enligt RAMS med företagsuppgift som reserv.\ncatalog:variable_text:35005:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-rams"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren enligt RAMS med företagsuppgift som reserv.\ncatalog:variable_text:35005:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35006:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni1"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35006:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35007:15065:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35007:15065:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snia"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35008:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snia"
+fields = { "tags" = ["business"] }
+evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35008:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snigrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-snigrupp"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Gruppering av näringsgren.\ncatalog:variable_text:35010:14975:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Gruppering av näringsgren.\ncatalog:variable_text:35010:14975:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp-snigrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp-snigrupp"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
+
+[[statement]]
+kind = "set"
+subject = "var:one-sni"
+fields = { "sets" = [] }
+evidence = "One-sni är en källmnemonik som inte beskriver markeringens innebörd.\ncatalog:variable_text:35012:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:one-sni"
+fields = { "tags" = ["business"] }
+evidence = "One-sni är en källmnemonik som inte beskriver markeringens innebörd.\ncatalog:variable_text:35012:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Kodning av referensmånad.\ncatalog:variable_text:35016:13149:15065\ncatalog:variable_text:35016:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad"
+fields = { "tags" = [] }
+evidence = "Kodning av referensmånad.\ncatalog:variable_text:35016:13149:15065\ncatalog:variable_text:35016:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-matmanad"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Kodning av referensmånad.\ncatalog:variable_text:35017:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-matmanad"
+fields = { "tags" = [] }
+evidence = "Kodning av referensmånad.\ncatalog:variable_text:35017:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:rpgr"
+fields = { "sets" = ["alder"] }
+evidence = "Rpgr är en ogenomskinlig källkod.\ncatalog:valueset:1256\ncatalog:variable_text:35018:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:rpgr"
+fields = { "tags" = ["demographics"] }
+evidence = "Rpgr är en ogenomskinlig källkod.\ncatalog:valueset:1256\ncatalog:variable_text:35018:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-organisation"
+fields = { "sets" = ["sektortillhorighet"] }
+evidence = "Sektortillhörighet för organisationen.\ncatalog:variable_text:35019:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-organisation"
+fields = { "tags" = ["business"] }
+evidence = "Sektortillhörighet för organisationen.\ncatalog:variable_text:35019:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-fallgrupp"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Samma sjukfallslängd är korrekt uppdelad efter period mot scb/ksju/fallgrp.\ncatalog:occurrence:317860\ncatalog:occurrence:317942\ncatalog:variable_text:35020:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-fallgrupp"
+fields = { "tags" = ["health"] }
+evidence = "Samma sjukfallslängd är korrekt uppdelad efter period mot scb/ksju/fallgrp.\ncatalog:occurrence:317860\ncatalog:occurrence:317942\ncatalog:variable_text:35020:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-kalender"
+fields = { "sets" = ["sjukdagar"] }
+evidence = "Kalenderdagar i sjukfall.\ncatalog:variable_text:35021:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdagar-kalender"
+fields = { "tags" = ["health"] }
+evidence = "Kalenderdagar i sjukfall.\ncatalog:variable_text:35021:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Observationens status är en kvalitetsmarkör.\ncatalog:valueset:4457\ncatalog:variable_text:35024:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Observationens status är en kvalitetsmarkör.\ncatalog:valueset:4457\ncatalog:variable_text:35024:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = ["antal-objekt-per-stratum"] }
+evidence = "Antal objekt per stratum enligt FDB.\ncatalog:variable_text:35025:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antal objekt per stratum enligt FDB.\ncatalog:variable_text:35025:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratam"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35026:15065:19723\nregisters/scb/r195/curation.toml:359"
+
+[[statement]]
+kind = "set"
+subject = "var:stratam"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35026:15065:19723\nregisters/scb/r195/curation.toml:359"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-strata"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35027:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-strata"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35027:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-stratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35028:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumbeteckning-objekt-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35028:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { "sets" = [] }
+evidence = "Observationens status är en kvalitetsmarkör.\ncatalog:valueset:3618\ncatalog:variable_text:35029:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { "tags" = ["methods"] }
+evidence = "Observationens status är en kvalitetsmarkör.\ncatalog:valueset:3618\ncatalog:variable_text:35029:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "sets" = [] }
+evidence = "Förvärvsarbete i november.\ncatalog:variable_text:35030:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "tags" = ["employment"] }
+evidence = "Förvärvsarbete i november.\ncatalog:variable_text:35030:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = ["urvalsstorlek-per-stratum"] }
+evidence = "Antal utvalda objekt per stratum.\ncatalog:variable_text:35031:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal utvalda objekt per stratum.\ncatalog:variable_text:35031:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanks"
+fields = { "sets" = ["urvalsstorlek-per-stratum"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:variable_text:35032:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanks"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:variable_text:35032:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanrfv"
+fields = { "sets" = ["urvalsstorlek-per-stratum"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:variable_text:35033:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanrfv"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:variable_text:35033:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35034:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35034:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vikta"
+fields = { "sets" = ["upprakningsvikt"] }
+evidence = "Den ensamma bokstaven A är en källkod i id:t.\ncatalog:variable_text:35035:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vikta"
+fields = { "tags" = ["methods"] }
+evidence = "Den ensamma bokstaven A är en källkod i id:t.\ncatalog:variable_text:35035:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2011-04-01..2011-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2012-01-01..2012-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2013-01-01..2013-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2014-01-01..2014-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2015-01-01..2015-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
+fields = { "description" = "Antal deldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2011-04-01..2011-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2012-01-01..2012-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2013-01-01..2013-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2014-01-01..2014-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2015-01-01..2015-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
+fields = { "description" = "Antal heldagar i ett sjukfall." }
+evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2015-01-01..2015-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
+fields = { "description" = "Antal glappdagar i ett sjukfall." }
+evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"

@@ -1,0 +1,240 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antankavg"
+fields = { "sets" = [] }
+evidence = "Antalet avser fartygstrafik.\ncatalog:variable_text:23566:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antankavg"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser fartygstrafik.\ncatalog:variable_text:23566:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antmedlast"
+fields = { "sets" = ["antal-lastenheter"] }
+evidence = "Antalet avser lastade transportenheter och hör ihop med antalet utan last.\ncatalog:variable_text:23567:12418:15706\ncatalog:variable_text:23569:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antmedlast"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser lastade transportenheter och hör ihop med antalet utan last.\ncatalog:variable_text:23567:12418:15706\ncatalog:variable_text:23569:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "sets" = [] }
+evidence = "Antalet avser passagerare eller passagerarfordon i fartygstrafik.\ncatalog:variable_text:23568:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser passagerare eller passagerarfordon i fartygstrafik.\ncatalog:variable_text:23568:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antutanlast"
+fields = { "sets" = ["antal-lastenheter"] }
+evidence = "Antalet avser tomma transportenheter och hör ihop med antalet med last.\ncatalog:variable_text:23567:12418:15706\ncatalog:variable_text:23569:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:antutanlast"
+fields = { "tags" = ["transport"] }
+evidence = "Antalet avser tomma transportenheter och hör ihop med antalet med last.\ncatalog:variable_text:23567:12418:15706\ncatalog:variable_text:23569:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttodrakt"
+fields = { "sets" = [] }
+evidence = "Bruttodräktigheten är ett storleksmått för fartyg.\ncatalog:variable_text:23570:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttodrakt"
+fields = { "tags" = ["transport"] }
+evidence = "Bruttodräktigheten är ett storleksmått för fartyg.\ncatalog:variable_text:23570:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttovikt"
+fields = { "sets" = [] }
+evidence = "Vikten avser transporterat gods.\ncatalog:variable_text:23571:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttovikt"
+fields = { "tags" = ["transport"] }
+evidence = "Vikten avser transporterat gods.\ncatalog:variable_text:23571:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:farttyp"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar fartyg.\ncatalog:variable_text:23573:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:farttyp"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln klassificerar fartyg.\ncatalog:variable_text:23573:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:flagg"
+fields = { "sets" = [] }
+evidence = "Flaggan anger fartygets registreringsland eller territorium.\ncatalog:variable_text:23575:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:flagg"
+fields = { "tags" = ["geography"] }
+evidence = "Flaggan anger fartygets registreringsland eller territorium.\ncatalog:variable_text:23575:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar imputerade värden.\ncatalog:variable_text:23578:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar imputerade värden.\ncatalog:variable_text:23578:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lasttyp"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar lasten i transporten.\ncatalog:variable_text:23580:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lasttyp"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln klassificerar lasten i transporten.\ncatalog:variable_text:23580:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:narmhamnkod"
+fields = { "sets" = ["hamn"] }
+evidence = "Koden anger en hamn och hör ihop med lastnings- eller lossningshamn.\ncatalog:variable_text:23581:12053:15706\ncatalog:variable_text:23586:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:narmhamnkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger en hamn och hör ihop med lastnings- eller lossningshamn.\ncatalog:variable_text:23581:12053:15706\ncatalog:variable_text:23586:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:narmkustkod"
+fields = { "sets" = ["kustomrade"] }
+evidence = "Koden anger ett kustområde och hör ihop med lastens kustområde.\ncatalog:variable_text:23582:12053:15706\ncatalog:variable_text:23587:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:narmkustkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger ett kustområde och hör ihop med lastens kustområde.\ncatalog:variable_text:23582:12053:15706\ncatalog:variable_text:23587:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:riktning"
+fields = { "sets" = [] }
+evidence = "Riktningen beskriver fartygs ankomst eller avgång och lastning eller lossning.\ncatalog:variable_text:23584:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:riktning"
+fields = { "tags" = ["transport"] }
+evidence = "Riktningen beskriver fartygs ankomst eller avgång och lastning eller lossning.\ncatalog:variable_text:23584:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:termhamnkod"
+fields = { "sets" = ["hamn"] }
+evidence = "Koden anger en hamn och hör ihop med närmaste hamn.\ncatalog:variable_text:23581:12053:15706\ncatalog:variable_text:23586:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:termhamnkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger en hamn och hör ihop med närmaste hamn.\ncatalog:variable_text:23581:12053:15706\ncatalog:variable_text:23586:14245:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:termkustkod"
+fields = { "sets" = ["kustomrade"] }
+evidence = "Koden anger ett kustområde och hör ihop med närmaste havskustområde.\ncatalog:variable_text:23582:12053:15706\ncatalog:variable_text:23587:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:termkustkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger ett kustområde och hör ihop med närmaste havskustområde.\ncatalog:variable_text:23582:12053:15706\ncatalog:variable_text:23587:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:transito"
+fields = { "sets" = [] }
+evidence = "Transitogods beskriver ett transportflöde.\ncatalog:variable_text:23588:12053:14610\ncatalog:variable_text:23588:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:transito"
+fields = { "tags" = ["transport"] }
+evidence = "Transitogods beskriver ett transportflöde.\ncatalog:variable_text:23588:12053:14610\ncatalog:variable_text:23588:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:trpomr"
+fields = { "sets" = [] }
+evidence = "Transportområdet är en geografisk områdesindelning för redovisningshamnen.\ncatalog:variable_text:23589:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:trpomr"
+fields = { "tags" = ["geography"] }
+evidence = "Transportområdet är en geografisk områdesindelning för redovisningshamnen.\ncatalog:variable_text:23589:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "sets" = [] }
+evidence = "Variabeln skiljer last och passagerardata i fartygstrafiken.\ncatalog:variable_text:23590:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln skiljer last och passagerardata i fartygstrafiken.\ncatalog:variable_text:23590:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:typfart"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av fartygstrafik.\ncatalog:variable_text:23591:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:typfart"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger typ av fartygstrafik.\ncatalog:variable_text:23591:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod"
+fields = { "sets" = [] }
+evidence = "Varukoden klassificerar transporterat gods.\ncatalog:variable_text:23592:12053:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod"
+fields = { "tags" = ["transport"] }
+evidence = "Varukoden klassificerar transporterat gods.\ncatalog:variable_text:23592:12053:15706"
