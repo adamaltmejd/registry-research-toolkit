@@ -155,10 +155,11 @@ def test_vocabulary_wording_needs_no_relock(tmp_path, membership_case):
 def test_variable_premise_tracks_matches_not_occurrence_fields(
     tmp_path, membership_case
 ):
-    # Regression: variable metadata locks source field values, or retains only a
-    # match count and misses a same-count locator replacement. Existing vocabulary
-    # wording coverage never changes source rows. The source overlays and expected
-    # JSON supply the allowed field drift, matched-row counts and located refusal.
+    # Regression: variable metadata locks occurrence/container field values, repeats
+    # large container descriptions, or retains only a match count and misses a
+    # same-count locator replacement. Existing vocabulary wording coverage never
+    # changes source rows. Source overlays and expected JSON supply the allowed
+    # field drift, entry-size ceiling, matched-row counts and located refusal.
     fixture, overlay, curation, expected = membership_case
     expected = expected["variable_premise"]
     shutil.copyfile(
@@ -168,6 +169,7 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
     shutil.copytree(fixture / "inputs", inputs)
     source = inputs / "frame/registers.jsonl"
     report = tmp_path / "report.json"
+    shutil.copyfile(overlay / "container-baseline.jsonl", source)
 
     def run(command):
         return subprocess.run(
@@ -198,6 +200,16 @@ def test_variable_premise_tracks_matches_not_occurrence_fields(
 
     locked = run("lock")
     assert locked.returncode == 0, locked.stderr
+    lock = json.loads((curation / "registers/demo/r/curation.lock").read_text())
+    assert all(
+        len(json.dumps({key: value}, separators=(",", ":")).encode())
+        <= expected["max_entry_bytes"]
+        for key, value in lock["statements"].items()
+    )
+    shutil.copyfile(overlay / "containers-changed.jsonl", source)
+    containers = run("build")
+    assert containers.returncode == 0, containers.stderr
+    (tmp_path / "catalog.db").unlink()
     shutil.copyfile(overlay / "fields-changed.jsonl", source)
     allowed = run("build")
     assert allowed.returncode == 0, allowed.stderr

@@ -36,7 +36,8 @@ enum LockedSubjects {
 
 impl LockedPremise {
     fn new(statement: &LocatedStatement, premise: &Premise) -> Self {
-        let subjects = if let Some(variable) = variable_level_setter(&statement.statement) {
+        let variable = variable_level_setter(&statement.statement);
+        let subjects = if let Some(variable) = variable {
             let locators = premise
                 .subjects
                 .iter()
@@ -57,7 +58,21 @@ impl LockedPremise {
         };
         Self {
             subjects,
-            objects: premise.objects.clone(),
+            objects: premise
+                .objects
+                .iter()
+                .filter(|object| {
+                    variable.is_none()
+                        || !matches!(
+                            object
+                                .fields
+                                .get("kind")
+                                .and_then(serde_json::Value::as_str),
+                            Some("register" | "table" | "release")
+                        )
+                })
+                .cloned()
+                .collect(),
         }
     }
 }
