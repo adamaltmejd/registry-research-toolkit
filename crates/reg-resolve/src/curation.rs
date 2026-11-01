@@ -30,7 +30,7 @@ pub struct Premise {
 #[serde(deny_unknown_fields)]
 pub struct SourcePremise {
     pub locator: Locator,
-    pub fields: BTreeMap<String, Value>,
+    pub fields: Arc<BTreeMap<String, Value>>,
 }
 
 /// Variable-wide metadata setters depend on membership, not occurrence field values.
@@ -622,29 +622,64 @@ fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
     }
 }
 
-fn premise(matches: &[Match], view: &[Source], fields: &BTreeSet<String>) -> Vec<SourcePremise> {
-    let mut out = Vec::new();
-    for selected in matches {
-        let source = &view[selected.source];
-        let fields = fields
-            .iter()
-            .map(|f| {
-                (
-                    f.clone(),
-                    source.fields.get(f).cloned().unwrap_or(Value::Null),
-                )
-            })
-            .collect::<BTreeMap<_, _>>();
-        for locator in &source.locators {
-            out.push(SourcePremise {
-                locator: locator.clone(),
-                fields: fields.clone(),
+type SourceSnapshots = BTreeMap<usize, Vec<(String, SourcePremise)>>;
+
+/// Each immutable view shares snapshots for the exact field projection consumed by
+/// a statement. Cache canonical ordering too: it includes potentially long source text.
+#[derive(Default)]
+struct PremiseSnapshots {
+    projections: BTreeMap<BTreeSet<String>, SourceSnapshots>,
+}
+
+impl PremiseSnapshots {
+    fn premise(
+        &mut self,
+        matches: &[Match],
+        view: &[Source],
+        fields: &BTreeSet<String>,
+    ) -> Vec<SourcePremise> {
+        if !self.projections.contains_key(fields) {
+            self.projections.insert(fields.clone(), BTreeMap::new());
+        }
+        let snapshots = self
+            .projections
+            .get_mut(fields)
+            .expect("projection inserted");
+        for selected in matches {
+            snapshots.entry(selected.source).or_insert_with(|| {
+                let source = &view[selected.source];
+                let fields = Arc::new(
+                    fields
+                        .iter()
+                        .map(|f| {
+                            (
+                                f.clone(),
+                                source.fields.get(f).cloned().unwrap_or(Value::Null),
+                            )
+                        })
+                        .collect(),
+                );
+                source
+                    .locators
+                    .iter()
+                    .map(|locator| {
+                        let row = SourcePremise {
+                            locator: locator.clone(),
+                            fields: Arc::clone(&fields),
+                        };
+                        (reg_frame::canonical_line(&row), row)
+                    })
+                    .collect()
             });
         }
+        let mut rows = matches
+            .iter()
+            .flat_map(|m| &snapshots[&m.source])
+            .collect::<Vec<_>>();
+        rows.sort_by(|a, b| a.0.cmp(&b.0));
+        rows.dedup_by(|a, b| a.1 == b.1);
+        rows.into_iter().map(|(_, row)| row.clone()).collect()
     }
-    out.sort_by_cached_key(reg_frame::canonical_line);
-    out.dedup();
-    out
 }
 
 fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
@@ -766,7 +801,7 @@ fn premise_source(premise: &SourcePremise) -> Source {
                 .map(|(a, b)| (a.to_owned(), b.to_owned()))
         });
     Source {
-        fields: Arc::new(premise.fields.clone()),
+        fields: Arc::clone(&premise.fields),
         locators: vec![premise.locator.clone()],
         period,
     }
@@ -1138,7 +1173,7 @@ pub fn reference(
                 .cloned()
         })
         .collect();
-    Ok(premise(&matches, &view, &fields))
+    Ok(PremiseSnapshots::default().premise(&matches, &view, &fields))
 }
 
 type DependencyCoordinate = (
@@ -1222,6 +1257,7 @@ fn application_dependencies(
     selected: &[Match],
     view: &[Source],
     index: &DependencyIndex,
+    snapshots: &mut PremiseSnapshots,
 ) -> Result<Vec<SourcePremise>, String> {
     if !matches!(statement, Statement::Assert { .. } | Statement::Set { .. }) {
         return Ok(Vec::new());
@@ -1425,10 +1461,7 @@ fn application_dependencies(
         .iter()
         .flat_map(|m| view[m.source].fields.keys().cloned())
         .collect();
-    let mut dependencies = premise(&matches, view, &fields);
-    dependencies.sort_by_cached_key(reg_frame::canonical_line);
-    dependencies.dedup();
-    Ok(dependencies)
+    Ok(snapshots.premise(&matches, view, &fields))
 }
 
 fn conflict_candidates(
@@ -1549,6 +1582,7 @@ pub fn resolve(
     let statement_effects: Vec<_> = statements.iter().map(|s| effects(s)).collect();
     let mut out = Vec::new();
     let mut selected = Vec::new();
+    let mut snapshots = PremiseSnapshots::default();
     for (statement_index, statement) in statements.iter().enumerate() {
         let address = subject(statement);
         let mut matches = index.select(address, &view, variables);
@@ -1585,7 +1619,7 @@ pub fn resolve(
             matches.retain(|m| !m.spans.is_empty());
         }
         selected.push(Premise {
-            subjects: premise(&matches, &view, &all_fields),
+            subjects: snapshots.premise(&matches, &view, &all_fields),
             objects: Vec::new(),
         });
         let result = (|| {
@@ -1769,7 +1803,7 @@ pub fn resolve(
                     }
                     whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);
-                    premise(&objects, &view, &fields)
+                    snapshots.premise(&objects, &view, &fields)
                 } else {
                     references
                         .get(object)
@@ -1787,6 +1821,7 @@ pub fn resolve(
                     &matches,
                     &view,
                     &dependencies,
+                    &mut snapshots,
                 )?
             };
             let mut objects = objects;
@@ -1803,7 +1838,7 @@ pub fn resolve(
             }
             Ok(ResolvedStatement {
                 premise: Premise {
-                    subjects: premise(&matches, &view, &fields),
+                    subjects: snapshots.premise(&matches, &view, &fields),
                     objects,
                 },
                 redundant,
@@ -1812,6 +1847,7 @@ pub fn resolve(
         })();
         out.push(result);
     }
+    drop(snapshots);
     let premises = out
         .iter()
         .zip(&selected)

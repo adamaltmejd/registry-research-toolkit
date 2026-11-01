@@ -429,6 +429,11 @@ Accepting one requires reviewed curation and a premise lock.
   ambiguous selectors, and conflicts are located refusals. Release builds fail; dev
   builds skip refused statements and report them. A `set` equal to the source is a
   redundant-set finding.
+- Source premise field projections and their canonical sort keys are shared per source
+  within each immutable view. Statement, conflict and lock bookkeeping clone shared
+  snapshots; acknowledgement findings copy only the snapshot they extend. Field
+  applications retain before/after records only for changed facts, while metadata and
+  provenance remain independent of record changes.
 - Evaluation serializes shared code-list facts once per phase and indexes selectors and
   application dependencies once per register phase. Conflict candidates share source
   locators, assertion addresses or table moves; the identity and overlap rules still
