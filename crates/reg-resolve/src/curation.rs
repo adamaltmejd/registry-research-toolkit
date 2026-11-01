@@ -293,6 +293,7 @@ fn guard_name(field: GuardField) -> &'static str {
 struct SelectorIndex {
     addresses: BTreeMap<(String, String, String), Vec<usize>>,
     variables: BTreeMap<String, Vec<usize>>,
+    source_variables: Vec<Vec<String>>,
 }
 
 impl SelectorIndex {
@@ -305,6 +306,7 @@ impl SelectorIndex {
             }
         }
         let mut selected_variables = BTreeMap::<String, Vec<usize>>::new();
+        let mut source_variables = vec![Vec::new(); view.len()];
         for (index, source) in view.iter().enumerate() {
             let kind = source.text("kind").unwrap_or_default();
             let table = source.text("table_slug").unwrap_or_default();
@@ -332,6 +334,7 @@ impl SelectorIndex {
                     }
                 }
                 for name in names {
+                    source_variables[index].push(name.clone());
                     selected_variables
                         .entry(name.clone())
                         .or_default()
@@ -342,6 +345,7 @@ impl SelectorIndex {
         Self {
             addresses,
             variables: selected_variables,
+            source_variables,
         }
     }
 
@@ -1550,25 +1554,12 @@ pub fn resolve(
         let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
         if variable_membership_field(statement).is_some() {
-            let names = variables
+            let names = matches
                 .iter()
-                .filter(|(_, members)| {
-                    matches.iter().any(|m| {
-                        let source = &view[m.source];
-                        crate::OccurrenceIdentity::from_fields(&source.fields).is_some_and(
-                            |identity| {
-                                source.locators.iter().any(|at| {
-                                    members
-                                        .contains(&crate::OccurrenceKey::new(identity.clone(), at))
-                                })
-                            },
-                        )
-                    })
-                })
-                .map(|(name, _)| name.clone())
-                .collect::<Vec<_>>();
+                .flat_map(|m| &index.source_variables[m.source])
+                .collect::<BTreeSet<_>>();
             matches = names
-                .iter()
+                .into_iter()
                 .flat_map(|name| index.select(&Address::Variable(name.clone()), &view, variables))
                 .collect();
             matches.sort_by_key(|m| m.source);
