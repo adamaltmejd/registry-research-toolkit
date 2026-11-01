@@ -1867,18 +1867,6 @@ evidence = "Avgiftsunderlag.\ncatalog:variable_text:45049:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagallmloneavg-foregar"
-fields = { "sets" = ["underlag-for-allman-loneavgift"] }
-evidence = "Källkolumnens ägare och beskrivna underlag skiljer sig mellan perioderna.\ncatalog:occurrence:464892\ncatalog:occurrence:465343"
-
-[[statement]]
-kind = "set"
-subject = "var:ulagallmloneavg-foregar"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnens ägare och beskrivna underlag skiljer sig mellan perioderna.\ncatalog:occurrence:464892\ncatalog:occurrence:465343"
-
-[[statement]]
-kind = "set"
 subject = "var:ulagallmloneavg1"
 fields = { "sets" = ["underlag-for-allman-loneavgift"] }
 evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45051:14245:18628"
@@ -3076,3 +3064,15 @@ kind = "set"
 subject = "var:uskpassnrv"
 fields = { "tags" = ["income"] }
 evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45150:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsutfallet: ulagallmloneavg2 @2017-01-01..2017-12-31 where key = 'v37010'"
+fields = { "variable" = "ulagallmloneavg2" }
+evidence = "Both identify the general payroll contribution base for the preceding income year, for individuals, in SEK. The later definition describes the base as summed. Both use UlagAllmLoneAvg2 in non-overlapping observed periods [14245,16436) and [17167,17532); coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "taxeringsutfallet: ulagallmloneavgex1 @2018-01-01..2018-12-31 where key = 'v37010'"
+fields = { "variable" = "ulagallmloneavg2" }
+evidence = "Both identify the general payroll contribution base for the preceding income year, for individuals, in SEK. The later definition describes the base as summed. Both use UlagAllmLoneAvg2 in non-overlapping observed periods [14245,16436) and [17167,17532); coverage across the gap is not asserted."

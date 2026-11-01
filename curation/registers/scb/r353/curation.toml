@@ -523,3 +523,9 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "tags" = ["demographics"] }
 evidence = "Klassificeringen avser födelsebakgrund.\ncatalog:occurrence-locators:variable:3208\ncatalog:valueset:8386"
+
+[[statement]]
+kind = "set"
+subject = "elever: peorgnr @2019-10-15..2019-10-15 where key = 'v56'"
+fields = { "variable" = "orgnr" }
+evidence = "Both operational definitions specify the school principal's organisation number in the same register's pupils table, column PeOrgNr, with character type. The earlier label 'Personal/organisation number' has a broader generic definition, but the operational meaning matches 'Organisation number'. Observed periods do not overlap; coverage across gaps is not asserted."

@@ -2581,18 +2581,6 @@ evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:14694:1387
 
 [[statement]]
 kind = "set"
-subject = "var:affgco2sk"
-fields = { "sets" = [] }
-evidence = "Adjacent mappings share the source column and require identity review.\ncatalog:occurrence:182095\ncatalog:occurrence:182574"
-
-[[statement]]
-kind = "set"
-subject = "var:affgco2sk"
-fields = { "tags" = ["taxation"] }
-evidence = "Adjacent mappings share the source column and require identity review.\ncatalog:occurrence:182095\ncatalog:occurrence:182574"
-
-[[statement]]
-kind = "set"
 subject = "var:affgco2ss"
 fields = { "sets" = [] }
 evidence = "The source mnemonic is opaque; the label identifies the tax rate.\ncatalog:variable_text:14696:13879:14245"
@@ -2602,18 +2590,6 @@ kind = "set"
 subject = "var:affgco2ss"
 fields = { "tags" = ["taxation"] }
 evidence = "The source mnemonic is opaque; the label identifies the tax rate.\ncatalog:variable_text:14696:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:affgensk"
-fields = { "sets" = [] }
-evidence = "Adjacent mappings share the source column and require identity review.\ncatalog:occurrence:182096\ncatalog:occurrence:182576"
-
-[[statement]]
-kind = "set"
-subject = "var:affgensk"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Adjacent mappings share the source column and require identity review.\ncatalog:occurrence:182096\ncatalog:occurrence:182576"
 
 [[statement]]
 kind = "set"
@@ -4318,18 +4294,6 @@ kind = "set"
 subject = "var:antal-arbetsstallen"
 fields = { "tags" = ["business"] }
 evidence = "Katalogen visar en angränsande ägare.\ncatalog:occurrence:154791\ncatalog:occurrence:154892"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-aeant"
-fields = { "sets" = [] }
-evidence = "Samma mått på antal arbetsställen är uppdelat mellan efterföljande perioder.\ncatalog:occurrence:154791\ncatalog:occurrence:154892\ncatalog:variable_text:14844:15706:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-aeant"
-fields = { "tags" = ["business"] }
-evidence = "Samma mått på antal arbetsställen är uppdelat mellan efterföljande perioder.\ncatalog:occurrence:154791\ncatalog:occurrence:154892\ncatalog:variable_text:14844:15706:16436"
 
 [[statement]]
 kind = "set"
@@ -10189,18 +10153,6 @@ evidence = "The source column has another owner and the unit changes.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-framstallning-elektrisk-v736-21"
-fields = { "sets" = [] }
-evidence = "The source column has another owner in an adjacent period.\ncatalog:occurrence:182569\ncatalog:occurrence:183236"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-framstallning-elektrisk-v736-21"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source column has another owner in an adjacent period.\ncatalog:occurrence:182569\ncatalog:occurrence:183236"
-
-[[statement]]
-kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-framstallning-elektrisk-v736-22"
 fields = { "sets" = [] }
 evidence = "The source column has another owner and the unit changes.\ncatalog:occurrence:182570\ncatalog:occurrence:183237\ncatalog:variable_text:15337:16071:17167\ncatalog:variable_text:15337:17167:17897"
@@ -13333,18 +13285,6 @@ evidence = "Id:t överskrider 60 tecken; etiketten är gemensam och kräver käl
 
 [[statement]]
 kind = "set"
-subject = "var:avdrag-bransle-annat-andamal-bensin-mk1"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i angränsande period.\ncatalog:occurrence:182495\ncatalog:occurrence:183109"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-bransle-annat-andamal-bensin-mk1"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Källkolumnen har en annan ägare i angränsande period.\ncatalog:occurrence:182495\ncatalog:occurrence:183109"
-
-[[statement]]
-kind = "set"
 subject = "var:avdrag-bransle-annat-andamal-dubbel"
 fields = { "sets" = [] }
 evidence = "Källkolumnen har en annan ägare i angränsande period.\ncatalog:occurrence:182331\ncatalog:occurrence:182943"
@@ -13390,18 +13330,6 @@ kind = "set"
 subject = "var:avdrag-bransle-elektrisk-kraft"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Enheten ändras mellan perioderna.\ncatalog:variable_text:15602:13514:17167\ncatalog:variable_text:15602:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-bransle-elektrisk-kraft-mk1"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i angränsande period.\ncatalog:occurrence:182366\ncatalog:occurrence:182978"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-bransle-elektrisk-kraft-mk1"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Källkolumnen har en annan ägare i angränsande period.\ncatalog:occurrence:182366\ncatalog:occurrence:182978"
 
 [[statement]]
 kind = "set"
@@ -13474,18 +13402,6 @@ kind = "set"
 subject = "var:avdrag-bransle-luftfartygsmotorer-mk1"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:181493\ncatalog:occurrence:183115"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-bransle-metallurg-gasol"
-fields = { "sets" = [] }
-evidence = "Källkolumnerna har andra ägare i angränsande perioder.\ncatalog:occurrence:181772\ncatalog:occurrence:181773\ncatalog:occurrence:182273\ncatalog:occurrence:182274\ncatalog:occurrence:182874"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-bransle-metallurg-gasol"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Källkolumnerna har andra ägare i angränsande perioder.\ncatalog:occurrence:181772\ncatalog:occurrence:181773\ncatalog:occurrence:182273\ncatalog:occurrence:182274\ncatalog:occurrence:182874"
 
 [[statement]]
 kind = "set"
@@ -20593,30 +20509,6 @@ evidence = "Motpartens definition saknas i paketet.\ncatalog:occurrence:170912\n
 
 [[statement]]
 kind = "set"
-subject = "var:btfpkv-2"
-fields = { "sets" = [] }
-evidence = "Motpartens definition saknas i paketet.\ncatalog:occurrence:170915\ncatalog:occurrence:172879"
-
-[[statement]]
-kind = "set"
-subject = "var:btfpkv-2"
-fields = { "tags" = ["transfers"] }
-evidence = "Motpartens definition saknas i paketet.\ncatalog:occurrence:170915\ncatalog:occurrence:172879"
-
-[[statement]]
-kind = "set"
-subject = "var:btfptr-2"
-fields = { "sets" = [] }
-evidence = "Motpartens definition saknas i paketet.\ncatalog:occurrence:170918\ncatalog:occurrence:172882"
-
-[[statement]]
-kind = "set"
-subject = "var:btfptr-2"
-fields = { "tags" = ["transfers"] }
-evidence = "Motpartens definition saknas i paketet.\ncatalog:occurrence:170918\ncatalog:occurrence:172882"
-
-[[statement]]
-kind = "set"
 subject = "var:btilp37"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:16264:16801:17167"
@@ -23137,18 +23029,6 @@ evidence = "Egenavgifter är avgifter av skattekaraktär.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:egenfb-naturgas-motorfordon"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182390\ncatalog:occurrence:183001"
-
-[[statement]]
-kind = "set"
-subject = "var:egenfb-naturgas-motorfordon"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182390\ncatalog:occurrence:183001"
-
-[[statement]]
-kind = "set"
 subject = "var:egenfb-torvbransle-svavel"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182509\ncatalog:occurrence:183157"
@@ -24094,18 +23974,6 @@ kind = "set"
 subject = "var:elkraftavdrag-sparbundet"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Källans enhet ändras från kilowattimmar till kronor.\ncatalog:variable_text:16568:13514:17167\ncatalog:variable_text:16568:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:elkraftavdrag-sparbundet-volymer"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182233\ncatalog:occurrence:182834"
-
-[[statement]]
-kind = "set"
-subject = "var:elkraftavdrag-sparbundet-volymer"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182233\ncatalog:occurrence:182834"
 
 [[statement]]
 kind = "set"
@@ -25885,18 +25753,6 @@ evidence = "Källan beskriver underlag för fastighetsskatt på vattenkraft.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:fastighetsskatt-elproduktion-vattenkraft"
-fields = { "sets" = [] }
-evidence = "Katalogen visar angränsande mappningar för AVAT.\ncatalog:occurrence:139520\ncatalog:occurrence:139726"
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetsskatt-elproduktion-vattenkraft"
-fields = { "tags" = ["property", "taxation"] }
-evidence = "Katalogen visar angränsande mappningar för AVAT.\ncatalog:occurrence:139520\ncatalog:occurrence:139726"
-
-[[statement]]
-kind = "set"
 subject = "var:fastighetsskatt-hyreshus-04-hel"
 fields = { "sets" = [] }
 evidence = "Katalogen visar växlande ägare för kolumnen.\ncatalog:occurrence:168706\ncatalog:occurrence:168859\ncatalog:occurrence:169017"
@@ -25918,18 +25774,6 @@ kind = "set"
 subject = "var:fastighetsskatt-hyreshus-04-helx"
 fields = { "tags" = ["property", "taxation"] }
 evidence = "Katalogen visar angränsande mappningar för AFAHHELX.\ncatalog:occurrence:168555\ncatalog:occurrence:168707"
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetsskatt-hyreshus-04-ht"
-fields = { "sets" = [] }
-evidence = "Katalogen visar växlande ägare för kolumnen.\ncatalog:occurrence:168562\ncatalog:occurrence:168714\ncatalog:occurrence:168867"
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetsskatt-hyreshus-04-ht"
-fields = { "tags" = ["property", "taxation"] }
-evidence = "Katalogen visar växlande ägare för kolumnen.\ncatalog:occurrence:168562\ncatalog:occurrence:168714\ncatalog:occurrence:168867"
 
 [[statement]]
 kind = "set"
@@ -27985,18 +27829,6 @@ evidence = "Variabeln avser avfall från marksanering.\ncatalog:variable_text:16
 
 [[statement]]
 kind = "set"
-subject = "var:fors-tekn-avs-f-l-fors-d-ftag-bar-risk-andra-ata-lee3-lee3"
-fields = { "sets" = [] }
-evidence = "Källkolumnen LEE3 har olika ägare i intilliggande perioder.\ncatalog:occurrence:163878\ncatalog:occurrence:164013"
-
-[[statement]]
-kind = "set"
-subject = "var:fors-tekn-avs-f-l-fors-d-ftag-bar-risk-andra-ata-lee3-lee3"
-fields = { "tags" = ["business"] }
-evidence = "Källkolumnen LEE3 har olika ägare i intilliggande perioder.\ncatalog:occurrence:163878\ncatalog:occurrence:164013"
-
-[[statement]]
-kind = "set"
 subject = "var:forsakringsersattningar-l5"
 fields = { "sets" = [] }
 evidence = "Källkolumnerna har olika ägare i intilliggande perioder.\ncatalog:occurrence:163708\ncatalog:occurrence:163709\ncatalog:occurrence:163844\ncatalog:occurrence:163845"
@@ -28417,18 +28249,6 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger koldioxidskattes
 
 [[statement]]
 kind = "set"
-subject = "var:fotfgensk"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182151\ncatalog:occurrence:182682"
-
-[[statement]]
-kind = "set"
-subject = "var:fotfgensk"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182151\ncatalog:occurrence:182682"
-
-[[statement]]
-kind = "set"
 subject = "var:fotfgenss"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger energiskattesats.\ncatalog:variable_text:16940:13879:14245"
@@ -28642,18 +28462,6 @@ kind = "set"
 subject = "var:skattesats-koldioxidskatt-flygfotogen-innevarande-ar-2008"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger koldioxidskattesats.\ncatalog:variable_text:16957:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:fotnvensk"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182153\ncatalog:occurrence:182687"
-
-[[statement]]
-kind = "set"
-subject = "var:fotnvensk"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182153\ncatalog:occurrence:182687"
 
 [[statement]]
 kind = "set"
@@ -29854,18 +29662,6 @@ kind = "set"
 subject = "var:gasnvco2ss"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Måttet avser koldioxidskattesats för flyggasol.\ncatalog:variable_text:17066:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:gasnvensk"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i den följande perioden; motpartens definition saknas i paketet.\ncatalog:occurrence:182163\ncatalog:occurrence:182705"
-
-[[statement]]
-kind = "set"
-subject = "var:gasnvensk"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har en annan ägare i den följande perioden; motpartens definition saknas i paketet.\ncatalog:occurrence:182163\ncatalog:occurrence:182705"
 
 [[statement]]
 kind = "set"
@@ -33586,18 +33382,6 @@ kind = "set"
 subject = "var:inkomst-passiv-naringsverksamhet"
 fields = { "tags" = ["income"] }
 evidence = "Variabeln mäter personlig näringsinkomst.\ncatalog:variable_text:17386:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-tjanst-2-ar-gamla"
-fields = { "sets" = [] }
-evidence = "Den gemensamma kolumnens perioduppdelning kräver granskning.\ncatalog:occurrence:175353\ncatalog:occurrence:176087"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-tjanst-2-ar-gamla"
-fields = { "tags" = ["income"] }
-evidence = "Den gemensamma kolumnens perioduppdelning kräver granskning.\ncatalog:occurrence:175353\ncatalog:occurrence:176087"
 
 [[statement]]
 kind = "set"
@@ -39469,13 +39253,13 @@ evidence = "Posten ingår i företagsredovisningen.\ncatalog:variable_text:17876
 
 [[statement]]
 kind = "set"
-subject = "var:likvidation-beslutande-instans"
+subject = "var:markering-beslutande-instans"
 fields = { "sets" = [] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:150773\ncatalog:occurrence:150879"
 
 [[statement]]
 kind = "set"
-subject = "var:likvidation-beslutande-instans"
+subject = "var:markering-beslutande-instans"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:150773\ncatalog:occurrence:150879"
 
@@ -40270,18 +40054,6 @@ kind = "set"
 subject = "var:mk1fgco2ss"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod för koldioxidskattesats.\ncatalog:variable_text:17988:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:mk1fgensk"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182170\ncatalog:occurrence:182740"
-
-[[statement]]
-kind = "set"
-subject = "var:mk1fgensk"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182170\ncatalog:occurrence:182740"
 
 [[statement]]
 kind = "set"
@@ -47725,18 +47497,6 @@ evidence = "Suffixet 2 är inte taget från källkolumnen. Samma premie med två
 
 [[statement]]
 kind = "set"
-subject = "var:pensionsforsakringspremie-2-ar-gamla"
-fields = { "sets" = [] }
-evidence = "Samma två år gamla pensionsförsäkringspremie återkommer från scb/frida/pensionsforsakringspremie-2.\ncatalog:occurrence:175169\ncatalog:occurrence:175878"
-
-[[statement]]
-kind = "set"
-subject = "var:pensionsforsakringspremie-2-ar-gamla"
-fields = { "tags" = ["finance"] }
-evidence = "Samma två år gamla pensionsförsäkringspremie återkommer från scb/frida/pensionsforsakringspremie-2.\ncatalog:occurrence:175169\ncatalog:occurrence:175878"
-
-[[statement]]
-kind = "set"
 subject = "var:pensionskostnader"
 fields = { "sets" = [] }
 evidence = "Pensionskostnaderna ingår i företagsredovisning.\ncatalog:variable_text:18668:10957:14975"
@@ -50353,18 +50113,6 @@ evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:referensperiod-antal-manader-btfptr2"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:170919\ncatalog:occurrence:172883"
-
-[[statement]]
-kind = "set"
-subject = "var:referensperiod-antal-manader-btfptr2"
-fields = { "tags" = ["transfers"] }
-evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:170919\ncatalog:occurrence:172883"
-
-[[statement]]
-kind = "set"
 subject = "var:referensperiod-antal-manader-btfptr3"
 fields = { "sets" = [] }
 evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:170920\ncatalog:occurrence:172884"
@@ -51793,18 +51541,6 @@ evidence = "The source column has another owner in a later release.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:skatt-brutto-punktskatter-v701-10"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182232\ncatalog:occurrence:182833"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-brutto-punktskatter-v701-10"
-fields = { "tags" = ["taxation"] }
-evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182232\ncatalog:occurrence:182833"
-
-[[statement]]
-kind = "set"
 subject = "var:skatt-brutto-punktskatter-v712-33"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182309\ncatalog:occurrence:182920"
@@ -51836,7 +51572,7 @@ evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte 
 [[statement]]
 kind = "set"
 subject = "var:skatt-brutto-punktskatter-v713-21"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182398\ncatalog:occurrence:183009"
 
 [[statement]]
@@ -51848,7 +51584,7 @@ evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte 
 [[statement]]
 kind = "set"
 subject = "var:skatt-brutto-punktskatter-v713-22"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182399\ncatalog:occurrence:183010"
 
 [[statement]]
@@ -51860,7 +51596,7 @@ evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte 
 [[statement]]
 kind = "set"
 subject = "var:skatt-brutto-punktskatter-v714-21"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:182482\ncatalog:occurrence:183095"
 
 [[statement]]
@@ -51922,54 +51658,6 @@ kind = "set"
 subject = "var:skatt-lager-aterkallande-ratallolja"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "The source columns have other owners across periods.\ncatalog:occurrence:182556\ncatalog:occurrence:183221\ncatalog:occurrence:186477\ncatalog:occurrence:190094"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-co2skatt-bensin"
-fields = { "sets" = [] }
-evidence = "The source columns have other owners across periods.\ncatalog:occurrence:179345\ncatalog:occurrence:179348\ncatalog:occurrence:182502\ncatalog:occurrence:183143\ncatalog:occurrence:183146"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-co2skatt-bensin"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source columns have other owners across periods.\ncatalog:occurrence:179345\ncatalog:occurrence:179348\ncatalog:occurrence:182502\ncatalog:occurrence:183143\ncatalog:occurrence:183146"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-co2skatt-olja-gasol"
-fields = { "sets" = [] }
-evidence = "The source column has an adjacent mapping.\ncatalog:occurrence:182287\ncatalog:occurrence:182888"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-co2skatt-olja-gasol"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source column has an adjacent mapping.\ncatalog:occurrence:182287\ncatalog:occurrence:182888"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-energiskatt-bensin"
-fields = { "sets" = [] }
-evidence = "The source columns have other owners across periods.\ncatalog:occurrence:179344\ncatalog:occurrence:179347\ncatalog:occurrence:183142\ncatalog:occurrence:183145"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-energiskatt-bensin"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source columns have other owners across periods.\ncatalog:occurrence:179344\ncatalog:occurrence:179347\ncatalog:occurrence:183142\ncatalog:occurrence:183145"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-energiskatt-elektrisk-energi"
-fields = { "sets" = [] }
-evidence = "The source column has an adjacent mapping.\ncatalog:occurrence:182245\ncatalog:occurrence:182846"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-netto-energiskatt-elektrisk-energi"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source column has an adjacent mapping.\ncatalog:occurrence:182245\ncatalog:occurrence:182846"
 
 [[statement]]
 kind = "set"
@@ -51992,7 +51680,7 @@ evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurre
 [[statement]]
 kind = "set"
 subject = "var:skatt-netto-energiskatt-v701-24"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurrence:182245\ncatalog:occurrence:182846"
 
 [[statement]]
@@ -52004,7 +51692,7 @@ evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurre
 [[statement]]
 kind = "set"
 subject = "var:skatt-netto-energiskatt-v712-128"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurrence:182286\ncatalog:occurrence:182887"
 
 [[statement]]
@@ -52028,7 +51716,7 @@ evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurre
 [[statement]]
 kind = "set"
 subject = "var:skatt-netto-energiskatt-v714-68"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurrence:182501\ncatalog:occurrence:183142"
 
 [[statement]]
@@ -52040,7 +51728,7 @@ evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurre
 [[statement]]
 kind = "set"
 subject = "var:skatt-netto-energiskatt-v736-27"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurrence:182573\ncatalog:occurrence:183242"
 
 [[statement]]
@@ -52105,18 +51793,6 @@ evidence = "The variable measures tax on interest.\ncatalog:variable_text:19051:
 
 [[statement]]
 kind = "set"
-subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v712-31"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182307\ncatalog:occurrence:182918"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v712-31"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182307\ncatalog:occurrence:182918"
-
-[[statement]]
-kind = "set"
 subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v712-32"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182308\ncatalog:occurrence:182919"
@@ -52174,18 +51850,6 @@ kind = "set"
 subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v718-11"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182514\ncatalog:occurrence:183163"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v736-07"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182556\ncatalog:occurrence:183221"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-pa-lager-vid-aterkallande-energiskatt-v736-07"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma kolumn har en annan ägare i den föregående perioden; motpartens definition saknas.\ncatalog:occurrence:182556\ncatalog:occurrence:183221"
 
 [[statement]]
 kind = "set"
@@ -53768,20 +53432,8 @@ evidence = "Identitetsfakt visar skilda ägare för samma källkolumn i olika pe
 [[statement]]
 kind = "set"
 subject = "var:skulder"
-fields = { "tags" = ["wealth"] }
-evidence = "Identitetsfakt visar skilda ägare för samma källkolumn i olika perioder.\ncatalog:occurrence:174309\ncatalog:occurrence:175705"
-
-[[statement]]
-kind = "set"
-subject = "var:skulder-boendet"
-fields = { "sets" = [] }
-evidence = "Katalogen visar ett perioduppdelat ägarskap med annan etikett.\ncatalog:occurrence:174309\ncatalog:occurrence:175705"
-
-[[statement]]
-kind = "set"
-subject = "var:skulder-boendet"
 fields = { "tags" = ["housing", "wealth"] }
-evidence = "Katalogen visar ett perioduppdelat ägarskap med annan etikett.\ncatalog:occurrence:174309\ncatalog:occurrence:175705"
+evidence = "Identitetsfakt visar skilda ägare för samma källkolumn i olika perioder.\ncatalog:occurrence:174309\ncatalog:occurrence:175705"
 
 [[statement]]
 kind = "set"
@@ -55268,7 +54920,7 @@ evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurre
 [[statement]]
 kind = "set"
 subject = "var:summa-skatt-punktskatt-v712-130"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har olika ägare i intilliggande utgåvor.\ncatalog:occurrence:182289\ncatalog:occurrence:182890"
 
 [[statement]]
@@ -56662,18 +56314,6 @@ kind = "set"
 subject = "var:tjanstepension-stp"
 fields = { "tags" = ["transfers"] }
 evidence = "Identitetsfakta visar korsvis ägarbyte.\ncatalog:occurrence:175247\ncatalog:occurrence:175249\ncatalog:occurrence:175966\ncatalog:occurrence:175968"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstepension-tjanst"
-fields = { "sets" = [] }
-evidence = "Identitetskopplingen kräver granskning.\ncatalog:occurrence:175230\ncatalog:occurrence:175949"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstepension-tjanst"
-fields = { "tags" = ["transfers"] }
-evidence = "Identitetskopplingen kräver granskning.\ncatalog:occurrence:175230\ncatalog:occurrence:175949"
 
 [[statement]]
 kind = "set"
@@ -58813,18 +58453,6 @@ evidence = "Utdelning som kapitalbeskattas.\ncatalog:variable_text:19622:13149:1
 
 [[statement]]
 kind = "set"
-subject = "var:utdelning-beskattas-tjanst-p2-7"
-fields = { "sets" = [] }
-evidence = "Identitetskopplingarna kräver granskning.\ncatalog:occurrence:143046\ncatalog:occurrence:143137\ncatalog:occurrence:143291\ncatalog:occurrence:143369"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-beskattas-tjanst-p2-7"
-fields = { "tags" = ["income", "taxation"] }
-evidence = "Identitetskopplingarna kräver granskning.\ncatalog:occurrence:143046\ncatalog:occurrence:143137\ncatalog:occurrence:143291\ncatalog:occurrence:143369"
-
-[[statement]]
-kind = "set"
 subject = "var:utdelning-beskattats-tjanst-forenkl"
 fields = { "sets" = [] }
 evidence = "Identitetskopplingen kräver granskning.\ncatalog:occurrence:143357\ncatalog:occurrence:143438"
@@ -58918,18 +58546,6 @@ kind = "set"
 subject = "var:utdelning-ska-beskattas-tjanst-forenkl"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Variabeln avser utdelning som beskattas i tjänst.\ncatalog:variable_text:19631:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v0469"
-fields = { "sets" = [] }
-evidence = "Samma utdelningsbegrepp är uppdelat mellan efterföljande perioder.\ncatalog:occurrence:143046\ncatalog:occurrence:143137\ncatalog:variable_text:19632:13879:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v0469"
-fields = { "tags" = ["income", "taxation"] }
-evidence = "Samma utdelningsbegrepp är uppdelat mellan efterföljande perioder.\ncatalog:occurrence:143046\ncatalog:occurrence:143137\ncatalog:variable_text:19632:13879:14975"
 
 [[statement]]
 kind = "set"
@@ -60622,18 +60238,6 @@ kind = "set"
 subject = "var:v0489"
 fields = { "tags" = ["finance"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:19777:12053:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:v0492"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i efterföljande period.\ncatalog:occurrence:142612\ncatalog:occurrence:142700"
-
-[[statement]]
-kind = "set"
-subject = "var:v0492"
-fields = { "tags" = ["income"] }
-evidence = "Samma källkolumn har en annan ägare i efterföljande period.\ncatalog:occurrence:142612\ncatalog:occurrence:142700"
 
 [[statement]]
 kind = "set"
@@ -62905,18 +62509,6 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:19967:11323:149
 
 [[statement]]
 kind = "set"
-subject = "var:v4505"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:143357\ncatalog:occurrence:143438"
-
-[[statement]]
-kind = "set"
-subject = "var:v4505"
-fields = { "tags" = ["income", "taxation"] }
-evidence = "Identitetsfaktet visar en intilliggande ägare vars definition inte ingår i paketet.\ncatalog:occurrence:143357\ncatalog:occurrence:143438"
-
-[[statement]]
-kind = "set"
 subject = "var:resterande-utdelning-forenklingsregeln-punkt-1-16"
 fields = { "sets" = [] }
 evidence = "V4509 är en opak källkod för resterande utdelning enligt förenklingsregeln.\ncatalog:variable_text:19969:15340:19723"
@@ -64021,18 +63613,6 @@ evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:v712-128"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182286\ncatalog:occurrence:182887"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-128"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182286\ncatalog:occurrence:182887"
-
-[[statement]]
-kind = "set"
 subject = "var:v712-13"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182288\ncatalog:occurrence:182889"
@@ -64042,18 +63622,6 @@ kind = "set"
 subject = "var:v712-13"
 fields = { "tags" = ["energy"] }
 evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182288\ncatalog:occurrence:182889"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-130"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182289\ncatalog:occurrence:182890"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-130"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:182289\ncatalog:occurrence:182890"
 
 [[statement]]
 kind = "set"
@@ -64777,18 +64345,6 @@ evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:v712-73"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182351\ncatalog:occurrence:182963"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-73"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182351\ncatalog:occurrence:182963"
-
-[[statement]]
-kind = "set"
 subject = "var:v712-75"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182353\ncatalog:occurrence:182965"
@@ -64930,54 +64486,6 @@ kind = "set"
 subject = "var:v712-87"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182365\ncatalog:occurrence:182977"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-89"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182367\ncatalog:occurrence:182979"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-89"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182367\ncatalog:occurrence:182979"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-90"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182368\ncatalog:occurrence:182980"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-90"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182368\ncatalog:occurrence:182980"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-91"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182369\ncatalog:occurrence:182981"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-91"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182369\ncatalog:occurrence:182981"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-92"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182370\ncatalog:occurrence:182982"
-
-[[statement]]
-kind = "set"
-subject = "var:v712-92"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182370\ncatalog:occurrence:182982"
 
 [[statement]]
 kind = "set"
@@ -65281,30 +64789,6 @@ evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:v713-21"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182398\ncatalog:occurrence:183009"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-21"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182398\ncatalog:occurrence:183009"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-22"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182399\ncatalog:occurrence:183010"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-22"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182399\ncatalog:occurrence:183010"
-
-[[statement]]
-kind = "set"
 subject = "var:v713-23"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182400\ncatalog:occurrence:183011"
@@ -65542,18 +65026,6 @@ kind = "set"
 subject = "var:v713-42"
 fields = { "tags" = ["energy"] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182419\ncatalog:occurrence:183030"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-43"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182420\ncatalog:occurrence:183031"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-43"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182420\ncatalog:occurrence:183031"
 
 [[statement]]
 kind = "set"
@@ -66073,42 +65545,6 @@ evidence = "Källkolumnen byter ägare och beteckning.\ncatalog:occurrence:17934
 
 [[statement]]
 kind = "set"
-subject = "var:v714-01"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182463\ncatalog:occurrence:183075"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-01"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182463\ncatalog:occurrence:183075"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-02"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i en senare observerad period.\ncatalog:occurrence:181454\ncatalog:occurrence:183076"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-02"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i en senare observerad period.\ncatalog:occurrence:181454\ncatalog:occurrence:183076"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-03"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182464\ncatalog:occurrence:183077"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-03"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182464\ncatalog:occurrence:183077"
-
-[[statement]]
-kind = "set"
 subject = "var:v714-05"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182466\ncatalog:occurrence:183079"
@@ -66301,18 +65737,6 @@ evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:v714-21"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182482\ncatalog:occurrence:183095"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-21"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182482\ncatalog:occurrence:183095"
-
-[[statement]]
-kind = "set"
 subject = "var:v714-22"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182483\ncatalog:occurrence:183096"
@@ -66397,42 +65821,6 @@ evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:v714-30"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182491\ncatalog:occurrence:183104"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-30"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182491\ncatalog:occurrence:183104"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-31"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182492\ncatalog:occurrence:183105"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-31"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182492\ncatalog:occurrence:183105"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-32"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i en senare observerad period.\ncatalog:occurrence:181484\ncatalog:occurrence:183106"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-32"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i en senare observerad period.\ncatalog:occurrence:181484\ncatalog:occurrence:183106"
-
-[[statement]]
-kind = "set"
 subject = "var:v714-33"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182493\ncatalog:occurrence:183107"
@@ -66454,30 +65842,6 @@ kind = "set"
 subject = "var:v714-34"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182494\ncatalog:occurrence:183108"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-36"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182496\ncatalog:occurrence:183110"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-36"
-fields = { "tags" = ["energy"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182496\ncatalog:occurrence:183110"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-37"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182497\ncatalog:occurrence:183111"
-
-[[statement]]
-kind = "set"
-subject = "var:v714-37"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182497\ncatalog:occurrence:183111"
 
 [[statement]]
 kind = "set"
@@ -66958,18 +66322,6 @@ kind = "set"
 subject = "var:v718-11"
 fields = { "tags" = ["taxation"] }
 evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182514\ncatalog:occurrence:183163"
-
-[[statement]]
-kind = "set"
-subject = "var:v718-12"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182515\ncatalog:occurrence:183164"
-
-[[statement]]
-kind = "set"
-subject = "var:v718-12"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182515\ncatalog:occurrence:183164"
 
 [[statement]]
 kind = "set"
@@ -68086,18 +67438,6 @@ kind = "set"
 subject = "var:v736-26"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182572\ncatalog:occurrence:183241"
-
-[[statement]]
-kind = "set"
-subject = "var:v736-27"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182573\ncatalog:occurrence:183242"
-
-[[statement]]
-kind = "set"
-subject = "var:v736-27"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182573\ncatalog:occurrence:183242"
 
 [[statement]]
 kind = "set"
@@ -77524,3 +76864,1869 @@ kind = "set"
 subject = "finansbolag: VG28 @2023-01-01..2023-12-31 where key = 'v27700'"
 fields = { "description" = "Övriga avsättningar" }
 evidence = "Rättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: avat @2011-01-01..2011-12-31 where key = 'v29836'"
+fields = { "variable" = "underlag-fastighetsskatt-vattenkraft" }
+evidence = "Both describe the property-tax base for hydroelectric generating units in SEK. AVAT in the company table changes ownership at day 15340 without overlap; the earlier label additionally states the 2.8% tax rate. The later member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0469 @2008-01-01..2008-12-31 where key = 'v26710'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0469 @2009-01-01..2009-12-31 where key = 'v26710'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0469 @2010-01-01..2010-12-31 where key = 'v26710'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0469 @2011-01-01..2011-12-31 where key = 'v26708'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2000-01-01..2000-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2001-01-01..2001-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2002-01-01..2002-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2003-01-01..2003-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2004-01-01..2004-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v0492 @2005-01-01..2005-12-31 where key = 'v17966'"
+fields = { "variable" = "ersattning-minus-avyttring-p3-1" }
+evidence = "Both measure proceeds minus disposal expenses for shares in closely held companies on appendix K10, in SEK. V0492 has adjacent periods at day 13149; the later label specifies form item 3.1 and subsequently uses V4545."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2015-01-01..2015-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2016-01-01..2016-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2017-01-01..2017-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2018-01-01..2018-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2019-01-01..2019-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2020-01-01..2020-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2021-01-01..2021-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2022-01-01..2022-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4505 @2023-01-01..2023-12-31 where key = 'v36690'"
+fields = { "variable" = "utdelning-beskattats-tjanst-forenkl" }
+evidence = "Both measure dividends taxable as employment income under the simplification rule in appendix K10, in SEK. V4505 observations meet at day 16436 without overlap; the later label adds form point 1.8. Both have nine occurrences, and the survivor begins earlier."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4525 @2012-01-01..2012-12-31 where key = 'v26708'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: v4525 @2013-01-01..2013-12-31 where key = 'v26708'"
+fields = { "variable" = "utdelning-som-beskattas-i-tjanst-huvudregeln-punkt-2-7-v4525" }
+evidence = "All measure dividends taxed as employment income at point 2.7 in the K10 appendix, in SEK. Their nonoverlapping periods join at days 14975 and 16071. The middle ledger records the column change from V0469 to V4525 at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: v7015 @2023-01-01..2023-12-31 where key = 'v49646'"
+fields = { "variable" = "rakenskapsarets-borjan" }
+evidence = "Both define the partnership financial year's starting date in appendix N3B, column V7015. Observations cover [17167,17532) and [19358,19723); the unobserved gap remains."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: v7016 @2023-01-01..2023-12-31 where key = 'v49645'"
+fields = { "variable" = "rakenskapsarets-slut-v7016" }
+evidence = "Both specify the accounting-year end date in N3B appendix column V7016; the later label explicitly identifies the partnership's year-end. Observed periods are [17167,18262) and [19358,19723), with no coverage asserted across the gap."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2007-01-01..2007-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2008-01-01..2008-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2009-01-01..2009-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2010-01-01..2010-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2011-01-01..2011-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2012-01-01..2012-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2013-01-01..2013-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: blibesl @2014-01-01..2014-12-31 where key = 'v26075'"
+fields = { "variable" = "markering-beslutande-instans" }
+evidence = "Both identify the deciding authority in the Companies Registration Office table, column BLIBESL/blibesl. Character type and the same 40-code value set 2084 persist across day 16436. The earlier label specifies the authority deciding liquidation."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: aeant @2013-01-01..2013-12-31 where key = 'v29697'"
+fields = { "variable" = "antal-arbetsstallen" }
+evidence = "Both define the number of establishments in count units. In the declaration-data table, AEAnt passes from [15706,16436) to [16436,19723) without overlapping ownership; the extra label text merely names AEAnt."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: aeant @2014-01-01..2014-12-31 where key = 'v29697'"
+fields = { "variable" = "antal-arbetsstallen" }
+evidence = "Both define the number of establishments in count units. In the declaration-data table, AEAnt passes from [15706,16436) to [16436,19723) without overlapping ownership; the extra label text merely names AEAnt."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: lee3 @2011-01-01..2011-12-31 where key = 'v36721'"
+fields = { "variable" = "lee3" }
+evidence = "LEE3 identifies other commitments within life-insurance technical provisions where the policyholder bears risk, later described as other fund commitments. Both use KSEK in the insurance-company table, with periods meeting at day 17532."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: lee3 @2014-01-01..2014-12-31 where key = 'v36721'"
+fields = { "variable" = "lee3" }
+evidence = "LEE3 identifies other commitments within life-insurance technical provisions where the policyholder bears risk, later described as other fund commitments. Both use KSEK in the insurance-company table, with periods meeting at day 17532."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: lee3 @2015-01-01..2015-12-31 where key = 'v36721'"
+fields = { "variable" = "lee3" }
+evidence = "LEE3 identifies other commitments within life-insurance technical provisions where the policyholder bears risk, later described as other fund commitments. Both use KSEK in the insurance-company table, with periods meeting at day 17532."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: lee3 @2016-01-01..2016-12-31 where key = 'v36721'"
+fields = { "variable" = "lee3" }
+evidence = "LEE3 identifies other commitments within life-insurance technical provisions where the policyholder bears risk, later described as other fund commitments. Both use KSEK in the insurance-company table, with periods meeting at day 17532."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: lee3 @2017-01-01..2017-12-31 where key = 'v36721'"
+fields = { "variable" = "lee3" }
+evidence = "LEE3 identifies other commitments within life-insurance technical provisions where the policyholder bears risk, later described as other fund commitments. Both use KSEK in the insurance-company table, with periods meeting at day 17532."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2013-01-01..2013-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2014-01-01..2014-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2016-01-01..2016-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2018-01-01..2018-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2019-01-01..2019-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2020-01-01..2020-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2021-01-01..2021-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2022-01-01..2022-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: afskht @2023-01-01..2023-12-31 where key = 'v16184'"
+fields = { "variable" = "underlag-fastighetsskatt-tomt-hyreshus" }
+evidence = "Both measure the tax base for rental-property land in SEK. The 0.4% ledger explicitly specifies land in [15706,16436) and [17532,19723); the other defines land throughout. Their AFSKHT observations in the partnership table alternate over [16071,17167) without overlap."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: btfpkv1 @2003-01-01..2003-12-31 where key = 'v32695'"
+fields = { "variable" = "tillfallig-foraldrapenning-1-4-ersattning-perioder-avser-barn-1-btfpkv1" }
+evidence = "Both describe periods of temporary parental benefit at one-quarter compensation for child 1, measured in months in individual-table column BTFPKV1. Observed periods are [10957,11323) and [12053,12418); no coverage of the gap is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: btfptr1 @2003-01-01..2003-12-31 where key = 'v32695'"
+fields = { "variable" = "tillfallig-foraldrapenning-3-4-ersattning-perioder-avser-barn-1-btfptr1" }
+evidence = "Both measure periods of temporary parental benefit at three-quarter compensation for child 1, in months, in individual-table column BTFPTR1. Observations cover [10957,11323) and [12053,12418); coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: btfptr2 @2003-01-01..2003-12-31 where key = 'v32695'"
+fields = { "variable" = "tillfallig-foraldrapenning-3-4-ersattning-perioder-avser-barn-2-btfptr2" }
+evidence = "Both operational descriptions concern periods of three-quarter temporary parental benefit for child 2, measured in months in BTFPTR2. Observations cover [10957,11323) and [12053,12418); the intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: fskubo @2016-01-01..2016-12-31 where key = 'v37445'"
+fields = { "variable" = "skulder" }
+evidence = "Both measure housing debt in SEK in individual-table column FSKUBO. The earlier operational definition specifies debt on residential property; the later label specifies housing debt. Observed periods are [12784,13149) and [16801,17167); the gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: nskpensu @2016-01-01..2016-12-31 where key = 'v37470'"
+fields = { "variable" = "pensionsforsakringspremie-2" }
+evidence = "Both describe pension-insurance premiums from two years earlier, in SEK, using NSKPENSU in Individual tables. The reference window appears in the earlier operational definition and the later label. Observed periods [13149,13514) and [16801,17167) leave an unobserved gap."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: pkutjp @2016-01-01..2016-12-31 where key = 'v591'"
+fields = { "variable" = "tjanstepension" }
+evidence = "Both describe occupational pension income in SEK in Individual tables, column PKUTJP. Observed periods are [10957,12784), [13149,13514) and [16801,17167); the intervening gaps remain unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: ttju @2016-01-01..2016-12-31 where key = 'v37635'"
+fields = { "variable" = "inkomst-av-tjanst" }
+evidence = "Both measure employment income two years old in SEK in individual-table column TTJU. The earlier operational definition explicitly states the two-year lag, matching the later label. Observed periods are [13149,13514) and [16801,17167), with the gap retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2008-01-01..2008-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2009-01-01..2009-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2010-01-01..2010-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2011-01-01..2011-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2012-01-01..2012-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgco2sk @2013-01-01..2013-12-31 where key = 'v25857'"
+fields = { "variable" = "koldioxidskatt-aterbetalningar-och-punktskatter-affgco2sk" }
+evidence = "Both concern previous-year carbon dioxide tax on other aviation gasoline, in SEK, under AFFGCO2SK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2008-01-01..2008-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2009-01-01..2009-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2010-01-01..2010-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2011-01-01..2011-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2012-01-01..2012-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: affgensk @2013-01-01..2013-12-31 where key = 'v25858'"
+fields = { "variable" = "energiskatt-affgensk" }
+evidence = "Both identify prior-year energy tax for other aviation petrol, measured in SEK. The later operational definition specifies professional aviation and the previous year. AFFGENSK has adjacent, nonoverlapping mappings at day 16071 in the energy excise table. The later member has nine occurrences versus six."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2008-01-01..2008-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2009-01-01..2009-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2010-01-01..2010-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2011-01-01..2011-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2012-01-01..2012-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotfgensk @2013-01-01..2013-12-31 where key = 'v25904'"
+fields = { "variable" = "energiskatt-fotfgensk" }
+evidence = "Both measure prior-year kerosene energy tax in SEK. The earlier definition names kerosene and the previous year's tax; the later operational definition specifies professional-aviation refund applications for kerosene concerning the previous year. FOTFGENSK changes owner at day 16071 in the energy excise table without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2008-01-01..2008-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2009-01-01..2009-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2010-01-01..2010-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2011-01-01..2011-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2012-01-01..2012-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotnvensk @2013-01-01..2013-12-31 where key = 'v25906'"
+fields = { "variable" = "energiskatt-fotnvensk" }
+evidence = "Both concern current-year energy tax for kerosene in energy-excise column FOTNVENSK, measured in SEK. The later operational definition specifies current-year aviation kerosene, and periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2008-01-01..2008-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2009-01-01..2009-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2010-01-01..2010-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2011-01-01..2011-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2012-01-01..2012-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: gasnvensk @2013-01-01..2013-12-31 where key = 'v25920'"
+fields = { "variable" = "energiskatt-gasnvensk" }
+evidence = "Both concern current-year LPG energy tax in SEK. The later operational definition specifies industrial-process refund applications, LPG and the current year, matching the earlier fuel and time qualifier. GASNVENSK has adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2008-01-01..2008-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2009-01-01..2009-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2010-01-01..2010-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2011-01-01..2011-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2012-01-01..2012-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1fgensk @2013-01-01..2013-12-31 where key = 'v25933'"
+fields = { "variable" = "energiskatt-mk1fgensk" }
+evidence = "Both concern previous-year energy tax for MK1/unleaded aviation gasoline in SEK, using MK1FGENSK in Energy excise taxes. The later operational definition retains the previous-year aviation scope, and observed periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_10 @2014-01-01..2014-12-31 where key = 'v26612'"
+fields = { "variable" = "v701-10" }
+evidence = "Both measure gross electricity energy tax in SEK in the Energy excise taxes table. V701_10 has adjacent periods meeting at day 16071, and the later operational definition explicitly identifies electricity taxation."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_10 @2015-01-01..2015-12-31 where key = 'v26612'"
+fields = { "variable" = "v701-10" }
+evidence = "Both measure gross electricity energy tax in SEK in the Energy excise taxes table. V701_10 has adjacent periods meeting at day 16071, and the later operational definition explicitly identifies electricity taxation."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_10 @2016-01-01..2016-12-31 where key = 'v26612'"
+fields = { "variable" = "v701-10" }
+evidence = "Both measure gross electricity energy tax in SEK in the Energy excise taxes table. V701_10 has adjacent periods meeting at day 16071, and the later operational definition explicitly identifies electricity taxation."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_10 @2017-01-01..2017-12-31 where key = 'v26612'"
+fields = { "variable" = "v701-10" }
+evidence = "Both measure gross electricity energy tax in SEK in the Energy excise taxes table. V701_10 has adjacent periods meeting at day 16071, and the later operational definition explicitly identifies electricity taxation."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2007-01-01..2007-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2008-01-01..2008-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2009-01-01..2009-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2010-01-01..2010-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2011-01-01..2011-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2012-01-01..2012-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_11 @2013-01-01..2013-12-31 where key = 'v25979'"
+fields = { "variable" = "avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11" }
+evidence = "Both definitions cover electricity consumed or sold for trains or other rail transport, measured in kilowatt-hours. V701_11 in the energy-excise table has adjacent periods ending and starting at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2007-01-01..2007-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2008-01-01..2008-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2009-01-01..2009-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2010-01-01..2010-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2011-01-01..2011-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2012-01-01..2012-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v701_24 @2013-01-01..2013-12-31 where key = 'v25992'"
+fields = { "variable" = "skatt-netto-energiskatt-v701-24" }
+evidence = "Both measure net energy tax on electricity in energy-excise column V701_24. The earlier label specifies electricity and the later operational definition confirms it. Units are kronor or SEK, and periods meet at day 16071 without overlap. The survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_116 @2013-01-01..2013-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2007-01-01..2007-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2008-01-01..2008-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2009-01-01..2009-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2010-01-01..2010-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2011-01-01..2011-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_117 @2012-01-01..2012-12-31 where key = 'v26299'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3" }
+evidence = "Both describe motor-vehicle LPG used in metallurgical or mineralogical processes, in tonnes. Their V712_116 periods meet at day 16071; the earlier ledger also uses V712_117 before day 15706. The later operational definition confirms motor-vehicle LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2008-01-01..2008-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2009-01-01..2009-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2010-01-01..2010-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2011-01-01..2011-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2012-01-01..2012-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_128 @2013-01-01..2013-12-31 where key = 'v26311'"
+fields = { "variable" = "skatt-netto-energiskatt-v712-128" }
+evidence = "Both measure net energy tax on oil and LPG in SEK. The later operational definition retains the oil-and-LPG energy-tax declaration, and observations in V712_128 meet at day 16071. 'Kronor' and 'SEK' identify the same monetary unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2008-01-01..2008-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2009-01-01..2009-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2010-01-01..2010-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2011-01-01..2011-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2012-01-01..2012-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_129 @2013-01-01..2013-12-31 where key = 'v26312'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-olja-v712-129" }
+evidence = "Both measure net carbon-dioxide tax on oil and LPG in SEK in energy-excise column V712_129. The earlier label specifies oil and LPG, and the later operational definition confirms that scope. Their observed periods meet at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2008-01-01..2008-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2009-01-01..2009-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2010-01-01..2010-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2011-01-01..2011-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2012-01-01..2012-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_130 @2013-01-01..2013-12-31 where key = 'v26314'"
+fields = { "variable" = "summa-skatt-punktskatt-v712-130" }
+evidence = "Both describe total tax for oil and LPG declarations in SEK. The later generic excise-tax label is qualified operationally as oil and LPG. Column V712_130 in the energy excise table has adjacent ownership at day 16071 and no overlapping periods."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_31 @2014-01-01..2014-12-31 where key = 'v26417'"
+fields = { "variable" = "v712-31" }
+evidence = "Both define energy tax on inventory upon revocation, measured in SEK in the energy excise table. V712_31 has adjacent ownership periods ending and starting at day 16071; the earlier wording additionally specifies oil and LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_31 @2015-01-01..2015-12-31 where key = 'v26417'"
+fields = { "variable" = "v712-31" }
+evidence = "Both define energy tax on inventory upon revocation, measured in SEK in the energy excise table. V712_31 has adjacent ownership periods ending and starting at day 16071; the earlier wording additionally specifies oil and LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_31 @2016-01-01..2016-12-31 where key = 'v26417'"
+fields = { "variable" = "v712-31" }
+evidence = "Both define energy tax on inventory upon revocation, measured in SEK in the energy excise table. V712_31 has adjacent ownership periods ending and starting at day 16071; the earlier wording additionally specifies oil and LPG."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2007-01-01..2007-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2008-01-01..2008-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2009-01-01..2009-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2010-01-01..2010-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2011-01-01..2011-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2012-01-01..2012-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_73 @2013-01-01..2013-12-31 where key = 'v26371'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-eller-salt-for-v712-73" }
+evidence = "Both describe deductions for motor-vehicle LPG consumed or sold for use in trains, vessels or aircraft, in tonnes. The later operational definition confirms motor-vehicle LPG. V712_73 stays in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2007-01-01..2007-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2008-01-01..2008-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2009-01-01..2009-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2010-01-01..2010-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2011-01-01..2011-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2012-01-01..2012-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_88 @2013-01-01..2013-12-31 where key = 'v26386'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-88" }
+evidence = "Both concern fuel-tax deductions for producing taxable electricity using high-tax oil of environmental class 1, measured in cubic meters. The later operational definition retains that fuel specification, and V712_88 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2007-01-01..2007-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2008-01-01..2008-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2009-01-01..2009-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2010-01-01..2010-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2011-01-01..2011-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2012-01-01..2012-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_89 @2013-01-01..2013-12-31 where key = 'v26388'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-89" }
+evidence = "Both cover fuel deductions for producing taxable electricity, measured in cubic meters. The earlier definition and later operational text specify high-tax environmental-class-2 oil; V712_89 has adjacent ownership at 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2007-01-01..2007-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2008-01-01..2008-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2009-01-01..2009-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2010-01-01..2010-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2011-01-01..2011-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2012-01-01..2012-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_90 @2013-01-01..2013-12-31 where key = 'v26389'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-90" }
+evidence = "Both concern fuel-tax deductions for taxable electricity generation using high-tax oil of environmental class 3 or no class. The later operational definition restores that fuel qualifier. V712_90 uses cubic metres throughout, with adjacent ownership at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2007-01-01..2007-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2008-01-01..2008-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2009-01-01..2009-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2010-01-01..2010-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2011-01-01..2011-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2012-01-01..2012-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_91 @2013-01-01..2013-12-31 where key = 'v26390'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-91" }
+evidence = "Both measure deductions for marked, low-tax oil used to generate taxable electricity, in cubic metres. Energy excise taxes column V712_91 changes ownership at day 16071, and the later operational definition retains marked, low-tax oil."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2007-01-01..2007-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2008-01-01..2008-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2009-01-01..2009-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2010-01-01..2010-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2011-01-01..2011-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2012-01-01..2012-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_92 @2013-01-01..2013-12-31 where key = 'v26391'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92" }
+evidence = "Both concern fuel-tax deductions for taxable electricity production using low-tax unmarked oil, measured consistently in cubic metres. The later operational definition confirms that fuel, and V712_92 observations meet at day 16071 in the same energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2007-01-01..2007-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2008-01-01..2008-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2009-01-01..2009-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2010-01-01..2010-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2011-01-01..2011-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2012-01-01..2012-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_13 @2013-01-01..2013-12-31 where key = 'v26411'"
+fields = { "variable" = "lev-och-egenfb-av-ovrig-egenfb-punktskatter-v713-13" }
+evidence = "The earlier definition and later operational text both identify natural gas for motor vehicles. Both use thousand cubic meters, and V713_13 changes ownership at the adjacent boundary 16071 in the energy-excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2007-01-01..2007-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2008-01-01..2008-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2009-01-01..2009-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2010-01-01..2010-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2011-01-01..2011-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2012-01-01..2012-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_21 @2013-01-01..2013-12-31 where key = 'v26419'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-21" }
+evidence = "Both describe gross energy excise tax for natural gas, coal and coke, measured in SEK. The later operational definition retains those fuels and energy taxation. V713_21 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2007-01-01..2007-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2008-01-01..2008-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2009-01-01..2009-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2010-01-01..2010-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2011-01-01..2011-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2012-01-01..2012-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_22 @2013-01-01..2013-12-31 where key = 'v26420'"
+fields = { "variable" = "skatt-brutto-punktskatter-v713-22" }
+evidence = "Both measure gross carbon dioxide tax on natural gas, coal and coke in SEK. The later operational definition supplies the same fuel and tax scope as the earlier label. V713_22 remains in Energy excise taxes, with periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2007-01-01..2007-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2008-01-01..2008-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2009-01-01..2009-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2010-01-01..2010-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2011-01-01..2011-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2012-01-01..2012-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_43 @2013-01-01..2013-12-31 where key = 'v26441'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-metallurgiska-processer-v713-43" }
+evidence = "Both describe fuel-tax deductions for coal and coke consumed or sold for metallurgical or mineralogical processes, measured in tonnes. The later operational definition confirms coal and coke. V713_43 has adjacent, nonoverlapping mappings at day 16071. The descriptive member has more occurrences."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2007-01-01..2007-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2008-01-01..2008-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2009-01-01..2009-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2010-01-01..2010-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2011-01-01..2011-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2012-01-01..2012-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_01 @2013-01-01..2013-12-31 where key = 'v26483'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-01" }
+evidence = "Both describe deliveries and own consumption of fuel with reduced tax, measured in liters. The earlier definition and later operational text specify gasoline environmental class 1. V714_01 has adjacent periods at day 16071 in the energy excise table."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_02 @2007-01-01..2007-12-31 where key = 'v26484'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-02" }
+evidence = "Both identify reduced-tax deliveries and own use of environmental-class-2 petrol in litres in energy-excise column V714_02. The later operational definition confirms the petrol class. Observations cover [13514,15340) and [16071,19723); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_02 @2008-01-01..2008-12-31 where key = 'v26484'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-02" }
+evidence = "Both identify reduced-tax deliveries and own use of environmental-class-2 petrol in litres in energy-excise column V714_02. The later operational definition confirms the petrol class. Observations cover [13514,15340) and [16071,19723); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_02 @2009-01-01..2009-12-31 where key = 'v26484'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-02" }
+evidence = "Both identify reduced-tax deliveries and own use of environmental-class-2 petrol in litres in energy-excise column V714_02. The later operational definition confirms the petrol class. Observations cover [13514,15340) and [16071,19723); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_02 @2010-01-01..2010-12-31 where key = 'v26484'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-02" }
+evidence = "Both identify reduced-tax deliveries and own use of environmental-class-2 petrol in litres in energy-excise column V714_02. The later operational definition confirms the petrol class. Observations cover [13514,15340) and [16071,19723); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_02 @2011-01-01..2011-12-31 where key = 'v26484'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-02" }
+evidence = "Both identify reduced-tax deliveries and own use of environmental-class-2 petrol in litres in energy-excise column V714_02. The later operational definition confirms the petrol class. Observations cover [13514,15340) and [16071,19723); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2007-01-01..2007-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2008-01-01..2008-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2009-01-01..2009-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2010-01-01..2010-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2011-01-01..2011-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2012-01-01..2012-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_03 @2013-01-01..2013-12-31 where key = 'v26485'"
+fields = { "variable" = "lev-och-egenfb-branslen-med-nedsatt-skatt-v714-03" }
+evidence = "Both describe reduced-tax deliveries and own use of gasoline or other fuels in energy-excise column V714_03, measured in liters. Periods meet at day 16071, and later operational text retains the other-fuels category."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2007-01-01..2007-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2008-01-01..2008-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2009-01-01..2009-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2010-01-01..2010-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2011-01-01..2011-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2012-01-01..2012-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_21 @2013-01-01..2013-12-31 where key = 'v26503'"
+fields = { "variable" = "skatt-brutto-punktskatter-v714-21" }
+evidence = "Both measure gross energy tax on petrol in SEK. The later generic gross-excise label is specified by its petrol energy-tax operational definition. Observations in energy-excise column V714_21 meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2007-01-01..2007-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2008-01-01..2008-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2009-01-01..2009-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2010-01-01..2010-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2011-01-01..2011-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2012-01-01..2012-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_30 @2013-01-01..2013-12-31 where key = 'v26512'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-30" }
+evidence = "Both concern the export or free-zone deduction for environmental-class-2 gasoline in energy-excise column V714_30, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. Observations meet at day 16071 without overlap; the survivor has ten occurrences versus seven."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2007-01-01..2007-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2008-01-01..2008-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2009-01-01..2009-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2010-01-01..2010-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2011-01-01..2011-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2012-01-01..2012-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_31 @2013-01-01..2013-12-31 where key = 'v26513'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-31" }
+evidence = "Both measure litres eligible for deduction when exported to a third country or transferred to a free zone or warehouse for use elsewhere. The earlier specified other fuels remain identified in the later gasoline declaration's operational description. V714_31 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_32 @2007-01-01..2007-12-31 where key = 'v26514'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-32" }
+evidence = "Both concern the export or free-zone deduction for alkylate gasoline in energy-excise column V714_32, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. The gap [15340,16071) remains unobserved. The survivor has ten occurrences versus five."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_32 @2008-01-01..2008-12-31 where key = 'v26514'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-32" }
+evidence = "Both concern the export or free-zone deduction for alkylate gasoline in energy-excise column V714_32, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. The gap [15340,16071) remains unobserved. The survivor has ten occurrences versus five."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_32 @2009-01-01..2009-12-31 where key = 'v26514'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-32" }
+evidence = "Both concern the export or free-zone deduction for alkylate gasoline in energy-excise column V714_32, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. The gap [15340,16071) remains unobserved. The survivor has ten occurrences versus five."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_32 @2010-01-01..2010-12-31 where key = 'v26514'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-32" }
+evidence = "Both concern the export or free-zone deduction for alkylate gasoline in energy-excise column V714_32, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. The gap [15340,16071) remains unobserved. The survivor has ten occurrences versus five."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_32 @2011-01-01..2011-12-31 where key = 'v26514'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v714-32" }
+evidence = "Both concern the export or free-zone deduction for alkylate gasoline in energy-excise column V714_32, measured in litres. The earlier definition identifies the fuel and the later operational definition confirms it. The gap [15340,16071) remains unobserved. The survivor has ten occurrences versus five."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2007-01-01..2007-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2008-01-01..2008-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2009-01-01..2009-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2010-01-01..2010-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2011-01-01..2011-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2012-01-01..2012-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_35 @2013-01-01..2013-12-31 where key = 'v26517'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35" }
+evidence = "Both describe the deduction for fuel consumed or sold for purposes other than propulsion or heating, or specified industrial processes. Petrol MK1 is explicit in the earlier definition and later operational definition. Both use litres in Energy excise taxes V714_35, with adjacent periods at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2007-01-01..2007-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2008-01-01..2008-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2009-01-01..2009-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2010-01-01..2010-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2011-01-01..2011-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2012-01-01..2012-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_36 @2013-01-01..2013-12-31 where key = 'v26518'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36" }
+evidence = "Both measure litres of environmental-class-2 gasoline eligible for deduction when used outside motor propulsion or heating, or in specified industrial processes. The later operational definition retains gasoline MK2, and V714_36 periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2007-01-01..2007-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2008-01-01..2008-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2009-01-01..2009-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2010-01-01..2010-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2011-01-01..2011-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2012-01-01..2012-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_37 @2013-01-01..2013-12-31 where key = 'v26519'"
+fields = { "variable" = "avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-37" }
+evidence = "Both measure litres of fuel eligible for deductions for purposes other than propulsion or heating, or specified industrial processes. The later operational definition retains the earlier restriction to certain other fuels. V714_37 in the energy excise table changes ownership at day 16071 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2008-01-01..2008-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2009-01-01..2009-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2010-01-01..2010-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2011-01-01..2011-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2012-01-01..2012-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_68 @2013-01-01..2013-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2008-01-01..2008-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2009-01-01..2009-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2010-01-01..2010-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2011-01-01..2011-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2012-01-01..2012-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_69 @2013-01-01..2013-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_71 @2007-01-01..2007-12-31 where key = 'v26550'"
+fields = { "variable" = "skatt-netto-energiskatt-v714-68" }
+evidence = "Both measure net energy tax on petrol in SEK. The later operational definition explicitly retains petrol energy tax, and their V714_68 observations meet at day 16071. The older ledger also uses V714_71 during [13514,13879) with the same tax definition and unit."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v714_72 @2007-01-01..2007-12-31 where key = 'v26551'"
+fields = { "variable" = "skatt-netto-koldioxidskatt-avser-punktskattedeklaration-for-bensin-v714-69" }
+evidence = "Both measure net carbon-dioxide tax on gasoline in SEK. V714_69 has adjacent periods ending and starting at day 16071; the later operational definition explicitly specifies gasoline excise declarations."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2007-01-01..2007-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2008-01-01..2008-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2009-01-01..2009-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2010-01-01..2010-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2011-01-01..2011-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2012-01-01..2012-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_12 @2013-01-01..2013-12-31 where key = 'v26564'"
+fields = { "variable" = "skatt-brutto-punktskatter-v718-12" }
+evidence = "Both measure gross sulphur tax in SEK in V718_12. The earlier explicit sulphur-tax definition is retained by the later operational description, and the nonoverlapping periods meet at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_07 @2014-01-01..2014-12-31 where key = 'v26417'"
+fields = { "variable" = "skatt-lager-aterkallande-ratallolja" }
+evidence = "Both concern stock tax upon revocation for raw tall oil, measured in SEK. V736_07 passes between them at day 16071, and later operational text explicitly specifies raw tall oil. The unobserved [17897,18993) gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_07 @2015-01-01..2015-12-31 where key = 'v26417'"
+fields = { "variable" = "skatt-lager-aterkallande-ratallolja" }
+evidence = "Both concern stock tax upon revocation for raw tall oil, measured in SEK. V736_07 passes between them at day 16071, and later operational text explicitly specifies raw tall oil. The unobserved [17897,18993) gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_07 @2016-01-01..2016-12-31 where key = 'v26417'"
+fields = { "variable" = "skatt-lager-aterkallande-ratallolja" }
+evidence = "Both concern stock tax upon revocation for raw tall oil, measured in SEK. V736_07 passes between them at day 16071, and later operational text explicitly specifies raw tall oil. The unobserved [17897,18993) gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_07 @2017-01-01..2017-12-31 where key = 'v26417'"
+fields = { "variable" = "skatt-lager-aterkallande-ratallolja" }
+evidence = "Both concern stock tax upon revocation for raw tall oil, measured in SEK. V736_07 passes between them at day 16071, and later operational text explicitly specifies raw tall oil. The unobserved [17897,18993) gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_07 @2018-01-01..2018-12-31 where key = 'v26417'"
+fields = { "variable" = "skatt-lager-aterkallande-ratallolja" }
+evidence = "Both concern stock tax upon revocation for raw tall oil, measured in SEK. V736_07 passes between them at day 16071, and later operational text explicitly specifies raw tall oil. The unobserved [17897,18993) gap is retained."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_21 @2014-01-01..2014-12-31 where key = 'v26392'"
+fields = { "variable" = "v736-21" }
+evidence = "Both measure deductions for crude tall oil used to generate taxable electricity, in cubic metres. The later operational definition confirms crude tall oil. V736_21 remains in Energy excise taxes, with observed periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_21 @2015-01-01..2015-12-31 where key = 'v26392'"
+fields = { "variable" = "v736-21" }
+evidence = "Both measure deductions for crude tall oil used to generate taxable electricity, in cubic metres. The later operational definition confirms crude tall oil. V736_21 remains in Energy excise taxes, with observed periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_21 @2016-01-01..2016-12-31 where key = 'v26392'"
+fields = { "variable" = "v736-21" }
+evidence = "Both measure deductions for crude tall oil used to generate taxable electricity, in cubic metres. The later operational definition confirms crude tall oil. V736_21 remains in Energy excise taxes, with observed periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_21 @2017-01-01..2017-12-31 where key = 'v26392'"
+fields = { "variable" = "v736-21" }
+evidence = "Both measure deductions for crude tall oil used to generate taxable electricity, in cubic metres. The later operational definition confirms crude tall oil. V736_21 remains in Energy excise taxes, with observed periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_21 @2018-01-01..2018-12-31 where key = 'v26392'"
+fields = { "variable" = "v736-21" }
+evidence = "Both measure deductions for crude tall oil used to generate taxable electricity, in cubic metres. The later operational definition confirms crude tall oil. V736_21 remains in Energy excise taxes, with observed periods meeting at day 16071."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2007-01-01..2007-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2008-01-01..2008-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2009-01-01..2009-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2010-01-01..2010-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2011-01-01..2011-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2012-01-01..2012-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v736_27 @2013-01-01..2013-12-31 where key = 'v26631'"
+fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
+evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."

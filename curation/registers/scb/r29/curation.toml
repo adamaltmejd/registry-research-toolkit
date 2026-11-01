@@ -4759,18 +4759,6 @@ evidence = "Id:t är en läsbar förkortning. Variabeln hör till förlustavdrag
 
 [[statement]]
 kind = "set"
-subject = "var:avtalstyp-exempt-progressionsupprakning"
-fields = { "sets" = ["metod-dubbelbeskattningsavtal"] }
-evidence = "Källkolumnen har en angränsande mappning till skatteunderlag.\ncatalog:occurrence:339035\ncatalog:occurrence:339504"
-
-[[statement]]
-kind = "set"
-subject = "var:avtalstyp-exempt-progressionsupprakning"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnen har en angränsande mappning till skatteunderlag.\ncatalog:occurrence:339035\ncatalog:occurrence:339504"
-
-[[statement]]
-kind = "set"
 subject = "var:underskott-av-en-eller-tva-familjefastighet"
 fields = { "sets" = [] }
 evidence = "AVUSKV är en opak källkod för underskott av småhus.\ncatalog:variable_text:36313:4748:7670"
@@ -6583,18 +6571,6 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:36465:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:cfakt"
-fields = { "sets" = ["faktorinkomst"] }
-evidence = "Identitetsfaktet behöver granskas mot den senare ägaren.\ncatalog:occurrence:339125\ncatalog:occurrence:339598"
-
-[[statement]]
-kind = "set"
-subject = "var:cfakt"
-fields = { "tags" = ["income"] }
-evidence = "Identitetsfaktet behöver granskas mot den senare ägaren.\ncatalog:occurrence:339125\ncatalog:occurrence:339598"
-
-[[statement]]
-kind = "set"
 subject = "var:faktorinkomst-definition-2003"
 fields = { "sets" = ["faktorinkomst"] }
 evidence = "Källkoden är opak och etiketten kolliderar.\ncatalog:variable_text:36467:12053:12418"
@@ -7435,20 +7411,8 @@ evidence = "Källkolumnen har olika ägare och etikettens studiemedel skiljer si
 
 [[statement]]
 kind = "set"
-subject = "var:fackforeningsavgift"
-fields = { "sets" = ["fackforeningsavgift"] }
-evidence = "Den senare ägaren anges som reduktionsunderlag; samma avgift delas även med scb/linda/fackforeningsavgift-ku över perioder.\ncatalog:occurrence:339403\ncatalog:occurrence:339932\ncatalog:occurrence:340500\ncatalog:occurrence:347292"
-
-[[statement]]
-kind = "set"
-subject = "var:fackforeningsavgift"
-fields = { "tags" = ["employment"] }
-evidence = "Den senare ägaren anges som reduktionsunderlag; samma avgift delas även med scb/linda/fackforeningsavgift-ku över perioder.\ncatalog:occurrence:339403\ncatalog:occurrence:339932\ncatalog:occurrence:340500\ncatalog:occurrence:347292"
-
-[[statement]]
-kind = "set"
 subject = "var:fackforeningsavgift-ku"
-fields = { "sets" = ["fackforeningsavgift"] }
+fields = { "sets" = [] }
 evidence = "Samma avgiftsbegrepp som scb/linda/fackforeningsavgift är uppdelat på perioder.\ncatalog:occurrence:339403\ncatalog:occurrence:339932"
 
 [[statement]]
@@ -8107,30 +8071,6 @@ evidence = "Förseningsavgift för deklaration.\ncatalog:variable_text:36600:767
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjningsstod"
-fields = { "sets" = ["ekonomiskt-bistand"] }
-evidence = "Samma källkolumn har angränsande ägare med olika benämningar.\ncatalog:occurrence:339174\ncatalog:occurrence:339656\ncatalog:variable_text:36601:11323:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har angränsande ägare med olika benämningar.\ncatalog:occurrence:339174\ncatalog:occurrence:339656\ncatalog:variable_text:36601:11323:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-delat"
-fields = { "sets" = ["ekonomiskt-bistand"] }
-evidence = "Samma källkolumn har angränsande ägare med olika benämningar.\ncatalog:occurrence:339176\ncatalog:occurrence:339658\ncatalog:variable_text:36602:12418:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningsstod-delat"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har angränsande ägare med olika benämningar.\ncatalog:occurrence:339176\ncatalog:occurrence:339658\ncatalog:variable_text:36602:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:fortc"
 fields = { "sets" = ["fodelseland"] }
 evidence = "Etiketten anger födelseland men flera utelämnade värdemängder nämner födelselän.\ncatalog:valueset:4345\ncatalog:valueset:5266\ncatalog:variable_text:36603:-731:8401"
@@ -8296,18 +8236,6 @@ kind = "set"
 subject = "var:fpkod"
 fields = { "tags" = ["transfers"] }
 evidence = "FP är en ogenomskinlig källkod.\ncatalog:variable_text:36616:4018:7305"
-
-[[statement]]
-kind = "set"
-subject = "var:fpmark"
-fields = { "sets" = ["pensionsmarkering"] }
-evidence = "Angränsande ägare har olika etiketter och uppgifterna räcker inte för att fastställa samma begrepp.\ncatalog:occurrence:350269\ncatalog:occurrence:350493\ncatalog:variable_text:36617:7670:8401"
-
-[[statement]]
-kind = "set"
-subject = "var:fpmark"
-fields = { "tags" = ["transfers"] }
-evidence = "Angränsande ägare har olika etiketter och uppgifterna räcker inte för att fastställa samma begrepp.\ncatalog:occurrence:350269\ncatalog:occurrence:350493\ncatalog:variable_text:36617:7670:8401"
 
 [[statement]]
 kind = "set"
@@ -10600,18 +10528,6 @@ kind = "set"
 subject = "var:medborgarskapskod"
 fields = { "tags" = ["demographics"] }
 evidence = "Koden avser nationalitet enligt taxeringen.\ncatalog:variable_text:36813:10227:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:medborgarskapsland"
-fields = { "sets" = ["medborgarskap"] }
-evidence = "Källkolumnen har en perioduppdelad mappning till nationalitetskod.\ncatalog:occurrence:341786\ncatalog:occurrence:343473"
-
-[[statement]]
-kind = "set"
-subject = "var:medborgarskapsland"
-fields = { "tags" = ["demographics"] }
-evidence = "Källkolumnen har en perioduppdelad mappning till nationalitetskod.\ncatalog:occurrence:341786\ncatalog:occurrence:343473"
 
 [[statement]]
 kind = "set"
@@ -15835,18 +15751,6 @@ evidence = "Båda perioduppdelade variablerna avser arbetsskadeavgiftens underla
 
 [[statement]]
 kind = "set"
-subject = "var:underlag-arbetsskadeavgift-138"
-fields = { "sets" = ["underlag-arbetsskadeavgift"] }
-evidence = "Samma källkolumn har en tidigare ägare med ett annat begrepp.\ncatalog:occurrence:334961\ncatalog:occurrence:336962"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-arbetsskadeavgift-138"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har en tidigare ägare med ett annat begrepp.\ncatalog:occurrence:334961\ncatalog:occurrence:336962"
-
-[[statement]]
-kind = "set"
 subject = "var:underlag-avkastningsskatt-15"
 fields = { "sets" = [] }
 evidence = "Källorna visar samma skatteunderlag korrekt uppdelat mellan perioder med scb/linda/avkastningsskatt-innevarande-ar.\ncatalog:variable_text:36300:12784:17897\ncatalog:variable_text:37260:11323:12784"
@@ -16396,18 +16300,6 @@ kind = "set"
 subject = "var:underlag-foraldraforsakringsavgift"
 fields = { "tags" = ["taxation"] }
 evidence = "Samma avgiftsunderlag är periodvis uppdelat mot scb/linda/underlag-foraldraforsakringsavgift-2.\ncatalog:occurrence:338980\ncatalog:occurrence:339440"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-foraldraforsakringsavgift-2"
-fields = { "sets" = ["underlag-foraldraforsakringsavgift"] }
-evidence = "Suffixet är inte ett källkolumnnummer; samma begrepp fortsätter hos scb/linda/underlag-foraldraforsakringsavgift.\ncatalog:occurrence:338980\ncatalog:occurrence:339440\ncatalog:variable_text:37306:10592:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-foraldraforsakringsavgift-2"
-fields = { "tags" = ["taxation"] }
-evidence = "Suffixet är inte ett källkolumnnummer; samma begrepp fortsätter hos scb/linda/underlag-foraldraforsakringsavgift.\ncatalog:occurrence:338980\ncatalog:occurrence:339440\ncatalog:variable_text:37306:10592:12784"
 
 [[statement]]
 kind = "set"
@@ -21886,3 +21778,621 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: VBBEL @1992-01-01..1992-12-31 where key = 'v1197'"
 fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Texten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @1999-01-01..1999-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @2000-01-01..2000-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @2001-01-01..2001-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @2002-01-01..2002-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @2003-01-01..2003-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: asfavg @2004-01-01..2004-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @1999-01-01..1999-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @2000-01-01..2000-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @2001-01-01..2001-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @2002-01-01..2002-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @2003-01-01..2003-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: askad @2004-01-01..2004-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @1997-01-01..1997-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @1998-01-01..1998-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @1999-01-01..1999-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @2000-01-01..2000-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @2001-01-01..2001-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @2002-01-01..2002-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @2003-01-01..2003-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bexproi @2004-01-01..2004-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2012-01-01..2012-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2013-01-01..2013-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2014-01-01..2014-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2015-01-01..2015-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2016-01-01..2016-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2017-01-01..2017-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bnation @2018-01-01..2018-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1994-01-01..1994-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1995-01-01..1995-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1996-01-01..1996-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1997-01-01..1997-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1998-01-01..1998-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @1999-01-01..1999-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @2000-01-01..2000-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @2001-01-01..2001-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @2002-01-01..2002-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @2003-01-01..2003-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: cfakt @2004-01-01..2004-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: fpmark @1991-01-01..1991-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: fpmark @1992-01-01..1992-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: isocb @2001-01-01..2001-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: isocb @2002-01-01..2002-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: isocb @2003-01-01..2003-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: isocb @2004-01-01..2004-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: isocbu @2004-01-01..2004-12-31 where key = 'v2722'"
+fields = { "variable" = "ekonomiskt-bistand-uppdelat" }
+evidence = "Both definitions cover means-tested social assistance for subsistence and other living needs, and both divide the SEK amount equally between applicant and co-applicant. ISOCBU has adjacent periods meeting at day 12784 in the population panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: ukufack @2005-01-01..2005-12-31 where key = 'v3319'"
+fields = { "variable" = "fackforeningsavgift-ku" }
+evidence = "Both measure trade-union dues in SEK. The earlier label specifies dues reported on control statements, with KURU record type 60 as the source; the later definition specifies dues paid during the year. UKUFACK changes ownership at day 12784 in both tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: ukufack @2006-01-01..2006-12-31 where key = 'v3319'"
+fields = { "variable" = "fackforeningsavgift-ku" }
+evidence = "Both measure trade-union dues in SEK. The earlier label specifies dues reported on control statements, with KURU record type 60 as the source; the later definition specifies dues paid during the year. UKUFACK changes ownership at day 12784 in both tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: bexproi @1997-01-01..1997-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: bexproi @1998-01-01..1998-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: cfakt @1994-01-01..1994-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: cfakt @1995-01-01..1995-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: cfakt @1996-01-01..1996-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: cfakt @1997-01-01..1997-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: cfakt @1998-01-01..1998-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: fpmark @1991-01-01..1991-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: fpmark @1992-01-01..1992-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bexproi @1997-01-01..1997-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bexproi @1998-01-01..1998-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: cfakt @1994-01-01..1994-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: cfakt @1995-01-01..1995-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: cfakt @1996-01-01..1996-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: cfakt @1997-01-01..1997-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: cfakt @1998-01-01..1998-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: fpmark @1991-01-01..1991-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: fpmark @1992-01-01..1992-12-31 where key = 'v2699'"
+fields = { "variable" = "bfpmark" }
+evidence = "Both define a pension indicator obtained from statements by social benefit payers, with character type and selector v2699. FPMARK covers [7670,8401), followed by BFPMARK over [8401,9496), in the population panel and both tax household sample tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @1999-01-01..1999-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @2000-01-01..2000-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @2001-01-01..2001-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @2002-01-01..2002-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @2003-01-01..2003-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: asfavg @2004-01-01..2004-12-31 where key = 'v5561'"
+fields = { "variable" = "underlag-foraldraforsakringsavgift" }
+evidence = "Both definitions specify the assessment base for a 2.2% parental insurance contribution, measured in SEK. Only the later label omits the rate. ASFAVG has adjacent coverage at day 12784 in both the population-panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @1999-01-01..1999-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @2000-01-01..2000-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @2001-01-01..2001-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @2002-01-01..2002-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @2003-01-01..2003-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: askad @2004-01-01..2004-12-31 where key = 'v5565'"
+fields = { "variable" = "underlag-arbetsskadeavgift" }
+evidence = "Both define the work-injury contribution assessment base in SEK. The earlier label specifies a 1.38% rate. Both use integer ASKAD in the population panel and foreign-born supplementary tables, with adjacent periods meeting at day 12784."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @1999-01-01..1999-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @2000-01-01..2000-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @2001-01-01..2001-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @2002-01-01..2002-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @2003-01-01..2003-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bexproi @2004-01-01..2004-12-31 where key = 'v5591'"
+fields = { "variable" = "skatteunderlag" }
+evidence = "Both definitions identify the income-tax exemption method with progression. Both use the complete identical binary list: 0 means the method was not applied and 1 means it was applied. BEXPROI changes ownership at day 12784 in both tables without overlapping occurrences."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2012-01-01..2012-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2013-01-01..2013-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2014-01-01..2014-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2015-01-01..2015-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2016-01-01..2016-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2017-01-01..2017-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bnation @2018-01-01..2018-12-31 where key = 'v271'"
+fields = { "variable" = "bnat" }
+evidence = "Both definitions specify the person's prioritized citizenship country, with the earlier definition explicitly saying plain text. Country-name observations end and begin at day 15340 without overlap. Shared country codes retain their meanings despite label capitalization changes."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @1999-01-01..1999-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @2000-01-01..2000-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @2001-01-01..2001-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @2002-01-01..2002-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @2003-01-01..2003-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: cfakt @2004-01-01..2004-12-31 where key = 'v85'"
+fields = { "variable" = "faktorinkomst-individ" }
+evidence = "Both describe factor income as income from labor and capital, in SEK; the later definition details primary income plus capital income. CFAKT changes ownership at day 12784 in both the population panel and foreign-born supplement without overlap. Earlier FAKTIN observations remain separated by the supplied gap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: isocb @2001-01-01..2001-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: isocb @2002-01-01..2002-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: isocb @2003-01-01..2003-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: isocb @2004-01-01..2004-12-31 where key = 'v2174'"
+fields = { "variable" = "ekonomiskt-bistand" }
+evidence = "Financial assistance and income support both cover assistance for subsistence and other living needs when these cannot be met otherwise. Both assign the SEK amount to its recipient. ISOCB passes between them at day 12784 in both the population-panel and foreign-born supplementary tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: isocbu @2004-01-01..2004-12-31 where key = 'v2722'"
+fields = { "variable" = "ekonomiskt-bistand-uppdelat" }
+evidence = "Both definitions cover means-tested social assistance for subsistence and other living needs, and both divide the SEK amount equally between applicant and co-applicant. ISOCBU has adjacent periods meeting at day 12784 in the population panel and foreign-born supplementary tables."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: ukufack @2005-01-01..2005-12-31 where key = 'v3319'"
+fields = { "variable" = "fackforeningsavgift-ku" }
+evidence = "Both measure trade-union dues in SEK. The earlier label specifies dues reported on control statements, with KURU record type 60 as the source; the later definition specifies dues paid during the year. UKUFACK changes ownership at day 12784 in both tables without overlap."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: ukufack @2006-01-01..2006-12-31 where key = 'v3319'"
+fields = { "variable" = "fackforeningsavgift-ku" }
+evidence = "Both measure trade-union dues in SEK. The earlier label specifies dues reported on control statements, with KURU record type 60 as the source; the later definition specifies dues paid during the year. UKUFACK changes ownership at day 12784 in both tables without overlap."

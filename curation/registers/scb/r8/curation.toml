@@ -901,20 +901,8 @@ evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:avregistreringsorsak"
-fields = { "sets" = ["avregistreringsorsak"] }
-evidence = "Samma avregistreringsorsak är korrekt uppdelad efter period mot avregorsak.\ncatalog:occurrence:103656\ncatalog:occurrence:103857"
-
-[[statement]]
-kind = "set"
-subject = "var:avregistreringsorsak"
-fields = { "tags" = ["transport"] }
-evidence = "Samma avregistreringsorsak är korrekt uppdelad efter period mot avregorsak.\ncatalog:occurrence:103656\ncatalog:occurrence:103857"
-
-[[statement]]
-kind = "set"
 subject = "var:avregorsak"
-fields = { "sets" = ["avregistreringsorsak"] }
+fields = { "sets" = [] }
 evidence = "Samma kolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
 
 [[statement]]
@@ -3070,3 +3058,21 @@ kind = "set"
 subject = "var:yrkesmassig-trafik-uthyrning"
 fields = { "tags" = ["transport"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11967"
+
+[[statement]]
+kind = "set"
+subject = "bussar: avrors @2009-12-31..2009-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: avrors @2008-12-31..2008-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: avrors @2009-12-31..2009-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."

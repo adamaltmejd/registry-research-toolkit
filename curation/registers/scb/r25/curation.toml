@@ -2792,18 +2792,6 @@ evidence = "AGS-beloppet hör till särskild löneskatt på förvärvsinkomster.
 
 [[statement]]
 kind = "set"
-subject = "var:ags-sarskild-loneskatt-individ"
-fields = { "sets" = [] }
-evidence = "Den angränsande mappningen till pagsft behöver granskas. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Beskrivningen anger AGS som underlag för särskild löneskatt, vilket den fasta definitionen undantar trots tidigare medlemsförslag. membership-0308: Skatten nämns endast som avräknad komponent i slutlig skatt. membership-0309: Den fasta kandidaten upptar uttryckligen AGS-komponenten; medlemskapet behålls trots beskrivningens motstridiga underlagsangivelse. membership-0310: Den valda posten är ett beskattningsunderlag, vilket kandidaten exkluderar. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel mäter särskild löneskatt på förvärvsinkomster. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: AGS/TFA-variabeln mäter ersättning, inte särskild löneskatt. membership-0315: Ingen vald variabel avser särskild löneskatt på förvärvsinkomster. membership-0316: Ingen vald variabel mäter särskild löneskatt på förvärvsinkomster. membership-0317: Inga valda variabler avser särskild löneskatt på förvärvsinkomster. membership-0318: PAGSFT stöds här som förtidspension enligt AGS, inte som särskild löneskatt; en angränsande kolumnägare ändrar inte detta. membership-0319: Inga valda variabler mäter särskild löneskatt på förvärvsinkomster. membership-0320: Beloppet är särskild löneskatt på förvärvsinkomster; motsvarande underlag utesluts och skyddat medlemskap behålls. membership-0321: Valda separata löneskattebelopp gäller pensionskostnader. membership-0322: Inget valt id mäter särskild löneskatt på förvärvsinkomster. membership-0323: AGS-engångsbeloppet är försäkringsersättning, inte särskild löneskatt. membership-0324: De valda särskilda löneskattevariablerna mäter pensionskostnadsunderlag, inte skatt på förvärvsinkomster. membership-0325: Inget valt mått avser särskild löneskatt på förvärvsinkomster. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den aktuella beskrivningen anger uttryckligen AGS som underlag för särskild löneskatt på förvärvsinkomster. membership-0308: Ingen vald variabel mäter detta löneskatteunderlag. membership-0309: Beskrivningen anger uttryckligen att AGS-beloppet är underlag för särskild löneskatt på förvärvsinkomster. membership-0310: ASLSFP mäter uttryckligen underlag för särskild löneskatt på förvärvsinkomst. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Ingen vald variabel anges som underlag för särskild löneskatt på förvärvsinkomst. membership-0315: Ingen vald variabel avser detta löneskatteunderlag. membership-0316: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0317: Inga valda variabler avser underlag för särskild löneskatt på förvärvsinkomst. membership-0318: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0319: Inga valda variabler mäter detta löneskatteunderlag. membership-0320: Etikett och beskrivning anger uttryckligen underlag för särskild löneskatt på förvärvsinkomst. membership-0321: Valda ersättningar anger frånvaro av avgiftsunderlag, inte ett sådant underlagsbelopp. membership-0322: Inget valt id mäter detta löneskatteunderlag. membership-0323: Ingen vald variabel i denna sektion mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0324: De valda särskilda löneskatteunderlagen avser pensionskostnader, som definitionen utesluter. membership-0325: Inget valt mått avser underlag för särskild löneskatt på förvärvsinkomst.\ncatalog:occurrence:277995\ncatalog:occurrence:277996\ncatalog:occurrence:279197\ncatalog:occurrence:279198\ncatalog:variable_text:30416:18628:20089\ncatalog:variable_text:30417:17897:20089\ncatalog:variable_text:30553:10592:13514\ncatalog:variable_text:30949:7670:20089\ncatalog:variable_text:31447:10227:17897\ncatalog:variable_text:31592:13514:18262\ncatalog:variable_text:31593:7670:20089\ncatalog:variable_text:31685:13514:17897\ncatalog:variable_text:31686:17897:20089\ncatalog:variable_text:31726:14975:20089\ncatalog:variable_text:31765:8766:20089\ncatalog:variable_text:31766:8766:20089\ncatalog:variable_text:31924:17897:20089\ncatalog:variable_text:32008:9862:10227\ncatalog:variable_text:32009:10227:20089\ncatalog:variable_text:32010:9862:10227\ncatalog:variable_text:32011:10227:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ags-sarskild-loneskatt-individ"
-fields = { "tags" = ["taxation"] }
-evidence = "Den angränsande mappningen till pagsft behöver granskas. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Beskrivningen anger AGS som underlag för särskild löneskatt, vilket den fasta definitionen undantar trots tidigare medlemsförslag. membership-0308: Skatten nämns endast som avräknad komponent i slutlig skatt. membership-0309: Den fasta kandidaten upptar uttryckligen AGS-komponenten; medlemskapet behålls trots beskrivningens motstridiga underlagsangivelse. membership-0310: Den valda posten är ett beskattningsunderlag, vilket kandidaten exkluderar. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel mäter särskild löneskatt på förvärvsinkomster. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: AGS/TFA-variabeln mäter ersättning, inte särskild löneskatt. membership-0315: Ingen vald variabel avser särskild löneskatt på förvärvsinkomster. membership-0316: Ingen vald variabel mäter särskild löneskatt på förvärvsinkomster. membership-0317: Inga valda variabler avser särskild löneskatt på förvärvsinkomster. membership-0318: PAGSFT stöds här som förtidspension enligt AGS, inte som särskild löneskatt; en angränsande kolumnägare ändrar inte detta. membership-0319: Inga valda variabler mäter särskild löneskatt på förvärvsinkomster. membership-0320: Beloppet är särskild löneskatt på förvärvsinkomster; motsvarande underlag utesluts och skyddat medlemskap behålls. membership-0321: Valda separata löneskattebelopp gäller pensionskostnader. membership-0322: Inget valt id mäter särskild löneskatt på förvärvsinkomster. membership-0323: AGS-engångsbeloppet är försäkringsersättning, inte särskild löneskatt. membership-0324: De valda särskilda löneskattevariablerna mäter pensionskostnadsunderlag, inte skatt på förvärvsinkomster. membership-0325: Inget valt mått avser särskild löneskatt på förvärvsinkomster. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den aktuella beskrivningen anger uttryckligen AGS som underlag för särskild löneskatt på förvärvsinkomster. membership-0308: Ingen vald variabel mäter detta löneskatteunderlag. membership-0309: Beskrivningen anger uttryckligen att AGS-beloppet är underlag för särskild löneskatt på förvärvsinkomster. membership-0310: ASLSFP mäter uttryckligen underlag för särskild löneskatt på förvärvsinkomst. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Ingen vald variabel anges som underlag för särskild löneskatt på förvärvsinkomst. membership-0315: Ingen vald variabel avser detta löneskatteunderlag. membership-0316: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0317: Inga valda variabler avser underlag för särskild löneskatt på förvärvsinkomst. membership-0318: Ingen vald variabel mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0319: Inga valda variabler mäter detta löneskatteunderlag. membership-0320: Etikett och beskrivning anger uttryckligen underlag för särskild löneskatt på förvärvsinkomst. membership-0321: Valda ersättningar anger frånvaro av avgiftsunderlag, inte ett sådant underlagsbelopp. membership-0322: Inget valt id mäter detta löneskatteunderlag. membership-0323: Ingen vald variabel i denna sektion mäter underlag för särskild löneskatt på förvärvsinkomst. membership-0324: De valda särskilda löneskatteunderlagen avser pensionskostnader, som definitionen utesluter. membership-0325: Inget valt mått avser underlag för särskild löneskatt på förvärvsinkomst.\ncatalog:occurrence:277995\ncatalog:occurrence:277996\ncatalog:occurrence:279197\ncatalog:occurrence:279198\ncatalog:variable_text:30416:18628:20089\ncatalog:variable_text:30417:17897:20089\ncatalog:variable_text:30553:10592:13514\ncatalog:variable_text:30949:7670:20089\ncatalog:variable_text:31447:10227:17897\ncatalog:variable_text:31592:13514:18262\ncatalog:variable_text:31593:7670:20089\ncatalog:variable_text:31685:13514:17897\ncatalog:variable_text:31686:17897:20089\ncatalog:variable_text:31726:14975:20089\ncatalog:variable_text:31765:8766:20089\ncatalog:variable_text:31766:8766:20089\ncatalog:variable_text:31924:17897:20089\ncatalog:variable_text:32008:9862:10227\ncatalog:variable_text:32009:10227:20089\ncatalog:variable_text:32010:9862:10227\ncatalog:variable_text:32011:10227:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:livranta-ags-ersattning-familj"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den uttryckligen namngivna härledda livräntevarianten behålls; beskrivningens pensionssummering kräver definitionsgranskning. membership-0308: Variabeln summerar livräntor utan pensionsbelopp. Samredovisade pensions- och livräntemått är uteslutna. membership-0309: Variabeln anger separat skattefri livränta från försäkring, utan angiven avgränsning till arbetsskadelivränta. membership-0310: De valda livräntorna är uttryckligen arbetsskadelivräntor, vilka kandidaten exkluderar. membership-0311: Sektionens livränta samredovisas med barnpension och utesluts därför från separat livränta. membership-0312: Ingen vald variabel mäter livränta. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Koderna 421, 423 och 429 avser uttryckligen livränta uppdelad efter skatteplikt. Kod 420 avser pension och kod 426 engångsbelopp. membership-0315: Ingen vald variabel avser livränta. membership-0316: INLIVR är uttryckligen deklarerad livränta enligt etiketten och den källstödda bedömningen. membership-0317: Beloppen stöds som livränta och definitionen inkluderar uttryckligen härledd redovisning. Den härledda summans pensionsinnehåll kräver granskning men dess fasta inkludering behålls. membership-0318: PARBLEP är särskilt redovisad arbetsskadelivränta och PBLIVSF en summa med pension; båda undantas. membership-0319: Beskrivningarna anger personskadelivränta eller annan livränta med skatteavgränsning. Särskilt redovisade yrkes- och arbetsskadelivräntor förs till arbetsskadeersättning. membership-0320: Ingen vald variabel särredovisar livränta. membership-0321: Separat redovisad skattefri försäkringslivränta omfattas; samredovisad pension och livränta utesluts. membership-0322: Den valda livräntan samredovisas med privat pension och är uttryckligen utesluten från separata livräntebelopp. membership-0323: Ingen vald variabel i denna sektion mäter separat livränta. membership-0324: Inga valda variabler mäter livränta. membership-0325: Inget valt mått avser livränta. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Barnpensionsvarianten är en bredare summa med barnpension; härledd livränta innehåller även skattepliktiga belopp. Ingen är ett avgränsat mått på kandidatens skattefria pension och livränta. membership-0308: Definitionen omfattar skattefria samredovisade pensions- och livräntebelopp samt uttryckliga pensionskomponenter. membership-0309: Variabeln mäter uttryckligen skattefri livränta, en tillåten separat livräntekomponent. membership-0310: Ingen vald variabel mäter den definierade skattefria pensions- och livränteposten eller en uttrycklig sådan komponent. membership-0311: Den skattefria barnpensionssumman är en särskilt namngiven barnförmån och saknar stöd som kandidatens allmänna pensions- eller livräntekomponent. membership-0312: Ingen vald variabel mäter uttryckligen skattefri pension eller livränta. membership-0313: Ingen vald pensionsvariabel anges som skattefri pension eller livränta. membership-0314: Definitionen omfattar uttryckliga skattefria pensions- och livräntekomponenter. Kod 426 är ett personskadeengångsbelopp och omfattas inte. membership-0315: Frivillig skattefri pension är ett separat förmånsmått, inte en uttrycklig komponent av den definierade pensions- och livräntesumman. membership-0316: INPENS är uttryckligen helt skattepliktig och INLIVR saknar stöd för en skattefri avgränsning. membership-0317: De valda livräntebeloppen är skattepliktiga, delvis skattepliktiga eller blandade summor. Ingen vald variabel särredovisar kandidatens skattefria belopp. membership-0318: PBLIVSF mäter uttryckligen skattefri barnpension, livränta och pension som samredovisat belopp. membership-0319: Källan anger uttryckligen skattefri pension och livränta. Blandade skattepliktiga och skattefria totaler utesluts. membership-0320: Skattefri sjuk- och aktivitetsersättning och sjukpenning är andra ersättningar, inte kandidatens pensions- och livräntebelopp. membership-0321: Samredovisat skattefritt belopp och uttryckliga separata livränte- och pensionskomponenter omfattas. membership-0322: Den valda pensions-/livräntesumman anger skattepliktig livränta, inte skattefri pension eller livränta. membership-0323: Ingen vald variabel mäter skattefri pension eller livränta; pensionssparkontot avser skattepliktig del. membership-0324: Vissa ej skattepliktiga ersättningar anges inte som pension eller livränta. membership-0325: Inget valt mått avser skattefri pension eller livränta.\ncatalog:variable_text:30418:7305:7670\ncatalog:variable_text:30528:6574:10592\ncatalog:variable_text:30529:10592:12418\ncatalog:variable_text:30530:17532:20089\ncatalog:variable_text:30632:14975:20089\ncatalog:variable_text:30633:17167:20089\ncatalog:variable_text:30634:7670:20089\ncatalog:variable_text:30891:3652:8401\ncatalog:variable_text:30928:12053:20089\ncatalog:variable_text:30956:12784:20089\ncatalog:variable_text:30957:12784:20089\ncatalog:variable_text:30958:12784:20089\ncatalog:variable_text:30959:12784:20089\ncatalog:variable_text:30960:12784:20089\ncatalog:variable_text:30961:12784:20089\ncatalog:variable_text:30962:12784:20089\ncatalog:variable_text:30963:12784:20089\ncatalog:variable_text:30964:12784:20089\ncatalog:variable_text:30965:12784:20089\ncatalog:variable_text:31075:4383:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31171:7305:7670\ncatalog:variable_text:31292:6209:7670\ncatalog:variable_text:31315:18628:20089\ncatalog:variable_text:31316:17167:20089\ncatalog:variable_text:31317:3652:6574\ncatalog:variable_text:31318:18628:20089\ncatalog:variable_text:31319:10227:20089\ncatalog:variable_text:31320:6574:7670\ncatalog:variable_text:31449:17532:20089\ncatalog:variable_text:31452:18262:20089\ncatalog:variable_text:31463:18262:20089\ncatalog:variable_text:31464:18628:20089\ncatalog:variable_text:31465:14975:20089\ncatalog:variable_text:31466:17167:20089\ncatalog:variable_text:31504:12784:20089\ncatalog:variable_text:31505:12784:20089\ncatalog:variable_text:31506:12784:20089\ncatalog:variable_text:31507:12784:20089\ncatalog:variable_text:31508:12784:20089\ncatalog:variable_text:31509:12784:20089\ncatalog:variable_text:31637:17167:20089\ncatalog:variable_text:31656:4748:5844\ncatalog:variable_text:31657:7305:14610\ncatalog:variable_text:31658:4748:7305\ncatalog:variable_text:31670:7670:20089\ncatalog:variable_text:31671:18628:20089\ncatalog:variable_text:31674:2922:7670\ncatalog:variable_text:31675:14975:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31840:7670:20089\ncatalog:variable_text:31841:18628:20089\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32069:14975:17897\ncatalog:variable_text:32070:17897:20089\ncatalog:variable_text:32083:17532:20089"
@@ -5012,18 +5000,6 @@ evidence = "Avs-familjens förkortningar är läsbara; avdraget avser skatt.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:avsext"
-fields = { "sets" = ["extra-avdrag"] }
-evidence = "Avs-familjens förkortningar är läsbara. Det statliga extra avdraget är samma begrepp korrekt uppdelat mellan angränsande perioder och hör till extra avdrag.\ncatalog:occurrence:259018\ncatalog:occurrence:259285\ncatalog:variable_text:30605:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:avsext"
-fields = { "tags" = ["taxation"] }
-evidence = "Avs-familjens förkortningar är läsbara. Det statliga extra avdraget är samma begrepp korrekt uppdelat mellan angränsande perioder och hör till extra avdrag.\ncatalog:occurrence:259018\ncatalog:occurrence:259285\ncatalog:variable_text:30605:7305:7670"
-
-[[statement]]
-kind = "set"
 subject = "var:avsforl"
 fields = { "sets" = ["forlustavdrag"] }
 evidence = "Beloppet ingår i förlustavdrag; den daterade operationsdefinitionen bevaras i källhistoriken.\ncatalog:variable_text:30606:2922:7305\ncatalog:variable_text:30606:7305:7670"
@@ -5261,18 +5237,6 @@ kind = "set"
 subject = "var:barn-vuxen-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Samma källkolumn har olika ägare och åldersgränsen kan inte jämföras med tillgänglig evidens.\ncatalog:occurrence:271440\ncatalog:occurrence:279943\ncatalog:variable_text:30625:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:barna"
-fields = { "sets" = [] }
-evidence = "Definitionen anger åldersgrupper medan värdemängden anger antal barn; relationen till den angränsande ägaren behöver granskas.\ncatalog:occurrence:256976\ncatalog:occurrence:257101\ncatalog:valueset:9896"
-
-[[statement]]
-kind = "set"
-subject = "var:barna"
-fields = { "tags" = ["demographics", "family-household"] }
-evidence = "Definitionen anger åldersgrupper medan värdemängden anger antal barn; relationen till den angränsande ägaren behöver granskas.\ncatalog:occurrence:256976\ncatalog:occurrence:257101\ncatalog:valueset:9896"
 
 [[statement]]
 kind = "set"
@@ -10280,18 +10244,6 @@ evidence = "Källkoden är en ogenomskinlig förkortning; etiketten anger markna
 
 [[statement]]
 kind = "set"
-subject = "var:fp"
-fields = { "sets" = ["folkpensionsbelopp"] }
-evidence = "Identitetsfakta visar angränsande och periodsplittade ägare.\ncatalog:occurrence:256801\ncatalog:occurrence:259339\ncatalog:occurrence:259574\ncatalog:occurrence:259866"
-
-[[statement]]
-kind = "set"
-subject = "var:fp"
-fields = { "tags" = ["transfers"] }
-evidence = "Identitetsfakta visar angränsande och periodsplittade ägare.\ncatalog:occurrence:256801\ncatalog:occurrence:259339\ncatalog:occurrence:259574\ncatalog:occurrence:259866"
-
-[[statement]]
-kind = "set"
 subject = "var:fp1"
 fields = { "sets" = ["folkpensionsbelopp"] }
 evidence = "FP är en opak källkod; 1 är en källkolumnsslot.\ncatalog:variable_text:31068:4018:7305"
@@ -12236,18 +12188,6 @@ evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31235:
 
 [[statement]]
 kind = "set"
-subject = "var:kfkufon3"
-fields = { "sets" = ["kapitalforlust"] }
-evidence = "Identitetsfaktet kräver granskning av perioddelningen.\ncatalog:occurrence:262229\ncatalog:occurrence:264855"
-
-[[statement]]
-kind = "set"
-subject = "var:kfkufon3"
-fields = { "tags" = ["income"] }
-evidence = "Identitetsfaktet kräver granskning av perioddelningen.\ncatalog:occurrence:262229\ncatalog:occurrence:264855"
-
-[[statement]]
-kind = "set"
 subject = "var:realisationsforlust-annan-fond"
 fields = { "sets" = ["kapitalforlust"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31237:10592:10957"
@@ -13013,18 +12953,6 @@ kind = "set"
 subject = "var:kvinnans-sammanraknade-forvarvsinkomst"
 fields = { "tags" = ["income"] }
 evidence = "Kvinnans belopp ingår i kandidatgruppen.\ncatalog:variable_text:31300:7670:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:kvkufon3"
-fields = { "sets" = ["kapitalvinst"] }
-evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:262251\ncatalog:occurrence:264881"
-
-[[statement]]
-kind = "set"
-subject = "var:kvkufon3"
-fields = { "tags" = ["income"] }
-evidence = "Källkolumnen har olika ägare i observerade perioder.\ncatalog:occurrence:262251\ncatalog:occurrence:264881"
 
 [[statement]]
 kind = "set"
@@ -14691,7 +14619,7 @@ evidence = "Identitetsfakta visar angränsande ägare för PAGSFT.\ncatalog:occu
 [[statement]]
 kind = "set"
 subject = "var:pagsft"
-fields = { "tags" = ["transfers"] }
+fields = { "tags" = ["taxation", "transfers"] }
 evidence = "Identitetsfakta visar angränsande ägare för PAGSFT.\ncatalog:occurrence:277995\ncatalog:occurrence:277996\ncatalog:occurrence:279197\ncatalog:occurrence:279198"
 
 [[statement]]
@@ -14849,18 +14777,6 @@ kind = "set"
 subject = "var:penshel"
 fields = { "tags" = ["transfers"] }
 evidence = "Helt skattepliktig pension och livränta ingår i gruppen.\ncatalog:variable_text:31460:6574:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:pension-enligt-ku"
-fields = { "sets" = [] }
-evidence = "BELPENS och KUPENS har andra ägare i angränsande perioder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel redovisar pension enligt kontrolluppgift eller den definierade pensionssumman. membership-0308: Definitionen omfattar pension enligt kontrolluppgift och den uttryckliga summan av allmän pension och tjänstepension. membership-0309: Den tidigare källbedömningen placerar uttryckligen pensionssumman i denna kandidat; beskrivningen anger en summering med allmän pension och tjänstepension. membership-0310: Ingen vald variabel mäter den definierade pensionssumman enligt kontrolluppgift. membership-0311: Sektionens pensionsmått är särskilda pensionstyper och komponenter; BELPENS anger uttryckligen folkpensionsbelopp. membership-0312: Den valda norska pensionsinkomsten saknar stöd för kontrolluppgiftsanknytning eller kandidatens uttryckliga pensionssummeringar. membership-0313: Inget valt sektionsmått stöds som pensionssumma enligt kontrolluppgift. membership-0314: Folkpensionsbelopp och kod 420 är separat redovisade pensionskomponenter, inte kandidatens pensionssummeringar. membership-0315: Valda pensionsbelopp är enskilda förmåner och inte den definierade kontrolluppgiftssumman. membership-0316: Valda deklarerade pensionsbelopp stöds inte som pension enligt kontrolluppgift. membership-0317: Kommunal tjänstepension och samredovisad livränta/pension är inte kandidatens pensionssummor enligt kontrolluppgift. membership-0318: Valda pensionsbelopp särredovisar förmåner eller blandade pensionsslag och stöds inte som gruppens pensionssummor enligt kontrolluppgift. membership-0319: Etiketter och beskrivningar styrker pension enligt kontrolluppgift. Identitetsfrågorna hindrar inte denna koncepttillhörighet. Pensionsbelopp-familj saknar stöd för kontrolluppgiftsavgränsningen. membership-0320: Ingen vald variabel avser pensionssumma enligt kontrolluppgift. membership-0321: Valda pensionsbelopp är inte belagda som pension enligt kontrolluppgift eller angiven pensionssummering. membership-0322: KU-pensionssummorna och uttryckliga summeringar av allmän pension och tjänstepension omfattas. membership-0323: Pensions- och bidragssumman innehåller andra skattepliktiga bidrag och utesluts därför; övriga pensionsvariabler saknar stöd för kandidatens KU-summa. membership-0324: Inga valda variabler mäter pension enligt kontrolluppgift. membership-0325: Valt pensionsförsäkringsbelopp avser inbetalning, inte pension enligt kontrolluppgift. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Avtalspensionen stöds som tjänstepensionsbelopp. membership-0308: Den valda pensionssumman innehåller även allmän pension och är uttryckligen utesluten. membership-0309: Vald tjänstepensionsanknuten pensionssumma innehåller också allmän pension och omfattas inte. membership-0310: De valda ATP- och efterlevandepensionsbeloppen är inte tjänstepension. membership-0311: Den granskade källbedömningen anger att avtalspensionen omfattar tjänstepensionsbelopp. membership-0312: Norsk pensionsinkomst saknar uttrycklig tjänstepensionsanknytning och ger därför inget stöd för medlemskap. membership-0313: Delpension och efterlevandepension till barn stöds inte som tjänstepensionsbelopp. membership-0314: Inga valda variabler anges som tjänstepensionsbelopp. membership-0315: Markeringen för pensionsförmån efter anställning mäter inte tjänstepensionsbelopp. membership-0316: Valda deklarerade pensionsbelopp identifieras inte som tjänstepension. membership-0317: Kommunala tjänstepensionsbelopp är namngivna systembelopp inom tjänstepension. membership-0318: Beloppet avser övriga tjänste- och tilläggspensioner efter att namngivna tjänstepensionssystem undantagits. Den äldre summan med privata pensioner undantas uttryckligen. membership-0319: Beskrivningen för pension-enligt-ku anger arbetsgivarutbetald tjänstepension; övriga två avser namngivna kommunala och övriga SPV-tjänstepensioner. Blandade pensionssummor utesluts. membership-0320: Ingen vald variabel avser tjänstepensionsbelopp. membership-0321: Ingen vald variabel anger tjänstepension enligt avgränsningen. membership-0322: Total tjänstepension och namngivna arbetsgivar- och avtalssystem omfattas, inklusive KPA, ITP och STP. Summor med allmän eller privat pension utesluts. membership-0323: Den enda valda direkt tjänstepensionsanknutna variabeln är en förekomstmarkering, vilket inte omfattas av den fasta beloppsdefinitionen. membership-0324: Pensionskostnadsunderlagen mäter inte tjänstepensionsutbetalningar. membership-0325: Valt inbetalt pensionssparande är inte tjänstepensionsutbetalning.\ncatalog:occurrence:257104\ncatalog:occurrence:257240\ncatalog:occurrence:259152\ncatalog:occurrence:259383\ncatalog:valueset:10571\ncatalog:variable_text:30446:16436:17532\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30489:12053:20089\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30607:18628:20089\ncatalog:variable_text:30608:12053:17167\ncatalog:variable_text:30608:17167:20089\ncatalog:variable_text:30630:10227:12053\ncatalog:variable_text:30631:10227:12053\ncatalog:variable_text:30633:17167:20089\ncatalog:variable_text:30634:7670:20089\ncatalog:variable_text:30635:8401:20089\ncatalog:variable_text:30637:17167:20089\ncatalog:variable_text:30667:3287:3652\ncatalog:variable_text:30668:3287:3652\ncatalog:variable_text:30670:3287:4018\ncatalog:variable_text:30808:13149:14245\ncatalog:variable_text:30891:3652:8401\ncatalog:variable_text:30928:12053:20089\ncatalog:variable_text:30956:12784:20089\ncatalog:variable_text:30957:12784:20089\ncatalog:variable_text:31021:9496:12053\ncatalog:variable_text:31035:12053:20089\ncatalog:variable_text:31037:17167:20089\ncatalog:variable_text:31038:13514:20089\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31075:4383:20089\ncatalog:variable_text:31076:4383:20089\ncatalog:variable_text:31078:17167:20089\ncatalog:variable_text:31083:17167:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31171:7305:7670\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31320:6574:7670\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31447:10227:17897\ncatalog:variable_text:31448:12053:20089\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31451:12053:20089\ncatalog:variable_text:31452:18262:20089\ncatalog:variable_text:31453:8401:12784\ncatalog:variable_text:31461:4018:7305\ncatalog:variable_text:31462:17167:20089\ncatalog:variable_text:31475:7305:9131\ncatalog:variable_text:31503:12418:12784\ncatalog:variable_text:31519:12418:12784\ncatalog:variable_text:31670:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31784:12418:17897\ncatalog:variable_text:31785:10227:17897\ncatalog:variable_text:31825:7670:17897\ncatalog:variable_text:31826:17897:20089\ncatalog:variable_text:31827:18628:20089\ncatalog:variable_text:31834:17167:17897\ncatalog:variable_text:31835:17897:20089\ncatalog:variable_text:31836:17897:20089\ncatalog:variable_text:31837:14975:17897\ncatalog:variable_text:31876:10227:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31878:12053:17897\ncatalog:variable_text:31879:8766:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31881:7305:17897\ncatalog:variable_text:31882:17897:20089\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31905:17167:20089\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32008:9862:10227\ncatalog:variable_text:32009:10227:20089\ncatalog:variable_text:32010:9862:10227\ncatalog:variable_text:32011:10227:20089\ncatalog:variable_text:32083:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:pension-enligt-ku"
-fields = { "tags" = ["transfers"] }
-evidence = "BELPENS och KUPENS har andra ägare i angränsande perioder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel redovisar pension enligt kontrolluppgift eller den definierade pensionssumman. membership-0308: Definitionen omfattar pension enligt kontrolluppgift och den uttryckliga summan av allmän pension och tjänstepension. membership-0309: Den tidigare källbedömningen placerar uttryckligen pensionssumman i denna kandidat; beskrivningen anger en summering med allmän pension och tjänstepension. membership-0310: Ingen vald variabel mäter den definierade pensionssumman enligt kontrolluppgift. membership-0311: Sektionens pensionsmått är särskilda pensionstyper och komponenter; BELPENS anger uttryckligen folkpensionsbelopp. membership-0312: Den valda norska pensionsinkomsten saknar stöd för kontrolluppgiftsanknytning eller kandidatens uttryckliga pensionssummeringar. membership-0313: Inget valt sektionsmått stöds som pensionssumma enligt kontrolluppgift. membership-0314: Folkpensionsbelopp och kod 420 är separat redovisade pensionskomponenter, inte kandidatens pensionssummeringar. membership-0315: Valda pensionsbelopp är enskilda förmåner och inte den definierade kontrolluppgiftssumman. membership-0316: Valda deklarerade pensionsbelopp stöds inte som pension enligt kontrolluppgift. membership-0317: Kommunal tjänstepension och samredovisad livränta/pension är inte kandidatens pensionssummor enligt kontrolluppgift. membership-0318: Valda pensionsbelopp särredovisar förmåner eller blandade pensionsslag och stöds inte som gruppens pensionssummor enligt kontrolluppgift. membership-0319: Etiketter och beskrivningar styrker pension enligt kontrolluppgift. Identitetsfrågorna hindrar inte denna koncepttillhörighet. Pensionsbelopp-familj saknar stöd för kontrolluppgiftsavgränsningen. membership-0320: Ingen vald variabel avser pensionssumma enligt kontrolluppgift. membership-0321: Valda pensionsbelopp är inte belagda som pension enligt kontrolluppgift eller angiven pensionssummering. membership-0322: KU-pensionssummorna och uttryckliga summeringar av allmän pension och tjänstepension omfattas. membership-0323: Pensions- och bidragssumman innehåller andra skattepliktiga bidrag och utesluts därför; övriga pensionsvariabler saknar stöd för kandidatens KU-summa. membership-0324: Inga valda variabler mäter pension enligt kontrolluppgift. membership-0325: Valt pensionsförsäkringsbelopp avser inbetalning, inte pension enligt kontrolluppgift. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Avtalspensionen stöds som tjänstepensionsbelopp. membership-0308: Den valda pensionssumman innehåller även allmän pension och är uttryckligen utesluten. membership-0309: Vald tjänstepensionsanknuten pensionssumma innehåller också allmän pension och omfattas inte. membership-0310: De valda ATP- och efterlevandepensionsbeloppen är inte tjänstepension. membership-0311: Den granskade källbedömningen anger att avtalspensionen omfattar tjänstepensionsbelopp. membership-0312: Norsk pensionsinkomst saknar uttrycklig tjänstepensionsanknytning och ger därför inget stöd för medlemskap. membership-0313: Delpension och efterlevandepension till barn stöds inte som tjänstepensionsbelopp. membership-0314: Inga valda variabler anges som tjänstepensionsbelopp. membership-0315: Markeringen för pensionsförmån efter anställning mäter inte tjänstepensionsbelopp. membership-0316: Valda deklarerade pensionsbelopp identifieras inte som tjänstepension. membership-0317: Kommunala tjänstepensionsbelopp är namngivna systembelopp inom tjänstepension. membership-0318: Beloppet avser övriga tjänste- och tilläggspensioner efter att namngivna tjänstepensionssystem undantagits. Den äldre summan med privata pensioner undantas uttryckligen. membership-0319: Beskrivningen för pension-enligt-ku anger arbetsgivarutbetald tjänstepension; övriga två avser namngivna kommunala och övriga SPV-tjänstepensioner. Blandade pensionssummor utesluts. membership-0320: Ingen vald variabel avser tjänstepensionsbelopp. membership-0321: Ingen vald variabel anger tjänstepension enligt avgränsningen. membership-0322: Total tjänstepension och namngivna arbetsgivar- och avtalssystem omfattas, inklusive KPA, ITP och STP. Summor med allmän eller privat pension utesluts. membership-0323: Den enda valda direkt tjänstepensionsanknutna variabeln är en förekomstmarkering, vilket inte omfattas av den fasta beloppsdefinitionen. membership-0324: Pensionskostnadsunderlagen mäter inte tjänstepensionsutbetalningar. membership-0325: Valt inbetalt pensionssparande är inte tjänstepensionsutbetalning.\ncatalog:occurrence:257104\ncatalog:occurrence:257240\ncatalog:occurrence:259152\ncatalog:occurrence:259383\ncatalog:valueset:10571\ncatalog:variable_text:30446:16436:17532\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30489:12053:20089\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30607:18628:20089\ncatalog:variable_text:30608:12053:17167\ncatalog:variable_text:30608:17167:20089\ncatalog:variable_text:30630:10227:12053\ncatalog:variable_text:30631:10227:12053\ncatalog:variable_text:30633:17167:20089\ncatalog:variable_text:30634:7670:20089\ncatalog:variable_text:30635:8401:20089\ncatalog:variable_text:30637:17167:20089\ncatalog:variable_text:30667:3287:3652\ncatalog:variable_text:30668:3287:3652\ncatalog:variable_text:30670:3287:4018\ncatalog:variable_text:30808:13149:14245\ncatalog:variable_text:30891:3652:8401\ncatalog:variable_text:30928:12053:20089\ncatalog:variable_text:30956:12784:20089\ncatalog:variable_text:30957:12784:20089\ncatalog:variable_text:31021:9496:12053\ncatalog:variable_text:31035:12053:20089\ncatalog:variable_text:31037:17167:20089\ncatalog:variable_text:31038:13514:20089\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31075:4383:20089\ncatalog:variable_text:31076:4383:20089\ncatalog:variable_text:31078:17167:20089\ncatalog:variable_text:31083:17167:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31171:7305:7670\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31320:6574:7670\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31447:10227:17897\ncatalog:variable_text:31448:12053:20089\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31451:12053:20089\ncatalog:variable_text:31452:18262:20089\ncatalog:variable_text:31453:8401:12784\ncatalog:variable_text:31461:4018:7305\ncatalog:variable_text:31462:17167:20089\ncatalog:variable_text:31475:7305:9131\ncatalog:variable_text:31503:12418:12784\ncatalog:variable_text:31519:12418:12784\ncatalog:variable_text:31670:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31784:12418:17897\ncatalog:variable_text:31785:10227:17897\ncatalog:variable_text:31825:7670:17897\ncatalog:variable_text:31826:17897:20089\ncatalog:variable_text:31827:18628:20089\ncatalog:variable_text:31834:17167:17897\ncatalog:variable_text:31835:17897:20089\ncatalog:variable_text:31836:17897:20089\ncatalog:variable_text:31837:14975:17897\ncatalog:variable_text:31876:10227:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31878:12053:17897\ncatalog:variable_text:31879:8766:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31881:7305:17897\ncatalog:variable_text:31882:17897:20089\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31905:17167:20089\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32008:9862:10227\ncatalog:variable_text:32009:10227:20089\ncatalog:variable_text:32010:9862:10227\ncatalog:variable_text:32011:10227:20089\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
@@ -15053,18 +14969,6 @@ kind = "set"
 subject = "var:pensionsbeloppskontroll-per-person-penst-2"
 fields = { "tags" = ["transfers"] }
 evidence = "Identitetsfaktet visar växlande ägare för person- och familjemått.\ncatalog:occurrence:258168\ncatalog:occurrence:258399\ncatalog:occurrence:258640"
-
-[[statement]]
-kind = "set"
-subject = "var:pensionsbeloppskontroll-per-person-penstf"
-fields = { "sets" = ["pensionsbeloppskontroll"] }
-evidence = "Identitetsfaktet visar växlande ägare för person- och familjemått.\ncatalog:occurrence:258169\ncatalog:occurrence:258400\ncatalog:occurrence:258641"
-
-[[statement]]
-kind = "set"
-subject = "var:pensionsbeloppskontroll-per-person-penstf"
-fields = { "tags" = ["transfers"] }
-evidence = "Identitetsfaktet visar växlande ägare för person- och familjemått.\ncatalog:occurrence:258169\ncatalog:occurrence:258400\ncatalog:occurrence:258641"
 
 [[statement]]
 kind = "set"
@@ -17121,7 +17025,7 @@ evidence = "Hushålls- och individmåttet är skatt enligt HEK.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:skatt-hek-individ"
-fields = { "sets" = ["skatt-enligt-hek"] }
+fields = { "sets" = ["skatt-enligt-hek", "slutlig-skatt"] }
 evidence = "De två perioderna beskriver slutlig skatt exklusive avdragsgilla skatter och avgifter samt eventuell sjömansskatt.\ncatalog:occurrence:261568\ncatalog:occurrence:264027\ncatalog:variable_text:31662:12053:20089\ncatalog:variable_text:31795:8401:10227"
 
 [[statement]]
@@ -18701,18 +18605,6 @@ kind = "set"
 subject = "var:stodomrade-a-kod"
 fields = { "tags" = ["geography"] }
 evidence = "Koden anger geografisk tillhörighet till stödområde A.\ncatalog:variable_text:31794:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:stotex"
-fields = { "sets" = ["slutlig-skatt"] }
-evidence = "Källkolumnen har en senare ägare med HEK-etikett.\ncatalog:occurrence:261568\ncatalog:occurrence:264027\ncatalog:variable_text:31795:8401:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:stotex"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnen har en senare ägare med HEK-etikett.\ncatalog:occurrence:261568\ncatalog:occurrence:264027\ncatalog:variable_text:31795:8401:10227"
 
 [[statement]]
 kind = "set"
@@ -26723,3 +26615,219 @@ kind = "set"
 subject = "individer-och-dodsbon: VBBEL @1992-01-01..1992-12-31 where key = 'v1197'"
 fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Källan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:32068:7305:7670\ncatalog:variable_text:32068:7670:8401"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: armant @1990-01-01..1990-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: armant @1991-01-01..1991-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: armant @1992-01-01..1992-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: avsext @1990-01-01..1990-12-31 where key = 'v39891'"
+fields = { "variable" = "statligt-extra-avdrag" }
+evidence = "Both measure the state extra deduction for reduced taxpaying capacity in SEK. Their AVSEXT observations meet at day 7305 in the same table, and the later operational definition explicitly confirms the state deduction."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1993-01-01..1993-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1994-01-01..1994-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1995-01-01..1995-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1996-01-01..1996-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1997-01-01..1997-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barmant @1998-01-01..1998-12-31 where key = 'v5577'"
+fields = { "variable" = "mantalsskrivning-andringsar" }
+evidence = "Both explicitly measure the year population-registration information last changed, in years. ARMANT passes between them at day 7305 without overlapping periods in the Individuals and estates table."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: barna @1979-01-01..1979-12-31 where key = 'v41326'"
+fields = { "variable" = "barnets-alder" }
+evidence = "The children's-age and child's-age definitions share the complete four-code list 9896, with codes 0–3 counting children aged 7–12. They alternate in nonoverlapping BARNA periods; the latter later uses BARNAR with the same list."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1981-01-01..1981-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1982-01-01..1982-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1983-01-01..1983-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1984-01-01..1984-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1985-01-01..1985-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: belpens @1986-01-01..1986-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fp @1990-01-01..1990-12-31 where key = 'v5650'"
+fields = { "variable" = "belpens" }
+evidence = "Both define the total basic-pension amount from KUSOC code 991 used to calculate the special basic allowance for pensioners. Both use selector v5650 and SEK, in disjoint observed windows [3287,4018) and [7305,8035); coverage between them is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fp @1991-01-01..1991-12-31 where key = 'v5650'"
+fields = { "variable" = "belpens" }
+evidence = "Both define the total basic-pension amount from KUSOC code 991 used to calculate the special basic allowance for pensioners. Both use selector v5650 and SEK, in disjoint observed windows [3287,4018) and [7305,8035); coverage between them is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kfkufon3 @1999-01-01..1999-12-31 where key = 'v4892'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "Both measure realized losses on interest-fund units in SEK. The earlier tax-statement observation uses KFKUFON3 during [10592,10957); later loss observations begin at day 12784 in the same table. No coverage is asserted for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kupens @1987-01-01..1987-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kupens @1988-01-01..1988-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kupens @1989-01-01..1989-12-31 where key = 'v18384'"
+fields = { "variable" = "tjanstepension-tjanst" }
+evidence = "Pension according to tax statements is explicitly defined as employer-paid occupational pension for the income year; the successor label identifies occupational pension under employment income. Both are SEK amounts in KUPENS in the same table, with adjacent periods ending and starting at day 7305."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kvkufon3 @1999-01-01..1999-12-31 where key = 'v30873'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "Both measure realized gains on interest-fund units in SEK. The earlier tax-statement observation uses KVKUFON3 during [10592,10957); later gain observations begin at day 12784 in the same table. No coverage is asserted for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2019-01-01..2019-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2020-01-01..2020-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2021-01-01..2021-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2022-01-01..2022-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2023-01-01..2023-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pagsft @2024-01-01..2024-12-31 where key = 'v42404'"
+fields = { "variable" = "pagsft" }
+evidence = "Both select amounts under compensation code 440, in SEK. The earlier AGS disability-pension description and later special-payroll-tax-base description use PAGSFT in the same table, with a non-overlapping handover at day 17897."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: penstf @1986-01-01..1986-12-31 where key = 'v21783'"
+fields = { "variable" = "pensionsbeloppskontroll-per-person-penst-2" }
+evidence = "Both identify the pension amount check per person in SEK and use selector v21783. The PENSTF observation [5844,6209) exactly fills the missing year between the other ledger's per-person observations; the family total remains separately supplied."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotex @1993-01-01..1993-12-31 where key = 'v105'"
+fields = { "variable" = "skatt-hek-individ" }
+evidence = "Both explicitly sum final tax excluding deductible taxes and fees, plus any maritime tax, in SEK in the Individuals and estates table, column STOTEX. Observed periods [8401,10227) and [12053,20089) do not overlap; the intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotex @1994-01-01..1994-12-31 where key = 'v105'"
+fields = { "variable" = "skatt-hek-individ" }
+evidence = "Both explicitly sum final tax excluding deductible taxes and fees, plus any maritime tax, in SEK in the Individuals and estates table, column STOTEX. Observed periods [8401,10227) and [12053,20089) do not overlap; the intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotex @1995-01-01..1995-12-31 where key = 'v105'"
+fields = { "variable" = "skatt-hek-individ" }
+evidence = "Both explicitly sum final tax excluding deductible taxes and fees, plus any maritime tax, in SEK in the Individuals and estates table, column STOTEX. Observed periods [8401,10227) and [12053,20089) do not overlap; the intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotex @1996-01-01..1996-12-31 where key = 'v105'"
+fields = { "variable" = "skatt-hek-individ" }
+evidence = "Both explicitly sum final tax excluding deductible taxes and fees, plus any maritime tax, in SEK in the Individuals and estates table, column STOTEX. Observed periods [8401,10227) and [12053,20089) do not overlap; the intervening gap remains unobserved."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotex @1997-01-01..1997-12-31 where key = 'v105'"
+fields = { "variable" = "skatt-hek-individ" }
+evidence = "Both explicitly sum final tax excluding deductible taxes and fees, plus any maritime tax, in SEK in the Individuals and estates table, column STOTEX. Observed periods [8401,10227) and [12053,20089) do not overlap; the intervening gap remains unobserved."

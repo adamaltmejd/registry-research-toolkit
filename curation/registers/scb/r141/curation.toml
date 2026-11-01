@@ -814,3 +814,15 @@ kind = "set"
 subject = "manatlig-bransle-gas-och-lagerstatistik: UTLAGER @2017-01-01..2017-12-31 where key = 'v20504'"
 fields = { "description" = "Lager vid periodens slut." }
 evidence = "Rättar ett grammatiskt fel utan att ändra betydelsen.\ncatalog:variable_text:39202:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: scbid @2024-01-01..2024-12-31 where key = 'v19529'"
+fields = { "variable" = "scb-nummer" }
+evidence = "The respondent identifier and later informationless identifier share the operational definition: product-specific IDs assigned by collection staff. Both use the ScbId column and character type in the same table, with adjacent periods [17532,19723) and [19723,20454). These facts support an unchanged identifier despite revised descriptive wording."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: scbid @2025-01-01..2025-12-31 where key = 'v19529'"
+fields = { "variable" = "scb-nummer" }
+evidence = "The respondent identifier and later informationless identifier share the operational definition: product-specific IDs assigned by collection staff. Both use the ScbId column and character type in the same table, with adjacent periods [17532,19723) and [19723,20454). These facts support an unchanged identifier despite revised descriptive wording."

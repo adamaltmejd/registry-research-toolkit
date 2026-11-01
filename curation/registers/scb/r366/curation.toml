@@ -11191,18 +11191,6 @@ evidence = "Antalet gäller undersökningens urval per stratum.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-ungdejfullf"
-fields = { "sets" = [] }
-evidence = "Samma tabell och kolumn har en annan ägare i en senare period.\ncatalog:occurrence:511340\ncatalog:occurrence:511474"
-
-[[statement]]
-kind = "set"
-subject = "var:lillan-ungdejfullf"
-fields = { "tags" = ["methods"] }
-evidence = "Samma tabell och kolumn har en annan ägare i en senare period.\ncatalog:occurrence:511340\ncatalog:occurrence:511474"
-
-[[statement]]
-kind = "set"
 subject = "var:lon-skal-yrkesbyte-annat"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Avser lön som skäl till yrkesbyte.\ncatalog:variable_text:54239:16801:17167"
@@ -14647,18 +14635,6 @@ evidence = "Antalet gäller populationens storlek per stratum.\ncatalog:occurren
 
 [[statement]]
 kind = "set"
-subject = "var:storan-ungdejfullf"
-fields = { "sets" = [] }
-evidence = "Samma tabell och kolumn har en annan ägare i en senare period.\ncatalog:occurrence:511341\ncatalog:occurrence:511482"
-
-[[statement]]
-kind = "set"
-subject = "var:storan-ungdejfullf"
-fields = { "tags" = ["methods"] }
-evidence = "Samma tabell och kolumn har en annan ägare i en senare period.\ncatalog:occurrence:511341\ncatalog:occurrence:511482"
-
-[[statement]]
-kind = "set"
 subject = "var:storbrit"
 fields = { "sets" = [] }
 evidence = "Frågan avser arbete i Storbritannien.\ncatalog:occurrence:510793\ncatalog:variable_text:54536:11323:11688"
@@ -16540,3 +16516,15 @@ kind = "set"
 subject = "lararforsorjningen-icke-aktiva: F1 @2004-01-01..2004-12-31 where key = 'v37237'"
 fields = { "description" = "Aktuell eller tidigare anställning som lärare eller skolledare inom skolväsendet." }
 evidence = "Värdena omfattar även tidigare och aldrig anställda, inte bara aktiva tjänster.\ncatalog:valueset:6403\ncatalog:variable_text:54591:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: lillan @2007-01-01..2007-06-30 where key = 'v15678'"
+fields = { "variable" = "lilla-n-per-stratum" }
+evidence = "Both define the number of sampled members per stratum, use count units and decimal type, and occupy column Lillan in the same youth education table during disjoint periods [13514,13695) and [16617,16801). The survivor has four occurrences."
+
+[[statement]]
+kind = "set"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: storan @2007-01-01..2007-06-30 where key = 'v15677'"
+fields = { "variable" = "stora-n-per-stratum" }
+evidence = "Both define the number of population members per stratum, use count units and decimal type, and occupy column Storan in the same youth education table during disjoint periods [13514,13695) and [16617,16801). The survivor has six occurrences."

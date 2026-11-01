@@ -2324,18 +2324,6 @@ evidence = "Samma företagsnäringsgren är korrekt uppdelad mellan angränsande
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni02-19053"
-fields = { "sets" = [] }
-evidence = "Den angränsande ägaren anger uttryckligen företagets näringsgren.\ncatalog:occurrence:414644\ncatalog:occurrence:414677"
-
-[[statement]]
-kind = "set"
-subject = "var:ftgsni02-19053"
-fields = { "tags" = ["business"] }
-evidence = "Den angränsande ägaren anger uttryckligen företagets näringsgren.\ncatalog:occurrence:414644\ncatalog:occurrence:414677"
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-foretag-sni-2002"
 fields = { "sets" = [] }
 evidence = "Id:t innehåller opak SNI-kod och en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41211:11688:14975"
@@ -4259,3 +4247,39 @@ kind = "set"
 subject = "individer: AntalKU @1985-01-01..1985-12-31 where key = 'v37412'"
 fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret." }
 evidence = "Rättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ftgsni02 @2002-01-01..2002-12-31 where key = 'v19053'"
+fields = { "variable" = "ftgsni02" }
+evidence = "Both describe principal industry under the Swedish industry classification, using FtgSni02 in the establishments table and the identical 778-code list. The enterprise-industry operational definition clarifies the unit, and the observed periods meet at day 12053 without overlap."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: peorgnr2 @2013-01-01..2013-12-31 where key = 'v42019'"
+fields = { "variable" = "person-orgnr-2" }
+evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: peorgnr2 @2019-01-01..2019-12-31 where key = 'v42019'"
+fields = { "variable" = "person-orgnr-2" }
+evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: peorgnr2 @2020-01-01..2020-12-31 where key = 'v42019'"
+fields = { "variable" = "person-orgnr-2" }
+evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: peorgnr2 @2021-01-01..2021-12-31 where key = 'v42019'"
+fields = { "variable" = "person-orgnr-2" }
+evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: peorgnr2 @2022-01-01..2022-12-31 where key = 'v42019'"
+fields = { "variable" = "person-orgnr-2" }
+evidence = "Both define legal-unit identity through organization numbers, or personal numbers for individual traders. Both occupy PeOrgNr2/PeorgNr2 in the FAD establishments table, with an observed handoff at day 15706 and no overlapping periods there. Their operational text refers to the measurement or register year."
