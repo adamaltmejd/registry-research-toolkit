@@ -17,7 +17,8 @@ use serde_json::Value;
 
 use crate::Ledger;
 
-/// The reviewed source facts, independent of statement layout and input row order.
+/// The full source facts used for application and conflict detection, independent
+/// of statement layout and input row order. Lock IO may record a narrower premise.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Premise {
@@ -30,6 +31,34 @@ pub struct Premise {
 pub struct SourcePremise {
     pub locator: Locator,
     pub fields: BTreeMap<String, Value>,
+}
+
+/// Variable-wide metadata setters depend on membership, not occurrence field values.
+#[must_use]
+pub fn variable_level_setter(statement: &Statement) -> Option<&str> {
+    let Statement::Set {
+        subject: Address::Variable(variable),
+        fields,
+        ..
+    } = statement
+    else {
+        return None;
+    };
+    let fields = stated_fields(fields);
+    (!fields.is_empty()
+        && fields.keys().all(|field| {
+            matches!(
+                field.as_str(),
+                "sets"
+                    | "tags"
+                    | "label"
+                    | "description"
+                    | "definition"
+                    | "operational_definition"
+                    | "synonyms"
+            )
+        }))
+    .then_some(variable)
 }
 
 #[derive(Debug)]

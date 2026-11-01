@@ -150,3 +150,86 @@ def test_vocabulary_wording_needs_no_relock(tmp_path, membership_case):
             db.execute("SELECT value FROM meta WHERE key='curation_digest'").fetchone()
             != original_hash
         )
+
+
+def test_variable_premise_tracks_matches_not_occurrence_fields(
+    tmp_path, membership_case
+):
+    # Regression: variable metadata locks source field values, or retains only a
+    # match count and misses a same-count locator replacement. Existing vocabulary
+    # wording coverage never changes source rows. The source overlays and expected
+    # JSON supply the allowed field drift, matched-row counts and located refusal.
+    fixture, overlay, curation, expected = membership_case
+    expected = expected["variable_premise"]
+    shutil.copyfile(
+        overlay / "variable-level.toml", curation / "registers/demo/r/curation.toml"
+    )
+    inputs = tmp_path / "inputs"
+    shutil.copytree(fixture / "inputs", inputs)
+    source = inputs / "frame/registers.jsonl"
+    report = tmp_path / "report.json"
+
+    def run(command):
+        return subprocess.run(
+            [
+                REG_BUILD,
+                command,
+                "--inputs",
+                inputs,
+                "--curation",
+                curation,
+                *(
+                    [
+                        "--release",
+                        "--out",
+                        tmp_path / "catalog.db",
+                        "--report",
+                        report,
+                    ]
+                    if command == "build"
+                    else []
+                ),
+            ],
+            cwd=REPO,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    locked = run("lock")
+    assert locked.returncode == 0, locked.stderr
+    shutil.copyfile(overlay / "fields-changed.jsonl", source)
+    allowed = run("build")
+    assert allowed.returncode == 0, allowed.stderr
+    (tmp_path / "catalog.db").unlink()
+
+    shutil.copyfile(overlay / "match-replaced.jsonl", source)
+    replaced = run("build")
+    assert replaced.returncode == 1, replaced.stderr
+    refusals = "\n".join(
+        detail
+        for refusal in json.loads(report.read_text())["refusals"]
+        for detail in refusal["details"]
+    )
+    assert f"{expected['location']}: {expected['code']}:" in refusals
+    assert expected["subject"] in refusals
+    count = expected["original_count"]
+    assert f"old count {count}, new count {count}" in refusals
+    shutil.copyfile(fixture / "grown/frame/registers.jsonl", source)
+    grown = run("build")
+    assert grown.returncode == 1, grown.stderr
+    refusals = "\n".join(
+        detail
+        for refusal in json.loads(report.read_text())["refusals"]
+        for detail in refusal["details"]
+    )
+    assert f"{expected['location']}: {expected['code']}:" in refusals
+    assert expected["subject"] in refusals
+    assert f"old count {count}, new count {expected['grown_count']}" in refusals
+
+    # Regression: a v1 lock is silently accepted rather than requiring a re-lock.
+    shutil.copyfile(overlay / "v1.lock", curation / "registers/demo/r/curation.lock")
+    obsolete = run("build")
+    assert obsolete.returncode == 1, obsolete.stderr
+    assert "unsupported premise lock version 1" in obsolete.stderr
+    assert "run reg-build lock" in obsolete.stderr
