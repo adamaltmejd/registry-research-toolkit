@@ -385,13 +385,13 @@ evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:12021:10592
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "sets" = [] }
 evidence = "AE är en ogenomskinlig källförkortning för arbetsställe.\ncatalog:valueset:4439\ncatalog:variable_text:12022:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "tags" = ["business"] }
 evidence = "AE är en ogenomskinlig källförkortning för arbetsställe.\ncatalog:valueset:4439\ncatalog:variable_text:12022:10592:19358"
 
@@ -649,25 +649,25 @@ evidence = "Adressuppgiften anger geografiskt läge.\ncatalog:variable_text:1205
 
 [[statement]]
 kind = "set"
-subject = "var:eiexpstkl"
+subject = "var:export-storleksklass"
 fields = { "sets" = [] }
 evidence = "EI är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:12053:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:eiexpstkl"
+subject = "var:export-storleksklass"
 fields = { "tags" = ["trade"] }
 evidence = "EI är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:12053:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:eiimpstkl"
+subject = "var:import-storleksklass"
 fields = { "sets" = [] }
 evidence = "EI är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:12054:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:eiimpstkl"
+subject = "var:import-storleksklass"
 fields = { "tags" = ["trade"] }
 evidence = "EI är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:12054:18993:19358"
 
@@ -889,25 +889,25 @@ evidence = "Indikator för huvudarbetsställe.\ncatalog:variable_text:12078:1059
 
 [[statement]]
 kind = "set"
-subject = "var:je-foretagsstatus"
+subject = "var:juridiska-enhetens-foretagsstatus"
 fields = { "sets" = [] }
 evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:variable_text:12079:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:je-foretagsstatus"
+subject = "var:juridiska-enhetens-foretagsstatus"
 fields = { "tags" = ["business"] }
 evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:variable_text:12079:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:je-status"
+subject = "var:juridiska-enhetens-status"
 fields = { "sets" = [] }
 evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:variable_text:12080:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:je-status"
+subject = "var:juridiska-enhetens-status"
 fields = { "tags" = ["business"] }
 evidence = "JE är en ogenomskinlig bokstavskod för juridisk enhet.\ncatalog:variable_text:12080:10592:19358"
 

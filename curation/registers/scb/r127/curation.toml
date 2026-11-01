@@ -139,13 +139,13 @@ evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:avgkvar"
+subject = "var:antal-lediga-jobb-bemannade-av-avgaende-medarbetare"
 fields = { "sets" = ["lediga-jobb"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger antal lediga jobb bemannade av avgående medarbetare.\ncatalog:variable_text:35065:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:avgkvar"
+subject = "var:antal-lediga-jobb-bemannade-av-avgaende-medarbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig källförkortning; etiketten anger antal lediga jobb bemannade av avgående medarbetare.\ncatalog:variable_text:35065:18993:20089"
 

@@ -1351,25 +1351,25 @@ evidence = "Arbetspraktik hör till arbetsmarknad.\ncatalog:variable_text:56165:
 
 [[statement]]
 kind = "set"
-subject = "var:arbloshh"
+subject = "var:arbetslost-hushall"
 fields = { "sets" = ["arbetsloshet"] }
 evidence = "Hushållssuffixet hh är en bokstavskod. Källan beskriver en kodning av arbetslöshet i hushållet.\ncatalog:valueset:12245\ncatalog:variable_text:56166:10227:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:arbloshh"
+subject = "var:arbetslost-hushall"
 fields = { "tags" = ["employment"] }
 evidence = "Hushållssuffixet hh är en bokstavskod. Källan beskriver en kodning av arbetslöshet i hushållet.\ncatalog:valueset:12245\ncatalog:variable_text:56166:10227:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:arblosue"
+subject = "var:arbetslos-utan-ersattning"
 fields = { "sets" = ["arbetsloshet"] }
 evidence = "Suffixet ue är en bokstavskod för utan ersättning. Variabeln kodar arbetslöshet utan ersättning.\ncatalog:variable_text:56167:10227:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:arblosue"
+subject = "var:arbetslos-utan-ersattning"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet ue är en bokstavskod för utan ersättning. Variabeln kodar arbetslöshet utan ersättning.\ncatalog:variable_text:56167:10227:2932897"
 
@@ -2263,25 +2263,25 @@ evidence = "Kodningen gäller arbetsmarknadsinsatser.\ncatalog:variable_text:562
 
 [[statement]]
 kind = "set"
-subject = "var:ekbantmanad"
+subject = "var:manader-med-ekonomiskt-bistand"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "EKB är en ogenomskinlig bokstavskod som inte finns i etiketten.\ncatalog:variable_text:56242:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ekbantmanad"
+subject = "var:manader-med-ekonomiskt-bistand"
 fields = { "tags" = ["transfers"] }
 evidence = "EKB är en ogenomskinlig bokstavskod som inte finns i etiketten.\ncatalog:variable_text:56242:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ekbbelopp"
+subject = "var:ekonomiskt-bistand"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "EKB är en ogenomskinlig bokstavskod som inte finns i etiketten.\ncatalog:variable_text:56243:15340:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ekbbelopp"
+subject = "var:ekonomiskt-bistand"
 fields = { "tags" = ["transfers"] }
 evidence = "EKB är en ogenomskinlig bokstavskod som inte finns i etiketten.\ncatalog:variable_text:56243:15340:2932897"
 
@@ -3223,13 +3223,13 @@ evidence = "Utbetalt belopp för hälso- och sjukvård i biståndsregistret.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:hhavslut"
+subject = "var:avslutskod-hushallet"
 fields = { "sets" = ["avslutskod-bistand"] }
 evidence = "HH är en källkod och inte en läsbar stam för hushåll.\ncatalog:variable_text:56322:17167:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:hhavslut"
+subject = "var:avslutskod-hushallet"
 fields = { "tags" = ["transfers"] }
 evidence = "HH är en källkod och inte en läsbar stam för hushåll.\ncatalog:variable_text:56322:17167:2932897"
 
@@ -3343,49 +3343,49 @@ evidence = "Indikator för utbetalt bistånd till hyresskuld.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:ieantmanad"
+subject = "var:antal-manader-med-introduktionsersattning"
 fields = { "sets" = ["introduktionsersattning"] }
 evidence = "IE är en bokstavskod för introduktionsersättning.\ncatalog:variable_text:56334:8766:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ieantmanad"
+subject = "var:antal-manader-med-introduktionsersattning"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "IE är en bokstavskod för introduktionsersättning.\ncatalog:variable_text:56334:8766:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ietotalbelopp"
+subject = "var:arssumma-for-introduktionsersattning"
 fields = { "sets" = ["introduktionsersattning"] }
 evidence = "IE är en bokstavskod för introduktionsersättning.\ncatalog:variable_text:56335:8766:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ietotalbelopp"
+subject = "var:arssumma-for-introduktionsersattning"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "IE är en bokstavskod för introduktionsersättning.\ncatalog:variable_text:56335:8766:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:inskrafhh"
+subject = "var:hushall-inskrivet-pa-arbetsformedlingen"
 fields = { "sets" = ["inskrivning-arbetsformedlingen"] }
 evidence = "AF är en bokstavskod för Arbetsförmedlingen.\ncatalog:variable_text:56337:10227:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:inskrafhh"
+subject = "var:hushall-inskrivet-pa-arbetsformedlingen"
 fields = { "tags" = ["employment"] }
 evidence = "AF är en bokstavskod för Arbetsförmedlingen.\ncatalog:variable_text:56337:10227:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:inskrivaf"
+subject = "var:inskriven-pa-arbetsformedlingen"
 fields = { "sets" = ["inskrivning-arbetsformedlingen"] }
 evidence = "AF är en bokstavskod för Arbetsförmedlingen.\ncatalog:variable_text:56338:10227:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:inskrivaf"
+subject = "var:inskriven-pa-arbetsformedlingen"
 fields = { "tags" = ["employment"] }
 evidence = "AF är en bokstavskod för Arbetsförmedlingen.\ncatalog:variable_text:56338:10227:2932897"
 
@@ -5347,13 +5347,13 @@ evidence = "Kodning av registerledarens försörjningshinder.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:sbelopp"
+subject = "var:ekonomiskt-bistand-exklusive-introduktionsersattning"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "Det inledande s är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56509:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:sbelopp"
+subject = "var:ekonomiskt-bistand-exklusive-introduktionsersattning"
 fields = { "tags" = ["transfers"] }
 evidence = "Det inledande s är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56509:15340:16071"
 

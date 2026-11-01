@@ -5,4 +5,4 @@ public = "rakenskapssammandrag"
 "Räkenskapssammandrag för landsting" = "rakenskapssammandrag-landsting"
 
 [variables]
-"rad" = ["Räkenskapssammandrag för landsting: Rad"]
+"interna-ranteintakter" = ["Räkenskapssammandrag för landsting: Rad"]

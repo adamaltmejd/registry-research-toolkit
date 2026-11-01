@@ -416,13 +416,13 @@ evidence = "Variabeln avser provresultat i engelska.\ncatalog:variable_text:2222
 
 [[statement]]
 kind = "set"
-subject = "var:bi-provbet"
+subject = "var:provbetyg-i-biologi"
 fields = { "sets" = ["provbetyg-no"] }
 evidence = "Bi är en ämneskod och provbet ett källmnemonik; etiketten anger provbetyg i biologi.\ncatalog:variable_text:22226:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:bi-provbet"
+subject = "var:provbetyg-i-biologi"
 fields = { "tags" = ["education"] }
 evidence = "Bi är en ämneskod och provbet ett källmnemonik; etiketten anger provbetyg i biologi.\ncatalog:variable_text:22226:20089:20270"
 
@@ -464,73 +464,73 @@ evidence = "Värdena anger deltagande i delprov i svenska.\ncatalog:valueset:112
 
 [[statement]]
 kind = "set"
-subject = "var:en-c-betyg"
+subject = "var:betyg-i-delprov-c-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22230:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:en-c-betyg"
+subject = "var:betyg-i-delprov-c-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22230:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22231:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22231:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22232:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22232:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-ej-delt"
+subject = "var:ej-deltagit-i-engelska"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "En är en ämneskod och ej-delt ett källmnemonik; etiketten anger engelska.\ncatalog:variable_text:22233:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-ej-delt"
+subject = "var:ej-deltagit-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och ej-delt ett källmnemonik; etiketten anger engelska.\ncatalog:variable_text:22233:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22234:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22234:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-provbet"
+subject = "var:provbetyg-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22235:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-provbet"
+subject = "var:provbetyg-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en källkod för engelska och id:t är därför en ogenomskinlig förkortning.\ncatalog:variable_text:22235:20089:20270"
 
@@ -716,37 +716,37 @@ evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet 
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-typ"
+subject = "var:provtyp-for-matematik-b"
 fields = { "sets" = ["provtyp"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger provtypen.\ncatalog:variable_text:22252:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-typ"
+subject = "var:provtyp-for-matematik-b"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger provtypen.\ncatalog:variable_text:22252:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b1-prov"
+subject = "var:deltagande-i-matematik-prov-b1"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B1.\ncatalog:variable_text:22253:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b1-prov"
+subject = "var:deltagande-i-matematik-prov-b1"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B1.\ncatalog:variable_text:22253:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b2-prov"
+subject = "var:deltagande-i-matematik-prov-b2"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B2.\ncatalog:variable_text:22254:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b2-prov"
+subject = "var:deltagande-i-matematik-prov-b2"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B2.\ncatalog:variable_text:22254:15340:15522"
 
@@ -776,61 +776,61 @@ evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet 
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-typ"
+subject = "var:provtyp-for-matematik-d"
 fields = { "sets" = ["provtyp"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger provtypen.\ncatalog:variable_text:22257:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-typ"
+subject = "var:provtyp-for-matematik-d"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger provtypen.\ncatalog:variable_text:22257:16071:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-a"
+subject = "var:deltagande-i-matematik-prov-a"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov A.\ncatalog:variable_text:22258:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-a"
+subject = "var:deltagande-i-matematik-prov-a"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov A.\ncatalog:variable_text:22258:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-b"
+subject = "var:deltagande-i-matematik-prov-b"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B.\ncatalog:variable_text:22259:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-b"
+subject = "var:deltagande-i-matematik-prov-b"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov B.\ncatalog:variable_text:22259:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-c"
+subject = "var:deltagande-i-matematik-prov-c"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov C.\ncatalog:variable_text:22260:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-c"
+subject = "var:deltagande-i-matematik-prov-c"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov C.\ncatalog:variable_text:22260:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-d"
+subject = "var:deltagande-i-matematik-prov-d"
 fields = { "sets" = ["provdeltagande"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov D.\ncatalog:variable_text:22261:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-d"
+subject = "var:deltagande-i-matematik-prov-d"
 fields = { "tags" = ["education"] }
 evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande i prov D.\ncatalog:variable_text:22261:20089:20270"
 
@@ -860,37 +860,37 @@ evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet 
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g-poang"
+subject = "var:antal-g-poang-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:204860\ncatalog:variable_text:22264:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-g-poang"
+subject = "var:antal-g-poang-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:204860\ncatalog:variable_text:22264:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205611\ncatalog:variable_text:22265:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205611\ncatalog:variable_text:22265:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-vg-poang"
+subject = "var:antal-vg-poang-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:204863\ncatalog:variable_text:22266:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-vg-poang"
+subject = "var:antal-vg-poang-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:204863\ncatalog:variable_text:22266:15340:15522"
 
@@ -1592,61 +1592,61 @@ evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:223
 
 [[statement]]
 kind = "set"
-subject = "var:sv-b-betyg"
+subject = "var:betyg-i-delprov-b-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205507\ncatalog:variable_text:22337:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-b-betyg"
+subject = "var:betyg-i-delprov-b-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205507\ncatalog:variable_text:22337:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-c-betyg"
+subject = "var:betyg-i-delprov-c-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205508\ncatalog:variable_text:22338:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-c-betyg"
+subject = "var:betyg-i-delprov-c-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205508\ncatalog:variable_text:22338:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205637\ncatalog:variable_text:22339:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205637\ncatalog:variable_text:22339:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205638\ncatalog:variable_text:22340:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205638\ncatalog:variable_text:22340:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-grupp"
+subject = "var:undervisningsgrupp-i-svenska"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205639\ncatalog:variable_text:22341:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-grupp"
+subject = "var:undervisningsgrupp-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:205639\ncatalog:variable_text:22341:20089:20270"
 

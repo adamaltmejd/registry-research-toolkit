@@ -565,25 +565,25 @@ evidence = "Måttet anger maximal effekt vid cykelprov.\ncatalog:variable_text:6
 
 [[statement]]
 kind = "set"
-subject = "var:mofbtkd"
+subject = "var:befattningskod-vid-monstring"
 fields = { "sets" = ["befattning"] }
 evidence = "Källmnemoniken är en opak kod för befattningskod vid mönstring.\ncatalog:variable_text:687:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:mofbtkd"
+subject = "var:befattningskod-vid-monstring"
 fields = { "tags" = ["defence"] }
 evidence = "Källmnemoniken är en opak kod för befattningskod vid mönstring.\ncatalog:variable_text:687:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:mofstat"
+subject = "var:status-vid-monstring"
 fields = { "sets" = ["monstringsstatus"] }
 evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:689:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:mofstat"
+subject = "var:status-vid-monstring"
 fields = { "tags" = ["defence"] }
 evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:689:9862:14975"
 
@@ -949,25 +949,25 @@ evidence = "Måttet anger synskärpa för vänster öga.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:syrelmn"
+subject = "var:syreupptagningsformaga-liter-syre-i-liter-per-minut"
 fields = { "sets" = ["syreupptagningsformaga"] }
 evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:724:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:syrelmn"
+subject = "var:syreupptagningsformaga-liter-syre-i-liter-per-minut"
 fields = { "tags" = ["health"] }
 evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:724:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:syrkgmn"
+subject = "var:syreupptagningsformaga-kilo-syre-i-kg-per-minut"
 fields = { "sets" = ["syreupptagningsformaga"] }
 evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:725:9862:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:syrkgmn"
+subject = "var:syreupptagningsformaga-kilo-syre-i-kg-per-minut"
 fields = { "tags" = ["health"] }
 evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:725:9862:14975"
 

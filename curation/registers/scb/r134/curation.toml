@@ -307,25 +307,25 @@ evidence = "Länet kodar arbetsställets geografiska läge.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:lillanksk"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-kort-blankett"
 fields = { "sets" = ["utvalda-arbetsstallen"] }
 evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34911:11323:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:lillanksk"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-kort-blankett"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34911:11323:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:lillanksl"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-lang-blankett"
 fields = { "sets" = ["utvalda-arbetsstallen"] }
 evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34912:11323:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:lillanksl"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-lang-blankett"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34912:11323:19358"
 
@@ -343,13 +343,13 @@ evidence = "Näringsgren hör till företagsstruktur.\ncatalog:variable_text:349
 
 [[statement]]
 kind = "set"
-subject = "var:nsvark"
+subject = "var:antal-svarande-objekt-kort-blankett"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak; antal svarande objekt är ett undersökningsmått.\ncatalog:variable_text:34915:11323:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nsvark"
+subject = "var:antal-svarande-objekt-kort-blankett"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är opak; antal svarande objekt är ett undersökningsmått.\ncatalog:variable_text:34915:11323:19358"
 
@@ -475,25 +475,25 @@ evidence = "Variabeln mäter sjukfrånvaro bland anställda.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:tillovrk"
+subject = "var:antal-visstidsanstallda-kvinnor-enligt-ovrigt-avtal"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34927:11323:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:tillovrk"
+subject = "var:antal-visstidsanstallda-kvinnor-enligt-ovrigt-avtal"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34927:11323:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:tillovrm"
+subject = "var:antalet-visstidsanstallda-man-enligt-ovrigt-avtal"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34928:11323:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:tillovrm"
+subject = "var:antalet-visstidsanstallda-man-enligt-ovrigt-avtal"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34928:11323:13149"
 

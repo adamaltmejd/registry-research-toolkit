@@ -55,13 +55,13 @@ evidence = "Avdraget avser skuldränta.\ncatalog:variable_text:33878:12784:18262
 
 [[statement]]
 kind = "set"
-subject = "var:bhelar"
+subject = "var:helarspopulation"
 fields = { "sets" = [] }
 evidence = "BHELAR är en källkod; etiketten anger populationstillhörighet.\ncatalog:variable_text:33879:12784:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:bhelar"
+subject = "var:helarspopulation"
 fields = { "tags" = ["demographics"] }
 evidence = "BHELAR är en källkod; etiketten anger populationstillhörighet.\ncatalog:variable_text:33879:12784:18262"
 
@@ -451,169 +451,169 @@ evidence = "Samma källkolumn har angränsande ägare med olika omfattning.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:karfor"
+subject = "var:avdrag-for-negativ-rantefordelning-kapital"
 fields = { "sets" = ["rantefordelning"] }
 evidence = "KARFOR är en källkod för negativ räntefördelning.\ncatalog:variable_text:33912:12784:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:karfor"
+subject = "var:avdrag-for-negativ-rantefordelning-kapital"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "KARFOR är en källkod för negativ räntefördelning.\ncatalog:variable_text:33912:12784:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kbtupp"
+subject = "var:aterforing-av-uppskovsbelopp-bostadsratt"
 fields = { "sets" = ["aterforing-av-uppskovsbelopp"] }
 evidence = "KBTUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33913:13149:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kbtupp"
+subject = "var:aterforing-av-uppskovsbelopp-bostadsratt"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "KBTUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33913:13149:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfbot"
+subject = "var:forlust-enligt-blankett-k5-och-k6"
 fields = { "sets" = [] }
 evidence = "KFBOT är en källkod för förlust enligt K5 och K6.\ncatalog:variable_text:33914:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfbot"
+subject = "var:forlust-enligt-blankett-k5-och-k6"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFBOT är en källkod för förlust enligt K5 och K6.\ncatalog:variable_text:33914:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kff"
+subject = "var:kapitalforlust-finansiellt-avdragsgillt-belopp"
 fields = { "sets" = [] }
 evidence = "KFF är en källkod för finansiell kapitalförlust.\ncatalog:variable_text:33915:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kff"
+subject = "var:kapitalforlust-finansiellt-avdragsgillt-belopp"
 fields = { "tags" = ["finance", "income", "taxation"] }
 evidence = "KFF är en källkod för finansiell kapitalförlust.\ncatalog:variable_text:33915:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kffa"
+subject = "var:kapitalforlust-aktier"
 fields = { "sets" = [] }
 evidence = "KFFA är en källkod för kapitalförlust på aktier.\ncatalog:variable_text:33916:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kffa"
+subject = "var:kapitalforlust-aktier"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFA är en källkod för kapitalförlust på aktier.\ncatalog:variable_text:33916:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kffaop"
+subject = "var:kapitalforlust-aktie-och-aktieindexoptioner"
 fields = { "sets" = [] }
 evidence = "KFFAOP är en källkod för kapitalförlust på optioner.\ncatalog:variable_text:33917:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kffaop"
+subject = "var:kapitalforlust-aktie-och-aktieindexoptioner"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFAOP är en källkod för kapitalförlust på optioner.\ncatalog:variable_text:33917:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kffov"
+subject = "var:kapitalforlust-vissa-ej-marknadsnoterade-vardepapper"
 fields = { "sets" = [] }
 evidence = "KFFOV är en källkod för kapitalförlust på vissa onoterade värdepapper.\ncatalog:variable_text:33918:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kffov"
+subject = "var:kapitalforlust-vissa-ej-marknadsnoterade-vardepapper"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFOV är en källkod för kapitalförlust på vissa onoterade värdepapper.\ncatalog:variable_text:33918:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kffovr"
+subject = "var:kapitalforlust-ovriga-finansiella-forluster"
 fields = { "sets" = [] }
 evidence = "KFFOVR är en källkod för övriga finansiella kapitalförluster.\ncatalog:variable_text:33919:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kffovr"
+subject = "var:kapitalforlust-ovriga-finansiella-forluster"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFFOVR är en källkod för övriga finansiella kapitalförluster.\ncatalog:variable_text:33919:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnat"
+subject = "var:forlust-enligt-blankett-k7-och-k8"
 fields = { "sets" = [] }
 evidence = "KFNAT är en källkod för förlust enligt K7 och K8.\ncatalog:variable_text:33920:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnat"
+subject = "var:forlust-enligt-blankett-k7-och-k8"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFNAT är en källkod för förlust enligt K7 och K8.\ncatalog:variable_text:33920:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnfot"
+subject = "var:forlust-fondandelar"
 fields = { "sets" = [] }
 evidence = "KFNFOT är en källkod för förlust på fondandelar.\ncatalog:variable_text:33921:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnfot"
+subject = "var:forlust-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFNFOT är en källkod för förlust på fondandelar.\ncatalog:variable_text:33921:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnfotsf"
+subject = "var:forlust-fondandelar-skattefri"
 fields = { "sets" = [] }
 evidence = "KFNFOTSF är en källkod för skattefri förlust.\ncatalog:variable_text:33922:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfnfotsf"
+subject = "var:forlust-fondandelar-skattefri"
 fields = { "tags" = ["finance", "income", "taxation"] }
 evidence = "KFNFOTSF är en källkod för skattefri förlust.\ncatalog:variable_text:33922:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfofot"
+subject = "var:forlust-ej-marknadsnoterade-fondandelar"
 fields = { "sets" = [] }
 evidence = "KFOFOT är en källkod för förlust på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33923:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfofot"
+subject = "var:forlust-ej-marknadsnoterade-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KFOFOT är en källkod för förlust på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33923:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfr"
+subject = "var:kapitalforlust-smahus-och-bostadsratt-avdragsgillt-belopp"
 fields = { "sets" = [] }
 evidence = "KFR är en källkod för avdragsgill kapitalförlust.\ncatalog:variable_text:33924:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kfr"
+subject = "var:kapitalforlust-smahus-och-bostadsratt-avdragsgillt-belopp"
 fields = { "tags" = ["income", "property", "taxation"] }
 evidence = "KFR är en källkod för avdragsgill kapitalförlust.\ncatalog:variable_text:33924:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kfrest"
+subject = "var:kapitalforlust-restpost"
 fields = { "sets" = [] }
 evidence = "KFREST är en källkod för kapitalförlustens restpost.\ncatalog:variable_text:33925:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kfrest"
+subject = "var:kapitalforlust-restpost"
 fields = { "tags" = ["income"] }
 evidence = "KFREST är en källkod för kapitalförlustens restpost.\ncatalog:variable_text:33925:12784:13514"
 
@@ -631,25 +631,25 @@ evidence = "Etikett och definition anger motstridiga kvantiteter.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:kfrs"
+subject = "var:kapitalforlust-smahus-enligt-k-blankett"
 fields = { "sets" = [] }
 evidence = "KFRS är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33927:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:kfrs"
+subject = "var:kapitalforlust-smahus-enligt-k-blankett"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFRS är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33927:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:kfrsma"
+subject = "var:kapitalforlust-smahus"
 fields = { "sets" = [] }
 evidence = "KFRSMA är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33928:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kfrsma"
+subject = "var:kapitalforlust-smahus"
 fields = { "tags" = ["income", "property"] }
 evidence = "KFRSMA är en källkod för kapitalförlust på småhus.\ncatalog:variable_text:33928:13514:18262"
 
@@ -679,25 +679,25 @@ evidence = "Variabeln anger kön.\ncatalog:variable_text:33930:12784:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kovrupp"
+subject = "var:aterforing-av-uppskovsbelopp-smahus-eller-bostadsratt"
 fields = { "sets" = ["aterforing-av-uppskovsbelopp"] }
 evidence = "KOVRUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33931:13514:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kovrupp"
+subject = "var:aterforing-av-uppskovsbelopp-smahus-eller-bostadsratt"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "KOVRUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33931:13514:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kstupp"
+subject = "var:aterforing-av-uppskovsbelopp-smahus"
 fields = { "sets" = ["aterforing-av-uppskovsbelopp"] }
 evidence = "KSTUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33932:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kstupp"
+subject = "var:aterforing-av-uppskovsbelopp-smahus"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "KSTUPP är en källkod för återföring av uppskovsbelopp.\ncatalog:variable_text:33932:13514:18262"
 
@@ -715,169 +715,169 @@ evidence = "Variabeln mäter överskott vid uthyrning.\ncatalog:variable_text:33
 
 [[statement]]
 kind = "set"
-subject = "var:kvbot"
+subject = "var:vinst-enligt-blankett-k5-och-k6"
 fields = { "sets" = [] }
 evidence = "KVBOT är en källkod för vinst enligt K5 och K6.\ncatalog:variable_text:33934:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvbot"
+subject = "var:vinst-enligt-blankett-k5-och-k6"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVBOT är en källkod för vinst enligt K5 och K6.\ncatalog:variable_text:33934:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvf"
+subject = "var:kapitalvinst-finansiellt-skattepliktigt-belopp"
 fields = { "sets" = [] }
 evidence = "KVF är en källkod för skattepliktig finansiell kapitalvinst.\ncatalog:variable_text:33935:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvf"
+subject = "var:kapitalvinst-finansiellt-skattepliktigt-belopp"
 fields = { "tags" = ["finance", "income", "taxation"] }
 evidence = "KVF är en källkod för skattepliktig finansiell kapitalvinst.\ncatalog:variable_text:33935:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfa"
+subject = "var:kapitalvinst-aktier-m-m"
 fields = { "sets" = [] }
 evidence = "KVFA är en källkod för kapitalvinst på aktier.\ncatalog:variable_text:33936:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfa"
+subject = "var:kapitalvinst-aktier-m-m"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVFA är en källkod för kapitalvinst på aktier.\ncatalog:variable_text:33936:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfov"
+subject = "var:kapitalvinst-vissa-ej-marknadsnoterade-vardepapper"
 fields = { "sets" = [] }
 evidence = "KVFOV är en källkod för kapitalvinst på vissa onoterade värdepapper.\ncatalog:variable_text:33937:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfov"
+subject = "var:kapitalvinst-vissa-ej-marknadsnoterade-vardepapper"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVFOV är en källkod för kapitalvinst på vissa onoterade värdepapper.\ncatalog:variable_text:33937:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfovr"
+subject = "var:kapitalvinst-ovriga-finansiella-vinster"
 fields = { "sets" = [] }
 evidence = "KVFOVR är en källkod för övriga finansiella kapitalvinster.\ncatalog:variable_text:33938:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvfovr"
+subject = "var:kapitalvinst-ovriga-finansiella-vinster"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVFOVR är en källkod för övriga finansiella kapitalvinster.\ncatalog:variable_text:33938:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnat"
+subject = "var:vinst-enligt-blankett-k7-och-k8"
 fields = { "sets" = [] }
 evidence = "KVNAT är en källkod för vinst enligt K7 och K8.\ncatalog:variable_text:33939:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnat"
+subject = "var:vinst-enligt-blankett-k7-och-k8"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVNAT är en källkod för vinst enligt K7 och K8.\ncatalog:variable_text:33939:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnfot"
+subject = "var:vinst-fondandelar"
 fields = { "sets" = [] }
 evidence = "KVNFOT är en källkod för vinst på fondandelar.\ncatalog:variable_text:33940:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnfot"
+subject = "var:vinst-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVNFOT är en källkod för vinst på fondandelar.\ncatalog:variable_text:33940:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnfotsf"
+subject = "var:vinst-fondandelar-skattefri"
 fields = { "sets" = [] }
 evidence = "KVNFOTSF är en källkod för skattefri vinst. Coordinator group membership: Medlemmarna mäter kapital- och realisationsvinster som brutto-, netto- eller skattepliktiga belopp, tillgångskomponenter eller restposter. Vinstmått där återfört uppskov ingår behålls; separata uppskovsåterföringar utesluts. KVNFOTSF hålls utanför eftersom dess uttryckligen skattefria belopp inte omfattas av den fasta uppräkningen. KFRREST tillförs inte som vinstmått eftersom etikett och beskrivning motsäger varandra.\ncatalog:variable_text:33901:12784:13514\ncatalog:variable_text:33902:13514:14610\ncatalog:variable_text:33903:13514:18262\ncatalog:variable_text:33904:13514:18262\ncatalog:variable_text:33905:12784:13514\ncatalog:variable_text:33906:17897:18262\ncatalog:variable_text:33907:13514:18262\ncatalog:variable_text:33908:12784:13514\ncatalog:variable_text:33909:12784:13514\ncatalog:variable_text:33910:12784:14610\ncatalog:variable_text:33911:12784:13514\ncatalog:variable_text:33926:13514:18262\ncatalog:variable_text:33934:13514:18262\ncatalog:variable_text:33935:12784:13514\ncatalog:variable_text:33936:13514:18262\ncatalog:variable_text:33937:12784:13514\ncatalog:variable_text:33938:13514:18262\ncatalog:variable_text:33939:13514:18262\ncatalog:variable_text:33940:13514:18262\ncatalog:variable_text:33941:16801:18262\ncatalog:variable_text:33942:13514:18262\ncatalog:variable_text:33943:12784:13514\ncatalog:variable_text:33944:12784:13514\ncatalog:variable_text:33945:13514:18262\ncatalog:variable_text:33946:13514:18262\ncatalog:variable_text:33947:13514:14610\ncatalog:variable_text:33952:12784:18262\ncatalog:variable_text:33953:13514:18262\ncatalog:variable_text:33956:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvnfotsf"
+subject = "var:vinst-fondandelar-skattefri"
 fields = { "tags" = ["finance", "income", "taxation"] }
 evidence = "KVNFOTSF är en källkod för skattefri vinst. Coordinator group membership: Medlemmarna mäter kapital- och realisationsvinster som brutto-, netto- eller skattepliktiga belopp, tillgångskomponenter eller restposter. Vinstmått där återfört uppskov ingår behålls; separata uppskovsåterföringar utesluts. KVNFOTSF hålls utanför eftersom dess uttryckligen skattefria belopp inte omfattas av den fasta uppräkningen. KFRREST tillförs inte som vinstmått eftersom etikett och beskrivning motsäger varandra.\ncatalog:variable_text:33901:12784:13514\ncatalog:variable_text:33902:13514:14610\ncatalog:variable_text:33903:13514:18262\ncatalog:variable_text:33904:13514:18262\ncatalog:variable_text:33905:12784:13514\ncatalog:variable_text:33906:17897:18262\ncatalog:variable_text:33907:13514:18262\ncatalog:variable_text:33908:12784:13514\ncatalog:variable_text:33909:12784:13514\ncatalog:variable_text:33910:12784:14610\ncatalog:variable_text:33911:12784:13514\ncatalog:variable_text:33926:13514:18262\ncatalog:variable_text:33934:13514:18262\ncatalog:variable_text:33935:12784:13514\ncatalog:variable_text:33936:13514:18262\ncatalog:variable_text:33937:12784:13514\ncatalog:variable_text:33938:13514:18262\ncatalog:variable_text:33939:13514:18262\ncatalog:variable_text:33940:13514:18262\ncatalog:variable_text:33941:16801:18262\ncatalog:variable_text:33942:13514:18262\ncatalog:variable_text:33943:12784:13514\ncatalog:variable_text:33944:12784:13514\ncatalog:variable_text:33945:13514:18262\ncatalog:variable_text:33946:13514:18262\ncatalog:variable_text:33947:13514:14610\ncatalog:variable_text:33952:12784:18262\ncatalog:variable_text:33953:13514:18262\ncatalog:variable_text:33956:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvofot"
+subject = "var:vinst-ej-marknadsnoterade-fondandelar"
 fields = { "sets" = [] }
 evidence = "KVOFOT är en källkod för vinst på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33942:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvofot"
+subject = "var:vinst-ej-marknadsnoterade-fondandelar"
 fields = { "tags" = ["finance", "income"] }
 evidence = "KVOFOT är en källkod för vinst på ej marknadsnoterade fondandelar.\ncatalog:variable_text:33942:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvr"
+subject = "var:kapitalvinst-smahus-och-bostadsratt-skattepliktigt-belopp"
 fields = { "sets" = [] }
 evidence = "KVR är en källkod för skattepliktig kapitalvinst.\ncatalog:variable_text:33943:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvr"
+subject = "var:kapitalvinst-smahus-och-bostadsratt-skattepliktigt-belopp"
 fields = { "tags" = ["income", "property", "taxation"] }
 evidence = "KVR är en källkod för skattepliktig kapitalvinst.\ncatalog:variable_text:33943:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrest"
+subject = "var:kapitalvinst-restpost"
 fields = { "sets" = [] }
 evidence = "KVREST är en källkod för kapitalvinstens restpost.\ncatalog:variable_text:33944:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrest"
+subject = "var:kapitalvinst-restpost"
 fields = { "tags" = ["income"] }
 evidence = "KVREST är en källkod för kapitalvinstens restpost.\ncatalog:variable_text:33944:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrrest"
+subject = "var:kapitalvinst-smahus-eller-bostadsratt"
 fields = { "sets" = [] }
 evidence = "KVRREST är en källkod för kapitalvinst avseende småhus eller bostadsrätt.\ncatalog:variable_text:33945:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrrest"
+subject = "var:kapitalvinst-smahus-eller-bostadsratt"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVRREST är en källkod för kapitalvinst avseende småhus eller bostadsrätt.\ncatalog:variable_text:33945:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrs"
+subject = "var:kapitalvinst-smahus"
 fields = { "sets" = [] }
 evidence = "KVRS är en källkod för kapitalvinst på småhus.\ncatalog:variable_text:33946:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrs"
+subject = "var:kapitalvinst-smahus"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVRS är en källkod för kapitalvinst på småhus.\ncatalog:variable_text:33946:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrsejupp"
+subject = "var:kapitalvinst-smahus-exklusive-uppskov"
 fields = { "sets" = [] }
 evidence = "KVRSEJUPP är en källkod för kapitalvinst på småhus exklusive uppskov.\ncatalog:variable_text:33947:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:kvrsejupp"
+subject = "var:kapitalvinst-smahus-exklusive-uppskov"
 fields = { "tags" = ["income", "property"] }
 evidence = "KVRSEJUPP är en källkod för kapitalvinst på småhus exklusive uppskov.\ncatalog:variable_text:33947:13514:14610"
 
@@ -919,13 +919,13 @@ evidence = "Variabeln mäter realisationsvinst.\ncatalog:variable_text:33952:127
 
 [[statement]]
 kind = "set"
-subject = "var:rnetto"
+subject = "var:kapitalvinst-fastighet-och-bostadsratt-netto"
 fields = { "sets" = [] }
 evidence = "RNETTO är en källkod för nettovinst på fastighet och bostadsrätt.\ncatalog:variable_text:33953:13514:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:rnetto"
+subject = "var:kapitalvinst-fastighet-och-bostadsratt-netto"
 fields = { "tags" = ["income", "property"] }
 evidence = "RNETTO är en källkod för nettovinst på fastighet och bostadsrätt.\ncatalog:variable_text:33953:13514:18262"
 
@@ -955,13 +955,13 @@ evidence = "Variabeln kodar senast känt civilstånd.\ncatalog:variable_text:339
 
 [[statement]]
 kind = "set"
-subject = "var:tnetto"
+subject = "var:kapitalvinst-netto"
 fields = { "sets" = [] }
 evidence = "TNETTO är en källkod för kapitalvinst netto.\ncatalog:variable_text:33956:17897:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:tnetto"
+subject = "var:kapitalvinst-netto"
 fields = { "tags" = ["income"] }
 evidence = "TNETTO är en källkod för kapitalvinst netto.\ncatalog:variable_text:33956:17897:18262"
 

@@ -39,7 +39,7 @@
 "hemtjanst-service" = ["SOL: HTJSERV"]
 "hemtjanst-service-2" = ["SOL_2007_2012: SERV"]
 "htjavan" = ["SOL: HTJAVAN"]
-"htjtim" = ["SOL: HTJTIM"]
+"hemtjansttimmar" = ["SOL: HTJTIM"]
 "kommun" = ["SOL: LK"]
 "kommundel" = ["SOL: KDEL"]
 "kon" = ["SOL: KON"]
@@ -57,7 +57,7 @@
 "sarskilt-boende" = ["SOL_2007_2012: SBO"]
 "sarskilt-boende-hemtjanst-dygnet-runt" = ["SOL_2007_2012: OMDR"]
 "servmatd" = ["SOL: SERVMATD"]
-"vboform" = ["SOL_INCR: VBOFORM"]
+"boendeform-vid-verkstallan" = ["SOL_INCR: VBOFORM"]
 "verkst" = ["SOL_INCR: VERKST"]
 
 

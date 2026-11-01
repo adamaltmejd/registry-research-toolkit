@@ -482,13 +482,13 @@ evidence = "Ämnesbetyg.\ncatalog:variable_text:21802:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Hkk är en bokstavskod för ämnets namn.\ncatalog:variable_text:21803:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "tags" = ["education"] }
 evidence = "Hkk är en bokstavskod för ämnets namn.\ncatalog:variable_text:21803:15706:20454"
 
@@ -518,13 +518,13 @@ evidence = "Huvudmannatyp beskriver utbildningens organisation.\ncatalog:valuese
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Idh är en bokstavskod för ämnets namn.\ncatalog:variable_text:21806:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "Idh är en bokstavskod för ämnets namn.\ncatalog:variable_text:21806:15706:20454"
 
@@ -590,25 +590,25 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:21813:15706:
 
 [[statement]]
 kind = "set"
-subject = "var:m1-bety"
+subject = "var:moderna-sprak-inom-ramen-for-elevens-val-betyg"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "M1 är en ogenomskinlig källkod; siffran är en källslot.\ncatalog:variable_text:21815:17897:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:m1-bety"
+subject = "var:moderna-sprak-inom-ramen-for-elevens-val-betyg"
 fields = { "tags" = ["education"] }
 evidence = "M1 är en ogenomskinlig källkod; siffran är en källslot.\ncatalog:variable_text:21815:17897:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:m2-bety"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-betyg"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "M2 är en ogenomskinlig källkod; siffran är en källslot.\ncatalog:variable_text:21816:17897:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:m2-bety"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-betyg"
 fields = { "tags" = ["education"] }
 evidence = "M2 är en ogenomskinlig källkod; siffran är en källslot.\ncatalog:variable_text:21816:17897:20454"
 
@@ -914,13 +914,13 @@ evidence = "Faderns omkodade utbildningsnivå ingår i gruppen.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Sva är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:21849:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "Sva är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:21849:15706:20454"
 

@@ -218,85 +218,85 @@ evidence = "Biologins provbetyg ingår i NO-resultaten.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:en-a-delt"
+subject = "var:deltagande-i-engelska-prov-a"
 fields = { "sets" = ["provdeltagande-i-engelska"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22101:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-a-delt"
+subject = "var:deltagande-i-engelska-prov-a"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22101:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b-delt"
+subject = "var:deltagande-i-engelska-prov-b"
 fields = { "sets" = ["provdeltagande-i-engelska"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22102:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b-delt"
+subject = "var:deltagande-i-engelska-prov-b"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22102:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1a-poang"
+subject = "var:poang-pa-delprov-b1a-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22103:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1a-poang"
+subject = "var:poang-pa-delprov-b1a-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22103:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1b-poang"
+subject = "var:poang-pa-delprov-b1b-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22104:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1b-poang"
+subject = "var:poang-pa-delprov-b1b-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22104:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1c-poang"
+subject = "var:poang-pa-delprov-b1c-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22105:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b1c-poang"
+subject = "var:poang-pa-delprov-b1c-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22105:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b2a-poang"
+subject = "var:poang-pa-delprov-b2a-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22106:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b2a-poang"
+subject = "var:poang-pa-delprov-b2a-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22106:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b2b-poang"
+subject = "var:poang-pa-delprov-b2b-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22107:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:en-b2b-poang"
+subject = "var:poang-pa-delprov-b2b-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22107:15340:15522"
 
@@ -314,13 +314,13 @@ evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över
 
 [[statement]]
 kind = "set"
-subject = "var:en-c-delt"
+subject = "var:deltagande-i-engelska-prov-c"
 fields = { "sets" = ["provdeltagande-i-engelska"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22109:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-c-delt"
+subject = "var:deltagande-i-engelska-prov-c"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22109:20089:20270"
 
@@ -350,25 +350,25 @@ evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22112:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22112:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-provbet"
+subject = "var:provbetyg-i-engelska"
 fields = { "sets" = ["provresultat-i-engelska"] }
 evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22113:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-provbet"
+subject = "var:provbetyg-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22113:20089:20270"
 
@@ -518,49 +518,49 @@ evidence = "Ma och PoT är källkoder. Etiketten delas med andra variabler och k
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pr"
+subject = "var:resultat-pa-delprov-a-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22128:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pr"
+subject = "var:resultat-pa-delprov-a-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22128:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-poang"
+subject = "var:poang-pa-delprov-b-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22129:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-poang"
+subject = "var:poang-pa-delprov-b-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22129:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-pr"
+subject = "var:resultat-pa-delprov-b-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22130:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-pr"
+subject = "var:resultat-pa-delprov-b-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22130:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-poang"
+subject = "var:poang-pa-delprov-c-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22131:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-poang"
+subject = "var:poang-pa-delprov-c-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22131:15340:15522"
 
@@ -590,97 +590,97 @@ evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pr"
+subject = "var:resultat-pa-delprov-c-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22134:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pr"
+subject = "var:resultat-pa-delprov-c-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22134:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-poang"
+subject = "var:poang-pa-delprov-d-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22135:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-poang"
+subject = "var:poang-pa-delprov-d-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22135:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-pr"
+subject = "var:resultat-pa-delprov-d-i-matematik"
 fields = { "sets" = ["provresultat-i-matematik"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22136:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-pr"
+subject = "var:resultat-pa-delprov-d-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22136:15340:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-a"
+subject = "var:deltagande-i-matematik-prov-a"
 fields = { "sets" = ["provdeltagande-i-matematik"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22137:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-a"
+subject = "var:deltagande-i-matematik-prov-a"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22137:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-b"
+subject = "var:deltagande-i-matematik-prov-b"
 fields = { "sets" = ["provdeltagande-i-matematik"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22138:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-b"
+subject = "var:deltagande-i-matematik-prov-b"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22138:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-c"
+subject = "var:deltagande-i-matematik-prov-c"
 fields = { "sets" = ["provdeltagande-i-matematik"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22139:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-c"
+subject = "var:deltagande-i-matematik-prov-c"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22139:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-d"
+subject = "var:deltagande-i-matematik-prov-d"
 fields = { "sets" = ["provdeltagande-i-matematik"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22140:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-d"
+subject = "var:deltagande-i-matematik-prov-d"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22140:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-e"
+subject = "var:deltagande-i-matematik-prov-e"
 fields = { "sets" = ["provdeltagande-i-matematik"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22141:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-delt-e"
+subject = "var:deltagande-i-matematik-prov-e"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22141:20089:20270"
 
@@ -710,13 +710,13 @@ evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22144:20089:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22144:20089:20270"
 

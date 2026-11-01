@@ -296,49 +296,49 @@ evidence = "Kommungrupp är en geografisk klassificering.\ncatalog:valueset:1233
 
 [[statement]]
 kind = "set"
-subject = "var:ksksats-1"
+subject = "var:kommunal-skattesats-till-primarkommun-ar-t-1"
 fields = { "sets" = ["primarkommunal-skattesats"] }
 evidence = "KSk är en källförkortning och inte läsbara ordstammar för kommunal skattesats.\ncatalog:variable_text:34319:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksats-1"
+subject = "var:kommunal-skattesats-till-primarkommun-ar-t-1"
 fields = { "tags" = ["taxation"] }
 evidence = "KSk är en källförkortning och inte läsbara ordstammar för kommunal skattesats.\ncatalog:variable_text:34319:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsandr"
+subject = "var:forandring-i-kommunal-skattesats-till-primarkommun"
 fields = { "sets" = ["primarkommunal-skattesats"] }
 evidence = "KSk är en ogenomskinlig källförkortning.\ncatalog:variable_text:34320:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsandr"
+subject = "var:forandring-i-kommunal-skattesats-till-primarkommun"
 fields = { "tags" = ["taxation"] }
 evidence = "KSk är en ogenomskinlig källförkortning.\ncatalog:variable_text:34320:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsh"
+subject = "var:den-hogsta-primarkommunala-skattesatsen-i-lanet"
 fields = { "sets" = ["primarkommunal-skattesats"] }
 evidence = "KSk och H är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34321:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsh"
+subject = "var:den-hogsta-primarkommunala-skattesatsen-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "KSk och H är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34321:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsl"
+subject = "var:den-lagsta-primarkommunala-skattesatsen-i-lanet"
 fields = { "sets" = ["primarkommunal-skattesats"] }
 evidence = "KSk och L är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34322:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ksksatsl"
+subject = "var:den-lagsta-primarkommunala-skattesatsen-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "KSk och L är källkoder, inte läsbara ordstammar.\ncatalog:variable_text:34322:13514:15340"
 
@@ -404,25 +404,25 @@ evidence = "Landareal beskriver markens egenskap.\ncatalog:variable_text:34327:1
 
 [[statement]]
 kind = "set"
-subject = "var:ltsksats-1"
+subject = "var:kommunal-skattesats-till-landsting-ar-t-1"
 fields = { "sets" = ["landstingsskattesats"] }
 evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34328:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ltsksats-1"
+subject = "var:kommunal-skattesats-till-landsting-ar-t-1"
 fields = { "tags" = ["taxation"] }
 evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34328:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ltsksatsandr"
+subject = "var:forandring-i-kommunal-skattesats-till-landsting"
 fields = { "sets" = ["landstingsskattesats"] }
 evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34329:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:ltsksatsandr"
+subject = "var:forandring-i-kommunal-skattesats-till-landsting"
 fields = { "tags" = ["taxation"] }
 evidence = "Lt och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34329:13514:15340"
 
@@ -656,49 +656,49 @@ evidence = "Variabeln anger skattekraft relativt riksmedelvärdet.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvh"
+subject = "var:den-hogsta-skattekraften-i-lanet"
 fields = { "sets" = ["skattekraft"] }
 evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34350:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvh"
+subject = "var:den-hogsta-skattekraften-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34350:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvhtkr"
+subject = "var:den-hogsta-skattekraften-i-lanet-i-tusental-kronor"
 fields = { "sets" = ["skattekraft"] }
 evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34351:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvhtkr"
+subject = "var:den-hogsta-skattekraften-i-lanet-i-tusental-kronor"
 fields = { "tags" = ["taxation"] }
 evidence = "H är en enbokstavskod för högsta värde.\ncatalog:variable_text:34351:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvl"
+subject = "var:den-lagsta-skattekraften-i-lanet"
 fields = { "sets" = ["skattekraft"] }
 evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34352:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvl"
+subject = "var:den-lagsta-skattekraften-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34352:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvltkr"
+subject = "var:den-lagsta-skattekraften-i-lanet-i-tusental-kronor"
 fields = { "sets" = ["skattekraft"] }
 evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34353:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:skundinvltkr"
+subject = "var:den-lagsta-skattekraften-i-lanet-i-tusental-kronor"
 fields = { "tags" = ["taxation"] }
 evidence = "L är en enbokstavskod för lägsta värde.\ncatalog:variable_text:34353:13514:15340"
 
@@ -788,24 +788,24 @@ evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34361
 
 [[statement]]
 kind = "set"
-subject = "var:tsksatsh"
+subject = "var:den-hogsta-totala-kommunala-skattesatsen-i-lanet"
 fields = { "sets" = ["total-kommunal-skattesats"] }
 evidence = "T, Sk och H är ogenomskinliga källkoder.\ncatalog:variable_text:34362:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:tsksatsh"
+subject = "var:den-hogsta-totala-kommunala-skattesatsen-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "T, Sk och H är ogenomskinliga källkoder.\ncatalog:variable_text:34362:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:tsksatsl"
+subject = "var:den-lagsta-totala-kommunala-skattesatsen-i-lanet"
 fields = { "sets" = ["total-kommunal-skattesats"] }
 evidence = "T, Sk och L är ogenomskinliga källkoder.\ncatalog:variable_text:34363:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:tsksatsl"
+subject = "var:den-lagsta-totala-kommunala-skattesatsen-i-lanet"
 fields = { "tags" = ["taxation"] }
 evidence = "T, Sk och L är ogenomskinliga källkoder.\ncatalog:variable_text:34363:13514:15340"

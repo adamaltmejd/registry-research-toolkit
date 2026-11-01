@@ -404,13 +404,13 @@ evidence = "Indikatorn avser nylig invandring.\ncatalog:occurrence-locators:vari
 
 [[statement]]
 kind = "set"
-subject = "var:obtid"
+subject = "var:inskrivningstid"
 fields = { "sets" = [] }
 evidence = "OB är en bokstavskod och id:t är inte en läsbar förkortning av etiketten.\ncatalog:occurrence-locators:variable:3067\ncatalog:variable_text:3067:18915:18916"
 
 [[statement]]
 kind = "set"
-subject = "var:obtid"
+subject = "var:inskrivningstid"
 fields = { "tags" = ["education"] }
 evidence = "OB är en bokstavskod och id:t är inte en läsbar förkortning av etiketten.\ncatalog:occurrence-locators:variable:3067\ncatalog:variable_text:3067:18915:18916"
 

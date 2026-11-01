@@ -103,13 +103,13 @@ evidence = "Antalet svarande är ett undersökningsmått.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ftyrkvis"
+subject = "var:yrkesvisning"
 fields = { "sets" = [] }
 evidence = "Källkolumnens initial är en opak kod.\ncatalog:variable_text:38938:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ftyrkvis"
+subject = "var:yrkesvisning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens initial är en opak kod.\ncatalog:variable_text:38938:19723:20089"
 
@@ -187,49 +187,49 @@ evidence = "Lillan är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38
 
 [[statement]]
 kind = "set"
-subject = "var:ljannons"
+subject = "var:totalt-antal-annonserade-lediga-jobb-pa-ett-arbetsstalle"
 fields = { "sets" = ["lediga-jobb"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38945:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljannons"
+subject = "var:totalt-antal-annonserade-lediga-jobb-pa-ett-arbetsstalle"
 fields = { "tags" = ["employment"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38945:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljovr"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-ovriga"
 fields = { "sets" = ["lediga-jobb"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38946:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljovr"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-ovriga"
 fields = { "tags" = ["employment"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38946:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljtotexljvik"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-exkl-vik"
 fields = { "sets" = ["lediga-jobb"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38947:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljtotexljvik"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-exkl-vik"
 fields = { "tags" = ["employment"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38947:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljvikvetinte"
+subject = "var:vet-ej-vikariefragan"
 fields = { "sets" = [] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38948:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ljvikvetinte"
+subject = "var:vet-ej-vikariefragan"
 fields = { "tags" = ["methods"] }
 evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38948:19723:20454"
 
@@ -259,13 +259,13 @@ evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ratg1"
+subject = "var:atgarder-vid-rekryteringsproblem-forlangde-rekryteringstiden"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38953:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg1"
+subject = "var:atgarder-vid-rekryteringsproblem-forlangde-rekryteringstiden"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38953:19723:20454"
 
@@ -295,13 +295,13 @@ evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:ratg4"
+subject = "var:atgarder-vid-rekryteringsproblem-sankte-kraven-pa-personliga"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38956:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg4"
+subject = "var:atgarder-vid-rekryteringsproblem-sankte-kraven-pa-personliga"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38956:19723:20454"
 
@@ -319,145 +319,145 @@ evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ratg6"
+subject = "var:atgarder-vid-rekryteringsproblem-erbjod-andra-formaner-som-t"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38958:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg6"
+subject = "var:atgarder-vid-rekryteringsproblem-erbjod-andra-formaner-som-t"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38958:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg7"
+subject = "var:atgarder-vid-rekryteringsproblem-forsokte-rekrytera"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38959:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg7"
+subject = "var:atgarder-vid-rekryteringsproblem-forsokte-rekrytera"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38959:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg8annan"
+subject = "var:atgarder-vid-rekryteringsproblem-annan-atgard"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38960:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratg8annan"
+subject = "var:atgarder-vid-rekryteringsproblem-annan-atgard"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38960:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratgingen"
+subject = "var:atgarder-vid-rekryteringsproblem-ingen-atgard"
 fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38961:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ratgingen"
+subject = "var:atgarder-vid-rekryteringsproblem-ingen-atgard"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38961:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon1"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-hyrde-in-personal"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38962:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon1"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-hyrde-in-personal"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38962:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon10annan"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-annan-konsekvens"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38963:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon10annan"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-annan-konsekvens"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38963:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon11"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-inga-konsekvenser"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38964:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon11"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-inga-konsekvenser"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38964:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon2"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-kopte-tjanster"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38965:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon2"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-kopte-tjanster"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38965:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon3"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-befintlig-personal"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38966:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon3"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-befintlig-personal"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38966:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon4"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-utbildning"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38967:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon4"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-utbildning"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38967:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon5"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-gora"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38968:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon5"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-gora"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38968:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon6"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-anstalla"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38969:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon6"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-anstalla"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38969:19723:20454"
 
@@ -487,25 +487,25 @@ evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:rkon9"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-planerad-expansion"
 fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38972:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rkon9"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-planerad-expansion"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38972:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rlir"
+subject = "var:har-inte-lyckats-rekrytera-sa-manga-personer-som-sokts-under"
 fields = { "sets" = ["ej-tillgodosedda-rekryteringar"] }
 evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38973:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rlir"
+subject = "var:har-inte-lyckats-rekrytera-sa-manga-personer-som-sokts-under"
 fields = { "tags" = ["employment"] }
 evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38973:19723:20454"
 
@@ -583,25 +583,25 @@ evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:rprob5"
+subject = "var:typ-av-rekryteringsproblem-inga-sokande-overhuvudtaget"
 fields = { "sets" = ["typer-av-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38980:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprob5"
+subject = "var:typ-av-rekryteringsproblem-inga-sokande-overhuvudtaget"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38980:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprob6"
+subject = "var:typ-av-rekryteringsproblem-de-sokande-hade-hogre-lonekrav-an"
 fields = { "sets" = ["typer-av-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38981:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprob6"
+subject = "var:typ-av-rekryteringsproblem-de-sokande-hade-hogre-lonekrav-an"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38981:19723:20454"
 
@@ -619,49 +619,49 @@ evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:rprob8"
+subject = "var:typ-av-rekryteringsproblem-annat-problem"
 fields = { "sets" = ["typer-av-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38983:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprob8"
+subject = "var:typ-av-rekryteringsproblem-annat-problem"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38983:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprobinga"
+subject = "var:typ-av-rekryteringsproblem-upplevde-inga-problem"
 fields = { "sets" = ["typer-av-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38984:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprobinga"
+subject = "var:typ-av-rekryteringsproblem-upplevde-inga-problem"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38984:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprobinteavsl"
+subject = "var:typ-av-rekryteringsproblem-har-inte-kommit-tillrackligt"
 fields = { "sets" = ["typer-av-rekryteringsproblem"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38985:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rprobinteavsl"
+subject = "var:typ-av-rekryteringsproblem-har-inte-kommit-tillrackligt"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38985:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rrek"
+subject = "var:har-rekryterat-eller-forsokt-rekrytera-personal-under-de"
 fields = { "sets" = ["rekryteringsaktivitet"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38986:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rrek"
+subject = "var:har-rekryterat-eller-forsokt-rekrytera-personal-under-de"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38986:19723:20454"
 
@@ -763,37 +763,37 @@ evidence = "Variabeln anger urvalsstorlek.\ncatalog:variable_text:38995:19723:20
 
 [[statement]]
 kind = "set"
-subject = "var:w-man"
+subject = "var:manadsvikt"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "W är en opak bokstavskod.\ncatalog:variable_text:38996:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:w-man"
+subject = "var:manadsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "W är en opak bokstavskod.\ncatalog:variable_text:38996:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:yantae-nr1"
+subject = "var:antal-arbetsstallenenheter-i-kombination-av-naringsgren"
 fields = { "sets" = [] }
 evidence = "Yantae är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38997:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:yantae-nr1"
+subject = "var:antal-arbetsstallenenheter-i-kombination-av-naringsgren"
 fields = { "tags" = ["methods"] }
 evidence = "Yantae är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38997:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ymeananst-nr1"
+subject = "var:genomsnittligt-antal-anstallda-i-yrket"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Y är en opak bokstavskod och mean är inte en ordstam i etiketten.\ncatalog:variable_text:38998:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ymeananst-nr1"
+subject = "var:genomsnittligt-antal-anstallda-i-yrket"
 fields = { "tags" = ["employment"] }
 evidence = "Y är en opak bokstavskod och mean är inte en ordstam i etiketten.\ncatalog:variable_text:38998:19723:20089"
 
@@ -811,25 +811,25 @@ evidence = "Yr är en opak källkod för en indikator.\ncatalog:variable_text:38
 
 [[statement]]
 kind = "set"
-subject = "var:yrek"
+subject = "var:rekryterat-eller-forsokt-rekrytera-personal-till-en-specifik"
 fields = { "sets" = ["rekryteringsaktivitet"] }
 evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39000:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:yrek"
+subject = "var:rekryterat-eller-forsokt-rekrytera-personal-till-en-specifik"
 fields = { "tags" = ["employment"] }
 evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39000:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:yrekvs"
+subject = "var:hur-ofta-lyckats-rekrytera-med-ratt-kvalifikationer-till-en"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger hur ofta rekrytering med rätt kvalifikationer lyckats.\ncatalog:variable_text:39001:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:yrekvs"
+subject = "var:hur-ofta-lyckats-rekrytera-med-ratt-kvalifikationer-till-en"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak källmnemonik; etiketten anger hur ofta rekrytering med rätt kvalifikationer lyckats.\ncatalog:variable_text:39001:19723:20089"
 
@@ -871,12 +871,12 @@ evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39004:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ysak-kt"
+subject = "var:yrken-dar-personer-saknas"
 fields = { "sets" = ["yrkesangivelse"] }
 evidence = "Y och KT är opaka källkoder.\ncatalog:variable_text:39005:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ysak-kt"
+subject = "var:yrken-dar-personer-saknas"
 fields = { "tags" = ["employment"] }
 evidence = "Y och KT är opaka källkoder.\ncatalog:variable_text:39005:19723:20089"

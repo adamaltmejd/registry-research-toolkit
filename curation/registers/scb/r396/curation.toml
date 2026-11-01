@@ -271,13 +271,13 @@ evidence = "Folkbokföringslän är en geografisk tillhörighet.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:luakod"
+subject = "var:omraden-med-lokala-utvecklingsavtal-alt-urbant"
 fields = { "sets" = [] }
 evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln anger geografiska områden.\ncatalog:variable_text:41389:9862:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:luakod"
+subject = "var:omraden-med-lokala-utvecklingsavtal-alt-urbant"
 fields = { "tags" = ["geography"] }
 evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln anger geografiska områden.\ncatalog:variable_text:41389:9862:18262"
 

@@ -422,25 +422,25 @@ evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:2962:189
 
 [[statement]]
 kind = "set"
-subject = "var:c-antmand"
+subject = "var:antal-mandat-centerpartiet"
 fields = { "sets" = ["mandatantal"] }
 evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2963:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:c-antmand"
+subject = "var:antal-mandat-centerpartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2963:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:c-antrost"
+subject = "var:antal-giltiga-roster-centerpartiet"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2964:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:c-antrost"
+subject = "var:antal-giltiga-roster-centerpartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2964:18993:19358"
 
@@ -506,13 +506,13 @@ evidence = "Variabeln mäter giltiga röster.\ncatalog:variable_text:2969:18993:
 
 [[statement]]
 kind = "set"
-subject = "var:kd-antmand"
+subject = "var:antal-mandat-kristdemokraterna"
 fields = { "sets" = ["mandatantal"] }
 evidence = "KD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2970:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kd-antmand"
+subject = "var:antal-mandat-kristdemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "KD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2970:18993:19358"
 
@@ -734,25 +734,25 @@ evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot landsti
 
 [[statement]]
 kind = "set"
-subject = "var:m-antmand"
+subject = "var:antal-mandat-moderaterna"
 fields = { "sets" = ["mandatantal"] }
 evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2990:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:m-antmand"
+subject = "var:antal-mandat-moderaterna"
 fields = { "tags" = ["democracy"] }
 evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2990:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:m-antrost"
+subject = "var:antal-giltiga-roster-moderaterna"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2991:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:m-antrost"
+subject = "var:antal-giltiga-roster-moderaterna"
 fields = { "tags" = ["democracy"] }
 evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2991:18993:19358"
 
@@ -794,49 +794,49 @@ evidence = "Variabeln anger medborgarskapsland.\ncatalog:variable_text:2995:1899
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antmand"
+subject = "var:antal-mandat-miljopartiet"
 fields = { "sets" = ["mandatantal"] }
 evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2996:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antmand"
+subject = "var:antal-mandat-miljopartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2996:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antrost"
+subject = "var:antal-giltiga-roster-miljopartiet"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2997:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antrost"
+subject = "var:antal-giltiga-roster-miljopartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2997:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nyd-antmand"
+subject = "var:antal-mandat-ny-demokrati"
 fields = { "sets" = ["mandatantal"] }
 evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2999:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:nyd-antmand"
+subject = "var:antal-mandat-ny-demokrati"
 fields = { "tags" = ["democracy"] }
 evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2999:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:nyd-antrost"
+subject = "var:antal-giltiga-roster-ny-demokrati"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3000:7670:8035"
 
 [[statement]]
 kind = "set"
-subject = "var:nyd-antrost"
+subject = "var:antal-giltiga-roster-ny-demokrati"
 fields = { "tags" = ["democracy"] }
 evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3000:7670:8035"
 
@@ -1046,25 +1046,25 @@ evidence = "Variabeln kodar rösträtt.\ncatalog:valueset:9721"
 
 [[statement]]
 kind = "set"
-subject = "var:s-antmand"
+subject = "var:antal-mandat-socialdemokraterna"
 fields = { "sets" = ["mandatantal"] }
 evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3019:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:s-antmand"
+subject = "var:antal-mandat-socialdemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3019:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:s-antrost"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3020:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:s-antrost"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3020:18993:19358"
 
@@ -1082,37 +1082,37 @@ evidence = "Variabeln mäter sammanräknad förvärvsinkomst.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antmand"
+subject = "var:antal-mandat-sverigedemokraterna"
 fields = { "sets" = ["mandatantal"] }
 evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3022:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antmand"
+subject = "var:antal-mandat-sverigedemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3022:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antrost"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3023:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antrost"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3023:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skp-antrost"
+subject = "var:antal-giltiga-roster-sveriges-kommunistiska-parti"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "SKP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3025:3287:3652"
 
 [[statement]]
 kind = "set"
-subject = "var:skp-antrost"
+subject = "var:antal-giltiga-roster-sveriges-kommunistiska-parti"
 fields = { "tags" = ["democracy"] }
 evidence = "SKP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3025:3287:3652"
 
@@ -1310,13 +1310,13 @@ evidence = "Variabeln anger svensk och utländsk bakgrund i text.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:v-antmand"
+subject = "var:antal-mandat-vansterpartiet"
 fields = { "sets" = ["mandatantal"] }
 evidence = "V är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3042:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:v-antmand"
+subject = "var:antal-mandat-vansterpartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "V är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3042:18993:19358"
 

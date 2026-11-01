@@ -337,133 +337,133 @@ evidence = "Avregistreringskoden beskriver svar, bortfall och övertäckning i u
 
 [[statement]]
 kind = "set"
-subject = "var:f1"
+subject = "var:personal-med-angiven-utbildning"
 fields = { "sets" = ["sysselsatt-personal"] }
 evidence = "F1 är en ogenomskinlig frågekod; källan beskriver förekomst av personal med angiven utbildning.\ncatalog:variable_text:3358:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f1"
+subject = "var:personal-med-angiven-utbildning"
 fields = { "tags" = ["employment"] }
 evidence = "F1 är en ogenomskinlig frågekod; källan beskriver förekomst av personal med angiven utbildning.\ncatalog:variable_text:3358:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f2"
+subject = "var:antal-anstallda-med-ratt-utbildning"
 fields = { "sets" = ["sysselsatt-personal"] }
 evidence = "F2 är en ogenomskinlig frågekod för antal anställda med rätt utbildning.\ncatalog:variable_text:3359:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f2"
+subject = "var:antal-anstallda-med-ratt-utbildning"
 fields = { "tags" = ["employment"] }
 evidence = "F2 är en ogenomskinlig frågekod för antal anställda med rätt utbildning.\ncatalog:variable_text:3359:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f3a"
+subject = "var:antalet-anstallda-pa-1-ars-sikt"
 fields = { "sets" = ["framtida-antal-anstallda"] }
 evidence = "F3a är en ogenomskinlig frågekod för bedömning av förändringen på ett års sikt.\ncatalog:valueset:12791\ncatalog:variable_text:3360:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f3a"
+subject = "var:antalet-anstallda-pa-1-ars-sikt"
 fields = { "tags" = ["employment"] }
 evidence = "F3a är en ogenomskinlig frågekod för bedömning av förändringen på ett års sikt.\ncatalog:valueset:12791\ncatalog:variable_text:3360:18628:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f3b"
+subject = "var:antalet-anstallda-pa-3-ars-sikt"
 fields = { "sets" = ["framtida-antal-anstallda"] }
 evidence = "F3b är en ogenomskinlig frågekod för bedömning av förändringen på tre års sikt.\ncatalog:valueset:12791\ncatalog:variable_text:3361:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f3b"
+subject = "var:antalet-anstallda-pa-3-ars-sikt"
 fields = { "tags" = ["employment"] }
 evidence = "F3b är en ogenomskinlig frågekod för bedömning av förändringen på tre års sikt.\ncatalog:valueset:12791\ncatalog:variable_text:3361:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:har-foretaget-sokt-personal"
 fields = { "sets" = ["sokt-personal"] }
 evidence = "F4a är en ogenomskinlig frågekod för om företaget sökt personal.\ncatalog:variable_text:3362:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:har-foretaget-sokt-personal"
 fields = { "tags" = ["employment"] }
 evidence = "F4a är en ogenomskinlig frågekod för om företaget sökt personal.\ncatalog:variable_text:3362:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:antal-sokta-personer"
 fields = { "sets" = ["sokt-personal"] }
 evidence = "F4b är en ogenomskinlig frågekod för antal sökta personer.\ncatalog:variable_text:3363:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:antal-sokta-personer"
 fields = { "tags" = ["employment"] }
 evidence = "F4b är en ogenomskinlig frågekod för antal sökta personer.\ncatalog:variable_text:3363:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:nyanstallt-personal"
 fields = { "sets" = ["nyanstalld-personal"] }
 evidence = "F4c är en ogenomskinlig frågekod för förekomst av nyanställning.\ncatalog:variable_text:3364:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:nyanstallt-personal"
 fields = { "tags" = ["employment"] }
 evidence = "F4c är en ogenomskinlig frågekod för förekomst av nyanställning.\ncatalog:variable_text:3364:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:antal-nyanstallda"
 fields = { "sets" = ["nyanstalld-personal"] }
 evidence = "F4d är en ogenomskinlig frågekod för antal nyanställda.\ncatalog:variable_text:3365:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:antal-nyanstallda"
 fields = { "tags" = ["employment"] }
 evidence = "F4d är en ogenomskinlig frågekod för antal nyanställda.\ncatalog:variable_text:3365:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a"
+subject = "var:tillgangen-pa-nyutexaminerade-sokande"
 fields = { "sets" = ["tillgang-pa-sokande"] }
 evidence = "F5a är en ogenomskinlig frågekod för tillgången på nyutexaminerade sökande.\ncatalog:variable_text:3366:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a"
+subject = "var:tillgangen-pa-nyutexaminerade-sokande"
 fields = { "tags" = ["employment"] }
 evidence = "F5a är en ogenomskinlig frågekod för tillgången på nyutexaminerade sökande.\ncatalog:variable_text:3366:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b"
+subject = "var:tillgangen-pa-yrkeserfarna-sokande"
 fields = { "sets" = ["tillgang-pa-sokande"] }
 evidence = "F5b är en ogenomskinlig frågekod för tillgången på yrkeserfarna sökande.\ncatalog:variable_text:3367:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b"
+subject = "var:tillgangen-pa-yrkeserfarna-sokande"
 fields = { "tags" = ["employment"] }
 evidence = "F5b är en ogenomskinlig frågekod för tillgången på yrkeserfarna sökande.\ncatalog:variable_text:3367:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f6"
+subject = "var:om-brist-hur-manga-fler-skulle-ni-vilja-anstalla"
 fields = { "sets" = [] }
 evidence = "F6 är en ogenomskinlig frågekod för ytterligare önskade anställningar vid brist.\ncatalog:variable_text:3368:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:f6"
+subject = "var:om-brist-hur-manga-fler-skulle-ni-vilja-anstalla"
 fields = { "tags" = ["employment"] }
 evidence = "F6 är en ogenomskinlig frågekod för ytterligare önskade anställningar vid brist.\ncatalog:variable_text:3368:18262:19723"
 
@@ -493,13 +493,13 @@ evidence = "Arbetsställets näringsgren hör till företagsstruktur.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:popstorl"
+subject = "var:totalt-antal-arbetsstallen-i-urvalsramen"
 fields = { "sets" = ["antal-arbetsstallen-i-urvalsdesignen"] }
 evidence = "Källmnemoniken är ogenomskinlig i förhållande till benämningen för antal arbetsställen i urvalsramen.\ncatalog:variable_text:3374:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:popstorl"
+subject = "var:totalt-antal-arbetsstallen-i-urvalsramen"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är ogenomskinlig i förhållande till benämningen för antal arbetsställen i urvalsramen.\ncatalog:variable_text:3374:19358:19723"
 

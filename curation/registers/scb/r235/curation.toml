@@ -38,7 +38,7 @@ evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:22\n\nLeg
 kind = "link"
 subject = "var:vsnamn"
 relation = "label_of"
-object = "scb/vaxtskyddsmedel/vsid"
+object = "scb/vaxtskyddsmedel/vaxtskyddsmedelsid-2006"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:26\n\nLegacy code_label_pair declaration"
 
 [[statement]]
@@ -2023,13 +2023,13 @@ evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:vsid"
+subject = "var:vaxtskyddsmedelsid-2006"
 fields = { "sets" = ["vaxtskyddspreparat"] }
 evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515598\ncatalog:variable_text:55409:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:vsid"
+subject = "var:vaxtskyddsmedelsid-2006"
 fields = { "tags" = ["agriculture"] }
 evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515598\ncatalog:variable_text:55409:13149:13514"
 

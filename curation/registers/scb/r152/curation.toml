@@ -97,25 +97,25 @@ evidence = "Kommentarer om granskning och insamling är kvalitetsmetadata.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:impcao"
+subject = "var:imputering-av-uppgift-om-syraneutraliserande-verkan"
 fields = { "sets" = [] }
 evidence = "CaO är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12780:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:impcao"
+subject = "var:imputering-av-uppgift-om-syraneutraliserande-verkan"
 fields = { "tags" = ["methods"] }
 evidence = "CaO är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12780:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:impcd"
+subject = "var:imputering-av-uppgift-om-kadmiuminnehall"
 fields = { "sets" = [] }
 evidence = "Cd är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12781:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:impcd"
+subject = "var:imputering-av-uppgift-om-kadmiuminnehall"
 fields = { "tags" = ["methods"] }
 evidence = "Cd är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12781:14610:15706"
 
@@ -133,13 +133,13 @@ evidence = "Variabeln beskriver uppgiftens källa eller imputering.\ncatalog:val
 
 [[statement]]
 kind = "set"
-subject = "var:impmg"
+subject = "var:imputering-av-uppgift-om-magnesiuminnehall"
 fields = { "sets" = [] }
 evidence = "Mg är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12783:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:impmg"
+subject = "var:imputering-av-uppgift-om-magnesiuminnehall"
 fields = { "tags" = ["methods"] }
 evidence = "Mg är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12783:14610:15706"
 

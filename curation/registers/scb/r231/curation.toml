@@ -135,13 +135,13 @@ evidence = "Markeringen beskriver insamlingsenhetens roll.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "sets" = [] }
 evidence = "SVA är en bokstavsförkortning som saknas i etiketten.\ncatalog:variable_text:3110:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "SVA är en bokstavsförkortning som saknas i etiketten.\ncatalog:variable_text:3110:20011:20012"
 

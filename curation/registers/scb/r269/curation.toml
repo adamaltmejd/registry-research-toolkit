@@ -223,13 +223,13 @@ evidence = "Variabeln kodar arbetsställets kommun.\ncatalog:variable_text:6218:
 
 [[statement]]
 kind = "set"
-subject = "var:lanf"
+subject = "var:lan"
 fields = { "sets" = [] }
 evidence = "Det avslutande F är en enbokstavskod i källkolumnen. Variabeln kodar län.\ncatalog:variable_text:6221:13149:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:lanf"
+subject = "var:lan"
 fields = { "tags" = ["geography"] }
 evidence = "Det avslutande F är en enbokstavskod i källkolumnen. Variabeln kodar län.\ncatalog:variable_text:6221:13149:17897"
 
@@ -307,37 +307,37 @@ evidence = "Övertidsersättning är ett lönebelopp.\ncatalog:variable_text:623
 
 [[statement]]
 kind = "set"
-subject = "var:ovklon"
+subject = "var:grundlon"
 fields = { "sets" = ["lonebelopp"] }
 evidence = "Ovk är en källmnemonik som inte är en läsbar stam av grundlön.\ncatalog:variable_text:6231:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ovklon"
+subject = "var:grundlon"
 fields = { "tags" = ["income"] }
 evidence = "Ovk är en källmnemonik som inte är en läsbar stam av grundlön.\ncatalog:variable_text:6231:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ovktid"
+subject = "var:veckoarbetstid-overenskommen"
 fields = { "sets" = ["arbetstid"] }
 evidence = "Ovk är en källmnemonik som inte är en läsbar stam av överenskommen.\ncatalog:variable_text:6232:13149:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ovktid"
+subject = "var:veckoarbetstid-overenskommen"
 fields = { "tags" = ["employment"] }
 evidence = "Ovk är en källmnemonik som inte är en läsbar stam av överenskommen.\ncatalog:variable_text:6232:13149:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ovktidh"
+subject = "var:veckoarbetstid-heltid"
 fields = { "sets" = ["arbetstid"] }
 evidence = "Ovk och det avslutande H är källkoder, inte läsbara stammar av etiketten.\ncatalog:variable_text:6233:13149:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ovktidh"
+subject = "var:veckoarbetstid-heltid"
 fields = { "tags" = ["employment"] }
 evidence = "Ovk och det avslutande H är källkoder, inte läsbara stammar av etiketten.\ncatalog:variable_text:6233:13149:18262"
 

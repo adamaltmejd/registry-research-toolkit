@@ -5,7 +5,7 @@
 "batteri" = ["batteri"]
 "g-faktor" = ["gkap"]
 "personnr" = ["penr"]
-"pkapdat" = ["pkapdat"]
+"iprovsdatum" = ["pkapdat"]
 "provtyp" = ["provtyp"]
 "spatial-formaga" = ["gvkap"]
 "verbal-formaga" = ["gckap"]

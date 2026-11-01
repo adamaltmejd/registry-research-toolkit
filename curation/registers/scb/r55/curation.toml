@@ -1105,37 +1105,37 @@ evidence = "Variabeln anger mottagen arbetslöshetsersättning.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:arslonfinkast"
+subject = "var:arsinkomster-fran-det-valda-arbetsstallet"
 fields = { "sets" = ["arbets-och-foretagarinkomst"] }
 evidence = "Källkolumnens kod är ogenomskinlig.\ncatalog:variable_text:55602:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:arslonfinkast"
+subject = "var:arsinkomster-fran-det-valda-arbetsstallet"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens kod är ogenomskinlig.\ncatalog:variable_text:55602:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:arssyk-egf"
+subject = "var:matar-for-yrkesuppgift-for-egna-foretagare"
 fields = { "sets" = ["yrkesuppgiftens-matar"] }
 evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55603:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:arssyk-egf"
+subject = "var:matar-for-yrkesuppgift-for-egna-foretagare"
 fields = { "tags" = [] }
 evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55603:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:astkommun"
+subject = "var:arbetsstallets-kommun-huvudsaklig-sysselsattning"
 fields = { "sets" = ["arbetsstallets-kommun"] }
 evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55604:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:astkommun"
+subject = "var:arbetsstallets-kommun-huvudsaklig-sysselsattning"
 fields = { "tags" = ["geography"] }
 evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55604:11323:20089"
 
@@ -1225,25 +1225,25 @@ evidence = "Kolumnens andra ägare beskriver utbildningsinriktning trots distrik
 
 [[statement]]
 kind = "set"
-subject = "var:eseg"
+subject = "var:europeisk-socioekonomisk-gruppering"
 fields = { "sets" = ["europeisk-socioekonomisk-gruppering"] }
 evidence = "ESeG är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:55614:16071:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg"
+subject = "var:europeisk-socioekonomisk-gruppering"
 fields = { "tags" = ["employment"] }
 evidence = "ESeG är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:55614:16071:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-egf"
+subject = "var:europeisk-socioekonomisk-gruppering-for-egna-foretagare"
 fields = { "sets" = ["europeisk-socioekonomisk-gruppering"] }
 evidence = "ESeG och EGF är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:55615:16071:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-egf"
+subject = "var:europeisk-socioekonomisk-gruppering-for-egna-foretagare"
 fields = { "tags" = ["employment"] }
 evidence = "ESeG och EGF är bokstavskoder som inte finns i etiketten.\ncatalog:variable_text:55615:16071:20089"
 
@@ -1345,13 +1345,13 @@ evidence = "Jobbbyte och in- och utflöde avser arbetsmarknaden.\ncatalog:values
 
 [[statement]]
 kind = "set"
-subject = "var:kallassyk-egf"
+subject = "var:kalla-for-yrkesuppgift-for-egna-foretagare"
 fields = { "sets" = [] }
 evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kallassyk-egf"
+subject = "var:kalla-for-yrkesuppgift-for-egna-foretagare"
 fields = { "tags" = ["methods"] }
 evidence = "SSYK och EGF är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55624:14610:20089"
 
@@ -1393,25 +1393,25 @@ evidence = "Kontant bruttolön är en lönekomponent.\ncatalog:variable_text:556
 
 [[statement]]
 kind = "set"
-subject = "var:ku1anstkl"
+subject = "var:storleksklass-efter-anstallda-storsta-forvarvskallan"
 fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
 evidence = "KU1 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55628:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1anstkl"
+subject = "var:storleksklass-efter-anstallda-storsta-forvarvskallan"
 fields = { "tags" = ["business"] }
 evidence = "KU1 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55628:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1astkommun"
+subject = "var:arbetsstallets-kommun-storsta-forvarvskallan"
 fields = { "sets" = ["arbetsstallets-kommun"] }
 evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55629:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1astkommun"
+subject = "var:arbetsstallets-kommun-storsta-forvarvskallan"
 fields = { "tags" = ["geography"] }
 evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55629:11323:20089"
 
@@ -1477,13 +1477,13 @@ evidence = "KU1 är en ogenomskinlig källkod; etiketten delas med andra variabl
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-storsta"
 fields = { "sets" = ["arbets-och-foretagarinkomst"] }
 evidence = "KU1 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:55637:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-storsta"
 fields = { "tags" = ["income"] }
 evidence = "KU1 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:55637:11323:20089"
 
@@ -1513,49 +1513,49 @@ evidence = "Identitetsfakta och definitionerna lämnar sysselsättningens omfatt
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ssykar"
+subject = "var:matar-for-yrkesuppgift-storsta-forvarvskallan"
 fields = { "sets" = ["yrkesuppgiftens-matar"] }
 evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55641:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ssykar"
+subject = "var:matar-for-yrkesuppgift-storsta-forvarvskallan"
 fields = { "tags" = [] }
 evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55641:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ssykkalla"
+subject = "var:kalla-for-yrkesuppgift-storsta-forvarvskallan"
 fields = { "sets" = [] }
 evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ssykkalla"
+subject = "var:kalla-for-yrkesuppgift-storsta-forvarvskallan"
 fields = { "tags" = ["methods"] }
 evidence = "KU1 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55642:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2anstkl"
+subject = "var:storleksklass-efter-anstallda-nast-storsta-forvarvskallan"
 fields = { "sets" = ["foretagsstorlek-efter-sysselsatta"] }
 evidence = "KU2 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55643:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2anstkl"
+subject = "var:storleksklass-efter-anstallda-nast-storsta-forvarvskallan"
 fields = { "tags" = ["business"] }
 evidence = "KU2 är en källmnemonik och id:t är ogenomskinligt.\ncatalog:variable_text:55643:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-nast-storsta"
 fields = { "sets" = ["arbets-och-foretagarinkomst"] }
 evidence = "KU2 är en ogenomskinlig källkod.\ncatalog:variable_text:55646:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ink"
+subject = "var:total-bruttolon-eller-foretagarinkomst-nast-storsta"
 fields = { "tags" = ["income"] }
 evidence = "KU2 är en ogenomskinlig källkod.\ncatalog:variable_text:55646:11323:20089"
 
@@ -1585,25 +1585,25 @@ evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ssykar"
+subject = "var:matar-for-yrkesuppgift-nast-storsta-forvarvskallan"
 fields = { "sets" = ["yrkesuppgiftens-matar"] }
 evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55650:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ssykar"
+subject = "var:matar-for-yrkesuppgift-nast-storsta-forvarvskallan"
 fields = { "tags" = [] }
 evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55650:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ssykkalla"
+subject = "var:kalla-for-yrkesuppgift-nast-storsta-forvarvskallan"
 fields = { "sets" = [] }
 evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ssykkalla"
+subject = "var:kalla-for-yrkesuppgift-nast-storsta-forvarvskallan"
 fields = { "tags" = ["methods"] }
 evidence = "KU2 och SSYK är källmnemoniker som inte framgår av etiketten.\ncatalog:variable_text:55651:17897:20089"
 
@@ -1741,13 +1741,13 @@ evidence = "Id:t behålls enligt ovra-familjens gemensamma läsbarhetsbedömning
 
 [[statement]]
 kind = "set"
-subject = "var:ovrkallassyk"
+subject = "var:kalla-for-yrkesuppgift-ovrigt-jobb"
 fields = { "sets" = [] }
 evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ovrkallassyk"
+subject = "var:kalla-for-yrkesuppgift-ovrigt-jobb"
 fields = { "tags" = ["methods"] }
 evidence = "SSYK är en källmnemonik som inte framgår av etiketten.\ncatalog:variable_text:55667:17897:20089"
 
@@ -1897,13 +1897,13 @@ evidence = "Samma tresiffriga yrkesbegrepp är delat per period med scb/yrkesreg
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3-egf"
+subject = "var:yrke-pa-3-sifferniva-for-egna-foretagare"
 fields = { "sets" = ["yrke"] }
 evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55684:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3-egf"
+subject = "var:yrke-pa-3-sifferniva-for-egna-foretagare"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55684:17897:20089"
 
@@ -1969,13 +1969,13 @@ evidence = "Samma fyrsiffriga yrkesbegrepp är delat per period med scb/yrkesreg
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk4-egf"
+subject = "var:yrke-pa-4-sifferniva-for-egna-foretagare"
 fields = { "sets" = ["yrke"] }
 evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55690:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk4-egf"
+subject = "var:yrke-pa-4-sifferniva-for-egna-foretagare"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK och EGF är bokstavskoder som saknas i etiketten.\ncatalog:variable_text:55690:17897:20089"
 

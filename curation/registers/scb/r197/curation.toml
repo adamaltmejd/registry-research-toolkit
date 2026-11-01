@@ -181,13 +181,13 @@ evidence = "The 2013 item asks whether household electricity is included in prop
 
 [[statement]]
 kind = "set"
-subject = "var:admi"
+subject = "var:driftkostnader-administration"
 fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
 evidence = "ADMI är en ogenomskinlig källförkortning för administration.\ncatalog:variable_text:27388:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:admi"
+subject = "var:driftkostnader-administration"
 fields = { "tags" = ["business", "housing"] }
 evidence = "ADMI är en ogenomskinlig källförkortning för administration.\ncatalog:variable_text:27388:16436:16801"
 
@@ -253,37 +253,37 @@ evidence = "Antal lägenheter hör till kandidatgruppen.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:avfond"
+subject = "var:driftkostnader-avskrivna-hyresfordringar"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27394:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:avfond"
+subject = "var:driftkostnader-avskrivna-hyresfordringar"
 fields = { "tags" = ["business"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27394:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:avsk"
+subject = "var:kostnader-avskrivningar-byggnader-markanlaggningar"
 fields = { "sets" = ["avskrivningar"] }
 evidence = "Källkoden är en opak förkortning; posten hör till avskrivningar.\ncatalog:variable_text:27395:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:avsk"
+subject = "var:kostnader-avskrivningar-byggnader-markanlaggningar"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är en opak förkortning; posten hör till avskrivningar.\ncatalog:variable_text:27395:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:bolp"
+subject = "var:kostnader-overfort-fran-underhalls-och-bolanepost"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27396:13514:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:bolp"
+subject = "var:kostnader-overfort-fran-underhalls-och-bolanepost"
 fields = { "tags" = ["business"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27396:13514:16071"
 
@@ -457,13 +457,13 @@ evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27410:1
 
 [[statement]]
 kind = "set"
-subject = "var:eubid"
+subject = "var:intakter-erhallna-eu-bidrag-och-bidrag-fran-andra-an-stat"
 fields = { "sets" = [] }
 evidence = "Id är en källmnemonik och etiketten anger bidragens omfattning.\ncatalog:variable_text:27412:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:eubid"
+subject = "var:intakter-erhallna-eu-bidrag-och-bidrag-fran-andra-an-stat"
 fields = { "tags" = ["business"] }
 evidence = "Id är en källmnemonik och etiketten anger bidragens omfattning.\ncatalog:variable_text:27412:16436:16801"
 
@@ -649,37 +649,37 @@ evidence = "Gemensamt underhåll anges som del av reparations- och underhållsko
 
 [[statement]]
 kind = "set"
-subject = "var:hblo"
+subject = "var:intaktsreduktioner-hyresbortfall-for-outhyrda-lokaler"
 fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
 evidence = "HBLO är en ogenomskinlig bokstavskod för hyresbortfall för lokaler.\ncatalog:variable_text:27428:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:hblo"
+subject = "var:intaktsreduktioner-hyresbortfall-for-outhyrda-lokaler"
 fields = { "tags" = ["business", "housing"] }
 evidence = "HBLO är en ogenomskinlig bokstavskod för hyresbortfall för lokaler.\ncatalog:variable_text:27428:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:hbov"
+subject = "var:intaktsreduktioner-hyresbortfall-ovrigt"
 fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
 evidence = "HBOV är en ogenomskinlig bokstavskod för övrigt hyresbortfall.\ncatalog:variable_text:27429:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:hbov"
+subject = "var:intaktsreduktioner-hyresbortfall-ovrigt"
 fields = { "tags" = ["business", "housing"] }
 evidence = "HBOV är en ogenomskinlig bokstavskod för övrigt hyresbortfall.\ncatalog:variable_text:27429:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:hbto"
+subject = "var:intaktsreduktioner-hyresbortfall-totalt"
 fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
 evidence = "HBTO är en ogenomskinlig bokstavskod för totalt hyresbortfall.\ncatalog:variable_text:27430:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:hbto"
+subject = "var:intaktsreduktioner-hyresbortfall-totalt"
 fields = { "tags" = ["business", "housing"] }
 evidence = "HBTO är en ogenomskinlig bokstavskod för totalt hyresbortfall.\ncatalog:variable_text:27430:16436:16801"
 
@@ -985,13 +985,13 @@ evidence = "Identitetsfaktet kopplar olika mått i angränsande perioder.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:kbid"
+subject = "var:intakter-erhallna-kommunala-driftbidrag-o-dyl"
 fields = { "sets" = [] }
 evidence = "Id är en källmnemonik för kommunala bidrag.\ncatalog:variable_text:27456:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:kbid"
+subject = "var:intakter-erhallna-kommunala-driftbidrag-o-dyl"
 fields = { "tags" = ["business"] }
 evidence = "Id är en källmnemonik för kommunala bidrag.\ncatalog:variable_text:27456:16436:16801"
 
@@ -1093,13 +1093,13 @@ evidence = "Identitetsfaktumet visar överlapp med ett kombinationsbelopp.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:lagund"
+subject = "var:uttagsskatt"
 fields = { "sets" = [] }
 evidence = "Id saknar läsbara stammar från källans etikett.\ncatalog:variable_text:27466:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:lagund"
+subject = "var:uttagsskatt"
 fields = { "tags" = ["taxation"] }
 evidence = "Id saknar läsbara stammar från källans etikett.\ncatalog:variable_text:27466:16436:16801"
 
@@ -1177,13 +1177,13 @@ evidence = "Källan anger nybyggnadsår.\ncatalog:variable_text:27472:16436:1680
 
 [[statement]]
 kind = "set"
-subject = "var:ofinink"
+subject = "var:kapitalkostnader-ovriga"
 fields = { "sets" = ["rantekostnader"] }
 evidence = "OFININK är en källmnemonik som inte uttrycker etikettens kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna. Samtliga poster beskriver räntekostnader. Definitionen begränsar inte medlemskap till fastighetsanknutna lån och omfattar därför även OFININK:s räntor utanför fastighetsförvaltningen.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27481:16436:16801\ncatalog:variable_text:27482:16436:16801\ncatalog:variable_text:27517:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:ofinink"
+subject = "var:kapitalkostnader-ovriga"
 fields = { "tags" = ["business", "housing"] }
 evidence = "OFININK är en källmnemonik som inte uttrycker etikettens kapitalkostnader. Coordinator group membership: V2050 avser övriga kapitalkostnader i form av uppläggningskostnader och dylikt. OFININK avser uttryckligen räntekostnader och utesluts enligt den fasta definitionen. Den stödda medlemmen behålls inför sammanläggning av sektionerna. Samtliga poster beskriver räntekostnader. Definitionen begränsar inte medlemskap till fastighetsanknutna lån och omfattar därför även OFININK:s räntor utanför fastighetsförvaltningen.\ncatalog:variable_text:27473:16436:16801\ncatalog:variable_text:27481:16436:16801\ncatalog:variable_text:27482:16436:16801\ncatalog:variable_text:27517:16436:16801"
 
@@ -1237,13 +1237,13 @@ evidence = "Samma kolumn har överlappande ägare med olika operationella avgrä
 
 [[statement]]
 kind = "set"
-subject = "var:ovvkos"
+subject = "var:kostnader-fran-sidoverksamhet"
 fields = { "sets" = [] }
 evidence = "OVVKOS är en opak källmnemonik för kostnader från sidoverksamhet.\ncatalog:variable_text:27478:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:ovvkos"
+subject = "var:kostnader-fran-sidoverksamhet"
 fields = { "tags" = ["business"] }
 evidence = "OVVKOS är en opak källmnemonik för kostnader från sidoverksamhet.\ncatalog:variable_text:27478:16436:16801"
 
@@ -1321,25 +1321,25 @@ evidence = "Källan anger reparationskostnader.\ncatalog:variable_text:27485:164
 
 [[statement]]
 kind = "set"
-subject = "var:sbid"
+subject = "var:intakter-erhallna-statliga-bidrag"
 fields = { "sets" = ["ovriga-statliga-stod-och-bidrag"] }
 evidence = "SBID är en ogenomskinlig källmnemonik för statliga bidrag.\ncatalog:variable_text:27486:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sbid"
+subject = "var:intakter-erhallna-statliga-bidrag"
 fields = { "tags" = ["housing", "transfers"] }
 evidence = "SBID är en ogenomskinlig källmnemonik för statliga bidrag.\ncatalog:variable_text:27486:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sheo"
+subject = "var:hyresintakter-netto"
 fields = { "sets" = ["intakter-efter-avdrag"] }
 evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27487:14245:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:sheo"
+subject = "var:hyresintakter-netto"
 fields = { "tags" = ["housing"] }
 evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27487:14245:16071"
 
@@ -1381,13 +1381,13 @@ evidence = "Periodsplitten mot foreningens-taxeringsvarde gäller samma taxering
 
 [[statement]]
 kind = "set"
-subject = "var:tbko"
+subject = "var:driftkostnader-taxebundna-kostnader"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27491:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:tbko"
+subject = "var:driftkostnader-taxebundna-kostnader"
 fields = { "tags" = ["business"] }
 evidence = "Id är en ogenomskinlig källmnemonik.\ncatalog:variable_text:27491:16436:16801"
 
@@ -1585,13 +1585,13 @@ evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\n
 
 [[statement]]
 kind = "set"
-subject = "var:v1035"
+subject = "var:bransle-och-varmeavgift"
 fields = { "sets" = [] }
 evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v1035"
+subject = "var:bransle-och-varmeavgift"
 fields = { "tags" = ["energy", "housing"] }
 evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
 
@@ -1621,13 +1621,13 @@ evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:v1060"
+subject = "var:bruttointakter-summa"
 fields = { "sets" = [] }
 evidence = "V1060 är en ogenomskinlig kolumnkod för summan av bruttointäkter.\ncatalog:variable_text:27512:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v1060"
+subject = "var:bruttointakter-summa"
 fields = { "tags" = ["business", "housing"] }
 evidence = "V1060 är en ogenomskinlig kolumnkod för summan av bruttointäkter.\ncatalog:variable_text:27512:16436:16801"
 
@@ -1645,13 +1645,13 @@ evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter
 
 [[statement]]
 kind = "set"
-subject = "var:v1090"
+subject = "var:intaktsreduktioner-ovrigt"
 fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
 evidence = "V1090 är en ogenomskinlig kolumnkod för övriga intäktsreduktioner.\ncatalog:variable_text:27514:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v1090"
+subject = "var:intaktsreduktioner-ovrigt"
 fields = { "tags" = ["business", "housing"] }
 evidence = "V1090 är en ogenomskinlig kolumnkod för övriga intäktsreduktioner.\ncatalog:variable_text:27514:16436:16801"
 
@@ -1669,13 +1669,13 @@ evidence = "V1130 är en ogenomskinlig kolumnkod för varmhyra eller kallhyra.\n
 
 [[statement]]
 kind = "set"
-subject = "var:v2030"
+subject = "var:arets-avskrivningar"
 fields = { "sets" = ["avskrivningar"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27516:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v2030"
+subject = "var:arets-avskrivningar"
 fields = { "tags" = ["business"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27516:16436:16801"
 
@@ -1693,49 +1693,49 @@ evidence = "V2050 är en ogenomskinlig kolumnkod för övriga kapitalkostnader. 
 
 [[statement]]
 kind = "set"
-subject = "var:v2080"
+subject = "var:annat-statligt-stod-och-bidrag"
 fields = { "sets" = ["ovriga-statliga-stod-och-bidrag"] }
 evidence = "V2080 är en ogenomskinlig kolumnkod för annat statligt stöd och bidrag.\ncatalog:variable_text:27518:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:v2080"
+subject = "var:annat-statligt-stod-och-bidrag"
 fields = { "tags" = ["housing", "transfers"] }
 evidence = "V2080 är en ogenomskinlig kolumnkod för annat statligt stöd och bidrag.\ncatalog:variable_text:27518:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:v2090"
+subject = "var:ranteintakter-och-andra-finansiella-intakter"
 fields = { "sets" = ["finansiella-intakter"] }
 evidence = "V2090 är en ogenomskinlig kolumnkod för ränteintäkter och andra finansiella intäkter.\ncatalog:variable_text:27519:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v2090"
+subject = "var:ranteintakter-och-andra-finansiella-intakter"
 fields = { "tags" = ["business", "finance"] }
 evidence = "V2090 är en ogenomskinlig kolumnkod för ränteintäkter och andra finansiella intäkter.\ncatalog:variable_text:27519:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4010"
+subject = "var:driftskostnader-for-skotsel-forvaltning-och-administration"
 fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
 evidence = "V4010 är en ogenomskinlig kolumnkod för driftkostnader för skötsel, förvaltning och administration.\ncatalog:variable_text:27520:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4010"
+subject = "var:driftskostnader-for-skotsel-forvaltning-och-administration"
 fields = { "tags" = ["business", "housing"] }
 evidence = "V4010 är en ogenomskinlig kolumnkod för driftkostnader för skötsel, förvaltning och administration.\ncatalog:variable_text:27520:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4040"
+subject = "var:driftskostnader-for-sophantering"
 fields = { "sets" = ["sophanteringskostnader"] }
 evidence = "V4040 är en ogenomskinlig kolumnkod för sophanteringskostnader.\ncatalog:variable_text:27521:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4040"
+subject = "var:driftskostnader-for-sophantering"
 fields = { "tags" = ["business", "environment", "housing"] }
 evidence = "V4040 är en ogenomskinlig kolumnkod för sophanteringskostnader.\ncatalog:variable_text:27521:16436:16801"
 
@@ -1765,73 +1765,73 @@ evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:v4085"
+subject = "var:central-administration"
 fields = { "sets" = ["skotsel-forvaltning-och-administration"] }
 evidence = "V4085 är en ogenomskinlig kolumnkod för central administration.\ncatalog:variable_text:27524:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4085"
+subject = "var:central-administration"
 fields = { "tags" = ["business", "housing"] }
 evidence = "V4085 är en ogenomskinlig kolumnkod för central administration.\ncatalog:variable_text:27524:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4100"
+subject = "var:sarredovisad-moms"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27525:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4100"
+subject = "var:sarredovisad-moms"
 fields = { "tags" = ["taxation"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27525:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4120"
+subject = "var:foreningens-inkomstskatt"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27526:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v4120"
+subject = "var:foreningens-inkomstskatt"
 fields = { "tags" = ["taxation"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27526:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v6020"
+subject = "var:byggnadskreditiv"
 fields = { "sets" = ["langfristiga-lan"] }
 evidence = "Id är en ogenomskinlig källkod; byggnadskreditiv ingår i summan långfristiga lån.\ncatalog:variable_text:27527:13514:16071\ncatalog:variable_text:27529:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v6020"
+subject = "var:byggnadskreditiv"
 fields = { "tags" = ["finance"] }
 evidence = "Id är en ogenomskinlig källkod; byggnadskreditiv ingår i summan långfristiga lån.\ncatalog:variable_text:27527:13514:16071\ncatalog:variable_text:27529:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v6030"
+subject = "var:langfristiga-lan-ovriga"
 fields = { "sets" = ["langfristiga-lan"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27528:13514:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:v6030"
+subject = "var:langfristiga-lan-ovriga"
 fields = { "tags" = ["finance"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27528:13514:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:v6040"
+subject = "var:langfristiga-lan-summa"
 fields = { "sets" = ["langfristiga-lan"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27529:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:v6040"
+subject = "var:langfristiga-lan-summa"
 fields = { "tags" = ["finance"] }
 evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:27529:16436:16801"
 

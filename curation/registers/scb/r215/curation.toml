@@ -1765,13 +1765,13 @@ evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:msignald"
+subject = "var:dodlighet-signalkraftor-for-konsumtion"
 fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
 evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55062:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:msignald"
+subject = "var:dodlighet-signalkraftor-for-konsumtion"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55062:17167:17532"
 
@@ -1789,13 +1789,13 @@ evidence = "Enheten ändras från kronor till kronor per MWh utan förklaring.\n
 
 [[statement]]
 kind = "set"
-subject = "var:msignalr"
+subject = "var:rymlingar-signalkraftor-for-konsumtion"
 fields = { "sets" = ["rymlingar-fran-odling"] }
 evidence = "MSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55064:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:msignalr"
+subject = "var:rymlingar-signalkraftor-for-konsumtion"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "MSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55064:17167:17532"
 
@@ -2833,13 +2833,13 @@ evidence = "SFlodR är en opak källmnemonik. Variabeln mäter rymlingar i vatte
 
 [[statement]]
 kind = "set"
-subject = "var:sfortsatt"
+subject = "var:sattfisk-for-fortsatt-odling"
 fields = { "sets" = ["sattfiskens-anvandningsandamal"] }
 evidence = "Inledande S är en källkod.\ncatalog:variable_text:55154:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sfortsatt"
+subject = "var:sattfisk-for-fortsatt-odling"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Inledande S är en källkod.\ncatalog:variable_text:55154:16436:16801"
 
@@ -3661,13 +3661,13 @@ evidence = "Källkoden återger inte etikettens ordstammar.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:ssignald"
+subject = "var:dodlighet-signalkraftor-for-utsattning"
 fields = { "sets" = ["dodlighet-bland-odlade-organismer"] }
 evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55223:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ssignald"
+subject = "var:dodlighet-signalkraftor-for-utsattning"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Källmnemoniken innehåller ogenomskinliga bokstavskoder.\ncatalog:variable_text:55223:17167:17532"
 
@@ -3685,13 +3685,13 @@ evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning
 
 [[statement]]
 kind = "set"
-subject = "var:ssignalr"
+subject = "var:rymlingar-signalkraftor-for-utsattning"
 fields = { "sets" = ["rymlingar-fran-odling"] }
 evidence = "SSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55225:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ssignalr"
+subject = "var:rymlingar-signalkraftor-for-utsattning"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "SSignalR är en opak källmnemonik. Variabeln mäter rymlingar i vattenbruk.\ncatalog:variable_text:55225:17167:17532"
 
@@ -3793,13 +3793,13 @@ evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:sutsatt"
+subject = "var:sattfisk-for-utsattning"
 fields = { "sets" = ["sattfiskens-anvandningsandamal"] }
 evidence = "Inledande S är en källkod.\ncatalog:variable_text:55234:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sutsatt"
+subject = "var:sattfisk-for-utsattning"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Inledande S är en källkod.\ncatalog:variable_text:55234:16436:16801"
 

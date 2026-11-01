@@ -1243,13 +1243,13 @@ evidence = "Regional nedsättning av egenavgifter.\ncatalog:variable_text:44997:
 
 [[statement]]
 kind = "set"
-subject = "var:sarskild-loneskatt-pensionsforsakring"
+subject = "var:underlag-f-sarsk-loneskatt-pa-pens-kostn-ulagslpensegen2426"
 fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-egen-pension"] }
 evidence = "Id:t anger skatt men variabeln anger underlag under hela perioden.\ncatalog:variable_text:44998:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sarskild-loneskatt-pensionsforsakring"
+subject = "var:underlag-f-sarsk-loneskatt-pa-pens-kostn-ulagslpensegen2426"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t anger skatt men variabeln anger underlag under hela perioden.\ncatalog:variable_text:44998:12784:18628"
 
@@ -1639,25 +1639,25 @@ evidence = "Kommunal inkomstskatt, fast belopp.\ncatalog:variable_text:45030:127
 
 [[statement]]
 kind = "set"
-subject = "var:skmvsdeb"
+subject = "var:mervardesskatt-debiterat-belopp"
 fields = { "sets" = ["mervardesskatt"] }
 evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45031:12784:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:skmvsdeb"
+subject = "var:mervardesskatt-debiterat-belopp"
 fields = { "tags" = ["taxation"] }
 evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45031:12784:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:skmvskred"
+subject = "var:mervardesskatt-tillgodofort-belopp"
 fields = { "sets" = ["mervardesskatt"] }
 evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45032:12784:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:skmvskred"
+subject = "var:mervardesskatt-tillgodofort-belopp"
 fields = { "tags" = ["taxation"] }
 evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45032:12784:16071"
 
@@ -1783,25 +1783,25 @@ evidence = "Statlig inkomstskatt.\ncatalog:variable_text:45042:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:slskforvink"
+subject = "var:sarskild-loneskatt-pa-vissa-forvarvsinkomster"
 fields = { "sets" = [] }
 evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45043:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:slskforvink"
+subject = "var:sarskild-loneskatt-pa-vissa-forvarvsinkomster"
 fields = { "tags" = ["taxation"] }
 evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45043:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:slskpensanst"
+subject = "var:sarskild-loneskatt-pa-pensionskostnader-for-anstallda"
 fields = { "sets" = ["sarskild-loneskatt-pa-pensionskostnader"] }
 evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45044:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:slskpensanst"
+subject = "var:sarskild-loneskatt-pa-pensionskostnader-for-anstallda"
 fields = { "tags" = ["taxation"] }
 evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45044:12784:18628"
 
@@ -2587,49 +2587,49 @@ evidence = "Källkolumnen har olika ägare och inkomstavgränsningar.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1"
+subject = "var:underlag-for-sjukforsakringsavgift-pa-inkomst-lagre-an-7-5"
 fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget entydigt.\ncatalog:variable_text:45110:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1"
+subject = "var:underlag-for-sjukforsakringsavgift-pa-inkomst-lagre-an-7-5"
 fields = { "tags" = ["taxation"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget entydigt.\ncatalog:variable_text:45110:12784:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per1"
+subject = "var:underlag-for-sjukforsakringsavgift-period-1"
 fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45111:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per1"
+subject = "var:underlag-for-sjukforsakringsavgift-period-1"
 fields = { "tags" = ["taxation"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45111:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per2"
+subject = "var:underlag-for-sjukforsakringsavgift-period-2"
 fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45112:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per2"
+subject = "var:underlag-for-sjukforsakringsavgift-period-2"
 fields = { "tags" = ["taxation"] }
 evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45112:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per3"
+subject = "var:underlag-summerat-for-berakning-av-allman-loneavgift"
 fields = { "sets" = ["underlag-for-allman-loneavgift", "underlag-for-sjukforsakringsavgift"] }
 evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:ulagsfavg1per3"
+subject = "var:underlag-summerat-for-berakning-av-allman-loneavgift"
 fields = { "tags" = ["taxation"] }
 evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167"
 

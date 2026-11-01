@@ -904,25 +904,25 @@ evidence = "Institutionell sektortillhörighet.\ncatalog:variable_text:34974:131
 
 [[statement]]
 kind = "set"
-subject = "var:kdagk"
+subject = "var:antal-sjukdagar-kvinna"
 fields = { "sets" = ["sjukdagar"] }
 evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34975:18993:19723\nregisters/scb/r195/curation.toml:41"
 
 [[statement]]
 kind = "set"
-subject = "var:kdagk"
+subject = "var:antal-sjukdagar-kvinna"
 fields = { "tags" = ["health"] }
 evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34975:18993:19723\nregisters/scb/r195/curation.toml:41"
 
 [[statement]]
 kind = "set"
-subject = "var:kdagm"
+subject = "var:antal-sjukdagar-man"
 fields = { "sets" = ["sjukdagar"] }
 evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34976:18993:19723\nregisters/scb/r195/curation.toml:47"
 
 [[statement]]
 kind = "set"
-subject = "var:kdagm"
+subject = "var:antal-sjukdagar-man"
 fields = { "tags" = ["health"] }
 evidence = "Källmnemoniken innehåller ensamma bokstavskoder.\ncatalog:variable_text:34976:18993:19723\nregisters/scb/r195/curation.toml:47"
 
@@ -1384,13 +1384,13 @@ evidence = "Kodning av referensmånad.\ncatalog:variable_text:35017:13149:15065"
 
 [[statement]]
 kind = "set"
-subject = "var:rpgr"
+subject = "var:indelning-i-aldersgrupp"
 fields = { "sets" = ["alder"] }
 evidence = "Rpgr är en ogenomskinlig källkod.\ncatalog:valueset:1256\ncatalog:variable_text:35018:13149:15065"
 
 [[statement]]
 kind = "set"
-subject = "var:rpgr"
+subject = "var:indelning-i-aldersgrupp"
 fields = { "tags" = ["demographics"] }
 evidence = "Rpgr är en ogenomskinlig källkod.\ncatalog:valueset:1256\ncatalog:variable_text:35018:13149:15065"
 
@@ -1564,13 +1564,13 @@ evidence = "Stratumbeteckning för objekt.\ncatalog:variable_text:35034:13149:13
 
 [[statement]]
 kind = "set"
-subject = "var:vikta"
+subject = "var:upprakningsvikt"
 fields = { "sets" = ["upprakningsvikt"] }
 evidence = "Den ensamma bokstaven A är en källkod i id:t.\ncatalog:variable_text:35035:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:vikta"
+subject = "var:upprakningsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Den ensamma bokstaven A är en källkod i id:t.\ncatalog:variable_text:35035:19358:19723"
 

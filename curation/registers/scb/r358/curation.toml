@@ -19,13 +19,13 @@ evidence = "Bränsleslag klassificerar trädbränslet.\ncatalog:register:261\nca
 
 [[statement]]
 kind = "set"
-subject = "var:btyp"
+subject = "var:kategorityp"
 fields = { "sets" = [] }
 evidence = "Btyp är en opak källförkortning; etiketten anger kategorityp.\ncatalog:valueset:5733\ncatalog:variable_text:45799:15706:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:btyp"
+subject = "var:kategorityp"
 fields = { "tags" = ["energy"] }
 evidence = "Btyp är en opak källförkortning; etiketten anger kategorityp.\ncatalog:valueset:5733\ncatalog:variable_text:45799:15706:19723"
 

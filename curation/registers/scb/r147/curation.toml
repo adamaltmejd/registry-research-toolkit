@@ -277,49 +277,49 @@ evidence = "Gårdens totala åkerareal.\ncatalog:variable_text:21600:18809:19174
 
 [[statement]]
 kind = "set"
-subject = "var:grp-gid"
+subject = "var:grodgrupp-idnr"
 fields = { "sets" = ["grodgrupp"] }
 evidence = "Grp och gid är koder; källan beskriver en grödgruppskod. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21602\ncatalog:valueset:3267\ncatalog:variable_text:21602:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:grp-gid"
+subject = "var:grodgrupp-idnr"
 fields = { "tags" = ["agriculture"] }
 evidence = "Grp och gid är koder; källan beskriver en grödgruppskod. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21602\ncatalog:valueset:3267\ncatalog:variable_text:21602:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:grp-groda"
+subject = "var:grodgrupp"
 fields = { "sets" = ["grodgrupp"] }
 evidence = "Grp är en kod; familjens variabler får samma läsbarhetsbedömning. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21603\ncatalog:variable_text:21603:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:grp-groda"
+subject = "var:grodgrupp"
 fields = { "tags" = ["agriculture"] }
 evidence = "Grp är en kod; familjens variabler får samma läsbarhetsbedömning. Variabeln ingår i grödgrupp och avser jordbruk.\ncatalog:occurrence-locators:variable:21603\ncatalog:variable_text:21603:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:hkod"
+subject = "var:lagringsmetod-for-stallgodsel"
 fields = { "sets" = [] }
 evidence = "Hkod är en opak källkod.\ncatalog:variable_text:21603:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:hkod"
+subject = "var:lagringsmetod-for-stallgodsel"
 fields = { "tags" = ["agriculture"] }
 evidence = "Hkod är en opak källkod.\ncatalog:variable_text:21603:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:i1"
+subject = "var:brukar-garden"
 fields = { "sets" = [] }
 evidence = "I1 är en opak källkod.\ncatalog:variable_text:21605:15522:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:i1"
+subject = "var:brukar-garden"
 fields = { "tags" = ["agriculture"] }
 evidence = "I1 är en opak källkod.\ncatalog:variable_text:21605:15522:15887"
 
@@ -349,37 +349,37 @@ evidence = "Lagringskapacitet för stallgödsel.\ncatalog:variable_text:21608:18
 
 [[statement]]
 kind = "set"
-subject = "var:kgivahg"
+subject = "var:mineralgodselgiva-kalium"
 fields = { "sets" = ["kaliumgiva"] }
 evidence = "K och HG är opaka bokstavskoder.\ncatalog:variable_text:21609:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:kgivahg"
+subject = "var:mineralgodselgiva-kalium"
 fields = { "tags" = ["agriculture"] }
 evidence = "K och HG är opaka bokstavskoder.\ncatalog:variable_text:21609:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:kgivasg"
+subject = "var:stallgodselgiva-kalium"
 fields = { "sets" = ["kaliumgiva"] }
 evidence = "K och SG är opaka bokstavskoder.\ncatalog:variable_text:21610:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:kgivasg"
+subject = "var:stallgodselgiva-kalium"
 fields = { "tags" = ["agriculture"] }
 evidence = "K och SG är opaka bokstavskoder.\ncatalog:variable_text:21610:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lambda"
+subject = "var:inklusionssannolikhet"
 fields = { "sets" = [] }
 evidence = "Lambda är en opak källbeteckning för inklusionssannolikhet.\ncatalog:variable_text:21611:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lambda"
+subject = "var:inklusionssannolikhet"
 fields = { "tags" = ["methods"] }
 evidence = "Lambda är en opak källbeteckning för inklusionssannolikhet.\ncatalog:variable_text:21611:18809:19174"
 
@@ -409,25 +409,25 @@ evidence = "Mjölkkornas nattvistelse under betesperioden.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:ngivahg"
+subject = "var:mineralgodselgiva-kvave"
 fields = { "sets" = ["kvavegiva"] }
 evidence = "N och HG är opaka bokstavskoder.\ncatalog:variable_text:21614:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:ngivahg"
+subject = "var:mineralgodselgiva-kvave"
 fields = { "tags" = ["agriculture"] }
 evidence = "N och HG är opaka bokstavskoder.\ncatalog:variable_text:21614:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:ngivasg"
+subject = "var:stallgodselgiva-kvave"
 fields = { "sets" = ["kvavegiva"] }
 evidence = "N och SG är opaka bokstavskoder.\ncatalog:variable_text:21615:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:ngivasg"
+subject = "var:stallgodselgiva-kvave"
 fields = { "tags" = ["agriculture"] }
 evidence = "N och SG är opaka bokstavskoder.\ncatalog:variable_text:21615:18809:19174"
 
@@ -457,25 +457,25 @@ evidence = "Samma resultatkod som blankettens-resultatkod, korrekt uppdelad mell
 
 [[statement]]
 kind = "set"
-subject = "var:pgivahg"
+subject = "var:mineralgodselgiva-fosfor"
 fields = { "sets" = ["fosforgiva"] }
 evidence = "P och HG är opaka bokstavskoder.\ncatalog:variable_text:21619:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:pgivahg"
+subject = "var:mineralgodselgiva-fosfor"
 fields = { "tags" = ["agriculture"] }
 evidence = "P och HG är opaka bokstavskoder.\ncatalog:variable_text:21619:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:pgivasg"
+subject = "var:stallgodselgiva-fosfor"
 fields = { "sets" = ["fosforgiva"] }
 evidence = "P och SG är opaka bokstavskoder.\ncatalog:variable_text:21620:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:pgivasg"
+subject = "var:stallgodselgiva-fosfor"
 fields = { "tags" = ["agriculture"] }
 evidence = "P och SG är opaka bokstavskoder.\ncatalog:variable_text:21620:18809:19174"
 
@@ -553,13 +553,13 @@ evidence = "Riksområde är en geografisk indelning.\ncatalog:variable_text:2162
 
 [[statement]]
 kind = "set"
-subject = "var:sgmangd"
+subject = "var:stallgodselgiva"
 fields = { "sets" = [] }
 evidence = "SG är en opak bokstavskod för stallgödsel.\ncatalog:variable_text:21628:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:sgmangd"
+subject = "var:stallgodselgiva"
 fields = { "tags" = ["agriculture"] }
 evidence = "SG är en opak bokstavskod för stallgödsel.\ncatalog:variable_text:21628:18809:19174"
 
@@ -649,25 +649,25 @@ evidence = "Kodning av sådd utan skyddsgröda.\ncatalog:variable_text:21636:155
 
 [[statement]]
 kind = "set"
-subject = "var:vtngivahg"
+subject = "var:mineralgodselgiva-vaxttillgangligt-kvave"
 fields = { "sets" = ["kvavegiva"] }
 evidence = "VT, N och HG är opaka bokstavskoder.\ncatalog:variable_text:21637:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:vtngivahg"
+subject = "var:mineralgodselgiva-vaxttillgangligt-kvave"
 fields = { "tags" = ["agriculture"] }
 evidence = "VT, N och HG är opaka bokstavskoder.\ncatalog:variable_text:21637:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:vtngivasg"
+subject = "var:stallgodselgiva-vaxttillgangligt-kvave"
 fields = { "sets" = ["kvavegiva"] }
 evidence = "VT, N och SG är opaka bokstavskoder.\ncatalog:variable_text:21638:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:vtngivasg"
+subject = "var:stallgodselgiva-vaxttillgangligt-kvave"
 fields = { "tags" = ["agriculture"] }
 evidence = "VT, N och SG är opaka bokstavskoder.\ncatalog:variable_text:21638:18809:19174"
 

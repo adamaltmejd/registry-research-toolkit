@@ -751,13 +751,13 @@ evidence = "Datumet omfattar besöksdatum samt historiska inskrivningsdatum.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:indatuma"
+subject = "var:besoksdatum-alfanumeriskt"
 fields = { "sets" = ["besoksdatum"] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57313:-2192:9862\ncatalog:variable_text:57313:9862:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:indatuma"
+subject = "var:besoksdatum-alfanumeriskt"
 fields = { "tags" = [] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57313:-2192:9862\ncatalog:variable_text:57313:9862:2932897"
 
@@ -787,25 +787,25 @@ evidence = "Datumet avser inventering.\ncatalog:variable_text:57315:9862:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:invdatuma"
+subject = "var:datum-for-inventering-alfanumeriskt"
 fields = { "sets" = ["inventeringsdatum"] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57316:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:invdatuma"
+subject = "var:datum-for-inventering-alfanumeriskt"
 fields = { "tags" = [] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57316:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:invdatumn"
+subject = "var:datum-for-inventering-i-sas-datum"
 fields = { "sets" = ["inventeringsdatum"] }
 evidence = "Den avslutande bokstaven n är en kod för datumrepresentation.\ncatalog:variable_text:57317:15340:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:invdatumn"
+subject = "var:datum-for-inventering-i-sas-datum"
 fields = { "tags" = [] }
 evidence = "Den avslutande bokstaven n är en kod för datumrepresentation.\ncatalog:variable_text:57317:15340:16436"
 
@@ -871,13 +871,13 @@ evidence = "Variabeln avser kontakt med läkare.\ncatalog:variable_text:57322:16
 
 [[statement]]
 kind = "set"
-subject = "var:lkf-in"
+subject = "var:rapporterad-folkbokforingsort-vid-vardkontakten"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "LKF och in är ogenomskinliga källförkortningar i id:t.\ncatalog:variable_text:57323:9862:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:lkf-in"
+subject = "var:rapporterad-folkbokforingsort-vid-vardkontakten"
 fields = { "tags" = ["geography"] }
 evidence = "LKF och in är ogenomskinliga källförkortningar i id:t.\ncatalog:variable_text:57323:9862:16436"
 
@@ -907,13 +907,13 @@ evidence = "LT är en källkod som saknar motsvarighet i etiketten.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:mdc"
+subject = "var:major-diagnostic-categories"
 fields = { "sets" = [] }
 evidence = "MDC är en bokstavskod för etikettens ord.\ncatalog:variable_text:57328:10227:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mdc"
+subject = "var:major-diagnostic-categories"
 fields = { "tags" = ["healthcare"] }
 evidence = "MDC är en bokstavskod för etikettens ord.\ncatalog:variable_text:57328:10227:2932897"
 
@@ -1135,13 +1135,13 @@ evidence = "Datumet anger utskrivning.\ncatalog:variable_text:57357:-2192:14610\
 
 [[statement]]
 kind = "set"
-subject = "var:utdatuma"
+subject = "var:utskrivningsdatum-alfanumeriskt"
 fields = { "sets" = ["utskrivningsdatum"] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57358:-2192:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:utdatuma"
+subject = "var:utskrivningsdatum-alfanumeriskt"
 fields = { "tags" = [] }
 evidence = "Den avslutande bokstaven a är en kod för datumrepresentation.\ncatalog:variable_text:57358:-2192:2932897"
 

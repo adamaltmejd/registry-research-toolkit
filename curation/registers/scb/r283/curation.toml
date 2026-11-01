@@ -61,13 +61,13 @@ evidence = "Antalet avser elavtal; källan stöder en grupp med övriga avtalsan
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:typ-av-elkund"
 fields = { "sets" = [] }
 evidence = "Rad är ett källkolumnnamn som inte uttrycker etikettens typ av elkund.\ncatalog:valueset:6325\ncatalog:variable_text:7432:13149:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:typ-av-elkund"
 fields = { "tags" = ["energy"] }
 evidence = "Rad är ett källkolumnnamn som inte uttrycker etikettens typ av elkund.\ncatalog:valueset:6325\ncatalog:variable_text:7432:13149:15706"
 

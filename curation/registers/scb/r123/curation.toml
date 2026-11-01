@@ -8881,13 +8881,13 @@ evidence = "Mäter uppskattning från chef.\ncatalog:variable_text:3495:18628:18
 
 [[statement]]
 kind = "set"
-subject = "var:chekasex"
+subject = "var:trakasserier-som-grundas-pa-kon-fran-chefer"
 fields = { "sets" = ["diskriminering-pa-arbetsplatsen"] }
 evidence = "Källkoden är en ogenomskinlig förkortning av trakasserier från chefer eller arbetskamrater.\ncatalog:variable_text:3496:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:chekasex"
+subject = "var:trakasserier-som-grundas-pa-kon-fran-chefer"
 fields = { "tags" = ["employment"] }
 evidence = "Källkoden är en ogenomskinlig förkortning av trakasserier från chefer eller arbetskamrater.\ncatalog:variable_text:3496:15706:16071"
 
@@ -9205,13 +9205,13 @@ evidence = "Mäter erhållen återkommande utbildning.\ncatalog:variable_text:35
 
 [[statement]]
 kind = "set"
-subject = "var:fhvannan"
+subject = "var:foretagshalsovardens-insats-gallde-annan-ospecifiserad"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:3523:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvannan"
+subject = "var:foretagshalsovardens-insats-gallde-annan-ospecifiserad"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:3523:15706:16071"
 
@@ -9253,37 +9253,37 @@ evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:fhvdroga"
+subject = "var:foretagshalsovardens-insats-gallde-missbruksproblem"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3527:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvdroga"
+subject = "var:foretagshalsovardens-insats-gallde-missbruksproblem"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3527:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvforb"
+subject = "var:foretagshalsovardens-roll-for-battre-arbetsmiljo"
 fields = { "sets" = [] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3528:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvforb"
+subject = "var:foretagshalsovardens-roll-for-battre-arbetsmiljo"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3528:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvinsat"
+subject = "var:bedomning-av-foretagshalsovardens-insatser"
 fields = { "sets" = [] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3529:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvinsat"
+subject = "var:bedomning-av-foretagshalsovardens-insatser"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3529:15706:16071"
 
@@ -9301,73 +9301,73 @@ evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3530:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvorgan"
+subject = "var:foretagshalsovardens-insats-gallde-arbetsorganisationen"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3531:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvorgan"
+subject = "var:foretagshalsovardens-insats-gallde-arbetsorganisationen"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3531:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvrehabi"
+subject = "var:foretagshalsovardens-insats-gallde-rehabiliteringsfragor"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3532:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvrehabi"
+subject = "var:foretagshalsovardens-insats-gallde-rehabiliteringsfragor"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3532:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvrelat"
+subject = "var:foretagshalsovardens-insats-gallde-sociala-relationer"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3533:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvrelat"
+subject = "var:foretagshalsovardens-insats-gallde-sociala-relationer"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3533:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvsjuka"
+subject = "var:foretagshalsovardens-insats-gallde-sjukfranvaro"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3534:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvsjuka"
+subject = "var:foretagshalsovardens-insats-gallde-sjukfranvaro"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3534:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvstress"
+subject = "var:foretagshalsovardens-insats-gallde-stress-i-arbetet"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3535:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvstress"
+subject = "var:foretagshalsovardens-insats-gallde-stress-i-arbetet"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3535:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvteknika"
+subject = "var:foretagshalsovardens-insats-gallde-teknisk-utrustning"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3536:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvteknika"
+subject = "var:foretagshalsovardens-insats-gallde-teknisk-utrustning"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3536:15706:16071"
 
@@ -9709,13 +9709,13 @@ evidence = "Samma anknytningsbegrepp är uppdelat mellan observerade perioder.\n
 
 [[statement]]
 kind = "set"
-subject = "var:h2o"
+subject = "var:utsatts-i-arbetet-for-vatten-som-regelbundet-kommer-i-direkt"
 fields = { "sets" = ["vattenkontakt-med-huden-i-arbetet"] }
 evidence = "H2O är en kod som inte förekommer i etiketten.\ncatalog:variable_text:3565:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:h2o"
+subject = "var:utsatts-i-arbetet-for-vatten-som-regelbundet-kommer-i-direkt"
 fields = { "tags" = ["employment"] }
 evidence = "H2O är en kod som inte förekommer i etiketten.\ncatalog:variable_text:3565:18628:18993"
 
@@ -9973,37 +9973,37 @@ evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3586:18628
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-2"
+subject = "var:naringsgren-sni2002-tvasifferkod-i-huvudsysslan"
 fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3587:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-2"
+subject = "var:naringsgren-sni2002-tvasifferkod-i-huvudsysslan"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3587:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-3"
+subject = "var:naringsgren-sni2002-tresifferkod-i-huvudsysslan"
 fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3588:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-3"
+subject = "var:naringsgren-sni2002-tresifferkod-i-huvudsysslan"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3588:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-4"
+subject = "var:naringsgren-sni2002-fyrsifferkod-i-huvudsysslan"
 fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3589:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:husni2002-4"
+subject = "var:naringsgren-sni2002-fyrsifferkod-i-huvudsysslan"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Hu är en källkod och inte en läsbar stam i etiketten.\ncatalog:variable_text:3589:13514:13879"
 
@@ -11221,13 +11221,13 @@ evidence = "Mäter möjlighet att påverka arbetssituationen.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:mono"
+subject = "var:enkelt-upprepat-styrt-arbete"
 fields = { "sets" = ["ensidigt-upprepade-arbetsrorelser"] }
 evidence = "Mono är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:3691:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:mono"
+subject = "var:enkelt-upprepat-styrt-arbete"
 fields = { "tags" = ["employment"] }
 evidence = "Mono är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:3691:15706:16071"
 
@@ -11689,37 +11689,37 @@ evidence = "Mäter användning av annan datorutrustning.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:pcpek"
+subject = "var:anvander-pekplatta"
 fields = { "sets" = ["hjalpmedel-vid-datorarbete"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller pekplatta som hjälpmedel vid datorarbete.\ncatalog:variable_text:3730:16436:16801\ncatalog:variable_text:3730:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pcpek"
+subject = "var:anvander-pekplatta"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller pekplatta som hjälpmedel vid datorarbete.\ncatalog:variable_text:3730:16436:16801\ncatalog:variable_text:3730:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pcpinne"
+subject = "var:anvander-styrpinne"
 fields = { "sets" = ["hjalpmedel-vid-datorarbete"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller styrpinne som hjälpmedel vid datorarbete.\ncatalog:variable_text:3731:16436:16801\ncatalog:variable_text:3731:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pcpinne"
+subject = "var:anvander-styrpinne"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller styrpinne som hjälpmedel vid datorarbete.\ncatalog:variable_text:3731:16436:16801\ncatalog:variable_text:3731:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pcprgm"
+subject = "var:anvandarvanliga-datorprogram-i-arbetet"
 fields = { "sets" = ["digitala-systems-anvandarvanlighet"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller datorprogrammens användarvänlighet i arbetet.\ncatalog:variable_text:3732:16436:16801\ncatalog:variable_text:3732:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pcprgm"
+subject = "var:anvandarvanliga-datorprogram-i-arbetet"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är ett källmnemoniskt kodnamn; pcp-familjen ges en enhetlig bedömning. Variabeln gäller datorprogrammens användarvänlighet i arbetet.\ncatalog:variable_text:3732:16436:16801\ncatalog:variable_text:3732:18628:18993"
 
@@ -11749,13 +11749,13 @@ evidence = "Mäter användning av pekskärm.\ncatalog:variable_text:3734:18628:1
 
 [[statement]]
 kind = "set"
-subject = "var:pctid"
+subject = "var:arbetstid-vid-datorn"
 fields = { "sets" = ["arbetstid-vid-dator-och-bildskarm"] }
 evidence = "PC är en bokstavskod och etiketten anger arbetstid vid datorn.\ncatalog:variable_text:3735:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:pctid"
+subject = "var:arbetstid-vid-datorn"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "PC är en bokstavskod och etiketten anger arbetstid vid datorn.\ncatalog:variable_text:3735:18628:18993"
 
@@ -12865,13 +12865,13 @@ evidence = "Mäter användning av stationära maskiner.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:stix"
+subject = "var:stodindex"
 fields = { "sets" = [] }
 evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3829:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:stix"
+subject = "var:stodindex"
 fields = { "tags" = ["employment"] }
 evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3829:18628:18993"
 
@@ -13093,25 +13093,25 @@ evidence = "Mäter systematiskt arbetsmiljöarbete.\ncatalog:variable_text:3847:
 
 [[statement]]
 kind = "set"
-subject = "var:t19fa"
+subject = "var:oppet-svar-for-fraga-t19"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t19fa"
+subject = "var:oppet-svar-for-fraga-t19"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter användning och typer av datorutrustning, inklusive bildskärm, datoransluten kassa och datoriserad kontrollapparatur. membership-0027: Omfattar datoriserad produktionsutrustning och fritext om annan använd datautrustning. Informationssökning är en arbetsuppgift och undantas. membership-0028: Valda digitala frågor mäter tid, kunnande eller systemegenskaper, inte användning av utrustningstyper. membership-0029: Mäter användning av surfplatta eller smartphone i arbetet.\ncatalog:variable_text:3392:12053:12418\ncatalog:variable_text:3410:18628:18993\ncatalog:variable_text:3433:18628:18993\ncatalog:variable_text:3467:12053:12418\ncatalog:variable_text:3482:12053:12418\ncatalog:variable_text:3497:12053:12418\ncatalog:variable_text:3501:19723:20089\ncatalog:variable_text:3502:19723:20089\ncatalog:variable_text:3515:19723:20089\ncatalog:variable_text:3615:12053:12418\ncatalog:variable_text:3631:12053:12418\ncatalog:variable_text:3654:19723:20089\ncatalog:variable_text:3656:15706:16071\ncatalog:variable_text:3743:12053:12418\ncatalog:variable_text:3744:12053:12418\ncatalog:variable_text:3815:12053:12418\ncatalog:variable_text:3840:18628:18993\ncatalog:variable_text:3848:12053:12418\ncatalog:variable_text:3925:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t24ea"
+subject = "var:oppet-svar-for-fraga-t24"
 fields = { "sets" = ["hjalpmedel-vid-datorarbete"] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter tangentbord, datormus eller andra hjälpmedel vid datorarbete. membership-0027: Mäter pekhjälpmedel, streckkodsläsare och fritext om annan utrustning vid datorarbete. membership-0028: Ingen vald variabel i sektionen mäter användning av inmatningshjälpmedel. membership-0029: Mäter regelbundet använda hjälpmedel vid datorarbete: annan utrustning, pekplatta, styrpinne, rullmus och pekskärm.\ncatalog:variable_text:3393:12053:12418\ncatalog:variable_text:3409:18628:18993\ncatalog:variable_text:3411:18628:18993\ncatalog:variable_text:3499:15706:16071\ncatalog:variable_text:3729:18628:18993\ncatalog:variable_text:3730:18628:18993\ncatalog:variable_text:3731:18628:18993\ncatalog:variable_text:3733:18628:18993\ncatalog:variable_text:3734:18628:18993\ncatalog:variable_text:3756:12053:12418\ncatalog:variable_text:3836:12053:12418\ncatalog:variable_text:3849:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:t24ea"
+subject = "var:oppet-svar-for-fraga-t24"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Mäter tangentbord, datormus eller andra hjälpmedel vid datorarbete. membership-0027: Mäter pekhjälpmedel, streckkodsläsare och fritext om annan utrustning vid datorarbete. membership-0028: Ingen vald variabel i sektionen mäter användning av inmatningshjälpmedel. membership-0029: Mäter regelbundet använda hjälpmedel vid datorarbete: annan utrustning, pekplatta, styrpinne, rullmus och pekskärm.\ncatalog:variable_text:3393:12053:12418\ncatalog:variable_text:3409:18628:18993\ncatalog:variable_text:3411:18628:18993\ncatalog:variable_text:3499:15706:16071\ncatalog:variable_text:3729:18628:18993\ncatalog:variable_text:3730:18628:18993\ncatalog:variable_text:3731:18628:18993\ncatalog:variable_text:3733:18628:18993\ncatalog:variable_text:3734:18628:18993\ncatalog:variable_text:3756:12053:12418\ncatalog:variable_text:3836:12053:12418\ncatalog:variable_text:3849:12053:12418"
 
@@ -13309,13 +13309,13 @@ evidence = "Gäller arbetsrelaterad tillgänglighet på fritiden.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:tint"
+subject = "var:introduktionsfraga-kodad"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:3866:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:tint"
+subject = "var:introduktionsfraga-kodad"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:3866:12053:12418"
 
@@ -13465,13 +13465,13 @@ evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-pr
 
 [[statement]]
 kind = "set"
-subject = "var:uantjobb"
+subject = "var:antal-jobb-senaste-3-aren-for-ungdomar"
 fields = { "sets" = [] }
 evidence = "U är en bokstavskod.\ncatalog:variable_text:3879:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:uantjobb"
+subject = "var:antal-jobb-senaste-3-aren-for-ungdomar"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod.\ncatalog:variable_text:3879:18628:18993"
 

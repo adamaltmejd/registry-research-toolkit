@@ -133,25 +133,25 @@ evidence = "Antalet avser tankinfrastruktur för bussar; jämförbara antal finn
 
 [[statement]]
 kind = "set"
-subject = "var:ejpub"
+subject = "var:gas-till-ej-publika-tankstallen"
 fields = { "sets" = [] }
 evidence = "Ejpub är en källmnemonik som inte uttrycker den levererade gasvolymen. Leveranserna är energimängder.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ejpub"
+subject = "var:gas-till-ej-publika-tankstallen"
 fields = { "tags" = ["energy"] }
 evidence = "Ejpub är en källmnemonik som inte uttrycker den levererade gasvolymen. Leveranserna är energimängder.\ncatalog:register:102\ncatalog:variable_text:11752:14975:20819\ncatalog:variable_text:11754:14975:20819\ncatalog:variable_text:11755:14975:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ejpubant"
+subject = "var:antal-icke-publika-tankstallen"
 fields = { "sets" = [] }
 evidence = "Ejpubant är en källmnemonik vars delar inte återger etikettens ord. Tankställena är transportinfrastruktur.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ejpubant"
+subject = "var:antal-icke-publika-tankstallen"
 fields = { "tags" = ["transport"] }
 evidence = "Ejpubant är en källmnemonik vars delar inte återger etikettens ord. Tankställena är transportinfrastruktur.\ncatalog:variable_text:11749:14245:20819\ncatalog:variable_text:11750:14245:20819\ncatalog:variable_text:11753:14610:20819"
 

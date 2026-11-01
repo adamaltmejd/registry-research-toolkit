@@ -1431,13 +1431,13 @@ evidence = "Aktiviteten är en komponent av personlig omvårdnad.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:bba"
+subject = "var:biaktivitet-utford-via-dator"
 fields = { "sets" = ["datoranvandning"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45225:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:bba"
+subject = "var:biaktivitet-utford-via-dator"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45225:14791:15156"
 
@@ -1479,13 +1479,13 @@ evidence = "Besöket är en fritidsaktivitet.\ncatalog:variable_text:45229:14791
 
 [[statement]]
 kind = "set"
-subject = "var:bha"
+subject = "var:huvudaktivitet-utford-via-dator"
 fields = { "sets" = ["datoranvandning"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45230:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:bha"
+subject = "var:huvudaktivitet-utford-via-dator"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45230:14791:15156"
 
@@ -1515,13 +1515,13 @@ evidence = "Biltillgång är en form av fordonstillgång.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:bilantal"
+subject = "var:hur-manga-fordon"
 fields = { "sets" = ["fordonstillgang"] }
 evidence = "Id:t anger bilar medan källan anger antal fordon.\ncatalog:variable_text:45233:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:bilantal"
+subject = "var:hur-manga-fordon"
 fields = { "tags" = ["transport"] }
 evidence = "Id:t anger bilar medan källan anger antal fordon.\ncatalog:variable_text:45233:14791:15156"
 
@@ -1719,13 +1719,13 @@ evidence = "Frågan gäller eget byggnadsarbete eller renovering av privat byggn
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04hb"
+subject = "var:disponibel-inkomst-2004-ars-definition-trif"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Id:t är en opak källkod; etiketten anger disponibel inkomst enligt 2004 års definition.\ncatalog:variable_text:45251:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04hb"
+subject = "var:disponibel-inkomst-2004-ars-definition-trif"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en opak källkod; etiketten anger disponibel inkomst enligt 2004 års definition.\ncatalog:variable_text:45251:18628:18993"
 
@@ -1947,61 +1947,61 @@ evidence = "Samma källkolumn är samtidigt kopplad till ensam-vid-aktiviteten.\
 
 [[statement]]
 kind = "set"
-subject = "var:f12"
+subject = "var:halsoproblem"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45277:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f12"
+subject = "var:halsoproblem"
 fields = { "tags" = ["health"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45277:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f13"
+subject = "var:delta-i-aktiviteter"
 fields = { "sets" = ["aktivitetsbegransning"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45278:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f13"
+subject = "var:delta-i-aktiviteter"
 fields = { "tags" = ["disability"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45278:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f15"
+subject = "var:barn-med-langvarig-sjukdom"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45279:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f15"
+subject = "var:barn-med-langvarig-sjukdom"
 fields = { "tags" = ["disability", "health"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45279:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:hjalp-med-hushallsysslor-utan-att-betala"
 fields = { "sets" = ["hjalp-med-hushallsaktiviteter"] }
 evidence = "F16 är en källkod utan läsbar betydelse. Etiketten anger obetald hjälp med hushållssysslor.\ncatalog:occurrence:466813\ncatalog:variable_text:45280:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:hjalp-med-hushallsysslor-utan-att-betala"
 fields = { "tags" = ["family-household"] }
 evidence = "F16 är en källkod utan läsbar betydelse. Etiketten anger obetald hjälp med hushållssysslor.\ncatalog:occurrence:466813\ncatalog:variable_text:45280:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:rut-avdraget"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45281:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:rut-avdraget"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45281:18628:18993"
 
@@ -2019,13 +2019,13 @@ evidence = "F19 är en frågekod.\ncatalog:variable_text:45282:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2"
+subject = "var:sov-nar-dagen-borjar"
 fields = { "sets" = ["somnstatus"] }
 evidence = "F2 är en ogenomskinlig källkod.\ncatalog:variable_text:45283:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f2"
+subject = "var:sov-nar-dagen-borjar"
 fields = { "tags" = ["culture"] }
 evidence = "F2 är en ogenomskinlig källkod.\ncatalog:variable_text:45283:14791:15156"
 
@@ -2043,49 +2043,49 @@ evidence = "F2_1 är en frågekod.\ncatalog:variable_text:45284:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-2"
+subject = "var:bor-med-foraldrar-och-eller-syskon"
 fields = { "sets" = ["hushallssammansattning"] }
 evidence = "F2_2 är en frågekod.\ncatalog:variable_text:45285:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-2"
+subject = "var:bor-med-foraldrar-och-eller-syskon"
 fields = { "tags" = ["family-household"] }
 evidence = "F2_2 är en frågekod.\ncatalog:variable_text:45285:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-3"
+subject = "var:bor-med-barn-under-20-ar"
 fields = { "sets" = ["barn-i-hushallet", "hushallssammansattning"] }
 evidence = "F2_3 är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variablerna räknar hushållets barn inom angivna åldersgränser; närvarande barn hålls separat. membership-0472: Inga valda variabler mäter antal eller förekomst av barn i hushållet. membership-0473: Båda variablerna mäter antal barn med angivna åldersgränser. membership-0474: Antal barn 13–16 år är ett åldersavgränsat barnantal; närvarande söner hör till annan kandidat. membership-0475: Mäter antal eller förekomst av hemmaboende barn, inklusive angivna åldersgrupper. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Antalet föräldrar boende i hushållet mäter dess sammansättning efter relationskategori. membership-0472: Valda hjälputbyten och personers kön beskriver inte vilka relationskategorier personen bor med. membership-0473: Variabeln anger förekomst av make, maka eller sambo. membership-0474: Förekomst av make, maka eller sambo beskriver hushållets relationssammansättning. membership-0475: Mäter hushållstyp och vilka relationskategorier personen bor med.\ncatalog:variable_text:45183:18628:18993\ncatalog:variable_text:45184:18628:18993\ncatalog:variable_text:45185:18628:18993\ncatalog:variable_text:45186:14791:15156\ncatalog:variable_text:45187:14791:15156\ncatalog:variable_text:45188:14791:15156\ncatalog:variable_text:45189:18628:18993\ncatalog:variable_text:45190:14791:15156\ncatalog:variable_text:45220:14791:15156\ncatalog:variable_text:45221:14791:15156\ncatalog:variable_text:45222:14791:15156\ncatalog:variable_text:45284:18628:18993\ncatalog:variable_text:45285:18628:18993\ncatalog:variable_text:45286:18628:18993\ncatalog:variable_text:45287:18628:18993\ncatalog:variable_text:45288:18628:18993\ncatalog:variable_text:45311:18628:18993\ncatalog:variable_text:45312:18628:18993\ncatalog:variable_text:45324:18628:18993\ncatalog:variable_text:45325:18628:18993\ncatalog:variable_text:45334:18628:18993\ncatalog:variable_text:45335:18628:18993\ncatalog:variable_text:45349:14791:15156\ncatalog:variable_text:45404:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45417:18628:18993\ncatalog:variable_text:45465:14791:15156\ncatalog:variable_text:45471:11139:11504\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45503:11139:11504\ncatalog:variable_text:45515:14791:15156\ncatalog:variable_text:45525:14791:15156\ncatalog:variable_text:45640:11139:11504\ncatalog:variable_text:45677:14791:15156\ncatalog:variable_text:45678:14791:15156\ncatalog:variable_text:45679:14791:15156\ncatalog:variable_text:45690:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-3"
+subject = "var:bor-med-barn-under-20-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F2_3 är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variablerna räknar hushållets barn inom angivna åldersgränser; närvarande barn hålls separat. membership-0472: Inga valda variabler mäter antal eller förekomst av barn i hushållet. membership-0473: Båda variablerna mäter antal barn med angivna åldersgränser. membership-0474: Antal barn 13–16 år är ett åldersavgränsat barnantal; närvarande söner hör till annan kandidat. membership-0475: Mäter antal eller förekomst av hemmaboende barn, inklusive angivna åldersgrupper. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Antalet föräldrar boende i hushållet mäter dess sammansättning efter relationskategori. membership-0472: Valda hjälputbyten och personers kön beskriver inte vilka relationskategorier personen bor med. membership-0473: Variabeln anger förekomst av make, maka eller sambo. membership-0474: Förekomst av make, maka eller sambo beskriver hushållets relationssammansättning. membership-0475: Mäter hushållstyp och vilka relationskategorier personen bor med.\ncatalog:variable_text:45183:18628:18993\ncatalog:variable_text:45184:18628:18993\ncatalog:variable_text:45185:18628:18993\ncatalog:variable_text:45186:14791:15156\ncatalog:variable_text:45187:14791:15156\ncatalog:variable_text:45188:14791:15156\ncatalog:variable_text:45189:18628:18993\ncatalog:variable_text:45190:14791:15156\ncatalog:variable_text:45220:14791:15156\ncatalog:variable_text:45221:14791:15156\ncatalog:variable_text:45222:14791:15156\ncatalog:variable_text:45284:18628:18993\ncatalog:variable_text:45285:18628:18993\ncatalog:variable_text:45286:18628:18993\ncatalog:variable_text:45287:18628:18993\ncatalog:variable_text:45288:18628:18993\ncatalog:variable_text:45311:18628:18993\ncatalog:variable_text:45312:18628:18993\ncatalog:variable_text:45324:18628:18993\ncatalog:variable_text:45325:18628:18993\ncatalog:variable_text:45334:18628:18993\ncatalog:variable_text:45335:18628:18993\ncatalog:variable_text:45349:14791:15156\ncatalog:variable_text:45404:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45417:18628:18993\ncatalog:variable_text:45465:14791:15156\ncatalog:variable_text:45471:11139:11504\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45503:11139:11504\ncatalog:variable_text:45515:14791:15156\ncatalog:variable_text:45525:14791:15156\ncatalog:variable_text:45640:11139:11504\ncatalog:variable_text:45677:14791:15156\ncatalog:variable_text:45678:14791:15156\ncatalog:variable_text:45679:14791:15156\ncatalog:variable_text:45690:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-4"
+subject = "var:bor-med-barn-20-ar-eller-aldre"
 fields = { "sets" = ["barn-i-hushallet", "hushallssammansattning"] }
 evidence = "F2_4 är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variablerna räknar hushållets barn inom angivna åldersgränser; närvarande barn hålls separat. membership-0472: Inga valda variabler mäter antal eller förekomst av barn i hushållet. membership-0473: Båda variablerna mäter antal barn med angivna åldersgränser. membership-0474: Antal barn 13–16 år är ett åldersavgränsat barnantal; närvarande söner hör till annan kandidat. membership-0475: Mäter antal eller förekomst av hemmaboende barn, inklusive angivna åldersgrupper. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Antalet föräldrar boende i hushållet mäter dess sammansättning efter relationskategori. membership-0472: Valda hjälputbyten och personers kön beskriver inte vilka relationskategorier personen bor med. membership-0473: Variabeln anger förekomst av make, maka eller sambo. membership-0474: Förekomst av make, maka eller sambo beskriver hushållets relationssammansättning. membership-0475: Mäter hushållstyp och vilka relationskategorier personen bor med.\ncatalog:variable_text:45183:18628:18993\ncatalog:variable_text:45184:18628:18993\ncatalog:variable_text:45185:18628:18993\ncatalog:variable_text:45186:14791:15156\ncatalog:variable_text:45187:14791:15156\ncatalog:variable_text:45188:14791:15156\ncatalog:variable_text:45189:18628:18993\ncatalog:variable_text:45190:14791:15156\ncatalog:variable_text:45220:14791:15156\ncatalog:variable_text:45221:14791:15156\ncatalog:variable_text:45222:14791:15156\ncatalog:variable_text:45284:18628:18993\ncatalog:variable_text:45285:18628:18993\ncatalog:variable_text:45286:18628:18993\ncatalog:variable_text:45287:18628:18993\ncatalog:variable_text:45288:18628:18993\ncatalog:variable_text:45311:18628:18993\ncatalog:variable_text:45312:18628:18993\ncatalog:variable_text:45324:18628:18993\ncatalog:variable_text:45325:18628:18993\ncatalog:variable_text:45334:18628:18993\ncatalog:variable_text:45335:18628:18993\ncatalog:variable_text:45349:14791:15156\ncatalog:variable_text:45404:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45417:18628:18993\ncatalog:variable_text:45465:14791:15156\ncatalog:variable_text:45471:11139:11504\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45503:11139:11504\ncatalog:variable_text:45515:14791:15156\ncatalog:variable_text:45525:14791:15156\ncatalog:variable_text:45640:11139:11504\ncatalog:variable_text:45677:14791:15156\ncatalog:variable_text:45678:14791:15156\ncatalog:variable_text:45679:14791:15156\ncatalog:variable_text:45690:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-4"
+subject = "var:bor-med-barn-20-ar-eller-aldre"
 fields = { "tags" = ["family-household"] }
 evidence = "F2_4 är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variablerna räknar hushållets barn inom angivna åldersgränser; närvarande barn hålls separat. membership-0472: Inga valda variabler mäter antal eller förekomst av barn i hushållet. membership-0473: Båda variablerna mäter antal barn med angivna åldersgränser. membership-0474: Antal barn 13–16 år är ett åldersavgränsat barnantal; närvarande söner hör till annan kandidat. membership-0475: Mäter antal eller förekomst av hemmaboende barn, inklusive angivna åldersgrupper. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Antalet föräldrar boende i hushållet mäter dess sammansättning efter relationskategori. membership-0472: Valda hjälputbyten och personers kön beskriver inte vilka relationskategorier personen bor med. membership-0473: Variabeln anger förekomst av make, maka eller sambo. membership-0474: Förekomst av make, maka eller sambo beskriver hushållets relationssammansättning. membership-0475: Mäter hushållstyp och vilka relationskategorier personen bor med.\ncatalog:variable_text:45183:18628:18993\ncatalog:variable_text:45184:18628:18993\ncatalog:variable_text:45185:18628:18993\ncatalog:variable_text:45186:14791:15156\ncatalog:variable_text:45187:14791:15156\ncatalog:variable_text:45188:14791:15156\ncatalog:variable_text:45189:18628:18993\ncatalog:variable_text:45190:14791:15156\ncatalog:variable_text:45220:14791:15156\ncatalog:variable_text:45221:14791:15156\ncatalog:variable_text:45222:14791:15156\ncatalog:variable_text:45284:18628:18993\ncatalog:variable_text:45285:18628:18993\ncatalog:variable_text:45286:18628:18993\ncatalog:variable_text:45287:18628:18993\ncatalog:variable_text:45288:18628:18993\ncatalog:variable_text:45311:18628:18993\ncatalog:variable_text:45312:18628:18993\ncatalog:variable_text:45324:18628:18993\ncatalog:variable_text:45325:18628:18993\ncatalog:variable_text:45334:18628:18993\ncatalog:variable_text:45335:18628:18993\ncatalog:variable_text:45349:14791:15156\ncatalog:variable_text:45404:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45417:18628:18993\ncatalog:variable_text:45465:14791:15156\ncatalog:variable_text:45471:11139:11504\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45503:11139:11504\ncatalog:variable_text:45515:14791:15156\ncatalog:variable_text:45525:14791:15156\ncatalog:variable_text:45640:11139:11504\ncatalog:variable_text:45677:14791:15156\ncatalog:variable_text:45678:14791:15156\ncatalog:variable_text:45679:14791:15156\ncatalog:variable_text:45690:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-5"
+subject = "var:bor-med-andra-vuxna"
 fields = { "sets" = ["hushallssammansattning"] }
 evidence = "F2_5 är en frågekod.\ncatalog:variable_text:45288:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-5"
+subject = "var:bor-med-andra-vuxna"
 fields = { "tags" = ["family-household"] }
 evidence = "F2_5 är en frågekod.\ncatalog:variable_text:45288:18628:18993"
 
@@ -2115,85 +2115,85 @@ evidence = "F21 är en frågekod.\ncatalog:variable_text:45290:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f23"
+subject = "var:matlagning-bakning-dukning"
 fields = { "sets" = ["tid-for-matlagning-och-bakning"] }
 evidence = "F23 är en ogenomskinlig källkod.\ncatalog:variable_text:45293:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f23"
+subject = "var:matlagning-bakning-dukning"
 fields = { "tags" = ["culture"] }
 evidence = "F23 är en ogenomskinlig källkod.\ncatalog:variable_text:45293:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f24"
+subject = "var:stadning-diskning-m-m"
 fields = { "sets" = ["tid-for-stadning-och-diskning"] }
 evidence = "F24 är en ogenomskinlig källkod.\ncatalog:variable_text:45294:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f24"
+subject = "var:stadning-diskning-m-m"
 fields = { "tags" = ["culture"] }
 evidence = "F24 är en ogenomskinlig källkod.\ncatalog:variable_text:45294:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f25"
+subject = "var:tvattning-kladvard-m-m"
 fields = { "sets" = ["tid-for-tvatt-och-kladvard"] }
 evidence = "F25 är en ogenomskinlig källkod.\ncatalog:variable_text:45295:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f25"
+subject = "var:tvattning-kladvard-m-m"
 fields = { "tags" = ["culture"] }
 evidence = "F25 är en ogenomskinlig källkod.\ncatalog:variable_text:45295:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f26"
+subject = "var:hantering-av-ekonomi"
 fields = { "sets" = [] }
 evidence = "F26 är en ogenomskinlig källkod.\ncatalog:variable_text:45296:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f26"
+subject = "var:hantering-av-ekonomi"
 fields = { "tags" = ["culture"] }
 evidence = "F26 är en ogenomskinlig källkod.\ncatalog:variable_text:45296:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f27"
+subject = "var:planera-och-organisera"
 fields = { "sets" = [] }
 evidence = "F27 är en ogenomskinlig källkod.\ncatalog:variable_text:45297:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f27"
+subject = "var:planera-och-organisera"
 fields = { "tags" = ["culture"] }
 evidence = "F27 är en ogenomskinlig källkod.\ncatalog:variable_text:45297:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f28"
+subject = "var:underhall-av-bostad"
 fields = { "sets" = ["tid-for-bostadsunderhall"] }
 evidence = "F28 är en ogenomskinlig källkod.\ncatalog:variable_text:45298:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f28"
+subject = "var:underhall-av-bostad"
 fields = { "tags" = ["culture"] }
 evidence = "F28 är en ogenomskinlig källkod.\ncatalog:variable_text:45298:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f29"
+subject = "var:underhall-av-fordon"
 fields = { "sets" = ["tid-for-fordonsunderhall"] }
 evidence = "F29 är en ogenomskinlig källkod.\ncatalog:variable_text:45299:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f29"
+subject = "var:underhall-av-fordon"
 fields = { "tags" = ["culture"] }
 evidence = "F29 är en ogenomskinlig källkod.\ncatalog:variable_text:45299:18628:18993"
 
@@ -2211,133 +2211,133 @@ evidence = "F3 är en ogenomskinlig källkod; definitionen anger ett klockslag.\
 
 [[statement]]
 kind = "set"
-subject = "var:f30"
+subject = "var:ta-hand-om-tradgarden"
 fields = { "sets" = ["tid-for-tradgardsskotsel"] }
 evidence = "F30 är en ogenomskinlig källkod.\ncatalog:variable_text:45301:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f30"
+subject = "var:ta-hand-om-tradgarden"
 fields = { "tags" = ["culture"] }
 evidence = "F30 är en ogenomskinlig källkod.\ncatalog:variable_text:45301:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:sallskapsdjur"
 fields = { "sets" = ["tid-for-sallskapsdjur"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45302:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:sallskapsdjur"
 fields = { "tags" = ["culture"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45302:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f32"
+subject = "var:dagligvaror"
 fields = { "sets" = ["tid-for-dagligvaruinkop"] }
 evidence = "F32 är en ogenomskinlig källkod.\ncatalog:variable_text:45303:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f32"
+subject = "var:dagligvaror"
 fields = { "tags" = ["culture"] }
 evidence = "F32 är en ogenomskinlig källkod.\ncatalog:variable_text:45303:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f33"
+subject = "var:handla-annat-an-dagligvaror"
 fields = { "sets" = ["tid-for-ovriga-varuinkop"] }
 evidence = "F33 är en ogenomskinlig källkod.\ncatalog:variable_text:45304:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f33"
+subject = "var:handla-annat-an-dagligvaror"
 fields = { "tags" = ["culture"] }
 evidence = "F33 är en ogenomskinlig källkod.\ncatalog:variable_text:45304:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f34"
+subject = "var:gora-olika-arenden"
 fields = { "sets" = ["tid-for-arenden"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45305:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f34"
+subject = "var:gora-olika-arenden"
 fields = { "tags" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45305:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f35"
+subject = "var:narvaro-av-barnen-pa-bokforingsdagen"
 fields = { "sets" = ["narvarande-barn"] }
 evidence = "F35 är en frågekod.\ncatalog:variable_text:45306:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f35"
+subject = "var:narvaro-av-barnen-pa-bokforingsdagen"
 fields = { "tags" = ["family-household"] }
 evidence = "F35 är en frågekod.\ncatalog:variable_text:45306:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f36"
+subject = "var:hjalpa-barn-med-laxor"
 fields = { "sets" = ["tid-for-laxhjalp", "tid-for-omsorg-om-egna-barn"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel mäter hjälp med barns läxläsning. membership-0472: Variabeln mäter tid för hjälp med läxläsning. membership-0473: Sektionens studiemått avser egna studier, inte hjälp med barns läxor. membership-0474: Sektionens studiemått avser egna studier och inte hjälp med barns läxor. membership-0475: Mäter tid för hjälp med barns läxor och skoluppgifter. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45504:14791:15156\ncatalog:variable_text:45505:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45576:14791:15156\ncatalog:variable_text:45578:14791:15156\ncatalog:variable_text:45579:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45693:14791:15156\ncatalog:variable_text:45697:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f36"
+subject = "var:hjalpa-barn-med-laxor"
 fields = { "tags" = ["education", "family-household"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel mäter hjälp med barns läxläsning. membership-0472: Variabeln mäter tid för hjälp med läxläsning. membership-0473: Sektionens studiemått avser egna studier, inte hjälp med barns läxor. membership-0474: Sektionens studiemått avser egna studier och inte hjälp med barns läxor. membership-0475: Mäter tid för hjälp med barns läxor och skoluppgifter. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45504:14791:15156\ncatalog:variable_text:45505:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45576:14791:15156\ncatalog:variable_text:45578:14791:15156\ncatalog:variable_text:45579:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45693:14791:15156\ncatalog:variable_text:45697:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f37"
+subject = "var:lasa-och-leka-med-barnen"
 fields = { "sets" = ["tid-for-lasning-och-lek-med-barn", "tid-for-omsorg-om-egna-barn"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel mäter läsning eller lek med barn. membership-0472: Båda mäter uttryckligen läsning eller lek med barn. membership-0473: Inga valda variabler i denna sektion mäter läsning eller lek med barn. membership-0474: Samtal och tillsyn är inte läsning eller lek med barn. membership-0475: Mäter tid för läsning och lek med barn. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f37"
+subject = "var:lasa-och-leka-med-barnen"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel mäter läsning eller lek med barn. membership-0472: Båda mäter uttryckligen läsning eller lek med barn. membership-0473: Inga valda variabler i denna sektion mäter läsning eller lek med barn. membership-0474: Samtal och tillsyn är inte läsning eller lek med barn. membership-0475: Mäter tid för läsning och lek med barn. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f38"
+subject = "var:narvara-vid-barnens-aktiviteter"
 fields = { "sets" = ["tid-for-omsorg-om-egna-barn", "tid-vid-barns-aktiviteter"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Valda närvaromått räknar barn och anger inte tid för närvaro vid barns aktiviteter. membership-0472: Läxhjälp, högläsning och lek anger inte närvaro vid barns aktiviteter. membership-0473: Variabeln mäter tid för närvaro vid barns aktiviteter. membership-0474: Ingen vald variabel mäter tid för närvaro vid barns aktiviteter. membership-0475: Mäter tid för närvaro vid barnens aktiviteter.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45267:14791:15156\ncatalog:variable_text:45268:14791:15156\ncatalog:variable_text:45269:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f38"
+subject = "var:narvara-vid-barnens-aktiviteter"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Annan barnomsorg och föräldramöten är källstödda komponenter av omsorg om egna barn. membership-0472: Läxhjälp, högläsning och lek är namngivna omsorgskomponenter i den fasta kandidaten; hjälp till andra hushålls barn exkluderas. membership-0473: Total omsorgstid och den namngivna komponenten närvaro vid barns aktiviteter omfattas av den fasta kandidaten. membership-0474: Omsorgsresor, samtal och tillsyn är stödda namngivna komponenter av omsorg om egna barn. membership-0475: Omfattar källnamngivna omsorgskomponenter: läxhjälp, läsning och lek, närvaro vid aktiviteter, omvårdnad och tillsyn. Allmän familjeaktivitet saknar uttrycklig omsorgskoppling. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Valda närvaromått räknar barn och anger inte tid för närvaro vid barns aktiviteter. membership-0472: Läxhjälp, högläsning och lek anger inte närvaro vid barns aktiviteter. membership-0473: Variabeln mäter tid för närvaro vid barns aktiviteter. membership-0474: Ingen vald variabel mäter tid för närvaro vid barns aktiviteter. membership-0475: Mäter tid för närvaro vid barnens aktiviteter.\ncatalog:occurrence:466471\ncatalog:variable_text:45170:14791:15156\ncatalog:variable_text:45267:14791:15156\ncatalog:variable_text:45268:14791:15156\ncatalog:variable_text:45269:14791:15156\ncatalog:variable_text:45307:18628:18993\ncatalog:variable_text:45308:18628:18993\ncatalog:variable_text:45309:18628:18993\ncatalog:variable_text:45310:18628:18993\ncatalog:variable_text:45314:18628:18993\ncatalog:variable_text:45315:18628:18993\ncatalog:variable_text:45350:14791:15156\ncatalog:variable_text:45411:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45415:14791:15156\ncatalog:variable_text:45485:14791:15156\ncatalog:variable_text:45538:14791:15156\ncatalog:variable_text:45564:14791:15156\ncatalog:variable_text:45636:14791:15156\ncatalog:variable_text:45665:14791:15156\ncatalog:variable_text:45715:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f39"
+subject = "var:familjeaktivitet"
 fields = { "sets" = [] }
 evidence = "F39 är en ogenomskinlig källkod.\ncatalog:variable_text:45310:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f39"
+subject = "var:familjeaktivitet"
 fields = { "tags" = ["culture", "family-household"] }
 evidence = "F39 är en ogenomskinlig källkod.\ncatalog:variable_text:45310:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f3a"
+subject = "var:barn-mellan-0-6-ar-i-hushallet"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "F3a är en frågekod.\ncatalog:variable_text:45311:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f3a"
+subject = "var:barn-mellan-0-6-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "F3a är en frågekod.\ncatalog:variable_text:45311:18628:18993"
 
@@ -2367,97 +2367,97 @@ evidence = "F4 är en ogenomskinlig källkod.\ncatalog:valueset:7881\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:f40"
+subject = "var:omsorg-av-barnen"
 fields = { "sets" = ["tid-for-omsorg-om-egna-barn"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45314:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f40"
+subject = "var:omsorg-av-barnen"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45314:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f41"
+subject = "var:tillsyn-av-barnen"
 fields = { "sets" = ["tid-for-omsorg-om-egna-barn"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45315:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f41"
+subject = "var:tillsyn-av-barnen"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45315:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f42"
+subject = "var:passa-andras-barn"
 fields = { "sets" = ["tid-for-hjalp-till-andras-barn"] }
 evidence = "F42 är en ogenomskinlig källkod.\ncatalog:variable_text:45316:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f42"
+subject = "var:passa-andras-barn"
 fields = { "tags" = ["culture"] }
 evidence = "F42 är en ogenomskinlig källkod.\ncatalog:variable_text:45316:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f43"
+subject = "var:hjalpa-andra-vuxna-i-hushallet"
 fields = { "sets" = ["tid-for-hjalp-till-vuxna-i-hushallet"] }
 evidence = "F43 är en ogenomskinlig källkod.\ncatalog:variable_text:45317:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f43"
+subject = "var:hjalpa-andra-vuxna-i-hushallet"
 fields = { "tags" = ["culture"] }
 evidence = "F43 är en ogenomskinlig källkod.\ncatalog:variable_text:45317:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f44"
+subject = "var:hjalpa-vuxna-utanfor-hushallet-pga-sjukdom"
 fields = { "sets" = ["tid-for-hjalp-till-andra-hushall"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variabeln mäter tid för annan hjälp till andra hushåll. membership-0472: Hjälp till andra hushålls barn är uttryckligen exkluderad; hjälputbytesfrekvenser är inte tidsmått. membership-0473: Variabeln mäter uttryckligen tid för ospecificerad hjälp till andra hushåll. Omsorg om andra anger inte denna avgränsning. membership-0474: Resmåttet omfattar både eget och andra hushåll och mäter resor, inte den praktiska hjälptiden. membership-0475: Båda mäter tid för hjälp till vuxna utanför det egna hushållet, på grund av omsorgsbehov eller med praktiska saker.\ncatalog:variable_text:45169:14791:15156\ncatalog:variable_text:45318:18628:18993\ncatalog:variable_text:45319:18628:18993\ncatalog:variable_text:45366:14791:15156\ncatalog:variable_text:45367:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45563:14791:15156\ncatalog:variable_text:45569:7486:7851\ncatalog:variable_text:45570:14791:15156\ncatalog:variable_text:45628:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f44"
+subject = "var:hjalpa-vuxna-utanfor-hushallet-pga-sjukdom"
 fields = { "tags" = ["social-care"] }
 evidence = "Id:t är en frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Variabeln mäter tid för annan hjälp till andra hushåll. membership-0472: Hjälp till andra hushålls barn är uttryckligen exkluderad; hjälputbytesfrekvenser är inte tidsmått. membership-0473: Variabeln mäter uttryckligen tid för ospecificerad hjälp till andra hushåll. Omsorg om andra anger inte denna avgränsning. membership-0474: Resmåttet omfattar både eget och andra hushåll och mäter resor, inte den praktiska hjälptiden. membership-0475: Båda mäter tid för hjälp till vuxna utanför det egna hushållet, på grund av omsorgsbehov eller med praktiska saker.\ncatalog:variable_text:45169:14791:15156\ncatalog:variable_text:45318:18628:18993\ncatalog:variable_text:45319:18628:18993\ncatalog:variable_text:45366:14791:15156\ncatalog:variable_text:45367:14791:15156\ncatalog:variable_text:45412:14791:15156\ncatalog:variable_text:45563:14791:15156\ncatalog:variable_text:45569:7486:7851\ncatalog:variable_text:45570:14791:15156\ncatalog:variable_text:45628:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f45"
+subject = "var:hjalpa-vuxna-utanfor-hushallet-med-praktiska-saker"
 fields = { "sets" = ["tid-for-hjalp-till-andra-hushall"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45319:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f45"
+subject = "var:hjalpa-vuxna-utanfor-hushallet-med-praktiska-saker"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45319:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f46"
+subject = "var:kontakt-med-slakt-och-vanner"
 fields = { "sets" = [] }
 evidence = "F46 är en frågekod.\ncatalog:variable_text:45320:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f46"
+subject = "var:kontakt-med-slakt-och-vanner"
 fields = { "tags" = ["culture"] }
 evidence = "F46 är en frågekod.\ncatalog:variable_text:45320:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f47"
+subject = "var:somn"
 fields = { "sets" = ["somntid"] }
 evidence = "F47 är en ogenomskinlig källkod.\ncatalog:variable_text:45321:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f47"
+subject = "var:somn"
 fields = { "tags" = ["culture"] }
 evidence = "F47 är en ogenomskinlig källkod.\ncatalog:variable_text:45321:18628:18993"
 
@@ -2487,13 +2487,13 @@ evidence = "F49 är en ogenomskinlig källkod.\ncatalog:variable_text:45323:1862
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:barn-mellan-7-12-ar-i-hushallet"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "F4a är en frågekod.\ncatalog:variable_text:45324:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:barn-mellan-7-12-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "F4a är en frågekod.\ncatalog:variable_text:45324:18628:18993"
 
@@ -2511,109 +2511,109 @@ evidence = "F4b är en frågekod.\ncatalog:variable_text:45325:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f5"
+subject = "var:sov-nar-dagen-slutade"
 fields = { "sets" = ["somnstatus"] }
 evidence = "F5 är en ogenomskinlig källkod.\ncatalog:variable_text:45326:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f5"
+subject = "var:sov-nar-dagen-slutade"
 fields = { "tags" = ["culture"] }
 evidence = "F5 är en ogenomskinlig källkod.\ncatalog:variable_text:45326:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f50"
+subject = "var:jobbade-hemifran-pa-sin-bokforingsdag"
 fields = { "sets" = [] }
 evidence = "F50 är en ogenomskinlig källkod.\ncatalog:variable_text:45327:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f50"
+subject = "var:jobbade-hemifran-pa-sin-bokforingsdag"
 fields = { "tags" = ["employment"] }
 evidence = "F50 är en ogenomskinlig källkod.\ncatalog:variable_text:45327:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-1"
+subject = "var:urvalspersonen-ar-den-enda-personen-i-hushallet"
 fields = { "sets" = ["hushallsstorlek"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45328:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-1"
+subject = "var:urvalspersonen-ar-den-enda-personen-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45328:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-2"
+subject = "var:ensam-hemma-vid-arbetet-hemifran"
 fields = { "sets" = ["samvaro-vid-hemarbete"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45329:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-2"
+subject = "var:ensam-hemma-vid-arbetet-hemifran"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45329:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-3"
+subject = "var:smabarn-hemma-vid-arbete-hemifran"
 fields = { "sets" = ["samvaro-vid-hemarbete"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45330:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-3"
+subject = "var:smabarn-hemma-vid-arbete-hemifran"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45330:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-4"
+subject = "var:aldre-barn-hemma-vid-arbete-hemifran"
 fields = { "sets" = ["samvaro-vid-hemarbete"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45331:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-4"
+subject = "var:aldre-barn-hemma-vid-arbete-hemifran"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45331:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-5"
+subject = "var:annan-vuxen-hemma-vid-arbete-hemifran"
 fields = { "sets" = ["samvaro-vid-hemarbete"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45332:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f51-5"
+subject = "var:annan-vuxen-hemma-vid-arbete-hemifran"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45332:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f52"
+subject = "var:borta-fran-hemmet"
 fields = { "sets" = [] }
 evidence = "F52 är en ogenomskinlig källkod.\ncatalog:variable_text:45333:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f52"
+subject = "var:borta-fran-hemmet"
 fields = { "tags" = ["culture"] }
 evidence = "F52 är en ogenomskinlig källkod.\ncatalog:variable_text:45333:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a"
+subject = "var:barn-mellan-13-19-ar-i-hushallet"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "F5a är en frågekod.\ncatalog:variable_text:45334:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f5a"
+subject = "var:barn-mellan-13-19-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "F5a är en frågekod.\ncatalog:variable_text:45334:18628:18993"
 
@@ -2643,13 +2643,13 @@ evidence = "F8 är en ogenomskinlig källkod.\ncatalog:variable_text:45336:18628
 
 [[statement]]
 kind = "set"
-subject = "var:f9"
+subject = "var:orsak-till-deltidsarbete"
 fields = { "sets" = [] }
 evidence = "F9 är en ogenomskinlig källkod.\ncatalog:variable_text:45337:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f9"
+subject = "var:orsak-till-deltidsarbete"
 fields = { "tags" = ["employment"] }
 evidence = "F9 är en ogenomskinlig källkod.\ncatalog:variable_text:45337:18628:18993"
 
@@ -2751,13 +2751,13 @@ evidence = "Fasta eller flexibla arbetstider.\ncatalog:variable_text:45345:14791
 
 [[statement]]
 kind = "set"
-subject = "var:flex2"
+subject = "var:lika-manga-arbetstimmar-per-vecka"
 fields = { "sets" = [] }
 evidence = "Flex beskriver inte om antalet arbetstimmar är ungefär lika varje vecka under någon av de redovisade perioderna.\ncatalog:occurrence:466642\ncatalog:variable_text:45346:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:flex2"
+subject = "var:lika-manga-arbetstimmar-per-vecka"
 fields = { "tags" = ["employment"] }
 evidence = "Flex beskriver inte om antalet arbetstimmar är ungefär lika varje vecka under någon av de redovisade perioderna.\ncatalog:occurrence:466642\ncatalog:variable_text:45346:14791:15156"
 
@@ -2907,25 +2907,25 @@ evidence = "FR10 är en källkod utan läsbar betydelse. Timmen är en komponent
 
 [[statement]]
 kind = "set"
-subject = "var:fr2"
+subject = "var:om-svarande-var-hemma-vid-dygnets-borjan"
 fields = { "sets" = ["hemma-vid-dygnsgrans"] }
 evidence = "Fr2 är en frågekod.\ncatalog:variable_text:45360:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr2"
+subject = "var:om-svarande-var-hemma-vid-dygnets-borjan"
 fields = { "tags" = ["housing"] }
 evidence = "Fr2 är en frågekod.\ncatalog:variable_text:45360:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3"
+subject = "var:om-svarande-var-hemma-vid-dygnets-slut"
 fields = { "sets" = ["hemma-vid-dygnsgrans"] }
 evidence = "Fr3 är en frågekod.\ncatalog:variable_text:45361:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3"
+subject = "var:om-svarande-var-hemma-vid-dygnets-slut"
 fields = { "tags" = ["housing"] }
 evidence = "Fr3 är en frågekod.\ncatalog:variable_text:45361:11139:11504"
 
@@ -3375,13 +3375,13 @@ evidence = "H-region.\ncatalog:variable_text:45399:7486:7851"
 
 [[statement]]
 kind = "set"
-subject = "var:ha"
+subject = "var:huvudaktivitet"
 fields = { "sets" = ["huvudaktivitet"] }
 evidence = "HA är en bokstavskod.\ncatalog:variable_text:45400:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:ha"
+subject = "var:huvudaktivitet"
 fields = { "tags" = ["culture"] }
 evidence = "HA är en bokstavskod.\ncatalog:variable_text:45400:14791:15156"
 
@@ -5043,25 +5043,25 @@ evidence = "Bedömning av dagboksdagen.\ncatalog:variable_text:45542:14791:15156
 
 [[statement]]
 kind = "set"
-subject = "var:nuts-nomenclature-des-unites-territoriales-statistiques-nuts2-old"
+subject = "var:nuts-nomenclature-des-unites-territoriales-nuts2-old"
 fields = { "sets" = ["nuts-region"] }
 evidence = "Id:t överstiger 60 tecken; etiketten delas.\ncatalog:variable_text:45543:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:nuts-nomenclature-des-unites-territoriales-statistiques-nuts2-old"
+subject = "var:nuts-nomenclature-des-unites-territoriales-nuts2-old"
 fields = { "tags" = ["geography"] }
 evidence = "Id:t överstiger 60 tecken; etiketten delas.\ncatalog:variable_text:45543:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:nuts-nomenclature-des-unites-territoriales-statistiques-nuts3-old"
+subject = "var:nuts-nomenclature-des-unites-territoriales-nuts3-old"
 fields = { "sets" = ["nuts-region"] }
 evidence = "Id:t överstiger 60 tecken; etiketten delas.\ncatalog:variable_text:45544:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:nuts-nomenclature-des-unites-territoriales-statistiques-nuts3-old"
+subject = "var:nuts-nomenclature-des-unites-territoriales-nuts3-old"
 fields = { "tags" = ["geography"] }
 evidence = "Id:t överstiger 60 tecken; etiketten delas.\ncatalog:variable_text:45544:14791:15156"
 
@@ -5799,25 +5799,25 @@ evidence = "Övriga promenader är ett promenadmått. Coordinator group membersh
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:episod-borjan"
 fields = { "sets" = ["episodtidpunkt"] }
 evidence = "Rad är en källkod för episodens början.\ncatalog:variable_text:45607:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:episod-borjan"
 fields = { "tags" = [] }
 evidence = "Rad är en källkod för episodens början.\ncatalog:variable_text:45607:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:rad2"
+subject = "var:episod-slut"
 fields = { "sets" = ["episodtidpunkt"] }
 evidence = "Rad är en källkod för episodens slut.\ncatalog:variable_text:45608:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:rad2"
+subject = "var:episod-slut"
 fields = { "tags" = [] }
 evidence = "Rad är en källkod för episodens slut.\ncatalog:variable_text:45608:14791:15156"
 

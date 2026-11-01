@@ -67,13 +67,13 @@ evidence = "Institutionell sektor klassificerar enhetens sektor.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:kavgaldersp"
+subject = "var:arbetsgivaravgift-alderspension"
 fields = { "sets" = [] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35295:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kavgaldersp"
+subject = "var:arbetsgivaravgift-alderspension"
 fields = { "tags" = ["taxation"] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35295:14610:20089"
 
@@ -91,25 +91,25 @@ evidence = "KAVG is an opaque source mnemonic. The label identifies the employer
 
 [[statement]]
 kind = "set"
-subject = "var:kavghel"
+subject = "var:arbetsgivaravgift-full"
 fields = { "sets" = [] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35297:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kavghel"
+subject = "var:arbetsgivaravgift-full"
 fields = { "tags" = ["taxation"] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35297:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kavgungdom"
+subject = "var:arbetsgivaravgift-ungdom"
 fields = { "sets" = [] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35298:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kavgungdom"
+subject = "var:arbetsgivaravgift-ungdom"
 fields = { "tags" = ["taxation"] }
 evidence = "KAVG is an opaque source mnemonic. The label identifies the employer contribution category; the amount is a tax-related charge.\ncatalog:register:194\ncatalog:variable_text:35298:14610:20089"
 
@@ -139,13 +139,13 @@ evidence = "Det inledande K är ett källkodled; etiketten anger lönesumma per 
 
 [[statement]]
 kind = "set"
-subject = "var:kforman"
+subject = "var:formaner-avgiftspliktiga"
 fields = { "sets" = [] }
 evidence = "Det inledande K är ett källkodled; etiketten anger avgiftspliktiga förmåner.\ncatalog:variable_text:35301:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kforman"
+subject = "var:formaner-avgiftspliktiga"
 fields = { "tags" = ["income"] }
 evidence = "Det inledande K är ett källkodled; etiketten anger avgiftspliktiga förmåner.\ncatalog:variable_text:35301:14610:20089"
 
@@ -163,25 +163,25 @@ evidence = "Variabeln avser ett kostnadsavdrag i skattedeklarationen.\ncatalog:r
 
 [[statement]]
 kind = "set"
-subject = "var:kskattlon"
+subject = "var:avdragen-skatt-lon-och-formaner"
 fields = { "sets" = [] }
 evidence = "Det inledande K är ett källkodled; etiketten anger avdragen skatt på lön och förmåner.\ncatalog:variable_text:35303:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kskattlon"
+subject = "var:avdragen-skatt-lon-och-formaner"
 fields = { "tags" = ["taxation"] }
 evidence = "Det inledande K är ett källkodled; etiketten anger avdragen skatt på lön och förmåner.\ncatalog:variable_text:35303:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ksumulag"
+subject = "var:summa-underlag"
 fields = { "sets" = [] }
 evidence = "KSUMULAG är ett källmnemoniskt kodnamn för summa underlag.\ncatalog:variable_text:35304:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ksumulag"
+subject = "var:summa-underlag"
 fields = { "tags" = ["taxation"] }
 evidence = "KSUMULAG är ett källmnemoniskt kodnamn för summa underlag.\ncatalog:variable_text:35304:14610:20089"
 

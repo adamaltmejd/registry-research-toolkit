@@ -961,25 +961,25 @@ evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:5474
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-i-hushallet-f5"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f5"
 fields = { "sets" = ["hemmaboende-barn"] }
 evidence = "Id anger antal men variabeln mäter förekomst.\ncatalog:valueset:1610\ncatalog:variable_text:54747:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-i-hushallet-f5"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f5"
 fields = { "tags" = ["family-household"] }
 evidence = "Id anger antal men variabeln mäter förekomst.\ncatalog:valueset:1610\ncatalog:variable_text:54747:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-i-hushallet-f7"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f7"
 fields = { "sets" = ["hemmaboende-barn"] }
 evidence = "Id anger antal men variabeln mäter förekomst.\ncatalog:valueset:1610\ncatalog:variable_text:54748:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-i-hushallet-f7"
+subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f7"
 fields = { "tags" = ["family-household"] }
 evidence = "Id anger antal men variabeln mäter förekomst.\ncatalog:valueset:1610\ncatalog:variable_text:54748:15706:16071"
 
@@ -1165,13 +1165,13 @@ evidence = "Gruppering av medborgarskap.\ncatalog:variable_text:54763:15706:1607
 
 [[statement]]
 kind = "set"
-subject = "var:f14-04"
+subject = "var:ansokan-till-forskarutbildningen-via-utbytesprogram"
 fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
 evidence = "Frågekoden är ogenomskinlig och etiketten anger ansökningssättet.\ncatalog:variable_text:54764:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f14-04"
+subject = "var:ansokan-till-forskarutbildningen-via-utbytesprogram"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig och etiketten anger ansökningssättet.\ncatalog:variable_text:54764:15706:16071"
 
@@ -1201,61 +1201,61 @@ evidence = "F18-0 är en opak frågekod; etiketten anger handledares insats.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:f20"
+subject = "var:uppmuntrad-att-studera-svenska-spraket"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54767:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f20"
+subject = "var:uppmuntrad-att-studera-svenska-spraket"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54767:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-01"
+subject = "var:skrivkunskaper-i-engelska"
 fields = { "sets" = ["sprakkunskaper"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54768:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-01"
+subject = "var:skrivkunskaper-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54768:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-02"
+subject = "var:skrivkunskaper-i-svenska"
 fields = { "sets" = ["sprakkunskaper"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54769:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f4-02"
+subject = "var:skrivkunskaper-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54769:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-01"
+subject = "var:talkunskaper-i-engelska"
 fields = { "sets" = ["sprakkunskaper"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54770:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-01"
+subject = "var:talkunskaper-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54770:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-02"
+subject = "var:talkunskaper-i-svenska"
 fields = { "sets" = ["sprakkunskaper"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54771:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-02"
+subject = "var:talkunskaper-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54771:15706:16071"
 
@@ -1273,37 +1273,37 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54772:15706:16
 
 [[statement]]
 kind = "set"
-subject = "var:f8-02"
+subject = "var:barn-flyttat-till-sverige"
 fields = { "sets" = ["familjemedlemmars-flyttning-till-sverige"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54773:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-02"
+subject = "var:barn-flyttat-till-sverige"
 fields = { "tags" = ["family-household", "migration"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54773:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-03"
+subject = "var:annan-familjemedlem-flyttat-till-sverige"
 fields = { "sets" = ["familjemedlemmars-flyttning-till-sverige"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54774:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-03"
+subject = "var:annan-familjemedlem-flyttat-till-sverige"
 fields = { "tags" = ["family-household", "migration"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54774:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-04"
+subject = "var:ingen-familjemedlem-flyttat-till-sverige"
 fields = { "sets" = ["familjemedlemmars-flyttning-till-sverige"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54775:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f8-04"
+subject = "var:ingen-familjemedlem-flyttat-till-sverige"
 fields = { "tags" = ["family-household", "migration"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:54775:15706:16071"
 
@@ -2281,13 +2281,13 @@ evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:51201
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-inkomstniva-f8"
+subject = "var:tillracklig-inkomstniva-enkatfraga-hur-latt-eller-svart-f8"
 fields = { "sets" = ["upplevd-ekonomisk-tillracklighet"] }
 evidence = "Id anger inkomstnivå men frågan gäller upplevd ekonomisk tillräcklighet.\ncatalog:variable_text:54859:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-inkomstniva-f8"
+subject = "var:tillracklig-inkomstniva-enkatfraga-hur-latt-eller-svart-f8"
 fields = { "tags" = ["income"] }
 evidence = "Id anger inkomstnivå men frågan gäller upplevd ekonomisk tillräcklighet.\ncatalog:variable_text:54859:15706:16071"
 

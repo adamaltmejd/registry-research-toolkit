@@ -440,13 +440,13 @@ evidence = "Kategorin avser nylig invandring.\ncatalog:occurrence-locators:varia
 
 [[statement]]
 kind = "set"
-subject = "var:obtid"
+subject = "var:inskrivningstid"
 fields = { "sets" = [] }
 evidence = "OB är en källförkortning som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:12908\ncatalog:variable_text:12908:18915:18916"
 
 [[statement]]
 kind = "set"
-subject = "var:obtid"
+subject = "var:inskrivningstid"
 fields = { "tags" = ["education"] }
 evidence = "OB är en källförkortning som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:12908\ncatalog:variable_text:12908:18915:18916"
 

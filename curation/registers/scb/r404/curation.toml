@@ -505,13 +505,13 @@ evidence = "Antalet arbetsgivare avser anställning.\ncatalog:variable_text:5693
 
 [[statement]]
 kind = "set"
-subject = "var:antalegf"
+subject = "var:antal-verksamheter-som-egenforetagare"
 fields = { "sets" = [] }
 evidence = "EGF är en källförkortning som inte återges i etiketten.\ncatalog:variable_text:5694:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:antalegf"
+subject = "var:antal-verksamheter-som-egenforetagare"
 fields = { "tags" = ["business"] }
 evidence = "EGF är en källförkortning som inte återges i etiketten.\ncatalog:variable_text:5694:18262:20089"
 
@@ -697,13 +697,13 @@ evidence = "Belopp och nivå är redovisningar av arbetsrelaterad inkomst.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:balosstat"
+subject = "var:klassificerad-som-arbetslos"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln klassificerar arbetslöshet.\ncatalog:variable_text:5711:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:balosstat"
+subject = "var:klassificerad-som-arbetslos"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln klassificerar arbetslöshet.\ncatalog:variable_text:5711:20089:20454"
 
@@ -757,25 +757,25 @@ evidence = "Postorten anger geografiskt läge.\ncatalog:variable_text:5715:18262
 
 [[statement]]
 kind = "set"
-subject = "var:bgatulittera"
+subject = "var:belagenhetsadress-gatulittera"
 fields = { "sets" = [] }
 evidence = "Det inledande B är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5716:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bgatulittera"
+subject = "var:belagenhetsadress-gatulittera"
 fields = { "tags" = ["geography"] }
 evidence = "Det inledande B är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5716:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bgatunr"
+subject = "var:belagenhetsadress-gatunummer"
 fields = { "sets" = [] }
 evidence = "Det inledande B är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5717:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bgatunr"
+subject = "var:belagenhetsadress-gatunummer"
 fields = { "tags" = ["geography"] }
 evidence = "Det inledande B är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5717:18262:20089"
 
@@ -793,13 +793,13 @@ evidence = "Indikatorn avser sysselsättning utifrån inkomst från ett annat no
 
 [[statement]]
 kind = "set"
-subject = "var:bnordpen"
+subject = "var:pensionar-utifran-pension-fran-annat-nordiskt-land"
 fields = { "sets" = ["pension"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5719:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bnordpen"
+subject = "var:pensionar-utifran-pension-fran-annat-nordiskt-land"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5719:18262:20089"
 
@@ -925,25 +925,25 @@ evidence = "Ordinarie och särskilda bostadstillägg för pensionärer grupperas
 
 [[statement]]
 kind = "set"
-subject = "var:bpensstat"
+subject = "var:klassificerad-som-pensionar"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig. Coordinator group membership: Statuskodningar och direkta klassificeringsindikatorer ingår. Tillfällig frånvaro är ett klassificeringsunderlag och undantas enligt den fasta definitionen. Pensionsbelopp, inkomstandel, namngivna pensionskomponenter och pensionsindikatorer omfattas enligt den fasta definitionen.\ncatalog:variable_text:5687:20089:20454\ncatalog:variable_text:5698:20089:20454\ncatalog:variable_text:5699:20089:20454\ncatalog:variable_text:5700:18628:18993\ncatalog:variable_text:5711:20089:20454\ncatalog:variable_text:5719:18262:20089\ncatalog:variable_text:5730:20089:20454\ncatalog:variable_text:5731:20089:20454\ncatalog:variable_text:5735:20089:20454\ncatalog:variable_text:5737:18628:18993\ncatalog:variable_text:5771:18262:20454\ncatalog:variable_text:5772:18262:20089\ncatalog:variable_text:5780:18262:20454\ncatalog:variable_text:5781:18262:20089\ncatalog:variable_text:5782:18628:20454\ncatalog:variable_text:5789:20089:20454\ncatalog:variable_text:5824:20089:20454\ncatalog:variable_text:5825:18262:20089\ncatalog:variable_text:5826:18262:20089\ncatalog:variable_text:5830:18262:20454\ncatalog:variable_text:5831:18262:20089\ncatalog:variable_text:5839:18262:20454\ncatalog:variable_text:5840:18262:20089\ncatalog:variable_text:5862:18262:20454\ncatalog:variable_text:5863:18262:20089\ncatalog:variable_text:5864:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bpensstat"
+subject = "var:klassificerad-som-pensionar"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är ogenomskinlig. Coordinator group membership: Statuskodningar och direkta klassificeringsindikatorer ingår. Tillfällig frånvaro är ett klassificeringsunderlag och undantas enligt den fasta definitionen. Pensionsbelopp, inkomstandel, namngivna pensionskomponenter och pensionsindikatorer omfattas enligt den fasta definitionen.\ncatalog:variable_text:5687:20089:20454\ncatalog:variable_text:5698:20089:20454\ncatalog:variable_text:5699:20089:20454\ncatalog:variable_text:5700:18628:18993\ncatalog:variable_text:5711:20089:20454\ncatalog:variable_text:5719:18262:20089\ncatalog:variable_text:5730:20089:20454\ncatalog:variable_text:5731:20089:20454\ncatalog:variable_text:5735:20089:20454\ncatalog:variable_text:5737:18628:18993\ncatalog:variable_text:5771:18262:20454\ncatalog:variable_text:5772:18262:20089\ncatalog:variable_text:5780:18262:20454\ncatalog:variable_text:5781:18262:20089\ncatalog:variable_text:5782:18628:20454\ncatalog:variable_text:5789:20089:20454\ncatalog:variable_text:5824:20089:20454\ncatalog:variable_text:5825:18262:20089\ncatalog:variable_text:5826:18262:20089\ncatalog:variable_text:5830:18262:20454\ncatalog:variable_text:5831:18262:20089\ncatalog:variable_text:5839:18262:20454\ncatalog:variable_text:5840:18262:20089\ncatalog:variable_text:5862:18262:20454\ncatalog:variable_text:5863:18262:20089\ncatalog:variable_text:5864:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bsjukstat"
+subject = "var:klassificerad-som-sjuk"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5731:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bsjukstat"
+subject = "var:klassificerad-som-sjuk"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5731:20089:20454"
 
@@ -1489,13 +1489,13 @@ evidence = "Klassificeringar för olika perioder grupperas.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:ietabep"
+subject = "var:ersattning-vid-deltagande-i-etableringsprogrammet"
 fields = { "sets" = ["etableringsersattning"] }
 evidence = "IETABEp är en ogenomskinlig källkod.\ncatalog:variable_text:5762:18262:20454\ncatalog:variable_text:5779:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ietabep"
+subject = "var:ersattning-vid-deltagande-i-etableringsprogrammet"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "IETABEp är en ogenomskinlig källkod.\ncatalog:variable_text:5762:18262:20454\ncatalog:variable_text:5779:18262:20089"
 
@@ -1849,13 +1849,13 @@ evidence = "Alternativa lönebelopp och lönekomponenter grupperas.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:mandeb"
+subject = "var:debiterad-preliminarskatt"
 fields = { "sets" = [] }
 evidence = "ManDeb är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:5809:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mandeb"
+subject = "var:debiterad-preliminarskatt"
 fields = { "tags" = ["taxation"] }
 evidence = "ManDeb är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:5809:18262:20454"
 
@@ -2365,25 +2365,25 @@ evidence = "Alternativ redovisning av studiestartsstöd.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp"
+subject = "var:utbildningsgrupp"
 fields = { "sets" = [] }
 evidence = "SUN2020Grp är en källkod som inte återfinns i etiketten.\ncatalog:variable_text:5856:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp"
+subject = "var:utbildningsgrupp"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020Grp är en källkod som inte återfinns i etiketten.\ncatalog:variable_text:5856:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "sets" = [] }
 evidence = "SUN2020Inr innehåller en källkod som inte återfinns i etiketten.\ncatalog:variable_text:5857:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020Inr innehåller en källkod som inte återfinns i etiketten.\ncatalog:variable_text:5857:18262:20089"
 
@@ -2425,13 +2425,13 @@ evidence = "Indikator grundad på nordisk inkomst.\ncatalog:variable_text:5860:2
 
 [[statement]]
 kind = "set"
-subject = "var:tetabj"
+subject = "var:ersattning-fran-forsakringskassan-vid-etableringsjobb"
 fields = { "sets" = ["ersattning-for-arbete"] }
 evidence = "TETABJ är en ogenomskinlig källkod. Coordinator group membership: Belopp och inkomstandel kompletteras av uttryckligen arbetsanknutna ersättningar för anställning, etableringsjobb och övrigt arbete.\ncatalog:variable_text:5690:20089:20454\ncatalog:variable_text:5747:18262:20454\ncatalog:variable_text:5752:19723:20454\ncatalog:variable_text:5861:19723:20454\ncatalog:variable_text:5865:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tetabj"
+subject = "var:ersattning-fran-forsakringskassan-vid-etableringsjobb"
 fields = { "tags" = ["income", "integration", "transfers"] }
 evidence = "TETABJ är en ogenomskinlig källkod. Coordinator group membership: Belopp och inkomstandel kompletteras av uttryckligen arbetsanknutna ersättningar för anställning, etableringsjobb och övrigt arbete.\ncatalog:variable_text:5690:20089:20454\ncatalog:variable_text:5747:18262:20454\ncatalog:variable_text:5752:19723:20454\ncatalog:variable_text:5861:19723:20454\ncatalog:variable_text:5865:18262:20454"
 

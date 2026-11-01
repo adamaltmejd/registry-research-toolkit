@@ -727,13 +727,13 @@ evidence = "Samma källkolumn har överlappande ägare med olika beskrivningar; 
 
 [[statement]]
 kind = "set"
-subject = "var:dplan"
+subject = "var:detaljplan"
 fields = { "sets" = [] }
 evidence = "D är en ensam bokstav i källmnemoniken för detaljplan.\ncatalog:variable_text:10064:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:dplan"
+subject = "var:detaljplan"
 fields = { "tags" = ["property"] }
 evidence = "D är en ensam bokstav i källmnemoniken för detaljplan.\ncatalog:variable_text:10064:10592:12053"
 
@@ -1123,13 +1123,13 @@ evidence = "Kodningen anger skattekontor.\ncatalog:variable_text:10107:10592:208
 
 [[statement]]
 kind = "set"
-subject = "var:skm"
+subject = "var:skattemyndighet"
 fields = { "sets" = [] }
 evidence = "Skm är en ogenomskinlig källmnemonik för skattemyndighet.\ncatalog:variable_text:10108:10592:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:skm"
+subject = "var:skattemyndighet"
 fields = { "tags" = ["taxation"] }
 evidence = "Skm är en ogenomskinlig källmnemonik för skattemyndighet.\ncatalog:variable_text:10108:10592:20819"
 
@@ -1423,25 +1423,25 @@ evidence = "Koden anger typ av taxeringsenhet.\ncatalog:variable_text:10133:1753
 
 [[statement]]
 kind = "set"
-subject = "var:ukoeff"
+subject = "var:kopeskillingskoefficient-uppskattad"
 fields = { "sets" = ["kopeskillingskoefficient"] }
 evidence = "Det inledande u är en otydlig bokstavskod för uppskattad.\ncatalog:variable_text:10134:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:ukoeff"
+subject = "var:kopeskillingskoefficient-uppskattad"
 fields = { "tags" = ["property"] }
 evidence = "Det inledande u är en otydlig bokstavskod för uppskattad.\ncatalog:variable_text:10134:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:utax"
+subject = "var:basvarde-uppskattat"
 fields = { "sets" = ["basvarde"] }
 evidence = "UTax är en ogenomskinlig källmnemonik för uppskattat basvärde.\ncatalog:variable_text:10135:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:utax"
+subject = "var:basvarde-uppskattat"
 fields = { "tags" = ["property"] }
 evidence = "UTax är en ogenomskinlig källmnemonik för uppskattat basvärde.\ncatalog:variable_text:10135:10592:12053"
 

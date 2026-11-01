@@ -1,12 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "var:bsjalvf"
+subject = "var:sjalvforsorjning-rk"
 fields = { "sets" = [] }
 evidence = "BSJALVF är en källkod med ett oförklarat bokstavsprefix; källans etikett anger begreppet. Klassificeringen bygger på årsinkomst.\ncatalog:valueset:10591\ncatalog:variable_text:41994:15706:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:bsjalvf"
+subject = "var:sjalvforsorjning-rk"
 fields = { "tags" = ["income"] }
 evidence = "BSJALVF är en källkod med ett oförklarat bokstavsprefix; källans etikett anger begreppet. Klassificeringen bygger på årsinkomst.\ncatalog:valueset:10591\ncatalog:variable_text:41994:15706:19723"

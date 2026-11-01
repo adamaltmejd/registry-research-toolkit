@@ -3391,13 +3391,13 @@ evidence = "F10VT20 är en källkod utan igenkännbara ordstammar för variabeln
 
 [[statement]]
 kind = "set"
-subject = "var:f11-01"
+subject = "var:skal-till-yrkesbytet-fick-inte-forlangd-tjanst"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "F11 är en opak frågekod.\ncatalog:variable_text:53574:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-01"
+subject = "var:skal-till-yrkesbytet-fick-inte-forlangd-tjanst"
 fields = { "tags" = ["employment"] }
 evidence = "F11 är en opak frågekod.\ncatalog:variable_text:53574:16801:17167"
 
@@ -3415,133 +3415,133 @@ evidence = "F11 är en opak frågekod.\ncatalog:variable_text:53575:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-03"
+subject = "var:skal-till-yrkesbytet-brist-pa-karriarmojligheter"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53576:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-03"
+subject = "var:skal-till-yrkesbytet-brist-pa-karriarmojligheter"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53576:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-04"
+subject = "var:skal-till-yrkesbytet-arbetsvillkoren"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53577:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-04"
+subject = "var:skal-till-yrkesbytet-arbetsvillkoren"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53577:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-05"
+subject = "var:skal-till-yrkesbytet-arbetsmiljon"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53578:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-05"
+subject = "var:skal-till-yrkesbytet-arbetsmiljon"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53578:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-06"
+subject = "var:skal-till-yrkesbytet-svart-att-kombinera-arbete-och-familj"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53579:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-06"
+subject = "var:skal-till-yrkesbytet-svart-att-kombinera-arbete-och-familj"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53579:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-1"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-aldre"
 fields = { "sets" = ["bedomningsstod-istallet-for-nationella-prov"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53580:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-1"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-aldre"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53580:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-2"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-egna-prov"
 fields = { "sets" = ["bedomningsstod-istallet-for-nationella-prov"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53581:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-2"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-egna-prov"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53581:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-3"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven"
 fields = { "sets" = ["bedomningsstod-istallet-for-nationella-prov"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53582:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-3"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53582:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-4"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-andra"
 fields = { "sets" = ["bedomningsstod-istallet-for-nationella-prov"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53583:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-4"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-andra"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53583:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-5"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-nej-har"
 fields = { "sets" = ["bedomningsstod-istallet-for-nationella-prov"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53584:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-5"
+subject = "var:stod-for-bedomning-istallet-for-nationella-proven-nej-har"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53584:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f11a"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-behoriga-externa"
 fields = { "sets" = ["hantering-av-larares-franvaro"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53585:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11a"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-behoriga-externa"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53585:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11b"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-obehoriga"
 fields = { "sets" = ["hantering-av-larares-franvaro"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53586:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11b"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-obehoriga"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53586:18809:19174"
 
@@ -3571,13 +3571,13 @@ evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53588:18809:19174
 
 [[statement]]
 kind = "set"
-subject = "var:f11e"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-andra"
 fields = { "sets" = ["hantering-av-larares-franvaro"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53589:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11e"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-andra"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:variable_text:53589:18809:19174"
 
@@ -3607,13 +3607,13 @@ evidence = "F11g är en frågekod.\ncatalog:variable_text:53591:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11h"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-andra-losningar"
 fields = { "sets" = ["hantering-av-larares-franvaro"] }
 evidence = "F11h är en frågekod.\ncatalog:variable_text:53592:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f11h"
+subject = "var:hantering-av-larares-franvaro-fore-pandemin-andra-losningar"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F11h är en frågekod.\ncatalog:variable_text:53592:18809:19174"
 
@@ -3799,25 +3799,25 @@ evidence = "Frågekoden är ogenomskinlig; svaret gäller en negativ bedömning 
 
 [[statement]]
 kind = "set"
-subject = "var:f12k"
+subject = "var:detaljerade-skal-till-yrkesbyte-brist-pa-stod-for-att"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53608:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f12k"
+subject = "var:detaljerade-skal-till-yrkesbyte-brist-pa-stod-for-att"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53608:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f12l"
+subject = "var:detaljerade-skal-till-yrkesbyte-otrygghet-p-g-a-hot-och-vald"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53609:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f12l"
+subject = "var:detaljerade-skal-till-yrkesbyte-otrygghet-p-g-a-hot-och-vald"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53609:16801:17167"
 
@@ -3835,25 +3835,25 @@ evidence = "Frågekoden är opak.\ncatalog:variable_text:53610:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f13aht"
+subject = "var:erbjuden-distansundervisning-ht21"
 fields = { "sets" = ["erbjuden-distansundervisning"] }
 evidence = "Id:t är en frågekod; etiketten anger erbjuden distansundervisning HT21.\ncatalog:variable_text:53611:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13aht"
+subject = "var:erbjuden-distansundervisning-ht21"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger erbjuden distansundervisning HT21.\ncatalog:variable_text:53611:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13avt"
+subject = "var:erbjuden-distansundervisning-vt22"
 fields = { "sets" = ["erbjuden-distansundervisning"] }
 evidence = "Id:t är en frågekod; etiketten anger erbjuden distansundervisning VT22.\ncatalog:variable_text:53612:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13avt"
+subject = "var:erbjuden-distansundervisning-vt22"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger erbjuden distansundervisning VT22.\ncatalog:variable_text:53612:18809:19174"
 
@@ -3871,37 +3871,37 @@ evidence = "Frågekoden är opak.\ncatalog:variable_text:53613:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f13bht-rev"
+subject = "var:andel-lektioner-pa-lank-ht"
 fields = { "sets" = ["andel-lektioner-pa-lank"] }
 evidence = "Id:t är en frågekod; etiketten anger andel lektioner på länk under höstterminen.\ncatalog:variable_text:53614:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13bht-rev"
+subject = "var:andel-lektioner-pa-lank-ht"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger andel lektioner på länk under höstterminen.\ncatalog:variable_text:53614:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13bvt-rev"
+subject = "var:andel-lektioner-pa-lank-vt"
 fields = { "sets" = ["andel-lektioner-pa-lank"] }
 evidence = "Id:t är en frågekod; etiketten anger andel lektioner på länk under vårterminen.\ncatalog:variable_text:53615:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13bvt-rev"
+subject = "var:andel-lektioner-pa-lank-vt"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger andel lektioner på länk under vårterminen.\ncatalog:variable_text:53615:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f13c"
+subject = "var:lon-som-skal-till-yrkesbyte-lonen-i-forhallande-till-andra"
 fields = { "sets" = ["skal-till-yrkesbyte"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53616:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:f13c"
+subject = "var:lon-som-skal-till-yrkesbyte-lonen-i-forhallande-till-andra"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53616:16801:17167"
 
@@ -3931,49 +3931,49 @@ evidence = "F14 är en ogenomskinlig frågekod. Källan beskriver aktivitetstyp 
 
 [[statement]]
 kind = "set"
-subject = "var:f14a"
+subject = "var:gemensamma-forhallningssatt-for-tydlig-undervisningsstruktur"
 fields = { "sets" = ["gemensamma-forhallningssatt-i-undervisningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53619:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14a"
+subject = "var:gemensamma-forhallningssatt-for-tydlig-undervisningsstruktur"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53619:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14b"
+subject = "var:gemensamma-forhallningssatt-for-variation-i-undervisningen"
 fields = { "sets" = ["gemensamma-forhallningssatt-i-undervisningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53620:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14b"
+subject = "var:gemensamma-forhallningssatt-for-variation-i-undervisningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53620:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14c"
+subject = "var:gemensamma-forhallningssatt-for-social-interaktion"
 fields = { "sets" = ["gemensamma-forhallningssatt-i-undervisningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53621:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14c"
+subject = "var:gemensamma-forhallningssatt-for-social-interaktion"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53621:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14d"
+subject = "var:gemensamma-forhallningssatt-for-att-folja-upp-att-elever"
 fields = { "sets" = ["gemensamma-forhallningssatt-i-undervisningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53622:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14d"
+subject = "var:gemensamma-forhallningssatt-for-att-folja-upp-att-elever"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53622:18262:18809"
 
@@ -3991,25 +3991,25 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53623:18262:18
 
 [[statement]]
 kind = "set"
-subject = "var:f14f"
+subject = "var:gemensamma-forhallningssatt-for-hur-eleverna-kan-fa-stalla"
 fields = { "sets" = ["gemensamma-forhallningssatt-i-undervisningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53624:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14f"
+subject = "var:gemensamma-forhallningssatt-for-hur-eleverna-kan-fa-stalla"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53624:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f14ht-rev"
+subject = "var:hybridsituation-ht"
 fields = { "sets" = ["hybridsituation-i-undervisningen"] }
 evidence = "Id:t är en frågekod; etiketten anger hybridsituation under höstterminen.\ncatalog:variable_text:53625:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f14ht-rev"
+subject = "var:hybridsituation-ht"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger hybridsituation under höstterminen.\ncatalog:variable_text:53625:18809:19174"
 
@@ -4027,37 +4027,37 @@ evidence = "Frågekoden är ogenomskinlig; etiketten anger tjänstgöringsomfatt
 
 [[statement]]
 kind = "set"
-subject = "var:f14vt-rev"
+subject = "var:hybridsituation-vt"
 fields = { "sets" = ["hybridsituation-i-undervisningen"] }
 evidence = "Id:t är en frågekod; etiketten anger hybridsituation under vårterminen.\ncatalog:variable_text:53627:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f14vt-rev"
+subject = "var:hybridsituation-vt"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten anger hybridsituation under vårterminen.\ncatalog:variable_text:53627:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-1"
+subject = "var:huvudsaklig-verksamhet-2001-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53628:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-1"
+subject = "var:huvudsaklig-verksamhet-2001-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53628:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-2"
+subject = "var:huvudsaklig-verksamhet-2001-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53629:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-2"
+subject = "var:huvudsaklig-verksamhet-2001-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53629:13514:13695"
 
@@ -4075,13 +4075,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53630:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-4"
+subject = "var:huvudsaklig-verksamhet-2001-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53631:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-4"
+subject = "var:huvudsaklig-verksamhet-2001-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53631:13514:13695"
 
@@ -4099,25 +4099,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53632:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-6"
+subject = "var:huvudsaklig-verksamhet-2001-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53633:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-6"
+subject = "var:huvudsaklig-verksamhet-2001-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53633:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-7"
+subject = "var:huvudsaklig-verksamhet-2001-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53634:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-1-7"
+subject = "var:huvudsaklig-verksamhet-2001-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53634:13514:13695"
 
@@ -4135,25 +4135,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53635:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-1"
+subject = "var:huvudsaklig-verksamhet-2002-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53636:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-1"
+subject = "var:huvudsaklig-verksamhet-2002-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53636:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-2"
+subject = "var:huvudsaklig-verksamhet-2002-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53637:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-2"
+subject = "var:huvudsaklig-verksamhet-2002-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53637:13514:13695"
 
@@ -4171,13 +4171,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53638:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-4"
+subject = "var:huvudsaklig-verksamhet-2002-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53639:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-4"
+subject = "var:huvudsaklig-verksamhet-2002-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53639:13514:13695"
 
@@ -4195,25 +4195,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53640:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-6"
+subject = "var:huvudsaklig-verksamhet-2002-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53641:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-6"
+subject = "var:huvudsaklig-verksamhet-2002-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53641:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-7"
+subject = "var:huvudsaklig-verksamhet-2002-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53642:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-2-7"
+subject = "var:huvudsaklig-verksamhet-2002-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53642:13514:13695"
 
@@ -4231,25 +4231,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53643:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-1"
+subject = "var:huvudsaklig-verksamhet-2003-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53644:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-1"
+subject = "var:huvudsaklig-verksamhet-2003-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53644:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-2"
+subject = "var:huvudsaklig-verksamhet-2003-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53645:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-2"
+subject = "var:huvudsaklig-verksamhet-2003-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53645:13514:13695"
 
@@ -4267,13 +4267,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53646:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-4"
+subject = "var:huvudsaklig-verksamhet-2003-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53647:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-4"
+subject = "var:huvudsaklig-verksamhet-2003-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53647:13514:13695"
 
@@ -4291,25 +4291,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53648:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-6"
+subject = "var:huvudsaklig-verksamhet-2003-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53649:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-6"
+subject = "var:huvudsaklig-verksamhet-2003-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53649:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-7"
+subject = "var:huvudsaklig-verksamhet-2003-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53650:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-3-7"
+subject = "var:huvudsaklig-verksamhet-2003-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53650:13514:13695"
 
@@ -4327,25 +4327,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53651:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-1"
+subject = "var:huvudsaklig-verksamhet-2004-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53652:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-1"
+subject = "var:huvudsaklig-verksamhet-2004-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53652:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-2"
+subject = "var:huvudsaklig-verksamhet-2004-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53653:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-2"
+subject = "var:huvudsaklig-verksamhet-2004-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53653:13514:13695"
 
@@ -4363,13 +4363,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53654:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-4"
+subject = "var:huvudsaklig-verksamhet-2004-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53655:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-4"
+subject = "var:huvudsaklig-verksamhet-2004-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53655:13514:13695"
 
@@ -4387,25 +4387,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53656:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-6"
+subject = "var:huvudsaklig-verksamhet-2004-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53657:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-6"
+subject = "var:huvudsaklig-verksamhet-2004-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53657:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-7"
+subject = "var:huvudsaklig-verksamhet-2004-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53658:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-4-7"
+subject = "var:huvudsaklig-verksamhet-2004-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53658:13514:13695"
 
@@ -4423,25 +4423,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53659:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-1"
+subject = "var:huvudsaklig-verksamhet-2005-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53660:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-1"
+subject = "var:huvudsaklig-verksamhet-2005-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53660:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-2"
+subject = "var:huvudsaklig-verksamhet-2005-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53661:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-2"
+subject = "var:huvudsaklig-verksamhet-2005-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53661:13514:13695"
 
@@ -4459,13 +4459,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53662:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-4"
+subject = "var:huvudsaklig-verksamhet-2005-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53663:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-4"
+subject = "var:huvudsaklig-verksamhet-2005-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53663:13514:13695"
 
@@ -4483,25 +4483,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53664:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-6"
+subject = "var:huvudsaklig-verksamhet-2005-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53665:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-6"
+subject = "var:huvudsaklig-verksamhet-2005-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53665:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-7"
+subject = "var:huvudsaklig-verksamhet-2005-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53666:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-5-7"
+subject = "var:huvudsaklig-verksamhet-2005-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53666:13514:13695"
 
@@ -4519,25 +4519,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53667:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-1"
+subject = "var:huvudsaklig-verksamhet-2006-gick-i-gymnasieskolan"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53668:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-1"
+subject = "var:huvudsaklig-verksamhet-2006-gick-i-gymnasieskolan"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53668:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-2"
+subject = "var:huvudsaklig-verksamhet-2006-arbetade"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53669:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-2"
+subject = "var:huvudsaklig-verksamhet-2006-arbetade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53669:13514:13695"
 
@@ -4555,13 +4555,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53670:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-4"
+subject = "var:huvudsaklig-verksamhet-2006-deltog-i-arbetsmarknadspolitiska"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53671:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-4"
+subject = "var:huvudsaklig-verksamhet-2006-deltog-i-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53671:13514:13695"
 
@@ -4579,25 +4579,25 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53672:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-6"
+subject = "var:huvudsaklig-verksamhet-2006-gick-pa-annan-utbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53673:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-6"
+subject = "var:huvudsaklig-verksamhet-2006-gick-pa-annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53673:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-7"
+subject = "var:huvudsaklig-verksamhet-2006-foraldraledig"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53674:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-6-7"
+subject = "var:huvudsaklig-verksamhet-2006-foraldraledig"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53674:13514:13695"
 
@@ -4651,37 +4651,37 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53678:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-4"
+subject = "var:arbetsmarknadspolitisk-atgard-arbetspraktik"
 fields = { "sets" = ["arbetsmarknadspolitiska-atgarder"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53679:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-4"
+subject = "var:arbetsmarknadspolitisk-atgard-arbetspraktik"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53679:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-5"
+subject = "var:arbetsmarknadspolitisk-atgard-arbetsmarknadsutbildning"
 fields = { "sets" = ["arbetsmarknadspolitiska-atgarder"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53680:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-5"
+subject = "var:arbetsmarknadspolitisk-atgard-arbetsmarknadsutbildning"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53680:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-6"
+subject = "var:arbetsmarknadspolitisk-atgard-datortek"
 fields = { "sets" = ["arbetsmarknadspolitiska-atgarder"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53681:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-6"
+subject = "var:arbetsmarknadspolitisk-atgard-datortek"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53681:13514:13695"
 
@@ -4699,61 +4699,61 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:53682:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-8"
+subject = "var:arbetsmarknadspolitisk-atgard-annan"
 fields = { "sets" = ["arbetsmarknadspolitiska-atgarder"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53683:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-8"
+subject = "var:arbetsmarknadspolitisk-atgard-annan"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53683:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f16a"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-motivera"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53685:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f16a"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-motivera"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53685:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f16b"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-fa-eleverna"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Källprojektionen anger hjälpsökande, individuell hjälp samt upptäckt och tillgodoseende av stödbehov. f16h behålls enligt det fasta stödda innehållet trots den noterade källkonflikten. Social gemenskap och uppföljning av förståelse omfattas inte. membership-0479: Valda undantagsmått avser undantag från distansundervisning, inte skolans förmåga att ge elevstöd. membership-0480: Ingen vald sektionsvariabel mäter former för elevstöd. membership-0481: Ingen vald variabel mäter former för elevstöd. membership-0482: Institutionens stöd vid kränkningar är inte skolans former för att upptäcka och tillgodose elevers stödbehov. membership-0483: Studsit9 bedömer utbildningens anpassning för funktionshinder, inte det definierade batteriet om hjälpsökande och stödbehov. membership-0484: Inga valda variabler mäter skolans former för elevstöd. membership-0485: Ingen vald variabel avser skolans former för elevstöd. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för elevstöd. membership-0487: Inga valda variabler avser skolans former för elevstöd. membership-0488: Ingen vald variabel mäter skolans former för elevstöd. membership-0489: Stöduppgiften gäller patientsituationer i arbetet, inte elevers stödbehov. membership-0490: Avbrottsorsaken uteblivet stöd anger ett skäl till studieavbrott, inte skolans förmåga att ordna elevstöd. membership-0491: Valda stödvariabler gäller andra uttryckliga frågebatterier eller faktiskt deltagande, inte skolans förmåga enligt definitionen.\ncatalog:occurrence:510644\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53608:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53686:18262:18809\ncatalog:variable_text:53687:18262:18809\ncatalog:variable_text:53688:18262:18809\ncatalog:variable_text:53690:18262:18809\ncatalog:variable_text:53691:18262:18809\ncatalog:variable_text:53692:18262:18809\ncatalog:variable_text:53754:13514:13695\ncatalog:variable_text:53947:18262:18444\ncatalog:variable_text:53948:18262:18444\ncatalog:variable_text:53961:13514:13695\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54517:16617:16801\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54528:17532:17897\ncatalog:variable_text:54529:17532:17897\ncatalog:variable_text:54530:17532:17897\ncatalog:variable_text:54531:17532:17897\ncatalog:variable_text:54532:13514:13695\ncatalog:variable_text:54562:13149:13514\ncatalog:variable_text:54605:18809:19174\ncatalog:variable_text:54606:18809:19174\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54643:16617:16801\ncatalog:variable_text:54644:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f16b"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-fa-eleverna"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Källprojektionen anger hjälpsökande, individuell hjälp samt upptäckt och tillgodoseende av stödbehov. f16h behålls enligt det fasta stödda innehållet trots den noterade källkonflikten. Social gemenskap och uppföljning av förståelse omfattas inte. membership-0479: Valda undantagsmått avser undantag från distansundervisning, inte skolans förmåga att ge elevstöd. membership-0480: Ingen vald sektionsvariabel mäter former för elevstöd. membership-0481: Ingen vald variabel mäter former för elevstöd. membership-0482: Institutionens stöd vid kränkningar är inte skolans former för att upptäcka och tillgodose elevers stödbehov. membership-0483: Studsit9 bedömer utbildningens anpassning för funktionshinder, inte det definierade batteriet om hjälpsökande och stödbehov. membership-0484: Inga valda variabler mäter skolans former för elevstöd. membership-0485: Ingen vald variabel avser skolans former för elevstöd. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för elevstöd. membership-0487: Inga valda variabler avser skolans former för elevstöd. membership-0488: Ingen vald variabel mäter skolans former för elevstöd. membership-0489: Stöduppgiften gäller patientsituationer i arbetet, inte elevers stödbehov. membership-0490: Avbrottsorsaken uteblivet stöd anger ett skäl till studieavbrott, inte skolans förmåga att ordna elevstöd. membership-0491: Valda stödvariabler gäller andra uttryckliga frågebatterier eller faktiskt deltagande, inte skolans förmåga enligt definitionen.\ncatalog:occurrence:510644\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53608:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53686:18262:18809\ncatalog:variable_text:53687:18262:18809\ncatalog:variable_text:53688:18262:18809\ncatalog:variable_text:53690:18262:18809\ncatalog:variable_text:53691:18262:18809\ncatalog:variable_text:53692:18262:18809\ncatalog:variable_text:53754:13514:13695\ncatalog:variable_text:53947:18262:18444\ncatalog:variable_text:53948:18262:18444\ncatalog:variable_text:53961:13514:13695\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54517:16617:16801\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54528:17532:17897\ncatalog:variable_text:54529:17532:17897\ncatalog:variable_text:54530:17532:17897\ncatalog:variable_text:54531:17532:17897\ncatalog:variable_text:54532:13514:13695\ncatalog:variable_text:54562:13149:13514\ncatalog:variable_text:54605:18809:19174\ncatalog:variable_text:54606:18809:19174\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54643:16617:16801\ncatalog:variable_text:54644:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f16c"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-sakerstalla"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53687:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f16c"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-sakerstalla"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53687:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f16d"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-ge-eleverna"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: f16a mäter motivation till aktivt deltagande och f16e kontroll av aktivitet. f16d mäter individuell hjälp och faller utanför definitionen. membership-0479: Närvarokontroll är uttryckligen skild från kandidatens motivation och kontroll av aktivt deltagande. membership-0480: Ingen vald sektionsvariabel mäter förmågan att motivera eller kontrollera aktivt elevdeltagande. membership-0481: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0482: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0483: Ingen vald variabel mäter skolans former för att motivera eller kontrollera aktivt elevdeltagande. membership-0484: Inga valda variabler mäter former för aktivt elevdeltagande. membership-0485: Ingen vald variabel avser former för aktivt elevdeltagande. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för aktivt elevdeltagande. membership-0487: Inga valda variabler avser former för aktivt elevdeltagande. membership-0488: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0489: Ingen vald variabel avser skolans former för aktivt elevdeltagande. membership-0490: Ingen vald variabel i sektionen mäter former för aktivt elevdeltagande. membership-0491: Ingen vald variabel mäter skolans former för aktivt elevdeltagande. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Källprojektionen anger hjälpsökande, individuell hjälp samt upptäckt och tillgodoseende av stödbehov. f16h behålls enligt det fasta stödda innehållet trots den noterade källkonflikten. Social gemenskap och uppföljning av förståelse omfattas inte. membership-0479: Valda undantagsmått avser undantag från distansundervisning, inte skolans förmåga att ge elevstöd. membership-0480: Ingen vald sektionsvariabel mäter former för elevstöd. membership-0481: Ingen vald variabel mäter former för elevstöd. membership-0482: Institutionens stöd vid kränkningar är inte skolans former för att upptäcka och tillgodose elevers stödbehov. membership-0483: Studsit9 bedömer utbildningens anpassning för funktionshinder, inte det definierade batteriet om hjälpsökande och stödbehov. membership-0484: Inga valda variabler mäter skolans former för elevstöd. membership-0485: Ingen vald variabel avser skolans former för elevstöd. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för elevstöd. membership-0487: Inga valda variabler avser skolans former för elevstöd. membership-0488: Ingen vald variabel mäter skolans former för elevstöd. membership-0489: Stöduppgiften gäller patientsituationer i arbetet, inte elevers stödbehov. membership-0490: Avbrottsorsaken uteblivet stöd anger ett skäl till studieavbrott, inte skolans förmåga att ordna elevstöd. membership-0491: Valda stödvariabler gäller andra uttryckliga frågebatterier eller faktiskt deltagande, inte skolans förmåga enligt definitionen.\ncatalog:occurrence:510644\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53608:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53685:18262:18809\ncatalog:variable_text:53686:18262:18809\ncatalog:variable_text:53687:18262:18809\ncatalog:variable_text:53688:18262:18809\ncatalog:variable_text:53689:18262:18809\ncatalog:variable_text:53690:18262:18809\ncatalog:variable_text:53691:18262:18809\ncatalog:variable_text:53692:18262:18809\ncatalog:variable_text:53754:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53947:18262:18444\ncatalog:variable_text:53948:18262:18444\ncatalog:variable_text:53961:13514:13695\ncatalog:variable_text:54165:18262:18809\ncatalog:variable_text:54264:18809:19174\ncatalog:variable_text:54265:18809:19174\ncatalog:variable_text:54266:18262:19174\ncatalog:variable_text:54267:18262:19174\ncatalog:variable_text:54268:18809:19174\ncatalog:variable_text:54269:18809:19174\ncatalog:variable_text:54270:18809:19174\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54517:16617:16801\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54528:17532:17897\ncatalog:variable_text:54529:17532:17897\ncatalog:variable_text:54530:17532:17897\ncatalog:variable_text:54531:17532:17897\ncatalog:variable_text:54532:13514:13695\ncatalog:variable_text:54562:13149:13514\ncatalog:variable_text:54605:18809:19174\ncatalog:variable_text:54606:18809:19174\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54643:16617:16801\ncatalog:variable_text:54644:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f16d"
+subject = "var:till-vilken-grad-skolan-hittat-former-for-att-ge-eleverna"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: f16a mäter motivation till aktivt deltagande och f16e kontroll av aktivitet. f16d mäter individuell hjälp och faller utanför definitionen. membership-0479: Närvarokontroll är uttryckligen skild från kandidatens motivation och kontroll av aktivt deltagande. membership-0480: Ingen vald sektionsvariabel mäter förmågan att motivera eller kontrollera aktivt elevdeltagande. membership-0481: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0482: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0483: Ingen vald variabel mäter skolans former för att motivera eller kontrollera aktivt elevdeltagande. membership-0484: Inga valda variabler mäter former för aktivt elevdeltagande. membership-0485: Ingen vald variabel avser former för aktivt elevdeltagande. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för aktivt elevdeltagande. membership-0487: Inga valda variabler avser former för aktivt elevdeltagande. membership-0488: Ingen vald variabel mäter former för aktivt elevdeltagande. membership-0489: Ingen vald variabel avser skolans former för aktivt elevdeltagande. membership-0490: Ingen vald variabel i sektionen mäter former för aktivt elevdeltagande. membership-0491: Ingen vald variabel mäter skolans former för aktivt elevdeltagande. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Källprojektionen anger hjälpsökande, individuell hjälp samt upptäckt och tillgodoseende av stödbehov. f16h behålls enligt det fasta stödda innehållet trots den noterade källkonflikten. Social gemenskap och uppföljning av förståelse omfattas inte. membership-0479: Valda undantagsmått avser undantag från distansundervisning, inte skolans förmåga att ge elevstöd. membership-0480: Ingen vald sektionsvariabel mäter former för elevstöd. membership-0481: Ingen vald variabel mäter former för elevstöd. membership-0482: Institutionens stöd vid kränkningar är inte skolans former för att upptäcka och tillgodose elevers stödbehov. membership-0483: Studsit9 bedömer utbildningens anpassning för funktionshinder, inte det definierade batteriet om hjälpsökande och stödbehov. membership-0484: Inga valda variabler mäter skolans former för elevstöd. membership-0485: Ingen vald variabel avser skolans former för elevstöd. membership-0486: Ingen vald variabel i denna sektion mäter skolans former för elevstöd. membership-0487: Inga valda variabler avser skolans former för elevstöd. membership-0488: Ingen vald variabel mäter skolans former för elevstöd. membership-0489: Stöduppgiften gäller patientsituationer i arbetet, inte elevers stödbehov. membership-0490: Avbrottsorsaken uteblivet stöd anger ett skäl till studieavbrott, inte skolans förmåga att ordna elevstöd. membership-0491: Valda stödvariabler gäller andra uttryckliga frågebatterier eller faktiskt deltagande, inte skolans förmåga enligt definitionen.\ncatalog:occurrence:510644\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53608:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53685:18262:18809\ncatalog:variable_text:53686:18262:18809\ncatalog:variable_text:53687:18262:18809\ncatalog:variable_text:53688:18262:18809\ncatalog:variable_text:53689:18262:18809\ncatalog:variable_text:53690:18262:18809\ncatalog:variable_text:53691:18262:18809\ncatalog:variable_text:53692:18262:18809\ncatalog:variable_text:53754:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53947:18262:18444\ncatalog:variable_text:53948:18262:18444\ncatalog:variable_text:53961:13514:13695\ncatalog:variable_text:54165:18262:18809\ncatalog:variable_text:54264:18809:19174\ncatalog:variable_text:54265:18809:19174\ncatalog:variable_text:54266:18262:19174\ncatalog:variable_text:54267:18262:19174\ncatalog:variable_text:54268:18809:19174\ncatalog:variable_text:54269:18809:19174\ncatalog:variable_text:54270:18809:19174\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54517:16617:16801\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54528:17532:17897\ncatalog:variable_text:54529:17532:17897\ncatalog:variable_text:54530:17532:17897\ncatalog:variable_text:54531:17532:17897\ncatalog:variable_text:54532:13514:13695\ncatalog:variable_text:54562:13149:13514\ncatalog:variable_text:54605:18809:19174\ncatalog:variable_text:54606:18809:19174\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54643:16617:16801\ncatalog:variable_text:54644:16617:16801"
 
@@ -4975,61 +4975,61 @@ evidence = "Frågekoden är ogenomskinlig; den delade etiketten kräver disambig
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-01"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-fore-mars-2020"
 fields = { "sets" = ["bredband-eller-datavolym-till-elever"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym före mars 2020.\ncatalog:variable_text:53707:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-01"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-fore-mars-2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym före mars 2020.\ncatalog:variable_text:53707:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-02"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-vt-2020-fran-mars"
 fields = { "sets" = ["bredband-eller-datavolym-till-elever"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym VT 2020.\ncatalog:variable_text:53708:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-02"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-vt-2020-fran-mars"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym VT 2020.\ncatalog:variable_text:53708:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-03"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-ht-2020"
 fields = { "sets" = ["bredband-eller-datavolym-till-elever"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym HT 2020.\ncatalog:variable_text:53709:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-03"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-ht-2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym HT 2020.\ncatalog:variable_text:53709:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-04"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-vt-2021"
 fields = { "sets" = ["bredband-eller-datavolym-till-elever"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym VT 2021.\ncatalog:variable_text:53710:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-04"
+subject = "var:ordnat-bredband-eller-datavolym-at-elever-vt-2021"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten anger bredband eller datavolym VT 2021.\ncatalog:variable_text:53710:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-05"
+subject = "var:inte-ordnat-bredband-eller-datavolym-at-elever-under-nagon"
 fields = { "sets" = ["bredband-eller-datavolym-till-elever"] }
 evidence = "Id:t är en frågekod; etiketten anger att bredband eller datavolym inte ordnats.\ncatalog:variable_text:53711:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c-05"
+subject = "var:inte-ordnat-bredband-eller-datavolym-at-elever-under-nagon"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten anger att bredband eller datavolym inte ordnats.\ncatalog:variable_text:53711:18262:18809"
 
@@ -5311,13 +5311,13 @@ evidence = "F18c_02 är en frågekod.\ncatalog:variable_text:53734:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c-03"
+subject = "var:anvander-valfria-motesverktyg-tillhandahallna-av-lararna-ht"
 fields = { "sets" = ["anvandning-av-tillhandahallna-motesverktyg"] }
 evidence = "F18c_03 är en frågekod.\ncatalog:variable_text:53735:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c-03"
+subject = "var:anvander-valfria-motesverktyg-tillhandahallna-av-lararna-ht"
 fields = { "tags" = ["digital", "education"] }
 evidence = "F18c_03 är en frågekod.\ncatalog:variable_text:53735:18262:18809"
 
@@ -5335,61 +5335,61 @@ evidence = "F18c_04 är en frågekod.\ncatalog:variable_text:53736:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c-05"
+subject = "var:anvander-ej-valfria-motesverktyg-tillhandahallna-av-lararna"
 fields = { "sets" = ["anvandning-av-tillhandahallna-motesverktyg"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53737:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c-05"
+subject = "var:anvander-ej-valfria-motesverktyg-tillhandahallna-av-lararna"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53737:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-01"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-fore"
 fields = { "sets" = ["digital-dokumentdelning-med-elever"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53738:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-01"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-fore"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53738:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-02"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-vt-2020"
 fields = { "sets" = ["digital-dokumentdelning-med-elever"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53739:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-02"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-vt-2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53739:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-03"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-ht-2020"
 fields = { "sets" = ["digital-dokumentdelning-med-elever"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53740:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-03"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-ht-2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53740:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-04"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-vt-2021"
 fields = { "sets" = ["digital-dokumentdelning-med-elever"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53741:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d-04"
+subject = "var:anvander-verktyg-for-att-dela-dokument-med-eleverna-vt-2021"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53741:18262:18809"
 
@@ -5455,13 +5455,13 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53746:18262:18
 
 [[statement]]
 kind = "set"
-subject = "var:f18e-05"
+subject = "var:anvander-ej-verktyg-for-att-kommunicera-med-eleverna"
 fields = { "sets" = ["digital-kommunikation-med-elever"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53747:18262:18444\ncatalog:variable_text:53747:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f18e-05"
+subject = "var:anvander-ej-verktyg-for-att-kommunicera-med-eleverna"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53747:18262:18444\ncatalog:variable_text:53747:18444:18809"
 
@@ -5491,61 +5491,61 @@ evidence = "Frågekoden är ogenomskinlig; den delade etiketten kräver disambig
 
 [[statement]]
 kind = "set"
-subject = "var:f1b"
+subject = "var:studerar-pa-gymnasieskolan-just-nu-eller-inte"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53750:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f1b"
+subject = "var:studerar-pa-gymnasieskolan-just-nu-eller-inte"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53750:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-01"
+subject = "var:avbrottsorsak-utbildningen-fel-inriktning"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53751:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-01"
+subject = "var:avbrottsorsak-utbildningen-fel-inriktning"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53751:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-02"
+subject = "var:avbrottsorsak-studietakten-for-hog"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53752:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-02"
+subject = "var:avbrottsorsak-studietakten-for-hog"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53752:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-04"
+subject = "var:avbrottsorsak-studierna-for-teoretiska"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53753:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-04"
+subject = "var:avbrottsorsak-studierna-for-teoretiska"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53753:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-05"
+subject = "var:avbrottsorsak-behovde-men-fick-inget-stod-i-skolarbetet"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53754:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-05"
+subject = "var:avbrottsorsak-behovde-men-fick-inget-stod-i-skolarbetet"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53754:13514:13695"
 
@@ -5731,241 +5731,241 @@ evidence = "F21_txt är en opak frågekod; etiketten anger andra skäl för att 
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-01"
+subject = "var:fortbildning-digitala-verktyg-vt-2020-fran-mars"
 fields = { "sets" = ["fortbildning-i-digitala-verktyg"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53770:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-01"
+subject = "var:fortbildning-digitala-verktyg-vt-2020-fran-mars"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53770:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-02"
+subject = "var:fortbildning-digitala-verktyg-ht2020"
 fields = { "sets" = ["fortbildning-i-digitala-verktyg"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53771:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-02"
+subject = "var:fortbildning-digitala-verktyg-ht2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53771:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-03"
+subject = "var:fortbildning-digitala-verktyg-vt2021"
 fields = { "sets" = ["fortbildning-i-digitala-verktyg"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53772:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-03"
+subject = "var:fortbildning-digitala-verktyg-vt2021"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53772:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-04"
+subject = "var:ej-fatt-fortbildning-digitala-verktyg-under-nagon"
 fields = { "sets" = ["fortbildning-i-digitala-verktyg"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53773:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21a-04"
+subject = "var:ej-fatt-fortbildning-digitala-verktyg-under-nagon"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53773:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-01"
+subject = "var:lopande-stod-for-digitala-verktyg-vt-2020-fran-mars"
 fields = { "sets" = ["lopande-stod-for-digitala-verktyg"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg VT 2020.\ncatalog:variable_text:53774:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-01"
+subject = "var:lopande-stod-for-digitala-verktyg-vt-2020-fran-mars"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg VT 2020.\ncatalog:variable_text:53774:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-02"
+subject = "var:lopande-stod-for-digitala-verktyg-ht2020"
 fields = { "sets" = ["lopande-stod-for-digitala-verktyg"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg HT 2020.\ncatalog:variable_text:53775:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-02"
+subject = "var:lopande-stod-for-digitala-verktyg-ht2020"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg HT 2020.\ncatalog:variable_text:53775:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-03"
+subject = "var:lopande-stod-for-digitala-verktyg-vt2021"
 fields = { "sets" = ["lopande-stod-for-digitala-verktyg"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg VT 2021.\ncatalog:variable_text:53776:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-03"
+subject = "var:lopande-stod-for-digitala-verktyg-vt2021"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande stöd för digitala verktyg VT 2021.\ncatalog:variable_text:53776:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-04"
+subject = "var:ej-fatt-lopande-stod-for-digitala-verktyg-under-nagon"
 fields = { "sets" = ["lopande-stod-for-digitala-verktyg"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivet stöd för digitala verktyg.\ncatalog:variable_text:53777:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21b-04"
+subject = "var:ej-fatt-lopande-stod-for-digitala-verktyg-under-nagon"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivet stöd för digitala verktyg.\ncatalog:variable_text:53777:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-01"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-vt-2020"
 fields = { "sets" = ["fortbildning-i-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik VT 2020.\ncatalog:variable_text:53778:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-01"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-vt-2020"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik VT 2020.\ncatalog:variable_text:53778:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-02"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-ht2020"
 fields = { "sets" = ["fortbildning-i-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik HT 2020.\ncatalog:variable_text:53779:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-02"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-ht2020"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik HT 2020.\ncatalog:variable_text:53779:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-03"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-vt2021"
 fields = { "sets" = ["fortbildning-i-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik VT 2021.\ncatalog:variable_text:53780:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-03"
+subject = "var:fortbildning-i-pedagogik-vid-undervisning-pa-distans-vt2021"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver fortbildning i distanspedagogik VT 2021.\ncatalog:variable_text:53780:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-04"
+subject = "var:ej-fatt-fortbildning-i-pedagogik-vid-undervisning-pa-distans"
 fields = { "sets" = ["fortbildning-i-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utebliven fortbildning i distanspedagogik.\ncatalog:variable_text:53781:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21c-04"
+subject = "var:ej-fatt-fortbildning-i-pedagogik-vid-undervisning-pa-distans"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utebliven fortbildning i distanspedagogik.\ncatalog:variable_text:53781:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-01"
+subject = "var:utveckling-av-pedagogiken-vt-2020-fran-mars"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken VT 2020.\ncatalog:variable_text:53782:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-01"
+subject = "var:utveckling-av-pedagogiken-vt-2020-fran-mars"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken VT 2020.\ncatalog:variable_text:53782:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-02"
+subject = "var:utveckling-av-pedagogiken-ht2020"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken HT 2020.\ncatalog:variable_text:53783:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-02"
+subject = "var:utveckling-av-pedagogiken-ht2020"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken HT 2020.\ncatalog:variable_text:53783:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-03"
+subject = "var:utveckling-av-pedagogiken-vt2021"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken VT 2021.\ncatalog:variable_text:53784:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-03"
+subject = "var:utveckling-av-pedagogiken-vt2021"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver utveckling av pedagogiken VT 2021.\ncatalog:variable_text:53784:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-04"
+subject = "var:ej-fatt-stod-for-utveckling-av-pedagogiken-under-nagon"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivet stöd för pedagogisk utveckling.\ncatalog:variable_text:53785:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21d-04"
+subject = "var:ej-fatt-stod-for-utveckling-av-pedagogiken-under-nagon"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivet stöd för pedagogisk utveckling.\ncatalog:variable_text:53785:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-01"
+subject = "var:lopande-moten-i-personalgruppen-vt-2020-fran-mars"
 fields = { "sets" = ["lopande-moten-i-personalgruppen"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten VT 2020.\ncatalog:variable_text:53786:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-01"
+subject = "var:lopande-moten-i-personalgruppen-vt-2020-fran-mars"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten VT 2020.\ncatalog:variable_text:53786:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-02"
+subject = "var:lopande-moten-i-personalgruppen-under-ht2020"
 fields = { "sets" = ["lopande-moten-i-personalgruppen"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten HT 2020.\ncatalog:variable_text:53787:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-02"
+subject = "var:lopande-moten-i-personalgruppen-under-ht2020"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten HT 2020.\ncatalog:variable_text:53787:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-03"
+subject = "var:lopande-moten-i-personalgruppen-vt2021"
 fields = { "sets" = ["lopande-moten-i-personalgruppen"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten VT 2021.\ncatalog:variable_text:53788:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-03"
+subject = "var:lopande-moten-i-personalgruppen-vt2021"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver löpande möten VT 2021.\ncatalog:variable_text:53788:18262:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-04"
+subject = "var:ej-fatt-lopande-moten-i-personalgruppen-under-nagon"
 fields = { "sets" = ["lopande-moten-i-personalgruppen"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivna löpande möten.\ncatalog:variable_text:53789:18444:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f21e-04"
+subject = "var:ej-fatt-lopande-moten-i-personalgruppen-under-nagon"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver uteblivna löpande möten.\ncatalog:variable_text:53789:18444:18809"
 
@@ -6451,61 +6451,61 @@ evidence = "F27_01 är en ogenomskinlig frågekod; källans etikett anger förs�
 
 [[statement]]
 kind = "set"
-subject = "var:f27-02"
+subject = "var:forsorjning-aktivitetsstod"
 fields = { "sets" = [] }
 evidence = "F27_02 är en ogenomskinlig frågekod; källans etikett anger försörjning genom aktivitetsstöd.\ncatalog:variable_text:53832:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-02"
+subject = "var:forsorjning-aktivitetsstod"
 fields = { "tags" = ["transfers"] }
 evidence = "F27_02 är en ogenomskinlig frågekod; källans etikett anger försörjning genom aktivitetsstöd.\ncatalog:variable_text:53832:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-03"
+subject = "var:forsorjning-arbetslosersattning"
 fields = { "sets" = [] }
 evidence = "F27_03 är en ogenomskinlig frågekod; källans etikett anger försörjning genom arbetslösersättning.\ncatalog:variable_text:53833:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-03"
+subject = "var:forsorjning-arbetslosersattning"
 fields = { "tags" = ["transfers"] }
 evidence = "F27_03 är en ogenomskinlig frågekod; källans etikett anger försörjning genom arbetslösersättning.\ncatalog:variable_text:53833:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-04"
+subject = "var:forsorjning-studiemedel"
 fields = { "sets" = [] }
 evidence = "F27_04 är en ogenomskinlig frågekod; källans etikett anger försörjning genom studiemedel.\ncatalog:variable_text:53834:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-04"
+subject = "var:forsorjning-studiemedel"
 fields = { "tags" = ["transfers"] }
 evidence = "F27_04 är en ogenomskinlig frågekod; källans etikett anger försörjning genom studiemedel.\ncatalog:variable_text:53834:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-08"
+subject = "var:forsorjning-genom-foraldrapenning"
 fields = { "sets" = [] }
 evidence = "F27_08 är en ogenomskinlig frågekod; källans etikett anger försörjning genom föräldrapenning.\ncatalog:variable_text:53837:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-08"
+subject = "var:forsorjning-genom-foraldrapenning"
 fields = { "tags" = ["transfers"] }
 evidence = "F27_08 är en ogenomskinlig frågekod; källans etikett anger försörjning genom föräldrapenning.\ncatalog:variable_text:53837:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-09"
+subject = "var:forsorjning-genom-sjukpenning"
 fields = { "sets" = [] }
 evidence = "F27_09 är en ogenomskinlig frågekod; källans etikett anger försörjning genom sjukpenning.\ncatalog:variable_text:53838:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-09"
+subject = "var:forsorjning-genom-sjukpenning"
 fields = { "tags" = ["transfers"] }
 evidence = "F27_09 är en ogenomskinlig frågekod; källans etikett anger försörjning genom sjukpenning.\ncatalog:variable_text:53838:13514:13695"
 
@@ -6967,13 +6967,13 @@ evidence = "F36_txt är en opak frågekod. Etiketten är tillräcklig som namnun
 
 [[statement]]
 kind = "set"
-subject = "var:f37a"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-arbetsuppgifterna"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53881:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37a"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-arbetsuppgifterna"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53881:17532:17897"
 
@@ -6991,13 +6991,13 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53882:17532:17
 
 [[statement]]
 kind = "set"
-subject = "var:f37c"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-arbetstiderna"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter tillfredsställelse med arbetet. membership-0479: Ingen vald variabel mäter tillfredsställelse med arbetet. membership-0480: Ingen vald sektionsvariabel mäter arbetstillfredsställelse. membership-0481: Frågebatteriet mäter nöjdhet eller missnöje med namngivna aspekter av arbetet. membership-0482: Valda nöjdhetsuppgifter gäller utbildningen, inte tillfredsställelse med arbetets aspekter. membership-0483: Sektionens nöjdhetsuppgift gäller utbildningen, inte arbetet. membership-0484: De valda positiva yrkesaspekterna och arbetsjämförelserna mäter inte nöjdhet eller missnöje med arbetet enligt denna definition. membership-0485: Ingen vald variabel mäter nöjdhet med arbetets aspekter; arbetskrav och examens betydelse är andra begrepp. membership-0486: Ingen vald variabel i denna sektion mäter tillfredsställelse med arbetet. membership-0487: Trivarb avser samlad trivsel utan namngiven arbetsaspekt och hålls därför utanför den fasta definitionen. membership-0488: Valda jämförelser mellan arbeten mäter relativ bedömning, inte den definierade nöjdheten med arbetet. membership-0489: Båda anger missnöje med arbetstider, en namngiven aspekt av arbetet enligt den fasta definitionen. membership-0490: Ingen vald variabel i sektionen mäter nöjdhet med arbetets aspekter; uppgiften om ånger saknar angivet föremål. membership-0491: Ingen vald variabel mäter nöjdhet med arbetets aspekter; utbildningsnöjdhet och syn på arbetets roll avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter missnöje med arbetstider. membership-0479: Ingen vald variabel mäter missnöje med arbetstider. membership-0480: Ingen vald sektionsvariabel mäter missnöje med arbetstider. membership-0481: F37c mäter uttryckligen nöjdhet eller missnöje med arbetstider och omfattas därmed även av denna definition. membership-0482: Valda arbetstidsmått anger timmar, inte missnöje med arbetstider. membership-0483: Antal arbetade timmar mäter arbetstid, inte missnöje med arbetstider. membership-0484: Inga valda variabler mäter missnöje med arbetstider. membership-0485: Ingen vald variabel mäter missnöje med arbetstider. membership-0486: Ingen vald variabel i denna sektion anger missnöje med arbetstider. membership-0487: Arbetstid som skäl till arbetsbyte mäter inte uttryckligen missnöje med arbetstider enligt kandidaten. membership-0488: Ingen vald variabel mäter missnöje med arbetstider. membership-0489: Båda variablerna anger missnöje med arbetstider. Skiftarbete anger i stället arbetstidens förläggning. membership-0490: Vald fråga om att arbeta mer eller mindre och veckoarbetstid belägger inte uttryckligt missnöje med arbetstider. membership-0491: Uppgiften om obekväma arbetstider anger arbetets egenskap, inte missnöje.\ncatalog:occurrence:510571\ncatalog:occurrence:510689\ncatalog:occurrence:510690\ncatalog:occurrence:510691\ncatalog:occurrence:510692\ncatalog:occurrence:510693\ncatalog:occurrence:510694\ncatalog:occurrence:510695\ncatalog:occurrence:510696\ncatalog:occurrence:510697\ncatalog:occurrence:510698\ncatalog:occurrence:510699\ncatalog:occurrence:510700\ncatalog:occurrence:510740\ncatalog:occurrence:511337\ncatalog:variable_text:53410:13514:13695\ncatalog:variable_text:53422:13149:13514\ncatalog:variable_text:53434:11323:11688\ncatalog:variable_text:53446:13514:13695\ncatalog:variable_text:53456:12418:12784\ncatalog:variable_text:53469:13514:13695\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53514:11323:11688\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53763:12418:12784\ncatalog:variable_text:53881:17532:17897\ncatalog:variable_text:53882:17532:17897\ncatalog:variable_text:53883:17532:17897\ncatalog:variable_text:53884:17532:17897\ncatalog:variable_text:53885:17532:17897\ncatalog:variable_text:53886:17532:17897\ncatalog:variable_text:53887:17532:17897\ncatalog:variable_text:53888:17532:17897\ncatalog:variable_text:53889:17532:17897\ncatalog:variable_text:53890:17532:17897\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54077:12784:13149\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54272:16801:17167\ncatalog:variable_text:54273:16801:17167\ncatalog:variable_text:54287:16617:16801\ncatalog:variable_text:54288:13149:13514\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54450:12418:12784\ncatalog:variable_text:54463:12418:12784\ncatalog:variable_text:54500:16801:17167\ncatalog:variable_text:54501:16801:17167\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54571:13514:13695\ncatalog:variable_text:54572:13514:13695\ncatalog:variable_text:54573:13514:13695\ncatalog:variable_text:54574:13514:13695\ncatalog:variable_text:54575:13514:13695\ncatalog:variable_text:54599:12418:12784\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54652:17532:17897\ncatalog:variable_text:54653:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37c"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-arbetstiderna"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter tillfredsställelse med arbetet. membership-0479: Ingen vald variabel mäter tillfredsställelse med arbetet. membership-0480: Ingen vald sektionsvariabel mäter arbetstillfredsställelse. membership-0481: Frågebatteriet mäter nöjdhet eller missnöje med namngivna aspekter av arbetet. membership-0482: Valda nöjdhetsuppgifter gäller utbildningen, inte tillfredsställelse med arbetets aspekter. membership-0483: Sektionens nöjdhetsuppgift gäller utbildningen, inte arbetet. membership-0484: De valda positiva yrkesaspekterna och arbetsjämförelserna mäter inte nöjdhet eller missnöje med arbetet enligt denna definition. membership-0485: Ingen vald variabel mäter nöjdhet med arbetets aspekter; arbetskrav och examens betydelse är andra begrepp. membership-0486: Ingen vald variabel i denna sektion mäter tillfredsställelse med arbetet. membership-0487: Trivarb avser samlad trivsel utan namngiven arbetsaspekt och hålls därför utanför den fasta definitionen. membership-0488: Valda jämförelser mellan arbeten mäter relativ bedömning, inte den definierade nöjdheten med arbetet. membership-0489: Båda anger missnöje med arbetstider, en namngiven aspekt av arbetet enligt den fasta definitionen. membership-0490: Ingen vald variabel i sektionen mäter nöjdhet med arbetets aspekter; uppgiften om ånger saknar angivet föremål. membership-0491: Ingen vald variabel mäter nöjdhet med arbetets aspekter; utbildningsnöjdhet och syn på arbetets roll avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter missnöje med arbetstider. membership-0479: Ingen vald variabel mäter missnöje med arbetstider. membership-0480: Ingen vald sektionsvariabel mäter missnöje med arbetstider. membership-0481: F37c mäter uttryckligen nöjdhet eller missnöje med arbetstider och omfattas därmed även av denna definition. membership-0482: Valda arbetstidsmått anger timmar, inte missnöje med arbetstider. membership-0483: Antal arbetade timmar mäter arbetstid, inte missnöje med arbetstider. membership-0484: Inga valda variabler mäter missnöje med arbetstider. membership-0485: Ingen vald variabel mäter missnöje med arbetstider. membership-0486: Ingen vald variabel i denna sektion anger missnöje med arbetstider. membership-0487: Arbetstid som skäl till arbetsbyte mäter inte uttryckligen missnöje med arbetstider enligt kandidaten. membership-0488: Ingen vald variabel mäter missnöje med arbetstider. membership-0489: Båda variablerna anger missnöje med arbetstider. Skiftarbete anger i stället arbetstidens förläggning. membership-0490: Vald fråga om att arbeta mer eller mindre och veckoarbetstid belägger inte uttryckligt missnöje med arbetstider. membership-0491: Uppgiften om obekväma arbetstider anger arbetets egenskap, inte missnöje.\ncatalog:occurrence:510571\ncatalog:occurrence:510689\ncatalog:occurrence:510690\ncatalog:occurrence:510691\ncatalog:occurrence:510692\ncatalog:occurrence:510693\ncatalog:occurrence:510694\ncatalog:occurrence:510695\ncatalog:occurrence:510696\ncatalog:occurrence:510697\ncatalog:occurrence:510698\ncatalog:occurrence:510699\ncatalog:occurrence:510700\ncatalog:occurrence:510740\ncatalog:occurrence:511337\ncatalog:variable_text:53410:13514:13695\ncatalog:variable_text:53422:13149:13514\ncatalog:variable_text:53434:11323:11688\ncatalog:variable_text:53446:13514:13695\ncatalog:variable_text:53456:12418:12784\ncatalog:variable_text:53469:13514:13695\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53514:11323:11688\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53763:12418:12784\ncatalog:variable_text:53881:17532:17897\ncatalog:variable_text:53882:17532:17897\ncatalog:variable_text:53883:17532:17897\ncatalog:variable_text:53884:17532:17897\ncatalog:variable_text:53885:17532:17897\ncatalog:variable_text:53886:17532:17897\ncatalog:variable_text:53887:17532:17897\ncatalog:variable_text:53888:17532:17897\ncatalog:variable_text:53889:17532:17897\ncatalog:variable_text:53890:17532:17897\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54077:12784:13149\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54272:16801:17167\ncatalog:variable_text:54273:16801:17167\ncatalog:variable_text:54287:16617:16801\ncatalog:variable_text:54288:13149:13514\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54450:12418:12784\ncatalog:variable_text:54463:12418:12784\ncatalog:variable_text:54500:16801:17167\ncatalog:variable_text:54501:16801:17167\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54571:13514:13695\ncatalog:variable_text:54572:13514:13695\ncatalog:variable_text:54573:13514:13695\ncatalog:variable_text:54574:13514:13695\ncatalog:variable_text:54575:13514:13695\ncatalog:variable_text:54599:12418:12784\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54652:17532:17897\ncatalog:variable_text:54653:17532:17897"
 
@@ -7015,37 +7015,37 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53884:17532:17
 
 [[statement]]
 kind = "set"
-subject = "var:f37e"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-fysisk-arbetsmiljo"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53885:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37e"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-fysisk-arbetsmiljo"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53885:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37f"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-psykisk-arbetsmiljo"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53886:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37f"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-psykisk-arbetsmiljo"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53886:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37g"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-vidareutbildning"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53887:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f37g"
+subject = "var:nojd-eller-missnojd-med-arbetet-avseende-vidareutbildning"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53887:17532:17897"
 
@@ -7087,13 +7087,13 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53890:17532:17
 
 [[statement]]
 kind = "set"
-subject = "var:f38"
+subject = "var:ytterligare-arbete-efter-utbildningen"
 fields = { "sets" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53891:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f38"
+subject = "var:ytterligare-arbete-efter-utbildningen"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53891:17532:17897"
 
@@ -7255,13 +7255,13 @@ evidence = "Frågekoden är ogenomskinlig och etiketten kolliderar.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:handledares-engagemang-under-utbildningen"
 fields = { "sets" = ["handledning-under-utbildningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53905:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a"
+subject = "var:handledares-engagemang-under-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53905:17532:17897"
 
@@ -7279,49 +7279,49 @@ evidence = "Frågekoden är opak.\ncatalog:variable_text:53906:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-02"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-borjade-arbeta"
 fields = { "sets" = ["skal-att-inte-paborja-gymnasieskolan"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53907:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-02"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-borjade-arbeta"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53907:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-03"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-var-inte-behorig"
 fields = { "sets" = ["skal-att-inte-paborja-gymnasieskolan"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53908:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-03"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-var-inte-behorig"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53908:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-04"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-skoltrott"
 fields = { "sets" = ["skal-att-inte-paborja-gymnasieskolan"] }
 evidence = "F4a är en opak frågekod.\ncatalog:variable_text:53909:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-04"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-skoltrott"
 fields = { "tags" = ["education"] }
 evidence = "F4a är en opak frågekod.\ncatalog:variable_text:53909:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-05"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-graviditet"
 fields = { "sets" = ["skal-att-inte-paborja-gymnasieskolan"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53910:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-05"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-graviditet"
 fields = { "tags" = ["education", "pregnancy-birth"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53910:16617:16801"
 
@@ -7339,13 +7339,13 @@ evidence = "Frågekoden är opak.\ncatalog:variable_text:53911:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-07"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-annat-halsoskal"
 fields = { "sets" = ["skal-att-inte-paborja-gymnasieskolan"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53912:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4a-07"
+subject = "var:skal-till-att-inte-paborja-gymnasieskolan-annat-halsoskal"
 fields = { "tags" = ["education", "health"] }
 evidence = "Frågekoden är opak.\ncatalog:variable_text:53912:16617:16801"
 
@@ -7375,61 +7375,61 @@ evidence = "Frågekoden är ogenomskinlig; svaret anger ett annat skäl till ute
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:handledares-aterkoppling-under-utbildningen"
 fields = { "sets" = ["handledning-under-utbildningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53915:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b"
+subject = "var:handledares-aterkoppling-under-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53915:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-02"
+subject = "var:avbrottsorsak-kom-inte-in-pa-forstahandsval"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53916:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-02"
+subject = "var:avbrottsorsak-kom-inte-in-pa-forstahandsval"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53916:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-03"
+subject = "var:avbrottsorsak-hade-tillrackligt-med-utbildning"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53917:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-03"
+subject = "var:avbrottsorsak-hade-tillrackligt-med-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53917:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-05"
+subject = "var:avbrottsorsak-oengagerade-larare"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53918:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-05"
+subject = "var:avbrottsorsak-oengagerade-larare"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53918:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-06"
+subject = "var:avbrottsorsak-stokig-skolmiljo"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53919:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:f4b-06"
+subject = "var:avbrottsorsak-stokig-skolmiljo"
 fields = { "tags" = ["education"] }
 evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53919:16617:16801"
 
@@ -7471,25 +7471,25 @@ evidence = "Frågekoden är opak; källan beskriver fritext för annan avbrottso
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:handledares-uppmuntrande-under-utbildningen"
 fields = { "sets" = ["handledning-under-utbildningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53923:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4c"
+subject = "var:handledares-uppmuntrande-under-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53923:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:handledares-tid-under-utbildningen"
 fields = { "sets" = ["handledning-under-utbildningen"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53924:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:f4d"
+subject = "var:handledares-tid-under-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53924:17532:17897"
 
@@ -7579,49 +7579,49 @@ evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53931:13514:13
 
 [[statement]]
 kind = "set"
-subject = "var:f5-2"
+subject = "var:samtal-med-nagon-vuxen-larare-pa-skolan"
 fields = { "sets" = ["samtal-med-vuxna"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53932:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-2"
+subject = "var:samtal-med-nagon-vuxen-larare-pa-skolan"
 fields = { "tags" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53932:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-3"
+subject = "var:samtal-med-nagon-vuxen-studie-och-yrkesvagledare-pa-skolan"
 fields = { "sets" = ["samtal-med-vuxna"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53933:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-3"
+subject = "var:samtal-med-nagon-vuxen-studie-och-yrkesvagledare-pa-skolan"
 fields = { "tags" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53933:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-4"
+subject = "var:samtal-med-nagon-vuxen-annan"
 fields = { "sets" = ["samtal-med-vuxna"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53934:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-4"
+subject = "var:samtal-med-nagon-vuxen-annan"
 fields = { "tags" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53934:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-5"
+subject = "var:samtal-med-nagon-vuxen-ingen-alls"
 fields = { "sets" = ["samtal-med-vuxna"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53935:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-5"
+subject = "var:samtal-med-nagon-vuxen-ingen-alls"
 fields = { "tags" = [] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53935:13514:13695"
 
@@ -7651,49 +7651,49 @@ evidence = "Frågekoden är ogenomskinlig; svaret anger plats för utlandsvistel
 
 [[statement]]
 kind = "set"
-subject = "var:f6-0"
+subject = "var:utlandsvistelse-inom-olika-utbildningsformer-svar-ja"
 fields = { "sets" = ["utlandsvistelse-for-utbildning-och-larande"] }
 evidence = "F6-0 är en frågekod.\ncatalog:variable_text:53938:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-0"
+subject = "var:utlandsvistelse-inom-olika-utbildningsformer-svar-ja"
 fields = { "tags" = ["education"] }
 evidence = "F6-0 är en frågekod.\ncatalog:variable_text:53938:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6c"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-ha-en"
 fields = { "sets" = ["skal-for-utbildning", "skal-till-yrkesutbildningsval"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6c"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-ha-en"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6d"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-ha-ett"
 fields = { "sets" = ["skal-for-utbildning", "skal-till-yrkesutbildningsval"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6d"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-ha-ett"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6e"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-goda"
 fields = { "sets" = ["skal-for-utbildning", "skal-till-yrkesutbildningsval"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6e"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-goda"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
@@ -7711,13 +7711,13 @@ evidence = "Frågekoden är ogenomskinlig. Coordinator group membership: Union o
 
 [[statement]]
 kind = "set"
-subject = "var:f6g"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-bra"
 fields = { "sets" = ["skal-for-utbildning", "skal-till-yrkesutbildningsval"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:f6g"
+subject = "var:skal-till-att-utbilda-sig-till-aktuellt-yrke-bra"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl för utbildning. membership-0479: Ingen vald variabel avser skäl att välja eller delta i utbildning. membership-0480: Programtyp och årskurs anger inte skäl att välja eller delta i utbildning. membership-0481: Ingen vald variabel mäter skäl för utbildning. membership-0482: Utbildningsnöjdhet och förberedelse för arbetslivet är bedömningar av utbildningen, inte skäl att välja eller delta i den. membership-0483: Variablerna är namngivna komponenter av skälen att välja eller delta i utbildningen. membership-0484: Inga valda variabler anger skäl att välja eller delta i utbildning. membership-0485: Ingen vald variabel anger skäl för att välja eller delta i utbildning. membership-0486: Sektionens utbildningsuppgifter anger nivå, deltagande eller fullföljande, inte skäl för utbildning. membership-0487: Skäl till lärararbete och villkor för examen mäter inte skäl att välja eller delta i utbildningen. membership-0488: Ingen vald variabel anger skäl för att välja eller delta i utbildningen. membership-0489: Den fasta definitionen omfattar skäl för utbildningsval, vilket även omfattar dessa uttryckliga skäl att utbilda sig till yrket och kompletterande fritext. membership-0490: Valda orsaksvariabler anger skäl till studieavbrott, inte skäl att välja eller delta i utbildning. membership-0491: Ingen vald variabel mäter skäl att välja eller delta i utbildning; orsaker till utebliven start och avbrott avser andra begrepp. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0479: Ingen vald variabel avser skäl till yrkesutbildningsval. membership-0480: Programtyp anger inte skäl till yrkesutbildningsval; ingen annan vald variabel mäter sådana skäl. membership-0481: Ingen vald variabel mäter skäl till yrkesutbildningsval. membership-0482: Ingen vald variabel anger skäl att utbilda sig till ett yrke. membership-0483: Skalutb3 anger yrkesutbildning som skäl att studera, inte skäl att välja det aktuella yrket. membership-0484: Inga valda variabler anger skäl till yrkesutbildningsval. membership-0485: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0486: Fullföljd yrkesutbildning och utbildningsanknuten utlandsvistelse anger inte skäl till yrkesutbildningsval. membership-0487: Skäl att arbeta som lärare är inte skäl att välja yrkesutbildning. membership-0488: Ingen vald variabel anger skäl till yrkesutbildningsval. membership-0489: Alla anger skäl att utbilda sig till aktuellt yrke, inklusive delskäl, andra skäl och fritext. Utbildningens senare förberedelse och nytta ingår inte. membership-0490: Ingen vald variabel i sektionen anger skäl till val av yrkesutbildning. membership-0491: Ingen vald variabel mäter skäl till yrkesutbildningsval.\ncatalog:occurrence:509980\ncatalog:valueset:8163\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53482:16617:16801\ncatalog:variable_text:53562:16071:16436\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:53940:16801:17167\ncatalog:variable_text:53941:16801:17167\ncatalog:variable_text:53942:16801:17167\ncatalog:variable_text:53943:16801:17167\ncatalog:variable_text:53944:16801:17167\ncatalog:variable_text:53953:16801:17167\ncatalog:variable_text:54030:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54123:17532:17897\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54198:12418:12784\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54384:16071:16436\ncatalog:variable_text:54470:16801:17167\ncatalog:variable_text:54471:16801:17167\ncatalog:variable_text:54472:16801:17167\ncatalog:variable_text:54478:12418:12784\ncatalog:variable_text:54479:12418:12784\ncatalog:variable_text:54491:13149:13514\ncatalog:variable_text:54492:13149:13514\ncatalog:variable_text:54493:13149:13514\ncatalog:variable_text:54494:13149:13514\ncatalog:variable_text:54495:13149:13514\ncatalog:variable_text:54496:13149:13514\ncatalog:variable_text:54497:13149:13514\ncatalog:variable_text:54498:13149:13514\ncatalog:variable_text:54499:13149:13514\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54615:16801:17167\ncatalog:variable_text:54616:16801:17167\ncatalog:variable_text:54635:16071:16436"
 
@@ -7903,49 +7903,49 @@ evidence = "Frågekoden är ogenomskinlig; svaret anger plats för utlandsvistel
 
 [[statement]]
 kind = "set"
-subject = "var:f8a"
+subject = "var:omstandighet-byte-av-gymnasieprogram"
 fields = { "sets" = ["skolrelaterade-omstandigheter"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53959:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8a"
+subject = "var:omstandighet-byte-av-gymnasieprogram"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53959:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:omstandighet-byte-av-klass-eller-skola"
 fields = { "sets" = ["skolrelaterade-omstandigheter"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53960:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:omstandighet-byte-av-klass-eller-skola"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53960:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8c"
+subject = "var:omstandighet-mer-stod-av-larare-eller-annan-skolpersonal"
 fields = { "sets" = ["skolrelaterade-omstandigheter"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53961:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8c"
+subject = "var:omstandighet-mer-stod-av-larare-eller-annan-skolpersonal"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53961:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8d"
+subject = "var:omstandighet-mer-praktik-i-utbildningen"
 fields = { "sets" = ["skolrelaterade-omstandigheter"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53962:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:f8d"
+subject = "var:omstandighet-mer-praktik-i-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:53962:13514:13695"
 
@@ -8767,13 +8767,13 @@ evidence = "Frågan gäller forskarutbildningens förberedelse för arbetslivet.
 
 [[statement]]
 kind = "set"
-subject = "var:forsta"
+subject = "var:typ-av-nuvarande-anstallning"
 fields = { "sets" = ["anstallningsform"] }
 evidence = "Första anger inte någon del av variabelns uppmätta anställningsstatus. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter anställningsform. membership-0479: Ingen vald variabel avser anställningsform. membership-0480: Ingen vald sektionsvariabel mäter anställningsform. membership-0481: De valda anställningskomponenterna är uttryckligen arbetsmarknadsanknytning efter utbildningen; övriga valda uppgifter mäter inte anställningsform. membership-0482: Valda sysselsättningsuppgifter beskriver huvudsaklig aktivitet, inte anställningsform. membership-0483: Variabeln kodar anställningsform och omfattas av definitionen; sektionsindelningen hindrar inte medlemskap. membership-0484: Båda anger anställningsform; forsta beskriver typ av nuvarande anställning och omfattas därför av den fasta definitionen. membership-0485: Ingen vald variabel anger anställningsform. membership-0486: Ingen vald variabel i denna sektion anger anställningsform. membership-0487: Inga valda variabler kodar anställningsform. membership-0488: Variabeln anger anställningsform och omfattas av definitionen även om den saknas i den tidigare medlemslistan. membership-0489: Aktuell anställning anger förekomst, inte anställningsform; utebliven förlängning anges som yrkesbytesskäl. membership-0490: Fritexten specificerar annan anställningsform och omfattas uttryckligen av definitionen. membership-0491: Tillsvidareanställning respektive tidsbegränsad anställning omfattas uttryckligen; den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter huvudsaklig sysselsättning. membership-0479: Ingen vald variabel mäter huvudsaklig aktivitet eller sysselsättning. membership-0480: Ingen vald sektionsvariabel mäter huvudsaklig sysselsättning. membership-0481: Arbete är skyddat och båda variablerna omfattas av kandidatens fasta inkluderingar och positiva etiketter. Ytterligare arbete vid sidan av huvudsaklig sysselsättning är inte en huvudsaklig aktivitet. membership-0482: Variablerna beskriver huvudsaklig sysselsättning, inklusive första året efter forskarutbildningen. membership-0483: Årsvariablerna kodar huvudsaklig aktivitet och hsyss huvudsaklig sysselsättning. Separat studiedeltagande ingår inte. membership-0484: huvverks beskriver huvudsaklig sysselsättning. forsta anger anställningsform och omfattas av definitionens undantag. Sektionens enda stödda medlem behålls. membership-0485: Variabeln beskriver uttryckligen personens huvudsakliga sysselsättning. Medlemskapet behålls oberoende av sektionens antal medlemmar. membership-0486: Sektionens studiedeltagande är ett separat deltagandemått och anger inte huvudsaklig sysselsättning. membership-0487: Arbete utanför skolväsendet anger inte att arbetet är huvudsaklig sysselsättning. membership-0488: Variablerna anger aktuellt arbete, huvudsaklig sysselsättning respektive aktuell eller tidigare läraranställning, som omfattas av kandidatens fasta inkludering. membership-0489: Definitionen omfattar arbete och huvudsaklig sysselsättning vid observationstidpunkter. Aktuell anställning och de två sysselsättningskodningarna stöder detta; inkomstkälla mäter något annat. membership-0490: Samtliga komponenter i batteriet anger huvudsaklig verksamhet för 2001–2006. Separat studiedeltagande, arbetssökande och försörjningssätt ingår inte. membership-0491: Variablerna anger huvudsaklig sysselsättning eller verksamhet och kompletterande fritext om annan aktivitet.\ncatalog:occurrence:510402\ncatalog:occurrence:510429\ncatalog:occurrence:510568\ncatalog:occurrence:510570\ncatalog:occurrence:510580\ncatalog:occurrence:510666\ncatalog:occurrence:510726\ncatalog:occurrence:510889\ncatalog:occurrence:511024\ncatalog:occurrence:511025\ncatalog:occurrence:511077\ncatalog:occurrence:511398\ncatalog:valueset:2446\ncatalog:valueset:3299\ncatalog:valueset:5992\ncatalog:valueset:6403\ncatalog:valueset:9290\ncatalog:valueset:9634\ncatalog:variable_text:53392:13149:13514\ncatalog:variable_text:53393:13149:13514\ncatalog:variable_text:53394:13149:13514\ncatalog:variable_text:53395:13149:13514\ncatalog:variable_text:53396:13149:13514\ncatalog:variable_text:53411:17532:17897\ncatalog:variable_text:53415:16801:17167\ncatalog:variable_text:53416:13149:13514\ncatalog:variable_text:53417:16617:16801\ncatalog:variable_text:53418:12784:13149\ncatalog:variable_text:53419:12418:12784\ncatalog:variable_text:53450:17532:17897\ncatalog:variable_text:53454:12418:12784\ncatalog:variable_text:53461:17532:17897\ncatalog:variable_text:53472:12418:12784\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53574:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53628:13514:13695\ncatalog:variable_text:53629:13514:13695\ncatalog:variable_text:53630:13514:13695\ncatalog:variable_text:53631:13514:13695\ncatalog:variable_text:53632:13514:13695\ncatalog:variable_text:53633:13514:13695\ncatalog:variable_text:53634:13514:13695\ncatalog:variable_text:53635:13514:13695\ncatalog:variable_text:53636:13514:13695\ncatalog:variable_text:53637:13514:13695\ncatalog:variable_text:53638:13514:13695\ncatalog:variable_text:53639:13514:13695\ncatalog:variable_text:53640:13514:13695\ncatalog:variable_text:53641:13514:13695\ncatalog:variable_text:53642:13514:13695\ncatalog:variable_text:53643:13514:13695\ncatalog:variable_text:53644:13514:13695\ncatalog:variable_text:53645:13514:13695\ncatalog:variable_text:53646:13514:13695\ncatalog:variable_text:53647:13514:13695\ncatalog:variable_text:53648:13514:13695\ncatalog:variable_text:53649:13514:13695\ncatalog:variable_text:53650:13514:13695\ncatalog:variable_text:53651:13514:13695\ncatalog:variable_text:53652:13514:13695\ncatalog:variable_text:53653:13514:13695\ncatalog:variable_text:53654:13514:13695\ncatalog:variable_text:53655:13514:13695\ncatalog:variable_text:53656:13514:13695\ncatalog:variable_text:53657:13514:13695\ncatalog:variable_text:53658:13514:13695\ncatalog:variable_text:53659:13514:13695\ncatalog:variable_text:53660:13514:13695\ncatalog:variable_text:53661:13514:13695\ncatalog:variable_text:53662:13514:13695\ncatalog:variable_text:53663:13514:13695\ncatalog:variable_text:53664:13514:13695\ncatalog:variable_text:53665:13514:13695\ncatalog:variable_text:53666:13514:13695\ncatalog:variable_text:53667:13514:13695\ncatalog:variable_text:53668:13514:13695\ncatalog:variable_text:53669:13514:13695\ncatalog:variable_text:53670:13514:13695\ncatalog:variable_text:53671:13514:13695\ncatalog:variable_text:53672:13514:13695\ncatalog:variable_text:53673:13514:13695\ncatalog:variable_text:53674:13514:13695\ncatalog:variable_text:53675:13514:13695\ncatalog:variable_text:53718:17532:17897\ncatalog:variable_text:53844:17532:17897\ncatalog:variable_text:53859:17532:17897\ncatalog:variable_text:53891:17532:17897\ncatalog:variable_text:54032:12784:13149\ncatalog:variable_text:54096:13149:13514\ncatalog:variable_text:54108:16801:17167\ncatalog:variable_text:54109:12418:12784\ncatalog:variable_text:54110:17532:17897\ncatalog:variable_text:54111:16801:17167\ncatalog:variable_text:54112:16801:17167\ncatalog:variable_text:54113:17532:17897\ncatalog:variable_text:54114:12784:13149\ncatalog:variable_text:54115:11323:11688\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54576:16617:16801\ncatalog:variable_text:54577:16617:16801\ncatalog:variable_text:54591:12418:12784\ncatalog:variable_text:54600:16617:16801\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54654:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:forsta"
+subject = "var:typ-av-nuvarande-anstallning"
 fields = { "tags" = ["employment"] }
 evidence = "Första anger inte någon del av variabelns uppmätta anställningsstatus. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter anställningsform. membership-0479: Ingen vald variabel avser anställningsform. membership-0480: Ingen vald sektionsvariabel mäter anställningsform. membership-0481: De valda anställningskomponenterna är uttryckligen arbetsmarknadsanknytning efter utbildningen; övriga valda uppgifter mäter inte anställningsform. membership-0482: Valda sysselsättningsuppgifter beskriver huvudsaklig aktivitet, inte anställningsform. membership-0483: Variabeln kodar anställningsform och omfattas av definitionen; sektionsindelningen hindrar inte medlemskap. membership-0484: Båda anger anställningsform; forsta beskriver typ av nuvarande anställning och omfattas därför av den fasta definitionen. membership-0485: Ingen vald variabel anger anställningsform. membership-0486: Ingen vald variabel i denna sektion anger anställningsform. membership-0487: Inga valda variabler kodar anställningsform. membership-0488: Variabeln anger anställningsform och omfattas av definitionen även om den saknas i den tidigare medlemslistan. membership-0489: Aktuell anställning anger förekomst, inte anställningsform; utebliven förlängning anges som yrkesbytesskäl. membership-0490: Fritexten specificerar annan anställningsform och omfattas uttryckligen av definitionen. membership-0491: Tillsvidareanställning respektive tidsbegränsad anställning omfattas uttryckligen; den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel mäter huvudsaklig sysselsättning. membership-0479: Ingen vald variabel mäter huvudsaklig aktivitet eller sysselsättning. membership-0480: Ingen vald sektionsvariabel mäter huvudsaklig sysselsättning. membership-0481: Arbete är skyddat och båda variablerna omfattas av kandidatens fasta inkluderingar och positiva etiketter. Ytterligare arbete vid sidan av huvudsaklig sysselsättning är inte en huvudsaklig aktivitet. membership-0482: Variablerna beskriver huvudsaklig sysselsättning, inklusive första året efter forskarutbildningen. membership-0483: Årsvariablerna kodar huvudsaklig aktivitet och hsyss huvudsaklig sysselsättning. Separat studiedeltagande ingår inte. membership-0484: huvverks beskriver huvudsaklig sysselsättning. forsta anger anställningsform och omfattas av definitionens undantag. Sektionens enda stödda medlem behålls. membership-0485: Variabeln beskriver uttryckligen personens huvudsakliga sysselsättning. Medlemskapet behålls oberoende av sektionens antal medlemmar. membership-0486: Sektionens studiedeltagande är ett separat deltagandemått och anger inte huvudsaklig sysselsättning. membership-0487: Arbete utanför skolväsendet anger inte att arbetet är huvudsaklig sysselsättning. membership-0488: Variablerna anger aktuellt arbete, huvudsaklig sysselsättning respektive aktuell eller tidigare läraranställning, som omfattas av kandidatens fasta inkludering. membership-0489: Definitionen omfattar arbete och huvudsaklig sysselsättning vid observationstidpunkter. Aktuell anställning och de två sysselsättningskodningarna stöder detta; inkomstkälla mäter något annat. membership-0490: Samtliga komponenter i batteriet anger huvudsaklig verksamhet för 2001–2006. Separat studiedeltagande, arbetssökande och försörjningssätt ingår inte. membership-0491: Variablerna anger huvudsaklig sysselsättning eller verksamhet och kompletterande fritext om annan aktivitet.\ncatalog:occurrence:510402\ncatalog:occurrence:510429\ncatalog:occurrence:510568\ncatalog:occurrence:510570\ncatalog:occurrence:510580\ncatalog:occurrence:510666\ncatalog:occurrence:510726\ncatalog:occurrence:510889\ncatalog:occurrence:511024\ncatalog:occurrence:511025\ncatalog:occurrence:511077\ncatalog:occurrence:511398\ncatalog:valueset:2446\ncatalog:valueset:3299\ncatalog:valueset:5992\ncatalog:valueset:6403\ncatalog:valueset:9290\ncatalog:valueset:9634\ncatalog:variable_text:53392:13149:13514\ncatalog:variable_text:53393:13149:13514\ncatalog:variable_text:53394:13149:13514\ncatalog:variable_text:53395:13149:13514\ncatalog:variable_text:53396:13149:13514\ncatalog:variable_text:53411:17532:17897\ncatalog:variable_text:53415:16801:17167\ncatalog:variable_text:53416:13149:13514\ncatalog:variable_text:53417:16617:16801\ncatalog:variable_text:53418:12784:13149\ncatalog:variable_text:53419:12418:12784\ncatalog:variable_text:53450:17532:17897\ncatalog:variable_text:53454:12418:12784\ncatalog:variable_text:53461:17532:17897\ncatalog:variable_text:53472:12418:12784\ncatalog:variable_text:53474:18262:19174\ncatalog:variable_text:53574:16801:17167\ncatalog:variable_text:53611:18809:19174\ncatalog:variable_text:53612:18809:19174\ncatalog:variable_text:53628:13514:13695\ncatalog:variable_text:53629:13514:13695\ncatalog:variable_text:53630:13514:13695\ncatalog:variable_text:53631:13514:13695\ncatalog:variable_text:53632:13514:13695\ncatalog:variable_text:53633:13514:13695\ncatalog:variable_text:53634:13514:13695\ncatalog:variable_text:53635:13514:13695\ncatalog:variable_text:53636:13514:13695\ncatalog:variable_text:53637:13514:13695\ncatalog:variable_text:53638:13514:13695\ncatalog:variable_text:53639:13514:13695\ncatalog:variable_text:53640:13514:13695\ncatalog:variable_text:53641:13514:13695\ncatalog:variable_text:53642:13514:13695\ncatalog:variable_text:53643:13514:13695\ncatalog:variable_text:53644:13514:13695\ncatalog:variable_text:53645:13514:13695\ncatalog:variable_text:53646:13514:13695\ncatalog:variable_text:53647:13514:13695\ncatalog:variable_text:53648:13514:13695\ncatalog:variable_text:53649:13514:13695\ncatalog:variable_text:53650:13514:13695\ncatalog:variable_text:53651:13514:13695\ncatalog:variable_text:53652:13514:13695\ncatalog:variable_text:53653:13514:13695\ncatalog:variable_text:53654:13514:13695\ncatalog:variable_text:53655:13514:13695\ncatalog:variable_text:53656:13514:13695\ncatalog:variable_text:53657:13514:13695\ncatalog:variable_text:53658:13514:13695\ncatalog:variable_text:53659:13514:13695\ncatalog:variable_text:53660:13514:13695\ncatalog:variable_text:53661:13514:13695\ncatalog:variable_text:53662:13514:13695\ncatalog:variable_text:53663:13514:13695\ncatalog:variable_text:53664:13514:13695\ncatalog:variable_text:53665:13514:13695\ncatalog:variable_text:53666:13514:13695\ncatalog:variable_text:53667:13514:13695\ncatalog:variable_text:53668:13514:13695\ncatalog:variable_text:53669:13514:13695\ncatalog:variable_text:53670:13514:13695\ncatalog:variable_text:53671:13514:13695\ncatalog:variable_text:53672:13514:13695\ncatalog:variable_text:53673:13514:13695\ncatalog:variable_text:53674:13514:13695\ncatalog:variable_text:53675:13514:13695\ncatalog:variable_text:53718:17532:17897\ncatalog:variable_text:53844:17532:17897\ncatalog:variable_text:53859:17532:17897\ncatalog:variable_text:53891:17532:17897\ncatalog:variable_text:54032:12784:13149\ncatalog:variable_text:54096:13149:13514\ncatalog:variable_text:54108:16801:17167\ncatalog:variable_text:54109:12418:12784\ncatalog:variable_text:54110:17532:17897\ncatalog:variable_text:54111:16801:17167\ncatalog:variable_text:54112:16801:17167\ncatalog:variable_text:54113:17532:17897\ncatalog:variable_text:54114:12784:13149\ncatalog:variable_text:54115:11323:11688\ncatalog:variable_text:54350:18262:19358\ncatalog:variable_text:54519:18262:19174\ncatalog:variable_text:54551:16071:16436\ncatalog:variable_text:54576:16617:16801\ncatalog:variable_text:54577:16617:16801\ncatalog:variable_text:54591:12418:12784\ncatalog:variable_text:54600:16617:16801\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54654:13514:13695"
 
@@ -8947,13 +8947,13 @@ evidence = "Bedömning av utbildningens innehåll.\ncatalog:variable_text:54046:
 
 [[statement]]
 kind = "set"
-subject = "var:fos1siff-last"
+subject = "var:forskningsamnesomrade"
 fields = { "sets" = [] }
 evidence = "FoS är en ogenomskinlig bokstavskod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel kodar utbildningsinriktning. membership-0479: Ingen vald variabel kodar utbildningens ämnesområde eller kursinriktning. membership-0480: Den granskade programtypen kodar gymnasieprogrammets typ, inte ämnesområde eller kursinriktning. membership-0481: De valda ämnesområdesuppgifterna gäller arbetets relation till utbildningen, inte kodning av utbildningens inriktning. membership-0482: FoS-variabeln avser forskningsämnesområde för anställdas arbetsuppgifter, inte utbildningens ämnesområde eller kursinriktning enligt den fasta definitionen. membership-0483: Kursinriktning och terminsvisa ämnesområden kodar utbildningens inriktning. Kursnivå, kurstyp och studieomfattning ingår inte. membership-0484: Inga valda variabler anger utbildningsinriktning. membership-0485: Påbörjad utbildning, kurskategori och bedömning av ämnesinnehåll kodar inte utbildningens ämnesinriktning. membership-0486: Utbildningsnivå, fullföljd yrkesutbildning och utlandsvistelsens utbildningsform anger inte ämnesområde eller kursinriktning. membership-0487: Variablerna kodar utbildningens inriktning, inklusive grupperad kodning. membership-0488: Variabeln kodar utbildningens ämnesinriktning enligt SUN 2000. membership-0489: Arbetsområde och skäl till yrkesutbildningsval kodar inte utbildningens ämnesområde eller kursinriktning. membership-0490: Avbrottsorsaken fel inriktning kodar ett skäl till avbrott, inte utbildningens ämnesområde eller kursinriktning. membership-0491: Gymnasieprogrammets typ och verksamhetsområde ger inte uttryckligt stöd för utbildningens ämnesområde eller kursinriktning.\ncatalog:occurrence:510542\ncatalog:valueset:379\ncatalog:valueset:8163\ncatalog:variable_text:53451:17532:17897\ncatalog:variable_text:53452:17532:17897\ncatalog:variable_text:53455:17532:17897\ncatalog:variable_text:53465:17532:17897\ncatalog:variable_text:53468:16801:17167\ncatalog:variable_text:53493:11323:11688\ncatalog:variable_text:53518:11323:11688\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:54047:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54084:16071:16436\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54212:13149:13514\ncatalog:variable_text:54301:11323:11688\ncatalog:variable_text:54309:16801:17167\ncatalog:variable_text:54310:13149:13514\ncatalog:variable_text:54311:13149:13514\ncatalog:variable_text:54312:13149:13514\ncatalog:variable_text:54313:13149:13514\ncatalog:variable_text:54314:13149:13514\ncatalog:variable_text:54315:13149:13514\ncatalog:variable_text:54316:13149:13514\ncatalog:variable_text:54359:16617:16801\ncatalog:variable_text:54360:16617:16801\ncatalog:variable_text:54564:13514:13695\ncatalog:variable_text:54601:11323:11688\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54617:12418:12784\ncatalog:variable_text:54618:12418:12784\ncatalog:variable_text:54619:12418:12784\ncatalog:variable_text:54629:16071:16436\ncatalog:variable_text:54633:16071:16436\ncatalog:variable_text:54655:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:fos1siff-last"
+subject = "var:forskningsamnesomrade"
 fields = { "tags" = ["research"] }
 evidence = "FoS är en ogenomskinlig bokstavskod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0478: Ingen vald variabel kodar utbildningsinriktning. membership-0479: Ingen vald variabel kodar utbildningens ämnesområde eller kursinriktning. membership-0480: Den granskade programtypen kodar gymnasieprogrammets typ, inte ämnesområde eller kursinriktning. membership-0481: De valda ämnesområdesuppgifterna gäller arbetets relation till utbildningen, inte kodning av utbildningens inriktning. membership-0482: FoS-variabeln avser forskningsämnesområde för anställdas arbetsuppgifter, inte utbildningens ämnesområde eller kursinriktning enligt den fasta definitionen. membership-0483: Kursinriktning och terminsvisa ämnesområden kodar utbildningens inriktning. Kursnivå, kurstyp och studieomfattning ingår inte. membership-0484: Inga valda variabler anger utbildningsinriktning. membership-0485: Påbörjad utbildning, kurskategori och bedömning av ämnesinnehåll kodar inte utbildningens ämnesinriktning. membership-0486: Utbildningsnivå, fullföljd yrkesutbildning och utlandsvistelsens utbildningsform anger inte ämnesområde eller kursinriktning. membership-0487: Variablerna kodar utbildningens inriktning, inklusive grupperad kodning. membership-0488: Variabeln kodar utbildningens ämnesinriktning enligt SUN 2000. membership-0489: Arbetsområde och skäl till yrkesutbildningsval kodar inte utbildningens ämnesområde eller kursinriktning. membership-0490: Avbrottsorsaken fel inriktning kodar ett skäl till avbrott, inte utbildningens ämnesområde eller kursinriktning. membership-0491: Gymnasieprogrammets typ och verksamhetsområde ger inte uttryckligt stöd för utbildningens ämnesområde eller kursinriktning.\ncatalog:occurrence:510542\ncatalog:valueset:379\ncatalog:valueset:8163\ncatalog:variable_text:53451:17532:17897\ncatalog:variable_text:53452:17532:17897\ncatalog:variable_text:53455:17532:17897\ncatalog:variable_text:53465:17532:17897\ncatalog:variable_text:53468:16801:17167\ncatalog:variable_text:53493:11323:11688\ncatalog:variable_text:53518:11323:11688\ncatalog:variable_text:53751:13514:13695\ncatalog:variable_text:53939:16801:17167\ncatalog:variable_text:54047:17532:17897\ncatalog:variable_text:54070:16071:16436\ncatalog:variable_text:54084:16071:16436\ncatalog:variable_text:54124:16071:16436\ncatalog:variable_text:54212:13149:13514\ncatalog:variable_text:54301:11323:11688\ncatalog:variable_text:54309:16801:17167\ncatalog:variable_text:54310:13149:13514\ncatalog:variable_text:54311:13149:13514\ncatalog:variable_text:54312:13149:13514\ncatalog:variable_text:54313:13149:13514\ncatalog:variable_text:54314:13149:13514\ncatalog:variable_text:54315:13149:13514\ncatalog:variable_text:54316:13149:13514\ncatalog:variable_text:54359:16617:16801\ncatalog:variable_text:54360:16617:16801\ncatalog:variable_text:54564:13514:13695\ncatalog:variable_text:54601:11323:11688\ncatalog:variable_text:54612:18262:19174\ncatalog:variable_text:54617:12418:12784\ncatalog:variable_text:54618:12418:12784\ncatalog:variable_text:54619:12418:12784\ncatalog:variable_text:54629:16071:16436\ncatalog:variable_text:54633:16071:16436\ncatalog:variable_text:54655:13514:13695"
 
@@ -8983,13 +8983,13 @@ evidence = "Suffixet är en tilldelad räknare och etiketten kolliderar.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32a-06"
+subject = "var:framtidsplaner-andra-studier-t-ex-komvux-f32a-06"
 fields = { "sets" = ["framtida-aktivitetsplaner"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54051:16617:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32a-06"
+subject = "var:framtidsplaner-andra-studier-t-ex-komvux-f32a-06"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54051:16617:16801"
 
@@ -9391,25 +9391,25 @@ evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:help3"
+subject = "var:hjalpvariabel-3-distans"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54085:18262:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:help3"
+subject = "var:hjalpvariabel-3-distans"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54085:18262:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:help6"
+subject = "var:hjalpvariabel-6-distans"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54086:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:help6"
+subject = "var:hjalpvariabel-6-distans"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:54086:18809:19174"
 
@@ -10447,25 +10447,25 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54174:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-f7b-02"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54175:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-f7b-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54175:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-f7b-03"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54176:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-etnisk-f7b-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54176:17532:17897"
 
@@ -10495,25 +10495,25 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54178:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7f-02"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54179:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7f-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54179:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7f-03"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54180:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7f-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54180:17532:17897"
 
@@ -10591,25 +10591,25 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54186:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7d-02"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54187:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7d-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54187:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7d-03"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54188:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-f7d-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54188:17532:17897"
 
@@ -10639,25 +10639,25 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54190:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-religion-f7a-02"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54191:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-religion-f7a-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54191:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-religion-f7a-03"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54192:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-religion-f7a-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54192:17532:17897"
 
@@ -10687,25 +10687,25 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54194:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-f7e-02"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54195:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-02"
+subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-f7e-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54195:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-f7e-03"
 fields = { "sets" = ["krankande-sarbehandling-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54196:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-03"
+subject = "var:krankande-sarbehandling-under-utbildningen-sexuell-f7e-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54196:17532:17897"
 
@@ -11371,61 +11371,61 @@ evidence = "Variabeln avser löpande stöd för digitala verktyg.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54253:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54253:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-01"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-01"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54254:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-01"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-01"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54254:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-02"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-02"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54255:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-02"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-02"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54255:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-03"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-03"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54256:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-03"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-03"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54256:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-04"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-04"
 fields = { "sets" = ["stod-for-utveckling-av-distanspedagogik"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54257:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-04"
+subject = "var:lopande-stod-for-att-utveckla-pedagogiken-f20d-04"
 fields = { "tags" = ["education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54257:18809:19174"
 
@@ -11683,13 +11683,13 @@ evidence = "Frågan avser arbete i Mellan- eller Sydamerika.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:namnare"
+subject = "var:hogskoleexamen"
 fields = { "sets" = [] }
 evidence = "Nämnare anger inte högskoleexamen eller dess grundkod.\ncatalog:occurrence:511110\ncatalog:variable_text:54280:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:namnare"
+subject = "var:hogskoleexamen"
 fields = { "tags" = ["education"] }
 evidence = "Nämnare anger inte högskoleexamen eller dess grundkod.\ncatalog:occurrence:511110\ncatalog:variable_text:54280:12418:12784"
 
@@ -12715,13 +12715,13 @@ evidence = "Svaret anger plats för utlandsvistelse inom utbildning.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:poa"
+subject = "var:poangomfattning"
 fields = { "sets" = [] }
 evidence = "Poa är en ogenomskinlig källförkortning för poängomfattning.\ncatalog:variable_text:54369:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:poa"
+subject = "var:poangomfattning"
 fields = { "tags" = ["education"] }
 evidence = "Poa är en ogenomskinlig källförkortning för poängomfattning.\ncatalog:variable_text:54369:12418:12784"
 
@@ -13111,37 +13111,37 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54404:17532:17897
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-02"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-02"
 fields = { "sets" = ["sexuellt-krankande-handlingar-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54405:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-02"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-02"
 fields = { "tags" = ["crime", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54405:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-03"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-03"
 fields = { "sets" = ["sexuellt-krankande-handlingar-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54406:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-03"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-03"
 fields = { "tags" = ["crime", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54406:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-04"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-04"
 fields = { "sets" = ["sexuellt-krankande-handlingar-under-utbildningen"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54407:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-04"
+subject = "var:sexuellt-krankande-handlingar-under-utbildningen-f12c-04"
 fields = { "tags" = ["crime", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54407:17532:17897"
 
@@ -14287,49 +14287,49 @@ evidence = "Samma källkolumn används för olika begrepp i angränsande periode
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-01"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-01"
 fields = { "sets" = ["tillgang-till-dator-eller-bredband-pa-skolan"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54503:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-01"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-01"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54503:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-02"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-02"
 fields = { "sets" = ["tillgang-till-dator-eller-bredband-pa-skolan"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54504:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-02"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-02"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54504:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-03"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-03"
 fields = { "sets" = ["tillgang-till-dator-eller-bredband-pa-skolan"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54505:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-03"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-03"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54505:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-04"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-04"
 fields = { "sets" = ["tillgang-till-dator-eller-bredband-pa-skolan"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54506:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-04"
+subject = "var:skolan-har-vid-behov-ordnat-att-elever-fick-komma-f19-04"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:54506:18809:19174"
 
@@ -14995,13 +14995,13 @@ evidence = "Frågan anger studietrötthet som orsak till studieuppehåll eller a
 
 [[statement]]
 kind = "set"
-subject = "var:stvkodgr"
+subject = "var:paborjat-gymnasieprogram-grupperade"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Stvkodgr är en ogenomskinlig källkod.\ncatalog:variable_text:54564:13514:13695"
 
 [[statement]]
 kind = "set"
-subject = "var:stvkodgr"
+subject = "var:paborjat-gymnasieprogram-grupperade"
 fields = { "tags" = ["education"] }
 evidence = "Stvkodgr är en ogenomskinlig källkod.\ncatalog:variable_text:54564:13514:13695"
 
@@ -15391,13 +15391,13 @@ evidence = "Källan anger formell tjänstgöringsomfattning i procent.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:trear"
+subject = "var:soka-anstallning-som-forskollarare"
 fields = { "sets" = [] }
 evidence = "TreAr anger en tidsram men återger inte etikettens begrepp att söka anställning.\ncatalog:variable_text:54598:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:trear"
+subject = "var:soka-anstallning-som-forskollarare"
 fields = { "tags" = ["employment"] }
 evidence = "TreAr anger en tidsram men återger inte etikettens begrepp att söka anställning.\ncatalog:variable_text:54598:12784:13149"
 
@@ -16207,25 +16207,25 @@ evidence = "Id:t är en frågekod; etiketten beskriver variation mellan program 
 
 [[statement]]
 kind = "set"
-subject = "var:vt20-f4"
+subject = "var:andel-av-undervisningen-pa-distans-vt-2020-fran-mitten"
 fields = { "sets" = ["andel-distansundervisning"] }
 evidence = "Id:t är en frågekod; etiketten beskriver andelen undervisning på distans.\ncatalog:variable_text:54666:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:vt20-f4"
+subject = "var:andel-av-undervisningen-pa-distans-vt-2020-fran-mitten"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver andelen undervisning på distans.\ncatalog:variable_text:54666:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:vt20-f5"
+subject = "var:hur-undervisningen-pa-distans-organiserats-vt-2020"
 fields = { "sets" = ["organisering-av-distansundervisning"] }
 evidence = "Id:t är en frågekod; etiketten beskriver organisering av distansundervisning.\ncatalog:variable_text:54667:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:vt20-f5"
+subject = "var:hur-undervisningen-pa-distans-organiserats-vt-2020"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod; etiketten beskriver organisering av distansundervisning.\ncatalog:variable_text:54667:18262:18444"
 

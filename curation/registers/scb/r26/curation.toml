@@ -1856,13 +1856,13 @@ evidence = "AstSni07C är en källmnemonik; etiketten anger statistikens näring
 
 [[statement]]
 kind = "set"
-subject = "var:atyp"
+subject = "var:storleksinsdelning-av-arbetstallen"
 fields = { "sets" = [] }
 evidence = "Atyp är en opak källmnemonik för arbetsställets storleksindelning.\ncatalog:variable_text:41161:17897:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:atyp"
+subject = "var:storleksinsdelning-av-arbetstallen"
 fields = { "tags" = ["business"] }
 evidence = "Atyp är en opak källmnemonik för arbetsställets storleksindelning.\ncatalog:variable_text:41161:17897:19358"
 
@@ -1928,13 +1928,13 @@ evidence = "Kodningen skiljer typer av egenföretagare.\ncatalog:valueset:9818\n
 
 [[statement]]
 kind = "set"
-subject = "var:bytc"
+subject = "var:kod-vid-justering-av-arbetsstalle"
 fields = { "sets" = [] }
 evidence = "Bytc är en opak källmnemonik för justeringskod.\ncatalog:variable_text:41168:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:bytc"
+subject = "var:kod-vid-justering-av-arbetsstalle"
 fields = { "tags" = ["methods"] }
 evidence = "Bytc är en opak källmnemonik för justeringskod.\ncatalog:variable_text:41168:17897:18993"
 
@@ -2132,37 +2132,37 @@ evidence = "Beteckningen används för folkbokföringsfastigheten.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fkantman"
+subject = "var:antal-manader-med-ersattning-fran-forsakringskassan"
 fields = { "sets" = ["ersattning-fran-forsakringskassan"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41192:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fkantman"
+subject = "var:antal-manader-med-ersattning-fran-forsakringskassan"
 fields = { "tags" = ["transfers"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41192:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fkarsers"
+subject = "var:arsersattning-fran-forsakringskassan"
 fields = { "sets" = ["ersattning-fran-forsakringskassan"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41193:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fkarsers"
+subject = "var:arsersattning-fran-forsakringskassan"
 fields = { "tags" = ["transfers"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41193:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fknovers"
+subject = "var:ersattning-fran-forsakringskassan-i-november"
 fields = { "sets" = ["ersattning-fran-forsakringskassan"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41194:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fknovers"
+subject = "var:ersattning-fran-forsakringskassan-i-november"
 fields = { "tags" = ["transfers"] }
 evidence = "FK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:41194:17897:18993"
 
@@ -2288,13 +2288,13 @@ evidence = "Förekomst, belopp och inkomstandel av förtidspension hör samman.\
 
 [[statement]]
 kind = "set"
-subject = "var:francfar"
+subject = "var:nyskapat-arbetsstalle"
 fields = { "sets" = ["nytt-arbetsstalle"] }
 evidence = "Källmnemoniken anger inte etikettens betydelse.\ncatalog:variable_text:41207:12053:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:francfar"
+subject = "var:nyskapat-arbetsstalle"
 fields = { "tags" = ["business"] }
 evidence = "Källmnemoniken anger inte etikettens betydelse.\ncatalog:variable_text:41207:12053:18993"
 
@@ -2456,25 +2456,25 @@ evidence = "Företagstyp aktuellt år.\ncatalog:variable_text:41220:17897:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ftyp"
+subject = "var:storleksindelning-av-foretaget"
 fields = { "sets" = [] }
 evidence = "Ftyp är en opak källmnemonik för företagets storleksindelning.\ncatalog:variable_text:41221:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ftyp"
+subject = "var:storleksindelning-av-foretaget"
 fields = { "tags" = ["business"] }
 evidence = "Ftyp är en opak källmnemonik för företagets storleksindelning.\ncatalog:variable_text:41221:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:g"
+subject = "var:antal-gemensamma-sysselsatta"
 fields = { "sets" = ["gemensamma-sysselsatta"] }
 evidence = "G är en enbokstavskod.\ncatalog:variable_text:41222:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:g"
+subject = "var:antal-gemensamma-sysselsatta"
 fields = { "tags" = ["employment"] }
 evidence = "G är en enbokstavskod.\ncatalog:variable_text:41222:18993:19358"
 
@@ -2516,13 +2516,13 @@ evidence = "Gatunummer är en del av företagets postadress.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:h"
+subject = "var:hopslagning"
 fields = { "sets" = [] }
 evidence = "H är en opak enbokstavskod för hopslagning.\ncatalog:variable_text:41226:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:h"
+subject = "var:hopslagning"
 fields = { "tags" = ["business"] }
 evidence = "H är en opak enbokstavskod för hopslagning.\ncatalog:variable_text:41226:18262:19358"
 
@@ -2756,13 +2756,13 @@ evidence = "Suffixet 2 är ett tilldelat räknarsuffix; källkolumnens suffix ä
 
 [[statement]]
 kind = "set"
-subject = "var:k12"
+subject = "var:kvot-1-och-2"
 fields = { "sets" = ["gemensamma-sysselsatta"] }
 evidence = "K12 är en källkod utan läsbara etikettstammar.\ncatalog:variable_text:41248:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:k12"
+subject = "var:kvot-1-och-2"
 fields = { "tags" = ["employment"] }
 evidence = "K12 är en källkod utan läsbara etikettstammar.\ncatalog:variable_text:41248:18262:19358"
 
@@ -3788,13 +3788,13 @@ evidence = "Datumet är en tidpunkt för senaste invandring.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:sfallkod"
+subject = "var:valt-arbetsstalle"
 fields = { "sets" = ["val-av-arbetsstalle"] }
 evidence = "Sfallkod är en opak källmnemonik.\ncatalog:variable_text:41340:12418:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sfallkod"
+subject = "var:valt-arbetsstalle"
 fields = { "tags" = ["employment"] }
 evidence = "Sfallkod är en opak källmnemonik.\ncatalog:variable_text:41340:12418:18993"
 
@@ -3860,13 +3860,13 @@ evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:4
 
 [[statement]]
 kind = "set"
-subject = "var:statusf"
+subject = "var:status-for-egna-foretagare"
 fields = { "sets" = [] }
 evidence = "F är en opak bokstavskod. Coordinator group membership: Medlemmarna kodar uttryckligen yrkesställning för individ, KU, AGI eller kombinatörer. Aktiv/passiv företagarstatus är ett separat attribut.\ncatalog:variable_text:41346:17897:18993\ncatalog:variable_text:41376:17532:18993\ncatalog:variable_text:41377:5479:17897\ncatalog:variable_text:41378:17897:18993\ncatalog:variable_text:41379:12418:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:statusf"
+subject = "var:status-for-egna-foretagare"
 fields = { "tags" = ["employment"] }
 evidence = "F är en opak bokstavskod. Coordinator group membership: Medlemmarna kodar uttryckligen yrkesställning för individ, KU, AGI eller kombinatörer. Aktiv/passiv företagarstatus är ett separat attribut.\ncatalog:variable_text:41346:17897:18993\ncatalog:variable_text:41376:17532:18993\ncatalog:variable_text:41377:5479:17897\ncatalog:variable_text:41378:17897:18993\ncatalog:variable_text:41379:12418:18993"
 
@@ -3896,37 +3896,37 @@ evidence = "Summerad inkomst för arbetsstället.\ncatalog:variable_text:41348:1
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-old"
+subject = "var:utbildningsniva-aggregat-old"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten. Variabeln mäter utbildningsnivå.\ncatalog:variable_text:41349:7305:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-old"
+subject = "var:utbildningsniva-aggregat-old"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten. Variabeln mäter utbildningsnivå.\ncatalog:variable_text:41349:7305:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp"
+subject = "var:utbildningsgrupp"
 fields = { "sets" = ["utbildningsgrupp"] }
 evidence = "SUN2020Grp är en källmnemonik vars kod inte förekommer i etiketten.\ncatalog:variable_text:41350:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020grp"
+subject = "var:utbildningsgrupp"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020Grp är en källmnemonik vars kod inte förekommer i etiketten.\ncatalog:variable_text:41350:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "SUN2020Inr är en källmnemonik vars kod inte förekommer i etiketten.\ncatalog:variable_text:41351:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020Inr är en källmnemonik vars kod inte förekommer i etiketten.\ncatalog:variable_text:41351:17897:18993"
 
@@ -4088,13 +4088,13 @@ evidence = "Företagstyp efter antal arbetsställen.\ncatalog:variable_text:4136
 
 [[statement]]
 kind = "set"
-subject = "var:u"
+subject = "var:uppdelning"
 fields = { "sets" = [] }
 evidence = "U är en opak bokstavskod.\ncatalog:variable_text:41366:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:u"
+subject = "var:uppdelning"
 fields = { "tags" = ["business"] }
 evidence = "U är en opak bokstavskod.\ncatalog:variable_text:41366:18262:19358"
 

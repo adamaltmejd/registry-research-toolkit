@@ -361,49 +361,49 @@ evidence = "B är en opak bokstavskod; uppgiften är en justerad påbörjandetid
 
 [[statement]]
 kind = "set"
-subject = "var:b-balkongperlgh"
+subject = "var:antal-balkonger-per-lagenhet"
 fields = { "sets" = ["balkonger"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40657:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-balkongperlgh"
+subject = "var:antal-balkonger-per-lagenhet"
 fields = { "tags" = ["housing"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40657:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bkbrutto"
+subject = "var:byggnadskostnad-brutto"
 fields = { "sets" = ["byggnadskostnad"] }
 evidence = "B och BK är opaka koder för byggnadskostnad.\ncatalog:variable_text:40658:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bkbrutto"
+subject = "var:byggnadskostnad-brutto"
 fields = { "tags" = ["housing"] }
 evidence = "B och BK är opaka koder för byggnadskostnad.\ncatalog:variable_text:40658:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bknetto"
+subject = "var:byggnadskostnad-netto"
 fields = { "sets" = ["byggnadskostnad"] }
 evidence = "B och BK är opaka koder för byggnadskostnad.\ncatalog:variable_text:40659:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bknetto"
+subject = "var:byggnadskostnad-netto"
 fields = { "tags" = ["housing"] }
 evidence = "B och BK är opaka koder för byggnadskostnad.\ncatalog:variable_text:40659:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bostadsareaperlgh"
+subject = "var:bostadsarea-per-lagenhet"
 fields = { "sets" = ["bostadsarea"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40660:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bostadsareaperlgh"
+subject = "var:bostadsarea-per-lagenhet"
 fields = { "tags" = ["housing"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara orden i etiketten.\ncatalog:variable_text:40660:13514:20089"
 
@@ -433,13 +433,13 @@ evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R
 
 [[statement]]
 kind = "set"
-subject = "var:b-fenergikomplement"
+subject = "var:forekomst-av-ytterligare-energislag"
 fields = { "sets" = ["energislag"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:variable_text:40663:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fenergikomplement"
+subject = "var:forekomst-av-ytterligare-energislag"
 fields = { "tags" = ["energy", "housing"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:variable_text:40663:13514:20089"
 
@@ -613,13 +613,13 @@ evidence = "B och F är enbokstavskoder; etiketten kolliderar och mål kräver R
 
 [[statement]]
 kind = "set"
-subject = "var:b-fuppvarmningkomplement"
+subject = "var:ytterligare-uppvarmningssystem"
 fields = { "sets" = ["uppvarmningssystem"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-fuppvarmningkomplement"
+subject = "var:ytterligare-uppvarmningssystem"
 fields = { "tags" = ["energy", "housing"] }
 evidence = "B och F är opaka bokstavskoder.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
 
@@ -661,25 +661,25 @@ evidence = "B och F är enskilda bokstavskoder.\ncatalog:variable_text:40681:135
 
 [[statement]]
 kind = "set"
-subject = "var:b-garageperlgh"
+subject = "var:antal-bilplatser-i-garage-och-parkeringsdack-per-lagenhet"
 fields = { "sets" = ["antal-bilplatser"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40682:13514:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:b-garageperlgh"
+subject = "var:antal-bilplatser-i-garage-och-parkeringsdack-per-lagenhet"
 fields = { "tags" = ["transport"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40682:13514:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:b-hygienrumperlgh"
+subject = "var:antal-hygienrum-per-lagenhet"
 fields = { "sets" = ["antal-hygienrum"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40683:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-hygienrumperlgh"
+subject = "var:antal-hygienrum-per-lagenhet"
 fields = { "tags" = ["housing"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40683:13514:20089"
 
@@ -697,85 +697,85 @@ evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:b-lagenhetsarea"
+subject = "var:lagenhetsarea"
 fields = { "sets" = ["bostadsarea"] }
 evidence = "B är en enskild bokstavskod utöver det läsbara ordet.\ncatalog:variable_text:40685:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-lagenhetsarea"
+subject = "var:lagenhetsarea"
 fields = { "tags" = ["housing"] }
 evidence = "B är en enskild bokstavskod utöver det läsbara ordet.\ncatalog:variable_text:40685:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-markkostbrutto"
+subject = "var:markkostnad-brutto"
 fields = { "sets" = ["markkostnad"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40686:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-markkostbrutto"
+subject = "var:markkostnad-brutto"
 fields = { "tags" = ["property"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40686:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-markkostnetto"
+subject = "var:markkostnad-netto"
 fields = { "sets" = ["markkostnad"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40687:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-markkostnetto"
+subject = "var:markkostnad-netto"
 fields = { "tags" = ["property"] }
 evidence = "B är en enskild bokstavskod utöver de läsbara ordstammarna.\ncatalog:variable_text:40687:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-moms"
+subject = "var:mervardesskatt-justerad"
 fields = { "sets" = ["mervardesskatt"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40688:13514:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:b-moms"
+subject = "var:mervardesskatt-justerad"
 fields = { "tags" = ["housing", "taxation"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40688:13514:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:b-skattmoms"
+subject = "var:beraknad-mervardesskatt-justerad"
 fields = { "sets" = ["mervardesskatt"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40690:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-skattmoms"
+subject = "var:beraknad-mervardesskatt-justerad"
 fields = { "tags" = ["housing", "taxation"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40690:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-slutprisbrutto"
+subject = "var:total-produktionskostnad-brutto"
 fields = { "sets" = ["total-produktionskostnad"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40691:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-slutprisbrutto"
+subject = "var:total-produktionskostnad-brutto"
 fields = { "tags" = ["housing"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40691:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-slutprisnetto"
+subject = "var:total-produktionskostnad-netto"
 fields = { "sets" = ["total-produktionskostnad"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40692:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-slutprisnetto"
+subject = "var:total-produktionskostnad-netto"
 fields = { "tags" = ["housing"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40692:13514:20089"
 
@@ -793,13 +793,13 @@ evidence = "B är en enbokstavskod; etiketten kolliderar och mål kräver R6-pr�
 
 [[statement]]
 kind = "set"
-subject = "var:b-yteffektivitet"
+subject = "var:yteffektivitet"
 fields = { "sets" = [] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40694:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-yteffektivitet"
+subject = "var:yteffektivitet"
 fields = { "tags" = ["housing"] }
 evidence = "B är en opak bokstavskod.\ncatalog:variable_text:40694:13514:20089"
 
@@ -1321,13 +1321,13 @@ evidence = "Nettomoms hör till mervärdesskattegruppen.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ovrigkost"
+subject = "var:byggnadskostnad"
 fields = { "sets" = ["byggnadskostnad"] }
 evidence = "Namnet anger övrig kostnad men källan anger byggnadskostnad under hela perioden.\ncatalog:variable_text:40747:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ovrigkost"
+subject = "var:byggnadskostnad"
 fields = { "tags" = ["housing"] }
 evidence = "Namnet anger övrig kostnad men källan anger byggnadskostnad under hela perioden.\ncatalog:variable_text:40747:13514:20089"
 

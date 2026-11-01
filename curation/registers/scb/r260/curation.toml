@@ -955,61 +955,61 @@ evidence = "Antal år i utbildning mäter utbildningsdeltagande.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-2"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu2"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23166:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-2"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu2"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23166:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-3"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu3"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23167:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-3"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu3"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23167:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-4"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu4"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23168:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-4"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu4"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23168:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-5"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu5"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23169:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-5"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu5"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23169:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-6"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu6"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23170:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-6"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-for-sokt-alefu6"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:23170:5479:5844"
 
@@ -1627,13 +1627,13 @@ evidence = "Id innehåller en enskild källbokstav och en ogenomskinlig källmne
 
 [[statement]]
 kind = "set"
-subject = "var:ikursl"
+subject = "var:kurslangd-i-veckor-for-slutligt-antagen-utbildning"
 fields = { "sets" = ["kurslangd-i-veckor"] }
 evidence = "Id innehåller en enskild källbokstav före kurslängdens stam.\ncatalog:variable_text:23223:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:ikursl"
+subject = "var:kurslangd-i-veckor-for-slutligt-antagen-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id innehåller en enskild källbokstav före kurslängdens stam.\ncatalog:variable_text:23223:5479:8766"
 
@@ -1711,13 +1711,13 @@ evidence = "ISKENH är en ogenomskinlig källkod för skola.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:isvgg"
+subject = "var:studievagsgrupp-for-antagen-specialkurs"
 fields = { "sets" = ["studievagsgrupp-for-specialkurs"] }
 evidence = "ISVGG är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23232:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:isvgg"
+subject = "var:studievagsgrupp-for-antagen-specialkurs"
 fields = { "tags" = ["education"] }
 evidence = "ISVGG är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23232:5479:8766"
 
@@ -1939,25 +1939,25 @@ evidence = "Variabeln mäter kurslängd i veckor.\ncatalog:variable_text:23250:5
 
 [[statement]]
 kind = "set"
-subject = "var:kval"
+subject = "var:kvarstaende-i-utbildningen"
 fields = { "sets" = [] }
 evidence = "Kval är en ogenomskinlig källkod; etiketten anger kvarstående i utbildningen.\ncatalog:variable_text:23251:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:kval"
+subject = "var:kvarstaende-i-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Kval är en ogenomskinlig källkod; etiketten anger kvarstående i utbildningen.\ncatalog:variable_text:23251:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:lakofo"
+subject = "var:forsamling"
 fields = { "sets" = [] }
 evidence = "Lakofo är en ogenomskinlig kod för län, kommun och församling.\ncatalog:variable_text:23252:5479:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:lakofo"
+subject = "var:forsamling"
 fields = { "tags" = ["geography"] }
 evidence = "Lakofo är en ogenomskinlig kod för län, kommun och församling.\ncatalog:variable_text:23252:5479:8401"
 
@@ -2191,13 +2191,13 @@ evidence = "SGYREG är en ogenomskinlig källmnemonik.\ncatalog:variable_text:23
 
 [[statement]]
 kind = "set"
-subject = "var:sint"
+subject = "var:antagen-till-sokt-utbildning-val-1"
 fields = { "sets" = ["antagningsstatus"] }
 evidence = "SINT är en ogenomskinlig källmnemonik.\ncatalog:variable_text:23280:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sint"
+subject = "var:antagen-till-sokt-utbildning-val-1"
 fields = { "tags" = ["education"] }
 evidence = "SINT är en ogenomskinlig källmnemonik.\ncatalog:variable_text:23280:5479:8766"
 
@@ -2791,25 +2791,25 @@ evidence = "Föräldrarnas grupperade utbildningsnivå hör till utbildning.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:sval"
+subject = "var:ansokningsalternativ-som-eleven-slutligt-antagits-till"
 fields = { "sets" = ["valutfall"] }
 evidence = "Sval är en ogenomskinlig källmnemonik för det val eleven antagits till.\ncatalog:valueset:3582\ncatalog:variable_text:23331:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sval"
+subject = "var:ansokningsalternativ-som-eleven-slutligt-antagits-till"
 fields = { "tags" = ["education"] }
 evidence = "Sval är en ogenomskinlig källmnemonik för det val eleven antagits till.\ncatalog:valueset:3582\ncatalog:variable_text:23331:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:svgg"
+subject = "var:studievagsgrupp-for-sokt-specialkurs-val-1"
 fields = { "sets" = ["studievagsgrupp-for-specialkurs"] }
 evidence = "SVGG är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23332:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:svgg"
+subject = "var:studievagsgrupp-for-sokt-specialkurs-val-1"
 fields = { "tags" = ["education"] }
 evidence = "SVGG är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23332:5479:8766"
 

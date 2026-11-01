@@ -721,13 +721,13 @@ evidence = "Företagsform är en företagsstrukturell klassificering.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:ib-ub-bast"
+subject = "var:korrigeringsstatus"
 fields = { "sets" = [] }
 evidence = "IB och UB är bokstavskoder som inte återger etiketten korrigeringsstatus.\ncatalog:variable_text:5938:15340:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ib-ub-bast"
+subject = "var:korrigeringsstatus"
 fields = { "tags" = ["methods"] }
 evidence = "IB och UB är bokstavskoder som inte återger etiketten korrigeringsstatus.\ncatalog:variable_text:5938:15340:20454"
 
@@ -1057,49 +1057,49 @@ evidence = "Posten mäter en del av nyemission på skuldsidan.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad101"
+subject = "var:banktillgodohavande-darav-utlandet-omvardering-under"
 fields = { "sets" = ["banktillgodohavanden"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5972:10592:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad101"
+subject = "var:banktillgodohavande-darav-utlandet-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5972:10592:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad11"
+subject = "var:andelar-i-vardepappersfonder-omvardering-under-kvartalet"
 fields = { "sets" = ["andelar-i-vardepappersfonder"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5973:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad11"
+subject = "var:andelar-i-vardepappersfonder-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5973:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-omvardering"
 fields = { "sets" = ["andelar-i-vardepappersfonder"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:5974:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:5974:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad12"
+subject = "var:finansiella-derivat-omvardering-under-kvartalet"
 fields = { "sets" = ["finansiella-derivattillgangar"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5975:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad12"
+subject = "var:finansiella-derivat-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatalog:variable_text:5975:9862:15340"
 
@@ -1117,313 +1117,313 @@ evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad14"
+subject = "var:certifikat-totalt-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5977:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad14"
+subject = "var:certifikat-totalt-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5977:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad141"
+subject = "var:certifikat-staten-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5978:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad141"
+subject = "var:certifikat-staten-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5978:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad142"
+subject = "var:certifikat-riksbanken-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5979:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad142"
+subject = "var:certifikat-riksbanken-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5979:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad143"
+subject = "var:certifikat-svenska-banker-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5980:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad143"
+subject = "var:certifikat-svenska-banker-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5980:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-omvardering-under"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5981:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5981:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-omvardering"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5982:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5982:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-omvardering"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5983:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5983:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad147"
+subject = "var:certifikat-kommuner-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5984:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad147"
+subject = "var:certifikat-kommuner-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5984:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad148"
+subject = "var:certifkat-utlandet-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5985:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad148"
+subject = "var:certifkat-utlandet-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5985:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad15"
+subject = "var:obligationer-totalt-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5986:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad15"
+subject = "var:obligationer-totalt-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5986:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad151"
+subject = "var:obligationer-staten-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5987:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad151"
+subject = "var:obligationer-staten-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5987:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad152"
+subject = "var:obligationer-svenska-banker-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5988:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad152"
+subject = "var:obligationer-svenska-banker-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5988:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-omvardering-under"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5989:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5989:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag-omvardering"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5990:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5990:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-omvardering"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5991:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5991:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad156"
+subject = "var:obligationer-kommuner-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5992:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad156"
+subject = "var:obligationer-kommuner-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5992:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad157"
+subject = "var:obligationer-utlandet-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5993:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad157"
+subject = "var:obligationer-utlandet-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5993:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad17"
+subject = "var:lan-mot-koncernforetag-i-utlandet-omvardering-under"
 fields = { "sets" = ["lan-till-koncernforetag-i-utlandet"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5994:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad17"
+subject = "var:lan-mot-koncernforetag-i-utlandet-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5994:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad20"
+subject = "var:finansiella-derivat-skuld-omvardering-under-kvartalet"
 fields = { "sets" = ["finansiella-derivatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5995:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad20"
+subject = "var:finansiella-derivat-skuld-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5995:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-omvardering-under"
 fields = { "sets" = ["finansiella-derivatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5996:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5996:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad22"
+subject = "var:certifikat-skuld-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5997:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad22"
+subject = "var:certifikat-skuld-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5997:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad221"
+subject = "var:certifikat-skuld-darav-utlandet-omvardering-under-kvartalet"
 fields = { "sets" = ["certifikatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5998:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad221"
+subject = "var:certifikat-skuld-darav-utlandet-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5998:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad23"
+subject = "var:obligationslan-skuld-omvardering-under-kvartalet"
 fields = { "sets" = ["obligationslan"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5999:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad23"
+subject = "var:obligationslan-skuld-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:5999:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-omvardering-under"
 fields = { "sets" = ["obligationslan"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6000:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6000:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad24"
+subject = "var:personalkonvertibler-skuld-omvardering-under-kvartalet"
 fields = { "sets" = ["personalkonvertibler"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6001:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad24"
+subject = "var:personalkonvertibler-skuld-omvardering-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6001:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-omvardering-under"
 fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6002:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-omvardering-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6002:9862:15340"
 
@@ -1501,49 +1501,49 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad34"
+subject = "var:andra-svenska-andelar-omvarderingar-under-kvartalet"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6009:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad34"
+subject = "var:andra-svenska-andelar-omvarderingar-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6009:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad35"
+subject = "var:andra-utlandska-andelar-omvarderingar-under-kvartalet"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6010:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad35"
+subject = "var:andra-utlandska-andelar-omvarderingar-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6010:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-omvarderingar-under"
 fields = { "sets" = ["aktiekapital"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6011:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-omvarderingar-under"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6011:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad501"
+subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-omvarderingar"
 fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad501"
+subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-omvarderingar"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340"
 
@@ -1561,13 +1561,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-omvarderingar-under"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6014:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-omvarderingar-under"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6014:14610:15340"
 
@@ -1717,13 +1717,13 @@ evidence = "Rotationsgrupp avser urvalsmetoden.\ncatalog:variable_text:6030:9862
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad101"
+subject = "var:banktillgodohavande-darav-utlandet-stallning-aktuellt"
 fields = { "sets" = ["banktillgodohavanden"] }
 evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6031:10592:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad101"
+subject = "var:banktillgodohavande-darav-utlandet-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6031:10592:15340"
 
@@ -1741,13 +1741,13 @@ evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:603
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-stallning"
 fields = { "sets" = ["andelar-i-vardepappersfonder"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6033:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6033:13879:15340"
 
@@ -1825,37 +1825,37 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-stallning-aktuellt"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6040:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6040:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-stallning"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6041:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6041:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-stallning"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6042:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6042:9862:15340"
 
@@ -1921,37 +1921,37 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-stallning-aktuellt"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6048:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6048:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag-stallning"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6049:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6049:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-stallning"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6050:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6050:9862:15340"
 
@@ -2005,13 +2005,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-stallning-aktuellt"
 fields = { "sets" = ["finansiella-derivatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6055:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6055:10957:15340"
 
@@ -2053,13 +2053,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-stallning-aktuellt"
 fields = { "sets" = ["obligationslan"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6059:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6059:9862:15340"
 
@@ -2077,25 +2077,25 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-stallning-aktuellt"
 fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6061:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6061:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad301"
+subject = "var:sv-noterade-aktier-innehav-darav-finansiella-ftg-stallning"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6062:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad301"
+subject = "var:sv-noterade-aktier-innehav-darav-finansiella-ftg-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6062:9862:14610"
 
@@ -2185,73 +2185,73 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-stallning-aktuellt"
 fields = { "sets" = ["aktiekapital"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6070:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6070:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad501"
+subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-stallning-aktuellt"
 fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad501"
+subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-stallning-aktuellt"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad51"
+subject = "var:totalt-eget-kapital-svenska-onoterade-aktiebolag-stallning"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6072:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad51"
+subject = "var:totalt-eget-kapital-svenska-onoterade-aktiebolag-stallning"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6072:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad511"
+subject = "var:obeskattade-reserver-onoterade-aktiebolag-stallning-aktuellt"
 fields = { "sets" = ["obeskattade-reserver"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6073:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad511"
+subject = "var:obeskattade-reserver-onoterade-aktiebolag-stallning-aktuellt"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6073:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad512"
+subject = "var:obeskattade-reserver-andra-foretagsformer"
 fields = { "sets" = ["obeskattade-reserver"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6074:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad512"
+subject = "var:obeskattade-reserver-andra-foretagsformer"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6074:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-stallning-aktuellt"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6075:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-stallning-aktuellt"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6075:14610:15340"
 
@@ -2377,49 +2377,49 @@ evidence = "Samma begrepp som i efterföljande period.\ncatalog:occurrence:40839
 
 [[statement]]
 kind = "set"
-subject = "var:transrad101"
+subject = "var:banktillgodohavande-darav-utlandet-transaktioner-under"
 fields = { "sets" = ["banktillgodohavanden"] }
 evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6088:10592:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad101"
+subject = "var:banktillgodohavande-darav-utlandet-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte banktillgodohavandet eller utlandsdelen.\ncatalog:variable_text:6088:10592:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad11"
+subject = "var:andelar-i-vardepappersfonder-transaktioner-under-kvartalet"
 fields = { "sets" = ["andelar-i-vardepappersfonder"] }
 evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6089:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad11"
+subject = "var:andelar-i-vardepappersfonder-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte fondandelarna.\ncatalog:variable_text:6089:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-transaktioner"
 fields = { "sets" = ["andelar-i-vardepappersfonder"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6090:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad111"
+subject = "var:andelar-i-vardepappersfonder-darav-utlandet-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte fondandelarna eller utlandsdelen.\ncatalog:variable_text:6090:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad12"
+subject = "var:finansiella-derivat-transaktioner-under-kvartalet"
 fields = { "sets" = ["finansiella-derivattillgangar"] }
 evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6091:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad12"
+subject = "var:finansiella-derivat-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6091:9862:15340"
 
@@ -2437,205 +2437,205 @@ evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:transrad14"
+subject = "var:certifikat-totalt-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6093:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad14"
+subject = "var:certifikat-totalt-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6093:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad141"
+subject = "var:certifikat-staten-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6094:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad141"
+subject = "var:certifikat-staten-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6094:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad142"
+subject = "var:certifikat-riksbanken-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6095:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad142"
+subject = "var:certifikat-riksbanken-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6095:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad143"
+subject = "var:certifikat-svenska-banker-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6096:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad143"
+subject = "var:certifikat-svenska-banker-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6096:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-transaktioner-under"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6097:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad144"
+subject = "var:certifikat-svenska-bostadsinstitut-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6097:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-transaktioner"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6098:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad145"
+subject = "var:certifikat-ovriga-svenska-finansiella-foretag-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6098:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-transkaktioner"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6099:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad146"
+subject = "var:certifikat-svenska-icke-finansiella-foretag-transkaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6099:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad147"
+subject = "var:certifikat-kommuner-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6100:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad147"
+subject = "var:certifikat-kommuner-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6100:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad148"
+subject = "var:certifikat-utlandet-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6101:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad148"
+subject = "var:certifikat-utlandet-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6101:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad15"
+subject = "var:obligationer-totalt-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6102:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad15"
+subject = "var:obligationer-totalt-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6102:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad151"
+subject = "var:obligationer-staten-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6103:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad151"
+subject = "var:obligationer-staten-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6103:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad152"
+subject = "var:obligationer-svenska-banker-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6104:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad152"
+subject = "var:obligationer-svenska-banker-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6104:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-transaktioner-under"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6105:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad153"
+subject = "var:obligationer-svenska-bostadsinstitut-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6105:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6106:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad154"
+subject = "var:obligationer-ovriga-svenska-finansiella-foretag"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6106:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-transaktioner"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6107:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad155"
+subject = "var:obligationer-svenska-icke-finansiella-foretag-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6107:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad156"
+subject = "var:obligationer-kommuner-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6108:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad156"
+subject = "var:obligationer-kommuner-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6108:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad157"
+subject = "var:obligationer-utlandet-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationsinnehav"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6109:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad157"
+subject = "var:obligationer-utlandet-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6109:9862:15340"
 
@@ -2653,109 +2653,109 @@ evidence = "Katalogen visar en angränsande mappning till scb/bast/lan-trans; un
 
 [[statement]]
 kind = "set"
-subject = "var:transrad17"
+subject = "var:lan-mot-koncernforetag-i-utlandet-transaktioner-under"
 fields = { "sets" = ["lan-till-koncernforetag-i-utlandet"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6111:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad17"
+subject = "var:lan-mot-koncernforetag-i-utlandet-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6111:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad20"
+subject = "var:finansiella-derivat-skuld-transaktioner-under-kvartalet"
 fields = { "sets" = ["finansiella-derivatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6112:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad20"
+subject = "var:finansiella-derivat-skuld-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6112:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-transaktioner-under"
 fields = { "sets" = ["finansiella-derivatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6113:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad201"
+subject = "var:finansiella-derivat-skuld-darav-utlandet-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6113:10957:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad22"
+subject = "var:certifikat-skuld-transaktioner-under-kvartalet"
 fields = { "sets" = ["certifikatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6114:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad22"
+subject = "var:certifikat-skuld-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6114:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad221"
+subject = "var:certifikat-skuld-darav-utlandet-transaktioner-under"
 fields = { "sets" = ["certifikatskulder"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6115:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad221"
+subject = "var:certifikat-skuld-darav-utlandet-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6115:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad23"
+subject = "var:obligationslan-skuld-transaktioner-under-kvartalet"
 fields = { "sets" = ["obligationslan"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6116:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad23"
+subject = "var:obligationslan-skuld-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6116:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-transaktioner-under"
 fields = { "sets" = ["obligationslan"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6117:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad231"
+subject = "var:obligationslan-skuld-darav-utlandet-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6117:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad24"
+subject = "var:personalkonvertibler-skuld-transaktioner-under-kvartalet"
 fields = { "sets" = ["personalkonvertibler"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6118:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad24"
+subject = "var:personalkonvertibler-skuld-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6118:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-transaktioner-under"
 fields = { "sets" = ["lan-fran-koncernforetag-i-utlandet"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6119:9862:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad26"
+subject = "var:lan-fran-koncernforetag-i-utlandet-skuld-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6119:9862:15340"
 
@@ -2809,49 +2809,49 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:transrad34"
+subject = "var:andra-svenska-andelar-transaktioner-under-kvartalet"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6124:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad34"
+subject = "var:andra-svenska-andelar-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte de svenska andelarna.\ncatalog:variable_text:6124:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad35"
+subject = "var:andra-utlandska-andelar-transaktioner-under-kvartalet"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6125:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad35"
+subject = "var:andra-utlandska-andelar-transaktioner-under-kvartalet"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6125:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-transaktioner-under"
 fields = { "sets" = ["aktiekapital"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6126:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad50"
+subject = "var:aktiekapital-svenska-noterade-aktiebolag-transaktioner-under"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:6126:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad501"
+subject = "var:aktiekaptial-darav-aterkop-av-egna-aktier-transaktioner"
 fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad501"
+subject = "var:aktiekaptial-darav-aterkop-av-egna-aktier-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340"
 
@@ -2869,13 +2869,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:transrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-transaktioner-under"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6129:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad52"
+subject = "var:totalt-eget-kapital-andra-foretagsformer-transaktioner-under"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6129:14610:15340"
 

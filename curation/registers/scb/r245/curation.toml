@@ -252,13 +252,13 @@ evidence = "Variabeln kodar arbetskraftsstatus.\ncatalog:valueset:90\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "sets" = ["lan"] }
 evidence = "Befolk är en missvisande identitet för en länsgruppering under samtliga perioder.\ncatalog:valueset:7367\ncatalog:variable_text:7726:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "tags" = ["geography"] }
 evidence = "Befolk är en missvisande identitet för en länsgruppering under samtliga perioder.\ncatalog:valueset:7367\ncatalog:variable_text:7726:16071:16436"
 
@@ -492,13 +492,13 @@ evidence = "Kvintilgruppen är en indelning av sammanräknad förvärvsinkomst.\
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-klassgrupp"
+subject = "var:grund-for-bosattning"
 fields = { "sets" = [] }
 evidence = "GFB är en bokstavskod som inte återges i etiketten.\ncatalog:valueset:2034\ncatalog:variable_text:7746:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-klassgrupp"
+subject = "var:grund-for-bosattning"
 fields = { "tags" = ["migration"] }
 evidence = "GFB är en bokstavskod som inte återges i etiketten.\ncatalog:valueset:2034\ncatalog:variable_text:7746:19723:20089"
 
@@ -540,13 +540,13 @@ evidence = "Hushållstyp omfattas inte av kandidaten för civilstånd och samboe
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "sets" = [] }
 evidence = "HUSSYK är en ogenomskinlig källkod för yrke i huvudsysslan.\ncatalog:valueset:8707\ncatalog:variable_text:7750:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "HUSSYK är en ogenomskinlig källkod för yrke i huvudsysslan.\ncatalog:valueset:8707\ncatalog:variable_text:7750:16071:16436"
 
@@ -924,61 +924,61 @@ evidence = "Variabeln anger sektorn i huvudsysslan.\ncatalog:valueset:542\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7786:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "tags" = ["methods"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7786:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7787:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "tags" = ["methods"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7787:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6-eup"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7788:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6-eup"
 fields = { "tags" = ["methods"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7788:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7789:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "tags" = ["methods"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7789:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-ep"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7790:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-ep"
 fields = { "tags" = ["methods"] }
 evidence = "Sel är en ogenomskinlig källkod; siffran är källkolumnens populationsnummer.\ncatalog:valueset:1106\ncatalog:variable_text:7790:16071:16436"
 
@@ -1032,25 +1032,25 @@ evidence = "Variabeln anger studiernas omfattning.\ncatalog:variable_text:7795:1
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
+subject = "var:utbildningsinriktning"
 fields = { "sets" = [] }
 evidence = "SUN är en källkod som inte förekommer i etiketten.\ncatalog:variable_text:7796:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
+subject = "var:utbildningsinriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en källkod som inte förekommer i etiketten.\ncatalog:variable_text:7796:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
+subject = "var:utbildningsniva"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en källkod som inte förekommer i etiketten.\ncatalog:variable_text:7797:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
+subject = "var:utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en källkod som inte förekommer i etiketten.\ncatalog:variable_text:7797:16071:16436"
 

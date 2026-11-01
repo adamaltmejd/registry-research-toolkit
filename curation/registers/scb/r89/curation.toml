@@ -248,25 +248,25 @@ evidence = "Antalet timanställda hör ihop med de könsuppdelade antalen och av
 
 [[statement]]
 kind = "set"
-subject = "var:antarm"
+subject = "var:antal-arsarbetare-manadsavlonade"
 fields = { "sets" = ["antal-arsarbetare"] }
 evidence = "Källmnemoniken innehåller en bokstavskod för avlöningsformen. Årsarbetare är ett arbetsmarknadsmått.\ncatalog:variable_text:34013:10592:20454\ncatalog:variable_text:34014:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:antarm"
+subject = "var:antal-arsarbetare-manadsavlonade"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken innehåller en bokstavskod för avlöningsformen. Årsarbetare är ett arbetsmarknadsmått.\ncatalog:variable_text:34013:10592:20454\ncatalog:variable_text:34014:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:antart"
+subject = "var:antal-arsarbetare-timavlonade"
 fields = { "sets" = ["antal-arsarbetare"] }
 evidence = "Källmnemoniken innehåller en bokstavskod för avlöningsformen. Årsarbetare är ett arbetsmarknadsmått.\ncatalog:variable_text:34013:10592:20454\ncatalog:variable_text:34014:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:antart"
+subject = "var:antal-arsarbetare-timavlonade"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken innehåller en bokstavskod för avlöningsformen. Årsarbetare är ett arbetsmarknadsmått.\ncatalog:variable_text:34013:10592:20454\ncatalog:variable_text:34014:10592:20454"
 
@@ -320,97 +320,97 @@ evidence = "Källmnemoniken innehåller bokstavskoder som inte framgår av etike
 
 [[statement]]
 kind = "set"
-subject = "var:delkvtv"
+subject = "var:deltids-tillsvidareanstallda-kvinnor"
 fields = { "sets" = ["antal-deltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoden tv för tillsvidareanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34020:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delkvtv"
+subject = "var:deltids-tillsvidareanstallda-kvinnor"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoden tv för tillsvidareanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34020:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delkvv"
+subject = "var:deltids-visstidsanstallda-kvinnor"
 fields = { "sets" = ["antal-deltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoden v för visstidsanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34021:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delkvv"
+subject = "var:deltids-visstidsanstallda-kvinnor"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoden v för visstidsanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34021:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delmtv"
+subject = "var:deltids-tillsvidareanstallda-man"
 fields = { "sets" = ["antal-deltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoder för män och tillsvidareanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34022:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delmtv"
+subject = "var:deltids-tillsvidareanstallda-man"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoder för män och tillsvidareanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34022:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delmv"
+subject = "var:deltids-visstidsanstallda-man"
 fields = { "sets" = ["antal-deltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoder för män och visstidsanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34023:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:delmv"
+subject = "var:deltids-visstidsanstallda-man"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoder för män och visstidsanställning. Måttet avser deltidsanställning.\ncatalog:variable_text:34010:13879:20454\ncatalog:variable_text:34023:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helkvtv"
+subject = "var:heltids-tillsvidareanstallda-kvinnor"
 fields = { "sets" = ["antal-heltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoden tv för tillsvidareanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34024:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helkvtv"
+subject = "var:heltids-tillsvidareanstallda-kvinnor"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoden tv för tillsvidareanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34024:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helkvv"
+subject = "var:heltids-visstidsanstallda-kvinnor"
 fields = { "sets" = ["antal-heltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoden v för visstidsanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34025:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helkvv"
+subject = "var:heltids-visstidsanstallda-kvinnor"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoden v för visstidsanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34025:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helmtv"
+subject = "var:heltids-tillsvidareanstallda-man"
 fields = { "sets" = ["antal-heltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoder för män och tillsvidareanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34026:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helmtv"
+subject = "var:heltids-tillsvidareanstallda-man"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoder för män och tillsvidareanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34026:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helmv"
+subject = "var:heltids-visstidsanstallda-man"
 fields = { "sets" = ["antal-heltidsanstallda"] }
 evidence = "Id:t innehåller bokstavskoder för män och visstidsanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34027:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:helmv"
+subject = "var:heltids-visstidsanstallda-man"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t innehåller bokstavskoder för män och visstidsanställning. Måttet avser heltidsanställning.\ncatalog:variable_text:34011:13879:20454\ncatalog:variable_text:34027:10592:13879"
 
@@ -524,97 +524,97 @@ evidence = "Den fördelade retroaktiva lönesumman hör ihop med utbetald retroa
 
 [[statement]]
 kind = "set"
-subject = "var:rortm"
+subject = "var:rorliga-lonetillagg-manadsavlonade"
 fields = { "sets" = ["rorliga-lonetillagg"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser rörliga lönebelopp.\ncatalog:variable_text:34038:13879:20454\ncatalog:variable_text:34039:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortm"
+subject = "var:rorliga-lonetillagg-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser rörliga lönebelopp.\ncatalog:variable_text:34038:13879:20454\ncatalog:variable_text:34039:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortt"
+subject = "var:rorliga-lonetillagg-timavlonade"
 fields = { "sets" = ["rorliga-lonetillagg"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser rörliga lönebelopp.\ncatalog:variable_text:34038:13879:20454\ncatalog:variable_text:34039:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortt"
+subject = "var:rorliga-lonetillagg-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser rörliga lönebelopp.\ncatalog:variable_text:34038:13879:20454\ncatalog:variable_text:34039:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklm"
+subject = "var:sjuklon-manadsavlonade"
 fields = { "sets" = ["sjuklon"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser sjuklönebelopp.\ncatalog:variable_text:34040:13879:20454\ncatalog:variable_text:34041:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklm"
+subject = "var:sjuklon-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser sjuklönebelopp.\ncatalog:variable_text:34040:13879:20454\ncatalog:variable_text:34041:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklt"
+subject = "var:sjuklon-timavlonade"
 fields = { "sets" = ["sjuklon"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser sjuklönebelopp.\ncatalog:variable_text:34040:13879:20454\ncatalog:variable_text:34041:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklt"
+subject = "var:sjuklon-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser sjuklönebelopp.\ncatalog:variable_text:34040:13879:20454\ncatalog:variable_text:34041:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumm"
+subject = "var:teoretisk-lonesumma-manadsavlonade"
 fields = { "sets" = ["teoretisk-lonesumma"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser teoretisk lönesumma.\ncatalog:variable_text:34042:10592:20454\ncatalog:variable_text:34043:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumm"
+subject = "var:teoretisk-lonesumma-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser teoretisk lönesumma.\ncatalog:variable_text:34042:10592:20454\ncatalog:variable_text:34043:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumt"
+subject = "var:teoretisk-lonesumma-timavlonade"
 fields = { "sets" = ["teoretisk-lonesumma"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser teoretisk lönesumma.\ncatalog:variable_text:34042:10592:20454\ncatalog:variable_text:34043:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumt"
+subject = "var:teoretisk-lonesumma-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser teoretisk lönesumma.\ncatalog:variable_text:34042:10592:20454\ncatalog:variable_text:34043:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:timkv"
+subject = "var:timanstallda-kvinnor"
 fields = { "sets" = ["antal-timanstallda"] }
 evidence = "TimM har en enbokstavskod för kön. Familjeregeln ger TimKv samma namnbytesbeslut. Variabeln mäter antalet timanställda kvinnor och hör till gruppen för antal timanställda.\ncatalog:occurrence-locators:variable:34044\ncatalog:variable_text:34012:13879:20454\ncatalog:variable_text:34044:10592:13879\ncatalog:variable_text:34045:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:timkv"
+subject = "var:timanstallda-kvinnor"
 fields = { "tags" = ["employment"] }
 evidence = "TimM har en enbokstavskod för kön. Familjeregeln ger TimKv samma namnbytesbeslut. Variabeln mäter antalet timanställda kvinnor och hör till gruppen för antal timanställda.\ncatalog:occurrence-locators:variable:34044\ncatalog:variable_text:34012:13879:20454\ncatalog:variable_text:34044:10592:13879\ncatalog:variable_text:34045:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:timm"
+subject = "var:timanstallda-man"
 fields = { "sets" = ["antal-timanstallda"] }
 evidence = "M är en enbokstavskod för kön i källkolumnen. Variabeln mäter antalet timanställda män och hör till gruppen för antal timanställda.\ncatalog:occurrence-locators:variable:34045\ncatalog:variable_text:34012:13879:20454\ncatalog:variable_text:34045:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:timm"
+subject = "var:timanstallda-man"
 fields = { "tags" = ["employment"] }
 evidence = "M är en enbokstavskod för kön i källkolumnen. Variabeln mäter antalet timanställda män och hör till gruppen för antal timanställda.\ncatalog:occurrence-locators:variable:34045\ncatalog:variable_text:34012:13879:20454\ncatalog:variable_text:34045:10592:13879"
 
@@ -644,24 +644,24 @@ evidence = "Beloppet är både utbetald och retroaktiv lönesumma.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumm"
+subject = "var:utbetald-lonesumma-manadsavlonade"
 fields = { "sets" = ["utbetald-lonesumma"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser utbetald lönesumma.\ncatalog:variable_text:34048:10592:20454\ncatalog:variable_text:34049:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumm"
+subject = "var:utbetald-lonesumma-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser utbetald lönesumma.\ncatalog:variable_text:34048:10592:20454\ncatalog:variable_text:34049:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumt"
+subject = "var:utbetald-lonesumma-timavlonade"
 fields = { "sets" = ["utbetald-lonesumma"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser utbetald lönesumma.\ncatalog:variable_text:34048:10592:20454\ncatalog:variable_text:34049:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumt"
+subject = "var:utbetald-lonesumma-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Id:t innehåller en bokstavskod för avlöningsformen. Måttet avser utbetald lönesumma.\ncatalog:variable_text:34048:10592:20454\ncatalog:variable_text:34049:10592:20454"

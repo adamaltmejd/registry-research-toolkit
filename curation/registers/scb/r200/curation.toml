@@ -993,13 +993,13 @@ evidence = "Variabeln mäter bruttoproduktion av el.\ncatalog:variable_text:4290
 
 [[statement]]
 kind = "set"
-subject = "var:elproduktion-egenforbrukning-bransle"
+subject = "var:elproduktion-egenforbrukning-bransleforbrukning-samt-teknisk"
 fields = { "sets" = [] }
 evidence = "Id:t beskriver andra storheter än den aggregattyp som kodas under hela perioden. Etiketten är bredare än kodlistan; målnamnet kräver koordinatorsgranskning.\ncatalog:valueset:8164\ncatalog:variable_text:4291:14245:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:elproduktion-egenforbrukning-bransle"
+subject = "var:elproduktion-egenforbrukning-bransleforbrukning-samt-teknisk"
 fields = { "tags" = ["energy"] }
 evidence = "Id:t beskriver andra storheter än den aggregattyp som kodas under hela perioden. Etiketten är bredare än kodlistan; målnamnet kräver koordinatorsgranskning.\ncatalog:valueset:8164\ncatalog:variable_text:4291:14245:20089"
 
@@ -1557,13 +1557,13 @@ evidence = "Variabeln mäter inköpsvärdet för mottagen värme.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:mw"
+subject = "var:lagringskapacitetsintervall"
 fields = { "sets" = [] }
 evidence = "MW är en opak källkod; etiketten anger lagringskapacitetsintervall.\ncatalog:occurrence:29531\ncatalog:occurrence:29541\ncatalog:variable_text:4349:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mw"
+subject = "var:lagringskapacitetsintervall"
 fields = { "tags" = ["energy"] }
 evidence = "MW är en opak källkod; etiketten anger lagringskapacitetsintervall.\ncatalog:occurrence:29531\ncatalog:occurrence:29541\ncatalog:variable_text:4349:18993:20089"
 
@@ -1593,13 +1593,13 @@ evidence = "Katalogens identitetsfakt visar överlappande mappningar. Variabeln 
 
 [[statement]]
 kind = "set"
-subject = "var:n2rad"
+subject = "var:kod-for-elanvandningens-anvandningsomraden"
 fields = { "sets" = [] }
 evidence = "N2rad är en källkod utan läsbara ordstammar; etiketten anger elanvändningens användningsområden.\ncatalog:variable_text:4352:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:n2rad"
+subject = "var:kod-for-elanvandningens-anvandningsomraden"
 fields = { "tags" = ["energy"] }
 evidence = "N2rad är en källkod utan läsbara ordstammar; etiketten anger elanvändningens användningsområden.\ncatalog:variable_text:4352:19358:20089"
 
@@ -9417,13 +9417,13 @@ evidence = "Katalogen visar överlappande ägare till samma källkolumn. Gruppka
 
 [[statement]]
 kind = "set"
-subject = "var:snamn"
+subject = "var:kraftstationens-namn"
 fields = { "sets" = [] }
 evidence = "Det inledande s är en ogenomskinlig bokstavskod i källkolumnen; etiketten anger kraftstationens namn.\ncatalog:variable_text:5109:14245:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:snamn"
+subject = "var:kraftstationens-namn"
 fields = { "tags" = ["energy"] }
 evidence = "Det inledande s är en ogenomskinlig bokstavskod i källkolumnen; etiketten anger kraftstationens namn.\ncatalog:variable_text:5109:14245:20089"
 

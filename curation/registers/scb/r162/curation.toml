@@ -265,13 +265,13 @@ evidence = "Koden beskriver insamlingens status och bortfall.\ncatalog:valueset:
 
 [[statement]]
 kind = "set"
-subject = "var:avsistaort"
+subject = "var:sista-palastningsorten"
 fields = { "sets" = ["palastningsplats"] }
 evidence = "Av anger avlastning men källan anger sista pålastningsorten under hela perioden.\ncatalog:variable_text:35630:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:avsistaort"
+subject = "var:sista-palastningsorten"
 fields = { "tags" = ["geography"] }
 evidence = "Av anger avlastning men källan anger sista pålastningsorten under hela perioden.\ncatalog:variable_text:35630:13879:14245"
 
@@ -325,13 +325,13 @@ evidence = "Beräknade stilleståndsveckor för lastbilen.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:eupop"
+subject = "var:ingar-i-eu-redovisningen"
 fields = { "sets" = [] }
 evidence = "Pop är inte en igenkännbar stam i etiketten och id:t är en källmnemonik.\ncatalog:variable_text:35638:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:eupop"
+subject = "var:ingar-i-eu-redovisningen"
 fields = { "tags" = ["methods"] }
 evidence = "Pop är inte en igenkännbar stam i etiketten och id:t är en källmnemonik.\ncatalog:variable_text:35638:10957:14245"
 
@@ -409,73 +409,73 @@ evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvmlast"
+subject = "var:korda-kilometer-i-sverige-med-last"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35649:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvmlast"
+subject = "var:korda-kilometer-i-sverige-med-last"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35649:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvtot"
+subject = "var:korda-kilometer-i-sverige-totalt"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35650:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvtot"
+subject = "var:korda-kilometer-i-sverige-totalt"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35650:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvulast"
+subject = "var:korda-kilometer-i-sverige-utan-last"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35651:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmsvulast"
+subject = "var:korda-kilometer-i-sverige-utan-last"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35651:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmutmlast"
+subject = "var:korda-kilometer-i-utlandet-med-last"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35652:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmutmlast"
+subject = "var:korda-kilometer-i-utlandet-med-last"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35652:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmuttot"
+subject = "var:korda-kilometer-i-utlandet-totalt"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35653:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmuttot"
+subject = "var:korda-kilometer-i-utlandet-totalt"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig och behandlas konsekvent inom familjen; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35653:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmutulast"
+subject = "var:korda-kilometer-i-utlandet-utan-last"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35654:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:kmutulast"
+subject = "var:korda-kilometer-i-utlandet-utan-last"
 fields = { "tags" = ["transport"] }
 evidence = "Källmnemoniken är ogenomskinlig; variabeln mäter körsträcka och hör till transport.\ncatalog:variable_text:35654:10957:14245"
 
@@ -601,13 +601,13 @@ evidence = "Urvalsstorlek är ett metodmått.\ncatalog:variable_text:35668:10957
 
 [[statement]]
 kind = "set"
-subject = "var:lillansm"
+subject = "var:urvalsstorlek-justerad-for-outliers"
 fields = { "sets" = ["urvalsstorlek"] }
 evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35669:11688:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:lillansm"
+subject = "var:urvalsstorlek-justerad-for-outliers"
 fields = { "tags" = ["methods"] }
 evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35669:11688:14245"
 
@@ -949,13 +949,13 @@ evidence = "Geografisk kod för körningens slutort.\ncatalog:variable_text:3570
 
 [[statement]]
 kind = "set"
-subject = "var:snr"
+subject = "var:stratumbeteckning"
 fields = { "sets" = [] }
 evidence = "S är en enbokstavskod för stratum.\ncatalog:variable_text:35704:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:snr"
+subject = "var:stratumbeteckning"
 fields = { "tags" = ["methods"] }
 evidence = "S är en enbokstavskod för stratum.\ncatalog:variable_text:35704:10957:14245"
 
@@ -985,13 +985,13 @@ evidence = "Populationens storlek är ett metodmått.\ncatalog:variable_text:357
 
 [[statement]]
 kind = "set"
-subject = "var:storansm"
+subject = "var:populationsstorlek-justerad-for-outliers"
 fields = { "sets" = ["populationsstorlek"] }
 evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35708:11688:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:storansm"
+subject = "var:populationsstorlek-justerad-for-outliers"
 fields = { "tags" = ["methods"] }
 evidence = "SM är en källkod som inte framgår av etiketten.\ncatalog:variable_text:35708:11688:14245"
 
@@ -1153,37 +1153,37 @@ evidence = "Samma kolumn har överlappande ägare för körning och sändning.\n
 
 [[statement]]
 kind = "set"
-subject = "var:vkodkltxt"
+subject = "var:varukod-i-klartext"
 fields = { "sets" = ["varuslag"] }
 evidence = "V är en enbokstavskod för vara.\ncatalog:variable_text:35724:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:vkodkltxt"
+subject = "var:varukod-i-klartext"
 fields = { "tags" = ["transport"] }
 evidence = "V är en enbokstavskod för vara.\ncatalog:variable_text:35724:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:vkodtom"
+subject = "var:en-tomkorning-registreras-med-1-korning-med-last-registreras"
 fields = { "sets" = [] }
 evidence = "V är en källkod och etiketten beskriver tomkörningsmarkeringen.\ncatalog:variable_text:35725:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:vkodtom"
+subject = "var:en-tomkorning-registreras-med-1-korning-med-last-registreras"
 fields = { "tags" = ["transport"] }
 evidence = "V är en källkod och etiketten beskriver tomkörningsmarkeringen.\ncatalog:variable_text:35725:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:yrkm"
+subject = "var:yrkesmassig-trafik-lastbil"
 fields = { "sets" = [] }
 evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:yrkm"
+subject = "var:yrkesmassig-trafik-lastbil"
 fields = { "tags" = ["transport"] }
 evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
 

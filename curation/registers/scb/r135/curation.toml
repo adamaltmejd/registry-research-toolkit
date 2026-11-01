@@ -559,13 +559,13 @@ evidence = "Näringsgren enligt NR för verksamhetsenhet.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en opak bokstavskod för näringsgren; siffran kommer från källkolumnen.\ncatalog:variable_text:33852:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en opak bokstavskod för näringsgren; siffran kommer från källkolumnen.\ncatalog:variable_text:33852:18262:20089"
 

@@ -453,13 +453,13 @@ evidence = "Utgående area ingår i bostadsareagruppen.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:bre"
+subject = "var:antal-borttagna-rumsenheter"
 fields = { "sets" = ["antal-rumsenheter"] }
 evidence = "Id är en bokstavskod för borttagna rumsenheter.\ncatalog:variable_text:39591:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bre"
+subject = "var:antal-borttagna-rumsenheter"
 fields = { "tags" = ["housing"] }
 evidence = "Id är en bokstavskod för borttagna rumsenheter.\ncatalog:variable_text:39591:19358:20089"
 
@@ -525,13 +525,13 @@ evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:3960
 
 [[statement]]
 kind = "set"
-subject = "var:fre"
+subject = "var:antal-rumsenheter-fore-ombyggnad"
 fields = { "sets" = ["antal-rumsenheter"] }
 evidence = "Id är en bokstavskod för rumsenheter före ombyggnad.\ncatalog:variable_text:39601:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fre"
+subject = "var:antal-rumsenheter-fore-ombyggnad"
 fields = { "tags" = ["housing"] }
 evidence = "Id är en bokstavskod för rumsenheter före ombyggnad.\ncatalog:variable_text:39601:19358:20089"
 
@@ -693,13 +693,13 @@ evidence = "Nettotillskott av lägenheter.\ncatalog:variable_text:39616:19358:20
 
 [[statement]]
 kind = "set"
-subject = "var:nre"
+subject = "var:antal-tillkommande-rumsenheter"
 fields = { "sets" = ["antal-rumsenheter"] }
 evidence = "Id är en bokstavskod för tillkommande rumsenheter.\ncatalog:variable_text:39617:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nre"
+subject = "var:antal-tillkommande-rumsenheter"
 fields = { "tags" = ["housing"] }
 evidence = "Id är en bokstavskod för tillkommande rumsenheter.\ncatalog:variable_text:39617:19358:20089"
 

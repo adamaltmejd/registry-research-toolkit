@@ -499,13 +499,13 @@ evidence = "Antal arbetslöshetsdagar hör till varaktighet.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:afkassgrp"
+subject = "var:kassagrupp-inom-arbetsloshetskassan"
 fields = { "sets" = [] }
 evidence = "AF är en källkod; etiketten anger kassagruppen.\ncatalog:variable_text:44183:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:afkassgrp"
+subject = "var:kassagrupp-inom-arbetsloshetskassan"
 fields = { "tags" = ["employment"] }
 evidence = "AF är en källkod; etiketten anger kassagruppen.\ncatalog:variable_text:44183:9862:19723"
 
@@ -787,25 +787,25 @@ evidence = "Pensionsinkomst.\ncatalog:variable_text:44206:14610:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ampol"
+subject = "var:summa-inkomst-foranledd-av-arbetsmarknadspolitisk-atgard"
 fields = { "sets" = ["inkomst-fran-arbetsmarknadspolitiska-atgarder"] }
 evidence = "AmPol är en källmnemonik för det samlade inkomstmåttet.\ncatalog:variable_text:44207:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ampol"
+subject = "var:summa-inkomst-foranledd-av-arbetsmarknadspolitisk-atgard"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "AmPol är en källmnemonik för det samlade inkomstmåttet.\ncatalog:variable_text:44207:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ampol-obearb"
+subject = "var:inkomst-foranledd-av-arbetsmarknadspolitisk-atgard"
 fields = { "sets" = ["inkomst-fran-arbetsmarknadspolitiska-atgarder"] }
 evidence = "AmPol är en källmnemonik för det samlade inkomstmåttet.\ncatalog:variable_text:44208:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ampol-obearb"
+subject = "var:inkomst-foranledd-av-arbetsmarknadspolitisk-atgard"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "AmPol är en källmnemonik för det samlade inkomstmåttet.\ncatalog:variable_text:44208:14975:19723"
 
@@ -1519,37 +1519,37 @@ evidence = "Samma biståndstyp fortsätter från socialbidragstyp.\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:elo-avbrottorsak"
+subject = "var:orsak-till-avbrott-for-etableringslots"
 fields = { "sets" = [] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44273:14610:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:elo-avbrottorsak"
+subject = "var:orsak-till-avbrott-for-etableringslots"
 fields = { "tags" = ["integration"] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44273:14610:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:elo-status"
+subject = "var:status-for-beslut-om-etableringslots"
 fields = { "sets" = [] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44275:14610:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:elo-status"
+subject = "var:status-for-beslut-om-etableringslots"
 fields = { "tags" = ["integration"] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44275:14610:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:elo-val"
+subject = "var:aktivt-val-gallande-etableringslots"
 fields = { "sets" = [] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44276:14610:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:elo-val"
+subject = "var:aktivt-val-gallande-etableringslots"
 fields = { "tags" = ["integration"] }
 evidence = "ELO är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:44276:14610:16801"
 
@@ -1567,157 +1567,157 @@ evidence = "Variabeln avser ensamkommande barn i migrationsregistret.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:epa-anst"
+subject = "var:aktivitet-enligt-etableringsplan-anstallning"
 fields = { "sets" = ["arbete-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser anställning inom etableringsplan.\ncatalog:variable_text:44278:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-anst"
+subject = "var:aktivitet-enligt-etableringsplan-anstallning"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser anställning inom etableringsplan.\ncatalog:variable_text:44278:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-arbfins"
+subject = "var:aktivitet-enligt-etableringsplan-arbetsforberedande-insatser"
 fields = { "sets" = ["arbetsforberedande-insatser-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser arbetsförberedande insatser inom etableringsplan.\ncatalog:variable_text:44279:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-arbfins"
+subject = "var:aktivitet-enligt-etableringsplan-arbetsforberedande-insatser"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser arbetsförberedande insatser inom etableringsplan.\ncatalog:variable_text:44279:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-arbprog"
+subject = "var:aktivitet-enligt-etableringsplan-arbetsmarknadspolitiska"
 fields = { "sets" = ["arbetsmarknadspolitiska-program-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser arbetsmarknadspolitiska program inom etableringsplan.\ncatalog:variable_text:44280:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-arbprog"
+subject = "var:aktivitet-enligt-etableringsplan-arbetsmarknadspolitiska"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser arbetsmarknadspolitiska program inom etableringsplan.\ncatalog:variable_text:44280:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-avbrottorsak"
+subject = "var:avbrottsorsak-for-beslut-om-etableringsplan"
 fields = { "sets" = [] }
 evidence = "EPA är en bokstavskod. Variabeln avser avbrottsorsak för etableringsplan.\ncatalog:variable_text:44281:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-avbrottorsak"
+subject = "var:avbrottsorsak-for-beslut-om-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser avbrottsorsak för etableringsplan.\ncatalog:variable_text:44281:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-forstabifalldatum"
+subject = "var:start-for-forsta-bifall-for-beslut-om-ratt"
 fields = { "sets" = ["start-for-etableringsdeltagande"] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för första bifall.\ncatalog:variable_text:44282:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-forstabifalldatum"
+subject = "var:start-for-forsta-bifall-for-beslut-om-ratt"
 fields = { "tags" = [] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för första bifall.\ncatalog:variable_text:44282:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-forstadatum"
+subject = "var:start-for-beslut-om-ratt-till-etableringsplan"
 fields = { "sets" = ["start-for-etableringsdeltagande"] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för beslut om etableringsplan.\ncatalog:variable_text:44283:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-forstadatum"
+subject = "var:start-for-beslut-om-ratt-till-etableringsplan"
 fields = { "tags" = [] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för beslut om etableringsplan.\ncatalog:variable_text:44283:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-hinder"
+subject = "var:hinder-att-delta-i-aktivitet-inom-etableringsplan"
 fields = { "sets" = ["hinder-for-aktivitet-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser hinder för aktivitet inom etableringsplan.\ncatalog:variable_text:44284:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-hinder"
+subject = "var:hinder-att-delta-i-aktivitet-inom-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser hinder för aktivitet inom etableringsplan.\ncatalog:variable_text:44284:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-lots"
+subject = "var:aktivitet-enligt-etableringsplan-etableringslots"
 fields = { "sets" = ["etableringslots-som-aktivitet"] }
 evidence = "EPA är en bokstavskod. Variabeln avser etableringslots som aktivitet.\ncatalog:variable_text:44285:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-lots"
+subject = "var:aktivitet-enligt-etableringsplan-etableringslots"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser etableringslots som aktivitet.\ncatalog:variable_text:44285:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-omf"
+subject = "var:omfattning-enligt-beslut-om-ratt-till-etableringsplan"
 fields = { "sets" = ["omfattning-av-etableringsdeltagande"] }
 evidence = "EPA är en ogenomskinlig källkod i variabelnamnet. Omfattningen hör till gruppen för etableringsdeltagande.\ncatalog:variable_text:44286:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-omf"
+subject = "var:omfattning-enligt-beslut-om-ratt-till-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en ogenomskinlig källkod i variabelnamnet. Omfattningen hör till gruppen för etableringsdeltagande.\ncatalog:variable_text:44286:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-orsakdeltid"
+subject = "var:orsak-till-deltid-enligt-beslut-om-ratt-till-etableringsplan"
 fields = { "sets" = [] }
 evidence = "EPA är en bokstavskod. Variabeln avser orsak till deltid enligt beslut om etableringsplan.\ncatalog:variable_text:44287:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-orsakdeltid"
+subject = "var:orsak-till-deltid-enligt-beslut-om-ratt-till-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser orsak till deltid enligt beslut om etableringsplan.\ncatalog:variable_text:44287:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-ovrakt"
+subject = "var:aktivitet-enligt-etableringsplan-ovriga-aktiviteter"
 fields = { "sets" = ["ovriga-aktiviteter-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser övriga aktiviteter inom etableringsplan.\ncatalog:variable_text:44288:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-ovrakt"
+subject = "var:aktivitet-enligt-etableringsplan-ovriga-aktiviteter"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser övriga aktiviteter inom etableringsplan.\ncatalog:variable_text:44288:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-ovrstud"
+subject = "var:aktivitet-enligt-etableringsplan-ovriga-studier"
 fields = { "sets" = ["ovrig-utbildning-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser övriga studier inom etableringsplan.\ncatalog:variable_text:44289:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-ovrstud"
+subject = "var:aktivitet-enligt-etableringsplan-ovriga-studier"
 fields = { "tags" = ["education", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser övriga studier inom etableringsplan.\ncatalog:variable_text:44289:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorg"
+subject = "var:aktivitet-enligt-etableringsplan-samhallsorientering"
 fields = { "sets" = ["samhallsorientering-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser samhällsorientering inom etableringsplan.\ncatalog:variable_text:44290:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorg"
+subject = "var:aktivitet-enligt-etableringsplan-samhallsorientering"
 fields = { "tags" = ["education", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser samhällsorientering inom etableringsplan.\ncatalog:variable_text:44290:16071:18262"
 
@@ -1759,145 +1759,145 @@ evidence = "EPA är en bokstavskod. Variabeln avser studier i svenska inom etabl
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sfistartdatum"
+subject = "var:start-for-studier-i-svenska-enligt-beslut-om-ratt"
 fields = { "sets" = ["studier-i-svenska-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för studier i svenska inom etableringsplan.\ncatalog:variable_text:44294:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sfistartdatum"
+subject = "var:start-for-studier-i-svenska-enligt-beslut-om-ratt"
 fields = { "tags" = [] }
 evidence = "EPA är en bokstavskod. Variabeln anger startdatum för studier i svenska inom etableringsplan.\ncatalog:variable_text:44294:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-status"
+subject = "var:status-for-beslut-om-ratt-till-etableringsplan"
 fields = { "sets" = [] }
 evidence = "EPA är en bokstavskod. Variabeln avser status för beslut om etableringsplan.\ncatalog:variable_text:44295:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-status"
+subject = "var:status-for-beslut-om-ratt-till-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser status för beslut om etableringsplan.\ncatalog:variable_text:44295:14610:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimakt"
+subject = "var:antal-timmar-med-aktiviteter-enligt-etableringsplan"
 fields = { "sets" = [] }
 evidence = "EPA är en bokstavskod. Variabeln avser totalt antal aktivitetstimmar inom etableringsplan.\ncatalog:variable_text:44296:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimakt"
+subject = "var:antal-timmar-med-aktiviteter-enligt-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser totalt antal aktivitetstimmar inom etableringsplan.\ncatalog:variable_text:44296:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimanst"
+subject = "var:antal-timmar-med-anstallning-enligt-etableringsplan"
 fields = { "sets" = ["arbete-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med anställning inom etableringsplan.\ncatalog:variable_text:44297:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimanst"
+subject = "var:antal-timmar-med-anstallning-enligt-etableringsplan"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med anställning inom etableringsplan.\ncatalog:variable_text:44297:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimarbfins"
+subject = "var:antal-timmar-med-arbetsforberedande-insatser-enligt"
 fields = { "sets" = ["arbetsforberedande-insatser-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med arbetsförberedande insatser inom etableringsplan.\ncatalog:variable_text:44298:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimarbfins"
+subject = "var:antal-timmar-med-arbetsforberedande-insatser-enligt"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med arbetsförberedande insatser inom etableringsplan.\ncatalog:variable_text:44298:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimarbprog"
+subject = "var:antal-timmar-med-arbetsmarknadspolitiska-program-enligt"
 fields = { "sets" = ["arbetsmarknadspolitiska-program-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med arbetsmarknadspolitiska program inom etableringsplan.\ncatalog:variable_text:44299:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimarbprog"
+subject = "var:antal-timmar-med-arbetsmarknadspolitiska-program-enligt"
 fields = { "tags" = ["employment", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med arbetsmarknadspolitiska program inom etableringsplan.\ncatalog:variable_text:44299:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimhinder"
+subject = "var:antal-timmar-med-hinder-enligt-etableringsplan"
 fields = { "sets" = ["hinder-for-aktivitet-enligt-etableringsplan"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med hinder inom etableringsplan.\ncatalog:variable_text:44300:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimhinder"
+subject = "var:antal-timmar-med-hinder-enligt-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med hinder inom etableringsplan.\ncatalog:variable_text:44300:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimlots"
+subject = "var:antal-timmar-med-etableringslots-enligt-etableringsplan"
 fields = { "sets" = ["etableringslots-som-aktivitet"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med etableringslots inom etableringsplan.\ncatalog:variable_text:44301:15706:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimlots"
+subject = "var:antal-timmar-med-etableringslots-enligt-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med etableringslots inom etableringsplan.\ncatalog:variable_text:44301:15706:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimovrakt"
+subject = "var:antal-timmar-med-ovriga-aktiviteter-enligt-etableringsplan"
 fields = { "sets" = ["ovriga-aktiviteter-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med övriga aktiviteter inom etableringsplan.\ncatalog:variable_text:44302:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimovrakt"
+subject = "var:antal-timmar-med-ovriga-aktiviteter-enligt-etableringsplan"
 fields = { "tags" = ["integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med övriga aktiviteter inom etableringsplan.\ncatalog:variable_text:44302:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimovrstud"
+subject = "var:antal-timmar-med-ovriga-studier-enligt-etableringsplan"
 fields = { "sets" = ["ovrig-utbildning-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med övriga studier inom etableringsplan.\ncatalog:variable_text:44303:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimovrstud"
+subject = "var:antal-timmar-med-ovriga-studier-enligt-etableringsplan"
 fields = { "tags" = ["education", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med övriga studier inom etableringsplan.\ncatalog:variable_text:44303:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimsamhorg"
+subject = "var:antal-timmar-med-samhallsorientering-enligt-etableringsplan"
 fields = { "sets" = ["samhallsorientering-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med samhällsorientering inom etableringsplan.\ncatalog:variable_text:44304:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimsamhorg"
+subject = "var:antal-timmar-med-samhallsorientering-enligt-etableringsplan"
 fields = { "tags" = ["education", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med samhällsorientering inom etableringsplan.\ncatalog:variable_text:44304:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimsfi"
+subject = "var:antal-timmar-med-studier-i-svenska-enligt-etableringsplan"
 fields = { "sets" = ["studier-i-svenska-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med studier i svenska inom etableringsplan.\ncatalog:variable_text:44305:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-sumtimsfi"
+subject = "var:antal-timmar-med-studier-i-svenska-enligt-etableringsplan"
 fields = { "tags" = ["education", "integration"] }
 evidence = "EPA är en bokstavskod. Variabeln avser timmar med studier i svenska inom etableringsplan.\ncatalog:variable_text:44305:15706:18262"
 
@@ -1975,13 +1975,13 @@ evidence = "Startdatum för etablering ingår i kandidaten.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:etabl-fhind"
+subject = "var:funktionshinder-etablering"
 fields = { "sets" = [] }
 evidence = "F är en enskild bokstavskod för funktionshinder.\ncatalog:variable_text:44313:14610:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:etabl-fhind"
+subject = "var:funktionshinder-etablering"
 fields = { "tags" = ["disability", "integration"] }
 evidence = "F är en enskild bokstavskod för funktionshinder.\ncatalog:variable_text:44313:14610:17167"
 
@@ -2035,13 +2035,13 @@ evidence = "Variabeln anger ny deltagare i etablering.\ncatalog:variable_text:44
 
 [[statement]]
 kind = "set"
-subject = "var:etabl-omf"
+subject = "var:omfattning-av-deltagande-i-etablering"
 fields = { "sets" = ["omfattning-av-etableringsdeltagande"] }
 evidence = "Namnet ingår i förkortningsfamiljen omf, som ges samma läsbarhetsbedömning. Omfattningen hör till gruppen för etableringsdeltagande.\ncatalog:variable_text:44318:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:etabl-omf"
+subject = "var:omfattning-av-deltagande-i-etablering"
 fields = { "tags" = ["integration"] }
 evidence = "Namnet ingår i förkortningsfamiljen omf, som ges samma läsbarhetsbedömning. Omfattningen hör till gruppen för etableringsdeltagande.\ncatalog:variable_text:44318:17532:19723"
 
@@ -3475,25 +3475,25 @@ evidence = "Deltagande i SFI.\ncatalog:variable_text:44454:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:sfitimkurs"
+subject = "var:undervisningstimmar-i-svenska-for-invandrare-senast"
 fields = { "sets" = ["undervisningstimmar-i-sfi"] }
 evidence = "SFI är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44455:14245:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sfitimkurs"
+subject = "var:undervisningstimmar-i-svenska-for-invandrare-senast"
 fields = { "tags" = ["education"] }
 evidence = "SFI är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44455:14245:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sfitimtot"
+subject = "var:undervisningstimmar-i-svenska-for-invandrare-totalt-under"
 fields = { "sets" = ["undervisningstimmar-i-sfi"] }
 evidence = "SFI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:44456:14245:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sfitimtot"
+subject = "var:undervisningstimmar-i-svenska-for-invandrare-totalt-under"
 fields = { "tags" = ["education"] }
 evidence = "SFI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:44456:14245:19723"
 
@@ -3823,25 +3823,25 @@ evidence = "Definitionen och värdeförråden beskriver olika klassificeringar.\
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3"
+subject = "var:yrke-pa-3-sifferniva-huvudsakliga-sysselsattningen"
 fields = { "sets" = ["yrke-i-huvudsaklig-sysselsattning"] }
 evidence = "SSYK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44485:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk3"
+subject = "var:yrke-pa-3-sifferniva-huvudsakliga-sysselsattningen"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44485:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk4"
+subject = "var:yrke-pa-4-sifferniva-huvudsakliga-sysselsattningen"
 fields = { "sets" = ["yrke-i-huvudsaklig-sysselsattning"] }
 evidence = "SSYK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44486:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ssyk4"
+subject = "var:yrke-pa-4-sifferniva-huvudsakliga-sysselsattningen"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44486:18993:19723"
 
@@ -3859,25 +3859,25 @@ evidence = "Definition och värdemängd beskriver olika skolstatus.\ncatalog:val
 
 [[statement]]
 kind = "set"
-subject = "var:stkodgy"
+subject = "var:registrerad-pa-gymnasieskola"
 fields = { "sets" = [] }
 evidence = "Stkod är en källmnemonik utan motsvarande ordstam i etiketten.\ncatalog:variable_text:44489:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:stkodgy"
+subject = "var:registrerad-pa-gymnasieskola"
 fields = { "tags" = ["education"] }
 evidence = "Stkod är en källmnemonik utan motsvarande ordstam i etiketten.\ncatalog:variable_text:44489:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:stkodgyavg"
+subject = "var:avslutat-gymnasiet"
 fields = { "sets" = [] }
 evidence = "Stkod är en källmnemonik utan motsvarande ordstam i etiketten.\ncatalog:variable_text:44490:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:stkodgyavg"
+subject = "var:avslutat-gymnasiet"
 fields = { "tags" = ["education"] }
 evidence = "Stkod är en källmnemonik utan motsvarande ordstam i etiketten.\ncatalog:variable_text:44490:18993:19723"
 

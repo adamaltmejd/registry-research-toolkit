@@ -68,49 +68,49 @@ evidence = "Avser deltagande i svenska som andraspråk.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:en-cd-pr"
+subject = "var:resultata-pa-delprov-c-och-d-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "EN och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22037:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-cd-pr"
+subject = "var:resultata-pa-delprov-c-och-d-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "EN och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22037:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "EN är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22038:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "EN är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22038:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-e-pr"
+subject = "var:resultat-pa-delprov-e-i-engelska"
 fields = { "sets" = ["provresultat-engelska"] }
 evidence = "EN och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22039:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-e-pr"
+subject = "var:resultat-pa-delprov-e-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "EN och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22039:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "EN är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22040:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:en-grupp"
+subject = "var:undervisningsgrupp-i-engelska"
 fields = { "tags" = ["education"] }
 evidence = "EN är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22040:13879:14975"
 
@@ -236,97 +236,97 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:22050:13879:
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pr"
+subject = "var:resultat-pa-delprov-a-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne och provresultat.\ncatalog:variable_text:22053:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pr"
+subject = "var:resultat-pa-delprov-a-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och provresultat.\ncatalog:variable_text:22053:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-pr"
+subject = "var:resultat-pa-delprov-b-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22054:13879:14245\ncatalog:variable_text:22054:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-b-pr"
+subject = "var:resultat-pa-delprov-b-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22054:13879:14245\ncatalog:variable_text:22054:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pr"
+subject = "var:resultat-pa-delprov-c-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22055:13879:14245\ncatalog:variable_text:22055:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pr"
+subject = "var:resultat-pa-delprov-c-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22055:13879:14245\ncatalog:variable_text:22055:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-pr"
+subject = "var:resultat-pa-delprov-d-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22056:13879:14245\ncatalog:variable_text:22056:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-d-pr"
+subject = "var:resultat-pa-delprov-d-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och provresultat; delprovets innehåll varierar mellan perioderna.\ncatalog:variable_text:22056:13879:14245\ncatalog:variable_text:22056:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pr"
+subject = "var:resultat-pa-delprov-e-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne och provresultat.\ncatalog:variable_text:22057:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pr"
+subject = "var:resultat-pa-delprov-e-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och provresultat.\ncatalog:variable_text:22057:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-ej-de"
+subject = "var:deltagit-i-undervisning-i-matematik"
 fields = { "sets" = [] }
 evidence = "Id består av opaka koder för ämne och deltagande.\ncatalog:variable_text:22058:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-ej-de"
+subject = "var:deltagit-i-undervisning-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne och deltagande.\ncatalog:variable_text:22058:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-gr-pr"
+subject = "var:resultat-pa-gruppuppgift-i-matematik"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "Id består av opaka koder för ämne, gruppuppgift och resultat.\ncatalog:variable_text:22059:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-gr-pr"
+subject = "var:resultat-pa-gruppuppgift-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Id består av opaka koder för ämne, gruppuppgift och resultat.\ncatalog:variable_text:22059:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "Ämneskoden ma är opak.\ncatalog:variable_text:22060:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-grupp"
+subject = "var:undervisningsgrupp-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ämneskoden ma är opak.\ncatalog:variable_text:22060:13879:14975"
 
@@ -476,109 +476,109 @@ evidence = "Avser faderns utbildningsnivå i äldre nivåindelning.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:sv-1-pr"
+subject = "var:resultat-pa-delprov-1-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22080:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-1-pr"
+subject = "var:resultat-pa-delprov-1-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22080:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-2-pr"
+subject = "var:resultat-pa-delprov-2-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22081:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-2-pr"
+subject = "var:resultat-pa-delprov-2-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22081:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-3-pr"
+subject = "var:resultat-pa-delprov-3-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22082:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-3-pr"
+subject = "var:resultat-pa-delprov-3-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22082:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-4-pr"
+subject = "var:resultat-pa-delprov-4-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22083:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-4-pr"
+subject = "var:resultat-pa-delprov-4-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22083:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-5-pr"
+subject = "var:resultat-pa-delprov-5-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22084:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-5-pr"
+subject = "var:resultat-pa-delprov-5-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22084:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-d-pr"
+subject = "var:resultat-pa-delprov-d-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22085:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-d-pr"
+subject = "var:resultat-pa-delprov-d-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22085:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22086:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-b"
+subject = "var:resultat-pa-delprov-b-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22086:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22087:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-delprov-c"
+subject = "var:resultat-pa-delprov-c-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22087:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-e-pr"
+subject = "var:resultat-pa-delprov-e-i-svenska"
 fields = { "sets" = ["provresultat-svenska"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22088:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-e-pr"
+subject = "var:resultat-pa-delprov-e-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV och PR är koder; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22088:14245:14975"
 
@@ -596,13 +596,13 @@ evidence = "Definitionen anger undervisningsdeltagande men den operationella def
 
 [[statement]]
 kind = "set"
-subject = "var:sv-grupp"
+subject = "var:undervisningsgrupp-i-svenska"
 fields = { "sets" = ["undervisningsgrupp"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22090:13879:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-grupp"
+subject = "var:undervisningsgrupp-i-svenska"
 fields = { "tags" = ["education"] }
 evidence = "SV är en ämneskod; familjens förkortningar behandlas enhetligt.\ncatalog:variable_text:22090:13879:14975"
 

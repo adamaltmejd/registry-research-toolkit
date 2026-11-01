@@ -1105,61 +1105,61 @@ evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v214"
+subject = "var:investeringar-planerade-transportmedel-rullande-v214"
 fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30302:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v214"
+subject = "var:investeringar-planerade-transportmedel-rullande-v214"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30302:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v314"
+subject = "var:investeringar-planerade-transportmedel-rullande-v314"
 fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30303:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v314"
+subject = "var:investeringar-planerade-transportmedel-rullande-v314"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30303:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v414"
+subject = "var:investeringar-planerade-transportmedel-rullande-v414"
 fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30304:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v414"
+subject = "var:investeringar-planerade-transportmedel-rullande-v414"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30304:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v514"
+subject = "var:investeringar-planerade-transportmedel-rullande-v514"
 fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30305:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v514"
+subject = "var:investeringar-planerade-transportmedel-rullande-v514"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30305:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v614"
+subject = "var:investeringar-planerade-transportmedel-rullande-v614"
 fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30306:14975:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v614"
+subject = "var:investeringar-planerade-transportmedel-rullande-v614"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Id överskrider 60 tecken; källkolumnen behövs för att skilja lika etiketter.\ncatalog:variable_text:30306:14975:17532"
 

@@ -1081,25 +1081,25 @@ evidence = "Familjens prefix sta är en källkod; etiketten anger objektsbortfal
 
 [[statement]]
 kind = "set"
-subject = "var:sta-fordeladareal"
+subject = "var:total-starkelsepotatisareal-enligt-brukaren"
 fields = { "sets" = ["total-potatisareal-enligt-brukaren"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger brukarens totala stärkelsepotatisareal.\ncatalog:occurrence:438145\ncatalog:variable_text:42143:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-fordeladareal"
+subject = "var:total-starkelsepotatisareal-enligt-brukaren"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger brukarens totala stärkelsepotatisareal.\ncatalog:occurrence:438145\ncatalog:variable_text:42143:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-hektarskordkg"
+subject = "var:starkelsepotatisskord-per-skordad-hektar"
 fields = { "sets" = [] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-hektarskordkg"
+subject = "var:starkelsepotatisskord-per-skordad-hektar"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
 
@@ -1117,13 +1117,13 @@ evidence = "Familjens prefix sta är en källkod; LillaN är antalet utvalda fö
 
 [[statement]]
 kind = "set"
-subject = "var:sta-obargadareal"
+subject = "var:obargad-areal-starkelsepotatis"
 fields = { "sets" = [] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stärkelsepotatisareal.\ncatalog:occurrence:438148\ncatalog:variable_text:42146:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-obargadareal"
+subject = "var:obargad-areal-starkelsepotatis"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stärkelsepotatisareal.\ncatalog:occurrence:438148\ncatalog:variable_text:42146:19723:20089"
 
@@ -1165,37 +1165,37 @@ evidence = "Familjens prefix sta är en källkod; etiketten och definitionen ang
 
 [[statement]]
 kind = "set"
-subject = "var:sta-osattareal"
+subject = "var:osatt-areal-starkelsepotatis"
 fields = { "sets" = ["osatt-potatisareal"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger osatt stärkelsepotatisareal.\ncatalog:occurrence:438152\ncatalog:variable_text:42150:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-osattareal"
+subject = "var:osatt-areal-starkelsepotatis"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger osatt stärkelsepotatisareal.\ncatalog:occurrence:438152\ncatalog:variable_text:42150:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-partielltbortfall"
+subject = "var:partiellt-bortfall-av-starkelsepotatis"
 fields = { "sets" = ["partiellt-bortfall"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger partiellt bortfall.\ncatalog:occurrence:438153\ncatalog:variable_text:42151:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-partielltbortfall"
+subject = "var:partiellt-bortfall-av-starkelsepotatis"
 fields = { "tags" = ["methods"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger partiellt bortfall.\ncatalog:occurrence:438153\ncatalog:variable_text:42151:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-skordadareal"
+subject = "var:skordad-areal-av-starkelsepotatis"
 fields = { "sets" = ["skordad-potatisareal"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger skördad stärkelsepotatisareal.\ncatalog:occurrence:438154\ncatalog:variable_text:42152:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-skordadareal"
+subject = "var:skordad-areal-av-starkelsepotatis"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger skördad stärkelsepotatisareal.\ncatalog:occurrence:438154\ncatalog:variable_text:42152:19723:20089"
 
@@ -1237,13 +1237,13 @@ evidence = "Familjens prefix sta är en källkod; etiketten och definitionen ang
 
 [[statement]]
 kind = "set"
-subject = "var:sta-totalskordton"
+subject = "var:total-starkelsepotatisskord"
 fields = { "sets" = ["total-potatisskord"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger total stärkelsepotatisskörd.\ncatalog:occurrence:438158\ncatalog:variable_text:42156:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-totalskordton"
+subject = "var:total-starkelsepotatisskord"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger total stärkelsepotatisskörd.\ncatalog:occurrence:438158\ncatalog:variable_text:42156:19723:20089"
 

@@ -295,13 +295,13 @@ evidence = "Motoreffekt beskriver fordonet.\ncatalog:variable_text:45877:10957:1
 
 [[statement]]
 kind = "set"
-subject = "var:elnat"
+subject = "var:fordonets-nationalitet-personbil-buss-lastbil"
 fields = { "sets" = [] }
 evidence = "ELNAT är en källmnemonik; familjen eln* behandlas enhetligt som opak. Variabeln kodar fordonets nationalitet.\ncatalog:valueset:12444\ncatalog:variable_text:45878:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:elnat"
+subject = "var:fordonets-nationalitet-personbil-buss-lastbil"
 fields = { "tags" = ["transport"] }
 evidence = "ELNAT är en källmnemonik; familjen eln* behandlas enhetligt som opak. Variabeln kodar fordonets nationalitet.\ncatalog:valueset:12444\ncatalog:variable_text:45878:10957:12053"
 
@@ -343,13 +343,13 @@ evidence = "Färgen avser motorfordon.\ncatalog:variable_text:45883:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:fgods"
+subject = "var:farligt-gods"
 fields = { "sets" = [] }
 evidence = "Den ensamma bokstaven f är en opak förkortning av farligt.\ncatalog:variable_text:45884:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:fgods"
+subject = "var:farligt-gods"
 fields = { "tags" = ["transport"] }
 evidence = "Den ensamma bokstaven f är en opak förkortning av farligt.\ncatalog:variable_text:45884:10957:12053"
 
@@ -367,13 +367,13 @@ evidence = "Olyckans svåraste följd och personskadekoden beskriver skadans sv�
 
 [[statement]]
 kind = "set"
-subject = "var:forarehemvarn"
+subject = "var:postnummer-for-forarens-adress"
 fields = { "sets" = [] }
 evidence = "Hemvarn motsvarar inte adress eller postnummer och är en opak källförkortning.\ncatalog:variable_text:45886:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:forarehemvarn"
+subject = "var:postnummer-for-forarens-adress"
 fields = { "tags" = ["geography"] }
 evidence = "Hemvarn motsvarar inte adress eller postnummer och är en opak källförkortning.\ncatalog:variable_text:45886:10957:12053"
 
@@ -391,13 +391,13 @@ evidence = "Kodningen beskriver ägarrelationen för ett fordon.\ncatalog:values
 
 [[statement]]
 kind = "set"
-subject = "var:forh"
+subject = "var:hinder-pa-vagbanan"
 fields = { "sets" = [] }
 evidence = "Förh är en opak källkod för hinder på vägbanan.\ncatalog:variable_text:45888:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:forh"
+subject = "var:hinder-pa-vagbanan"
 fields = { "tags" = ["transport"] }
 evidence = "Förh är en opak källkod för hinder på vägbanan.\ncatalog:variable_text:45888:10957:12053"
 
@@ -535,49 +535,49 @@ evidence = "Modellkoden beskriver fordonet.\ncatalog:variable_text:45902:10957:1
 
 [[statement]]
 kind = "set"
-subject = "var:oar"
+subject = "var:olycksar"
 fields = { "sets" = ["olyckstidpunkt"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45904:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:oar"
+subject = "var:olycksar"
 fields = { "tags" = [] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45904:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:odatdag"
+subject = "var:olycksdatum-dag"
 fields = { "sets" = ["olyckstidpunkt"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45905:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:odatdag"
+subject = "var:olycksdatum-dag"
 fields = { "tags" = [] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45905:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:odatman"
+subject = "var:olycksdatum-manad"
 fields = { "sets" = ["olyckstidpunkt"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45906:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:odatman"
+subject = "var:olycksdatum-manad"
 fields = { "tags" = [] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45906:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:oklock"
+subject = "var:tidpunkt-for-olyckan-tim-min"
 fields = { "sets" = ["olyckstidpunkt"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45908:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:oklock"
+subject = "var:tidpunkt-for-olyckan-tim-min"
 fields = { "tags" = [] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45908:10957:12053"
 
@@ -607,13 +607,13 @@ evidence = "Områdeskoden beskriver olycksplatsens trafikmiljö.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:otyp"
+subject = "var:olyckstyp"
 fields = { "sets" = ["olyckstyp"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45911:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:otyp"
+subject = "var:olyckstyp"
 fields = { "tags" = ["transport"] }
 evidence = "O är en ensam bokstavskod för olycka.\ncatalog:variable_text:45911:10957:12053"
 
@@ -631,37 +631,37 @@ evidence = "Kolumnernas ägare växlar mellan olika begrepp.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:pddistr"
+subject = "var:polisdistrikt"
 fields = { "sets" = ["polisens-omradesindelning"] }
 evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45913:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:pddistr"
+subject = "var:polisdistrikt"
 fields = { "tags" = ["geography"] }
 evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45913:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:pdomr"
+subject = "var:polisomrade"
 fields = { "sets" = ["polisens-omradesindelning"] }
 evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45915:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:pdomr"
+subject = "var:polisomrade"
 fields = { "tags" = ["geography"] }
 evidence = "PD är en opak bokstavskod för polis.\ncatalog:variable_text:45915:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:pskada"
+subject = "var:kod-for-personskada"
 fields = { "sets" = ["personskadans-svarighetsgrad"] }
 evidence = "P är en ensam bokstavskod för person.\ncatalog:variable_text:45920:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:pskada"
+subject = "var:kod-for-personskada"
 fields = { "tags" = ["health"] }
 evidence = "P är en ensam bokstavskod för person.\ncatalog:variable_text:45920:10957:12053"
 
@@ -739,25 +739,25 @@ evidence = "Traktorkort är särskild körbehörighet.\ncatalog:variable_text:45
 
 [[statement]]
 kind = "set"
-subject = "var:trfm"
+subject = "var:trafikmiljo"
 fields = { "sets" = ["olycksplatsens-trafikmiljo"] }
 evidence = "Trfm är en opak bokstavskod för trafikmiljö.\ncatalog:variable_text:45929:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:trfm"
+subject = "var:trafikmiljo"
 fields = { "tags" = ["transport"] }
 evidence = "Trfm är en opak bokstavskod för trafikmiljö.\ncatalog:variable_text:45929:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:u-behordatum"
+subject = "var:forsta-behorighetsdatum"
 fields = { "sets" = ["korkortets-behorighetsdatum"] }
 evidence = "U är en ensam bokstavskod för ursprunglig.\ncatalog:variable_text:45930:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:u-behordatum"
+subject = "var:forsta-behorighetsdatum"
 fields = { "tags" = [] }
 evidence = "U är en ensam bokstavskod för ursprunglig.\ncatalog:variable_text:45930:10957:12053"
 
@@ -775,13 +775,13 @@ evidence = "Samma kolumn är samtidigt kopplad till ursprunglig behörighet och 
 
 [[statement]]
 kind = "set"
-subject = "var:ugrupp"
+subject = "var:olyckstyp-undergrupp"
 fields = { "sets" = ["olyckstyp"] }
 evidence = "U är en ensam bokstavskod för undergrupp.\ncatalog:variable_text:45932:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:ugrupp"
+subject = "var:olyckstyp-undergrupp"
 fields = { "tags" = ["transport"] }
 evidence = "U är en ensam bokstavskod för undergrupp.\ncatalog:variable_text:45932:10957:12053"
 
@@ -835,25 +835,25 @@ evidence = "Växellådan beskriver fordonet.\ncatalog:variable_text:45938:10957:
 
 [[statement]]
 kind = "set"
-subject = "var:vdago"
+subject = "var:veckodag"
 fields = { "sets" = ["olyckstidpunkt"] }
 evidence = "VDAGO är en opak källkod för veckodag.\ncatalog:variable_text:45939:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:vdago"
+subject = "var:veckodag"
 fields = { "tags" = [] }
 evidence = "VDAGO är en opak källkod för veckodag.\ncatalog:variable_text:45939:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:ymark"
+subject = "var:yrkesmassig-trafik"
 fields = { "sets" = [] }
 evidence = "Ymark är en opak källkod för yrkesmässig trafik.\ncatalog:variable_text:45940:10957:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:ymark"
+subject = "var:yrkesmassig-trafik"
 fields = { "tags" = ["transport"] }
 evidence = "Ymark är en opak källkod för yrkesmässig trafik.\ncatalog:variable_text:45940:10957:12053"
 

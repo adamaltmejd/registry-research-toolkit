@@ -331,25 +331,25 @@ evidence = "Finansiella kostnader är en företagsredovisningspost.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:je-foretagsstatus"
+subject = "var:juridiska-enhetens-foretagsstatus"
 fields = { "sets" = [] }
 evidence = "JE är en bokstavskod för juridisk enhet.\ncatalog:variable_text:39503:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:je-foretagsstatus"
+subject = "var:juridiska-enhetens-foretagsstatus"
 fields = { "tags" = ["business"] }
 evidence = "JE är en bokstavskod för juridisk enhet.\ncatalog:variable_text:39503:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:je-status"
+subject = "var:juridiska-enhetens-status"
 fields = { "sets" = [] }
 evidence = "JE är en bokstavskod för juridisk enhet.\ncatalog:variable_text:39504:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:je-status"
+subject = "var:juridiska-enhetens-status"
 fields = { "tags" = ["business"] }
 evidence = "JE är en bokstavskod för juridisk enhet.\ncatalog:variable_text:39504:17532:19723"
 
@@ -475,25 +475,25 @@ evidence = "Nettoomsättning är ett företagsmått.\ncatalog:variable_text:3951
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "sets" = ["huvudsaklig-naringsgren"] }
 evidence = "Ng är en bokstavskod; 1 är en källkolumnsposition.\ncatalog:variable_text:39516:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod; 1 är en källkolumnsposition.\ncatalog:variable_text:39516:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1"
+subject = "var:naringsgren-for-statistiken-huvudsaklig"
 fields = { "sets" = ["huvudsaklig-naringsgren"] }
 evidence = "Ngs är en bokstavskod; 1 är en källkolumnsposition.\ncatalog:variable_text:39517:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1"
+subject = "var:naringsgren-for-statistiken-huvudsaklig"
 fields = { "tags" = ["business"] }
 evidence = "Ngs är en bokstavskod; 1 är en källkolumnsposition.\ncatalog:variable_text:39517:17532:19723"
 

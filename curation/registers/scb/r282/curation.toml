@@ -464,13 +464,13 @@ evidence = "Län är en geografisk indelning.\ncatalog:variable_text:6269:15706:
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "sets" = ["bostadskategori"] }
 evidence = "Lgh är en opak källförkortning för lägenhet; variabeln klassificerar lägenhetskategori.\ncatalog:valueset:394\ncatalog:variable_text:6270:15706:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "tags" = ["housing"] }
 evidence = "Lgh är en opak källförkortning för lägenhet; variabeln klassificerar lägenhetskategori.\ncatalog:valueset:394\ncatalog:variable_text:6270:15706:20089"
 

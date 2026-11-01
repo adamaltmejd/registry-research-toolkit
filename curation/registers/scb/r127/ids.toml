@@ -5,7 +5,7 @@ public = "kv"
 
 [variables]
 "ar-och-kvartal" = ["Privat och offentlig sektor: Kvartal @ 2005-01-01"]
-"avgkvar" = ["Privat och offentlig sektor: AvgKvar"]
+"antal-lediga-jobb-bemannade-av-avgaende-medarbetare" = ["Privat och offentlig sektor: AvgKvar"]
 "bemforetag-4924" = ["Privat och offentlig sektor: BemForetag"]
 "bemftg" = ["Privat och offentlig sektor: BemFtg"]
 "cfar-nummer" = ["Privat och offentlig sektor: CFarNr"]

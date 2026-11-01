@@ -1950,13 +1950,13 @@ evidence = "Geografisk region.\ncatalog:variable_text:56865:9131:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:sni"
+subject = "var:arbetsstallets-naringsgren-trestallig"
 fields = { "sets" = ["arbetsstallets-naringsgren"] }
 evidence = "SNI är en kod som inte förekommer i etiketten.\ncatalog:variable_text:56866:9131:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sni"
+subject = "var:arbetsstallets-naringsgren-trestallig"
 fields = { "tags" = ["business"] }
 evidence = "SNI är en kod som inte förekommer i etiketten.\ncatalog:variable_text:56866:9131:19358"
 
@@ -2058,13 +2058,13 @@ evidence = "Yrke enligt SSYK.\ncatalog:variable_text:56877:14610:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykar"
+subject = "var:artal-for-yrkesuppgift-for-forvarvsarbetande"
 fields = { "sets" = ["yrkesuppgiftens-ar"] }
 evidence = "SSYK är en kod som saknas i etiketten.\ncatalog:variable_text:56878:11323:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:ssykar"
+subject = "var:artal-for-yrkesuppgift-for-forvarvsarbetande"
 fields = { "tags" = [] }
 evidence = "SSYK är en kod som saknas i etiketten.\ncatalog:variable_text:56878:11323:17167"
 

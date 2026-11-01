@@ -367,13 +367,13 @@ evidence = "Föräldrapenningtillägget är en lönekomponent.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:hut"
+subject = "var:huvudtitel"
 fields = { "sets" = [] }
 evidence = "HUT är en opak bokstavskod för huvudtitel.\ncatalog:variable_text:43031:10227:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:hut"
+subject = "var:huvudtitel"
 fields = { "tags" = ["public-finance"] }
 evidence = "HUT är en opak bokstavskod för huvudtitel.\ncatalog:variable_text:43031:10227:13149"
 
@@ -559,13 +559,13 @@ evidence = "Tillägg för obekväm tid är ett arbetstidsberoende lönetillägg.
 
 [[statement]]
 kind = "set"
-subject = "var:objourber"
+subject = "var:arbetstidsberoende-tillagg"
 fields = { "sets" = ["arbetstidsberoende-lonetillagg", "lonetillagg"] }
 evidence = "Id är en källmnemonik för komponenter, medan etiketten anger det samlade tillägget.\ncatalog:variable_text:43049:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:objourber"
+subject = "var:arbetstidsberoende-tillagg"
 fields = { "tags" = ["income"] }
 evidence = "Id är en källmnemonik för komponenter, medan etiketten anger det samlade tillägget.\ncatalog:variable_text:43049:9496:20089"
 
@@ -679,25 +679,25 @@ evidence = "Semestertillägg är en lönekomponent.\ncatalog:variable_text:43062
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "sets" = [] }
 evidence = "SNI är en klassifikationskod som inte förekommer i etiketten näringsgren.\ncatalog:variable_text:43063:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "tags" = ["business"] }
 evidence = "SNI är en klassifikationskod som inte förekommer i etiketten näringsgren.\ncatalog:variable_text:43063:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:spop"
+subject = "var:sysselsattningspopulation"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Spop är en opak källmnemonik för sysselsättningspopulation.\ncatalog:variable_text:43064:15706:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:spop"
+subject = "var:sysselsattningspopulation"
 fields = { "tags" = ["employment"] }
 evidence = "Spop är en opak källmnemonik för sysselsättningspopulation.\ncatalog:variable_text:43064:15706:20089"
 

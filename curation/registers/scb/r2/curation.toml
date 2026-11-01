@@ -3079,13 +3079,13 @@ evidence = "A-region är en geografisk indelning med en tidigare motsvarighet.\n
 
 [[statement]]
 kind = "set"
-subject = "var:aboebo"
+subject = "var:boende-under-asyltiden"
 fields = { "sets" = [] }
 evidence = "ABOEBO är en opak källkod; etiketten anger boende under asyltiden.\ncatalog:variable_text:41605:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aboebo"
+subject = "var:boende-under-asyltiden"
 fields = { "tags" = ["housing"] }
 evidence = "ABOEBO är en opak källkod; etiketten anger boende under asyltiden.\ncatalog:variable_text:41605:20453:20454"
 
@@ -4099,25 +4099,25 @@ evidence = "Datumet avser immigration och hör till invandringsdatum.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:datumap1"
+subject = "var:datum-annan-person-1"
 fields = { "sets" = ["datum-annan-person"] }
 evidence = "AP är en bokstavskod för annan person; position 1 kommer från källkolumnen.\ncatalog:variable_text:41696:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:datumap1"
+subject = "var:datum-annan-person-1"
 fields = { "tags" = [] }
 evidence = "AP är en bokstavskod för annan person; position 1 kommer från källkolumnen.\ncatalog:variable_text:41696:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:datumap2"
+subject = "var:datum-annan-person-2"
 fields = { "sets" = ["datum-annan-person"] }
 evidence = "AP är en bokstavskod för annan person; position 2 kommer från källkolumnen.\ncatalog:variable_text:41697:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:datumap2"
+subject = "var:datum-annan-person-2"
 fields = { "tags" = [] }
 evidence = "AP är en bokstavskod för annan person; position 2 kommer från källkolumnen.\ncatalog:variable_text:41697:20453:20454"
 
@@ -4171,13 +4171,13 @@ evidence = "Faderns distriktskod hör till distriktsgruppen.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:distriktskodg"
+subject = "var:distrikt-tidigare"
 fields = { "sets" = ["distrikt"] }
 evidence = "G är en enskild källbokstav för tidigare distrikt.\ncatalog:variable_text:41702:20454:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:distriktskodg"
+subject = "var:distrikt-tidigare"
 fields = { "tags" = ["geography"] }
 evidence = "G är en enskild källbokstav för tidigare distrikt.\ncatalog:variable_text:41702:20454:2932897"
 

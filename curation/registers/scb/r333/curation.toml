@@ -1165,13 +1165,13 @@ evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy 
 
 [[statement]]
 kind = "set"
-subject = "var:personnrap1"
+subject = "var:personnummer-annan-person-1"
 fields = { "sets" = ["personnrap"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:21"
 
 [[statement]]
 kind = "set"
-subject = "var:personnrap2"
+subject = "var:personnummer-annan-person-2"
 fields = { "sets" = ["personnrap"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:21"
 
@@ -3601,13 +3601,13 @@ evidence = "Identifierare för biologisk mor.\ncatalog:occurrence-locators:varia
 
 [[statement]]
 kind = "set"
-subject = "var:personnrg"
+subject = "var:personnummer-tidigare"
 fields = { "sets" = ["barnets-personnummer"] }
 evidence = "G är en ogenomskinlig enbokstavskod från källkolumnen; etiketten anger tidigare personnummer.\ncatalog:occurrence-locators:variable:6587\ncatalog:variable_text:6587:19722:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:personnrg"
+subject = "var:personnummer-tidigare"
 fields = { "tags" = [] }
 evidence = "G är en ogenomskinlig enbokstavskod från källkolumnen; etiketten anger tidigare personnummer.\ncatalog:occurrence-locators:variable:6587\ncatalog:variable_text:6587:19722:19723"
 
@@ -3673,13 +3673,13 @@ evidence = "Samkönad familj är en familjetyp.\ncatalog:occurrence-locators:var
 
 [[statement]]
 kind = "set"
-subject = "var:scb-upplatform"
+subject = "var:bostadens-upplatelseform"
 fields = { "sets" = [] }
 evidence = "SCB är en källprefixkod som saknas i etiketten.\ncatalog:occurrence-locators:variable:6595\ncatalog:variable_text:6595:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:scb-upplatform"
+subject = "var:bostadens-upplatelseform"
 fields = { "tags" = ["housing"] }
 evidence = "SCB är en källprefixkod som saknas i etiketten.\ncatalog:occurrence-locators:variable:6595\ncatalog:variable_text:6595:20088:20089"
 
@@ -4273,13 +4273,13 @@ evidence = "Kodningen anger svensk eller utländsk bakgrund.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-lgh"
+subject = "var:lagenhetens-identitetsnummer"
 fields = { "sets" = ["lagenhetsidentitet"] }
 evidence = "UUID är en källkod som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:6647\ncatalog:variable_text:6647:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-lgh"
+subject = "var:lagenhetens-identitetsnummer"
 fields = { "tags" = [] }
 evidence = "UUID är en källkod som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:6647\ncatalog:variable_text:6647:20088:20089"
 

@@ -43,109 +43,109 @@ evidence = "Designvikten är en undersökningsvikt.\ncatalog:variable_text:44673
 
 [[statement]]
 kind = "set"
-subject = "var:f01"
+subject = "var:avsikt-att-lasa-vidare"
 fields = { "sets" = [] }
 evidence = "F01 är en opak frågekod.\ncatalog:variable_text:44674:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f01"
+subject = "var:avsikt-att-lasa-vidare"
 fields = { "tags" = ["education"] }
 evidence = "F01 är en opak frågekod.\ncatalog:variable_text:44674:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-1"
+subject = "var:andra-erfarenheter"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-1 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44675:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-1"
+subject = "var:andra-erfarenheter"
 fields = { "tags" = ["education"] }
 evidence = "F02-1 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44675:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-2"
+subject = "var:inte-behorig"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-2 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44676:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-2"
+subject = "var:inte-behorig"
 fields = { "tags" = ["education"] }
 evidence = "F02-2 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44676:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-3"
+subject = "var:annan-sysselsattning"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-3 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44677:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-3"
+subject = "var:annan-sysselsattning"
 fields = { "tags" = ["education"] }
 evidence = "F02-3 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44677:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-4"
+subject = "var:otillrackliga-betyg"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-4 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44678:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-4"
+subject = "var:otillrackliga-betyg"
 fields = { "tags" = ["education"] }
 evidence = "F02-4 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44678:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-5"
+subject = "var:studieuppehall-prioriterades"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-5 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44679:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-5"
+subject = "var:studieuppehall-prioriterades"
 fields = { "tags" = ["education"] }
 evidence = "F02-5 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44679:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-6"
+subject = "var:vet-inte-studieamne"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-6 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44680:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-6"
+subject = "var:vet-inte-studieamne"
 fields = { "tags" = ["education"] }
 evidence = "F02-6 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44680:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-7"
+subject = "var:andra-skal"
 fields = { "sets" = ["skal-till-studieuppehall"] }
 evidence = "F02-7 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44681:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f02-7"
+subject = "var:andra-skal"
 fields = { "tags" = ["education"] }
 evidence = "F02-7 är en opak frågekod; variabeln anger ett skäl till studieuppehåll.\ncatalog:variable_text:44681:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f03"
+subject = "var:atersokande"
 fields = { "sets" = ["atersokande-till-utbildning"] }
 evidence = "F03 är en opak frågekod; variabeln avser återsökande.\ncatalog:variable_text:44682:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f03"
+subject = "var:atersokande"
 fields = { "tags" = ["education"] }
 evidence = "F03 är en opak frågekod; variabeln avser återsökande.\ncatalog:variable_text:44682:14061:14426"
 
@@ -163,25 +163,25 @@ evidence = "F04 är en opak frågekod; variabeln avser tidigare antagning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:f05-01"
+subject = "var:avstod-pga-utbildning"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-01 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44684:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-01"
+subject = "var:avstod-pga-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "F05-01 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44684:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-02"
+subject = "var:fel-ort"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-02 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44685:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-02"
+subject = "var:fel-ort"
 fields = { "tags" = ["education"] }
 evidence = "F05-02 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44685:14061:14426"
 
@@ -199,145 +199,145 @@ evidence = "F05-03 är en opak frågekod; variabeln anger ett skäl att avstå.\
 
 [[statement]]
 kind = "set"
-subject = "var:f05-04"
+subject = "var:inget-boende"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-04 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44687:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-04"
+subject = "var:inget-boende"
 fields = { "tags" = ["education"] }
 evidence = "F05-04 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44687:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-05"
+subject = "var:ekonomiska-skal"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-05 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44688:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-05"
+subject = "var:ekonomiska-skal"
 fields = { "tags" = ["education"] }
 evidence = "F05-05 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44688:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-06"
+subject = "var:ej-studier-pga-arbete"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-06 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44689:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-06"
+subject = "var:ej-studier-pga-arbete"
 fields = { "tags" = ["education"] }
 evidence = "F05-06 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44689:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-07"
+subject = "var:ej-studier-pga-foraldraledighet"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-07 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44690:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-07"
+subject = "var:ej-studier-pga-foraldraledighet"
 fields = { "tags" = ["education"] }
 evidence = "F05-07 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44690:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-08"
+subject = "var:ej-studier-pga-varnplikt"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-08 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44691:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-08"
+subject = "var:ej-studier-pga-varnplikt"
 fields = { "tags" = ["education"] }
 evidence = "F05-08 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44691:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-09"
+subject = "var:ej-studier-pga-sjukdom"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-09 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44692:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-09"
+subject = "var:ej-studier-pga-sjukdom"
 fields = { "tags" = ["education"] }
 evidence = "F05-09 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44692:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-10"
+subject = "var:ej-studier-pga-annat"
 fields = { "sets" = ["skal-att-avsta-fran-studiestart"] }
 evidence = "F05-10 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44693:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f05-10"
+subject = "var:ej-studier-pga-annat"
 fields = { "tags" = ["education"] }
 evidence = "F05-10 är en opak frågekod; variabeln anger ett skäl att avstå.\ncatalog:variable_text:44693:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f06"
+subject = "var:atersokande-samma"
 fields = { "sets" = ["atersokande-till-utbildning"] }
 evidence = "F06 är en opak frågekod; variabeln avser återsökande.\ncatalog:variable_text:44694:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f06"
+subject = "var:atersokande-samma"
 fields = { "tags" = ["education"] }
 evidence = "F06 är en opak frågekod; variabeln avser återsökande.\ncatalog:variable_text:44694:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-1"
+subject = "var:hogre-utbildning-for-yrket"
 fields = { "sets" = ["motiv-till-studier"] }
 evidence = "F07-1 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44695:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-1"
+subject = "var:hogre-utbildning-for-yrket"
 fields = { "tags" = ["education"] }
 evidence = "F07-1 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44695:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-2"
+subject = "var:intresse-for-studieamnet"
 fields = { "sets" = ["motiv-till-studier"] }
 evidence = "F07-2 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44696:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-2"
+subject = "var:intresse-for-studieamnet"
 fields = { "tags" = ["education"] }
 evidence = "F07-2 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44696:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-3"
+subject = "var:forbattra-mojligheterna-pa-arbetsmarknaden"
 fields = { "sets" = ["motiv-till-studier"] }
 evidence = "F07-3 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44697:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-3"
+subject = "var:forbattra-mojligheterna-pa-arbetsmarknaden"
 fields = { "tags" = ["education"] }
 evidence = "F07-3 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44697:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-4"
+subject = "var:studera-pga-arbetsloshet"
 fields = { "sets" = ["motiv-till-studier"] }
 evidence = "F07-4 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44698:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-4"
+subject = "var:studera-pga-arbetsloshet"
 fields = { "tags" = ["education"] }
 evidence = "F07-4 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44698:14061:14426"
 
@@ -355,13 +355,13 @@ evidence = "F07-5 är en opak frågekod; variabeln anger ett studiemotiv.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:f07-6"
+subject = "var:studier-pga-andra-skal"
 fields = { "sets" = ["motiv-till-studier"] }
 evidence = "F07-6 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44700:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f07-6"
+subject = "var:studier-pga-andra-skal"
 fields = { "tags" = ["education"] }
 evidence = "F07-6 är en opak frågekod; variabeln anger ett studiemotiv.\ncatalog:variable_text:44700:14061:14426"
 
@@ -475,73 +475,73 @@ evidence = "F10-04 är en opak frågekod. Etiketten delas med andra periodfrågo
 
 [[statement]]
 kind = "set"
-subject = "var:f11"
+subject = "var:last-upp-betyg"
 fields = { "sets" = ["komplettering-av-gymnasieutbildning"] }
 evidence = "F11 är en opak frågekod; variabeln avser uppläsning av betyg.\ncatalog:variable_text:44710:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f11"
+subject = "var:last-upp-betyg"
 fields = { "tags" = ["education"] }
 evidence = "F11 är en opak frågekod; variabeln avser uppläsning av betyg.\ncatalog:variable_text:44710:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-01"
+subject = "var:komplettering-pa-komvux"
 fields = { "sets" = ["komplettering-av-gymnasieutbildning"] }
 evidence = "F12-01 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44711:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-01"
+subject = "var:komplettering-pa-komvux"
 fields = { "tags" = ["education"] }
 evidence = "F12-01 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44711:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-02"
+subject = "var:komplettering-pa-basar"
 fields = { "sets" = ["komplettering-av-gymnasieutbildning"] }
 evidence = "F12-02 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44712:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-02"
+subject = "var:komplettering-pa-basar"
 fields = { "tags" = ["education"] }
 evidence = "F12-02 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44712:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-03"
+subject = "var:komplettering-annat-satt"
 fields = { "sets" = ["komplettering-av-gymnasieutbildning"] }
 evidence = "F12-03 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44713:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-03"
+subject = "var:komplettering-annat-satt"
 fields = { "tags" = ["education"] }
 evidence = "F12-03 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44713:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-ver2"
+subject = "var:komplettering-av-gymnasieutbildning"
 fields = { "sets" = ["komplettering-av-gymnasieutbildning"] }
 evidence = "F12-ver2 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44714:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-ver2"
+subject = "var:komplettering-av-gymnasieutbildning"
 fields = { "tags" = ["education"] }
 evidence = "F12-ver2 är en opak frågekod; variabeln avser komplettering.\ncatalog:variable_text:44714:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f13"
+subject = "var:hogskoleprov"
 fields = { "sets" = [] }
 evidence = "F13 är en opak frågekod.\ncatalog:variable_text:44715:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f13"
+subject = "var:hogskoleprov"
 fields = { "tags" = ["education"] }
 evidence = "F13 är en opak frågekod.\ncatalog:variable_text:44715:14061:14426"
 
@@ -619,49 +619,49 @@ evidence = "F16-ver2 är en opak frågekod. Etiketten delas med andra frågor oc
 
 [[statement]]
 kind = "set"
-subject = "var:f17-1"
+subject = "var:forlorad-kunskap"
 fields = { "sets" = ["upplevda-foljder-av-studieuppehall"] }
 evidence = "F17-1 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44722:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-1"
+subject = "var:forlorad-kunskap"
 fields = { "tags" = ["education"] }
 evidence = "F17-1 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44722:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-2"
+subject = "var:forlorad-studievana"
 fields = { "sets" = ["upplevda-foljder-av-studieuppehall"] }
 evidence = "F17-2 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44723:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-2"
+subject = "var:forlorad-studievana"
 fields = { "tags" = ["education"] }
 evidence = "F17-2 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44723:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-3"
+subject = "var:kunskap-fran-studieuppehall"
 fields = { "sets" = ["upplevda-foljder-av-studieuppehall"] }
 evidence = "F17-3 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44724:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-3"
+subject = "var:kunskap-fran-studieuppehall"
 fields = { "tags" = ["education"] }
 evidence = "F17-3 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44724:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-4"
+subject = "var:erfarenheter-av-studieuppehall"
 fields = { "sets" = ["upplevda-foljder-av-studieuppehall"] }
 evidence = "F17-4 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44725:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-4"
+subject = "var:erfarenheter-av-studieuppehall"
 fields = { "tags" = ["education"] }
 evidence = "F17-4 är en opak frågekod; variabeln avser upplevd följd av uppehållet.\ncatalog:variable_text:44725:14061:14426"
 
@@ -679,109 +679,109 @@ evidence = "F18 är en opak frågekod; variabeln anger utbildningstyp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:planerad-studiegang"
 fields = { "sets" = [] }
 evidence = "F19 är en opak frågekod.\ncatalog:variable_text:44727:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:planerad-studiegang"
 fields = { "tags" = ["education"] }
 evidence = "F19 är en opak frågekod.\ncatalog:variable_text:44727:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f20"
+subject = "var:foljt-studiegangen"
 fields = { "sets" = [] }
 evidence = "F20 är en opak frågekod.\ncatalog:variable_text:44728:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f20"
+subject = "var:foljt-studiegangen"
 fields = { "tags" = ["education"] }
 evidence = "F20 är en opak frågekod.\ncatalog:variable_text:44728:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:avsikt-att-lasa-klart"
 fields = { "sets" = [] }
 evidence = "F21 är en opak frågekod.\ncatalog:variable_text:44729:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:avsikt-att-lasa-klart"
 fields = { "tags" = ["education"] }
 evidence = "F21 är en opak frågekod.\ncatalog:variable_text:44729:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f22"
+subject = "var:skal-till-studieavbrott"
 fields = { "sets" = [] }
 evidence = "F22 är en opak frågekod.\ncatalog:variable_text:44730:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f22"
+subject = "var:skal-till-studieavbrott"
 fields = { "tags" = ["education"] }
 evidence = "F22 är en opak frågekod.\ncatalog:variable_text:44730:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-01"
+subject = "var:utbildningsbyte-universitet"
 fields = { "sets" = ["utbildningsbyte"] }
 evidence = "F23-01 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44731:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-01"
+subject = "var:utbildningsbyte-universitet"
 fields = { "tags" = ["education"] }
 evidence = "F23-01 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44731:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-02"
+subject = "var:utbildningsbyte-yrkesutbildning"
 fields = { "sets" = ["utbildningsbyte"] }
 evidence = "F23-02 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44732:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-02"
+subject = "var:utbildningsbyte-yrkesutbildning"
 fields = { "tags" = ["education"] }
 evidence = "F23-02 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44732:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-03"
+subject = "var:utbildningsbyte-folkhogskola"
 fields = { "sets" = ["utbildningsbyte"] }
 evidence = "F23-03 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44733:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-03"
+subject = "var:utbildningsbyte-folkhogskola"
 fields = { "tags" = ["education"] }
 evidence = "F23-03 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44733:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-04"
+subject = "var:utbildningsbyte-komvux"
 fields = { "sets" = ["utbildningsbyte"] }
 evidence = "F23-04 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44734:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-04"
+subject = "var:utbildningsbyte-komvux"
 fields = { "tags" = ["education"] }
 evidence = "F23-04 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44734:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-ver2"
+subject = "var:utbildningsbyte"
 fields = { "sets" = ["utbildningsbyte"] }
 evidence = "F23-ver2 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44735:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-ver2"
+subject = "var:utbildningsbyte"
 fields = { "tags" = ["education"] }
 evidence = "F23-ver2 är en opak frågekod; variabeln avser utbildningsbyte.\ncatalog:variable_text:44735:14061:14426"
 
@@ -823,13 +823,13 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:44738:14061:
 
 [[statement]]
 kind = "set"
-subject = "var:regpgrp"
+subject = "var:registrerade-hogskolepoang"
 fields = { "sets" = [] }
 evidence = "Regpgrp är en opak källmnemonik.\ncatalog:variable_text:44740:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:regpgrp"
+subject = "var:registrerade-hogskolepoang"
 fields = { "tags" = ["education"] }
 evidence = "Regpgrp är en opak källmnemonik.\ncatalog:variable_text:44740:14061:14426"
 
@@ -859,13 +859,13 @@ evidence = "Variabeln anger faderns utbildningsnivå.\ncatalog:variable_text:447
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-grov-up"
+subject = "var:utbildningsniva-grov"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Up är en opak bokstavskod för undersökningspersonen.\ncatalog:variable_text:44743:14061:14426"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-grov-up"
+subject = "var:utbildningsniva-grov"
 fields = { "tags" = ["education"] }
 evidence = "Up är en opak bokstavskod för undersökningspersonen.\ncatalog:variable_text:44743:14061:14426"
 

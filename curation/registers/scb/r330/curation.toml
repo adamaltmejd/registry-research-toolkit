@@ -241,12 +241,12 @@ evidence = "Variabeln beskriver typ av finansiellt instrument.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:vpsort"
+subject = "var:vardepapperssort"
 fields = { "sets" = [] }
 evidence = "VP är en källkodsförkortning för värdepapper och id är därmed opakt.\ncatalog:variable_text:1438:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:vpsort"
+subject = "var:vardepapperssort"
 fields = { "tags" = ["finance"] }
 evidence = "VP är en källkodsförkortning för värdepapper och id är därmed opakt.\ncatalog:variable_text:1438:17167:20454"

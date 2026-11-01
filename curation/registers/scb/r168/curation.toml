@@ -2373,61 +2373,61 @@ evidence = "Källkoden är ogenomskinlig; etiketten anger bostadsdelen av brutto
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0111"
+subject = "var:arets-resultat"
 fields = { "sets" = ["redovisat-slutresultat"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger årets resultat.\ncatalog:variable_text:10655:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0111"
+subject = "var:arets-resultat"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger årets resultat.\ncatalog:variable_text:10655:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0113"
+subject = "var:periodiseringsfond"
 fields = { "sets" = ["obeskattade-reserver", "periodiseringsfond"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger periodiseringsfond. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte periodiseringsfondens belopp eller förändring. membership-0118: Både periodiseringsfondens belopp och dess förändring omfattas uttryckligen. membership-0119: Bokslutsdispositionernas totalsumma innehåller även andra poster och är inte ett separat fondbelopp eller en separat fondförändring. membership-0120: Ingen vald variabel i sektionen avser periodiseringsfond. membership-0121: Ingen sektionsvariabel mäter periodiseringsfond eller dess förändring. membership-0122: Ingen vald variabel i sektionen avser periodiseringsfondens belopp eller förändring. membership-0123: Ingen vald variabel i denna sektion mäter periodiseringsfondens belopp eller förändring.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10677:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0113"
+subject = "var:periodiseringsfond"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger periodiseringsfond. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte obeskattade reserver eller deras beståndsdelar. membership-0118: Totalsumman och de namngivna reservstockarna omfattas; årets förändringar utesluts. membership-0119: Valda bokslutsdispositioner är förändringsposter och valda egna kapitalposter är inte obeskattade reserver. membership-0120: Ingen vald variabel i sektionen avser obeskattade reserver. membership-0121: Ingen sektionsvariabel mäter obeskattade reserver eller deras beståndsdelar. membership-0122: Ingen vald variabel i sektionen avser obeskattade reservers stockar. membership-0123: Ingen vald variabel i denna sektion mäter obeskattade reserver eller deras beståndsdelar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte periodiseringsfondens belopp eller förändring. membership-0118: Både periodiseringsfondens belopp och dess förändring omfattas uttryckligen. membership-0119: Bokslutsdispositionernas totalsumma innehåller även andra poster och är inte ett separat fondbelopp eller en separat fondförändring. membership-0120: Ingen vald variabel i sektionen avser periodiseringsfond. membership-0121: Ingen sektionsvariabel mäter periodiseringsfond eller dess förändring. membership-0122: Ingen vald variabel i sektionen avser periodiseringsfondens belopp eller förändring. membership-0123: Ingen vald variabel i denna sektion mäter periodiseringsfondens belopp eller förändring.\ncatalog:variable_text:10561:18993:19723\ncatalog:variable_text:10602:18993:19723\ncatalog:variable_text:10641:18993:19723\ncatalog:variable_text:10656:18993:19723\ncatalog:variable_text:10677:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10693:18993:19723\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10826:18993:19723\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10880:18993:19723\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0122"
+subject = "var:langfristiga-skulder-till-koncern-och-intresseforetag"
 fields = { "sets" = ["langfristiga-skulder"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger långfristiga skulder till koncern- och intresseföretag.\ncatalog:variable_text:10657:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0122"
+subject = "var:langfristiga-skulder-till-koncern-och-intresseforetag"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger långfristiga skulder till koncern- och intresseföretag.\ncatalog:variable_text:10657:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0124"
+subject = "var:kortfristiga-skulder-hos-koncern-och-intresseforetag"
 fields = { "sets" = ["kortfristiga-skulder"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger kortfristiga skulder hos koncern- och intresseföretag.\ncatalog:variable_text:10658:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb0124"
+subject = "var:kortfristiga-skulder-hos-koncern-och-intresseforetag"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger kortfristiga skulder hos koncern- och intresseföretag.\ncatalog:variable_text:10658:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb232"
+subject = "var:summa-aktier-och-andelar-i-koncern-och-intresseforetag"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier och andelar.\ncatalog:variable_text:10659:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb232"
+subject = "var:summa-aktier-och-andelar-i-koncern-och-intresseforetag"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier och andelar.\ncatalog:variable_text:10659:18993:19723"
 
@@ -2457,25 +2457,25 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläg
 
 [[statement]]
 kind = "set"
-subject = "var:fgb243"
+subject = "var:andra-langfristiga-vardepappersinnehav"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger andra långfristiga värdepappersinnehav. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte innehav av aktier eller andelar. membership-0118: De inkluderade posterna anger uttryckligen aktier eller ägarandelar. Fgb243 omfattar även andra värdepapper och hålls utanför den fasta avgränsningen. membership-0119: Den historiska leveranskolumnen anger långfristiga aktier och andelar och omfattas av innehavsdefinitionen. membership-0120: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0121: Ingen variabel i denna sektion avser innehav av aktier eller andelar. membership-0122: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0123: Ingen vald variabel i denna sektion mäter innehav av aktier eller andelar.\ncatalog:variable_text:10566:12053:13514\ncatalog:variable_text:10567:12053:13514\ncatalog:variable_text:10568:12053:13514\ncatalog:variable_text:10571:18993:19723\ncatalog:variable_text:10572:18993:19723\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10659:18993:19723\ncatalog:variable_text:10662:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10760:9862:12053\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb243"
+subject = "var:andra-langfristiga-vardepappersinnehav"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger andra långfristiga värdepappersinnehav. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler mäter inte innehav av aktier eller andelar. membership-0118: De inkluderade posterna anger uttryckligen aktier eller ägarandelar. Fgb243 omfattar även andra värdepapper och hålls utanför den fasta avgränsningen. membership-0119: Den historiska leveranskolumnen anger långfristiga aktier och andelar och omfattas av innehavsdefinitionen. membership-0120: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0121: Ingen variabel i denna sektion avser innehav av aktier eller andelar. membership-0122: Ingen vald variabel i sektionen avser innehav av aktier eller andelar. membership-0123: Ingen vald variabel i denna sektion mäter innehav av aktier eller andelar.\ncatalog:variable_text:10566:12053:13514\ncatalog:variable_text:10567:12053:13514\ncatalog:variable_text:10568:12053:13514\ncatalog:variable_text:10571:18993:19723\ncatalog:variable_text:10572:18993:19723\ncatalog:variable_text:10590:12053:18628\ncatalog:variable_text:10591:12053:17167\ncatalog:variable_text:10659:18993:19723\ncatalog:variable_text:10662:18993:19723\ncatalog:variable_text:10682:12053:13514\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10706:18993:19723\ncatalog:variable_text:10707:18993:19723\ncatalog:variable_text:10708:18993:19723\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10760:9862:12053\ncatalog:variable_text:10761:13149:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10886:18628:18993\ncatalog:variable_text:10888:18993:19723\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628\ncatalog:variable_text:10906:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb369-01"
+subject = "var:annan-kand-forandring-av-eget-kapital"
 fields = { "sets" = ["forandringar-av-eget-kapital"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger en annan känd kapitalförändring.\ncatalog:variable_text:10663:13149:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb369-01"
+subject = "var:annan-kand-forandring-av-eget-kapital"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger en annan känd kapitalförändring.\ncatalog:variable_text:10663:13149:18993"
 
@@ -2505,37 +2505,37 @@ evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av icke-fi
 
 [[statement]]
 kind = "set"
-subject = "var:fgr570"
+subject = "var:nedskrivning-av-finansiella-tillgangar-inkl-aterforing"
 fields = { "sets" = ["nedskrivningar-av-finansiella-tillgangar"] }
 evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av finansiella tillgångar inklusive återföring.\ncatalog:variable_text:10666:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr570"
+subject = "var:nedskrivning-av-finansiella-tillgangar-inkl-aterforing"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkolumnens kod är opak; etiketten anger nedskrivning av finansiella tillgångar inklusive återföring.\ncatalog:variable_text:10666:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr578"
+subject = "var:overavskrivningar-inkl-upplosning"
 fields = { "sets" = ["bokslutsdispositioner", "overavskrivningar"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger överavskrivningar inklusive upplösning.\ncatalog:variable_text:10667:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr578"
+subject = "var:overavskrivningar-inkl-upplosning"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger överavskrivningar inklusive upplösning.\ncatalog:variable_text:10667:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr579"
+subject = "var:resultat-fran-andelar-i-koncernforetag"
 fields = { "sets" = ["resultat-fran-agarandelar"] }
 evidence = "Källkolumnens kod är opak; etiketten anger resultat från andelar i koncernföretag.\ncatalog:variable_text:10668:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr579"
+subject = "var:resultat-fran-andelar-i-koncernforetag"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är opak; etiketten anger resultat från andelar i koncernföretag.\ncatalog:variable_text:10668:18993:19723"
 
@@ -2565,13 +2565,13 @@ evidence = "Id:t är en källkod; etiketten anger nedskrivningar av finansiella 
 
 [[statement]]
 kind = "set"
-subject = "var:fgr587"
+subject = "var:resultat-fran-ovriga-foretag-som-det-finns-ett-agarintresse"
 fields = { "sets" = ["resultat-fran-agarandelar"] }
 evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga företag med ägarintresse.\ncatalog:variable_text:10671:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr587"
+subject = "var:resultat-fran-ovriga-foretag-som-det-finns-ett-agarintresse"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga företag med ägarintresse.\ncatalog:variable_text:10671:18993:19723"
 
@@ -2769,37 +2769,37 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger den sammanslagna in
 
 [[statement]]
 kind = "set"
-subject = "var:fsum802"
+subject = "var:summa-finansiella-plusposter"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella plusposter.\ncatalog:variable_text:10688:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum802"
+subject = "var:summa-finansiella-plusposter"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella plusposter.\ncatalog:variable_text:10688:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum803"
+subject = "var:summa-finansiella-minusposter"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella minusposter.\ncatalog:variable_text:10689:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum803"
+subject = "var:summa-finansiella-minusposter"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av finansiella minusposter.\ncatalog:variable_text:10689:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum901"
+subject = "var:pagende-nyanlaggningar-och-forskott-avseende-materiella"
 fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av pågående nyanläggningar och förskott.\ncatalog:variable_text:10690:18993:19723\ncatalog:variable_text:10690:7305:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum901"
+subject = "var:pagende-nyanlaggningar-och-forskott-avseende-materiella"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summan av pågående nyanläggningar och förskott.\ncatalog:variable_text:10690:18993:19723\ncatalog:variable_text:10690:7305:9862"
 
@@ -2829,13 +2829,13 @@ evidence = "Källkolumnens kod är opak; etiketten anger summan av kortfristiga 
 
 [[statement]]
 kind = "set"
-subject = "var:fsum906"
+subject = "var:summa-fritt-eget-kapital"
 fields = { "sets" = ["eget-kapital"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summa fritt eget kapital.\ncatalog:variable_text:10693:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum906"
+subject = "var:summa-fritt-eget-kapital"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger summa fritt eget kapital.\ncatalog:variable_text:10693:18993:19723"
 
@@ -2877,13 +2877,13 @@ evidence = "Kodningen beskriver företagsenhetens funktion.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:huvar"
+subject = "var:summering-av-ekonomisk-fordelningsnyckel"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak; etiketten beskriver summeringen.\ncatalog:variable_text:10697:12053:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:huvar"
+subject = "var:summering-av-ekonomisk-fordelningsnyckel"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens kod är opak; etiketten beskriver summeringen.\ncatalog:variable_text:10697:12053:18628"
 
@@ -2961,13 +2961,13 @@ evidence = "Värdet avser råvarukostnader och är uttryckligen imputerat.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:infi"
+subject = "var:ingar-i-undersokningen-industrins-forbrukning-av-inkopta"
 fields = { "sets" = [] }
 evidence = "INFI är en opak akronym som inte förekommer i etiketten.\ncatalog:variable_text:10704:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:infi"
+subject = "var:ingar-i-undersokningen-industrins-forbrukning-av-inkopta"
 fields = { "tags" = ["methods"] }
 evidence = "INFI är en opak akronym som inte förekommer i etiketten.\ncatalog:variable_text:10704:12053:19723"
 
@@ -3345,13 +3345,13 @@ evidence = "Variabeln anger uppgiftskälla.\ncatalog:variable_text:10735:17897:1
 
 [[statement]]
 kind = "set"
-subject = "var:ivp"
+subject = "var:ingar-i-undersokningen-industrins-varuproduktion"
 fields = { "sets" = [] }
 evidence = "IVP är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10736:13514:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ivp"
+subject = "var:ingar-i-undersokningen-industrins-varuproduktion"
 fields = { "tags" = ["methods"] }
 evidence = "IVP är en källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10736:13514:19723"
 
@@ -3693,13 +3693,13 @@ evidence = "Leverantörsskulder är en kortfristig skuldpost.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:lgr520"
+subject = "var:ovriga-sociala-avgifter"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger övriga sociala avgifter.\ncatalog:variable_text:10765:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:lgr520"
+subject = "var:ovriga-sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger övriga sociala avgifter.\ncatalog:variable_text:10765:12784:13514"
 
@@ -4797,13 +4797,13 @@ evidence = "Posten omfattar sociala och andra personalkostnader.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:stg-gem"
+subject = "var:storleksgrupp-gem-stratum"
 fields = { "sets" = ["urvalsstratum"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:10861:15340:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:stg-gem"
+subject = "var:storleksgrupp-gem-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:10861:15340:18993"
 
@@ -5109,13 +5109,13 @@ evidence = "Variabeln mäter antal sysselsatta enligt RAMS.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:tff"
+subject = "var:ingar-i-undersokningen-tjansteforetagens-forbrukning"
 fields = { "sets" = [] }
 evidence = "TFF är en opak källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10887:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:tff"
+subject = "var:ingar-i-undersokningen-tjansteforetagens-forbrukning"
 fields = { "tags" = ["methods"] }
 evidence = "TFF är en opak källförkortning som inte förekommer i etiketten.\ncatalog:variable_text:10887:18993:19723"
 

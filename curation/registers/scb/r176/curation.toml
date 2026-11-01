@@ -241,13 +241,13 @@ evidence = "COICOP-koden ingår i konsumtionsklassificeringen.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:delk"
+subject = "var:typ-av-vara"
 fields = { "sets" = [] }
 evidence = "DELK är en ogenomskinlig källkod; etiketten anger varutyp.\ncatalog:variable_text:38225:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:delk"
+subject = "var:typ-av-vara"
 fields = { "tags" = ["business"] }
 evidence = "DELK är en ogenomskinlig källkod; etiketten anger varutyp.\ncatalog:variable_text:38225:16436:19723"
 
@@ -373,109 +373,109 @@ evidence = "FSG och AGSS är opaka källkoder; etiketten kolliderar med en annan
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-cgs"
+subject = "var:forsaljning-kedja-13"
 fields = { "sets" = [] }
 evidence = "FSG och CGS är opaka källkoder.\ncatalog:variable_text:38243:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-cgs"
+subject = "var:forsaljning-kedja-13"
 fields = { "tags" = ["business"] }
 evidence = "FSG och CGS är opaka källkoder.\ncatalog:variable_text:38243:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-ekos"
+subject = "var:forsaljning-kedja-12"
 fields = { "sets" = [] }
 evidence = "FSG och EKOS är opaka källkoder.\ncatalog:variable_text:38244:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-ekos"
+subject = "var:forsaljning-kedja-12"
 fields = { "tags" = ["business"] }
 evidence = "FSG och EKOS är opaka källkoder.\ncatalog:variable_text:38244:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-hems"
+subject = "var:forsaljning-kedja-6"
 fields = { "sets" = [] }
 evidence = "FSG och HEMS är opaka källkoder.\ncatalog:variable_text:38245:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-hems"
+subject = "var:forsaljning-kedja-6"
 fields = { "tags" = ["business"] }
 evidence = "FSG och HEMS är opaka källkoder.\ncatalog:variable_text:38245:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-icab"
+subject = "var:forsaljning-kedja-11"
 fields = { "sets" = [] }
 evidence = "FSG och ICAB är opaka källkoder.\ncatalog:variable_text:38246:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-icab"
+subject = "var:forsaljning-kedja-11"
 fields = { "tags" = ["business"] }
 evidence = "FSG och ICAB är opaka källkoder.\ncatalog:variable_text:38246:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-icas"
+subject = "var:forsaljning-kedja-10"
 fields = { "sets" = [] }
 evidence = "FSG och ICAS är opaka källkoder.\ncatalog:variable_text:38247:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-icas"
+subject = "var:forsaljning-kedja-10"
 fields = { "tags" = ["business"] }
 evidence = "FSG och ICAS är opaka källkoder.\ncatalog:variable_text:38247:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-kfb"
+subject = "var:forsaljning-kedja-9"
 fields = { "sets" = [] }
 evidence = "FSG och KFB är opaka källkoder.\ncatalog:variable_text:38248:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-kfb"
+subject = "var:forsaljning-kedja-9"
 fields = { "tags" = ["business"] }
 evidence = "FSG och KFB är opaka källkoder.\ncatalog:variable_text:38248:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-kfs"
+subject = "var:forsaljning-kedja-8"
 fields = { "sets" = [] }
 evidence = "FSG och KFS är opaka källkoder.\ncatalog:variable_text:38249:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-kfs"
+subject = "var:forsaljning-kedja-8"
 fields = { "tags" = ["business"] }
 evidence = "FSG och KFS är opaka källkoder.\ncatalog:variable_text:38249:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-lidls"
+subject = "var:forsaljning-kedja-1"
 fields = { "sets" = [] }
 evidence = "FSG och LIDLS är opaka källkoder.\ncatalog:variable_text:38250:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-lidls"
+subject = "var:forsaljning-kedja-1"
 fields = { "tags" = ["business"] }
 evidence = "FSG och LIDLS är opaka källkoder.\ncatalog:variable_text:38250:18262:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-pbs"
+subject = "var:forsaljning-kedja-2"
 fields = { "sets" = [] }
 evidence = "FSG och PBS är opaka källkoder.\ncatalog:variable_text:38251:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-pbs"
+subject = "var:forsaljning-kedja-2"
 fields = { "tags" = ["business"] }
 evidence = "FSG och PBS är opaka källkoder.\ncatalog:variable_text:38251:13879:16436"
 
@@ -493,49 +493,49 @@ evidence = "FSG och PXS är opaka källkoder; etiketten kolliderar med en annan 
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-ses"
+subject = "var:forsaljning-kedja-7"
 fields = { "sets" = [] }
 evidence = "FSG och SES är opaka källkoder.\ncatalog:variable_text:38253:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-ses"
+subject = "var:forsaljning-kedja-7"
 fields = { "tags" = ["business"] }
 evidence = "FSG och SES är opaka källkoder.\ncatalog:variable_text:38253:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-shs"
+subject = "var:forsaljning-shell"
 fields = { "sets" = [] }
 evidence = "FSG och SHS är opaka källkoder.\ncatalog:variable_text:38254:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-shs"
+subject = "var:forsaljning-shell"
 fields = { "tags" = ["business"] }
 evidence = "FSG och SHS är opaka källkoder.\ncatalog:variable_text:38254:13879:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-stb"
+subject = "var:forsaljning-kedja-3"
 fields = { "sets" = [] }
 evidence = "FSG och STB är opaka källkoder.\ncatalog:variable_text:38255:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-stb"
+subject = "var:forsaljning-kedja-3"
 fields = { "tags" = ["business"] }
 evidence = "FSG och STB är opaka källkoder.\ncatalog:variable_text:38255:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-tot"
+subject = "var:forsaljning-totalt"
 fields = { "sets" = [] }
 evidence = "FSG_TOT är en källkod. Variabeln mäter försäljningsbelopp.\ncatalog:occurrence-locators:variable:38256\ncatalog:variable_text:38256:14245:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-tot"
+subject = "var:forsaljning-totalt"
 fields = { "tags" = ["business"] }
 evidence = "FSG_TOT är en källkod. Variabeln mäter försäljningsbelopp.\ncatalog:occurrence-locators:variable:38256\ncatalog:variable_text:38256:14245:15340"
 
@@ -553,25 +553,25 @@ evidence = "FSG och VIS är opaka källkoder; etiketten kolliderar med en annan 
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-whs"
+subject = "var:forsaljning-kedja-5"
 fields = { "sets" = [] }
 evidence = "FSG och WHS är opaka källkoder.\ncatalog:variable_text:38258:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-whs"
+subject = "var:forsaljning-kedja-5"
 fields = { "tags" = ["business"] }
 evidence = "FSG och WHS är opaka källkoder.\ncatalog:variable_text:38258:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-wils"
+subject = "var:forsaljning-kedja-4"
 fields = { "sets" = [] }
 evidence = "FSG och WILS är opaka källkoder.\ncatalog:variable_text:38259:12784:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:fsg-wils"
+subject = "var:forsaljning-kedja-4"
 fields = { "tags" = ["business"] }
 evidence = "FSG och WILS är opaka källkoder.\ncatalog:variable_text:38259:12784:15340"
 
@@ -589,109 +589,109 @@ evidence = "FSGE och AGSS är opaka källkoder; etiketten kolliderar med en anna
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-cgs"
+subject = "var:forsaljning-exklusive-moms-kedja-13"
 fields = { "sets" = [] }
 evidence = "FSGE och CGS är opaka källkoder.\ncatalog:variable_text:38261:12418:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-cgs"
+subject = "var:forsaljning-exklusive-moms-kedja-13"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och CGS är opaka källkoder.\ncatalog:variable_text:38261:12418:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-ekos"
+subject = "var:forsaljning-exklusive-moms-kedja-12"
 fields = { "sets" = [] }
 evidence = "FSGE och EKOS är opaka källkoder.\ncatalog:variable_text:38262:12784:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-ekos"
+subject = "var:forsaljning-exklusive-moms-kedja-12"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och EKOS är opaka källkoder.\ncatalog:variable_text:38262:12784:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-hems"
+subject = "var:forsaljning-exklusive-moms-kedja-6"
 fields = { "sets" = [] }
 evidence = "FSGE och HEMS är opaka källkoder.\ncatalog:variable_text:38263:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-hems"
+subject = "var:forsaljning-exklusive-moms-kedja-6"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och HEMS är opaka källkoder.\ncatalog:variable_text:38263:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-icab"
+subject = "var:forsaljning-exklusive-moms-kedja-11"
 fields = { "sets" = [] }
 evidence = "FSGE och ICAB är opaka källkoder.\ncatalog:variable_text:38264:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-icab"
+subject = "var:forsaljning-exklusive-moms-kedja-11"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och ICAB är opaka källkoder.\ncatalog:variable_text:38264:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-icas"
+subject = "var:forsaljning-exklusive-moms-kedja-10"
 fields = { "sets" = [] }
 evidence = "FSGE och ICAS är opaka källkoder.\ncatalog:variable_text:38265:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-icas"
+subject = "var:forsaljning-exklusive-moms-kedja-10"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och ICAS är opaka källkoder.\ncatalog:variable_text:38265:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-kfb"
+subject = "var:forsaljning-exklusive-moms-kedja-9"
 fields = { "sets" = [] }
 evidence = "FSGE och KFB är opaka källkoder. Coordinator group membership: Medlemmarna mäter uttryckligen försäljning eller nettoomsättning, inklusive totaler och komponenter. Varde inkluderas eftersom den källciterade bedömningen anger försäljningsvärde för vissa perioder. Fsge-kfb och fsge-kfs avvaktar saknat indexunderlag. Momssats, vikter och produktgruppernas fritext omfattas inte.\ncatalog:variable_text:38236:16436:19723\ncatalog:variable_text:38237:16436:19723\ncatalog:variable_text:38238:16436:19723\ncatalog:variable_text:38239:16436:19723\ncatalog:variable_text:38240:16436:19723\ncatalog:variable_text:38241:16436:19723\ncatalog:variable_text:38242:12784:14610\ncatalog:variable_text:38243:12784:15340\ncatalog:variable_text:38244:12784:15340\ncatalog:variable_text:38245:12784:15340\ncatalog:variable_text:38246:12784:15340\ncatalog:variable_text:38247:12784:15340\ncatalog:variable_text:38248:12784:15340\ncatalog:variable_text:38249:12784:15340\ncatalog:variable_text:38250:18262:18993\ncatalog:variable_text:38251:13879:16436\ncatalog:variable_text:38252:14245:15340\ncatalog:variable_text:38253:13879:15340\ncatalog:variable_text:38254:13879:15340\ncatalog:variable_text:38255:16436:19723\ncatalog:variable_text:38256:14245:15340\ncatalog:variable_text:38257:12784:14975\ncatalog:variable_text:38258:12784:15340\ncatalog:variable_text:38259:12784:15340\ncatalog:variable_text:38260:12784:14610\ncatalog:variable_text:38261:12418:19723\ncatalog:variable_text:38262:12784:19723\ncatalog:variable_text:38263:12053:19723\ncatalog:variable_text:38264:12053:19723\ncatalog:variable_text:38265:12053:19723\ncatalog:variable_text:38266:12053:19723\ncatalog:variable_text:38268:18262:19723\ncatalog:variable_text:38269:13879:16436\ncatalog:variable_text:38270:15706:16436\ncatalog:variable_text:38271:13879:19723\ncatalog:variable_text:38272:13879:18262\ncatalog:variable_text:38273:12418:12784\ncatalog:variable_text:38274:13879:19723\ncatalog:variable_text:38275:14245:19723\ncatalog:variable_text:38276:12784:14975\ncatalog:variable_text:38277:12418:19723\ncatalog:variable_text:38278:12053:19723\ncatalog:variable_text:38300:18993:19723\ncatalog:variable_text:38303:16436:18628\ncatalog:variable_text:38331:16436:18628\ncatalog:variable_text:38332:16436:18628\ncatalog:variable_text:38333:16436:18628\ncatalog:variable_text:38334:16436:18628\ncatalog:variable_text:38335:16436:18628\ncatalog:variable_text:38336:12053:12418\ncatalog:variable_text:38336:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-kfb"
+subject = "var:forsaljning-exklusive-moms-kedja-9"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och KFB är opaka källkoder. Coordinator group membership: Medlemmarna mäter uttryckligen försäljning eller nettoomsättning, inklusive totaler och komponenter. Varde inkluderas eftersom den källciterade bedömningen anger försäljningsvärde för vissa perioder. Fsge-kfb och fsge-kfs avvaktar saknat indexunderlag. Momssats, vikter och produktgruppernas fritext omfattas inte.\ncatalog:variable_text:38236:16436:19723\ncatalog:variable_text:38237:16436:19723\ncatalog:variable_text:38238:16436:19723\ncatalog:variable_text:38239:16436:19723\ncatalog:variable_text:38240:16436:19723\ncatalog:variable_text:38241:16436:19723\ncatalog:variable_text:38242:12784:14610\ncatalog:variable_text:38243:12784:15340\ncatalog:variable_text:38244:12784:15340\ncatalog:variable_text:38245:12784:15340\ncatalog:variable_text:38246:12784:15340\ncatalog:variable_text:38247:12784:15340\ncatalog:variable_text:38248:12784:15340\ncatalog:variable_text:38249:12784:15340\ncatalog:variable_text:38250:18262:18993\ncatalog:variable_text:38251:13879:16436\ncatalog:variable_text:38252:14245:15340\ncatalog:variable_text:38253:13879:15340\ncatalog:variable_text:38254:13879:15340\ncatalog:variable_text:38255:16436:19723\ncatalog:variable_text:38256:14245:15340\ncatalog:variable_text:38257:12784:14975\ncatalog:variable_text:38258:12784:15340\ncatalog:variable_text:38259:12784:15340\ncatalog:variable_text:38260:12784:14610\ncatalog:variable_text:38261:12418:19723\ncatalog:variable_text:38262:12784:19723\ncatalog:variable_text:38263:12053:19723\ncatalog:variable_text:38264:12053:19723\ncatalog:variable_text:38265:12053:19723\ncatalog:variable_text:38266:12053:19723\ncatalog:variable_text:38268:18262:19723\ncatalog:variable_text:38269:13879:16436\ncatalog:variable_text:38270:15706:16436\ncatalog:variable_text:38271:13879:19723\ncatalog:variable_text:38272:13879:18262\ncatalog:variable_text:38273:12418:12784\ncatalog:variable_text:38274:13879:19723\ncatalog:variable_text:38275:14245:19723\ncatalog:variable_text:38276:12784:14975\ncatalog:variable_text:38277:12418:19723\ncatalog:variable_text:38278:12053:19723\ncatalog:variable_text:38300:18993:19723\ncatalog:variable_text:38303:16436:18628\ncatalog:variable_text:38331:16436:18628\ncatalog:variable_text:38332:16436:18628\ncatalog:variable_text:38333:16436:18628\ncatalog:variable_text:38334:16436:18628\ncatalog:variable_text:38335:16436:18628\ncatalog:variable_text:38336:12053:12418\ncatalog:variable_text:38336:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-kfs"
+subject = "var:forsaljning-exklusive-moms-kedja-8"
 fields = { "sets" = [] }
 evidence = "FSGE och KFS är opaka källkoder. Coordinator group membership: Medlemmarna mäter uttryckligen försäljning eller nettoomsättning, inklusive totaler och komponenter. Varde inkluderas eftersom den källciterade bedömningen anger försäljningsvärde för vissa perioder. Fsge-kfb och fsge-kfs avvaktar saknat indexunderlag. Momssats, vikter och produktgruppernas fritext omfattas inte.\ncatalog:variable_text:38236:16436:19723\ncatalog:variable_text:38237:16436:19723\ncatalog:variable_text:38238:16436:19723\ncatalog:variable_text:38239:16436:19723\ncatalog:variable_text:38240:16436:19723\ncatalog:variable_text:38241:16436:19723\ncatalog:variable_text:38242:12784:14610\ncatalog:variable_text:38243:12784:15340\ncatalog:variable_text:38244:12784:15340\ncatalog:variable_text:38245:12784:15340\ncatalog:variable_text:38246:12784:15340\ncatalog:variable_text:38247:12784:15340\ncatalog:variable_text:38248:12784:15340\ncatalog:variable_text:38249:12784:15340\ncatalog:variable_text:38250:18262:18993\ncatalog:variable_text:38251:13879:16436\ncatalog:variable_text:38252:14245:15340\ncatalog:variable_text:38253:13879:15340\ncatalog:variable_text:38254:13879:15340\ncatalog:variable_text:38255:16436:19723\ncatalog:variable_text:38256:14245:15340\ncatalog:variable_text:38257:12784:14975\ncatalog:variable_text:38258:12784:15340\ncatalog:variable_text:38259:12784:15340\ncatalog:variable_text:38260:12784:14610\ncatalog:variable_text:38261:12418:19723\ncatalog:variable_text:38262:12784:19723\ncatalog:variable_text:38263:12053:19723\ncatalog:variable_text:38264:12053:19723\ncatalog:variable_text:38265:12053:19723\ncatalog:variable_text:38267:12053:19723\ncatalog:variable_text:38268:18262:19723\ncatalog:variable_text:38269:13879:16436\ncatalog:variable_text:38270:15706:16436\ncatalog:variable_text:38271:13879:19723\ncatalog:variable_text:38272:13879:18262\ncatalog:variable_text:38273:12418:12784\ncatalog:variable_text:38274:13879:19723\ncatalog:variable_text:38275:14245:19723\ncatalog:variable_text:38276:12784:14975\ncatalog:variable_text:38277:12418:19723\ncatalog:variable_text:38278:12053:19723\ncatalog:variable_text:38300:18993:19723\ncatalog:variable_text:38303:16436:18628\ncatalog:variable_text:38331:16436:18628\ncatalog:variable_text:38332:16436:18628\ncatalog:variable_text:38333:16436:18628\ncatalog:variable_text:38334:16436:18628\ncatalog:variable_text:38335:16436:18628\ncatalog:variable_text:38336:12053:12418\ncatalog:variable_text:38336:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-kfs"
+subject = "var:forsaljning-exklusive-moms-kedja-8"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och KFS är opaka källkoder. Coordinator group membership: Medlemmarna mäter uttryckligen försäljning eller nettoomsättning, inklusive totaler och komponenter. Varde inkluderas eftersom den källciterade bedömningen anger försäljningsvärde för vissa perioder. Fsge-kfb och fsge-kfs avvaktar saknat indexunderlag. Momssats, vikter och produktgruppernas fritext omfattas inte.\ncatalog:variable_text:38236:16436:19723\ncatalog:variable_text:38237:16436:19723\ncatalog:variable_text:38238:16436:19723\ncatalog:variable_text:38239:16436:19723\ncatalog:variable_text:38240:16436:19723\ncatalog:variable_text:38241:16436:19723\ncatalog:variable_text:38242:12784:14610\ncatalog:variable_text:38243:12784:15340\ncatalog:variable_text:38244:12784:15340\ncatalog:variable_text:38245:12784:15340\ncatalog:variable_text:38246:12784:15340\ncatalog:variable_text:38247:12784:15340\ncatalog:variable_text:38248:12784:15340\ncatalog:variable_text:38249:12784:15340\ncatalog:variable_text:38250:18262:18993\ncatalog:variable_text:38251:13879:16436\ncatalog:variable_text:38252:14245:15340\ncatalog:variable_text:38253:13879:15340\ncatalog:variable_text:38254:13879:15340\ncatalog:variable_text:38255:16436:19723\ncatalog:variable_text:38256:14245:15340\ncatalog:variable_text:38257:12784:14975\ncatalog:variable_text:38258:12784:15340\ncatalog:variable_text:38259:12784:15340\ncatalog:variable_text:38260:12784:14610\ncatalog:variable_text:38261:12418:19723\ncatalog:variable_text:38262:12784:19723\ncatalog:variable_text:38263:12053:19723\ncatalog:variable_text:38264:12053:19723\ncatalog:variable_text:38265:12053:19723\ncatalog:variable_text:38267:12053:19723\ncatalog:variable_text:38268:18262:19723\ncatalog:variable_text:38269:13879:16436\ncatalog:variable_text:38270:15706:16436\ncatalog:variable_text:38271:13879:19723\ncatalog:variable_text:38272:13879:18262\ncatalog:variable_text:38273:12418:12784\ncatalog:variable_text:38274:13879:19723\ncatalog:variable_text:38275:14245:19723\ncatalog:variable_text:38276:12784:14975\ncatalog:variable_text:38277:12418:19723\ncatalog:variable_text:38278:12053:19723\ncatalog:variable_text:38300:18993:19723\ncatalog:variable_text:38303:16436:18628\ncatalog:variable_text:38331:16436:18628\ncatalog:variable_text:38332:16436:18628\ncatalog:variable_text:38333:16436:18628\ncatalog:variable_text:38334:16436:18628\ncatalog:variable_text:38335:16436:18628\ncatalog:variable_text:38336:12053:12418\ncatalog:variable_text:38336:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-lidls"
+subject = "var:forsaljning-exklusive-moms-kedja-1"
 fields = { "sets" = [] }
 evidence = "FSGE och LIDLS är opaka källkoder.\ncatalog:variable_text:38268:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-lidls"
+subject = "var:forsaljning-exklusive-moms-kedja-1"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och LIDLS är opaka källkoder.\ncatalog:variable_text:38268:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-pbs"
+subject = "var:forsaljning-exklusive-moms-kedja-2"
 fields = { "sets" = [] }
 evidence = "FSGE och PBS är opaka källkoder.\ncatalog:variable_text:38269:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-pbs"
+subject = "var:forsaljning-exklusive-moms-kedja-2"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och PBS är opaka källkoder.\ncatalog:variable_text:38269:13879:16436"
 
@@ -709,61 +709,61 @@ evidence = "FSGE och PXS är opaka källkoder; etiketten kolliderar med en annan
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-ses"
+subject = "var:forsaljning-exklusive-moms-kedja-7"
 fields = { "sets" = [] }
 evidence = "FSGE och SES är opaka källkoder.\ncatalog:variable_text:38271:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-ses"
+subject = "var:forsaljning-exklusive-moms-kedja-7"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och SES är opaka källkoder.\ncatalog:variable_text:38271:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-shs"
+subject = "var:forsaljning-exklusive-moms-shell"
 fields = { "sets" = [] }
 evidence = "FSGE och SHS är opaka källkoder.\ncatalog:variable_text:38272:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-shs"
+subject = "var:forsaljning-exklusive-moms-shell"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och SHS är opaka källkoder.\ncatalog:variable_text:38272:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-spars"
+subject = "var:forsaljning-spar"
 fields = { "sets" = [] }
 evidence = "FSGE är en opak källkod.\ncatalog:variable_text:38273:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-spars"
+subject = "var:forsaljning-spar"
 fields = { "tags" = ["business"] }
 evidence = "FSGE är en opak källkod.\ncatalog:variable_text:38273:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-stb"
+subject = "var:forsaljning-exklusive-moms-kedja-3"
 fields = { "sets" = [] }
 evidence = "FSGE och STB är opaka källkoder.\ncatalog:variable_text:38274:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-stb"
+subject = "var:forsaljning-exklusive-moms-kedja-3"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och STB är opaka källkoder.\ncatalog:variable_text:38274:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-tot"
+subject = "var:forsaljning-exklusive-moms-totalt"
 fields = { "sets" = [] }
 evidence = "FSGE_TOT är en källkod. Variabeln mäter försäljningsbelopp exklusive moms.\ncatalog:occurrence-locators:variable:38275\ncatalog:variable_text:38275:14245:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-tot"
+subject = "var:forsaljning-exklusive-moms-totalt"
 fields = { "tags" = ["business"] }
 evidence = "FSGE_TOT är en källkod. Variabeln mäter försäljningsbelopp exklusive moms.\ncatalog:occurrence-locators:variable:38275\ncatalog:variable_text:38275:14245:19723"
 
@@ -781,25 +781,25 @@ evidence = "FSGE och VIS är opaka källkoder; etiketten kolliderar med en annan
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-whs"
+subject = "var:forsaljning-exklusive-moms-kedja-5"
 fields = { "sets" = [] }
 evidence = "FSGE och WHS är opaka källkoder.\ncatalog:variable_text:38277:12418:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-whs"
+subject = "var:forsaljning-exklusive-moms-kedja-5"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och WHS är opaka källkoder.\ncatalog:variable_text:38277:12418:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-wils"
+subject = "var:forsaljning-exklusive-moms-kedja-4"
 fields = { "sets" = [] }
 evidence = "FSGE och WILS är opaka källkoder.\ncatalog:variable_text:38278:12053:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsge-wils"
+subject = "var:forsaljning-exklusive-moms-kedja-4"
 fields = { "tags" = ["business"] }
 evidence = "FSGE och WILS är opaka källkoder.\ncatalog:variable_text:38278:12053:19723"
 
@@ -949,25 +949,25 @@ evidence = "Källkolumnen har även tilldelats nr-produktkod.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:kpin"
+subject = "var:varunamn-till-konsumentprisindexkod"
 fields = { "sets" = ["varuklassificering-kpi"] }
 evidence = "KPIN är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:38296:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:kpin"
+subject = "var:varunamn-till-konsumentprisindexkod"
 fields = { "tags" = ["prices"] }
 evidence = "KPIN är en källmnemonik som inte förekommer i etiketten.\ncatalog:variable_text:38296:16436:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:kpin0"
+subject = "var:varunamn-till-konsumentprisindexkod-pa-aggregerad-niva"
 fields = { "sets" = ["varuklassificering-kpi"] }
 evidence = "KPIN är en källmnemonik som inte förekommer i etiketten; 0 anger källans nivå.\ncatalog:variable_text:38297:17532:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:kpin0"
+subject = "var:varunamn-till-konsumentprisindexkod-pa-aggregerad-niva"
 fields = { "tags" = ["prices"] }
 evidence = "KPIN är en källmnemonik som inte förekommer i etiketten; 0 anger källans nivå.\ncatalog:variable_text:38297:17532:19723"
 
@@ -1261,25 +1261,25 @@ evidence = "Källan beskriver ett statistiskt uppräkningstal.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:v1"
+subject = "var:resultatrapport"
 fields = { "sets" = [] }
 evidence = "V1 är en opak källkolumn; ja-nej-värdena avser resultatrapport.\ncatalog:valueset:10571\ncatalog:variable_text:38327:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v1"
+subject = "var:resultatrapport"
 fields = { "tags" = ["business"] }
 evidence = "V1 är en opak källkolumn; ja-nej-värdena avser resultatrapport.\ncatalog:valueset:10571\ncatalog:variable_text:38327:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v2"
+subject = "var:rakenskapsarets-overensstammelse-mot-kalenderar"
 fields = { "sets" = [] }
 evidence = "V2 är en opak källkolumn.\ncatalog:variable_text:38328:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v2"
+subject = "var:rakenskapsarets-overensstammelse-mot-kalenderar"
 fields = { "tags" = ["business"] }
 evidence = "V2 är en opak källkolumn.\ncatalog:variable_text:38328:16436:18628"
 
@@ -1297,49 +1297,49 @@ evidence = "V2Tom är en ogenomskinlig källmnemonik; etiketten kan kollidera oc
 
 [[statement]]
 kind = "set"
-subject = "var:v3"
+subject = "var:branschavstamning"
 fields = { "sets" = [] }
 evidence = "V3 är en opak källkolumn.\ncatalog:variable_text:38330:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v3"
+subject = "var:branschavstamning"
 fields = { "tags" = ["business"] }
 evidence = "V3 är en opak källkolumn.\ncatalog:variable_text:38330:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v5"
+subject = "var:serveringsverksamhet"
 fields = { "sets" = [] }
 evidence = "V5 är en opak källkolumn.\ncatalog:variable_text:38331:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v5"
+subject = "var:serveringsverksamhet"
 fields = { "tags" = ["business"] }
 evidence = "V5 är en opak källkolumn.\ncatalog:variable_text:38331:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v7"
+subject = "var:livsmedelsforsaljning-eget-tillagg"
 fields = { "sets" = [] }
 evidence = "V7 är en opak källkolumn.\ncatalog:variable_text:38332:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v7"
+subject = "var:livsmedelsforsaljning-eget-tillagg"
 fields = { "tags" = ["business"] }
 evidence = "V7 är en opak källkolumn.\ncatalog:variable_text:38332:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v7-txt"
+subject = "var:livsmedel-fritext"
 fields = { "sets" = [] }
 evidence = "V7 är en opak källkolumn.\ncatalog:variable_text:38333:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v7-txt"
+subject = "var:livsmedel-fritext"
 fields = { "tags" = ["business"] }
 evidence = "V7 är en opak källkolumn.\ncatalog:variable_text:38333:16436:18628"
 
@@ -1357,13 +1357,13 @@ evidence = "V9 är en opak källkolumn.\ncatalog:variable_text:38334:16436:18628
 
 [[statement]]
 kind = "set"
-subject = "var:v9-txt"
+subject = "var:ovrigt-sortiment-annat-an-livsmedel"
 fields = { "sets" = [] }
 evidence = "V9 är en opak källkolumn.\ncatalog:variable_text:38335:16436:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:v9-txt"
+subject = "var:ovrigt-sortiment-annat-an-livsmedel"
 fields = { "tags" = ["business"] }
 evidence = "V9 är en opak källkolumn.\ncatalog:variable_text:38335:16436:18628"
 

@@ -466,13 +466,13 @@ evidence = "Producerad el vid enbart elproduktion.\ncatalog:variable_text:6336:1
 
 [[statement]]
 kind = "set"
-subject = "var:elprodk"
+subject = "var:el-vid-kraftvarmeproduktion"
 fields = { "sets" = ["elproduktion"] }
 evidence = "K är en enstaka bokstavskod för kraftvärme.\ncatalog:variable_text:6337:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:elprodk"
+subject = "var:el-vid-kraftvarmeproduktion"
 fields = { "tags" = ["energy"] }
 evidence = "K är en enstaka bokstavskod för kraftvärme.\ncatalog:variable_text:6337:17532:20454"
 
@@ -490,13 +490,13 @@ evidence = "Producerad el.\ncatalog:variable_text:6338:18993:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fid"
+subject = "var:varmeidentifikation"
 fields = { "sets" = [] }
 evidence = "F är en enstaka bokstavskod; etiketten anger värmeidentifikation.\ncatalog:variable_text:6340:12784:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fid"
+subject = "var:varmeidentifikation"
 fields = { "tags" = ["energy"] }
 evidence = "F är en enstaka bokstavskod; etiketten anger värmeidentifikation.\ncatalog:variable_text:6340:12784:20454"
 
@@ -526,13 +526,13 @@ evidence = "V är en enstaka bokstavskod; källan anger bränsleförbrukning fö
 
 [[statement]]
 kind = "set"
-subject = "var:fjv"
+subject = "var:levererad-fjarrvarme"
 fields = { "sets" = [] }
 evidence = "Fjv är en bokstavskod för fjärrvärme.\ncatalog:variable_text:6343:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fjv"
+subject = "var:levererad-fjarrvarme"
 fields = { "tags" = ["energy"] }
 evidence = "Fjv är en bokstavskod för fjärrvärme.\ncatalog:variable_text:6343:17532:20454"
 
@@ -730,13 +730,13 @@ evidence = "Ng är en bokstavskod för näringsgren; 2002 kommer från källkolu
 
 [[statement]]
 kind = "set"
-subject = "var:nggrupp"
+subject = "var:naringsgren"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren.\ncatalog:variable_text:6366:13149:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nggrupp"
+subject = "var:naringsgren"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren.\ncatalog:variable_text:6366:13149:20454"
 
@@ -802,13 +802,13 @@ evidence = "Kod för import eller export.\ncatalog:variable_text:6374:12784:2045
 
 [[statement]]
 kind = "set"
-subject = "var:senhet"
+subject = "var:bransleslagets-standardenhet"
 fields = { "sets" = ["branslets-mattenhet"] }
 evidence = "S är en enstaka bokstavskod för standard.\ncatalog:variable_text:6375:17532:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:senhet"
+subject = "var:bransleslagets-standardenhet"
 fields = { "tags" = ["energy"] }
 evidence = "S är en enstaka bokstavskod för standard.\ncatalog:variable_text:6375:17532:20454"
 

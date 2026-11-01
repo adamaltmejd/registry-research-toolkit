@@ -376,13 +376,13 @@ evidence = "Beh och EST är koder; källan beskriver behörighet till estetiska 
 
 [[statement]]
 kind = "set"
-subject = "var:beh-gymn"
+subject = "var:behorighet-till-gymnasieskolans-nationella-program"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Beh är en källkod i samma förkortningsfamilj som övriga beh-variabler.\ncatalog:variable_text:43139:16983:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-gymn"
+subject = "var:behorighet-till-gymnasieskolans-nationella-program"
 fields = { "tags" = ["education"] }
 evidence = "Beh är en källkod i samma förkortningsfamilj som övriga beh-variabler.\ncatalog:variable_text:43139:16983:20270"
 
@@ -604,13 +604,13 @@ evidence = "Markeringen gäller insamlingens organisation.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "sets" = [] }
 evidence = "SVA är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:43158:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "SVA är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:43158:20011:20012"
 
@@ -772,13 +772,13 @@ evidence = "Ämnesbetyg i historia.\ncatalog:variable_text:43171:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "HKK är en bokstavskod.\ncatalog:variable_text:43172:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "tags" = ["education"] }
 evidence = "HKK är en bokstavskod.\ncatalog:variable_text:43172:12965:20270"
 
@@ -808,13 +808,13 @@ evidence = "Uppgiften avser skolans huvudman.\ncatalog:variable_text:43174:20011
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "IDH är en bokstavskod.\ncatalog:variable_text:43175:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "IDH är en bokstavskod.\ncatalog:variable_text:43175:12965:20270"
 
@@ -1144,13 +1144,13 @@ evidence = "Åldersavvikelse i skolgången.\ncatalog:variable_text:43204:20011:2
 
 [[statement]]
 kind = "set"
-subject = "var:rda"
+subject = "var:betyg-i-amnet-rorelse-och-drama"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "RDA är en bokstavskod.\ncatalog:variable_text:43209:15522:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:rda"
+subject = "var:betyg-i-amnet-rorelse-och-drama"
 fields = { "tags" = ["education"] }
 evidence = "RDA är en bokstavskod.\ncatalog:variable_text:43209:15522:20270"
 
@@ -1228,13 +1228,13 @@ evidence = "Stöd i undervisningen.\ncatalog:variable_text:43221:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:stud-handl-ml"
+subject = "var:studiehandledning-pa-modersmal"
 fields = { "sets" = [] }
 evidence = "Ml är en källmnemonik vars bokstäver inte är igenkännbara ordstammar för modersmål.\ncatalog:variable_text:43222:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:stud-handl-ml"
+subject = "var:studiehandledning-pa-modersmal"
 fields = { "tags" = ["education"] }
 evidence = "Ml är en källmnemonik vars bokstäver inte är igenkännbara ordstammar för modersmål.\ncatalog:variable_text:43222:20011:20012"
 
@@ -1468,13 +1468,13 @@ evidence = "Id:ts förkortningar är läsbara och ämnesbetyget tillhör gruppen
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "SVA är en bokstavskod för svenska som andraspråk och står inte som ord i källans etikett. Variabeln mäter ett ämnesbetyg och hör till utbildning.\ncatalog:occurrence:450240\ncatalog:variable_text:43242:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "SVA är en bokstavskod för svenska som andraspråk och står inte som ord i källans etikett. Variabeln mäter ett ämnesbetyg och hör till utbildning.\ncatalog:occurrence:450240\ncatalog:variable_text:43242:12965:20270"
 

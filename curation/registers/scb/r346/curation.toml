@@ -391,13 +391,13 @@ evidence = "Län anger geografisk tillhörighet vid folkbokföringen.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "sets" = ["bostadstyp"] }
 evidence = "Lgh är en ogenomskinlig källförkortning för lägenhet; källan anger lägenhetskategori.\ncatalog:variable_text:26501:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "tags" = ["housing"] }
 evidence = "Lgh är en ogenomskinlig källförkortning för lägenhet; källan anger lägenhetskategori.\ncatalog:variable_text:26501:15340:20089"
 

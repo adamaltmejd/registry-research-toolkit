@@ -319,25 +319,25 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26033:17
 
 [[statement]]
 kind = "set"
-subject = "var:f12-3"
+subject = "var:arbete-i-sverige-som-inte-kraver-hogskoleutbildning"
 fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26034:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-3"
+subject = "var:arbete-i-sverige-som-inte-kraver-hogskoleutbildning"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26034:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-6"
+subject = "var:studerat-i-sverige-pa-sfi"
 fields = { "sets" = ["deltagande-i-svenskundervisning", "studiedeltagande-i-sverige"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-6"
+subject = "var:studerat-i-sverige-pa-sfi"
 fields = { "tags" = ["education", "integration"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784"
 
@@ -391,25 +391,25 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26039:12
 
 [[statement]]
 kind = "set"
-subject = "var:f21-4"
+subject = "var:svart-att-fa-arbete-pga-svar-beskrivlig-kompetens"
 fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26040:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-4"
+subject = "var:svart-att-fa-arbete-pga-svar-beskrivlig-kompetens"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26040:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-6"
+subject = "var:svart-att-fa-arbete-pga-min-harkomst"
 fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26041:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-6"
+subject = "var:svart-att-fa-arbete-pga-min-harkomst"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26041:12418:12784"
 
@@ -643,73 +643,73 @@ evidence = "Källans etikett och de senare svarsalternativen beskriver olika omf
 
 [[statement]]
 kind = "set"
-subject = "var:f26-1"
+subject = "var:deltagit-i-undervisning-i-amnet-svenska-sprak-ej-deltagit"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26061:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-1"
+subject = "var:deltagit-i-undervisning-i-amnet-svenska-sprak-ej-deltagit"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26061:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-2"
+subject = "var:deltagit-i-undervisning-i-svenska-sfi"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26062:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-2"
+subject = "var:deltagit-i-undervisning-i-svenska-sfi"
 fields = { "tags" = ["education", "integration"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26062:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-3"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-grundskoleniva"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26063:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-3"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-grundskoleniva"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26063:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-4"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-gymnasieniva"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26064:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-4"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-gymnasieniva"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26064:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-5"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-hogskoleniva"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26065:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-5"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-hogskoleniva"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26065:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-6"
+subject = "var:deltagit-i-undervisning-i-svenska-annat"
 fields = { "sets" = ["deltagande-i-svenskundervisning"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26066:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f26-6"
+subject = "var:deltagit-i-undervisning-i-svenska-annat"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26066:12418:12784"
 
@@ -727,157 +727,157 @@ evidence = "Definitionen och den operativa definitionen anger olika omfattning.\
 
 [[statement]]
 kind = "set"
-subject = "var:f27-1"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på svenska.\ncatalog:variable_text:26068:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-1"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på svenska.\ncatalog:variable_text:26068:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-2"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
 fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26069:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-2"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26069:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-7"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
 fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på engelska.\ncatalog:variable_text:26070:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-7"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på engelska.\ncatalog:variable_text:26070:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-8"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
 fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26071:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27-8"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26071:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:f27a-ut"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-svensk"
 fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26072:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27a-ut"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-svensk"
 fields = { "tags" = ["employment", "income"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26072:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27b"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-annan"
 fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26073:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27b"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-annan"
 fields = { "tags" = ["employment", "income"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26073:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27c-ut"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-battre-kunskaper"
 fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26074:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27c-ut"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-battre-kunskaper"
 fields = { "tags" = ["employment", "income"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26074:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27d-ut"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-svensk-nationalitet"
 fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26075:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27d-ut"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-svensk-nationalitet"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26075:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27e"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-annan-nationalitet"
 fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26076:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27e"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-annan-nationalitet"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26076:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27f-ut"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-battre-kunskaper"
 fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26077:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27f-ut"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-battre-kunskaper"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26077:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27g-ut"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-svensk"
 fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26078:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27g-ut"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-svensk"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26078:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27h"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-annan"
 fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26079:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27h"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-annan"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26079:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27i-ut"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-battre-kunskaper"
 fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26080:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f27i-ut"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-battre-kunskaper"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26080:14245:14610"
 

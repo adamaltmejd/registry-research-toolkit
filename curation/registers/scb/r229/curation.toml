@@ -811,13 +811,13 @@ evidence = "Stratifieringsgruppen hör till urvalsmetoden.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:gruppnan"
+subject = "var:antal-svarande-i-urvalets-forsta-fas"
 fields = { "sets" = ["antal-svarande"] }
 evidence = "Gruppnan är en källmnemonik utan tydliga stammar för etiketten.\ncatalog:variable_text:39706:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:gruppnan"
+subject = "var:antal-svarande-i-urvalets-forsta-fas"
 fields = { "tags" = ["methods"] }
 evidence = "Gruppnan är en källmnemonik utan tydliga stammar för etiketten.\ncatalog:variable_text:39706:14610:14791"
 
@@ -907,13 +907,13 @@ evidence = "Variabeln beskriver deltagande i undersökningens halvår.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:help4"
+subject = "var:hjalpvariabel-1"
 fields = { "sets" = [] }
 evidence = "Help4 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39714:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:help4"
+subject = "var:hjalpvariabel-1"
 fields = { "tags" = ["methods"] }
 evidence = "Help4 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39714:14610:14791"
 
@@ -991,13 +991,13 @@ evidence = "Region används som hjälpinformation vid estimation.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:introb"
+subject = "var:person-som-aku-intervjuare-kontaktade"
 fields = { "sets" = [] }
 evidence = "Introb är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39721:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:introb"
+subject = "var:person-som-aku-intervjuare-kontaktade"
 fields = { "tags" = ["methods"] }
 evidence = "Introb är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39721:14610:14791"
 
@@ -2215,61 +2215,61 @@ evidence = "Urvalsstorlek per stratum är undersökningsmetodik.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:lills2ny"
+subject = "var:antal-svarande-i-urvalets-andra-fas"
 fields = { "sets" = ["antal-svarande"] }
 evidence = "Lills2ny är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39823:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:lills2ny"
+subject = "var:antal-svarande-i-urvalets-andra-fas"
 fields = { "tags" = ["methods"] }
 evidence = "Lills2ny är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39823:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medhld"
+subject = "var:deltagit-i-handledd-distansutbildning"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i handledd distansutbildning.\ncatalog:variable_text:39825:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medhld"
+subject = "var:deltagit-i-handledd-distansutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i handledd distansutbildning.\ncatalog:variable_text:39825:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medk"
+subject = "var:deltagit-i-konferenser"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i konferenser.\ncatalog:variable_text:39826:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medk"
+subject = "var:deltagit-i-konferenser"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i konferenser.\ncatalog:variable_text:39826:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medl"
+subject = "var:deltagit-i-lararledd-utbildning"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i lärarledd utbildning.\ncatalog:variable_text:39827:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medl"
+subject = "var:deltagit-i-lararledd-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i lärarledd utbildning.\ncatalog:variable_text:39827:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medlk"
+subject = "var:deltagit-i-kurser"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i kurser.\ncatalog:variable_text:39828:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:medlk"
+subject = "var:deltagit-i-kurser"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger deltagande i kurser.\ncatalog:variable_text:39828:14610:14791"
 
@@ -3091,73 +3091,73 @@ evidence = "Källkolumnen återanvänds för företagsstorlek; variabeln gäller
 
 [[statement]]
 kind = "set"
-subject = "var:t2"
+subject = "var:anstallningstid"
 fields = { "sets" = ["anstallningstid"] }
 evidence = "Id:t är en opak frågekod; etiketten anger anställningstid.\ncatalog:variable_text:39897:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t2"
+subject = "var:anstallningstid"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak frågekod; etiketten anger anställningstid.\ncatalog:variable_text:39897:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t3"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter"
 fields = { "sets" = ["tid-med-nuvarande-arbetsuppgifter"] }
 evidence = "Id:t är en opak frågekod; etiketten anger tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39898:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:t3"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak frågekod; etiketten anger tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39898:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:t3int"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter-grupperad"
 fields = { "sets" = ["tid-med-nuvarande-arbetsuppgifter"] }
 evidence = "Id:t är en opak frågekod; etiketten anger grupperad tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39899:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:t3int"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter-grupperad"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak frågekod; etiketten anger grupperad tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39899:13149:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:t4"
+subject = "var:deltagande-i-utbildning"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak frågekod; etiketten anger deltagande i utbildning.\ncatalog:variable_text:39900:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t4"
+subject = "var:deltagande-i-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak frågekod; etiketten anger deltagande i utbildning.\ncatalog:variable_text:39900:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t5"
+subject = "var:handledning-sjalvstudier"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t är en opak frågekod; etiketten anger handledning och självstudier. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0421: Båda kodar deltagande i namngivna utbildningsformer. Antal kurser och antal kursdeltagare mäter andra begrepp. membership-0422: Variablerna anger deltagande i utbildning och namngivna former, inklusive utbildning via handledning eller självstudier i t5. T6 gäller finansiering och undantas.\ncatalog:variable_text:39662:10592:10957\ncatalog:variable_text:39673:10592:12418\ncatalog:variable_text:39683:14610:14791\ncatalog:variable_text:39684:14610:14791\ncatalog:variable_text:39825:14610:14791\ncatalog:variable_text:39826:14610:14791\ncatalog:variable_text:39827:14610:14791\ncatalog:variable_text:39828:14610:14791\ncatalog:variable_text:39900:14610:14791\ncatalog:variable_text:39901:14610:14791\ncatalog:variable_text:39902:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t5"
+subject = "var:handledning-sjalvstudier"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak frågekod; etiketten anger handledning och självstudier. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0421: Båda kodar deltagande i namngivna utbildningsformer. Antal kurser och antal kursdeltagare mäter andra begrepp. membership-0422: Variablerna anger deltagande i utbildning och namngivna former, inklusive utbildning via handledning eller självstudier i t5. T6 gäller finansiering och undantas.\ncatalog:variable_text:39662:10592:10957\ncatalog:variable_text:39673:10592:12418\ncatalog:variable_text:39683:14610:14791\ncatalog:variable_text:39684:14610:14791\ncatalog:variable_text:39825:14610:14791\ncatalog:variable_text:39826:14610:14791\ncatalog:variable_text:39827:14610:14791\ncatalog:variable_text:39828:14610:14791\ncatalog:variable_text:39900:14610:14791\ncatalog:variable_text:39901:14610:14791\ncatalog:variable_text:39902:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t6"
+subject = "var:utbildning-betald-av-arbetsgivaren"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten anger utbildning betald av arbetsgivaren.\ncatalog:variable_text:39902:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:t6"
+subject = "var:utbildning-betald-av-arbetsgivaren"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak frågekod; etiketten anger utbildning betald av arbetsgivaren.\ncatalog:variable_text:39902:14610:14791"
 
@@ -3343,61 +3343,61 @@ evidence = "T9e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39917:146
 
 [[statement]]
 kind = "set"
-subject = "var:taljahld"
+subject = "var:antal-timmar-for-handledd-distansutbildning"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för handledd distansutbildning.\ncatalog:variable_text:39918:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljahld"
+subject = "var:antal-timmar-for-handledd-distansutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för handledd distansutbildning.\ncatalog:variable_text:39918:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarek"
+subject = "var:antal-timmar-pa-konferenser"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar på konferenser.\ncatalog:variable_text:39919:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarek"
+subject = "var:antal-timmar-pa-konferenser"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar på konferenser.\ncatalog:variable_text:39919:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarel"
+subject = "var:antal-timmar-i-lararledd-utbildning"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar i lärarledd utbildning.\ncatalog:variable_text:39920:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarel"
+subject = "var:antal-timmar-i-lararledd-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar i lärarledd utbildning.\ncatalog:variable_text:39920:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljares"
+subject = "var:antal-timmar-for-sjalvstudier"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för självstudier.\ncatalog:variable_text:39921:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljares"
+subject = "var:antal-timmar-for-sjalvstudier"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för självstudier.\ncatalog:variable_text:39921:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarlk"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för lärarledda kurser och konferenser.\ncatalog:variable_text:39922:14610:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:taljarlk"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en opak källkod; etiketten anger timmar för lärarledda kurser och konferenser.\ncatalog:variable_text:39922:14610:14791"
 
