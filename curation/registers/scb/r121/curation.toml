@@ -44821,6 +44821,18 @@ evidence = "Källkolumnerna har identitetskonflikter.\ncatalog:occurrence:163821
 
 [[statement]]
 kind = "set"
+subject = "var:orealiserade-forluster-l18"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har olika ägare i intilliggande perioder.\ncatalog:occurrence:163832\ncatalog:occurrence:163968"
+
+[[statement]]
+kind = "set"
+subject = "var:orealiserade-forluster-l18"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen har olika ägare i intilliggande perioder.\ncatalog:occurrence:163832\ncatalog:occurrence:163968"
+
+[[statement]]
+kind = "set"
 subject = "var:orealiserade-vinster-l15"
 fields = { "sets" = [] }
 evidence = "Källkolumnerna har olika ägare i intilliggande perioder.\ncatalog:occurrence:163692\ncatalog:occurrence:163693\ncatalog:occurrence:163827\ncatalog:occurrence:163828"
@@ -78779,79 +78791,43 @@ evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energ
 kind = "set"
 subject = "forsakringsbolag: l20 @2017-01-01..2017-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2018-01-01..2018-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2018-01-01..2018-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2019-01-01..2019-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2019-01-01..2019-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2020-01-01..2020-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2020-01-01..2020-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2021-01-01..2021-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2021-01-01..2021-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2022-01-01..2022-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2022-01-01..2022-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
-
-[[statement]]
-kind = "set"
-subject = "forsakringsbolag: l19 @2023-01-01..2023-12-31 where key = 'v26224'"
-fields = { "variable" = "l18" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
 subject = "forsakringsbolag: l20 @2023-01-01..2023-12-31 where key = 'v26287'"
 fields = { "variable" = "ovriga-intakter-l19" }
-evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+evidence = "FRIDA insurers shift the life-insurance columns by one from 2017 while retaining old label numbers. L20 carries Övriga intäkter (L19), continuing the historical other-income meaning. The stale 2017 L19 row is assigned to unrealised losses; the conflicting L18 row remains separate as an open question. No cost or loss occurrence is merged into income."
 
 [[statement]]
 kind = "set"
@@ -78936,3 +78912,10 @@ kind = "set"
 subject = "punktskatter-for-energi: v712_34 @2023-01-01..2023-12-31 where key = 'v26612'"
 fields = { "variable" = "v712-33" }
 evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2017-01-01..2017-12-31 where key = 'v26287' and release = 'r13707'"
+fields = { "variable" = "orealiserade-forluster-l18" }
+evidence = "FRIDA insurers 2017 shift chain: L13=transfer to financial operations (old L12), L14=technical result (old L13), L15=capital-return income (old L14), L16=unrealised gains (old L15), L17=transfer from insurance operations (old L16), L18=capital-return costs (old L17), L19=unrealised losses (old L18), L20=other income (old L19). L19/v26287 retains the stale other-income label in release r13707; the shifted chain and explicit 2018-2023 L19 loss labels establish its loss meaning. Restore the 2017 L19 occurrence to the separate unrealised-losses series, retaining source text."
+caveat = "Open question (FRIDA insurers 2017 L18, continues audit #55): release r13707 has L18/v26212 labelled Kapavkast., kostnader (L17) and L18/v26224 labelled Orealiserade förluster (L18). The shift chain suggests the latter is stale, but it remains owned by l18. Assigning both rows to kapavkast-kostnader-l17 makes its existing sets/tags setters ambiguous: they expand to whole-variable membership, including both overlapping source keys. Variable addresses accept no guards, and guarded occurrence membership setters also expand to the entire variable. Existing grammar therefore cannot express a narrow metadata guard; preserve the conflict pending a separate decision rather than discard metadata or change resolver rules."
