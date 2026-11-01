@@ -1141,13 +1141,13 @@ evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas 
 
 [[statement]]
 kind = "set"
-subject = "var:astlan"
+subject = "var:lan-arbetsstallet-huvudsaklig-sysselsattning"
 fields = { "sets" = ["arbetsstallets-lan"] }
 evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55605:14245:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:astlan"
+subject = "var:lan-arbetsstallet-huvudsaklig-sysselsattning"
 fields = { "tags" = ["geography"] }
 evidence = "Ast är en källförkortning för arbetsställe; familjen behandlas konsekvent som ogenomskinlig.\ncatalog:variable_text:55605:14245:20089"
 
@@ -1417,13 +1417,13 @@ evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55629:1132
 
 [[statement]]
 kind = "set"
-subject = "var:ku1astlan"
+subject = "var:lan-arbetsstallet-storsta-forvarvskallan"
 fields = { "sets" = ["arbetsstallets-lan"] }
 evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55630:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ku1astlan"
+subject = "var:lan-arbetsstallet-storsta-forvarvskallan"
 fields = { "tags" = ["geography"] }
 evidence = "KU1 är en ogenomskinlig källkod.\ncatalog:variable_text:55630:11323:20089"
 

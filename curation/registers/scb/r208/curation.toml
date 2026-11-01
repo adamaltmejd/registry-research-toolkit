@@ -5599,25 +5599,25 @@ evidence = "Variabeln mäter total kärn- och fröskörd.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ordlan"
+subject = "var:lan-brukningscentrum"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "OrdLan är ett källnamn vars förled är ogenomskinligt. Etiketten anger län och värdemängden bekräftar länskodningen.\ncatalog:valueset:7128\ncatalog:variable_text:42665:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ordlan"
+subject = "var:lan-brukningscentrum"
 fields = { "tags" = ["geography"] }
 evidence = "OrdLan är ett källnamn vars förled är ogenomskinligt. Etiketten anger län och värdemängden bekräftar länskodningen.\ncatalog:valueset:7128\ncatalog:variable_text:42665:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ordpo8"
+subject = "var:produktionsomrade-8-omraden-brukningscentrum"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "OrdPo8 är ett källnamn vars förled är ogenomskinligt. Etiketten och värdemängden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42666:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ordpo8"
+subject = "var:produktionsomrade-8-omraden-brukningscentrum"
 fields = { "tags" = ["geography"] }
 evidence = "OrdPo8 är ett källnamn vars förled är ogenomskinligt. Etiketten och värdemängden anger produktionsområde.\ncatalog:valueset:10438\ncatalog:variable_text:42666:19723:20089"
 
@@ -6103,13 +6103,13 @@ evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar 
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-omraden"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42707:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-omraden"
 fields = { "tags" = ["geography"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42707:19723:20089"
 
@@ -6151,13 +6151,13 @@ evidence = "Koden anger geografisk indelning i län, kommun och församling, int
 
 [[statement]]
 kind = "set"
-subject = "var:sko"
+subject = "var:skordeomrade-areal-skattning"
 fields = { "sets" = ["skordeomrade"] }
 evidence = "SKO är en bokstavskod för skördeområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42711:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sko"
+subject = "var:skordeomrade-areal-skattning"
 fields = { "tags" = ["geography"] }
 evidence = "SKO är en bokstavskod för skördeområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42711:19723:20089"
 

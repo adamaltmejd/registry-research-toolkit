@@ -349,49 +349,49 @@ evidence = "Gatuadressen anger företagets läge.\ncatalog:variable_text:27566:1
 
 [[statement]]
 kind = "set"
-subject = "var:gata-2"
+subject = "var:foretagets-gatuadress"
 fields = { "sets" = [] }
 evidence = "Suffixet 2 saknas i källkolumnen GatuNr.\ncatalog:variable_text:27567:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:gata-2"
+subject = "var:foretagets-gatuadress"
 fields = { "tags" = ["geography"] }
 evidence = "Suffixet 2 saknas i källkolumnen GatuNr.\ncatalog:variable_text:27567:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113b-kontroll"
+subject = "var:hushallsinvestering-totalt"
 fields = { "sets" = [] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113b-kontroll"
+subject = "var:hushallsinvestering-totalt"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27568:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113e"
+subject = "var:hushallsinvestering-energibesparing"
 fields = { "sets" = [] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113e"
+subject = "var:hushallsinvestering-energibesparing"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27569:14975:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113v"
+subject = "var:hushallsinvestering-varmeatervinning"
 fields = { "sets" = [] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27570:14975:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:hus113v"
+subject = "var:hushallsinvestering-varmeatervinning"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källans bokstavskod är inte en läsbar beteckning för hushållsinvestering.\ncatalog:variable_text:27570:14975:16071"
 

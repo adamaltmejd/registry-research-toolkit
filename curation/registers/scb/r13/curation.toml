@@ -913,13 +913,13 @@ evidence = "Näringsgrenskodningen är uppdelad på intilliggande perioder med n
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en opak källkod och 1 är en källkolumnsplats; etiketten anger näringsgren.\ncatalog:variable_text:39333:17897:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en opak källkod och 1 är en källkolumnsplats; etiketten anger näringsgren.\ncatalog:variable_text:39333:17897:19358"
 
@@ -1009,25 +1009,25 @@ evidence = "Variabeln anger enhetens säteskommun.\ncatalog:variable_text:39344:
 
 [[statement]]
 kind = "set"
-subject = "var:sni"
+subject = "var:naringsgren-sni-92"
 fields = { "sets" = ["naringsgren"] }
 evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren.\ncatalog:variable_text:39345:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sni"
+subject = "var:naringsgren-sni-92"
 fields = { "tags" = ["business"] }
 evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren.\ncatalog:variable_text:39345:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sni2002"
+subject = "var:naringsgren-sni-2002"
 fields = { "sets" = ["naringsgren"] }
 evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren; 2002 anger klassifikationens version.\ncatalog:variable_text:39346:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:sni2002"
+subject = "var:naringsgren-sni-2002"
 fields = { "tags" = ["business"] }
 evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren; 2002 anger klassifikationens version.\ncatalog:variable_text:39346:14975:15340"
 

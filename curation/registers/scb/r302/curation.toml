@@ -181,13 +181,13 @@ evidence = "F10_7 är en opak frågekod; variabeln bedömer arbetsmiljöns betyd
 
 [[statement]]
 kind = "set"
-subject = "var:f10-8"
+subject = "var:arbetsbelastning-stress-betydelse-i-yrket"
 fields = { "sets" = ["arbetsfaktorers-betydelse"] }
 evidence = "F10_8 är en opak frågekod; variabeln bedömer arbetsbelastningens betydelse.\ncatalog:valueset:5188\ncatalog:variable_text:26149:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f10-8"
+subject = "var:arbetsbelastning-stress-betydelse-i-yrket"
 fields = { "tags" = ["employment"] }
 evidence = "F10_8 är en opak frågekod; variabeln bedömer arbetsbelastningens betydelse.\ncatalog:valueset:5188\ncatalog:variable_text:26149:14245:14610"
 
@@ -253,145 +253,145 @@ evidence = "F15 är en opak frågekod för önskemål om arbete inom utbildnings
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:skal-utanfor-utbildningsomrade-lag-lon"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235456\ncatalog:variable_text:26155:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:skal-utanfor-utbildningsomrade-lag-lon"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235456\ncatalog:variable_text:26155:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-01"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete-dar-vill-bo"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_01 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235457\ncatalog:variable_text:26156:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-01"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete-dar-vill-bo"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_01 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235457\ncatalog:variable_text:26156:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-02"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_02 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235458\ncatalog:variable_text:26157:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-02"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-arbete"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_02 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235458\ncatalog:variable_text:26157:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-03"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-heltidsarbete"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_03 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235459\ncatalog:variable_text:26158:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-03"
+subject = "var:skal-utanfor-utbildningsomrade-svart-fa-heltidsarbete"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_03 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235459\ncatalog:variable_text:26158:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-04"
+subject = "var:skal-utanfor-utbildningsomrade-arbetar-inom-annan-utbildning"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_04 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235460\ncatalog:variable_text:26159:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-04"
+subject = "var:skal-utanfor-utbildningsomrade-arbetar-inom-annan-utbildning"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_04 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235460\ncatalog:variable_text:26159:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-05"
+subject = "var:skal-utanfor-utbildningsomrade-mer-attraktivt-arbete"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_05 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235461\ncatalog:variable_text:26160:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-05"
+subject = "var:skal-utanfor-utbildningsomrade-mer-attraktivt-arbete"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_05 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235461\ncatalog:variable_text:26160:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-07"
+subject = "var:skal-utanfor-utbildningsomrade-lag-status"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_07 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235462\ncatalog:variable_text:26161:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-07"
+subject = "var:skal-utanfor-utbildningsomrade-lag-status"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_07 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235462\ncatalog:variable_text:26161:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-08"
+subject = "var:skal-utanfor-utbildningsomrade-avsaknad-karriarmojligheter"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_08 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235463\ncatalog:variable_text:26162:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-08"
+subject = "var:skal-utanfor-utbildningsomrade-avsaknad-karriarmojligheter"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_08 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235463\ncatalog:variable_text:26162:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-09"
+subject = "var:skal-utanfor-utbildningsomrade-daliga-arbetstider"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_09 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235464\ncatalog:variable_text:26163:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-09"
+subject = "var:skal-utanfor-utbildningsomrade-daliga-arbetstider"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_09 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235464\ncatalog:variable_text:26163:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-10"
+subject = "var:skal-utanfor-utbildningsomrade-mycket-stress"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_10 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235465\ncatalog:variable_text:26164:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-10"
+subject = "var:skal-utanfor-utbildningsomrade-mycket-stress"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_10 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235465\ncatalog:variable_text:26164:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-11"
+subject = "var:skal-utanfor-utbildningsomrade-dalig-arbetsmiljo"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16_11 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235466\ncatalog:variable_text:26165:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-11"
+subject = "var:skal-utanfor-utbildningsomrade-dalig-arbetsmiljo"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16_11 är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235466\ncatalog:variable_text:26165:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16forts"
+subject = "var:skal-utanfor-utbildningsomrade-annat"
 fields = { "sets" = ["skal-till-arbete-utanfor-utbildningsomradet"] }
 evidence = "F16forts är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235467\ncatalog:variable_text:26166:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f16forts"
+subject = "var:skal-utanfor-utbildningsomrade-annat"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16forts är en opak frågekod; den gemensamma etiketten kräver disambiguering mot övriga skäl.\ncatalog:occurrence:235467\ncatalog:variable_text:26166:14245:14610"
 
@@ -553,13 +553,13 @@ evidence = "F20_5 är en opak frågekod för bedömning av lärosätet.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:f20-6"
+subject = "var:bedomning-uppsats-examensarbete-avslutad-utbildning"
 fields = { "sets" = ["bedomning-av-avslutad-utbildning"] }
 evidence = "F20_6 är en opak frågekod för bedömning av uppsats eller examensarbete.\ncatalog:valueset:8654\ncatalog:variable_text:26180:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f20-6"
+subject = "var:bedomning-uppsats-examensarbete-avslutad-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "F20_6 är en opak frågekod för bedömning av uppsats eller examensarbete.\ncatalog:valueset:8654\ncatalog:variable_text:26180:14245:14610"
 
@@ -625,13 +625,13 @@ evidence = "Etiketten anger nytta men värdemängden anger nöjdhet; kodningen b
 
 [[statement]]
 kind = "set"
-subject = "var:f21-5"
+subject = "var:nytta-utbildning-privatliv-fritid"
 fields = { "sets" = [] }
 evidence = "F21_5 är en opak frågekod.\ncatalog:variable_text:26186:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f21-5"
+subject = "var:nytta-utbildning-privatliv-fritid"
 fields = { "tags" = ["education"] }
 evidence = "F21_5 är en opak frågekod.\ncatalog:variable_text:26186:14245:14610"
 

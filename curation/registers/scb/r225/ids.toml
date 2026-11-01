@@ -24,4 +24,4 @@ public = "land-och-vattenarealer"
 "sjonamn" = ["Land- och vattenarealer: sjonamn"]
 "storasjo" = ["Land- och vattenarealer: storasjo"]
 "totalareal-land-vatten" = ["Land- och vattenarealer: SP_Geometry @ 2020-01-01"]
-"uuid" = ["Land- och vattenarealer: UUID"]
+"objekt-referensar-lopnummer" = ["Land- och vattenarealer: UUID"]

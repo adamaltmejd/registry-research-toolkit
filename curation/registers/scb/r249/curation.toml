@@ -3742,61 +3742,61 @@ evidence = "Variabeln beskriver en lokal utbildningskurs.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:matematik-betygsniva-a-poang-totalt"
 fields = { "sets" = ["provpoang-per-betygsniva"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar med en annan variabel och målet kräver R6-prövning.\ncatalog:variable_text:34703:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:matematik-betygsniva-a-poang-totalt"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar med en annan variabel och målet kräver R6-prövning.\ncatalog:variable_text:34703:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:matematik-betygsniva-c-poang-muntlig-del"
 fields = { "sets" = ["provpoang-per-betygsniva"] }
 evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34704:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:matematik-betygsniva-c-poang-muntlig-del"
 fields = { "tags" = ["education"] }
 evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34704:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:matematik-betygsniva-c-poang-totalt-gy-2011"
 fields = { "sets" = ["provpoang-per-betygsniva"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34705:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:matematik-betygsniva-c-poang-totalt-gy-2011"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34705:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:matematik-betygsniva-e-poang-muntlig-del-gy-2011"
 fields = { "sets" = ["provpoang-per-betygsniva"] }
 evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34706:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:matematik-betygsniva-e-poang-muntlig-del-gy-2011"
 fields = { "tags" = ["education"] }
 evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34706:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:matematik-betygsniva-e-poang-totalt"
 fields = { "sets" = ["provpoang-per-betygsniva"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34707:15887:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:matematik-betygsniva-e-poang-totalt"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34707:15887:16071"
 
@@ -4318,13 +4318,13 @@ evidence = "Kodningen anger skolväsendets verksamhetsform.\ncatalog:valueset:11
 
 [[statement]]
 kind = "set"
-subject = "var:yrkeskod-text"
+subject = "var:yrkespaket-klartext"
 fields = { "sets" = ["yrkespaket"] }
 evidence = "Id:t anger yrkeskod medan källan beskriver yrkespaket i klartext under hela perioden.\ncatalog:variable_text:34766:19905:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:yrkeskod-text"
+subject = "var:yrkespaket-klartext"
 fields = { "tags" = ["education"] }
 evidence = "Id:t anger yrkeskod medan källan beskriver yrkespaket i klartext under hela perioden.\ncatalog:variable_text:34766:19905:20089"
 

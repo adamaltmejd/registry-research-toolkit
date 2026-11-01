@@ -1652,49 +1652,49 @@ evidence = "Variabeln räknar arbetsställen per företag och hör till gruppen 
 
 [[statement]]
 kind = "set"
-subject = "var:antk1"
+subject = "var:antal-foretagskombinationer-fran-ar-1-till-ar-2"
 fields = { "sets" = ["antal-foretagskombinationer"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41140:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:antk1"
+subject = "var:antal-foretagskombinationer-fran-ar-1-till-ar-2"
 fields = { "tags" = ["business"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41140:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:antk1-17484"
+subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
 fields = { "sets" = [] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:antk1-17484"
+subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
 fields = { "tags" = ["employment"] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:antk2"
+subject = "var:antal-foretagskombinationer-fran-ar-2-till-ar-1"
 fields = { "sets" = ["antal-foretagskombinationer"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41142:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:antk2"
+subject = "var:antal-foretagskombinationer-fran-ar-2-till-ar-1"
 fields = { "tags" = ["business"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41142:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:antk2-17484"
+subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
 fields = { "sets" = [] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:antk2-17484"
+subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
 fields = { "tags" = ["employment"] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
@@ -2336,13 +2336,13 @@ evidence = "Den angränsande ägaren anger uttryckligen företagets näringsgren
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni02-4027"
+subject = "var:naringsgren-foretag-sni-2002"
 fields = { "sets" = [] }
 evidence = "Id:t innehåller opak SNI-kod och en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41211:11688:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni02-4027"
+subject = "var:naringsgren-foretag-sni-2002"
 fields = { "tags" = ["business"] }
 evidence = "Id:t innehåller opak SNI-kod och en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41211:11688:14975"
 
@@ -2360,13 +2360,13 @@ evidence = "FtgSni-familjen behålls; variabeln kodar företagets näringsgren.\
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni07-4027"
+subject = "var:naringsgren-foretag-sni-2007"
 fields = { "sets" = [] }
 evidence = "Id:t har en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41213:13514:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni07-4027"
+subject = "var:naringsgren-foretag-sni-2007"
 fields = { "tags" = ["business"] }
 evidence = "Id:t har en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41213:13514:18993"
 
@@ -2408,13 +2408,13 @@ evidence = "Identitetsfakt och mindre specifik definition kräver granskning. Co
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni92-4027"
+subject = "var:naringsgren-foretag-sni-92"
 fields = { "sets" = [] }
 evidence = "Id:t har en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41217:10957:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni92-4027"
+subject = "var:naringsgren-foretag-sni-92"
 fields = { "tags" = ["business"] }
 evidence = "Id:t har en tillagd räknarsuffix; målet kräver kollisionskontroll.\ncatalog:variable_text:41217:10957:11688"
 
@@ -2660,13 +2660,13 @@ evidence = "Samma sektorklassificering är perioduppdelad från institutionell-s
 
 [[statement]]
 kind = "set"
-subject = "var:institutionell-sektor-2"
+subject = "var:institutionell-sektor-foretag-november-foregaende-ar"
 fields = { "sets" = [] }
 evidence = "Suffixet 2 kommer inte från källkolumnen Sektor1.\ncatalog:variable_text:41240:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:institutionell-sektor-2"
+subject = "var:institutionell-sektor-foretag-november-foregaende-ar"
 fields = { "tags" = ["business"] }
 evidence = "Suffixet 2 kommer inte från källkolumnen Sektor1.\ncatalog:variable_text:41240:18993:19358"
 
@@ -2744,13 +2744,13 @@ evidence = "Variabeln kodar företagets juridiska form.\ncatalog:variable_text:4
 
 [[statement]]
 kind = "set"
-subject = "var:juridisk-form-2"
+subject = "var:juridisk-form-foretag-november-foregaende-ar"
 fields = { "sets" = ["juridisk-form"] }
 evidence = "Suffixet 2 är ett tilldelat räknarsuffix; källkolumnens suffix är 1.\ncatalog:occurrence:415782\ncatalog:variable_text:41247:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:juridisk-form-2"
+subject = "var:juridisk-form-foretag-november-foregaende-ar"
 fields = { "tags" = ["business"] }
 evidence = "Suffixet 2 är ett tilldelat räknarsuffix; källkolumnens suffix är 1.\ncatalog:occurrence:415782\ncatalog:variable_text:41247:18993:19358"
 
@@ -2888,25 +2888,25 @@ evidence = "Kostnadsersättningar utöver lön är arbetsrelaterade ersättninga
 
 [[statement]]
 kind = "set"
-subject = "var:kvar"
+subject = "var:klassificering-foretag-fad"
 fields = { "sets" = ["foretagets-fad-klassificering"] }
 evidence = "Kvar är en källmnemonik som inte beskriver hela klassificeringen av kvarvarande, nya och nedlagda företag.\ncatalog:valueset:5402\ncatalog:variable_text:41260:17532:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kvar"
+subject = "var:klassificering-foretag-fad"
 fields = { "tags" = ["business"] }
 evidence = "Kvar är en källmnemonik som inte beskriver hela klassificeringen av kvarvarande, nya och nedlagda företag.\ncatalog:valueset:5402\ncatalog:variable_text:41260:17532:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kvarf"
+subject = "var:klassificering-foretag-fad-individer"
 fields = { "sets" = ["foretagets-fad-klassificering"] }
 evidence = "Kvarf är en opak källmnemonik för företagets FAD-klassificering.\ncatalog:valueset:10818\ncatalog:variable_text:41261:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:kvarf"
+subject = "var:klassificering-foretag-fad-individer"
 fields = { "tags" = ["business"] }
 evidence = "Kvarf är en opak källmnemonik för företagets FAD-klassificering.\ncatalog:valueset:10818\ncatalog:variable_text:41261:17897:18993"
 
@@ -2924,13 +2924,13 @@ evidence = "Kvot av gemensamma sysselsatta.\ncatalog:variable_text:41262:17897:1
 
 [[statement]]
 kind = "set"
-subject = "var:kvot1-44781"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t-1"
 fields = { "sets" = ["gemensamma-sysselsatta"] }
 evidence = "Suffixet 44781 är inte del av källkolumnen.\ncatalog:variable_text:41263:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kvot1-44781"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t-1"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 44781 är inte del av källkolumnen.\ncatalog:variable_text:41263:18262:19358"
 
@@ -2948,13 +2948,13 @@ evidence = "Kvot av gemensamma sysselsatta.\ncatalog:variable_text:41264:17897:1
 
 [[statement]]
 kind = "set"
-subject = "var:kvot2-44781"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t"
 fields = { "sets" = ["gemensamma-sysselsatta"] }
 evidence = "Suffixet 44781 är inte del av källkolumnen.\ncatalog:variable_text:41265:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kvot2-44781"
+subject = "var:kvot-gemensamma-sysselsatta-av-sysselsatta-arbetsstalle-t"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 44781 är inte del av källkolumnen.\ncatalog:variable_text:41265:18262:19358"
 
@@ -3932,25 +3932,25 @@ evidence = "SUN2020Inr är en källmnemonik vars kod inte förekommer i etikette
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-66"
+subject = "var:utbildningsniva-sun-2020-komplett-3-stallig"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Suffixet 66 är inte del av källkolumnen.\ncatalog:variable_text:41352:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-66"
+subject = "var:utbildningsniva-sun-2020-komplett-3-stallig"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 66 är inte del av källkolumnen.\ncatalog:variable_text:41352:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-old"
+subject = "var:utbildningsniva-sun-2020-forsta-positionen"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten. Variabeln mäter utbildningsnivå.\ncatalog:variable_text:41353:17897:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-old"
+subject = "var:utbildningsniva-sun-2020-forsta-positionen"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en bokstavskod som inte förekommer i etiketten. Variabeln mäter utbildningsnivå.\ncatalog:variable_text:41353:17897:18993"
 

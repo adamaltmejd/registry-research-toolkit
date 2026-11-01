@@ -559,13 +559,13 @@ evidence = "H är en bokstavskod för hushåll; etiketten anger hushållstyp.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:ibelapr"
+subject = "var:introduktionsersattning-i-april"
 fields = { "sets" = ["introduktionsersattningsbelopp"] }
 evidence = "I är en bokstavskod för introduktionsersättning; etiketten anger aprilbeloppet.\ncatalog:variable_text:7281:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:ibelapr"
+subject = "var:introduktionsersattning-i-april"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "I är en bokstavskod för introduktionsersättning; etiketten anger aprilbeloppet.\ncatalog:variable_text:7281:13149:13514"
 

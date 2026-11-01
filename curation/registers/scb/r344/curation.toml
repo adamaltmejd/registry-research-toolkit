@@ -256,13 +256,13 @@ evidence = "Uppgiften gäller utbildningsstöd.\ncatalog:variable_text:43126:200
 
 [[statement]]
 kind = "set"
-subject = "var:antal"
+subject = "var:antal-amnen-ej-natt-kunskapskraven-4-grupper"
 fields = { "sets" = [] }
 evidence = "Antal är en ospecifik källkod; etiketten anger antal ämnen där kraven inte nåtts.\ncatalog:variable_text:43127:16617:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:antal"
+subject = "var:antal-amnen-ej-natt-kunskapskraven-4-grupper"
 fields = { "tags" = ["education"] }
 evidence = "Antal är en ospecifik källkod; etiketten anger antal ämnen där kraven inte nåtts.\ncatalog:variable_text:43127:16617:20270"
 
@@ -388,13 +388,13 @@ evidence = "Beh är en källkod i samma förkortningsfamilj som övriga beh-vari
 
 [[statement]]
 kind = "set"
-subject = "var:beh-impro"
+subject = "var:behorighet-programinriktade-individuella-val"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Beh och IMPRO är koder; källan beskriver behörighet till programinriktat individuellt val.\ncatalog:variable_text:43140:18078:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-impro"
+subject = "var:behorighet-programinriktade-individuella-val"
 fields = { "tags" = ["education"] }
 evidence = "Beh och IMPRO är koder; källan beskriver behörighet till programinriktat individuellt val.\ncatalog:variable_text:43140:18078:20270"
 
@@ -652,13 +652,13 @@ evidence = "Ämnesbetyg i engelska.\ncatalog:variable_text:43161:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:en-dhsk"
+subject = "var:betyg-engelska-dova-horselskadade"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Dhsk är en källkod som inte är läsbar i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43162:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:en-dhsk"
+subject = "var:betyg-engelska-dova-horselskadade"
 fields = { "tags" = ["education"] }
 evidence = "Dhsk är en källkod som inte är läsbar i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43162:15522:16983"
 
@@ -988,25 +988,25 @@ evidence = "Suffixet 2 är en tilldelad räknare som inte finns i källkolumnen;
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:modersmal-betyg"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "ML är en källkod som inte förekommer i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43191:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:modersmal-betyg"
 fields = { "tags" = ["education"] }
 evidence = "ML är en källkod som inte förekommer i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43191:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:modersmal-sprak"
 fields = { "sets" = ["undervisningsamne-sprak"] }
 evidence = "ML är en källkod som inte förekommer i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43192:12965:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:modersmal-sprak"
 fields = { "tags" = ["education"] }
 evidence = "ML är en källkod som inte förekommer i etiketten; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43192:12965:20270"
 
@@ -1072,25 +1072,25 @@ evidence = "Moderns födelseland.\ncatalog:variable_text:43197:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:mspr1-dhsk"
+subject = "var:moderna-sprak-elevens-val-betyg-dova-horselskadade"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Mspr1 och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43198:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:mspr1-dhsk"
+subject = "var:moderna-sprak-elevens-val-betyg-dova-horselskadade"
 fields = { "tags" = ["education"] }
 evidence = "Mspr1 och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43198:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:mspr2-dhsk"
+subject = "var:moderna-sprak-sprakval-betyg-dova-horselskadade"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Mspr2 och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43199:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:mspr2-dhsk"
+subject = "var:moderna-sprak-sprakval-betyg-dova-horselskadade"
 fields = { "tags" = ["education"] }
 evidence = "Mspr2 och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43199:15522:16983"
 
@@ -1240,49 +1240,49 @@ evidence = "Ml är en källmnemonik vars bokstäver inte är igenkännbara ordst
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-utbildningsniva-sun-2000-7-nivaer"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43223:12965:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-utbildningsniva-sun-2000-7-nivaer"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43223:12965:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor"
+subject = "var:moderns-utbildningsniva-sun-2000"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43224:18184:18185"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor"
+subject = "var:moderns-utbildningsniva-sun-2000"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43224:18184:18185"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:moderns-utbildningsniva-sun-2020"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:43225:20012:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-2"
+subject = "var:moderns-utbildningsniva-sun-2020"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:43225:20012:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad"
+subject = "var:moderns-utbildningsniva-grupperad-sun-2000"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43226:18184:18185"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-grupperad"
+subject = "var:moderns-utbildningsniva-grupperad-sun-2000"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassificeringskod som inte förekommer i etiketten.\ncatalog:variable_text:43226:18184:18185"
 
@@ -1492,37 +1492,37 @@ evidence = "Tidigaste invandringsdatum ingår med senaste invandringsdatum.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:tn-dhsk"
+subject = "var:betyg-teckensprak-dova-horselskadade"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Tn och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43245:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:tn-dhsk"
+subject = "var:betyg-teckensprak-dova-horselskadade"
 fields = { "tags" = ["education"] }
 evidence = "Tn och dhsk är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43245:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:tn-ho"
+subject = "var:betyg-teckensprak-horande"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Tn och ho är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43246:15887:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:tn-ho"
+subject = "var:betyg-teckensprak-horande"
 fields = { "tags" = ["education"] }
 evidence = "Tn och ho är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43246:15887:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:tn-n"
+subject = "var:betyg-teckensprak-nyborjare"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Tn och n är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43247:15522:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:tn-n"
+subject = "var:betyg-teckensprak-nyborjare"
 fields = { "tags" = ["education"] }
 evidence = "Tn och n är källkoder; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43247:15522:16983"
 

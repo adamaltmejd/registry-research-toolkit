@@ -25,25 +25,25 @@ evidence = "Branschgruppering beskriver näringslivets struktur.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:cu-status-text"
+subject = "var:statuskod-klartext"
 fields = { "sets" = [] }
 evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7942\ncatalog:variable_text:7942:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:cu-status-text"
+subject = "var:statuskod-klartext"
 fields = { "tags" = ["methods"] }
 evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7942\ncatalog:variable_text:7942:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:cu-statusparent"
+subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
 fields = { "sets" = [] }
 evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7943\ncatalog:variable_text:7943:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:cu-statusparent"
+subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
 fields = { "tags" = ["methods"] }
 evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7943\ncatalog:variable_text:7943:18628:20454"
 

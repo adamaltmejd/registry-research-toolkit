@@ -547,73 +547,73 @@ evidence = "Branschindikatorn ingår i kandidatgruppen.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:tixfast"
+subject = "var:tjansteproduktionsindex-fasta-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32144:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfast"
+subject = "var:tjansteproduktionsindex-fasta-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32144:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfastkal"
+subject = "var:tjansteproduktionsindex-fasta-kalenderkorrigerade-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32145:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfastkal"
+subject = "var:tjansteproduktionsindex-fasta-kalenderkorrigerade-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32145:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixlopande"
+subject = "var:tjansteproduktionsindex-lopande-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32146:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixlopande"
+subject = "var:tjansteproduktionsindex-lopande-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32146:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixlopandekal"
+subject = "var:tjansteproduktionsindex-lopande-kalenderkorrigerade-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32147:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixlopandekal"
+subject = "var:tjansteproduktionsindex-lopande-kalenderkorrigerade-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32147:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixsasongsrensad"
+subject = "var:tjansteproduktionsindex-sasongsjusterat"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32148:14245:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixsasongsrensad"
+subject = "var:tjansteproduktionsindex-sasongsjusterat"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32148:14245:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixtrend"
+subject = "var:tjansteproduktionsindex-trend"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32149:14245:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixtrend"
+subject = "var:tjansteproduktionsindex-trend"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32149:14245:16436"
 

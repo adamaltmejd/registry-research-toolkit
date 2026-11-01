@@ -5,7 +5,7 @@ public = "tradbransle-torv"
 [variables]
 "adress" = ["Trädbränsle-, torv- och avfallspriser: Adress"]
 "anlaggningens-namn" = ["Trädbränsle-, torv- och avfallspriser: ArbNamn @ 2014-01-01"]
-"anlaggningens-namn-2" = ["Trädbränsle-, torv- och avfallspriser: Anl"]
+"anlaggningens-namn-industri" = ["Trädbränsle-, torv- och avfallspriser: Anl"]
 "arbstallnamn" = ["Trädbränsle-, torv- och avfallspriser: ArbNamn @ 2016-01-01"]
 "avfallsmangd" = ["Trädbränsle-, torv- och avfallspriser: Avfallsmangd"]
 "avfallstyp" = ["Trädbränsle-, torv- och avfallspriser: Avfallstyp"]

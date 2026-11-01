@@ -580,13 +580,13 @@ evidence = "ML är en bokstavskod för modersmål.\ncatalog:variable_text:12987:
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-utbildningsniva-sju-nivaer"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en källförkortning som inte återges i etiketten. Variabeln avser moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:valueset:7048\ncatalog:variable_text:12988:15628:15629"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-utbildningsniva-sju-nivaer"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en källförkortning som inte återges i etiketten. Variabeln avser moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:valueset:7048\ncatalog:variable_text:12988:15628:15629"
 
@@ -796,13 +796,13 @@ evidence = "Föräldrarnas utbildningsnivå ingår i gruppen.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-mor-grupperad"
+subject = "var:foraldrarnas-hogsta-utbildningsniva-grupperad"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Id:t anger modern medan källans etikett och definition anger föräldrarna i alla perioder.\ncatalog:variable_text:13006:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-mor-grupperad"
+subject = "var:foraldrarnas-hogsta-utbildningsniva-grupperad"
 fields = { "tags" = ["education"] }
 evidence = "Id:t anger modern medan källans etikett och definition anger föräldrarna i alla perioder.\ncatalog:variable_text:13006:20011:20012"
 

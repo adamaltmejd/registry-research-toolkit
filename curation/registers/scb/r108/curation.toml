@@ -337,49 +337,49 @@ evidence = "F22 används för olika begrepp i olika perioder.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:f22-01"
+subject = "var:forsorjning-hogskolestudier-lon"
 fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
 evidence = "F22_01 är en ogenomskinlig frågekod; etiketten anger försörjning med lön.\ncatalog:variable_text:23384:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-01"
+subject = "var:forsorjning-hogskolestudier-lon"
 fields = { "tags" = ["education", "income"] }
 evidence = "F22_01 är en ogenomskinlig frågekod; etiketten anger försörjning med lön.\ncatalog:variable_text:23384:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-02"
+subject = "var:forsorjning-hogskolestudier-studiemedel"
 fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
 evidence = "F22_02 är en ogenomskinlig frågekod; etiketten anger försörjning med studiemedel.\ncatalog:variable_text:23385:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-02"
+subject = "var:forsorjning-hogskolestudier-studiemedel"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F22_02 är en ogenomskinlig frågekod; etiketten anger försörjning med studiemedel.\ncatalog:variable_text:23385:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-03"
+subject = "var:forsorjning-hogskolestudier-besparingar"
 fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
 evidence = "F22_03 är en ogenomskinlig frågekod; etiketten anger försörjning med besparingar.\ncatalog:variable_text:23386:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-03"
+subject = "var:forsorjning-hogskolestudier-besparingar"
 fields = { "tags" = ["education", "wealth"] }
 evidence = "F22_03 är en ogenomskinlig frågekod; etiketten anger försörjning med besparingar.\ncatalog:variable_text:23386:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-04"
+subject = "var:forsorjning-hogskolestudier-lan-foraldrar-slaktingar"
 fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
 evidence = "F22_04 är en ogenomskinlig frågekod; etiketten anger lån från föräldrar eller släktingar.\ncatalog:variable_text:23387:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f22-04"
+subject = "var:forsorjning-hogskolestudier-lan-foraldrar-slaktingar"
 fields = { "tags" = ["education", "finance"] }
 evidence = "F22_04 är en ogenomskinlig frågekod; etiketten anger lån från föräldrar eller släktingar.\ncatalog:variable_text:23387:18078:18444"
 
@@ -505,13 +505,13 @@ evidence = "F25_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23397:
 
 [[statement]]
 kind = "set"
-subject = "var:f25j"
+subject = "var:infokalla-muntlig-studie-yrkesvagledare-larare-gymnasiet"
 fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
 evidence = "F25j är en opak källkod; etiketten beskriver informationskällan.\ncatalog:variable_text:23398:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f25j"
+subject = "var:infokalla-muntlig-studie-yrkesvagledare-larare-gymnasiet"
 fields = { "tags" = ["education"] }
 evidence = "F25j är en opak källkod; etiketten beskriver informationskällan.\ncatalog:variable_text:23398:18809:19174"
 
@@ -817,13 +817,13 @@ evidence = "F33-07 är en opak frågekod.\ncatalog:variable_text:23423:18809:191
 
 [[statement]]
 kind = "set"
-subject = "var:f33-08"
+subject = "var:distansundervisning-svarast-svenska-svenska-andrasprak"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-08 är en opak frågekod.\ncatalog:variable_text:23424:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-08"
+subject = "var:distansundervisning-svarast-svenska-svenska-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "F33-08 är en opak frågekod.\ncatalog:variable_text:23424:18809:19174"
 
@@ -1873,37 +1873,37 @@ evidence = "Källkolumnens programkodning varierar mellan perioderna.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:pgm-ga"
+subject = "var:gymnasieprogram-arskurs-2-lasaret-2002-03"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23516:12234:12600"
 
 [[statement]]
 kind = "set"
-subject = "var:pgm-ga"
+subject = "var:gymnasieprogram-arskurs-2-lasaret-2002-03"
 fields = { "tags" = ["education"] }
 evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23516:12234:12600"
 
 [[statement]]
 kind = "set"
-subject = "var:pgm2"
+subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23517:15887:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:pgm2"
+subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
 fields = { "tags" = ["education"] }
 evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23517:15887:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:pgmgrp"
+subject = "var:gymnasieprogram-fyra-grupper-2009-10"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Pgmgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23518:14426:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:pgmgrp"
+subject = "var:gymnasieprogram-fyra-grupper-2009-10"
 fields = { "tags" = ["education"] }
 evidence = "Pgmgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23518:14426:14791"
 
@@ -1921,13 +1921,13 @@ evidence = "Pgrgrp är en opak källkod; etiketten kolliderar och behöver käll
 
 [[statement]]
 kind = "set"
-subject = "var:prggrp"
+subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Prggrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23520:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:prggrp"
+subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
 fields = { "tags" = ["education"] }
 evidence = "Prggrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23520:18809:19174"
 
@@ -2389,25 +2389,25 @@ evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisa
 
 [[statement]]
 kind = "set"
-subject = "var:wk-k"
+subject = "var:kalibrerad-vikt-fragor-kort-och-lang-enkat"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "Wk-k är en opak källkod.\ncatalog:variable_text:23560:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-k"
+subject = "var:kalibrerad-vikt-fragor-kort-och-lang-enkat"
 fields = { "tags" = ["methods"] }
 evidence = "Wk-k är en opak källkod.\ncatalog:variable_text:23560:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-l"
+subject = "var:kalibrerad-vikt-fragor-endast-lang-enkat"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "Wk-l är en opak källkod.\ncatalog:variable_text:23561:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-l"
+subject = "var:kalibrerad-vikt-fragor-endast-lang-enkat"
 fields = { "tags" = ["methods"] }
 evidence = "Wk-l är en opak källkod.\ncatalog:variable_text:23561:15156:15522"
 
@@ -2425,13 +2425,13 @@ evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisa
 
 [[statement]]
 kind = "set"
-subject = "var:wk-sam"
+subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23563:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-sam"
+subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
 fields = { "tags" = ["methods"] }
 evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23563:18078:18444"
 

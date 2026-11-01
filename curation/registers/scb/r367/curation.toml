@@ -1323,37 +1323,37 @@ evidence = "Tid som åskådare vid idrottsevenemang är en underhållningsaktivi
 
 [[statement]]
 kind = "set"
-subject = "var:ba"
+subject = "var:biaktivitet"
 fields = { "sets" = ["biaktivitet"] }
 evidence = "BA är en bokstavskod för biaktivitet.\ncatalog:variable_text:45216:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:ba"
+subject = "var:biaktivitet"
 fields = { "tags" = ["culture"] }
 evidence = "BA är en bokstavskod för biaktivitet.\ncatalog:variable_text:45216:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:ba91"
+subject = "var:biaktivitet-omkodad-90-91"
 fields = { "sets" = ["biaktivitet"] }
 evidence = "BA är en bokstavskod för biaktivitet; etiketten delas med andra variabler.\ncatalog:variable_text:45217:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:ba91"
+subject = "var:biaktivitet-omkodad-90-91"
 fields = { "tags" = ["culture"] }
 evidence = "BA är en bokstavskod för biaktivitet; etiketten delas med andra variabler.\ncatalog:variable_text:45217:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:baind1"
+subject = "var:biaktivitet-aggregerad"
 fields = { "sets" = ["biaktivitet"] }
 evidence = "Id:t är en källkod för aggregerad biaktivitet; etiketten delas med andra variabler.\ncatalog:variable_text:45218:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:baind1"
+subject = "var:biaktivitet-aggregerad"
 fields = { "tags" = ["culture"] }
 evidence = "Id:t är en källkod för aggregerad biaktivitet; etiketten delas med andra variabler.\ncatalog:variable_text:45218:11139:11504"
 
@@ -1731,13 +1731,13 @@ evidence = "Id:t är en opak källkod; etiketten anger disponibel inkomst enligt
 
 [[statement]]
 kind = "set"
-subject = "var:cfvikih"
+subject = "var:sammanraknad-forvarvs-kapitalinkomst-familj-2000"
 fields = { "sets" = ["sammanraknad-forvarvs-och-kapitalinkomst"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45252:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:cfvikih"
+subject = "var:sammanraknad-forvarvs-kapitalinkomst-familj-2000"
 fields = { "tags" = ["income"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45252:11139:11504"
 
@@ -2007,13 +2007,13 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:45281:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:tidsbrist-avsta-saker-vardagar"
 fields = { "sets" = ["upplevd-tidsbrist"] }
 evidence = "F19 är en frågekod.\ncatalog:variable_text:45282:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:tidsbrist-avsta-saker-vardagar"
 fields = { "tags" = ["culture"] }
 evidence = "F19 är en frågekod.\ncatalog:variable_text:45282:18628:18993"
 
@@ -2031,13 +2031,13 @@ evidence = "F2 är en ogenomskinlig källkod.\ncatalog:variable_text:45283:14791
 
 [[statement]]
 kind = "set"
-subject = "var:f2-1"
+subject = "var:bor-med-make-maka-partner"
 fields = { "sets" = ["hushallssammansattning"] }
 evidence = "F2_1 är en frågekod.\ncatalog:variable_text:45284:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f2-1"
+subject = "var:bor-med-make-maka-partner"
 fields = { "tags" = ["family-household"] }
 evidence = "F2_1 är en frågekod.\ncatalog:variable_text:45284:18628:18993"
 
@@ -2103,13 +2103,13 @@ evidence = "F20 är en ogenomskinlig källkod.\ncatalog:variable_text:45289:1862
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:mycket-gora-svart-hinna-vardagar"
 fields = { "sets" = ["upplevd-sysselsatthetsbelastning"] }
 evidence = "F21 är en frågekod.\ncatalog:variable_text:45290:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:mycket-gora-svart-hinna-vardagar"
 fields = { "tags" = ["culture"] }
 evidence = "F21 är en frågekod.\ncatalog:variable_text:45290:18628:18993"
 
@@ -2199,13 +2199,13 @@ evidence = "F29 är en ogenomskinlig källkod.\ncatalog:variable_text:45299:1862
 
 [[statement]]
 kind = "set"
-subject = "var:f3"
+subject = "var:klockslag-lagga-sig-sova"
 fields = { "sets" = ["somnens-tidpunkter"] }
 evidence = "F3 är en ogenomskinlig källkod; definitionen anger ett klockslag.\ncatalog:variable_text:45300:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f3"
+subject = "var:klockslag-lagga-sig-sova"
 fields = { "tags" = [] }
 evidence = "F3 är en ogenomskinlig källkod; definitionen anger ett klockslag.\ncatalog:variable_text:45300:14791:15156"
 
@@ -2343,25 +2343,25 @@ evidence = "F3a är en frågekod.\ncatalog:variable_text:45311:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f3b"
+subject = "var:antal-barn-0-6-ar-hushallet"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "F3b är en frågekod.\ncatalog:variable_text:45312:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f3b"
+subject = "var:antal-barn-0-6-ar-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "F3b är en frågekod.\ncatalog:variable_text:45312:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f4"
+subject = "var:nattsomn-forsta-natten"
 fields = { "sets" = ["somnstatus"] }
 evidence = "F4 är en ogenomskinlig källkod.\ncatalog:valueset:7881\ncatalog:variable_text:45313:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:f4"
+subject = "var:nattsomn-forsta-natten"
 fields = { "tags" = ["health"] }
 evidence = "F4 är en ogenomskinlig källkod.\ncatalog:valueset:7881\ncatalog:variable_text:45313:14791:15156"
 
@@ -2463,25 +2463,25 @@ evidence = "F47 är en ogenomskinlig källkod.\ncatalog:variable_text:45321:1862
 
 [[statement]]
 kind = "set"
-subject = "var:f48"
+subject = "var:studier-minuter"
 fields = { "sets" = ["tid-for-studier"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45322:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f48"
+subject = "var:studier-minuter"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45322:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f49"
+subject = "var:forvarvsarbete-minuter"
 fields = { "sets" = ["tid-for-forvarvsarbete"] }
 evidence = "F49 är en ogenomskinlig källkod.\ncatalog:variable_text:45323:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f49"
+subject = "var:forvarvsarbete-minuter"
 fields = { "tags" = ["employment"] }
 evidence = "F49 är en ogenomskinlig källkod.\ncatalog:variable_text:45323:18628:18993"
 
@@ -2619,13 +2619,13 @@ evidence = "F5a är en frågekod.\ncatalog:variable_text:45334:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b"
+subject = "var:antal-barn-13-19-ar-hushallet"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "F5b är en frågekod.\ncatalog:variable_text:45335:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:f5b"
+subject = "var:antal-barn-13-19-ar-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "F5b är en frågekod.\ncatalog:variable_text:45335:18628:18993"
 
@@ -2883,25 +2883,25 @@ evidence = "Måttet avser total tid för förvärvsarbete.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:fr10min"
+subject = "var:arbete-skola-utomhus-minuter"
 fields = { "sets" = ["arbetstid-utomhus"] }
 evidence = "FR10 är en källkod utan läsbar betydelse. Minuten är en komponent av den uppgivna utomhustiden; den gemensamma etiketten behöver kolumndisambiguering.\ncatalog:occurrence:466249\ncatalog:variable_text:45358:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr10min"
+subject = "var:arbete-skola-utomhus-minuter"
 fields = { "tags" = ["employment"] }
 evidence = "FR10 är en källkod utan läsbar betydelse. Minuten är en komponent av den uppgivna utomhustiden; den gemensamma etiketten behöver kolumndisambiguering.\ncatalog:occurrence:466249\ncatalog:variable_text:45358:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr10tim"
+subject = "var:arbete-skola-utomhus-timmar"
 fields = { "sets" = ["arbetstid-utomhus"] }
 evidence = "FR10 är en källkod utan läsbar betydelse. Timmen är en komponent av den uppgivna utomhustiden; den gemensamma etiketten behöver kolumndisambiguering.\ncatalog:occurrence:466250\ncatalog:variable_text:45359:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:fr10tim"
+subject = "var:arbete-skola-utomhus-timmar"
 fields = { "tags" = ["employment"] }
 evidence = "FR10 är en källkod utan läsbar betydelse. Timmen är en komponent av den uppgivna utomhustiden; den gemensamma etiketten behöver kolumndisambiguering.\ncatalog:occurrence:466250\ncatalog:variable_text:45359:11139:11504"
 
@@ -3135,37 +3135,37 @@ evidence = "Frekvens mäter omfattningen av matlagningshjälp.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelp"
+subject = "var:gett-personlig-hjalp-utan-ersattning"
 fields = { "sets" = ["hjalp-med-hushallsaktiviteter"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:45380:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelp"
+subject = "var:gett-personlig-hjalp-utan-ersattning"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:45380:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelpant"
+subject = "var:gett-personlig-hjalp-antal-ganger-senaste-manaden"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45381:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelpant"
+subject = "var:gett-personlig-hjalp-antal-ganger-senaste-manaden"
 fields = { "tags" = ["social-care"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45381:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelpofta"
+subject = "var:gett-personlig-hjalp-hur-ofta"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45382:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gpershelpofta"
+subject = "var:gett-personlig-hjalp-hur-ofta"
 fields = { "tags" = ["social-care"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45382:14791:15156"
 
@@ -3387,13 +3387,13 @@ evidence = "HA är en bokstavskod.\ncatalog:variable_text:45400:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:ha91"
+subject = "var:huvudaktivitet-jamforbar-90-91"
 fields = { "sets" = ["huvudaktivitet"] }
 evidence = "HA är en bokstavskod.\ncatalog:variable_text:45401:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:ha91"
+subject = "var:huvudaktivitet-jamforbar-90-91"
 fields = { "tags" = ["culture"] }
 evidence = "HA är en bokstavskod.\ncatalog:variable_text:45401:14791:15156"
 
@@ -4299,13 +4299,13 @@ evidence = "Antal kulturbesök mäter deras omfattning.\ncatalog:variable_text:4
 
 [[statement]]
 kind = "set"
-subject = "var:l"
+subject = "var:lage-fardmedel"
 fields = { "sets" = [] }
 evidence = "En ensam källbokstav är en opak kod; etiketten anger läge eller färdmedel.\ncatalog:variable_text:45480:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:l"
+subject = "var:lage-fardmedel"
 fields = { "tags" = ["geography", "transport"] }
 evidence = "En ensam källbokstav är en opak kod; etiketten anger läge eller färdmedel.\ncatalog:variable_text:45480:14791:15156"
 
@@ -4815,13 +4815,13 @@ evidence = "Motionsfrekvens hör till gruppen för idrott och motion.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:msborn"
+subject = "var:fodelsear-maka-make-sambo"
 fields = { "sets" = ["fodelsear"] }
 evidence = "MS är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45524:7486:7851"
 
 [[statement]]
 kind = "set"
-subject = "var:msborn"
+subject = "var:fodelsear-maka-make-sambo"
 fields = { "tags" = ["demographics"] }
 evidence = "MS är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45524:7486:7851"
 
@@ -4839,13 +4839,13 @@ evidence = "Antal barn efter ålder.\ncatalog:variable_text:45525:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:mssex"
+subject = "var:kon-maka-make-sambo"
 fields = { "sets" = ["kon"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45526:7486:7851"
 
 [[statement]]
 kind = "set"
-subject = "var:mssex"
+subject = "var:kon-maka-make-sambo"
 fields = { "tags" = ["demographics"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45526:7486:7851"
 
@@ -6783,13 +6783,13 @@ evidence = "Måttet avser tid för städning.\ncatalog:variable_text:45689:14791
 
 [[statement]]
 kind = "set"
-subject = "var:stbant16"
+subject = "var:antal-barn-13-16-ar"
 fields = { "sets" = ["barn-i-hushallet"] }
 evidence = "Familjens källkodade namn ges en gemensam läsbarhetsbedömning. Etiketten anger antal barn 13–16 år.\ncatalog:occurrence:466764\ncatalog:variable_text:45690:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:stbant16"
+subject = "var:antal-barn-13-16-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Familjens källkodade namn ges en gemensam läsbarhetsbedömning. Etiketten anger antal barn 13–16 år.\ncatalog:occurrence:466764\ncatalog:variable_text:45690:14791:15156"
 
@@ -6891,13 +6891,13 @@ evidence = "Avser tillgång till fritidshus.\ncatalog:variable_text:45698:14791:
 
 [[statement]]
 kind = "set"
-subject = "var:sun"
+subject = "var:utbildningsniva-sun-1996"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en klassifikationsförkortning som saknas i etiketten; etiketten anger utbildningsnivå.\ncatalog:occurrence:466396\ncatalog:variable_text:45699:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:sun"
+subject = "var:utbildningsniva-sun-1996"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationsförkortning som saknas i etiketten; etiketten anger utbildningsnivå.\ncatalog:occurrence:466396\ncatalog:variable_text:45699:11139:11504"
 
@@ -6927,13 +6927,13 @@ evidence = "Utbildningsnivå.\ncatalog:variable_text:45701:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:sunms"
+subject = "var:utbildningsniva-partner"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:45702:11139:11504"
 
 [[statement]]
 kind = "set"
-subject = "var:sunms"
+subject = "var:utbildningsniva-partner"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:45702:11139:11504"
 
@@ -7371,13 +7371,13 @@ evidence = "Tid för underhållsarbete.\ncatalog:variable_text:45740:14791:15156
 
 [[statement]]
 kind = "set"
-subject = "var:upborn"
+subject = "var:fodelsear-urvalsperson"
 fields = { "sets" = ["fodelsear"] }
 evidence = "UP är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45742:7486:7851"
 
 [[statement]]
 kind = "set"
-subject = "var:upborn"
+subject = "var:fodelsear-urvalsperson"
 fields = { "tags" = ["demographics"] }
 evidence = "UP är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45742:7486:7851"
 
@@ -7395,13 +7395,13 @@ evidence = "Självskattad hälsa.\ncatalog:variable_text:45743:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:upsex"
+subject = "var:kon-urvalsperson"
 fields = { "sets" = ["kon"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45744:7486:7851"
 
 [[statement]]
 kind = "set"
-subject = "var:upsex"
+subject = "var:kon-urvalsperson"
 fields = { "tags" = ["demographics"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45744:7486:7851"
 

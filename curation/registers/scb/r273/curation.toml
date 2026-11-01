@@ -1099,49 +1099,49 @@ evidence = "Antal barn efter ålder.\ncatalog:variable_text:44234:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basaltfar"
+subject = "var:arbetsmarknadsstatus-far-grov"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44235:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basaltfar"
+subject = "var:arbetsmarknadsstatus-far-grov"
 fields = { "tags" = ["employment"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44235:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basaltmor"
+subject = "var:arbetsmarknadsstatus-mor-grov"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44236:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basaltmor"
+subject = "var:arbetsmarknadsstatus-mor-grov"
 fields = { "tags" = ["employment"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44236:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basfar"
+subject = "var:arbetsmarknadsstatus-far"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44237:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basfar"
+subject = "var:arbetsmarknadsstatus-far"
 fields = { "tags" = ["employment"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44237:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basmor"
+subject = "var:arbetsmarknadsstatus-mor"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44238:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:basmor"
+subject = "var:arbetsmarknadsstatus-mor"
 fields = { "tags" = ["employment"] }
 evidence = "BAS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44238:18993:19723"
 
@@ -1339,13 +1339,13 @@ evidence = "Variabeln är en klassificering som sysselsatt annan månad.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:byrkstallng"
+subject = "var:yrkesstallning-grov"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "Det ensamma G är en bokstavskod för grov nivå.\ncatalog:variable_text:44256:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:byrkstallng"
+subject = "var:yrkesstallning-grov"
 fields = { "tags" = ["employment"] }
 evidence = "Det ensamma G är en bokstavskod för grov nivå.\ncatalog:variable_text:44256:18993:19723"
 
@@ -1723,25 +1723,25 @@ evidence = "EPA är en bokstavskod. Variabeln avser samhällsorientering inom et
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorgsendatum"
+subject = "var:senaste-startdatum-samhallsorientering-etableringsplan"
 fields = { "sets" = ["samhallsorientering-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Etiketten delas med variabeln för första startdatum; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:44291\ncatalog:variable_text:44291:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorgsendatum"
+subject = "var:senaste-startdatum-samhallsorientering-etableringsplan"
 fields = { "tags" = [] }
 evidence = "EPA är en bokstavskod. Etiketten delas med variabeln för första startdatum; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:44291\ncatalog:variable_text:44291:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorgstartdatum"
+subject = "var:forsta-startdatum-samhallsorientering-etableringsplan"
 fields = { "sets" = ["samhallsorientering-inom-etablering"] }
 evidence = "EPA är en bokstavskod. Etiketten delas med variabeln för senaste startdatum; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:44292\ncatalog:variable_text:44292:15706:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:epa-samhorgstartdatum"
+subject = "var:forsta-startdatum-samhallsorientering-etableringsplan"
 fields = { "tags" = [] }
 evidence = "EPA är en bokstavskod. Etiketten delas med variabeln för senaste startdatum; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:44292\ncatalog:variable_text:44292:15706:18262"
 
@@ -4267,25 +4267,25 @@ evidence = "Undervisningstimmarna hör till den fastställda gruppen för underv
 
 [[statement]]
 kind = "set"
-subject = "var:utar"
+subject = "var:beslutsar-uppehallstillstand-kommunmottagning"
 fields = { "sets" = ["tidpunkt-for-mottagningsgrundande-uppehallstillstandsbeslut"] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44523:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utar"
+subject = "var:beslutsar-uppehallstillstand-kommunmottagning"
 fields = { "tags" = [] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44523:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utar-fel"
+subject = "var:beslutsar-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "sets" = ["tidpunkt-for-mottagningsgrundande-uppehallstillstandsbeslut"] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44524:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utar-fel"
+subject = "var:beslutsar-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "tags" = [] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44524:19358:19723"
 
@@ -4387,25 +4387,25 @@ evidence = "Samma tresiffriga nivåbegrepp är uppdelat per period med sun2000ni
 
 [[statement]]
 kind = "set"
-subject = "var:utdatum"
+subject = "var:beslutsdatum-uppehallstillstand-kommunmottagning"
 fields = { "sets" = ["tidpunkt-for-mottagningsgrundande-uppehallstillstandsbeslut"] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44533:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utdatum"
+subject = "var:beslutsdatum-uppehallstillstand-kommunmottagning"
 fields = { "tags" = [] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44533:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utdatum-fel"
+subject = "var:beslutsdatum-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "sets" = ["tidpunkt-for-mottagningsgrundande-uppehallstillstandsbeslut"] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44534:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:utdatum-fel"
+subject = "var:beslutsdatum-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "tags" = [] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44534:19358:19723"
 
@@ -4447,25 +4447,25 @@ evidence = "Partnerns utländska eller svenska bakgrund.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:uttyp"
+subject = "var:beslutstyp-uppehallstillstand-kommunmottagning"
 fields = { "sets" = ["beslutstyp-for-mottagningsgrundande-uppehallstillstand"] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44538:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:uttyp"
+subject = "var:beslutstyp-uppehallstillstand-kommunmottagning"
 fields = { "tags" = ["migration"] }
 evidence = "UT är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:44538:13879:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:uttyp-fel"
+subject = "var:beslutstyp-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "sets" = ["beslutstyp-for-mottagningsgrundande-uppehallstillstand"] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44539:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:uttyp-fel"
+subject = "var:beslutstyp-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "tags" = ["migration"] }
 evidence = "UT är en bokstavskod som saknas i etiketten; källkolumnen skiljer felvarianten.\ncatalog:variable_text:44539:19358:19723"
 

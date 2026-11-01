@@ -817,13 +817,13 @@ evidence = "Inställning till EU-medlemskapet hör ihop med föregående unders�
 
 [[statement]]
 kind = "set"
-subject = "var:eufu"
+subject = "var:eu-sympati-foregaende-undersokning"
 fields = { "sets" = ["eu-sympati"] }
 evidence = "Id:t är en ogenomskinlig källkod för EU-sympati vid föregående undersökning.\ncatalog:variable_text:40960:20209:20240"
 
 [[statement]]
 kind = "set"
-subject = "var:eufu"
+subject = "var:eu-sympati-foregaende-undersokning"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en ogenomskinlig källkod för EU-sympati vid föregående undersökning.\ncatalog:variable_text:40960:20209:20240"
 
@@ -1033,13 +1033,13 @@ evidence = "Fr10 är en opak frågekod; etiketten anger fritext för annat parti
 
 [[statement]]
 kind = "set"
-subject = "var:fr11"
+subject = "var:tveksam-saker-partival-val-idag"
 fields = { "sets" = [] }
 evidence = "Fr11 är en ogenomskinlig frågekod för säkerhet i partivalet.\ncatalog:valueset:12853\ncatalog:variable_text:40978:20209:20240"
 
 [[statement]]
 kind = "set"
-subject = "var:fr11"
+subject = "var:tveksam-saker-partival-val-idag"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr11 är en ogenomskinlig frågekod för säkerhet i partivalet.\ncatalog:valueset:12853\ncatalog:variable_text:40978:20209:20240"
 
@@ -1261,13 +1261,13 @@ evidence = "Frågekoden är opak, men källans civilståndsdefinition stämmer i
 
 [[statement]]
 kind = "set"
-subject = "var:fr19"
+subject = "var:sysselsattning-make-maka-sammanboende"
 fields = { "sets" = ["sysselsattning"] }
 evidence = "Fr19 är en ogenomskinlig frågekod för partners sysselsättning.\ncatalog:occurrence:405940\ncatalog:valueset:2925"
 
 [[statement]]
 kind = "set"
-subject = "var:fr19"
+subject = "var:sysselsattning-make-maka-sammanboende"
 fields = { "tags" = ["employment"] }
 evidence = "Fr19 är en ogenomskinlig frågekod för partners sysselsättning.\ncatalog:occurrence:405940\ncatalog:valueset:2925"
 
@@ -1513,13 +1513,13 @@ evidence = "Fr34a är en ogenomskinlig frågekod.\ncatalog:variable_text:41018:1
 
 [[statement]]
 kind = "set"
-subject = "var:fr34b"
+subject = "var:partival-omval-regionfullmaktige-tveksam-ej-rostat"
 fields = { "sets" = ["partival-omval-regionfullmaktige"] }
 evidence = "Fr34b är en ogenomskinlig frågekod.\ncatalog:variable_text:41019:15095:15126"
 
 [[statement]]
 kind = "set"
-subject = "var:fr34b"
+subject = "var:partival-omval-regionfullmaktige-tveksam-ej-rostat"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr34b är en ogenomskinlig frågekod.\ncatalog:variable_text:41019:15095:15126"
 
@@ -1561,13 +1561,13 @@ evidence = "Fr4 är en ogenomskinlig frågekod.\ncatalog:variable_text:41022:178
 
 [[statement]]
 kind = "set"
-subject = "var:fr4x"
+subject = "var:nast-basta-parti-fraga"
 fields = { "sets" = ["nast-basta-parti"] }
 evidence = "Fr4x är en ogenomskinlig frågekod. Etiketten delas med en härledd variabel och målformen behöver disambigueras.\ncatalog:variable_text:41023:20209:20240"
 
 [[statement]]
 kind = "set"
-subject = "var:fr4x"
+subject = "var:nast-basta-parti-fraga"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr4x är en ogenomskinlig frågekod. Etiketten delas med en härledd variabel och målformen behöver disambigueras.\ncatalog:variable_text:41023:20209:20240"
 
@@ -1585,13 +1585,13 @@ evidence = "Fr4xa är en ogenomskinlig frågekod.\ncatalog:variable_text:41024:2
 
 [[statement]]
 kind = "set"
-subject = "var:fr5"
+subject = "var:valdeltagande-senaste-riksdagsval-fraga"
 fields = { "sets" = ["valdeltagande-senaste-riksdagsval"] }
 evidence = "Fr5 är en opak frågekod och etiketten anger valdeltagande vid senaste riksdagsval.\ncatalog:variable_text:41025:20209:20240"
 
 [[statement]]
 kind = "set"
-subject = "var:fr5"
+subject = "var:valdeltagande-senaste-riksdagsval-fraga"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr5 är en opak frågekod och etiketten anger valdeltagande vid senaste riksdagsval.\ncatalog:variable_text:41025:20209:20240"
 
@@ -1945,13 +1945,13 @@ evidence = "Id:t är en ogenomskinlig källkod. Etiketten anger partiblockval vi
 
 [[statement]]
 kind = "set"
-subject = "var:pnbsymp"
+subject = "var:nast-basta-parti-harledd"
 fields = { "sets" = ["nast-basta-parti"] }
 evidence = "Pnbsymp är en ogenomskinlig bokstavskod. Etiketten delas med frågevariabeln och målformen behöver disambigueras.\ncatalog:occurrence:405978"
 
 [[statement]]
 kind = "set"
-subject = "var:pnbsymp"
+subject = "var:nast-basta-parti-harledd"
 fields = { "tags" = ["democracy"] }
 evidence = "Pnbsymp är en ogenomskinlig bokstavskod. Etiketten delas med frågevariabeln och målformen behöver disambigueras.\ncatalog:occurrence:405978"
 
@@ -2269,13 +2269,13 @@ evidence = "Variabeln avser valdeltagande vid ett hypotetiskt riksdagsval och h�
 
 [[statement]]
 kind = "set"
-subject = "var:valdrv-sen"
+subject = "var:valdeltagande-senaste-riksdagsval-harledd"
 fields = { "sets" = ["valdeltagande-senaste-riksdagsval"] }
 evidence = "Valdrv är en källkodsförkortning, och familjen med suffixet sen ges en enhetlig namnändring. Variabeln mäter valdeltagande vid senaste riksdagsval och hör till motsvarande grupp och demokratitemat.\ncatalog:register:225\ncatalog:valueset:10746\ncatalog:variable_text:41086:20209:20240"
 
 [[statement]]
 kind = "set"
-subject = "var:valdrv-sen"
+subject = "var:valdeltagande-senaste-riksdagsval-harledd"
 fields = { "tags" = ["democracy"] }
 evidence = "Valdrv är en källkodsförkortning, och familjen med suffixet sen ges en enhetlig namnändring. Variabeln mäter valdeltagande vid senaste riksdagsval och hör till motsvarande grupp och demokratitemat.\ncatalog:register:225\ncatalog:valueset:10746\ncatalog:variable_text:41086:20209:20240"
 

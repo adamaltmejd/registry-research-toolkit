@@ -43,13 +43,13 @@ evidence = "Källkolumnens inledande bokstavskod är inte en läsbar del av etik
 
 [[statement]]
 kind = "set"
-subject = "var:taggbranschgrn"
+subject = "var:naringsgren-sni-koder-delindex"
 fields = { "sets" = [] }
 evidence = "Källkolumnens bokstavskoder är inte läsbara delar av etiketten. Variabeln beskriver näringsgren.\ncatalog:occurrence:401531\ncatalog:variable_text:40941:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:taggbranschgrn"
+subject = "var:naringsgren-sni-koder-delindex"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens bokstavskoder är inte läsbara delar av etiketten. Variabeln beskriver näringsgren.\ncatalog:occurrence:401531\ncatalog:variable_text:40941:16071:16436"
 

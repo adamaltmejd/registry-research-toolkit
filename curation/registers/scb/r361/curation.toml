@@ -217,13 +217,13 @@ evidence = "Näringsgren är en företagsklassificering; den grova och den huvud
 
 [[statement]]
 kind = "set"
-subject = "var:ngs"
+subject = "var:huvudsaklig-naringsgren-statistiken"
 fields = { "sets" = [] }
 evidence = "NgS är en ogenomskinlig källmnemonik för näringsgren för statistiken. Den huvudsakliga och den grova klassificeringen är två kodningar av näringsgren.\ncatalog:variable_text:39476:15706:20454\ncatalog:variable_text:39477:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs"
+subject = "var:huvudsaklig-naringsgren-statistiken"
 fields = { "tags" = ["business"] }
 evidence = "NgS är en ogenomskinlig källmnemonik för näringsgren för statistiken. Den huvudsakliga och den grova klassificeringen är två kodningar av näringsgren.\ncatalog:variable_text:39476:15706:20454\ncatalog:variable_text:39477:15706:20454"
 

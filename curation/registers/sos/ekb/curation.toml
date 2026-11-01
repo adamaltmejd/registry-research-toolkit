@@ -2287,13 +2287,13 @@ evidence = "EKB är en ogenomskinlig bokstavskod som inte finns i etiketten.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:ekbtotalbelopp"
+subject = "var:belopp-ar-exkl-introduktionsersattning"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "EKB är en bokstavskod; etiketten kolliderar och mål kräver kontroll.\ncatalog:variable_text:56244:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ekbtotalbelopp"
+subject = "var:belopp-ar-exkl-introduktionsersattning"
 fields = { "tags" = ["transfers"] }
 evidence = "EKB är en bokstavskod; etiketten kolliderar och mål kräver kontroll.\ncatalog:variable_text:56244:7305:2932897"
 

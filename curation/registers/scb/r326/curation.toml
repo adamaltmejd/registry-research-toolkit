@@ -327,13 +327,13 @@ evidence = "Fullföljande är ett utbildningsresultat.\ncatalog:variable_text:34
 
 [[statement]]
 kind = "set"
-subject = "var:hkom"
+subject = "var:folkbokforingskommun"
 fields = { "sets" = ["kommun"] }
 evidence = "H är en ogenomskinlig bokstavskod; etiketten anger kommun.\ncatalog:variable_text:34447:13330:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:hkom"
+subject = "var:folkbokforingskommun"
 fields = { "tags" = ["geography"] }
 evidence = "H är en ogenomskinlig bokstavskod; etiketten anger kommun.\ncatalog:variable_text:34447:13330:13514"
 

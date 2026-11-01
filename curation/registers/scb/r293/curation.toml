@@ -735,13 +735,13 @@ evidence = "s04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:s05"
+subject = "var:fou-medel-boendemiljo-samhallsplanering"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
 evidence = "s05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44603:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s05"
+subject = "var:fou-medel-boendemiljo-samhallsplanering"
 fields = { "tags" = [] }
 evidence = "s05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44603:17897:18628"
 
@@ -771,13 +771,13 @@ evidence = "s07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:s08"
+subject = "var:fou-medel-socialvard-social-miljo-trygghet"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
 evidence = "s08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44606:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s08"
+subject = "var:fou-medel-socialvard-social-miljo-trygghet"
 fields = { "tags" = [] }
 evidence = "s08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44606:17897:18628"
 
@@ -795,37 +795,37 @@ evidence = "s09 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:s10"
+subject = "var:fou-medel-undervisning"
 fields = { "sets" = ["fou-anslag-utbildning"] }
 evidence = "s10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44608:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s10"
+subject = "var:fou-medel-undervisning"
 fields = { "tags" = ["education", "research"] }
 evidence = "s10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44608:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s11"
+subject = "var:fou-medel-arbetsmiljo-personalskydd"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
 evidence = "s11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44609:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s11"
+subject = "var:fou-medel-arbetsmiljo-personalskydd"
 fields = { "tags" = ["employment", "research"] }
 evidence = "s11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44609:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s12"
+subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
 evidence = "s12 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44610:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s12"
+subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
 fields = { "tags" = [] }
 evidence = "s12 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44610:17897:18628"
 
@@ -975,13 +975,13 @@ evidence = "S16 är en opak källkod.\ncatalog:variable_text:44622:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s17"
+subject = "var:fou-medel-ej-fordelat-utan-andamalsindelning"
 fields = { "sets" = [] }
 evidence = "S17 är en opak källkod; ofördelat socioekonomiskt ändamål är inte ofördelat forskningsämne.\ncatalog:variable_text:44623:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:s17"
+subject = "var:fou-medel-ej-fordelat-utan-andamalsindelning"
 fields = { "tags" = ["public-finance", "research"] }
 evidence = "S17 är en opak källkod; ofördelat socioekonomiskt ändamål är inte ofördelat forskningsämne.\ncatalog:variable_text:44623:17897:18628"
 

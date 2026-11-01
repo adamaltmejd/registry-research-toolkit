@@ -6168,25 +6168,25 @@ evidence = "Samma källkolumn är mappad till två olika begrepp under överlapp
 
 [[statement]]
 kind = "set"
-subject = "var:clim-gov"
+subject = "var:statliga-regleringar-atgarder-klimatforandring"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger klimatrelaterade statliga åtgärder.\ncatalog:variable_text:27920:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:clim-gov"
+subject = "var:statliga-regleringar-atgarder-klimatforandring"
 fields = { "tags" = ["business", "environment"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger klimatrelaterade statliga åtgärder.\ncatalog:variable_text:27920:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:clim-pric"
+subject = "var:okade-kostnader-insatspriser-klimatforandringar"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger klimatrelaterade kostnader och insatspriser.\ncatalog:variable_text:27921:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:clim-pric"
+subject = "var:okade-kostnader-insatspriser-klimatforandringar"
 fields = { "tags" = ["business", "environment"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger klimatrelaterade kostnader och insatspriser.\ncatalog:variable_text:27921:18262:20089"
 
@@ -7572,25 +7572,25 @@ evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver antal a
 
 [[statement]]
 kind = "set"
-subject = "var:enmrg"
+subject = "var:foretag-gick-ihop-eller-kopte-foretag-eller-delar"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28131:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:enmrg"
+subject = "var:foretag-gick-ihop-eller-kopte-foretag-eller-delar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28131:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:enout"
+subject = "var:salde-stangde-eller-outsourcade-foretagsdelar"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28134:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:enout"
+subject = "var:salde-stangde-eller-outsourcade-foretagsdelar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28134:16071:17167"
 
@@ -7800,13 +7800,13 @@ evidence = "Samma kolumn har överlappande ägare med olika beskrivning av utgif
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-cgo-obr"
+subject = "var:obrusade-innovationsutgifter-kapitalvaror-exkl-fou"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för kapitalvaror.\ncatalog:variable_text:28176:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-cgo-obr"
+subject = "var:obrusade-innovationsutgifter-kapitalvaror-exkl-fou"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för kapitalvaror.\ncatalog:variable_text:28176:18993:20089"
 
@@ -7884,25 +7884,25 @@ evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovati
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-rnd-contr-out-obr"
+subject = "var:obrusade-utgifter-utlagd-fou"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade utgifter för utlagd FoU.\ncatalog:variable_text:28183:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-rnd-contr-out-obr"
+subject = "var:obrusade-utgifter-utlagd-fou"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade utgifter för utlagd FoU.\ncatalog:variable_text:28183:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-rnd-ih-obr"
+subject = "var:obrusade-utgifter-egen-fou"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade utgifter för egen FoU.\ncatalog:variable_text:28184:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-rnd-ih-obr"
+subject = "var:obrusade-utgifter-egen-fou"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade utgifter för egen FoU.\ncatalog:variable_text:28184:18993:20089"
 
@@ -8004,25 +8004,25 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2481
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-succ-rndinn"
+subject = "var:lanefinansiering-fou-eller-innovation"
 fields = { "sets" = ["lanefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28402:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-succ-rndinn"
+subject = "var:lanefinansiering-fou-eller-innovation"
 fields = { "tags" = ["business", "finance", "research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28402:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
+subject = "var:forsok-aktiefinansiering-lyckades-inte"
 fields = { "sets" = ["aktiefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
+subject = "var:forsok-aktiefinansiering-lyckades-inte"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
@@ -8040,13 +8040,13 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2481
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-succ-rndinn"
+subject = "var:aktiefinansiering-fou-eller-innovation"
 fields = { "sets" = ["aktiefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28405:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-succ-rndinn"
+subject = "var:aktiefinansiering-fou-eller-innovation"
 fields = { "tags" = ["business", "finance", "research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28405:16801:20089"
 
@@ -8148,13 +8148,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28414:182
 
 [[statement]]
 kind = "set"
-subject = "var:funrtd"
+subject = "var:stod-innovationsverksamhet-eu-deltog"
 fields = { "sets" = [] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28416:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:funrtd"
+subject = "var:stod-innovationsverksamhet-eu-deltog"
 fields = { "tags" = ["research"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28416:16071:17167"
 
@@ -8556,13 +8556,13 @@ evidence = "Källkoden är en opak förkortning. Källan anger brist på samarbe
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lcred-lequit"
+subject = "var:innovationshinder-brist-kredit-eller-eget-kapital"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28496:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lcred-lequit"
+subject = "var:innovationshinder-brist-kredit-eller-eget-kapital"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28496:16801:18628"
 
@@ -8952,13 +8952,13 @@ evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella r
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nfinres"
+subject = "var:inget-utbyte-finansiella-resurser-fran-koncerndelar"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28557:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nfinres"
+subject = "var:inget-utbyte-finansiella-resurser-fran-koncerndelar"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28557:16801:18628"
 
@@ -8976,13 +8976,13 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28558:16
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nsourc"
+subject = "var:inget-utbyte-foretagsaktiviteter-fran-koncerndelar"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28559:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nsourc"
+subject = "var:inget-utbyte-foretagsaktiviteter-fran-koncerndelar"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28559:16801:18628"
 
@@ -11640,13 +11640,13 @@ evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella r
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nfinres"
+subject = "var:inget-utbyte-finansiella-resurser-till-koncerndelar"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28900:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nfinres"
+subject = "var:inget-utbyte-finansiella-resurser-till-koncerndelar"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28900:16801:18628"
 
@@ -11664,13 +11664,13 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28901:16
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nsourc"
+subject = "var:inget-utbyte-foretagsaktiviteter-till-koncerndelar"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "Källkod ersätts med källans etikett.\ncatalog:variable_text:28902:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nsourc"
+subject = "var:inget-utbyte-foretagsaktiviteter-till-koncerndelar"
 fields = { "tags" = ["business"] }
 evidence = "Källkod ersätts med källans etikett.\ncatalog:variable_text:28902:16801:18628"
 
@@ -12048,13 +12048,13 @@ evidence = "Q15i är en opak frågekod. Källan anger innovationseffekt på uppf
 
 [[statement]]
 kind = "set"
-subject = "var:q16a"
+subject = "var:innovationshinder-ide-eller-planeringsstadiet"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Uppskjuten eller avbruten innovationsaktivitet mäter aktivitetsutfall, inte i vilket skede ett innovationshinder inträffade. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: De valda koderna saknar definitioner; de belägger inte när innovationshinder inträffar. membership-0293: Ingen vald variabel har dokumenterat innehåll om hindrets skede. HBEG-, HCON- och HDLAY-koderna saknar tolkning. membership-0294: Ingen vald variabel i denna sektion har belagt skede för innovationshinder. membership-0295: Logistikhindren anger orsaker, inte innovationshindrets skede. membership-0296: Variablerna mäter nedläggning i olika skeden och allvarlig försening, vilket definitionen omfattar. membership-0297: Uppskjuten eller avbruten aktivitet är en aktivitetskodning, inte en kodning av innovationshindrets skede. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Beskrivningen anger uttryckligen aktivitet som skjutits upp eller avbrutits innan den slutförts. Medlemmen behålls oberoende av sektionsgränsen. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInaba saknar definition; uppskjuten eller avbruten aktivitet är inte belagd. membership-0293: Ingen vald variabel dokumenterar uppskjuten eller avbruten innovationsaktivitet. HDLAY-koderna saknar tolkning. membership-0294: INONAB och INONAB_O saknar definition och kan inte beläggas som uppskjuten eller avbruten innovationsaktivitet. membership-0295: Logistikhindren mäter anledningar till uteblivna innovationer, inte kodning av uppskjuten eller avbruten innovationsaktivitet. membership-0296: Båda kodar uttryckligen nedlagd innovationsverksamhet. Allvarlig försening i q16c belägger inte uppskjutande, och q9 skiljer inte avbruten från enbart pågående verksamhet. membership-0297: Båda definitionerna avser innovationsaktivitet som skjutits upp eller avbrutits före slutförande. De skyddade medlemskapen behålls.\ncatalog:variable_text:27868:13149:14245\ncatalog:variable_text:28267:11688:18628\ncatalog:variable_text:28268:11688:18628\ncatalog:variable_text:28269:11688:18628\ncatalog:variable_text:28270:11688:18628\ncatalog:variable_text:28274:11688:18628\ncatalog:variable_text:28285:11688:18628\ncatalog:variable_text:28500:11688:18628\ncatalog:variable_text:28501:11688:18628\ncatalog:variable_text:28505:11688:18628\ncatalog:variable_text:28506:11688:18628\ncatalog:variable_text:28512:11688:18628\ncatalog:variable_text:28513:11688:18628\ncatalog:variable_text:28647:11688:18628\ncatalog:variable_text:28648:11688:18628\ncatalog:variable_text:28774:16071:17167\ncatalog:variable_text:28775:16071:17167\ncatalog:variable_text:28776:16071:17167\ncatalog:variable_text:28777:16071:17167\ncatalog:variable_text:28778:16071:17167\ncatalog:variable_text:28938:11688:13514\ncatalog:variable_text:28939:11688:13514\ncatalog:variable_text:28940:11688:13514\ncatalog:variable_text:28952:11688:13514\ncatalog:variable_text:29162:16071:17167\ncatalog:variable_text:29163:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:q16a"
+subject = "var:innovationshinder-ide-eller-planeringsstadiet"
 fields = { "tags" = ["research"] }
 evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Uppskjuten eller avbruten innovationsaktivitet mäter aktivitetsutfall, inte i vilket skede ett innovationshinder inträffade. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: De valda koderna saknar definitioner; de belägger inte när innovationshinder inträffar. membership-0293: Ingen vald variabel har dokumenterat innehåll om hindrets skede. HBEG-, HCON- och HDLAY-koderna saknar tolkning. membership-0294: Ingen vald variabel i denna sektion har belagt skede för innovationshinder. membership-0295: Logistikhindren anger orsaker, inte innovationshindrets skede. membership-0296: Variablerna mäter nedläggning i olika skeden och allvarlig försening, vilket definitionen omfattar. membership-0297: Uppskjuten eller avbruten aktivitet är en aktivitetskodning, inte en kodning av innovationshindrets skede. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Beskrivningen anger uttryckligen aktivitet som skjutits upp eller avbrutits innan den slutförts. Medlemmen behålls oberoende av sektionsgränsen. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInaba saknar definition; uppskjuten eller avbruten aktivitet är inte belagd. membership-0293: Ingen vald variabel dokumenterar uppskjuten eller avbruten innovationsaktivitet. HDLAY-koderna saknar tolkning. membership-0294: INONAB och INONAB_O saknar definition och kan inte beläggas som uppskjuten eller avbruten innovationsaktivitet. membership-0295: Logistikhindren mäter anledningar till uteblivna innovationer, inte kodning av uppskjuten eller avbruten innovationsaktivitet. membership-0296: Båda kodar uttryckligen nedlagd innovationsverksamhet. Allvarlig försening i q16c belägger inte uppskjutande, och q9 skiljer inte avbruten från enbart pågående verksamhet. membership-0297: Båda definitionerna avser innovationsaktivitet som skjutits upp eller avbrutits före slutförande. De skyddade medlemskapen behålls.\ncatalog:variable_text:27868:13149:14245\ncatalog:variable_text:28267:11688:18628\ncatalog:variable_text:28268:11688:18628\ncatalog:variable_text:28269:11688:18628\ncatalog:variable_text:28270:11688:18628\ncatalog:variable_text:28274:11688:18628\ncatalog:variable_text:28285:11688:18628\ncatalog:variable_text:28500:11688:18628\ncatalog:variable_text:28501:11688:18628\ncatalog:variable_text:28505:11688:18628\ncatalog:variable_text:28506:11688:18628\ncatalog:variable_text:28512:11688:18628\ncatalog:variable_text:28513:11688:18628\ncatalog:variable_text:28647:11688:18628\ncatalog:variable_text:28648:11688:18628\ncatalog:variable_text:28774:16071:17167\ncatalog:variable_text:28775:16071:17167\ncatalog:variable_text:28776:16071:17167\ncatalog:variable_text:28777:16071:17167\ncatalog:variable_text:28778:16071:17167\ncatalog:variable_text:28938:11688:13514\ncatalog:variable_text:28939:11688:13514\ncatalog:variable_text:28940:11688:13514\ncatalog:variable_text:28952:11688:13514\ncatalog:variable_text:29162:16071:17167\ncatalog:variable_text:29163:18993:20089"
 
@@ -12360,25 +12360,25 @@ evidence = "Id:t är en källkod och etiketten anger riskminimering för it-säk
 
 [[statement]]
 kind = "set"
-subject = "var:risks-oth"
+subject = "var:risk-andra-operationella-eller-finansiella"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger andra operationella eller finansiella risker.\ncatalog:occurrence:248631\ncatalog:variable_text:28973:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-oth"
+subject = "var:risk-andra-operationella-eller-finansiella"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod och etiketten anger andra operationella eller finansiella risker.\ncatalog:occurrence:248631\ncatalog:variable_text:28973:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-oth-miti"
+subject = "var:riskminimering-andra-operationella-eller-finansiella"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger minimering av andra operationella eller finansiella risker.\ncatalog:occurrence:248632\ncatalog:variable_text:28974:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-oth-miti"
+subject = "var:riskminimering-andra-operationella-eller-finansiella"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod och etiketten anger minimering av andra operationella eller finansiella risker.\ncatalog:occurrence:248632\ncatalog:variable_text:28974:18993:20089"
 
@@ -13956,13 +13956,13 @@ evidence = "Den tidigare WEIGHT-kolumnens innebörd är inte fastställd.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:weight-emp"
+subject = "var:vikt-antal-anstallda-population-per-antal-anstallda-svarande"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger vikten.\ncatalog:variable_text:29189:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:weight-emp"
+subject = "var:vikt-antal-anstallda-population-per-antal-anstallda-svarande"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger vikten.\ncatalog:variable_text:29189:18993:20089"
 

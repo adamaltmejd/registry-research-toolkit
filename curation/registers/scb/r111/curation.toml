@@ -1249,13 +1249,13 @@ evidence = "F10 återanvänds för andra frågor, och arbete avser både arbete 
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-3"
+subject = "var:arbete-matveckan-hogskoleexaminerade"
 fields = { "sets" = [] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F11.\ncatalog:occurrence:250246\ncatalog:variable_text:29372:13208:13239\ncatalog:variable_text:29372:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-3"
+subject = "var:arbete-matveckan-hogskoleexaminerade"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F11.\ncatalog:occurrence:250246\ncatalog:variable_text:29372:13208:13239\ncatalog:variable_text:29372:14669:14700"
 
@@ -2929,13 +2929,13 @@ evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:bidrag"
+subject = "var:studier-oavsett-bidrag"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Id:t anger bidrag medan variabeln mäter studier oavsett bidrag.\ncatalog:occurrence:249190\ncatalog:variable_text:29513:13208:13239"
 
 [[statement]]
 kind = "set"
-subject = "var:bidrag"
+subject = "var:studier-oavsett-bidrag"
 fields = { "tags" = ["education"] }
 evidence = "Id:t anger bidrag medan variabeln mäter studier oavsett bidrag.\ncatalog:occurrence:249190\ncatalog:variable_text:29513:13208:13239"
 
@@ -3205,13 +3205,13 @@ evidence = "Variabeln grupperar forskarexamina.\ncatalog:variable_text:29536:132
 
 [[statement]]
 kind = "set"
-subject = "var:f03"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbetet-matveckan"
 fields = { "sets" = ["utbildningsniva-for-arbetet"] }
 evidence = "F03 är en ogenomskinlig frågekod.\ncatalog:variable_text:29537:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:f03"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbetet-matveckan"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F03 är en ogenomskinlig frågekod.\ncatalog:variable_text:29537:14669:14700"
 
@@ -3241,25 +3241,25 @@ evidence = "Frågekoden är ogenomskinlig; etiketten anger huvudsaklig sysselsä
 
 [[statement]]
 kind = "set"
-subject = "var:f1-exam"
+subject = "var:forekomst-examen-hogskoleregister-vt2021"
 fields = { "sets" = ["examensforekomst"] }
 evidence = "F1 är en ogenomskinlig frågekod; etiketten anger examensförekomst.\ncatalog:variable_text:29540:18628:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f1-exam"
+subject = "var:forekomst-examen-hogskoleregister-vt2021"
 fields = { "tags" = ["education"] }
 evidence = "F1 är en ogenomskinlig frågekod; etiketten anger examensförekomst.\ncatalog:variable_text:29540:18628:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f1-old"
+subject = "var:forekomst-examen-sverige-enkat"
 fields = { "sets" = ["examensforekomst"] }
 evidence = "F1 och old är en ogenomskinlig källkod; etiketten anger examensförekomst.\ncatalog:variable_text:29541:15796:15826"
 
 [[statement]]
 kind = "set"
-subject = "var:f1-old"
+subject = "var:forekomst-examen-sverige-enkat"
 fields = { "tags" = ["education"] }
 evidence = "F1 och old är en ogenomskinlig källkod; etiketten anger examensförekomst.\ncatalog:variable_text:29541:15796:15826"
 
@@ -3337,13 +3337,13 @@ evidence = "Samma källkolumn har andra ägare i andra perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:f11-ny"
+subject = "var:arbete-apl-plats-imputerat-gymnasieavgangna"
 fields = { "sets" = ["arbete-pa-apl-plats"] }
 evidence = "F11_ny är en opak frågekod; källetiketten anger arbete på APL-plats.\ncatalog:occurrence:249641\ncatalog:valueset:6863\ncatalog:variable_text:29548:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f11-ny"
+subject = "var:arbete-apl-plats-imputerat-gymnasieavgangna"
 fields = { "tags" = ["employment"] }
 evidence = "F11_ny är en opak frågekod; källetiketten anger arbete på APL-plats.\ncatalog:occurrence:249641\ncatalog:valueset:6863\ncatalog:variable_text:29548:18262:18444"
 
@@ -3373,13 +3373,13 @@ evidence = "Identifieraren är en opak källkod; etiketten anger nöjdhet med ar
 
 [[statement]]
 kind = "set"
-subject = "var:f12-5083"
+subject = "var:anstallningsform-hogskoleexaminerade"
 fields = { "sets" = ["anstallningsform"] }
 evidence = "F12 är en ogenomskinlig källkod och suffixet är inte en källkolumn.\ncatalog:occurrence:250247\ncatalog:variable_text:29551:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:f12-5083"
+subject = "var:anstallningsform-hogskoleexaminerade"
 fields = { "tags" = ["employment"] }
 evidence = "F12 är en ogenomskinlig källkod och suffixet är inte en källkolumn.\ncatalog:occurrence:250247\ncatalog:variable_text:29551:14669:14700"
 
@@ -3397,61 +3397,61 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:f15-01"
+subject = "var:sokt-arbete-eller-inte-ja-aret-efter-gymnasiet"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "F15_01 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249554\ncatalog:variable_text:29553:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-01"
+subject = "var:sokt-arbete-eller-inte-ja-aret-efter-gymnasiet"
 fields = { "tags" = ["employment"] }
 evidence = "F15_01 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249554\ncatalog:variable_text:29553:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-02"
+subject = "var:sokt-arbete-eller-inte-nej-erbjuden-aret-efter-gymnasiet"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "F15_02 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249555\ncatalog:variable_text:29554:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-02"
+subject = "var:sokt-arbete-eller-inte-nej-erbjuden-aret-efter-gymnasiet"
 fields = { "tags" = ["employment"] }
 evidence = "F15_02 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249555\ncatalog:variable_text:29554:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-03"
+subject = "var:sokt-arbete-eller-inte-nej-redan-arbete-gymnasieslut"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "F15_03 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249556\ncatalog:variable_text:29555:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-03"
+subject = "var:sokt-arbete-eller-inte-nej-redan-arbete-gymnasieslut"
 fields = { "tags" = ["employment"] }
 evidence = "F15_03 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249556\ncatalog:variable_text:29555:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-04"
+subject = "var:sokt-arbete-eller-inte-nej-inget-arbete-aret-efter-gymnasiet"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "F15_04 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249557\ncatalog:variable_text:29556:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-04"
+subject = "var:sokt-arbete-eller-inte-nej-inget-arbete-aret-efter-gymnasiet"
 fields = { "tags" = ["employment"] }
 evidence = "F15_04 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249557\ncatalog:variable_text:29556:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-05"
+subject = "var:sokt-arbete-eller-inte-minns-inte-aret-efter-gymnasiet"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "F15_05 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249558\ncatalog:variable_text:29557:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f15-05"
+subject = "var:sokt-arbete-eller-inte-minns-inte-aret-efter-gymnasiet"
 fields = { "tags" = ["employment"] }
 evidence = "F15_05 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249558\ncatalog:variable_text:29557:17167:17348"
 
@@ -3493,49 +3493,49 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:f16-01"
+subject = "var:sokt-arbete-inom-utbildningens-omrade"
 fields = { "sets" = ["arbetssokandets-omrade"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29561:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-01"
+subject = "var:sokt-arbete-inom-utbildningens-omrade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29561:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-02"
+subject = "var:sokt-arbete-inom-annat-an-utbildningens-omrade"
 fields = { "sets" = ["arbetssokandets-omrade"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29562:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-02"
+subject = "var:sokt-arbete-inom-annat-an-utbildningens-omrade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29562:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-03"
+subject = "var:sokt-arbete-utbildning-inte-inriktad-mot-sarskilt-omrade"
 fields = { "sets" = ["arbetssokandets-omrade"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29563:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-03"
+subject = "var:sokt-arbete-utbildning-inte-inriktad-mot-sarskilt-omrade"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29563:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-04"
+subject = "var:sokt-arbete-omrade-minns-inte"
 fields = { "sets" = ["arbetssokandets-omrade"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29564:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f16-04"
+subject = "var:sokt-arbete-omrade-minns-inte"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas med andra svarsalternativ.\ncatalog:variable_text:29564:17167:17348"
 
@@ -3577,49 +3577,49 @@ evidence = "Identifieraren är en opak källkod; etiketten anger nöjdhet med ar
 
 [[statement]]
 kind = "set"
-subject = "var:f17-01-ny"
+subject = "var:arbete-aret-efter-gymnasiet-inom-utbildningsomrade"
 fields = { "sets" = ["arbetsomraden"] }
 evidence = "F17_01_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29568\ncatalog:occurrence:249563\ncatalog:variable_text:29568:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-01-ny"
+subject = "var:arbete-aret-efter-gymnasiet-inom-utbildningsomrade"
 fields = { "tags" = ["employment"] }
 evidence = "F17_01_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29568\ncatalog:occurrence:249563\ncatalog:variable_text:29568:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-02-ny"
+subject = "var:arbete-aret-efter-gymnasiet-annat-an-utbildningsomrade"
 fields = { "sets" = ["arbetsomraden"] }
 evidence = "F17_02_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29569\ncatalog:occurrence:249564\ncatalog:variable_text:29569:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-02-ny"
+subject = "var:arbete-aret-efter-gymnasiet-annat-an-utbildningsomrade"
 fields = { "tags" = ["employment"] }
 evidence = "F17_02_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29569\ncatalog:occurrence:249564\ncatalog:variable_text:29569:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-03-ny"
+subject = "var:arbete-aret-efter-gymnasiet-utbildning-inte-omradesinriktad"
 fields = { "sets" = ["arbetsomraden"] }
 evidence = "F17_03_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29570\ncatalog:occurrence:249565\ncatalog:variable_text:29570:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-03-ny"
+subject = "var:arbete-aret-efter-gymnasiet-utbildning-inte-omradesinriktad"
 fields = { "tags" = ["employment"] }
 evidence = "F17_03_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29570\ncatalog:occurrence:249565\ncatalog:variable_text:29570:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-04-ny"
+subject = "var:inte-arbetat-aret-efter-gymnasiet"
 fields = { "sets" = ["arbetsomraden"] }
 evidence = "F17_04_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29571\ncatalog:occurrence:249566\ncatalog:variable_text:29571:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-04-ny"
+subject = "var:inte-arbetat-aret-efter-gymnasiet"
 fields = { "tags" = ["employment"] }
 evidence = "F17_04_ny är en opak frågekod. Det likalydande etikettförslaget behöver särskiljas med källkolumnen. Variabeln är ett delalternativ för arbete inom olika områden.\ncatalog:occurrence-locators:variable:29571\ncatalog:occurrence:249566\ncatalog:variable_text:29571:17167:17348"
 
@@ -3685,25 +3685,25 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:f19-txt"
+subject = "var:framtidsplaner-annat-text-hosten-2014"
 fields = { "sets" = ["andra-framtidsplaner"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten anger fritext om andra framtidsplaner.\ncatalog:variable_text:29577:16161:16191"
 
 [[statement]]
 kind = "set"
-subject = "var:f19-txt"
+subject = "var:framtidsplaner-annat-text-hosten-2014"
 fields = { "tags" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten anger fritext om andra framtidsplaner.\ncatalog:variable_text:29577:16161:16191"
 
 [[statement]]
 kind = "set"
-subject = "var:f1b-01"
+subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29578:18628:18809"
 
 [[statement]]
 kind = "set"
-subject = "var:f1b-01"
+subject = "var:orsak-inte-uttaget-examensbevis-inte-tillrackliga-poang"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod; etiketten anger skäl till att examensbevis inte tagits ut.\ncatalog:variable_text:29578:18628:18809"
 
@@ -3877,13 +3877,13 @@ evidence = "F25_5 är en ogenomskinlig källkod.\ncatalog:occurrence:250062\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:f25-6"
+subject = "var:kannedom-arbete-praktik-examensarbete"
 fields = { "sets" = ["kannedom-om-arbetet"] }
 evidence = "F25_6 är en ogenomskinlig källkod.\ncatalog:occurrence:250063\ncatalog:variable_text:29593:13208:13239"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-6"
+subject = "var:kannedom-arbete-praktik-examensarbete"
 fields = { "tags" = ["employment"] }
 evidence = "F25_6 är en ogenomskinlig källkod.\ncatalog:occurrence:250063\ncatalog:variable_text:29593:13208:13239"
 
@@ -3913,13 +3913,13 @@ evidence = "F28_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29595
 
 [[statement]]
 kind = "set"
-subject = "var:f29-5"
+subject = "var:studier-utomlands-efter-gymnasieutbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29596:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-5"
+subject = "var:studier-utomlands-efter-gymnasieutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; etiketten delas och målnamnet kräver disambiguering.\ncatalog:variable_text:29596:14669:14700"
 
@@ -3937,13 +3937,13 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249041\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:f3-02"
+subject = "var:orsak-examenskrav-inte-natts-behover-inte-examensbevis"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29598:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-02"
+subject = "var:orsak-examenskrav-inte-natts-behover-inte-examensbevis"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29598:17167:17348"
 
@@ -3961,25 +3961,25 @@ evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29599:17
 
 [[statement]]
 kind = "set"
-subject = "var:f3-06"
+subject = "var:orsak-examenskrav-inte-natts-svart-kombinera-studier-familj"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29600:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-06"
+subject = "var:orsak-examenskrav-inte-natts-svart-kombinera-studier-familj"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29600:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-09"
+subject = "var:orsak-examenskrav-inte-natts-studiesvarigheter"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29601:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f3-09"
+subject = "var:orsak-examenskrav-inte-natts-studiesvarigheter"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29601:17167:17348"
 
@@ -4129,13 +4129,13 @@ evidence = "Källkolumnen har en annan ägare i en annan period. Coordinator gro
 
 [[statement]]
 kind = "set"
-subject = "var:f5-03"
+subject = "var:orsak-examen-ej-uttagen-arbete-inte-matchade-utbildningen"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29614:15796:15826\ncatalog:variable_text:29614:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-03"
+subject = "var:orsak-examen-ej-uttagen-arbete-inte-matchade-utbildningen"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29614:15796:15826\ncatalog:variable_text:29614:17167:17348"
 
@@ -4165,13 +4165,13 @@ evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:f5-06"
+subject = "var:orsak-examen-ej-uttagen-svart-kombinera-studier-familj"
 fields = { "sets" = [] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29617:15796:15826"
 
 [[statement]]
 kind = "set"
-subject = "var:f5-06"
+subject = "var:orsak-examen-ej-uttagen-svart-kombinera-studier-familj"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren är en opak källkod.\ncatalog:variable_text:29617:15796:15826"
 
@@ -4273,25 +4273,25 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29625:16
 
 [[statement]]
 kind = "set"
-subject = "var:f6-03"
+subject = "var:fick-arbetet-via-extrajobb-sommarjobb"
 fields = { "sets" = ["vag-till-arbetet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29626:16161:16191"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-03"
+subject = "var:fick-arbetet-via-extrajobb-sommarjobb"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29626:16161:16191"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-04"
+subject = "var:fick-arbetet-via-larling-praktikplats-apu-apl"
 fields = { "sets" = ["vag-till-arbetet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29627:16161:16191"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-04"
+subject = "var:fick-arbetet-via-larling-praktikplats-apu-apl"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29627:16161:16191"
 
@@ -4441,13 +4441,13 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29639:15
 
 [[statement]]
 kind = "set"
-subject = "var:f7-txt"
+subject = "var:skal-studera-annan-anledning"
 fields = { "sets" = ["skal-att-studera"] }
 evidence = "F7_txt är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:250410\ncatalog:variable_text:29640:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:f7-txt"
+subject = "var:skal-studera-annan-anledning"
 fields = { "tags" = ["education"] }
 evidence = "F7_txt är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:250410\ncatalog:variable_text:29640:19174:19358"
 
@@ -4465,13 +4465,13 @@ evidence = "F8 är en opak frågekod.\ncatalog:occurrence:249139\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:f9-ny"
+subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "F9_ny är en opak frågekod; källan anger gymnasieprogram.\ncatalog:valueset:6085\ncatalog:variable_text:29642:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-ny"
+subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
 fields = { "tags" = ["education"] }
 evidence = "F9_ny är en opak frågekod; källan anger gymnasieprogram.\ncatalog:valueset:6085\ncatalog:variable_text:29642:17167:17348"
 
@@ -5293,49 +5293,49 @@ evidence = "Variabeln grupperar föräldrars utbildning.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:fr00a"
+subject = "var:huvudsaklig-sysselsattning-januari-2000"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29711:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr00a"
+subject = "var:huvudsaklig-sysselsattning-januari-2000"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29711:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr00b"
+subject = "var:huvudsaklig-sysselsattning-februari-2000"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29712:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr00b"
+subject = "var:huvudsaklig-sysselsattning-februari-2000"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29712:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr1"
+subject = "var:huvudsaklig-sysselsattning-mars-2000-och-2002"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Frågekoden är ogenomskinlig; etiketten anger huvudsaklig sysselsättning.\ncatalog:variable_text:29713:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr1"
+subject = "var:huvudsaklig-sysselsattning-mars-2000-och-2002"
 fields = { "tags" = ["employment"] }
 evidence = "Frågekoden är ogenomskinlig; etiketten anger huvudsaklig sysselsättning.\ncatalog:variable_text:29713:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr11man"
+subject = "var:manadslon-angiven-fore-skatt-mars-2002"
 fields = { "sets" = ["lon"] }
 evidence = "Fr11man är en ogenomskinlig frågekod.\ncatalog:variable_text:29714:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr11man"
+subject = "var:manadslon-angiven-fore-skatt-mars-2002"
 fields = { "tags" = ["income"] }
 evidence = "Fr11man är en ogenomskinlig frågekod.\ncatalog:variable_text:29714:11747:11778"
 
@@ -5353,37 +5353,37 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp. Coordinato
 
 [[statement]]
 kind = "set"
-subject = "var:fr13d"
+subject = "var:arbetsuppgifter-forklara-lekman-mars-2000-och-2002"
 fields = { "sets" = ["forklara-for-lekman-i-arbetet"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249780\ncatalog:occurrence:249876\ncatalog:variable_text:29716:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13d"
+subject = "var:arbetsuppgifter-forklara-lekman-mars-2000-och-2002"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249780\ncatalog:occurrence:249876\ncatalog:variable_text:29716:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13e"
+subject = "var:arbetsuppgifter-anvanda-it-informationssokning"
 fields = { "sets" = ["it-for-information-och-kommunikation-i-arbetet"] }
 evidence = "Fr13e är en ogenomskinlig frågekod.\ncatalog:variable_text:29717:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13e"
+subject = "var:arbetsuppgifter-anvanda-it-informationssokning"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Fr13e är en ogenomskinlig frågekod.\ncatalog:variable_text:29717:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13f"
+subject = "var:arbetsuppgifter-anvanda-it-kontakt-kommunikation"
 fields = { "sets" = ["it-for-information-och-kommunikation-i-arbetet"] }
 evidence = "Fr13f är en ogenomskinlig frågekod.\ncatalog:variable_text:29718:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13f"
+subject = "var:arbetsuppgifter-anvanda-it-kontakt-kommunikation"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "Fr13f är en ogenomskinlig frågekod.\ncatalog:variable_text:29718:11747:11778"
 
@@ -5401,13 +5401,13 @@ evidence = "Frågornas innehåll skiljer sig mellan perioderna.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:fr13j"
+subject = "var:arbetsuppgifter-medverka-forandringar"
 fields = { "sets" = ["verksamhetsutveckling-i-arbetet"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29720:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr13j"
+subject = "var:arbetsuppgifter-medverka-forandringar"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29720:11747:11778"
 
@@ -5425,37 +5425,37 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:249792\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:fr14e"
+subject = "var:fardighetstraning-anvanda-it-informationssokning"
 fields = { "sets" = ["fardighetstraning-i-it-for-information-och-kommunikation"] }
 evidence = "Fr14e är en ogenomskinlig frågekod.\ncatalog:variable_text:29722:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14e"
+subject = "var:fardighetstraning-anvanda-it-informationssokning"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Fr14e är en ogenomskinlig frågekod.\ncatalog:variable_text:29722:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14f"
+subject = "var:fardighetstraning-anvanda-it-kontakt-kommunikation"
 fields = { "sets" = ["fardighetstraning-i-it-for-information-och-kommunikation"] }
 evidence = "Fr14f är en ogenomskinlig frågekod.\ncatalog:variable_text:29723:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14f"
+subject = "var:fardighetstraning-anvanda-it-kontakt-kommunikation"
 fields = { "tags" = ["digital", "education"] }
 evidence = "Fr14f är en ogenomskinlig frågekod.\ncatalog:variable_text:29723:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14i"
+subject = "var:fardighetstraning-argumentera-overtyga-utbildning-1998-99"
 fields = { "sets" = ["fardighetstraning-i-argumentation"] }
 evidence = "Fr14i är en ogenomskinlig källkod.\ncatalog:occurrence:249894\ncatalog:variable_text:29724:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14i"
+subject = "var:fardighetstraning-argumentera-overtyga-utbildning-1998-99"
 fields = { "tags" = ["education"] }
 evidence = "Fr14i är en ogenomskinlig källkod.\ncatalog:occurrence:249894\ncatalog:variable_text:29724:11747:11778"
 
@@ -5473,25 +5473,25 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29725:11
 
 [[statement]]
 kind = "set"
-subject = "var:fr15a"
+subject = "var:bedomning-utbildning-undervisning-1996-97-och-1998-99"
 fields = { "sets" = ["bedomning-av-undervisning"] }
 evidence = "Fr15a är en ogenomskinlig frågekod.\ncatalog:variable_text:29726:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr15a"
+subject = "var:bedomning-utbildning-undervisning-1996-97-och-1998-99"
 fields = { "tags" = ["education"] }
 evidence = "Fr15a är en ogenomskinlig frågekod.\ncatalog:variable_text:29726:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr15b"
+subject = "var:bedomning-utbildning-amnesinnehall-1996-97-och-1998-99"
 fields = { "sets" = ["bedomning-av-utbildningens-innehall"] }
 evidence = "Fr15b är en ogenomskinlig frågekod.\ncatalog:variable_text:29727:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr15b"
+subject = "var:bedomning-utbildning-amnesinnehall-1996-97-och-1998-99"
 fields = { "tags" = ["education"] }
 evidence = "Fr15b är en ogenomskinlig frågekod.\ncatalog:variable_text:29727:11747:11778"
 
@@ -5521,25 +5521,25 @@ evidence = "Fr16b är en ogenomskinlig källkod.\ncatalog:occurrence:249804\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:fr16c"
+subject = "var:kombinerat-studier-arbete-nej-1996-97"
 fields = { "sets" = ["kombination-av-studier-och-arbete"] }
 evidence = "Fr16c är en ogenomskinlig källkod.\ncatalog:occurrence:249805\ncatalog:variable_text:29730:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr16c"
+subject = "var:kombinerat-studier-arbete-nej-1996-97"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Fr16c är en ogenomskinlig källkod.\ncatalog:occurrence:249805\ncatalog:variable_text:29730:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr20utom"
+subject = "var:arbete-utomlands-utanfor-europa-efter-utbildning-1998-99"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29731:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr20utom"
+subject = "var:arbete-utomlands-utanfor-europa-efter-utbildning-1998-99"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29731:11747:11778"
 
@@ -5557,37 +5557,37 @@ evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräv
 
 [[statement]]
 kind = "set"
-subject = "var:fr21atxt"
+subject = "var:arbete-utomlands-land-inom-europa"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29733:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr21atxt"
+subject = "var:arbete-utomlands-land-inom-europa"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29733:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr21b"
+subject = "var:arbete-utomlands-utanfor-europa-efter-utbildning-1996-97"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29734:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr21b"
+subject = "var:arbete-utomlands-utanfor-europa-efter-utbildning-1996-97"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29734:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr21btxt"
+subject = "var:arbete-utomlands-land-utanfor-europa"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29735:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr21btxt"
+subject = "var:arbete-utomlands-land-utanfor-europa"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29735:11017:11048"
 
@@ -5605,73 +5605,73 @@ evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräv
 
 [[statement]]
 kind = "set"
-subject = "var:fr24a"
+subject = "var:studier-utomlands-gymnasieutbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24a"
+subject = "var:studier-utomlands-gymnasieutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24b"
+subject = "var:hogskoleutbildning-utomlands"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24b"
+subject = "var:hogskoleutbildning-utomlands"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24c"
+subject = "var:forskarutbildning-utomlands"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24c"
+subject = "var:forskarutbildning-utomlands"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24d"
+subject = "var:personalutbildning-utomlands"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24d"
+subject = "var:personalutbildning-utomlands"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24e"
+subject = "var:annan-utbildning-utomlands"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24e"
+subject = "var:annan-utbildning-utomlands"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3"
+subject = "var:typ-kurs-utbildning"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Fr3 är en ogenomskinlig källkod.\ncatalog:occurrence:249824\ncatalog:variable_text:29742:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3"
+subject = "var:typ-kurs-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Fr3 är en ogenomskinlig källkod.\ncatalog:occurrence:249824\ncatalog:variable_text:29742:11017:11048"
 
@@ -5701,25 +5701,25 @@ evidence = "Fr3c är en ogenomskinlig källkod.\ncatalog:occurrence:249914\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:fr3d"
+subject = "var:kurs-utbildning-komvux-sverige"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Fr3d är en ogenomskinlig källkod.\ncatalog:occurrence:249915\ncatalog:variable_text:29745:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3d"
+subject = "var:kurs-utbildning-komvux-sverige"
 fields = { "tags" = ["education"] }
 evidence = "Fr3d är en ogenomskinlig källkod.\ncatalog:occurrence:249915\ncatalog:variable_text:29745:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3e"
+subject = "var:kurs-utbildning-folkhogskola"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Fr3e är en ogenomskinlig källkod.\ncatalog:occurrence:249916\ncatalog:variable_text:29746:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3e"
+subject = "var:kurs-utbildning-folkhogskola"
 fields = { "tags" = ["education"] }
 evidence = "Fr3e är en ogenomskinlig källkod.\ncatalog:occurrence:249916\ncatalog:variable_text:29746:11747:11778"
 
@@ -5737,37 +5737,37 @@ evidence = "Fr3f är en ogenomskinlig källkod. Coordinator group membership: Un
 
 [[statement]]
 kind = "set"
-subject = "var:fr3g"
+subject = "var:annan-kurs-utbildning"
 fields = { "sets" = ["utbildningsdeltagande"] }
 evidence = "Fr3g är en ogenomskinlig källkod.\ncatalog:occurrence:249918\ncatalog:variable_text:29748:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr3g"
+subject = "var:annan-kurs-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Fr3g är en ogenomskinlig källkod.\ncatalog:occurrence:249918\ncatalog:variable_text:29748:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr4"
+subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
 fields = { "sets" = [] }
 evidence = "Fr4 är en opak frågekod.\ncatalog:variable_text:29749:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr4"
+subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
 fields = { "tags" = ["employment"] }
 evidence = "Fr4 är en opak frågekod.\ncatalog:variable_text:29749:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6"
+subject = "var:anstallningsform-mars-2000-och-2002"
 fields = { "sets" = ["anstallningsform"] }
 evidence = "Fr6 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249921\ncatalog:variable_text:29750:11747:11778"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6"
+subject = "var:anstallningsform-mars-2000-och-2002"
 fields = { "tags" = ["employment"] }
 evidence = "Fr6 är en ogenomskinlig källkod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249921\ncatalog:variable_text:29750:11747:11778"
 
@@ -5785,337 +5785,337 @@ evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr97a"
+subject = "var:huvudsaklig-sysselsattning-september-1997"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29752:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97a"
+subject = "var:huvudsaklig-sysselsattning-september-1997"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29752:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97b"
+subject = "var:huvudsaklig-sysselsattning-oktober-1997"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29753:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97b"
+subject = "var:huvudsaklig-sysselsattning-oktober-1997"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29753:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97c"
+subject = "var:huvudsaklig-sysselsattning-november-1997"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29754:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97c"
+subject = "var:huvudsaklig-sysselsattning-november-1997"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29754:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97d"
+subject = "var:huvudsaklig-sysselsattning-december-1997"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29755:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr97d"
+subject = "var:huvudsaklig-sysselsattning-december-1997"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29755:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98a"
+subject = "var:huvudsaklig-sysselsattning-januari-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29756:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98a"
+subject = "var:huvudsaklig-sysselsattning-januari-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29756:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98b"
+subject = "var:huvudsaklig-sysselsattning-februari-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29757:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98b"
+subject = "var:huvudsaklig-sysselsattning-februari-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29757:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98c"
+subject = "var:huvudsaklig-sysselsattning-mars-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29758:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98c"
+subject = "var:huvudsaklig-sysselsattning-mars-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29758:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98d"
+subject = "var:huvudsaklig-sysselsattning-april-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29759:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98d"
+subject = "var:huvudsaklig-sysselsattning-april-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29759:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98e"
+subject = "var:huvudsaklig-sysselsattning-maj-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29760:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98e"
+subject = "var:huvudsaklig-sysselsattning-maj-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29760:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98f"
+subject = "var:huvudsaklig-sysselsattning-juni-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29761:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98f"
+subject = "var:huvudsaklig-sysselsattning-juni-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29761:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98g"
+subject = "var:huvudsaklig-sysselsattning-juli-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29762:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98g"
+subject = "var:huvudsaklig-sysselsattning-juli-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29762:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98h"
+subject = "var:huvudsaklig-sysselsattning-augusti-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29763:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98h"
+subject = "var:huvudsaklig-sysselsattning-augusti-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29763:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98i"
+subject = "var:huvudsaklig-sysselsattning-september-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29764:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98i"
+subject = "var:huvudsaklig-sysselsattning-september-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29764:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98j"
+subject = "var:huvudsaklig-sysselsattning-oktober-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29765:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98j"
+subject = "var:huvudsaklig-sysselsattning-oktober-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29765:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98k"
+subject = "var:huvudsaklig-sysselsattning-november-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29766:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98k"
+subject = "var:huvudsaklig-sysselsattning-november-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29766:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98l"
+subject = "var:huvudsaklig-sysselsattning-december-1998"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29767:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr98l"
+subject = "var:huvudsaklig-sysselsattning-december-1998"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29767:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99a"
+subject = "var:huvudsaklig-sysselsattning-januari-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29768:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99a"
+subject = "var:huvudsaklig-sysselsattning-januari-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29768:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99b"
+subject = "var:huvudsaklig-sysselsattning-februari-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29769:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99b"
+subject = "var:huvudsaklig-sysselsattning-februari-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29769:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99c"
+subject = "var:huvudsaklig-sysselsattning-mars-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29770:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99c"
+subject = "var:huvudsaklig-sysselsattning-mars-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29770:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99d"
+subject = "var:huvudsaklig-sysselsattning-april-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29771:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99d"
+subject = "var:huvudsaklig-sysselsattning-april-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29771:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99e"
+subject = "var:huvudsaklig-sysselsattning-maj-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29772:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99e"
+subject = "var:huvudsaklig-sysselsattning-maj-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29772:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99f"
+subject = "var:huvudsaklig-sysselsattning-juni-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29773:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99f"
+subject = "var:huvudsaklig-sysselsattning-juni-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29773:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99g"
+subject = "var:huvudsaklig-sysselsattning-juli-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29774:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99g"
+subject = "var:huvudsaklig-sysselsattning-juli-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29774:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99h"
+subject = "var:huvudsaklig-sysselsattning-augusti-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29775:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99h"
+subject = "var:huvudsaklig-sysselsattning-augusti-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29775:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99i"
+subject = "var:huvudsaklig-sysselsattning-september-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29776:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99i"
+subject = "var:huvudsaklig-sysselsattning-september-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29776:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99j"
+subject = "var:huvudsaklig-sysselsattning-oktober-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29777:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99j"
+subject = "var:huvudsaklig-sysselsattning-oktober-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29777:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99k"
+subject = "var:huvudsaklig-sysselsattning-november-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29778:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99k"
+subject = "var:huvudsaklig-sysselsattning-november-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29778:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99l"
+subject = "var:huvudsaklig-sysselsattning-december-1999"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29779:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:fr99l"
+subject = "var:huvudsaklig-sysselsattning-december-1999"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog:variable_text:29779:11017:11048"
 
@@ -6937,13 +6937,13 @@ evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-2"
+subject = "var:huvudsaklig-sysselsattning-hogskoleexaminerade-matveckan"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Siffersuffixet är en tilldelad räknare, inte källkolumnen F10.\ncatalog:variable_text:29848:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-2"
+subject = "var:huvudsaklig-sysselsattning-hogskoleexaminerade-matveckan"
 fields = { "tags" = ["employment"] }
 evidence = "Siffersuffixet är en tilldelad räknare, inte källkolumnen F10.\ncatalog:variable_text:29848:14669:14700"
 
@@ -7381,13 +7381,13 @@ evidence = "Variabeln är en kalibrerad vikt.\ncatalog:occurrence:250417\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:kalvikt-2"
+subject = "var:kalibrerad-vikt-registerinformation"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "Suffixet 2 är inte en del av källkolumnen.\ncatalog:occurrence:249992\ncatalog:variable_text:29886:12478:12509"
 
 [[statement]]
 kind = "set"
-subject = "var:kalvikt-2"
+subject = "var:kalibrerad-vikt-registerinformation"
 fields = { "tags" = ["methods"] }
 evidence = "Suffixet 2 är inte en del av källkolumnen.\ncatalog:occurrence:249992\ncatalog:variable_text:29886:12478:12509"
 
@@ -7849,13 +7849,13 @@ evidence = "Variabeln anger urvalsstorlek i andra fasen.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:m"
+subject = "var:antal-inkomna-svar-per-stratum-inklusive-overtackning"
 fields = { "sets" = [] }
 evidence = "Enbokstavskoden är ogenomskinlig.\ncatalog:variable_text:29927:11017:11048"
 
 [[statement]]
 kind = "set"
-subject = "var:m"
+subject = "var:antal-inkomna-svar-per-stratum-inklusive-overtackning"
 fields = { "tags" = ["methods"] }
 evidence = "Enbokstavskoden är ogenomskinlig.\ncatalog:variable_text:29927:11017:11048"
 
@@ -8101,13 +8101,13 @@ evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-arbete-4"
+subject = "var:nojdhet-arbete-22-26-april-2013"
 fields = { "sets" = ["nojdhet-med-arbetet"] }
 evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:29948:15796:15826"
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-arbete-4"
+subject = "var:nojdhet-arbete-22-26-april-2013"
 fields = { "tags" = ["employment"] }
 evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:29948:15796:15826"
 
@@ -8377,13 +8377,13 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-utbildning-3"
+subject = "var:nojdhet-universitets-hogskoleutbildning"
 fields = { "sets" = [] }
 evidence = "Suffixet 3 är inte en del av källkolumnen.\ncatalog:occurrence:248949\ncatalog:variable_text:29971:15796:15826"
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-utbildning-3"
+subject = "var:nojdhet-universitets-hogskoleutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 3 är inte en del av källkolumnen.\ncatalog:occurrence:248949\ncatalog:variable_text:29971:15796:15826"
 
@@ -9349,13 +9349,13 @@ evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30054:17167:173
 
 [[statement]]
 kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-07"
+subject = "var:skal-arbete-inte-overensstammer-utbildning-vet-inte"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30055:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-07"
+subject = "var:skal-arbete-inte-overensstammer-utbildning-vet-inte"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30055:17167:17348"
 
@@ -9445,61 +9445,61 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-02"
+subject = "var:inte-overensstammer-svart-fa-arbete-overhuvudtaget-2022"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30063:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-02"
+subject = "var:inte-overensstammer-svart-fa-arbete-overhuvudtaget-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30063:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-03"
+subject = "var:skal-inte-overensstammer-arbetar-inom-annan-utbildning-2022"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30064:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-03"
+subject = "var:skal-inte-overensstammer-arbetar-inom-annan-utbildning-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30064:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-04"
+subject = "var:skal-arbete-inte-overensstammer-mer-attraktivt-2022"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30065:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-04"
+subject = "var:skal-arbete-inte-overensstammer-mer-attraktivt-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30065:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-05"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2022"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30066:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-05"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30066:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-06"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2022"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30067:19174:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f12-06"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2022"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30067:19174:19358"
 
@@ -9541,37 +9541,37 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-05"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2019"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30071:18078:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-05"
+subject = "var:skal-arbete-inte-overensstammer-kvar-gamla-arbetet-2019"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30071:18078:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-06"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2019"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30072:18078:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-06"
+subject = "var:skal-arbete-inte-overensstammer-saknar-erfarenhet-2019"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30072:18078:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-07"
+subject = "var:skal-arbete-inte-overensstammer-familjeskal"
 fields = { "sets" = [] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30073:18078:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:skal-varfor-arbete-inte-overensstammer-f7-07"
+subject = "var:skal-arbete-inte-overensstammer-familjeskal"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Namnet överstiger 60 tecken.\ncatalog:variable_text:30073:18078:18262"
 
@@ -10477,25 +10477,25 @@ evidence = "F19 har olika ägare mellan perioderna.\ncatalog:occurrence:250149\n
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-2"
+subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
 fields = { "sets" = ["utbildningsniva-for-arbetet"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen F23.\ncatalog:variable_text:30150:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-2"
+subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen F23.\ncatalog:variable_text:30150:14669:14700"
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-3"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
 fields = { "sets" = ["utbildningsniva-for-arbetet"] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F3.\ncatalog:variable_text:30151:13939:13970"
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-3"
+subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F3.\ncatalog:variable_text:30151:13939:13970"
 
@@ -10789,13 +10789,13 @@ evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:utbildning-forberett-arbete-studier-5"
+subject = "var:gymnasieutbildning-forberett-arbetslivet"
 fields = { "sets" = ["utbildningens-forberedelse"] }
 evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:30177:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildning-forberett-arbete-studier-5"
+subject = "var:gymnasieutbildning-forberett-arbetslivet"
 fields = { "tags" = ["education"] }
 evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:30177:17167:17348"
 
@@ -11137,49 +11137,49 @@ evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:vk"
+subject = "var:kalibrerad-vikt-indirekta-svar-upprakningstal"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "Vk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249704\ncatalog:variable_text:30208:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:vk"
+subject = "var:kalibrerad-vikt-indirekta-svar-upprakningstal"
 fields = { "tags" = ["methods"] }
 evidence = "Vk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249704\ncatalog:variable_text:30208:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:wk"
+subject = "var:kalibrerad-vikt-direkta-svar-upprakningstal"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249769\ncatalog:variable_text:30209:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:wk"
+subject = "var:kalibrerad-vikt-direkta-svar-upprakningstal"
 fields = { "tags" = ["methods"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249769\ncatalog:variable_text:30209:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-direktasvar"
+subject = "var:kalibrerad-vikt-direkta-svar-antal"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249632\ncatalog:variable_text:30210:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-direktasvar"
+subject = "var:kalibrerad-vikt-direkta-svar-antal"
 fields = { "tags" = ["methods"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249632\ncatalog:variable_text:30210:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-indirektasvar"
+subject = "var:kalibrerad-vikt-indirekta-svar-antal"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249633\ncatalog:variable_text:30211:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:wk-indirektasvar"
+subject = "var:kalibrerad-vikt-indirekta-svar-antal"
 fields = { "tags" = ["methods"] }
 evidence = "Wk är en ogenomskinlig bokstavskod; etiketten kan kräva disambiguering.\ncatalog:occurrence:249633\ncatalog:variable_text:30211:17167:17348"
 
@@ -11233,13 +11233,13 @@ evidence = "Variabeln anger personens yrkesgrupp.\ncatalog:variable_text:30215:1
 
 [[statement]]
 kind = "set"
-subject = "var:yrkgen"
+subject = "var:programtyp-hogskoleutbildning-urvalsdragning"
 fields = { "sets" = ["programtyp-i-hogskolan"] }
 evidence = "Yrkgen är en källmnemonik utan igenkännbara delar av etiketten.\ncatalog:variable_text:30216:17167:17348"
 
 [[statement]]
 kind = "set"
-subject = "var:yrkgen"
+subject = "var:programtyp-hogskoleutbildning-urvalsdragning"
 fields = { "tags" = ["education"] }
 evidence = "Yrkgen är en källmnemonik utan igenkännbara delar av etiketten.\ncatalog:variable_text:30216:17167:17348"
 

@@ -997,133 +997,133 @@ evidence = "Status för momsregistrering.\ncatalog:valueset:7003\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig-detaljgrupp"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Gruppen omfattar näringsgrenskodningar.\ncatalog:variable_text:12096:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig-detaljgrupp"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Gruppen omfattar näringsgrenskodningar.\ncatalog:variable_text:12096:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1avd"
+subject = "var:naringsgren-huvudsaklig-avdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Etiketten delas med andra nivåer och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12097:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1avd"
+subject = "var:naringsgren-huvudsaklig-avdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Etiketten delas med andra nivåer och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12097:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1uavd"
+subject = "var:naringsgren-huvudsaklig-underavdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Etiketten delas med andra nivåer och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12098:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1uavd"
+subject = "var:naringsgren-huvudsaklig-underavdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren; etiketten identifierar den huvudsakliga näringsgrenen. Etiketten delas med andra nivåer och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12098:10592:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:ng2-835"
+subject = "var:naringsgren-andra-detaljgrupp"
 fields = { "sets" = ["naringsgren"] }
 evidence = "835 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12099:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng2-835"
+subject = "var:naringsgren-andra-detaljgrupp"
 fields = { "tags" = ["business"] }
 evidence = "835 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12099:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng2avd"
+subject = "var:naringsgren-andra-avdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12100:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng2avd"
+subject = "var:naringsgren-andra-avdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12100:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng3-21078"
+subject = "var:naringsgren-tredje-detaljgrupp"
 fields = { "sets" = ["naringsgren"] }
 evidence = "21078 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12101:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng3-21078"
+subject = "var:naringsgren-tredje-detaljgrupp"
 fields = { "tags" = ["business"] }
 evidence = "21078 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12101:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng3avd"
+subject = "var:naringsgren-tredje-avdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12102:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng3avd"
+subject = "var:naringsgren-tredje-avdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12102:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng4-37550"
+subject = "var:naringsgren-fjarde-detaljgrupp"
 fields = { "sets" = ["naringsgren"] }
 evidence = "37550 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12103:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng4-37550"
+subject = "var:naringsgren-fjarde-detaljgrupp"
 fields = { "tags" = ["business"] }
 evidence = "37550 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12103:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng4avd"
+subject = "var:naringsgren-fjarde-avdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12104:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng4avd"
+subject = "var:naringsgren-fjarde-avdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12104:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng5-37551"
+subject = "var:naringsgren-femte-detaljgrupp"
 fields = { "sets" = ["naringsgren"] }
 evidence = "37551 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12105:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng5-37551"
+subject = "var:naringsgren-femte-detaljgrupp"
 fields = { "tags" = ["business"] }
 evidence = "37551 är ett tillagt löpnummer, inte källkolumnens fältposition. Etiketten delas med avdelningsnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12105:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng5avd"
+subject = "var:naringsgren-femte-avdelning"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12106:10592:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ng5avd"
+subject = "var:naringsgren-femte-avdelning"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en bokstavskod för näringsgren. Etiketten delas med detaljnivån och målet behöver disambigueras enligt D-12.\ncatalog:variable_text:12106:10592:19358"
 

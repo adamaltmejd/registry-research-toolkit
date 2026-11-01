@@ -848,13 +848,13 @@ evidence = "Variabeln anger var ägaren är bosatt.\ncatalog:variable_text:25806
 
 [[statement]]
 kind = "set"
-subject = "var:moblera"
+subject = "var:specialavtal-specialbostad"
 fields = { "sets" = [] }
 evidence = "Möblera anger endast ett exempel och är inte variabelns betydelse under någon period.\ncatalog:variable_text:25813:13514:14610\ncatalog:variable_text:25813:14610:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:moblera"
+subject = "var:specialavtal-specialbostad"
 fields = { "tags" = ["housing"] }
 evidence = "Möblera anger endast ett exempel och är inte variabelns betydelse under någon period.\ncatalog:variable_text:25813:13514:14610\ncatalog:variable_text:25813:14610:16071"
 

@@ -3703,13 +3703,13 @@ evidence = "Levande födda är en komponent i antalet födda.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:aregionfg"
+subject = "var:a-region-tidigare"
 fields = { "sets" = ["a-region"] }
 evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A-region.\ncatalog:variable_text:41658:-731:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:aregionfg"
+subject = "var:a-region-tidigare"
 fields = { "tags" = ["geography"] }
 evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A-region.\ncatalog:variable_text:41658:-731:10227"
 
@@ -4867,25 +4867,25 @@ evidence = "Variabeln anger relationspersonens folkbokföringsförsamling.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-efb"
+subject = "var:grund-bosattning-efter-folkbokforing"
 fields = { "sets" = ["grund-for-bosattning"] }
 evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41766:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-efb"
+subject = "var:grund-bosattning-efter-folkbokforing"
 fields = { "tags" = ["migration"] }
 evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41766:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-ffb"
+subject = "var:grund-bosattning-fore-folkbokforing"
 fields = { "sets" = ["grund-for-bosattning"] }
 evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41767:14245:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-ffb"
+subject = "var:grund-bosattning-fore-folkbokforing"
 fields = { "tags" = ["migration"] }
 evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41767:14245:14975"
 
@@ -5011,13 +5011,13 @@ evidence = "H-region är en geografisk indelning med en tidigare motsvarighet.\n
 
 [[statement]]
 kind = "set"
-subject = "var:hregionfg"
+subject = "var:h-region-tidigare"
 fields = { "sets" = ["h-region"] }
 evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare H-region.\ncatalog:variable_text:41778:1096:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:hregionfg"
+subject = "var:h-region-tidigare"
 fields = { "tags" = ["geography"] }
 evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare H-region.\ncatalog:variable_text:41778:1096:10227"
 
@@ -5851,13 +5851,13 @@ evidence = "Tidigare riksområde ingår i boenderegion och mäter geografisk til
 
 [[statement]]
 kind = "set"
-subject = "var:rnplgh-ridlghg"
+subject = "var:lagenhetsnyckel-fore-flytt"
 fields = { "sets" = ["bostadslagenhet"] }
 evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41870:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:rnplgh-ridlghg"
+subject = "var:lagenhetsnyckel-fore-flytt"
 fields = { "tags" = [] }
 evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41870:16801:17897"
 
@@ -5971,25 +5971,25 @@ evidence = "Variabeln anger taxeringsdistrikt.\ncatalog:variable_text:41882:2921
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsdistrikt-2"
+subject = "var:taxeringsdistrikt-dodsfall-medborgarskapsandring"
 fields = { "sets" = ["taxeringsdistrikt"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41883:-731:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsdistrikt-2"
+subject = "var:taxeringsdistrikt-dodsfall-medborgarskapsandring"
 fields = { "tags" = ["geography", "taxation"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41883:-731:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsdistrikt-3"
+subject = "var:taxeringsdistrikt-inflyttning"
 fields = { "sets" = ["taxeringsdistrikt"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41884:-731:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsdistrikt-3"
+subject = "var:taxeringsdistrikt-inflyttning"
 fields = { "tags" = ["geography", "taxation"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41884:-731:2922"
 
@@ -6031,13 +6031,13 @@ evidence = "Tidigare medborgarskapskodning hör till kandidatgruppen och demogra
 
 [[statement]]
 kind = "set"
-subject = "var:tidpunkt-civilstand"
+subject = "var:civilstand-vid-dodsfall"
 fields = { "sets" = ["civilstand"] }
 evidence = "Id:t anger en tidpunkt men variabeln kodar civilstånd vid dödsfallet.\ncatalog:variable_text:41888:-731:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:tidpunkt-civilstand"
+subject = "var:civilstand-vid-dodsfall"
 fields = { "tags" = ["family-household"] }
 evidence = "Id:t anger en tidpunkt men variabeln kodar civilstånd vid dödsfallet.\ncatalog:variable_text:41888:-731:10227"
 
@@ -6151,13 +6151,13 @@ evidence = "Landkoden avser in- eller utvandring beroende på posttyp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-fastg"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
 fields = { "sets" = ["bostadsfastighet"] }
 evidence = "UUID och G är källkoder som inte framgår av etiketten. Etiketten delas med andra variabler och målet kräver R6-hållning.\ncatalog:variable_text:41898:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-fastg"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
 fields = { "tags" = ["geography"] }
 evidence = "UUID och G är källkoder som inte framgår av etiketten. Etiketten delas med andra variabler och målet kräver R6-hållning.\ncatalog:variable_text:41898:18628:20454"
 
@@ -6211,13 +6211,13 @@ evidence = "Identitetsnumret anger relationspersonens bostadslägenhet vid civil
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-lghg"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
 fields = { "sets" = ["bostadslagenhet"] }
 evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41903:18628:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:uuid-lghg"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
 fields = { "tags" = [] }
 evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41903:18628:20454"
 
@@ -6271,13 +6271,13 @@ evidence = "Yrkeskoden ingår i kandidatgruppen och beskriver yrke.\ncatalog:reg
 
 [[statement]]
 kind = "set"
-subject = "var:yrke-vid-arbetstillstand-2"
+subject = "var:yrke-vid-arbetstillstand-ssyk-2012"
 fields = { "sets" = ["yrke-vid-arbetstillstand"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Etiketten kolliderar och målnamnet behöver disambigueras enligt D-12.\ncatalog:register:231\ncatalog:variable_text:41908:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:yrke-vid-arbetstillstand-2"
+subject = "var:yrke-vid-arbetstillstand-ssyk-2012"
 fields = { "tags" = ["employment"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Etiketten kolliderar och målnamnet behöver disambigueras enligt D-12.\ncatalog:register:231\ncatalog:variable_text:41908:20453:20454"
 

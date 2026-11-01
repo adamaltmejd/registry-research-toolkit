@@ -764,13 +764,13 @@ evidence = "Variabeln mäter total kommunal skattesats.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:tsksats-1"
+subject = "var:total-kommunal-skattesats-ar-t-1"
 fields = { "sets" = ["total-kommunal-skattesats"] }
 evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34360:13514:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:tsksats-1"
+subject = "var:total-kommunal-skattesats-ar-t-1"
 fields = { "tags" = ["taxation"] }
 evidence = "T och Sk är ogenomskinliga källkoder.\ncatalog:variable_text:34360:13514:15340"
 

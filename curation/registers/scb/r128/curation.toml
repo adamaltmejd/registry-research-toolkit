@@ -1375,13 +1375,13 @@ evidence = "Pensions- och sjukförsäkringsavgift är en avgift av skattekarakt�
 
 [[statement]]
 kind = "set"
-subject = "var:beters"
+subject = "var:bilforman-betald"
 fields = { "sets" = ["bilforman"] }
 evidence = "BetErs är en ogenomskinlig källmnemonik för betald bilförmån.\ncatalog:variable_text:39053:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:beters"
+subject = "var:bilforman-betald"
 fields = { "tags" = ["income"] }
 evidence = "BetErs är en ogenomskinlig källmnemonik för betald bilförmån.\ncatalog:variable_text:39053:17532:17897"
 

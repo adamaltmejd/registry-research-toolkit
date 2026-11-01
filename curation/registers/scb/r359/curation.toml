@@ -139,25 +139,25 @@ evidence = "Antal-familjen behålls som en läsbar beteckningsfamilj. Variabeln 
 
 [[statement]]
 kind = "set"
-subject = "var:effektl"
+subject = "var:installerad-effekt-solceller-mer-an-30-mindre-an-1000-kw"
 fields = { "sets" = [] }
 evidence = "L är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448924\ncatalog:variable_text:43108:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektl"
+subject = "var:installerad-effekt-solceller-mer-an-30-mindre-an-1000-kw"
 fields = { "tags" = ["energy"] }
 evidence = "L är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448924\ncatalog:variable_text:43108:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektm"
+subject = "var:installerad-effekt-solceller-mellan-20-och-30-kw"
 fields = { "sets" = [] }
 evidence = "M är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448925\ncatalog:variable_text:43109:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektm"
+subject = "var:installerad-effekt-solceller-mellan-20-och-30-kw"
 fields = { "tags" = ["energy"] }
 evidence = "M är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448925\ncatalog:variable_text:43109:19723:20089"
 
@@ -199,37 +199,37 @@ evidence = "Variabeln mäter installerad effekt från solcellsanläggningar.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:effekts"
+subject = "var:installerad-effekt-solceller-mer-an-10-mindre-an-20-kw"
 fields = { "sets" = [] }
 evidence = "S är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448926\ncatalog:variable_text:43113:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effekts"
+subject = "var:installerad-effekt-solceller-mer-an-10-mindre-an-20-kw"
 fields = { "tags" = ["energy"] }
 evidence = "S är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448926\ncatalog:variable_text:43113:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektxl"
+subject = "var:installerad-effekt-solceller-storre-an-1000-kw"
 fields = { "sets" = [] }
 evidence = "XL är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448927\ncatalog:variable_text:43114:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektxl"
+subject = "var:installerad-effekt-solceller-storre-an-1000-kw"
 fields = { "tags" = ["energy"] }
 evidence = "XL är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448927\ncatalog:variable_text:43114:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektxs"
+subject = "var:installerad-effekt-solceller-mindre-an-10-kw"
 fields = { "sets" = [] }
 evidence = "XS är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448928\ncatalog:variable_text:43115:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:effektxs"
+subject = "var:installerad-effekt-solceller-mindre-an-10-kw"
 fields = { "tags" = ["energy"] }
 evidence = "XS är en bokstavskod; etiketten delas med andra variabler och målnamnet behöver därför disambigueras.\ncatalog:occurrence:448928\ncatalog:variable_text:43115:19723:20089"
 

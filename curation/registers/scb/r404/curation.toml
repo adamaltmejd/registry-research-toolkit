@@ -2389,25 +2389,25 @@ evidence = "SUN2020Inr innehåller en källkod som inte återfinns i etiketten.\
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-66"
+subject = "var:hogsta-utbildningsniva-trestallig"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Suffixet 66 finns inte i källkolumnen och är en räknarsuffix.\ncatalog:variable_text:5858:18262:20089\ncatalog:variable_text:5859:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-66"
+subject = "var:hogsta-utbildningsniva-trestallig"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 66 finns inte i källkolumnen och är en räknarsuffix.\ncatalog:variable_text:5858:18262:20089\ncatalog:variable_text:5859:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-old"
+subject = "var:hogsta-utbildningsniva-aggregat"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN2020 är en källkod som inte återfinns i etiketten; etiketten kolliderar med en annan nivåvariabel.\ncatalog:variable_text:5858:18262:20089\ncatalog:variable_text:5859:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva-old"
+subject = "var:hogsta-utbildningsniva-aggregat"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020 är en källkod som inte återfinns i etiketten; etiketten kolliderar med en annan nivåvariabel.\ncatalog:variable_text:5858:18262:20089\ncatalog:variable_text:5859:18262:20089"
 
@@ -2473,37 +2473,37 @@ evidence = "Indikatorn används för klassificering som sysselsatt. Coordinator 
 
 [[statement]]
 kind = "set"
-subject = "var:tjobbovr"
+subject = "var:ovrig-ersattning-arbete"
 fields = { "sets" = ["ersattning-for-arbete"] }
 evidence = "Det inledande T är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5747:18262:20454\ncatalog:variable_text:5865:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tjobbovr"
+subject = "var:ovrig-ersattning-arbete"
 fields = { "tags" = ["income"] }
 evidence = "Det inledande T är en enstaka källbokstav och gör id:t ogenomskinligt.\ncatalog:variable_text:5747:18262:20454\ncatalog:variable_text:5865:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tlivrfk"
+subject = "var:arbetsskade-yrkesskadelivranta"
 fields = { "sets" = ["ersattning-vid-langvarigt-nedsatt-arbetsformaga"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5866:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tlivrfk"
+subject = "var:arbetsskade-yrkesskadelivranta"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5866:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tspensku"
+subject = "var:sjukpension-sjukersattning-pensionsforsakring"
 fields = { "sets" = ["ersattning-vid-langvarigt-nedsatt-arbetsformaga", "sjukersattning"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5867:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tspensku"
+subject = "var:sjukpension-sjukersattning-pensionsforsakring"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5867:18262:20089"
 

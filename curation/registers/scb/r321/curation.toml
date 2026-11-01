@@ -1357,13 +1357,13 @@ evidence = "Fr10b är en opak frågekod.\ncatalog:occurrence:383285\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:fr10c-text"
+subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
 fields = { "sets" = ["inkomna-medborgarforslag"] }
 evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382605\ncatalog:variable_text:38450:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr10c-text"
+subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382605\ncatalog:variable_text:38450:16801:17167"
 
@@ -1381,73 +1381,73 @@ evidence = "Samma källkolumn har olika ägare för olika begrepp i separata per
 
 [[statement]]
 kind = "set"
-subject = "var:fr12"
+subject = "var:rad-kommitte-ungdomar-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod.\ncatalog:occurrence:383128\ncatalog:variable_text:38452:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12"
+subject = "var:rad-kommitte-ungdomar-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod.\ncatalog:occurrence:383128\ncatalog:variable_text:38452:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-2"
+subject = "var:rad-kommitte-aldre-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383129\ncatalog:variable_text:38453:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-2"
+subject = "var:rad-kommitte-aldre-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383129\ncatalog:variable_text:38453:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-3"
+subject = "var:rad-kommitte-nationella-minoriteter-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383130\ncatalog:variable_text:38454:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-3"
+subject = "var:rad-kommitte-nationella-minoriteter-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383130\ncatalog:variable_text:38454:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-4"
+subject = "var:rad-kommitte-personer-funktionsnedsattning-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383131\ncatalog:variable_text:38455:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-4"
+subject = "var:rad-kommitte-personer-funktionsnedsattning-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383131\ncatalog:variable_text:38455:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-5"
+subject = "var:rad-kommitte-personer-utlandsk-bakgrund-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383132\ncatalog:variable_text:38456:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-5"
+subject = "var:rad-kommitte-personer-utlandsk-bakgrund-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383132\ncatalog:variable_text:38456:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-6"
+subject = "var:rad-kommitte-annan-grupp-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383133\ncatalog:variable_text:38457:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12-6"
+subject = "var:rad-kommitte-annan-grupp-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12 är en opak frågekod; numret är en källkolumnslot.\ncatalog:occurrence:383133\ncatalog:variable_text:38457:16801:17167"
 
@@ -1477,25 +1477,25 @@ evidence = "Fr12a är en opak frågekod.\ncatalog:occurrence:382790\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:fr12a-text"
+subject = "var:antal-inkomna-folkinitiativ-kommun-mandatperiod"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr12a är en opak frågekod.\ncatalog:occurrence:382791\ncatalog:variable_text:38460:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12a-text"
+subject = "var:antal-inkomna-folkinitiativ-kommun-mandatperiod"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12a är en opak frågekod.\ncatalog:occurrence:382791\ncatalog:variable_text:38460:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12b"
+subject = "var:antal-folkinitiativ-beslut-folkomrostning-mandatperiod"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr12b är en opak frågekod.\ncatalog:occurrence:382792\ncatalog:variable_text:38461:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr12b"
+subject = "var:antal-folkinitiativ-beslut-folkomrostning-mandatperiod"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr12b är en opak frågekod.\ncatalog:occurrence:382792\ncatalog:variable_text:38461:19723:20089"
 
@@ -1525,25 +1525,25 @@ evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källko
 
 [[statement]]
 kind = "set"
-subject = "var:fr14"
+subject = "var:rad-ungdomar-kommuner-2011"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382608\ncatalog:variable_text:38464:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14"
+subject = "var:rad-ungdomar-kommuner-2011"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382608\ncatalog:variable_text:38464:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-2"
+subject = "var:rad-aldre-kommuner-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382609\ncatalog:variable_text:38465:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-2"
+subject = "var:rad-aldre-kommuner-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382609\ncatalog:variable_text:38465:16801:17167"
 
@@ -1561,61 +1561,61 @@ evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-3"
+subject = "var:rad-nationella-minoriteter-kommuner-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382610\ncatalog:variable_text:38467:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-3"
+subject = "var:rad-nationella-minoriteter-kommuner-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382610\ncatalog:variable_text:38467:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-4"
+subject = "var:rad-funktionsnedsattning-kommuner-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382611\ncatalog:variable_text:38468:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-4"
+subject = "var:rad-funktionsnedsattning-kommuner-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382611\ncatalog:variable_text:38468:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-5"
+subject = "var:rad-utlandsk-bakgrund-kommuner-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382612\ncatalog:variable_text:38469:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-5"
+subject = "var:rad-utlandsk-bakgrund-kommuner-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382612\ncatalog:variable_text:38469:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-6"
+subject = "var:rad-annan-grupp-kommuner-2015"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382613\ncatalog:variable_text:38470:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-6"
+subject = "var:rad-annan-grupp-kommuner-2015"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382613\ncatalog:variable_text:38470:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-text"
+subject = "var:antal-bifallna-medborgarforslag-kommuner"
 fields = { "sets" = ["inkomna-medborgarforslag"] }
 evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382695\ncatalog:variable_text:38471:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr14-text"
+subject = "var:antal-bifallna-medborgarforslag-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382695\ncatalog:variable_text:38471:18262:18628"
 
@@ -1645,13 +1645,13 @@ evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr16-text"
+subject = "var:antal-inkomna-e-forslag-regioner"
 fields = { "sets" = ["inkomna-e-forslag"] }
 evidence = "Fr16-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:383203\ncatalog:variable_text:38474:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr16-text"
+subject = "var:antal-inkomna-e-forslag-regioner"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Fr16-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:383203\ncatalog:variable_text:38474:18262:18628"
 
@@ -1705,13 +1705,13 @@ evidence = "Katalogen anger skilda ägare till samma källkolumner.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:fr19-text"
+subject = "var:antal-bifallna-e-forslag-kommuner"
 fields = { "sets" = ["inkomna-e-forslag"] }
 evidence = "Fr19-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:382700\ncatalog:variable_text:38479:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr19-text"
+subject = "var:antal-bifallna-e-forslag-kommuner"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Fr19-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:382700\ncatalog:variable_text:38479:18262:18628"
 
@@ -1801,85 +1801,85 @@ evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:fr23"
+subject = "var:rad-ungdomar-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383221\ncatalog:variable_text:38487:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23"
+subject = "var:rad-ungdomar-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383221\ncatalog:variable_text:38487:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-2"
+subject = "var:rad-aldre-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383222\ncatalog:variable_text:38488:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-2"
+subject = "var:rad-aldre-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383222\ncatalog:variable_text:38488:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-3"
+subject = "var:rad-nationella-minoriteter-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383223\ncatalog:variable_text:38489:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-3"
+subject = "var:rad-nationella-minoriteter-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383223\ncatalog:variable_text:38489:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-4"
+subject = "var:rad-funktionsnedsattning-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383224\ncatalog:variable_text:38490:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-4"
+subject = "var:rad-funktionsnedsattning-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383224\ncatalog:variable_text:38490:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-5"
+subject = "var:rad-utlandsk-bakgrund-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383225\ncatalog:variable_text:38491:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-5"
+subject = "var:rad-utlandsk-bakgrund-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383225\ncatalog:variable_text:38491:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-6"
+subject = "var:interreligiosa-rad-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383226\ncatalog:variable_text:38492:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-6"
+subject = "var:interreligiosa-rad-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383226\ncatalog:variable_text:38492:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-7"
+subject = "var:rad-annan-grupp-regioner-2019"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383227\ncatalog:variable_text:38493:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23-7"
+subject = "var:rad-annan-grupp-regioner-2019"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383227\ncatalog:variable_text:38493:18262:18628"
 
@@ -2005,25 +2005,25 @@ evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-6"
+subject = "var:rad-interreligiosa-2019-2023"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382721\ncatalog:occurrence:383323\ncatalog:variable_text:38504:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-6"
+subject = "var:rad-interreligiosa-2019-2023"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382721\ncatalog:occurrence:383323\ncatalog:variable_text:38504:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-7"
+subject = "var:rad-annan-grupp-2019-2023"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382722\ncatalog:occurrence:383324\ncatalog:variable_text:38505:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-7"
+subject = "var:rad-annan-grupp-2019-2023"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382722\ncatalog:occurrence:383324\ncatalog:variable_text:38505:19723:20089"
 
@@ -2161,97 +2161,97 @@ evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr26-6"
+subject = "var:rad-interreligiosa-2023"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr26 är en opak frågekod.\ncatalog:occurrence:382831\ncatalog:variable_text:38517:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr26-6"
+subject = "var:rad-interreligiosa-2023"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr26 är en opak frågekod.\ncatalog:occurrence:382831\ncatalog:variable_text:38517:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr26-7"
+subject = "var:rad-annan-grupp-2023"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr26 är en opak frågekod.\ncatalog:occurrence:382832\ncatalog:variable_text:38518:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr26-7"
+subject = "var:rad-annan-grupp-2023"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr26 är en opak frågekod.\ncatalog:occurrence:382832\ncatalog:variable_text:38518:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27"
+subject = "var:medborgarkontor-fysiskt"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr27 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383162\ncatalog:variable_text:38519:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27"
+subject = "var:medborgarkontor-fysiskt"
 fields = { "tags" = [] }
 evidence = "Fr27 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383162\ncatalog:variable_text:38519:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-2"
+subject = "var:medborgarkontor-webbportal-callcenter-kundtjanst"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr27-2 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383163\ncatalog:variable_text:38520:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-2"
+subject = "var:medborgarkontor-webbportal-callcenter-kundtjanst"
 fields = { "tags" = [] }
 evidence = "Fr27-2 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383163\ncatalog:variable_text:38520:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-2-28613"
+subject = "var:brukarrepresentation-utover-delegering-grundskola"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382642\ncatalog:variable_text:38521:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-2-28613"
+subject = "var:brukarrepresentation-utover-delegering-grundskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382642\ncatalog:variable_text:38521:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-3"
+subject = "var:har-inte-medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr27-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383164\ncatalog:variable_text:38522:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-3"
+subject = "var:har-inte-medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Fr27-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383164\ncatalog:variable_text:38522:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-3-28613"
+subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382643\ncatalog:variable_text:38523:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-3-28613"
+subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382643\ncatalog:variable_text:38523:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-4"
+subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382644\ncatalog:variable_text:38524:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-4"
+subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382644\ncatalog:variable_text:38524:16801:17167"
 
@@ -2353,13 +2353,13 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr28-5"
+subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382653\ncatalog:variable_text:38533:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr28-5"
+subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382653\ncatalog:variable_text:38533:16801:17167"
 
@@ -2473,145 +2473,145 @@ evidence = "Frågekoden är ett opakt id; källets etikett kolliderar och kräve
 
 [[statement]]
 kind = "set"
-subject = "var:fr31"
+subject = "var:region-sociala-medier-medborgarkontakt"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383179\ncatalog:variable_text:38543:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31"
+subject = "var:region-sociala-medier-medborgarkontakt"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383179\ncatalog:variable_text:38543:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-2"
+subject = "var:region-sociala-medier-informera-medborgare"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383180\ncatalog:variable_text:38544:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-2"
+subject = "var:region-sociala-medier-informera-medborgare"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383180\ncatalog:variable_text:38544:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-3"
+subject = "var:region-sociala-medier-paverka-politiska-beslut"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383181\ncatalog:variable_text:38545:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-3"
+subject = "var:region-sociala-medier-paverka-politiska-beslut"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383181\ncatalog:variable_text:38545:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-4"
+subject = "var:region-sociala-medier-annat-syfte"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383182\ncatalog:variable_text:38546:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-4"
+subject = "var:region-sociala-medier-annat-syfte"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383182\ncatalog:variable_text:38546:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-5"
+subject = "var:region-sociala-medier-medborgarkontakter-nej"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383183\ncatalog:variable_text:38547:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr31-5"
+subject = "var:region-sociala-medier-medborgarkontakter-nej"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383183\ncatalog:variable_text:38547:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr32"
+subject = "var:kommun-webbplats-folja-medborgarforslag"
 fields = { "sets" = ["medborgarforslag-pa-webbplats"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382664\ncatalog:variable_text:38548:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr32"
+subject = "var:kommun-webbplats-folja-medborgarforslag"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382664\ncatalog:variable_text:38548:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr32-9"
+subject = "var:kommun-webbplats-information-medborgarforslag"
 fields = { "sets" = ["medborgarforslag-pa-webbplats"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382672\ncatalog:variable_text:38549:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr32-9"
+subject = "var:kommun-webbplats-information-medborgarforslag"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382672\ncatalog:variable_text:38549:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33"
+subject = "var:kommun-sociala-medier-medborgarkontakt"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382673\ncatalog:variable_text:38550:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33"
+subject = "var:kommun-sociala-medier-medborgarkontakt"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382673\ncatalog:variable_text:38550:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-2"
+subject = "var:kommun-sociala-medier-informera-medborgare"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382674\ncatalog:variable_text:38551:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-2"
+subject = "var:kommun-sociala-medier-informera-medborgare"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382674\ncatalog:variable_text:38551:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-3"
+subject = "var:kommun-sociala-medier-paverka-politiska-beslut"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382675\ncatalog:variable_text:38552:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-3"
+subject = "var:kommun-sociala-medier-paverka-politiska-beslut"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382675\ncatalog:variable_text:38552:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-4"
+subject = "var:kommun-sociala-medier-annat-syfte"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382676\ncatalog:variable_text:38553:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-4"
+subject = "var:kommun-sociala-medier-annat-syfte"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382676\ncatalog:variable_text:38553:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-5"
+subject = "var:kommun-sociala-medier-medborgarkontakter-nej"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382677\ncatalog:variable_text:38554:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr33-5"
+subject = "var:kommun-sociala-medier-medborgarkontakter-nej"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382677\ncatalog:variable_text:38554:16801:17167"
 
@@ -2629,73 +2629,73 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-2"
+subject = "var:region-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383243\ncatalog:variable_text:38556:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-2"
+subject = "var:region-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383243\ncatalog:variable_text:38556:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-3"
+subject = "var:region-fullmaktige-verksamhetsmal-samtliga-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383244\ncatalog:variable_text:38557:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-3"
+subject = "var:region-fullmaktige-verksamhetsmal-samtliga-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383244\ncatalog:variable_text:38557:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-4"
+subject = "var:region-fullmaktige-verksamhetsmal-vissa-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383245\ncatalog:variable_text:38558:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-4"
+subject = "var:region-fullmaktige-verksamhetsmal-vissa-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383245\ncatalog:variable_text:38558:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-5"
+subject = "var:region-fullmaktige-hallbarhetsmal-samtliga-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383246\ncatalog:variable_text:38559:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-5"
+subject = "var:region-fullmaktige-hallbarhetsmal-samtliga-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383246\ncatalog:variable_text:38559:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-6"
+subject = "var:region-fullmaktige-hallbarhetsmal-vissa-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383247\ncatalog:variable_text:38560:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-6"
+subject = "var:region-fullmaktige-hallbarhetsmal-vissa-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383247\ncatalog:variable_text:38560:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-7"
+subject = "var:landsting-fullmaktige-inga-ekonomiska-verksamhetsmal-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383248\ncatalog:variable_text:38561:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38-7"
+subject = "var:landsting-fullmaktige-inga-ekonomiska-verksamhetsmal-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383248\ncatalog:variable_text:38561:18262:18628"
 
@@ -2713,49 +2713,49 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383347\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-1"
+subject = "var:kommun-samverkan-gemensam-namnd"
 fields = { "sets" = ["samverkan-mellan-kommuner-och-regioner"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382850\ncatalog:variable_text:38563:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-1"
+subject = "var:kommun-samverkan-gemensam-namnd"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382850\ncatalog:variable_text:38563:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-2"
+subject = "var:kommun-samverkan-kommunalforbund"
 fields = { "sets" = ["samverkan-mellan-kommuner-och-regioner"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382851\ncatalog:variable_text:38564:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-2"
+subject = "var:kommun-samverkan-kommunalforbund"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382851\ncatalog:variable_text:38564:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-3"
+subject = "var:kommun-avtalssamverkan"
 fields = { "sets" = ["samverkan-mellan-kommuner-och-regioner"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382852\ncatalog:variable_text:38565:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-3"
+subject = "var:kommun-avtalssamverkan"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382852\ncatalog:variable_text:38565:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-4"
+subject = "var:kommun-samverkan-annat-satt"
 fields = { "sets" = ["samverkan-mellan-kommuner-och-regioner"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382853\ncatalog:variable_text:38566:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b-4"
+subject = "var:kommun-samverkan-annat-satt"
 fields = { "tags" = [] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382853\ncatalog:variable_text:38566:19723:20089"
 
@@ -2785,85 +2785,85 @@ evidence = "Den operativa betydelsen ändras mellan perioderna.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383250\ncatalog:occurrence:383350\ncatalog:variable_text:38569:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383250\ncatalog:occurrence:383350\ncatalog:variable_text:38569:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2-29350"
+subject = "var:kommun-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382738\ncatalog:variable_text:38570:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2-29350"
+subject = "var:kommun-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382738\ncatalog:variable_text:38570:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2-text"
+subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383351\ncatalog:variable_text:38571:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-2-text"
+subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383351\ncatalog:variable_text:38571:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-3"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383251\ncatalog:occurrence:383352\ncatalog:variable_text:38572:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-3"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383251\ncatalog:occurrence:383352\ncatalog:variable_text:38572:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-3-29350"
+subject = "var:kommun-fullmaktige-verksamhetsmal-samtliga-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382739\ncatalog:variable_text:38573:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-3-29350"
+subject = "var:kommun-fullmaktige-verksamhetsmal-samtliga-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382739\ncatalog:variable_text:38573:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-5"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-samtliga-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382740\ncatalog:variable_text:38574:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-5"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-samtliga-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382740\ncatalog:variable_text:38574:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-6"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-vissa-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382741\ncatalog:variable_text:38575:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr39-6"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-vissa-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382741\ncatalog:variable_text:38575:18262:18628"
 
@@ -2893,13 +2893,13 @@ evidence = "Fr3b är en opak källkod och etiketten anger heltäckande kommun- e
 
 [[statement]]
 kind = "set"
-subject = "var:fr40"
+subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382744\ncatalog:variable_text:38578:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40"
+subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382744\ncatalog:variable_text:38578:18262:18628"
 
@@ -2917,25 +2917,25 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-2-35983"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-annat"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383355\ncatalog:variable_text:38580:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-2-35983"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-annat"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383355\ncatalog:variable_text:38580:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-2-text"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-fritext"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383356\ncatalog:variable_text:38581:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-2-text"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-fritext"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383356\ncatalog:variable_text:38581:19723:20089"
 
@@ -2953,73 +2953,73 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-3-35983"
+subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383357\ncatalog:variable_text:38583:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-3-35983"
+subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383357\ncatalog:variable_text:38583:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-4"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382747\ncatalog:variable_text:38584:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-4"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382747\ncatalog:variable_text:38584:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-5"
+subject = "var:brukarrepresentation-aldreomsorg-2020"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382748\ncatalog:variable_text:38585:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-5"
+subject = "var:brukarrepresentation-aldreomsorg-2020"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382748\ncatalog:variable_text:38585:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-6"
+subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382749\ncatalog:variable_text:38586:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-6"
+subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
 fields = { "tags" = ["democracy", "disability", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382749\ncatalog:variable_text:38586:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-7"
+subject = "var:brukarrepresentation-annat-omrade-2020"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382750\ncatalog:variable_text:38587:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-7"
+subject = "var:brukarrepresentation-annat-omrade-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382750\ncatalog:variable_text:38587:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-8"
+subject = "var:kommun-inte-brukarrepresentation-2020"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382751\ncatalog:variable_text:38588:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-8"
+subject = "var:kommun-inte-brukarrepresentation-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382751\ncatalog:variable_text:38588:18262:18628"
 
@@ -3061,13 +3061,13 @@ evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurren
 
 [[statement]]
 kind = "set"
-subject = "var:fr41-3"
+subject = "var:region-inte-medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr41-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:variable_text:38592:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41-3"
+subject = "var:region-inte-medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Fr41-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:variable_text:38592:19723:20089"
 
@@ -3145,37 +3145,37 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr41a"
+subject = "var:fullmaktige-ekonomiska-mal-samtliga-bolag-arligen"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382861\ncatalog:variable_text:38599:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41a"
+subject = "var:fullmaktige-ekonomiska-mal-samtliga-bolag-arligen"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382861\ncatalog:variable_text:38599:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41b"
+subject = "var:fullmaktige-verksamhetsmal-samtliga-bolag-arligen"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382862\ncatalog:variable_text:38600:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41b"
+subject = "var:fullmaktige-verksamhetsmal-samtliga-bolag-arligen"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382862\ncatalog:variable_text:38600:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41c"
+subject = "var:fullmaktige-hallbarhetsmal-samtliga-bolag-arligen"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382863\ncatalog:variable_text:38601:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr41c"
+subject = "var:fullmaktige-hallbarhetsmal-samtliga-bolag-arligen"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382863\ncatalog:variable_text:38601:19723:20089"
 
@@ -3241,25 +3241,25 @@ evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:fr42-4"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382867\ncatalog:variable_text:38607:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr42-4"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382867\ncatalog:variable_text:38607:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr42-5"
+subject = "var:region-webb-folja-hantering-inlamnade-medborgarforslag"
 fields = { "sets" = ["medborgarforslag-pa-webbplats"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383365\ncatalog:variable_text:38608:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr42-5"
+subject = "var:region-webb-folja-hantering-inlamnade-medborgarforslag"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383365\ncatalog:variable_text:38608:19723:20089"
 
@@ -3397,49 +3397,49 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr43-8"
+subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382881\ncatalog:variable_text:38620:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr43-8"
+subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382881\ncatalog:variable_text:38620:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44"
+subject = "var:fysiskt-medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr44 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382882\ncatalog:variable_text:38621:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44"
+subject = "var:fysiskt-medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Fr44 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382882\ncatalog:variable_text:38621:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44-2"
+subject = "var:medborgarkontor-webbportal-eller-callcenter-kundtjanst"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr44-2 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382883\ncatalog:variable_text:38622:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44-2"
+subject = "var:medborgarkontor-webbportal-eller-callcenter-kundtjanst"
 fields = { "tags" = ["digital"] }
 evidence = "Fr44-2 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382883\ncatalog:variable_text:38622:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44-3"
+subject = "var:inget-medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr44-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382884\ncatalog:variable_text:38623:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr44-3"
+subject = "var:inget-medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Fr44-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:382884\ncatalog:variable_text:38623:19723:20089"
 
@@ -3565,61 +3565,61 @@ evidence = "Etiketten anger förekomst medan enheten och definitionen anger anta
 
 [[statement]]
 kind = "set"
-subject = "var:fr6"
+subject = "var:sammantradesarvode-fortroendevalda-regioner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383367\ncatalog:variable_text:38634:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6"
+subject = "var:sammantradesarvode-fortroendevalda-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383367\ncatalog:variable_text:38634:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-2"
+subject = "var:inlasningsarvode-fortroendevalda-regioner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383368\ncatalog:variable_text:38635:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-2"
+subject = "var:inlasningsarvode-fortroendevalda-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383368\ncatalog:variable_text:38635:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-3"
+subject = "var:manadsarvode-fortroendevalda-regioner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383369\ncatalog:variable_text:38636:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-3"
+subject = "var:manadsarvode-fortroendevalda-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383369\ncatalog:variable_text:38636:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-4"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-regioner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383370\ncatalog:variable_text:38637:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-4"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383370\ncatalog:variable_text:38637:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-5"
+subject = "var:annat-arvode-fortroendevalda-regioner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383371\ncatalog:variable_text:38638:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6-5"
+subject = "var:annat-arvode-fortroendevalda-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:383371\ncatalog:variable_text:38638:19723:20089"
 
@@ -3637,97 +3637,97 @@ evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\n
 
 [[statement]]
 kind = "set"
-subject = "var:fr6a"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2016"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr6a är en opak frågekod.\ncatalog:occurrence:383187\ncatalog:variable_text:38640:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6a"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2016"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr6a är en opak frågekod.\ncatalog:occurrence:383187\ncatalog:variable_text:38640:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6a-text"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2016"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr6a är en opak frågekod.\ncatalog:occurrence:383188\ncatalog:variable_text:38641:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6a-text"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2016"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr6a är en opak frågekod.\ncatalog:occurrence:383188\ncatalog:variable_text:38641:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6b-text"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2016"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr6b är en opak frågekod.\ncatalog:occurrence:383189\ncatalog:variable_text:38642:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr6b-text"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2016"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr6b är en opak frågekod.\ncatalog:occurrence:383189\ncatalog:variable_text:38642:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7"
+subject = "var:sammantradesarvode-fortroendevalda-kommuner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382892\ncatalog:variable_text:38643:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7"
+subject = "var:sammantradesarvode-fortroendevalda-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382892\ncatalog:variable_text:38643:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-2"
+subject = "var:inlasningsarvode-fortroendevalda-kommuner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382893\ncatalog:variable_text:38644:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-2"
+subject = "var:inlasningsarvode-fortroendevalda-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382893\ncatalog:variable_text:38644:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-3"
+subject = "var:manadsarvode-fortroendevalda-kommuner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382894\ncatalog:variable_text:38645:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-3"
+subject = "var:manadsarvode-fortroendevalda-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382894\ncatalog:variable_text:38645:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-4"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-kommuner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382895\ncatalog:variable_text:38646:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-4"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382895\ncatalog:variable_text:38646:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-5"
+subject = "var:annat-arvode-fortroendevalda-kommuner"
 fields = { "sets" = ["arvodestyper-for-fortroendevalda"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382896\ncatalog:variable_text:38647:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr7-5"
+subject = "var:annat-arvode-fortroendevalda-kommuner"
 fields = { "tags" = ["democracy"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382896\ncatalog:variable_text:38647:19723:20089"
 
@@ -3781,13 +3781,13 @@ evidence = "Fr8a är en opak frågekod.\ncatalog:occurrence:382683\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fr8c-text"
+subject = "var:antal-behandlade-bifallna-medborgarforslag-regioner"
 fields = { "sets" = ["inkomna-medborgarforslag"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383194\ncatalog:variable_text:38652:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fr8c-text"
+subject = "var:antal-behandlade-bifallna-medborgarforslag-regioner"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383194\ncatalog:variable_text:38652:16801:17167"
 
@@ -3805,37 +3805,37 @@ evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:fr9a"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2020"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr9a är en opak frågekod.\ncatalog:occurrence:383278\ncatalog:variable_text:38654:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr9a"
+subject = "var:folkinitiativ-folkomrostning-forekomst-regioner-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr9a är en opak frågekod.\ncatalog:occurrence:383278\ncatalog:variable_text:38654:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr9a-text"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2020"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr9a är en opak frågekod.\ncatalog:occurrence:383279\ncatalog:variable_text:38655:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr9a-text"
+subject = "var:antal-inkomna-folkinitiativ-regioner-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr9a är en opak frågekod.\ncatalog:occurrence:383279\ncatalog:variable_text:38655:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr9b-text"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2020"
 fields = { "sets" = ["folkinitiativ-till-folkomrostning"] }
 evidence = "Fr9b är en opak frågekod.\ncatalog:occurrence:383280\ncatalog:variable_text:38656:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fr9b-text"
+subject = "var:antal-folkinitiativ-lett-till-folkomrostning-regioner-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr9b är en opak frågekod.\ncatalog:occurrence:383280\ncatalog:variable_text:38656:18262:18628"
 

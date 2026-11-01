@@ -505,37 +505,37 @@ evidence = "ASNI92 är en ogenomskinlig källkod; etiketten anger näringsgren.\
 
 [[statement]]
 kind = "set"
-subject = "var:astsni"
+subject = "var:naringsgren-sni-1992-tvasifferniva"
 fields = { "sets" = ["naringsgren-huvudsaklig-sysselsattning"] }
 evidence = "Astsni är en ogenomskinlig källkod; etiketten anger näringsgren för huvudsaklig sysselsättning.\ncatalog:variable_text:41439:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:astsni"
+subject = "var:naringsgren-sni-1992-tvasifferniva"
 fields = { "tags" = ["business"] }
 evidence = "Astsni är en ogenomskinlig källkod; etiketten anger näringsgren för huvudsaklig sysselsättning.\ncatalog:variable_text:41439:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:astsni-17509"
+subject = "var:naringsgren-sni-1992-2002-femsifferniva"
 fields = { "sets" = ["naringsgren-huvudsaklig-sysselsattning"] }
 evidence = "Id:t är en ogenomskinlig källkod med ett suffix som inte finns i källkolumnen.\ncatalog:variable_text:41440:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:astsni-17509"
+subject = "var:naringsgren-sni-1992-2002-femsifferniva"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod med ett suffix som inte finns i källkolumnen.\ncatalog:variable_text:41440:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:astsni07"
+subject = "var:naringsgren-sni-2007-femsifferniva"
 fields = { "sets" = ["naringsgren-huvudsaklig-sysselsattning"] }
 evidence = "Astsni07 är en ogenomskinlig källkod.\ncatalog:variable_text:41441:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:astsni07"
+subject = "var:naringsgren-sni-2007-femsifferniva"
 fields = { "tags" = ["business"] }
 evidence = "Astsni07 är en ogenomskinlig källkod.\ncatalog:variable_text:41441:17897:18628"
 
@@ -757,25 +757,25 @@ evidence = "FK är en bokstavskod och årsersättningens källa framgår av etik
 
 [[statement]]
 kind = "set"
-subject = "var:flkatadfar"
+subject = "var:fodd-sverige-utomlands-adoptivfar"
 fields = { "sets" = ["adoptivfaderns-fodelseursprung"] }
 evidence = "Flkat är en ogenomskinlig källförkortning.\ncatalog:variable_text:41463:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:flkatadfar"
+subject = "var:fodd-sverige-utomlands-adoptivfar"
 fields = { "tags" = ["demographics"] }
 evidence = "Flkat är en ogenomskinlig källförkortning.\ncatalog:variable_text:41463:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:flkatadmor"
+subject = "var:fodd-sverige-utomlands-adoptivmor"
 fields = { "sets" = ["adoptivmoderns-fodelseursprung"] }
 evidence = "Flkat är en ogenomskinlig källförkortning.\ncatalog:variable_text:41464:10592:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:flkatadmor"
+subject = "var:fodd-sverige-utomlands-adoptivmor"
 fields = { "tags" = ["demographics"] }
 evidence = "Flkat är en ogenomskinlig källförkortning.\ncatalog:variable_text:41464:10592:12053"
 
@@ -937,37 +937,37 @@ evidence = "Grov sektorkodning hör till institutionell sektor.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:gydelt"
+subject = "var:gymnasiestuderande-hosttermin"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "GY är en källkod för gymnasiet och id är ogenomskinligt.\ncatalog:variable_text:41478:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:gydelt"
+subject = "var:gymnasiestuderande-hosttermin"
 fields = { "tags" = ["education"] }
 evidence = "GY är en källkod för gymnasiet och id är ogenomskinligt.\ncatalog:variable_text:41478:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:gyfgh"
+subject = "var:gymnasiestuderande-vartermin"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "GYFGH är en ogenomskinlig källkod.\ncatalog:variable_text:41479:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:gyfgh"
+subject = "var:gymnasiestuderande-vartermin"
 fields = { "tags" = ["education"] }
 evidence = "GYFGH är en ogenomskinlig källkod.\ncatalog:variable_text:41479:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:gylako"
+subject = "var:skolkommun-gymnasieskola-hosttermin"
 fields = { "sets" = ["skolkommun"] }
 evidence = "GYLAKO är en ogenomskinlig källkod.\ncatalog:variable_text:41480:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:gylako"
+subject = "var:skolkommun-gymnasieskola-hosttermin"
 fields = { "tags" = ["geography"] }
 evidence = "GYLAKO är en ogenomskinlig källkod.\ncatalog:variable_text:41480:9496:10227"
 
@@ -1153,25 +1153,25 @@ evidence = "Variabeln anger folkhögskolans kurstyp under vårterminen.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:kvlako"
+subject = "var:skolkommun-komvux-hosttermin"
 fields = { "sets" = ["skolkommun"] }
 evidence = "KVLAKO är en ogenomskinlig källkod.\ncatalog:variable_text:41499:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:kvlako"
+subject = "var:skolkommun-komvux-hosttermin"
 fields = { "tags" = ["geography"] }
 evidence = "KVLAKO är en ogenomskinlig källkod.\ncatalog:variable_text:41499:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:kxdelt"
+subject = "var:komvuxutbildning-hosttermin"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "KX är en ogenomskinlig källkod för Komvux.\ncatalog:variable_text:41500:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:kxdelt"
+subject = "var:komvuxutbildning-hosttermin"
 fields = { "tags" = ["education"] }
 evidence = "KX är en ogenomskinlig källkod för Komvux.\ncatalog:variable_text:41500:9131:9496"
 
@@ -1309,25 +1309,25 @@ evidence = "Kommunen anger tidigare bostadsort.\ncatalog:variable_text:41519:116
 
 [[statement]]
 kind = "set"
-subject = "var:rpualdgrp"
+subject = "var:aldersgrupp-31-december"
 fields = { "sets" = ["alder"] }
 evidence = "RPU är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:41520:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:rpualdgrp"
+subject = "var:aldersgrupp-31-december"
 fields = { "tags" = ["demographics"] }
 evidence = "RPU är en bokstavskod som inte finns i etiketten.\ncatalog:variable_text:41520:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:rpusuninr-3"
+subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:rpusuninr-3"
+subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
 
@@ -1393,13 +1393,13 @@ evidence = "Sektorkoden hör till institutionell sektor.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sektorkod-2"
+subject = "var:sektorkod-huvudsaklig-sysselsattning-november"
 fields = { "sets" = ["institutionell-sektor"] }
 evidence = "Suffixet 2 finns inte i källkolumnen SektorKod.\ncatalog:variable_text:41527:14610:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sektorkod-2"
+subject = "var:sektorkod-huvudsaklig-sysselsattning-november"
 fields = { "tags" = ["business"] }
 evidence = "Suffixet 2 finns inte i källkolumnen SektorKod.\ncatalog:variable_text:41527:14610:18628"
 
@@ -1837,25 +1837,25 @@ evidence = "Id:t anger SUN 2000 och utbildningsnivå; källan beskriver nivå ä
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-66"
+subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
 fields = { "sets" = [] }
 evidence = "Suffixet 66 finns inte i källkolumnen.\ncatalog:variable_text:41565:15706:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-66"
+subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 66 finns inte i källkolumnen.\ncatalog:variable_text:41565:15706:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-det"
+subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
 fields = { "sets" = [] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41566:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-det"
+subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41566:11323:11688"
 
@@ -1873,13 +1873,13 @@ evidence = "Variabeln anger faderns utbildningsnivå.\ncatalog:variable_text:415
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-far-2"
+subject = "var:utbildningsniva-biologisk-far-hogsta-fullfoljda-sun-2000"
 fields = { "sets" = ["faderns-utbildningsniva"] }
 evidence = "Suffixet 2 är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:41568:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-far-2"
+subject = "var:utbildningsniva-biologisk-far-hogsta-fullfoljda-sun-2000"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 2 är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:41568:16801:17897"
 
@@ -2041,25 +2041,25 @@ evidence = "Variabeln anger faderns utbildningsnivå.\ncatalog:variable_text:415
 
 [[statement]]
 kind = "set"
-subject = "var:suninr"
+subject = "var:utbildningsinriktning-sun-forsta-siffran"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41582:10227:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:suninr"
+subject = "var:utbildningsinriktning-sun-forsta-siffran"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41582:10227:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:sunniva"
+subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
 fields = { "sets" = [] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41583:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sunniva"
+subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41583:19723:20089"
 
@@ -2245,25 +2245,25 @@ evidence = "Variabeln anger förekomst av vuxenstudiestöd.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:vuxenstudiestod-2"
+subject = "var:sarskilt-vuxenstudiestod-arbetslosa"
 fields = { "sets" = ["vuxenstudiestod"] }
 evidence = "Suffixet 2 finns inte i källkolumnen SVUXA.\ncatalog:variable_text:41600:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vuxenstudiestod-2"
+subject = "var:sarskilt-vuxenstudiestod-arbetslosa"
 fields = { "tags" = ["transfers"] }
 evidence = "Suffixet 2 finns inte i källkolumnen SVUXA.\ncatalog:variable_text:41600:11323:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:vuxenstudiestod-studiebidrag-ovriga"
+subject = "var:rekryteringsbidrag-vuxenstuderande-skattepliktig"
 fields = { "sets" = ["vuxenstudiestod"] }
 evidence = "Id:t anger studiebidrag medan variabeln mäter mottagande av rekryteringsbidrag.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:vuxenstudiestod-studiebidrag-ovriga"
+subject = "var:rekryteringsbidrag-vuxenstuderande-skattepliktig"
 fields = { "tags" = ["transfers"] }
 evidence = "Id:t anger studiebidrag medan variabeln mäter mottagande av rekryteringsbidrag.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
 

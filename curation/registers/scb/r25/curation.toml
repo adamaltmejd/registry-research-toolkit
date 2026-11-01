@@ -2396,13 +2396,13 @@ evidence = "ARBINK and CARB record the same work-income measure across disjoint 
 
 [[statement]]
 kind = "set"
-subject = "var:aallmtj"
+subject = "var:allmanna-avdrag-tjanst"
 fields = { "sets" = [] }
 evidence = "Källkoden är en ogenomskinlig förkortning; variabeln mäter allmänna avdrag i tjänst.\ncatalog:variable_text:30384:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:aallmtj"
+subject = "var:allmanna-avdrag-tjanst"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning; variabeln mäter allmänna avdrag i tjänst.\ncatalog:variable_text:30384:16801:20089"
 
@@ -2444,37 +2444,37 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30387:16801:200
 
 [[statement]]
 kind = "set"
-subject = "var:aamavgr"
+subject = "var:underlag-arbetsmarknadsavgift-foregaende-ar-2004"
 fields = { "sets" = ["underlag-arbetsmarknadsavgift"] }
 evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30388:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:aamavgr"
+subject = "var:underlag-arbetsmarknadsavgift-foregaende-ar-2004"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30388:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:aapavgx"
+subject = "var:underlag-alderspensionsavgift-foregaende-ar"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig; kandidaten för ålderspensionsavgift omfattar inte underlag.\ncatalog:variable_text:30389:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:aapavgx"
+subject = "var:underlag-alderspensionsavgift-foregaende-ar"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig; kandidaten för ålderspensionsavgift omfattar inte underlag.\ncatalog:variable_text:30389:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:aapensfx"
+subject = "var:underlag-pensionsavgift-annat-forvarvsarbete-foregaende-ar"
 fields = { "sets" = ["underlag-allman-pensionsavgift"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30390:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:aapensfx"
+subject = "var:underlag-pensionsavgift-annat-forvarvsarbete-foregaende-ar"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30390:10957:11323"
 
@@ -2540,13 +2540,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30395:9496:1022
 
 [[statement]]
 kind = "set"
-subject = "var:aasjuk3"
+subject = "var:underlag-sjukforsakringsavgift-brutet-rakenskapsar"
 fields = { "sets" = ["underlag-sjukforsakringsavgift"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30396:9496:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:aasjuk3"
+subject = "var:underlag-sjukforsakringsavgift-brutet-rakenskapsar"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30396:9496:9862"
 
@@ -2624,25 +2624,25 @@ evidence = "Identitetsfaktet kräver granskning av den angränsande mappningen.\
 
 [[statement]]
 kind = "set"
-subject = "var:aelevp1"
+subject = "var:underlag-efterlevandepensionsavgift-fodda-1982-1988-halvar-1"
 fields = { "sets" = ["underlag-efterlevandepensionsavgift"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30403:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:aelevp1"
+subject = "var:underlag-efterlevandepensionsavgift-fodda-1982-1988-halvar-1"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30403:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:aelevp2"
+subject = "var:underlag-efterlevandepensionsavgift-fodda-1982-1988-halvar-2"
 fields = { "sets" = ["underlag-efterlevandepensionsavgift"] }
 evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30404:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:aelevp2"
+subject = "var:underlag-efterlevandepensionsavgift-fodda-1982-1988-halvar-2"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30404:13514:13879"
 
@@ -2684,13 +2684,13 @@ evidence = "Källkolumnens kod är opak; etiketten delas med andra variabler och
 
 [[statement]]
 kind = "set"
-subject = "var:afahhalv"
+subject = "var:underlag-fastighetsavgift-hyreshus-0-15-procent"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak; etiketten delas med andra variabler och målet kräver disambiguering.\ncatalog:variable_text:30408:15706:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:afahhalv"
+subject = "var:underlag-fastighetsavgift-hyreshus-0-15-procent"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkolumnens kod är opak; etiketten delas med andra variabler och målet kräver disambiguering.\ncatalog:variable_text:30408:15706:18993"
 
@@ -2924,13 +2924,13 @@ evidence = "The earlier period describes a property-tax base; the counterpart's 
 
 [[statement]]
 kind = "set"
-subject = "var:ainjo"
+subject = "var:a-inkomst-jordbruksfastighet"
 fields = { "sets" = ["inkomst-jordbruksfastighet"] }
 evidence = "Källmnemoniken är opak; etiketten anger inkomstslaget.\ncatalog:variable_text:30428:365:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:ainjo"
+subject = "var:a-inkomst-jordbruksfastighet"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak; etiketten anger inkomstslaget.\ncatalog:variable_text:30428:365:2922"
 
@@ -2996,13 +2996,13 @@ evidence = "Perioduppdelningen mellan ALU och arbetsmarknadsåtgärder kräver i
 
 [[statement]]
 kind = "set"
-subject = "var:akbf"
+subject = "var:folkbokforingsort-31-december-indelning-1-januari"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "Källkolumnens bokstavskod är opak; etiketten anger folkbokföringsort.\ncatalog:variable_text:30434:7670:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:akbf"
+subject = "var:folkbokforingsort-31-december-indelning-1-januari"
 fields = { "tags" = ["geography"] }
 evidence = "Källkolumnens bokstavskod är opak; etiketten anger folkbokföringsort.\ncatalog:variable_text:30434:7670:8401"
 
@@ -3140,13 +3140,13 @@ evidence = "Beloppet avser vilande aktivitetsersättning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:akupenssek"
+subject = "var:pensionsforsakring-pensionssparkonto-inbetalt-belopp-sek"
 fields = { "sets" = ["pensionsforsakringspremie"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:30446:16436:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:akupenssek"
+subject = "var:pensionsforsakring-pensionssparkonto-inbetalt-belopp-sek"
 fields = { "tags" = ["finance"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:30446:16436:17532"
 
@@ -3164,13 +3164,13 @@ evidence = "Källan anger belopp i kronor i äldre perioder och avgiftssats i pr
 
 [[statement]]
 kind = "set"
-subject = "var:alav"
+subject = "var:allmanna-avdrag-exklusive-underskott-forvarvskalla"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten delas med andra variabler.\ncatalog:variable_text:30448:-731:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:alav"
+subject = "var:allmanna-avdrag-exklusive-underskott-forvarvskalla"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig och etiketten delas med andra variabler.\ncatalog:variable_text:30448:-731:2922"
 
@@ -3548,25 +3548,25 @@ evidence = "AMPENS är en ogenomskinlig källmnemonik. Coordinator group members
 
 [[statement]]
 kind = "set"
-subject = "var:anarb"
+subject = "var:underlag-avgift-arbetsloshetsforsakring-naringsverksamhet"
 fields = { "sets" = ["underlag-allman-arbetsloshetsforsakringsavgift"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:30480:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:anarb"
+subject = "var:underlag-avgift-arbetsloshetsforsakring-naringsverksamhet"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:30480:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:anasjuk"
+subject = "var:underlag-allman-sjukforsakringsavgift-naringsverksamhet"
 fields = { "sets" = ["underlag-sjukforsakringsavgift"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30481:8766:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:anasjuk"
+subject = "var:underlag-allman-sjukforsakringsavgift-naringsverksamhet"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30481:8766:9496"
 
@@ -4388,13 +4388,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30552:17167:175
 
 [[statement]]
 kind = "set"
-subject = "var:aslsfp"
+subject = "var:underlag-sarskild-loneskatt-forvarvsinkomst-16-16-procent"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning av etiketten.\ncatalog:variable_text:30553:10592:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:aslsfp"
+subject = "var:underlag-sarskild-loneskatt-forvarvsinkomst-16-16-procent"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en opak förkortning av etiketten.\ncatalog:variable_text:30553:10592:13514"
 
@@ -4412,25 +4412,25 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:30554:13149:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:aslspax"
+subject = "var:underlag-loneskatt-pensionskostnader-anstalld-17-69-procent"
 fields = { "sets" = ["underlag-sarskild-loneskatt-pensionskostnader"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30555:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:aslspax"
+subject = "var:underlag-loneskatt-pensionskostnader-anstalld-17-69-procent"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30555:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:aslspex"
+subject = "var:underlag-loneskatt-egna-pensionskostnader-foregaende-ar"
 fields = { "sets" = ["underlag-sarskild-loneskatt-pensionskostnader"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30556:10227:10592"
 
 [[statement]]
 kind = "set"
-subject = "var:aslspex"
+subject = "var:underlag-loneskatt-egna-pensionskostnader-foregaende-ar"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30556:10227:10592"
 
@@ -4496,25 +4496,25 @@ evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:atarb"
+subject = "var:underlag-avgift-arbetsloshetsforsakring-tjanst"
 fields = { "sets" = ["underlag-allman-arbetsloshetsforsakringsavgift"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30562:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:atarb"
+subject = "var:underlag-avgift-arbetsloshetsforsakring-tjanst"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30562:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:atasjuk"
+subject = "var:underlag-allman-sjukforsakringsavgift-tjanst"
 fields = { "sets" = ["underlag-sjukforsakringsavgift"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30563:8766:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:atasjuk"
+subject = "var:underlag-allman-sjukforsakringsavgift-tjanst"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:30563:8766:9496"
 
@@ -5432,61 +5432,61 @@ evidence = "Källmnemoniken är opak.\ncatalog:valueset:8388\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:basforv"
+subject = "var:nedsattning-statlig-inkomstskatt-forvarvsinkomst-avtal"
 fields = { "sets" = [] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:30640:9862:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:basforv"
+subject = "var:nedsattning-statlig-inkomstskatt-forvarvsinkomst-avtal"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:30640:9862:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:baskap"
+subject = "var:nedsattning-statlig-inkomstskatt-kapitalinkomst-avtal"
 fields = { "sets" = [] }
 evidence = "Källkoden är en ogenomskinlig förkortning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel markerar avtalsnedsättning av inkomstskatt. membership-0308: Ingen vald variabel kodar avtalsnedsättning av inkomstskatt. membership-0309: Ingen vald variabel mäter avtalsgrundad nedsättning av inkomstskatt. membership-0310: Ingen vald variabel anger skatteavtalsgrundad nedsättning av inkomstskatt. membership-0311: Samtliga anger avtalsgrundad nedsättning av kommunal eller statlig inkomstskatt och omfattas av fast kandidattext. membership-0312: Ingen vald variabel anger avtalsnedsättning av inkomstskatt. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler kodar avtalsnedsättning av inkomstskatt. membership-0315: Ingen vald variabel avser avtalsnedsättning av inkomstskatt. membership-0316: Ingen vald variabel markerar avtalsnedsättning av inkomstskatt. membership-0317: Inga valda variabler markerar skatteavtalsgrundad nedsättning. membership-0318: Valda avtalsnedsättningar avser avkastningsskatt, inte inkomstskatt. membership-0319: Inga valda variabler avser avtalsnedsättning av inkomstskatt. membership-0320: Ingen vald variabel anger skatteavtalsgrundad nedsättning av inkomstskatt. membership-0321: Vald avtalsmarkering gäller exemptmetoden, inte angiven avtalsnedsättning. membership-0322: Inget valt id markerar skatteavtalsgrundad inkomstskattenedsättning. membership-0323: Ingen vald variabel i denna sektion kodar avtalsnedsättning av inkomstskatt. membership-0324: Utländska skattebelopp är inte markeringar för avtalsnedsättning. membership-0325: Inget valt mått markerar skatteavtalsgrundad nedsättning av inkomstskatt.\ncatalog:valueset:3232\ncatalog:valueset:3476\ncatalog:variable_text:30615:9862:20089\ncatalog:variable_text:30640:9862:20089\ncatalog:variable_text:30641:9862:20089\ncatalog:variable_text:31374:9862:13879\ncatalog:variable_text:31375:14610:16801\ncatalog:variable_text:31709:9862:20089\ncatalog:variable_text:32060:12784:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:baskap"
+subject = "var:nedsattning-statlig-inkomstskatt-kapitalinkomst-avtal"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel markerar avtalsnedsättning av inkomstskatt. membership-0308: Ingen vald variabel kodar avtalsnedsättning av inkomstskatt. membership-0309: Ingen vald variabel mäter avtalsgrundad nedsättning av inkomstskatt. membership-0310: Ingen vald variabel anger skatteavtalsgrundad nedsättning av inkomstskatt. membership-0311: Samtliga anger avtalsgrundad nedsättning av kommunal eller statlig inkomstskatt och omfattas av fast kandidattext. membership-0312: Ingen vald variabel anger avtalsnedsättning av inkomstskatt. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler kodar avtalsnedsättning av inkomstskatt. membership-0315: Ingen vald variabel avser avtalsnedsättning av inkomstskatt. membership-0316: Ingen vald variabel markerar avtalsnedsättning av inkomstskatt. membership-0317: Inga valda variabler markerar skatteavtalsgrundad nedsättning. membership-0318: Valda avtalsnedsättningar avser avkastningsskatt, inte inkomstskatt. membership-0319: Inga valda variabler avser avtalsnedsättning av inkomstskatt. membership-0320: Ingen vald variabel anger skatteavtalsgrundad nedsättning av inkomstskatt. membership-0321: Vald avtalsmarkering gäller exemptmetoden, inte angiven avtalsnedsättning. membership-0322: Inget valt id markerar skatteavtalsgrundad inkomstskattenedsättning. membership-0323: Ingen vald variabel i denna sektion kodar avtalsnedsättning av inkomstskatt. membership-0324: Utländska skattebelopp är inte markeringar för avtalsnedsättning. membership-0325: Inget valt mått markerar skatteavtalsgrundad nedsättning av inkomstskatt.\ncatalog:valueset:3232\ncatalog:valueset:3476\ncatalog:variable_text:30615:9862:20089\ncatalog:variable_text:30640:9862:20089\ncatalog:variable_text:30641:9862:20089\ncatalog:variable_text:31374:9862:13879\ncatalog:variable_text:31375:14610:16801\ncatalog:variable_text:31709:9862:20089\ncatalog:variable_text:32060:12784:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:batpe"
+subject = "var:atp-kod-egen-forman"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:8401:9862\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:batpe"
+subject = "var:atp-kod-egen-forman"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:8401:9862\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:batpf"
+subject = "var:atp-kod-efterlevandeforman"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:batpf"
+subject = "var:atp-kod-efterlevandeforman"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bavkap"
+subject = "var:nedsattning-avkastningsskatt-utlandsk-kapitalforsakring"
 fields = { "sets" = ["nedsattning-avkastningsskatt"] }
 evidence = "Källmnemoniken är opak.\ncatalog:valueset:11549\ncatalog:variable_text:30644:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bavkap"
+subject = "var:nedsattning-avkastningsskatt-utlandsk-kapitalforsakring"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak.\ncatalog:valueset:11549\ncatalog:variable_text:30644:13879:20089"
 
@@ -5504,13 +5504,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30645:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bavpen"
+subject = "var:nedsattning-avkastningsskatt-utlandsk-pensionsforsakring"
 fields = { "sets" = ["nedsattning-avkastningsskatt"] }
 evidence = "Källmnemoniken är opak.\ncatalog:valueset:10392\ncatalog:variable_text:30646:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bavpen"
+subject = "var:nedsattning-avkastningsskatt-utlandsk-pensionsforsakring"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak.\ncatalog:valueset:10392\ncatalog:variable_text:30646:13879:20089"
 
@@ -5564,13 +5564,13 @@ evidence = "Etikett och värdemängd anger olika innehåll. Coordinator group me
 
 [[statement]]
 kind = "set"
-subject = "var:bbidrf"
+subject = "var:barnbidrag-forlangt-flerbarnstillagg-familj"
 fields = { "sets" = ["barnbidrag"] }
 evidence = "Bbi-familjen behandlas som opaka källförkortningar. Variabeln mäter barnbidrag som familjebelopp.\ncatalog:variable_text:30652:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbidrf"
+subject = "var:barnbidrag-forlangt-flerbarnstillagg-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Bbi-familjen behandlas som opaka källförkortningar. Variabeln mäter barnbidrag som familjebelopp.\ncatalog:variable_text:30652:17167:20089"
 
@@ -5612,37 +5612,37 @@ evidence = "Kodningen avser oäkta bostadsrätt.\ncatalog:variable_text:30655:13
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn18"
+subject = "var:antal-hemmaboende-barn-18-ar-eller-aldre"
 fields = { "sets" = ["antal-barn"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30656:10227:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn18"
+subject = "var:antal-hemmaboende-barn-18-ar-eller-aldre"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30656:10227:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn19hb"
+subject = "var:antal-barn-0-19-ar-hushall"
 fields = { "sets" = ["antal-barn"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30657:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn19hb"
+subject = "var:antal-barn-0-19-ar-hushall"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30657:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn2029hb"
+subject = "var:antal-barn-20-29-ar-hushall"
 fields = { "sets" = ["antal-barn"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30658:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbrn2029hb"
+subject = "var:antal-barn-20-29-ar-hushall"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens kod är opak.\ncatalog:variable_text:30658:14975:20089"
 
@@ -5924,49 +5924,49 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30685:11323:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:bforv"
+subject = "var:forvarvsarbetande-arbetsinkomst-storre-an-basbelopp"
 fields = { "sets" = ["forvarvsarbete"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30686:8401:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bforv"
+subject = "var:forvarvsarbetande-arbetsinkomst-storre-an-basbelopp"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30686:8401:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf1"
+subject = "var:folkpension-efterlevandeforman-forekomst-1"
 fields = { "sets" = ["folkpension-efterlevandeformanskod"] }
 evidence = "Källmnemoniken är opak; ettan är en källkolumnsposition.\ncatalog:variable_text:30687:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf1"
+subject = "var:folkpension-efterlevandeforman-forekomst-1"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; ettan är en källkolumnsposition.\ncatalog:variable_text:30687:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf2"
+subject = "var:folkpension-efterlevandeforman-forekomst-2"
 fields = { "sets" = ["folkpension-efterlevandeformanskod"] }
 evidence = "Källmnemoniken är opak; tvåan är en källkolumnsposition.\ncatalog:variable_text:30688:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf2"
+subject = "var:folkpension-efterlevandeforman-forekomst-2"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; tvåan är en källkolumnsposition.\ncatalog:variable_text:30688:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf3"
+subject = "var:folkpension-efterlevandeforman-forekomst-3"
 fields = { "sets" = ["folkpension-efterlevandeformanskod"] }
 evidence = "Källmnemoniken är opak; trean är en källkolumnsposition.\ncatalog:variable_text:30689:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bfpf3"
+subject = "var:folkpension-efterlevandeforman-forekomst-3"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; trean är en källkolumnsposition.\ncatalog:variable_text:30689:9862:12053"
 
@@ -6164,13 +6164,13 @@ evidence = "Källmnemoniken är ogenomskinlig; etiketten anger antal utbetalning
 
 [[statement]]
 kind = "set"
-subject = "var:binjo"
+subject = "var:b-inkomst-jordbruksfastighet"
 fields = { "sets" = ["inkomst-jordbruksfastighet"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30709:365:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:binjo"
+subject = "var:b-inkomst-jordbruksfastighet"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30709:365:2922"
 
@@ -6188,13 +6188,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30710:365:2922"
 
 [[statement]]
 kind = "set"
-subject = "var:binsta"
+subject = "var:institutionell-sektor-foretag-huvudsaklig-sysselsattning"
 fields = { "sets" = ["institutionell-sektor"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och behöver disambiguering.\ncatalog:variable_text:30711:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:binsta"
+subject = "var:institutionell-sektor-foretag-huvudsaklig-sysselsattning"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och behöver disambiguering.\ncatalog:variable_text:30711:17897:20089"
 
@@ -6272,13 +6272,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:30718:13149:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bishbur"
+subject = "var:studiehjalp-utlandsstudier-manader-bidrag-dagliga-resor"
 fields = { "sets" = ["studiehjalp"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30719:13149:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bishbur"
+subject = "var:studiehjalp-utlandsstudier-manader-bidrag-dagliga-resor"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30719:13149:20089"
 
@@ -6596,25 +6596,25 @@ evidence = "Varianten ingår i blandad inkomst.\ncatalog:variable_text:30748:120
 
 [[statement]]
 kind = "set"
-subject = "var:blkfa"
+subject = "var:aktuell-folkbokforingsort-taxeringsuttag"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "Källkolumnens bokstavskod är opak för etiketten.\ncatalog:variable_text:30749:8766:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:blkfa"
+subject = "var:aktuell-folkbokforingsort-taxeringsuttag"
 fields = { "tags" = ["geography"] }
 evidence = "Källkolumnens bokstavskod är opak för etiketten.\ncatalog:variable_text:30749:8766:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:blkff"
+subject = "var:aktuell-folkbokforingsort-31-12-inkomstar"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "Källkolumnens bokstavskod är opak för etiketten.\ncatalog:variable_text:30750:8401:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:blkff"
+subject = "var:aktuell-folkbokforingsort-31-12-inkomstar"
 fields = { "tags" = ["geography"] }
 evidence = "Källkolumnens bokstavskod är opak för etiketten.\ncatalog:variable_text:30750:8401:9496"
 
@@ -7160,25 +7160,25 @@ evidence = "Källmnemoniken är opak för andelen inkomstpensionstillägg.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:bpmrkg"
+subject = "var:pensionsmarkering-gifta-sambo"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak för pensionsmarkering.\ncatalog:variable_text:30797:8401:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:bpmrkg"
+subject = "var:pensionsmarkering-gifta-sambo"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak för pensionsmarkering.\ncatalog:variable_text:30797:8401:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:bpmrkog"
+subject = "var:pensionsmarkering-ensamstaende"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak för pensionsmarkering.\ncatalog:variable_text:30798:8401:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:bpmrkog"
+subject = "var:pensionsmarkering-ensamstaende"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak för pensionsmarkering.\ncatalog:variable_text:30798:8401:12418"
 
@@ -7256,13 +7256,13 @@ evidence = "Markeringen avser ränteförmån.\ncatalog:valueset:2498\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:brbhyr"
+subject = "var:flerfamiljshus-rantebidrag-markering"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak i förhållande till etiketten.\ncatalog:variable_text:30805:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:brbhyr"
+subject = "var:flerfamiljshus-rantebidrag-markering"
 fields = { "tags" = ["housing", "transfers"] }
 evidence = "Källmnemoniken är opak i förhållande till etiketten.\ncatalog:variable_text:30805:10592:11323"
 
@@ -7352,13 +7352,13 @@ evidence = "Markeringen avser sambeskattad sambofamilj.\ncatalog:valueset:8067\n
 
 [[statement]]
 kind = "set"
-subject = "var:bsink"
+subject = "var:markering-a-sink-sink-skatt"
 fields = { "sets" = [] }
 evidence = "SINK är en källkod som inte ensam återger etikettens begrepp.\ncatalog:variable_text:30813:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bsink"
+subject = "var:markering-a-sink-sink-skatt"
 fields = { "tags" = ["taxation"] }
 evidence = "SINK är en källkod som inte ensam återger etikettens begrepp.\ncatalog:variable_text:30813:17897:20089"
 
@@ -7532,25 +7532,25 @@ evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:30827:
 
 [[statement]]
 kind = "set"
-subject = "var:cbrutt03"
+subject = "var:bruttoinkomst-definition-2003-individ"
 fields = { "sets" = ["bruttoinkomst"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30828:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:cbrutt03"
+subject = "var:bruttoinkomst-definition-2003-individ"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30828:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:cbrutto"
+subject = "var:bruttoinkomst-individ"
 fields = { "sets" = ["bruttoinkomst"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30829:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cbrutto"
+subject = "var:bruttoinkomst-individ"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30829:18628:20089"
 
@@ -7568,25 +7568,25 @@ evidence = "Förkortningsfamiljen med 15 behandlas som opak. Variabeln mäter fa
 
 [[statement]]
 kind = "set"
-subject = "var:cbruttohb"
+subject = "var:bruttoinkomst-bostadshushall"
 fields = { "sets" = ["bruttoinkomst"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30831:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cbruttohb"
+subject = "var:bruttoinkomst-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30831:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kehb"
+subject = "var:disponibel-inkomst-2004-per-konsumtionsenhet-bostadshushall"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30832:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kehb"
+subject = "var:disponibel-inkomst-2004-per-konsumtionsenhet-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30832:19723:20089"
 
@@ -7628,13 +7628,13 @@ evidence = "Källkolumnen är en opak kod.\ncatalog:variable_text:30835:18628:20
 
 [[statement]]
 kind = "set"
-subject = "var:cdispkehb"
+subject = "var:disponibel-inkomst-1991-per-konsumtionsenhet-bostadshushall"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30836:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdispkehb"
+subject = "var:disponibel-inkomst-1991-per-konsumtionsenhet-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30836:19723:20089"
 
@@ -7664,13 +7664,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:cfakt04hb"
+subject = "var:faktorinkomst-fran-2004-bostadshushall"
 fields = { "sets" = ["faktorinkomst"] }
 evidence = "Källmnemoniken och formatändelsen är opaka.\ncatalog:variable_text:30839:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cfakt04hb"
+subject = "var:faktorinkomst-fran-2004-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken och formatändelsen är opaka.\ncatalog:variable_text:30839:18262:20089"
 
@@ -7700,13 +7700,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:30841:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cfakt504hb"
+subject = "var:faktorinkomst-exkl-kapitalvinst-2004-bostadshushall"
 fields = { "sets" = ["faktorinkomst"] }
 evidence = "Källmnemoniken och formatändelsen är opaka.\ncatalog:variable_text:30842:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cfakt504hb"
+subject = "var:faktorinkomst-exkl-kapitalvinst-2004-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken och formatändelsen är opaka.\ncatalog:variable_text:30842:18628:20089"
 
@@ -7736,13 +7736,13 @@ evidence = "Källmnemoniken och familjeändelsen är opaka.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:cftaghb"
+subject = "var:naringsinkomst-bostadshushall"
 fields = { "sets" = ["naringsinkomst"] }
 evidence = "Källkolumnens bokstavskod är opak.\ncatalog:variable_text:30845:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cftaghb"
+subject = "var:naringsinkomst-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens bokstavskod är opak.\ncatalog:variable_text:30845:14975:20089"
 
@@ -7868,13 +7868,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:30855:189
 
 [[statement]]
 kind = "set"
-subject = "var:cmixhb"
+subject = "var:blandad-inkomst-bostadshushall"
 fields = { "sets" = ["blandad-inkomst"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:30856:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cmixhb"
+subject = "var:blandad-inkomst-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:30856:14975:20089"
 
@@ -7976,13 +7976,13 @@ evidence = "Beloppet avser ersättning i samband med sjukdom.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:csjukhb"
+subject = "var:sjukdomsersattning-skattepliktig-skattefri-bostadshushall"
 fields = { "sets" = ["ersattning-i-samband-med-sjukdom"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30865:14975:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:csjukhb"
+subject = "var:sjukdomsersattning-skattepliktig-skattefri-bostadshushall"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:30865:14975:20089"
 
@@ -8300,13 +8300,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:dind"
+subject = "var:delkomponent-disponibel-inkomst-tidigare-definition"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30895:4018:4383"
 
 [[statement]]
 kind = "set"
-subject = "var:dind"
+subject = "var:delkomponent-disponibel-inkomst-tidigare-definition"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30895:4018:4383"
 
@@ -8336,13 +8336,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:dinpp"
+subject = "var:disponibel-inkomst-per-vuxen-familj-tidigare-definition"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30898:4018:4383"
 
 [[statement]]
 kind = "set"
-subject = "var:dinpp"
+subject = "var:disponibel-inkomst-per-vuxen-familj-tidigare-definition"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30898:4018:4383"
 
@@ -8372,13 +8372,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:dinu82"
+subject = "var:delkomponent-disponibel-inkomst-definition-1982"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30901:4748:5113"
 
 [[statement]]
 kind = "set"
-subject = "var:dinu82"
+subject = "var:delkomponent-disponibel-inkomst-definition-1982"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöver D-12-prövning.\ncatalog:variable_text:30901:4748:5113"
 
@@ -8396,13 +8396,13 @@ evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-3"
+subject = "var:disponibel-inkomst-bostadshushall-definition-1991"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:30904:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-3"
+subject = "var:disponibel-inkomst-bostadshushall-definition-1991"
 fields = { "tags" = ["income"] }
 evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:30904:18262:20089"
 
@@ -8708,13 +8708,13 @@ evidence = "Avgiftsbeloppet och dess nedsättning hör till samma begrepp.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:efterlevandepensionsavgift-nedsattning"
+subject = "var:efterlevandepensionsavgift-fore-nedsattning"
 fields = { "sets" = ["efterlevandepensionsavgift"] }
 evidence = "Id anger nedsättning men källan anger avgiftsbelopp före nedsättning.\ncatalog:variable_text:30930:11688:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:efterlevandepensionsavgift-nedsattning"
+subject = "var:efterlevandepensionsavgift-fore-nedsattning"
 fields = { "tags" = ["taxation"] }
 evidence = "Id anger nedsättning men källan anger avgiftsbelopp före nedsättning.\ncatalog:variable_text:30930:11688:20089"
 
@@ -9572,13 +9572,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31006:11688:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:fkuutftsek"
+subject = "var:utlandsk-forsakring-foregaende-ar-kapitalunderlag-sek"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31007:16436:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:fkuutftsek"
+subject = "var:utlandsk-forsakring-foregaende-ar-kapitalunderlag-sek"
 fields = { "tags" = ["wealth"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31007:16436:17532"
 
@@ -10760,13 +10760,13 @@ evidence = "I57KOMP24 är en ogenomskinlig källkod. Coordinator group membershi
 
 [[statement]]
 kind = "set"
-subject = "var:iabb"
+subject = "var:allmant-forlangt-barnbidrag-vardnadshavare"
 fields = { "sets" = ["barnbidrag"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31112:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:iabb"
+subject = "var:allmant-forlangt-barnbidrag-vardnadshavare"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31112:12053:12418"
 
@@ -10808,49 +10808,49 @@ evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31115:
 
 [[statement]]
 kind = "set"
-subject = "var:ibostbu"
+subject = "var:bostadsbidrag-barnfamilj-makar-ensamstaende-yngre-29-individ"
 fields = { "sets" = ["bostadsbidrag"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31116:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibostbu"
+subject = "var:bostadsbidrag-barnfamilj-makar-ensamstaende-yngre-29-individ"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31116:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibostbuhb"
+subject = "var:bostadsbidrag-barnfamilj-makar-ensamstaende-yngre-29-hushall"
 fields = { "sets" = ["bostadsbidrag"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31117:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibostbuhb"
+subject = "var:bostadsbidrag-barnfamilj-makar-ensamstaende-yngre-29-hushall"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31117:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibosttilu"
+subject = "var:tillaggsbelopp-bostadsbidrag-sokande-medsokande"
 fields = { "sets" = ["bostadsbidrag"] }
 evidence = "Källkoden innehåller opaka prefix och suffix.\ncatalog:variable_text:31118:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibosttilu"
+subject = "var:tillaggsbelopp-bostadsbidrag-sokande-medsokande"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden innehåller opaka prefix och suffix.\ncatalog:variable_text:31118:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibostvpu"
+subject = "var:bostadsbidrag-varnpliktiga-rtb-familj"
 fields = { "sets" = ["bostadsbidrag-varnpliktiga"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31119:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ibostvpu"
+subject = "var:bostadsbidrag-varnpliktiga-rtb-familj"
 fields = { "tags" = ["defence", "transfers"] }
 evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31119:17167:20089"
 
@@ -10868,49 +10868,49 @@ evidence = "Identitetsfaktet kräver granskning av UTBO.\ncatalog:occurrence:256
 
 [[statement]]
 kind = "set"
-subject = "var:ielstod"
+subject = "var:elstod-belopp-elavtalsinnehavare"
 fields = { "sets" = ["elstod"] }
 evidence = "IELSTOD är en källmnemonik med inledande kodbokstav.\ncatalog:variable_text:31121:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ielstod"
+subject = "var:elstod-belopp-elavtalsinnehavare"
 fields = { "tags" = ["transfers"] }
 evidence = "IELSTOD är en källmnemonik med inledande kodbokstav.\ncatalog:variable_text:31121:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ielstodu"
+subject = "var:elstod-hushallsbelopp-per-antal-vuxna-i-hushallet"
 fields = { "sets" = ["elstod"] }
 evidence = "IELSTODU är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31122:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ielstodu"
+subject = "var:elstod-hushallsbelopp-per-antal-vuxna-i-hushallet"
 fields = { "tags" = ["transfers"] }
 evidence = "IELSTODU är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31122:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ietabtu"
+subject = "var:etableringstillagg-rtb-familj"
 fields = { "sets" = ["etableringstillagg"] }
 evidence = "Opak källkod; etiketten delas med en annan variabel.\ncatalog:variable_text:31123:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ietabtu"
+subject = "var:etableringstillagg-rtb-familj"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "Opak källkod; etiketten delas med en annan variabel.\ncatalog:variable_text:31123:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ifamvpu"
+subject = "var:familjebidrag-varnpliktiga-rtb-familj"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:31124:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ifamvpu"
+subject = "var:familjebidrag-varnpliktiga-rtb-familj"
 fields = { "tags" = ["defence", "transfers"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:31124:17167:20089"
 
@@ -11024,13 +11024,13 @@ evidence = "Inackorderingsbidrag är en del av studiehjälpen.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:inasjor"
+subject = "var:a-inkomst-jordbruksfastighet-brukad"
 fields = { "sets" = ["inkomst-jordbruksfastighet"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31134:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:inasjor"
+subject = "var:a-inkomst-jordbruksfastighet-brukad"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31134:7305:7670"
 
@@ -11072,13 +11072,13 @@ evidence = "SKAINB anger ackumulerad inbetald A-skatt i angränsande perioder; u
 
 [[statement]]
 kind = "set"
-subject = "var:inbsjor"
+subject = "var:b-inkomst-jordbruksfastighet-ej-brukad"
 fields = { "sets" = ["inkomst-jordbruksfastighet"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31138:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:inbsjor"
+subject = "var:b-inkomst-jordbruksfastighet-ej-brukad"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31138:7305:7670"
 
@@ -11552,13 +11552,13 @@ evidence = "Siffersuffixet är inte ett källkolumnnummer.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:institutionell-sektor-4"
+subject = "var:institutionell-sektor-huvudsaklig-sysselsattning"
 fields = { "sets" = ["institutionell-sektor"] }
 evidence = "Siffersuffixet är inte ett källkolumnnummer.\ncatalog:variable_text:31178:7305:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:institutionell-sektor-4"
+subject = "var:institutionell-sektor-huvudsaklig-sysselsattning"
 fields = { "tags" = ["business"] }
 evidence = "Siffersuffixet är inte ett källkolumnnummer.\ncatalog:variable_text:31178:7305:8401"
 
@@ -11612,49 +11612,49 @@ evidence = "Introduktionsersättningen ingår i gruppen.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:iomstlan"
+subject = "var:omstallningsstudiestod-lan"
 fields = { "sets" = [] }
 evidence = "IOMSTLAN är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31183:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:iomstlan"
+subject = "var:omstallningsstudiestod-lan"
 fields = { "tags" = ["transfers"] }
 evidence = "IOMSTLAN är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31183:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbidh"
+subject = "var:rekryteringsbidrag-familj"
 fields = { "sets" = ["rekryteringsbidrag"] }
 evidence = "IREKBIDH är en opak källkod.\ncatalog:variable_text:31184:12053:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbidh"
+subject = "var:rekryteringsbidrag-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "IREKBIDH är en opak källkod.\ncatalog:variable_text:31184:12053:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbit"
+subject = "var:tillaggsbidrag-rekryteringsbidrag-belopp"
 fields = { "sets" = ["rekryteringsbidrag"] }
 evidence = "IREKBIT är en opak källkod.\ncatalog:variable_text:31185:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbit"
+subject = "var:tillaggsbidrag-rekryteringsbidrag-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "IREKBIT är en opak källkod.\ncatalog:variable_text:31185:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbu"
+subject = "var:utokat-rekryteringsbidrag-belopp"
 fields = { "sets" = ["rekryteringsbidrag"] }
 evidence = "IREKBU är en opak källkod.\ncatalog:variable_text:31186:15340:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:irekbu"
+subject = "var:utokat-rekryteringsbidrag-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "IREKBU är en opak källkod.\ncatalog:variable_text:31186:15340:16071"
 
@@ -11744,37 +11744,37 @@ evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31193:
 
 [[statement]]
 kind = "set"
-subject = "var:isocbh"
+subject = "var:ekonomiskt-bistand-familj"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31194:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:isocbh"
+subject = "var:ekonomiskt-bistand-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31194:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:isocbidh"
+subject = "var:socialbidrag-introduktionsersattning-flyktingar-familj"
 fields = { "sets" = ["ekonomiskt-bistand"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:31195:8401:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:isocbidh"
+subject = "var:socialbidrag-introduktionsersattning-flyktingar-familj"
 fields = { "tags" = ["integration", "transfers"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:31195:8401:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:isstbarn"
+subject = "var:tillaggsbidrag-studiestartsstod-belopp"
 fields = { "sets" = ["studiestartsstod"] }
 evidence = "Källmnemoniken är opak; etiketten anger tilläggsbidraget.\ncatalog:variable_text:31196:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:isstbarn"
+subject = "var:tillaggsbidrag-studiestartsstod-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; etiketten anger tilläggsbidraget.\ncatalog:variable_text:31196:17167:20089"
 
@@ -11816,13 +11816,13 @@ evidence = "Identitetsfaktet kräver jämförelse med den följande ägaren. Coo
 
 [[statement]]
 kind = "set"
-subject = "var:istudsfhb"
+subject = "var:summa-studiemedel-studiehjalp-lan-bidrag-bostadshushall"
 fields = { "sets" = ["sammanraknat-studiestod", "studiemedel"] }
 evidence = "ISTUDSFHB är en ogenomskinlig källmnemonik. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Variabeln summerar lån och bidrag från studiemedel och studiehjälp. membership-0308: Båda mäter sammanräknade studiestödsbelopp; separata låne- och bidragskomponenter omfattas inte. membership-0309: Ackumulerad studieskuld är skuldstock, inte sammanräknat studiestödsbelopp. membership-0310: De valda studielåneposterna mäter återbetalning, inte sammanräknat utbetalt studiestöd. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiestödsvariabler mäter mottagningsperioder, som denna kandidat uttryckligen utesluter. membership-0313: Återbetalda studiemedel samredovisade med givet bidragsförskott är inte ett sammanräknat studiestödsbelopp enligt definitionen. membership-0314: Extra tillägg är en separat stödkomponent och inte sammanräknat studiestöd. membership-0315: Valda studiemedelsbidrag och inackorderingsbidrag är separata komponenter, inte sammanräknat studiestöd. membership-0316: ISTUDSFH summerar uttryckligen lån och bidrag från studiemedel och studiehjälp. Identitetsfrågan om perioddelning ändrar inte begreppet. membership-0317: Lärlingsersättning och dess månader är inte sammanräknat studiestöd. membership-0318: Valda övriga utbildningsbidrag är inte sammanräknat studiestöd enligt definitionen. membership-0319: Inga valda variabler summerar studiestöd. membership-0320: Ingen vald variabel avser sammanräknat studiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Beloppen är uttryckliga studiestödssummor; enskilda bidrag, lån och mottagningsperioder utesluts. membership-0323: De valda studiestöden är separat redovisade stödkomponenter, vilka definitionen utesluter. membership-0324: Vuxenstudiestöd och separata utbildningsbidrag är inte de definierade sammanräknade studiestödsbeloppen. membership-0325: Inget valt mått avser sammanräknat studiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den fasta definitionen inkluderar uttryckligen summering av studiemedel med studiehjälp, vilket variabeln mäter. membership-0308: Definitionen omfattar studiemedlens låne- och bidragsbelopp samt uttrycklig summering med studiehjälp. Lånesumman är inte separat merkostnads- eller tilläggslån. membership-0309: Ackumulerad studieskuld är en skuldstock, inte studiemedlens utbetalningar eller veckor. membership-0310: De valda studielåneposterna mäter återbetalning och inte utbetalda studiemedel eller mottagningsveckor. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Variablerna anger veckor med studiemedelsbidrag eller lån, inklusive bidrag för utlandsstudier. Separata tilläggslån och merkostnadslån utesluts. membership-0313: CTRAN avser återbetalning tillsammans med givet bidragsförskott, inte utbetalda studiemedel eller mottagningsveckor. membership-0314: Trots etikettens studiemedelsord anger granskad evidens att extra tillägget består av studiehjälp. membership-0315: Variabeln mäter studiemedlens bidrag för utlandsstudier. membership-0316: Utlandsstudielånet och den uttryckliga summeringen av studiemedel med studiehjälp omfattas. Separat tilläggslån och vuxenstudiestöd är exkluderade. membership-0317: Inga valda variabler avser studiemedel. membership-0318: Valda övriga utbildningsbidrag stöds inte som studiemedel. membership-0319: Inga valda variabler avser studiemedel. membership-0320: Rekryteringsbidrag och särskilt utbildningsbidrag är andra stödformer än studiemedel. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Definitionen omfattar bidrag, lån, tillägg, utlandsveckor och uttryckliga summeringar med studiehjälp. Lån m.m. är en studiemedelssumma, inte separat merkostnads- eller tilläggslån. membership-0323: Omställningsstudiestöd, särskilt utbildningsbidrag och vuxenstudiestöd är inte kandidatens studiemedel. membership-0324: De valda vuxenstudiestöden och utbildningsbidragen är andra stödformer som definitionen utesluter. membership-0325: Inget valt mått avser studiemedel.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:30723:17167:20089\ncatalog:variable_text:30724:17167:20089\ncatalog:variable_text:30866:5844:7305\ncatalog:variable_text:30972:11323:17167\ncatalog:variable_text:30972:17167:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31193:13149:20089\ncatalog:variable_text:31199:16071:16436\ncatalog:variable_text:31200:14975:17167\ncatalog:variable_text:31313:16071:20089\ncatalog:variable_text:31314:16071:20089\ncatalog:variable_text:31443:7670:8035\ncatalog:variable_text:31444:8401:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31566:15340:16071\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31806:13149:20089\ncatalog:variable_text:31807:13149:20089\ncatalog:variable_text:31808:18628:20089\ncatalog:variable_text:31809:17167:20089\ncatalog:variable_text:31810:17167:20089\ncatalog:variable_text:31811:18628:20089\ncatalog:variable_text:31812:17167:20089\ncatalog:variable_text:31813:18262:20089\ncatalog:variable_text:31814:14975:20089\ncatalog:variable_text:31815:15340:17167\ncatalog:variable_text:31816:13149:16071\ncatalog:variable_text:31817:19723:20089\ncatalog:variable_text:31821:14975:20089\ncatalog:variable_text:31822:17167:20089\ncatalog:variable_text:31823:12053:15340\ncatalog:variable_text:31869:13149:20089\ncatalog:variable_text:31870:13514:20089\ncatalog:variable_text:31894:19358:20089\ncatalog:variable_text:31921:9862:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:31932:8401:9496\ncatalog:variable_text:32048:1461:2191\ncatalog:variable_text:32050:5844:19723\ncatalog:variable_text:32051:17167:20089\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32075:5844:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:istudsfhb"
+subject = "var:summa-studiemedel-studiehjalp-lan-bidrag-bostadshushall"
 fields = { "tags" = ["transfers"] }
 evidence = "ISTUDSFHB är en ogenomskinlig källmnemonik. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Variabeln summerar lån och bidrag från studiemedel och studiehjälp. membership-0308: Båda mäter sammanräknade studiestödsbelopp; separata låne- och bidragskomponenter omfattas inte. membership-0309: Ackumulerad studieskuld är skuldstock, inte sammanräknat studiestödsbelopp. membership-0310: De valda studielåneposterna mäter återbetalning, inte sammanräknat utbetalt studiestöd. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiestödsvariabler mäter mottagningsperioder, som denna kandidat uttryckligen utesluter. membership-0313: Återbetalda studiemedel samredovisade med givet bidragsförskott är inte ett sammanräknat studiestödsbelopp enligt definitionen. membership-0314: Extra tillägg är en separat stödkomponent och inte sammanräknat studiestöd. membership-0315: Valda studiemedelsbidrag och inackorderingsbidrag är separata komponenter, inte sammanräknat studiestöd. membership-0316: ISTUDSFH summerar uttryckligen lån och bidrag från studiemedel och studiehjälp. Identitetsfrågan om perioddelning ändrar inte begreppet. membership-0317: Lärlingsersättning och dess månader är inte sammanräknat studiestöd. membership-0318: Valda övriga utbildningsbidrag är inte sammanräknat studiestöd enligt definitionen. membership-0319: Inga valda variabler summerar studiestöd. membership-0320: Ingen vald variabel avser sammanräknat studiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Beloppen är uttryckliga studiestödssummor; enskilda bidrag, lån och mottagningsperioder utesluts. membership-0323: De valda studiestöden är separat redovisade stödkomponenter, vilka definitionen utesluter. membership-0324: Vuxenstudiestöd och separata utbildningsbidrag är inte de definierade sammanräknade studiestödsbeloppen. membership-0325: Inget valt mått avser sammanräknat studiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den fasta definitionen inkluderar uttryckligen summering av studiemedel med studiehjälp, vilket variabeln mäter. membership-0308: Definitionen omfattar studiemedlens låne- och bidragsbelopp samt uttrycklig summering med studiehjälp. Lånesumman är inte separat merkostnads- eller tilläggslån. membership-0309: Ackumulerad studieskuld är en skuldstock, inte studiemedlens utbetalningar eller veckor. membership-0310: De valda studielåneposterna mäter återbetalning och inte utbetalda studiemedel eller mottagningsveckor. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Variablerna anger veckor med studiemedelsbidrag eller lån, inklusive bidrag för utlandsstudier. Separata tilläggslån och merkostnadslån utesluts. membership-0313: CTRAN avser återbetalning tillsammans med givet bidragsförskott, inte utbetalda studiemedel eller mottagningsveckor. membership-0314: Trots etikettens studiemedelsord anger granskad evidens att extra tillägget består av studiehjälp. membership-0315: Variabeln mäter studiemedlens bidrag för utlandsstudier. membership-0316: Utlandsstudielånet och den uttryckliga summeringen av studiemedel med studiehjälp omfattas. Separat tilläggslån och vuxenstudiestöd är exkluderade. membership-0317: Inga valda variabler avser studiemedel. membership-0318: Valda övriga utbildningsbidrag stöds inte som studiemedel. membership-0319: Inga valda variabler avser studiemedel. membership-0320: Rekryteringsbidrag och särskilt utbildningsbidrag är andra stödformer än studiemedel. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Definitionen omfattar bidrag, lån, tillägg, utlandsveckor och uttryckliga summeringar med studiehjälp. Lån m.m. är en studiemedelssumma, inte separat merkostnads- eller tilläggslån. membership-0323: Omställningsstudiestöd, särskilt utbildningsbidrag och vuxenstudiestöd är inte kandidatens studiemedel. membership-0324: De valda vuxenstudiestöden och utbildningsbidragen är andra stödformer som definitionen utesluter. membership-0325: Inget valt mått avser studiemedel.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:30723:17167:20089\ncatalog:variable_text:30724:17167:20089\ncatalog:variable_text:30866:5844:7305\ncatalog:variable_text:30972:11323:17167\ncatalog:variable_text:30972:17167:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31193:13149:20089\ncatalog:variable_text:31199:16071:16436\ncatalog:variable_text:31200:14975:17167\ncatalog:variable_text:31313:16071:20089\ncatalog:variable_text:31314:16071:20089\ncatalog:variable_text:31443:7670:8035\ncatalog:variable_text:31444:8401:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31566:15340:16071\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31806:13149:20089\ncatalog:variable_text:31807:13149:20089\ncatalog:variable_text:31808:18628:20089\ncatalog:variable_text:31809:17167:20089\ncatalog:variable_text:31810:17167:20089\ncatalog:variable_text:31811:18628:20089\ncatalog:variable_text:31812:17167:20089\ncatalog:variable_text:31813:18262:20089\ncatalog:variable_text:31814:14975:20089\ncatalog:variable_text:31815:15340:17167\ncatalog:variable_text:31816:13149:16071\ncatalog:variable_text:31817:19723:20089\ncatalog:variable_text:31821:14975:20089\ncatalog:variable_text:31822:17167:20089\ncatalog:variable_text:31823:12053:15340\ncatalog:variable_text:31869:13149:20089\ncatalog:variable_text:31870:13514:20089\ncatalog:variable_text:31894:19358:20089\ncatalog:variable_text:31921:9862:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:31932:8401:9496\ncatalog:variable_text:32048:1461:2191\ncatalog:variable_text:32050:5844:19723\ncatalog:variable_text:32051:17167:20089\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32075:5844:9862"
 
@@ -11888,25 +11888,25 @@ evidence = "IVPLTOTH är en opak källkod.\ncatalog:variable_text:31205:8401:149
 
 [[statement]]
 kind = "set"
-subject = "var:ivxalanh"
+subject = "var:vuxenstudiestod-lan-arbetslosa-familj"
 fields = { "sets" = [] }
 evidence = "Opak källkod med beskrivande etikett. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser vuxenstudiestöd. membership-0308: Ingen vald variabel särredovisar vuxenstudiestöd. membership-0309: Ackumulerad studieskuld kan härröra från vuxenstudiestöd men mäter skuldstock, inte stödets belopp. membership-0310: Studielåneåterbetalningen kan avse vuxenstudiestöd men är inte ett utbetalt bidrags- eller lånebelopp. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiemedels- och studiehjälpsvariabler avser stödformer som kandidaten uttryckligen utesluter. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter vuxenstudiestöd. membership-0315: Valda studiestöd avser studiemedel, studiehjälp eller merkostnadslån, inte vuxenstudiestöd. membership-0316: Familjens vuxenstudiestödslån för arbetslösa och övriga är uttryckligen inkluderade lånekomponenter. Omställningsstudiestöd är en separat namngiven stödform. membership-0317: Inga valda variabler avser vuxenstudiestöd. membership-0318: Ingen vald variabel mäter vuxenstudiestöd. membership-0319: Inga valda variabler avser vuxenstudiestöd. membership-0320: Rekryteringsbidrag till vuxenstuderande och särskilt utbildningsbidrag är inte dokumenterade som vuxenstudiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Etiketten anger studiepenning medan beskrivningen gäller särskilt vuxenstudiestöd; underlaget avgör inte att variabeln mäter vuxenstudiestöd. membership-0323: Variabeln redovisar vuxenstudiestödets studiebidrag för arbetslösa på familjenivå. membership-0324: Definitionen omfattar både totalt vuxenstudiestöd och uttryckliga bidrags- och lånekomponenter för individ och familj. Det skyddade totalmåttet behålls. membership-0325: Inget valt mått avser vuxenstudiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar vuxenstudiestödets lån. membership-0308: Ingen vald variabel identifierar vuxenstudiestödets lån. membership-0309: Ackumulerad studieskuld särskiljer inte vuxenstudiestödets lån och mäter inte utbetalt lånebelopp. membership-0310: Återbetalda studielån är inte vuxenstudiestödets utbetalda lån. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda lån avser studiemedel, tilläggslån eller merkostnadslån, inte vuxenstudiestöd. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter lån inom vuxenstudiestöd. membership-0315: Merkostnadslån är inte dokumenterat som vuxenstudiestödets lån. membership-0316: Båda variablerna mäter uttryckligen vuxenstudiestödets familjelån, för arbetslösa respektive övriga. membership-0317: Inga valda variabler avser vuxenstudiestödets lån. membership-0318: Ingen vald variabel mäter vuxenstudiestödets lån. membership-0319: Inga valda variabler avser vuxenstudiestödets lån. membership-0320: Ingen vald variabel avser vuxenstudiestödets lån. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avgränsas till vuxenstudiestödets lånedel; den motstridiga familjebeskrivningen anger inte ett separat lånebelopp. membership-0323: Den valda vuxenstudiestödsvariabeln avser studiebidrag, inte lån. membership-0324: Samtliga fyra mäter vuxenstudiestödets lån; bidragsvariablerna utesluts. membership-0325: Valda lånemarkeringar och skulder avser inte vuxenstudiestödets lån.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30694:10592:19358\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31131:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31183:19358:20089\ncatalog:variable_text:31206:9862:12418\ncatalog:variable_text:31207:9862:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31579:10592:13879\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31819:6209:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32073:9862:12418\ncatalog:variable_text:32074:9862:12418\ncatalog:variable_text:32075:5844:9862\ncatalog:variable_text:32076:9862:12418\ncatalog:variable_text:32077:6574:9862\ncatalog:variable_text:32078:9862:12418\ncatalog:variable_text:32079:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:ivxalanh"
+subject = "var:vuxenstudiestod-lan-arbetslosa-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak källkod med beskrivande etikett. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser vuxenstudiestöd. membership-0308: Ingen vald variabel särredovisar vuxenstudiestöd. membership-0309: Ackumulerad studieskuld kan härröra från vuxenstudiestöd men mäter skuldstock, inte stödets belopp. membership-0310: Studielåneåterbetalningen kan avse vuxenstudiestöd men är inte ett utbetalt bidrags- eller lånebelopp. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiemedels- och studiehjälpsvariabler avser stödformer som kandidaten uttryckligen utesluter. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter vuxenstudiestöd. membership-0315: Valda studiestöd avser studiemedel, studiehjälp eller merkostnadslån, inte vuxenstudiestöd. membership-0316: Familjens vuxenstudiestödslån för arbetslösa och övriga är uttryckligen inkluderade lånekomponenter. Omställningsstudiestöd är en separat namngiven stödform. membership-0317: Inga valda variabler avser vuxenstudiestöd. membership-0318: Ingen vald variabel mäter vuxenstudiestöd. membership-0319: Inga valda variabler avser vuxenstudiestöd. membership-0320: Rekryteringsbidrag till vuxenstuderande och särskilt utbildningsbidrag är inte dokumenterade som vuxenstudiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Etiketten anger studiepenning medan beskrivningen gäller särskilt vuxenstudiestöd; underlaget avgör inte att variabeln mäter vuxenstudiestöd. membership-0323: Variabeln redovisar vuxenstudiestödets studiebidrag för arbetslösa på familjenivå. membership-0324: Definitionen omfattar både totalt vuxenstudiestöd och uttryckliga bidrags- och lånekomponenter för individ och familj. Det skyddade totalmåttet behålls. membership-0325: Inget valt mått avser vuxenstudiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar vuxenstudiestödets lån. membership-0308: Ingen vald variabel identifierar vuxenstudiestödets lån. membership-0309: Ackumulerad studieskuld särskiljer inte vuxenstudiestödets lån och mäter inte utbetalt lånebelopp. membership-0310: Återbetalda studielån är inte vuxenstudiestödets utbetalda lån. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda lån avser studiemedel, tilläggslån eller merkostnadslån, inte vuxenstudiestöd. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter lån inom vuxenstudiestöd. membership-0315: Merkostnadslån är inte dokumenterat som vuxenstudiestödets lån. membership-0316: Båda variablerna mäter uttryckligen vuxenstudiestödets familjelån, för arbetslösa respektive övriga. membership-0317: Inga valda variabler avser vuxenstudiestödets lån. membership-0318: Ingen vald variabel mäter vuxenstudiestödets lån. membership-0319: Inga valda variabler avser vuxenstudiestödets lån. membership-0320: Ingen vald variabel avser vuxenstudiestödets lån. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avgränsas till vuxenstudiestödets lånedel; den motstridiga familjebeskrivningen anger inte ett separat lånebelopp. membership-0323: Den valda vuxenstudiestödsvariabeln avser studiebidrag, inte lån. membership-0324: Samtliga fyra mäter vuxenstudiestödets lån; bidragsvariablerna utesluts. membership-0325: Valda lånemarkeringar och skulder avser inte vuxenstudiestödets lån.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30694:10592:19358\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31131:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31183:19358:20089\ncatalog:variable_text:31206:9862:12418\ncatalog:variable_text:31207:9862:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31579:10592:13879\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31819:6209:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32073:9862:12418\ncatalog:variable_text:32074:9862:12418\ncatalog:variable_text:32075:5844:9862\ncatalog:variable_text:32076:9862:12418\ncatalog:variable_text:32077:6574:9862\ncatalog:variable_text:32078:9862:12418\ncatalog:variable_text:32079:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:ivxlanh"
+subject = "var:vuxenstudiestod-lan-ovriga-familj"
 fields = { "sets" = [] }
 evidence = "Opak källkod med beskrivande etikett. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser vuxenstudiestöd. membership-0308: Ingen vald variabel särredovisar vuxenstudiestöd. membership-0309: Ackumulerad studieskuld kan härröra från vuxenstudiestöd men mäter skuldstock, inte stödets belopp. membership-0310: Studielåneåterbetalningen kan avse vuxenstudiestöd men är inte ett utbetalt bidrags- eller lånebelopp. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiemedels- och studiehjälpsvariabler avser stödformer som kandidaten uttryckligen utesluter. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter vuxenstudiestöd. membership-0315: Valda studiestöd avser studiemedel, studiehjälp eller merkostnadslån, inte vuxenstudiestöd. membership-0316: Familjens vuxenstudiestödslån för arbetslösa och övriga är uttryckligen inkluderade lånekomponenter. Omställningsstudiestöd är en separat namngiven stödform. membership-0317: Inga valda variabler avser vuxenstudiestöd. membership-0318: Ingen vald variabel mäter vuxenstudiestöd. membership-0319: Inga valda variabler avser vuxenstudiestöd. membership-0320: Rekryteringsbidrag till vuxenstuderande och särskilt utbildningsbidrag är inte dokumenterade som vuxenstudiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Etiketten anger studiepenning medan beskrivningen gäller särskilt vuxenstudiestöd; underlaget avgör inte att variabeln mäter vuxenstudiestöd. membership-0323: Variabeln redovisar vuxenstudiestödets studiebidrag för arbetslösa på familjenivå. membership-0324: Definitionen omfattar både totalt vuxenstudiestöd och uttryckliga bidrags- och lånekomponenter för individ och familj. Det skyddade totalmåttet behålls. membership-0325: Inget valt mått avser vuxenstudiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar vuxenstudiestödets lån. membership-0308: Ingen vald variabel identifierar vuxenstudiestödets lån. membership-0309: Ackumulerad studieskuld särskiljer inte vuxenstudiestödets lån och mäter inte utbetalt lånebelopp. membership-0310: Återbetalda studielån är inte vuxenstudiestödets utbetalda lån. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda lån avser studiemedel, tilläggslån eller merkostnadslån, inte vuxenstudiestöd. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter lån inom vuxenstudiestöd. membership-0315: Merkostnadslån är inte dokumenterat som vuxenstudiestödets lån. membership-0316: Båda variablerna mäter uttryckligen vuxenstudiestödets familjelån, för arbetslösa respektive övriga. membership-0317: Inga valda variabler avser vuxenstudiestödets lån. membership-0318: Ingen vald variabel mäter vuxenstudiestödets lån. membership-0319: Inga valda variabler avser vuxenstudiestödets lån. membership-0320: Ingen vald variabel avser vuxenstudiestödets lån. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avgränsas till vuxenstudiestödets lånedel; den motstridiga familjebeskrivningen anger inte ett separat lånebelopp. membership-0323: Den valda vuxenstudiestödsvariabeln avser studiebidrag, inte lån. membership-0324: Samtliga fyra mäter vuxenstudiestödets lån; bidragsvariablerna utesluts. membership-0325: Valda lånemarkeringar och skulder avser inte vuxenstudiestödets lån.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30694:10592:19358\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31131:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31183:19358:20089\ncatalog:variable_text:31206:9862:12418\ncatalog:variable_text:31207:9862:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31579:10592:13879\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31819:6209:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32073:9862:12418\ncatalog:variable_text:32074:9862:12418\ncatalog:variable_text:32075:5844:9862\ncatalog:variable_text:32076:9862:12418\ncatalog:variable_text:32077:6574:9862\ncatalog:variable_text:32078:9862:12418\ncatalog:variable_text:32079:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:ivxlanh"
+subject = "var:vuxenstudiestod-lan-ovriga-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak källkod med beskrivande etikett. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser vuxenstudiestöd. membership-0308: Ingen vald variabel särredovisar vuxenstudiestöd. membership-0309: Ackumulerad studieskuld kan härröra från vuxenstudiestöd men mäter skuldstock, inte stödets belopp. membership-0310: Studielåneåterbetalningen kan avse vuxenstudiestöd men är inte ett utbetalt bidrags- eller lånebelopp. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda studiemedels- och studiehjälpsvariabler avser stödformer som kandidaten uttryckligen utesluter. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter vuxenstudiestöd. membership-0315: Valda studiestöd avser studiemedel, studiehjälp eller merkostnadslån, inte vuxenstudiestöd. membership-0316: Familjens vuxenstudiestödslån för arbetslösa och övriga är uttryckligen inkluderade lånekomponenter. Omställningsstudiestöd är en separat namngiven stödform. membership-0317: Inga valda variabler avser vuxenstudiestöd. membership-0318: Ingen vald variabel mäter vuxenstudiestöd. membership-0319: Inga valda variabler avser vuxenstudiestöd. membership-0320: Rekryteringsbidrag till vuxenstuderande och särskilt utbildningsbidrag är inte dokumenterade som vuxenstudiestöd. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Etiketten anger studiepenning medan beskrivningen gäller särskilt vuxenstudiestöd; underlaget avgör inte att variabeln mäter vuxenstudiestöd. membership-0323: Variabeln redovisar vuxenstudiestödets studiebidrag för arbetslösa på familjenivå. membership-0324: Definitionen omfattar både totalt vuxenstudiestöd och uttryckliga bidrags- och lånekomponenter för individ och familj. Det skyddade totalmåttet behålls. membership-0325: Inget valt mått avser vuxenstudiestöd. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar vuxenstudiestödets lån. membership-0308: Ingen vald variabel identifierar vuxenstudiestödets lån. membership-0309: Ackumulerad studieskuld särskiljer inte vuxenstudiestödets lån och mäter inte utbetalt lånebelopp. membership-0310: Återbetalda studielån är inte vuxenstudiestödets utbetalda lån. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda lån avser studiemedel, tilläggslån eller merkostnadslån, inte vuxenstudiestöd. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Inga valda variabler mäter lån inom vuxenstudiestöd. membership-0315: Merkostnadslån är inte dokumenterat som vuxenstudiestödets lån. membership-0316: Båda variablerna mäter uttryckligen vuxenstudiestödets familjelån, för arbetslösa respektive övriga. membership-0317: Inga valda variabler avser vuxenstudiestödets lån. membership-0318: Ingen vald variabel mäter vuxenstudiestödets lån. membership-0319: Inga valda variabler avser vuxenstudiestödets lån. membership-0320: Ingen vald variabel avser vuxenstudiestödets lån. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avgränsas till vuxenstudiestödets lånedel; den motstridiga familjebeskrivningen anger inte ett separat lånebelopp. membership-0323: Den valda vuxenstudiestödsvariabeln avser studiebidrag, inte lån. membership-0324: Samtliga fyra mäter vuxenstudiestödets lån; bidragsvariablerna utesluts. membership-0325: Valda lånemarkeringar och skulder avser inte vuxenstudiestödets lån.\ncatalog:variable_text:30400:5844:20089\ncatalog:variable_text:30564:15340:20089\ncatalog:variable_text:30566:4748:20089\ncatalog:variable_text:30694:10592:19358\ncatalog:variable_text:30700:13149:16071\ncatalog:variable_text:30701:13149:20089\ncatalog:variable_text:30708:13149:20089\ncatalog:variable_text:30715:13149:20089\ncatalog:variable_text:30716:13149:20089\ncatalog:variable_text:30717:13149:20089\ncatalog:variable_text:30718:13149:20089\ncatalog:variable_text:30719:13149:20089\ncatalog:variable_text:30721:13149:16071\ncatalog:variable_text:30722:13149:20089\ncatalog:variable_text:31115:13149:20089\ncatalog:variable_text:31131:13149:20089\ncatalog:variable_text:31133:15340:20089\ncatalog:variable_text:31183:19358:20089\ncatalog:variable_text:31206:9862:12418\ncatalog:variable_text:31207:9862:12418\ncatalog:variable_text:31565:15340:16071\ncatalog:variable_text:31579:10592:13879\ncatalog:variable_text:31602:9862:12418\ncatalog:variable_text:31819:6209:12418\ncatalog:variable_text:31922:9862:12418\ncatalog:variable_text:32072:7305:20089\ncatalog:variable_text:32073:9862:12418\ncatalog:variable_text:32074:9862:12418\ncatalog:variable_text:32075:5844:9862\ncatalog:variable_text:32076:9862:12418\ncatalog:variable_text:32077:6574:9862\ncatalog:variable_text:32078:9862:12418\ncatalog:variable_text:32079:9862:12418"
 
@@ -12152,13 +12152,13 @@ evidence = "Identitetsfakta visar växlande ägare för vinst och förlust.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:karfor"
+subject = "var:avdrag-negativ-rantefordelning-kapital"
 fields = { "sets" = [] }
 evidence = "KARFOR är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31228:8766:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:karfor"
+subject = "var:avdrag-negativ-rantefordelning-kapital"
 fields = { "tags" = ["taxation"] }
 evidence = "KARFOR är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31228:8766:20089"
 
@@ -12368,13 +12368,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten delas med andra variabler
 
 [[statement]]
 kind = "set"
-subject = "var:kkueho"
+subject = "var:erhallen-ersattning-premie-vid-avyttring"
 fields = { "sets" = ["utbetalt-belopp-for-vardepapper"] }
 evidence = "Källmnemoniken är opak; etiketten anger ersättningen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Valda värdepappersinkomster är räntor och utdelningar, som uttryckligen undantas. membership-0308: Ingen vald variabel mäter utbetalt belopp för värdepapper. membership-0309: Valda värdepappersmått är innehavsvärden eller separat utdelning, inte angivna utbetalda värdepappersbelopp. membership-0310: Ingen vald variabel mäter utbetalt belopp för värdepapper. membership-0311: Fondavyttringsersättning och erlagd terminsbetalning är särskilda transaktionsmått, inte den definierade utbetalningen för obligationer och värdepapper. membership-0312: Positionstyp för optioner eller terminer är inget utbetalt värdepappersbelopp. membership-0313: Räntor och utdelningar undantas från utbetalda värdepappersbelopp. membership-0314: Terminsersättningen avser slutförande av terminsaffär; värdepappersfordran är en tillgång, inte ett utbetalt obligations- eller värdepappersbelopp. membership-0315: Marknadsvärdet på övriga värdepapper är ett innehavsvärde, inte utbetalt belopp. membership-0316: Valda värdepappersmått gäller inkomster, vinster och förluster, inte utbetalda transaktionsbelopp. membership-0317: Erhållen ersättning eller premie vid avyttring och ersättning vid aktieförsäljning är utbetalda värdepappersbelopp, skilda från vinster och utdelningar. membership-0318: Valda gåvo-, royalty- och skogskontobelopp är inte utbetalningar för obligationer eller värdepapper. membership-0319: Marknadsvärden för innehav och separata räntor eller vinster är inte utbetalda värdepappersbelopp. membership-0320: Ingen vald variabel avser utbetalt belopp för värdepapper. membership-0321: Valda värdepappersanknutna belopp är utdelning eller skatt, som definitionen utesluter. membership-0322: Inget valt id mäter utbetalt belopp för värdepapper. membership-0323: Ingen vald variabel i denna sektion mäter utbetalt belopp för värdepapper. membership-0324: Samtliga mäter utbetalda obligations- eller värdepappersbelopp. Dokumenterade kolumnägarfrågor ändrar inte deras stödda begreppstillhörighet. membership-0325: Valda inkomsträntor och obligationsinnehav är separat ränta respektive innehavsvärde, inte kandidatens utbetalda belopp.\ncatalog:occurrence:260226\ncatalog:occurrence:262244\ncatalog:occurrence:264873\ncatalog:variable_text:30437:10592:10957\ncatalog:variable_text:30438:10592:10957\ncatalog:variable_text:30439:10592:10957\ncatalog:variable_text:30440:10592:10957\ncatalog:variable_text:30441:6574:20089\ncatalog:variable_text:30610:12053:20089\ncatalog:variable_text:30680:12053:20089\ncatalog:variable_text:30739:13879:19358\ncatalog:variable_text:30855:18993:20089\ncatalog:variable_text:30951:12053:20089\ncatalog:variable_text:31033:6574:13879\ncatalog:variable_text:31066:10592:10957\ncatalog:variable_text:31166:16071:20089\ncatalog:variable_text:31167:18628:20089\ncatalog:variable_text:31216:12784:20089\ncatalog:variable_text:31221:18628:20089\ncatalog:variable_text:31222:17167:20089\ncatalog:variable_text:31223:12784:20089\ncatalog:variable_text:31247:12053:20089\ncatalog:variable_text:31248:19358:20089\ncatalog:variable_text:31254:10592:19358\ncatalog:variable_text:31359:17897:20089\ncatalog:variable_text:31384:11323:20089\ncatalog:variable_text:31386:11323:20089\ncatalog:variable_text:31410:10592:13879\ncatalog:variable_text:31526:10592:10957\ncatalog:variable_text:31549:10592:10957\ncatalog:variable_text:31552:17167:20089\ncatalog:variable_text:31558:7670:20089\ncatalog:variable_text:31666:12784:20089\ncatalog:variable_text:31678:12053:20089\ncatalog:variable_text:31721:19358:20089\ncatalog:variable_text:32045:12784:20089\ncatalog:variable_text:32046:10957:19358\ncatalog:variable_text:32047:6574:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:kkueho"
+subject = "var:erhallen-ersattning-premie-vid-avyttring"
 fields = { "tags" = ["finance"] }
 evidence = "Källmnemoniken är opak; etiketten anger ersättningen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Valda värdepappersinkomster är räntor och utdelningar, som uttryckligen undantas. membership-0308: Ingen vald variabel mäter utbetalt belopp för värdepapper. membership-0309: Valda värdepappersmått är innehavsvärden eller separat utdelning, inte angivna utbetalda värdepappersbelopp. membership-0310: Ingen vald variabel mäter utbetalt belopp för värdepapper. membership-0311: Fondavyttringsersättning och erlagd terminsbetalning är särskilda transaktionsmått, inte den definierade utbetalningen för obligationer och värdepapper. membership-0312: Positionstyp för optioner eller terminer är inget utbetalt värdepappersbelopp. membership-0313: Räntor och utdelningar undantas från utbetalda värdepappersbelopp. membership-0314: Terminsersättningen avser slutförande av terminsaffär; värdepappersfordran är en tillgång, inte ett utbetalt obligations- eller värdepappersbelopp. membership-0315: Marknadsvärdet på övriga värdepapper är ett innehavsvärde, inte utbetalt belopp. membership-0316: Valda värdepappersmått gäller inkomster, vinster och förluster, inte utbetalda transaktionsbelopp. membership-0317: Erhållen ersättning eller premie vid avyttring och ersättning vid aktieförsäljning är utbetalda värdepappersbelopp, skilda från vinster och utdelningar. membership-0318: Valda gåvo-, royalty- och skogskontobelopp är inte utbetalningar för obligationer eller värdepapper. membership-0319: Marknadsvärden för innehav och separata räntor eller vinster är inte utbetalda värdepappersbelopp. membership-0320: Ingen vald variabel avser utbetalt belopp för värdepapper. membership-0321: Valda värdepappersanknutna belopp är utdelning eller skatt, som definitionen utesluter. membership-0322: Inget valt id mäter utbetalt belopp för värdepapper. membership-0323: Ingen vald variabel i denna sektion mäter utbetalt belopp för värdepapper. membership-0324: Samtliga mäter utbetalda obligations- eller värdepappersbelopp. Dokumenterade kolumnägarfrågor ändrar inte deras stödda begreppstillhörighet. membership-0325: Valda inkomsträntor och obligationsinnehav är separat ränta respektive innehavsvärde, inte kandidatens utbetalda belopp.\ncatalog:occurrence:260226\ncatalog:occurrence:262244\ncatalog:occurrence:264873\ncatalog:variable_text:30437:10592:10957\ncatalog:variable_text:30438:10592:10957\ncatalog:variable_text:30439:10592:10957\ncatalog:variable_text:30440:10592:10957\ncatalog:variable_text:30441:6574:20089\ncatalog:variable_text:30610:12053:20089\ncatalog:variable_text:30680:12053:20089\ncatalog:variable_text:30739:13879:19358\ncatalog:variable_text:30855:18993:20089\ncatalog:variable_text:30951:12053:20089\ncatalog:variable_text:31033:6574:13879\ncatalog:variable_text:31066:10592:10957\ncatalog:variable_text:31166:16071:20089\ncatalog:variable_text:31167:18628:20089\ncatalog:variable_text:31216:12784:20089\ncatalog:variable_text:31221:18628:20089\ncatalog:variable_text:31222:17167:20089\ncatalog:variable_text:31223:12784:20089\ncatalog:variable_text:31247:12053:20089\ncatalog:variable_text:31248:19358:20089\ncatalog:variable_text:31254:10592:19358\ncatalog:variable_text:31359:17897:20089\ncatalog:variable_text:31384:11323:20089\ncatalog:variable_text:31386:11323:20089\ncatalog:variable_text:31410:10592:13879\ncatalog:variable_text:31526:10592:10957\ncatalog:variable_text:31549:10592:10957\ncatalog:variable_text:31552:17167:20089\ncatalog:variable_text:31558:7670:20089\ncatalog:variable_text:31666:12784:20089\ncatalog:variable_text:31678:12053:20089\ncatalog:variable_text:31721:19358:20089\ncatalog:variable_text:32045:12784:20089\ncatalog:variable_text:32046:10957:19358\ncatalog:variable_text:32047:6574:8766"
 
@@ -12428,25 +12428,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31251:11688:200
 
 [[statement]]
 kind = "set"
-subject = "var:kkurbf"
+subject = "var:rantebidrag-statliga-lan-flerfamiljshus"
 fields = { "sets" = ["rantebidrag"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31252:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:kkurbf"
+subject = "var:rantebidrag-statliga-lan-flerfamiljshus"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31252:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:kkurbo"
+subject = "var:statligt-rantebidrag-lan-smahus"
 fields = { "sets" = ["rantebidrag"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31253:9131:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kkurbo"
+subject = "var:statligt-rantebidrag-lan-smahus"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31253:9131:12418"
 
@@ -12884,25 +12884,25 @@ evidence = "KTP är en bokstavskod för kommunal tjänstepension. Coordinator gr
 
 [[statement]]
 kind = "set"
-subject = "var:kuinst"
+subject = "var:kod-institutionell-sektor-agarkategori-juridisk-form"
 fields = { "sets" = ["institutionell-sektor"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:31290:6209:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:kuinst"
+subject = "var:kod-institutionell-sektor-agarkategori-juridisk-form"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:31290:6209:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:kukost"
+subject = "var:kostforman-varde"
 fields = { "sets" = ["kostforman"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31291:6574:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:kukost"
+subject = "var:kostforman-varde"
 fields = { "tags" = ["income"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31291:6574:7670"
 
@@ -12920,13 +12920,13 @@ evidence = "KULIVR är en opak källkod.\ncatalog:variable_text:31292:6209:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:kulon"
+subject = "var:kontant-bruttolon-pensionsgrundande"
 fields = { "sets" = [] }
 evidence = "KULON är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31293:6209:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:kulon"
+subject = "var:kontant-bruttolon-pensionsgrundande"
 fields = { "tags" = ["income"] }
 evidence = "KULON är en ogenomskinlig källmnemonik.\ncatalog:variable_text:31293:6209:7670"
 
@@ -13256,13 +13256,13 @@ evidence = "Skattepliktig summa av pension och livränta ingår i gruppen.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:lkf"
+subject = "var:folkbokforingsort-vid-taxeringsuttag"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "LKF är en bokstavskod som inte återges i etiketten.\ncatalog:variable_text:31321:2922:6209"
 
 [[statement]]
 kind = "set"
-subject = "var:lkf"
+subject = "var:folkbokforingsort-vid-taxeringsuttag"
 fields = { "tags" = ["geography"] }
 evidence = "LKF är en bokstavskod som inte återges i etiketten.\ncatalog:variable_text:31321:2922:6209"
 
@@ -13964,13 +13964,13 @@ evidence = "Id:t är en källkod och etiketten anger insatt belopp på skogskont
 
 [[statement]]
 kind = "set"
-subject = "var:nkunar"
+subject = "var:utbetalt-eftergivet-naringsbidrag"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31383:11323:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nkunar"
+subject = "var:utbetalt-eftergivet-naringsbidrag"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31383:11323:20089"
 
@@ -14120,13 +14120,13 @@ evidence = "NSIBOST är en opak källkod.\ncatalog:variable_text:31395:12053:135
 
 [[statement]]
 kind = "set"
-subject = "var:nsisjuk"
+subject = "var:sjukpenning-enskilda-naringsidkare"
 fields = { "sets" = [] }
 evidence = "NSISJUK är en opak källkod.\ncatalog:variable_text:31396:12053:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nsisjuk"
+subject = "var:sjukpenning-enskilda-naringsidkare"
 fields = { "tags" = ["transfers"] }
 evidence = "NSISJUK är en opak källkod.\ncatalog:variable_text:31396:12053:20089"
 
@@ -14144,13 +14144,13 @@ evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31397:1205
 
 [[statement]]
 kind = "set"
-subject = "var:nskresa"
+subject = "var:avdrag-tjansteresa-privat-bil-enskilda-naringsidkare"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31398:12053:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nskresa"
+subject = "var:avdrag-tjansteresa-privat-bil-enskilda-naringsidkare"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:31398:12053:20089"
 
@@ -14180,13 +14180,13 @@ evidence = "Id avslutas med en ensam källkod för aktiv verksamhet.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:nunderhb"
+subject = "var:underskott-naringsverksamhet-bostadshushall"
 fields = { "sets" = ["underskott-av-naringsverksamhet"] }
 evidence = "Id innehåller källkoder för näringsverksamhet och hushåll.\ncatalog:variable_text:31401:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nunderhb"
+subject = "var:underskott-naringsverksamhet-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Id innehåller källkoder för näringsverksamhet och hushåll.\ncatalog:variable_text:31401:18628:20089"
 
@@ -14708,13 +14708,13 @@ evidence = "Källmnemoniken är opak för etiketten. Coordinator group membershi
 
 [[statement]]
 kind = "set"
-subject = "var:parblep"
+subject = "var:arbetsskadelivranta-egen-ej-pensionsgrundande"
 fields = { "sets" = ["arbetsskadeersattning"] }
 evidence = "Källmnemoniken är opak; etiketten anger livräntan.\ncatalog:variable_text:31449:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:parblep"
+subject = "var:arbetsskadelivranta-egen-ej-pensionsgrundande"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; etiketten anger livräntan.\ncatalog:variable_text:31449:17532:20089"
 
@@ -15260,13 +15260,13 @@ evidence = "Källmnemoniken är opak för garantipension. Coordinator group memb
 
 [[statement]]
 kind = "set"
-subject = "var:pgarsep"
+subject = "var:garantipension-sarskild-efterlevandepension-belopp"
 fields = { "sets" = ["efterlevandepension-till-vuxna"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31500:12053:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:pgarsep"
+subject = "var:garantipension-sarskild-efterlevandepension-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31500:12053:20089"
 
@@ -15308,13 +15308,13 @@ evidence = "PKTJPS är en källmnemonik för kommunal tjänstepension från SPV.
 
 [[statement]]
 kind = "set"
-subject = "var:pkuli421"
+subject = "var:personskadelivranta-skada-fore-1962-skattefri-skattepliktig"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser ersättningskod 421. membership-0308: Ingen vald variabel identifierar ersättningskod 421. membership-0309: Ingen vald variabel mäter ersättningskod 421. membership-0310: Ingen vald variabel avser ersättningskod 421. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel avser ersättningskod 421. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Variablerna är skattefri respektive skattepliktig del av kod 421. membership-0315: Ingen vald variabel avser ersättningskod 421. membership-0316: Ingen vald variabel mäter ersättningskod 421. membership-0317: Inga valda variabler avser ersättningskod 421. membership-0318: Ingen vald variabel avser ersättningskod 421. membership-0319: Källan anger totalbelopp för ersättningskod 421, vilket definitionen uttryckligen omfattar. membership-0320: Ingen vald variabel avser ersättningskod 421. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avser ersättningskod 421. membership-0323: Ingen vald variabel i denna sektion avser ersättningskod 421. membership-0324: Inga valda variabler avser ersättningskod 421. membership-0325: Inget valt mått avser ersättningskod 421. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den uttryckligen namngivna härledda livräntevarianten behålls; beskrivningens pensionssummering kräver definitionsgranskning. membership-0308: Variabeln summerar livräntor utan pensionsbelopp. Samredovisade pensions- och livräntemått är uteslutna. membership-0309: Variabeln anger separat skattefri livränta från försäkring, utan angiven avgränsning till arbetsskadelivränta. membership-0310: De valda livräntorna är uttryckligen arbetsskadelivräntor, vilka kandidaten exkluderar. membership-0311: Sektionens livränta samredovisas med barnpension och utesluts därför från separat livränta. membership-0312: Ingen vald variabel mäter livränta. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Koderna 421, 423 och 429 avser uttryckligen livränta uppdelad efter skatteplikt. Kod 420 avser pension och kod 426 engångsbelopp. membership-0315: Ingen vald variabel avser livränta. membership-0316: INLIVR är uttryckligen deklarerad livränta enligt etiketten och den källstödda bedömningen. membership-0317: Beloppen stöds som livränta och definitionen inkluderar uttryckligen härledd redovisning. Den härledda summans pensionsinnehåll kräver granskning men dess fasta inkludering behålls. membership-0318: PARBLEP är särskilt redovisad arbetsskadelivränta och PBLIVSF en summa med pension; båda undantas. membership-0319: Beskrivningarna anger personskadelivränta eller annan livränta med skatteavgränsning. Särskilt redovisade yrkes- och arbetsskadelivräntor förs till arbetsskadeersättning. membership-0320: Ingen vald variabel särredovisar livränta. membership-0321: Separat redovisad skattefri försäkringslivränta omfattas; samredovisad pension och livränta utesluts. membership-0322: Den valda livräntan samredovisas med privat pension och är uttryckligen utesluten från separata livräntebelopp. membership-0323: Ingen vald variabel i denna sektion mäter separat livränta. membership-0324: Inga valda variabler mäter livränta. membership-0325: Inget valt mått avser livränta.\ncatalog:variable_text:30418:7305:7670\ncatalog:variable_text:30528:6574:10592\ncatalog:variable_text:30529:10592:12418\ncatalog:variable_text:30530:17532:20089\ncatalog:variable_text:30633:17167:20089\ncatalog:variable_text:30956:12784:20089\ncatalog:variable_text:30957:12784:20089\ncatalog:variable_text:30958:12784:20089\ncatalog:variable_text:30959:12784:20089\ncatalog:variable_text:30960:12784:20089\ncatalog:variable_text:30961:12784:20089\ncatalog:variable_text:30962:12784:20089\ncatalog:variable_text:30963:12784:20089\ncatalog:variable_text:30964:12784:20089\ncatalog:variable_text:30965:12784:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31292:6209:7670\ncatalog:variable_text:31315:18628:20089\ncatalog:variable_text:31316:17167:20089\ncatalog:variable_text:31317:3652:6574\ncatalog:variable_text:31318:18628:20089\ncatalog:variable_text:31319:10227:20089\ncatalog:variable_text:31449:17532:20089\ncatalog:variable_text:31452:18262:20089\ncatalog:variable_text:31463:18262:20089\ncatalog:variable_text:31504:12784:20089\ncatalog:variable_text:31505:12784:20089\ncatalog:variable_text:31506:12784:20089\ncatalog:variable_text:31507:12784:20089\ncatalog:variable_text:31508:12784:20089\ncatalog:variable_text:31509:12784:20089\ncatalog:variable_text:31670:7670:20089\ncatalog:variable_text:31674:2922:7670\ncatalog:variable_text:31840:7670:20089\ncatalog:variable_text:31841:18628:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:pkuli421"
+subject = "var:personskadelivranta-skada-fore-1962-skattefri-skattepliktig"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel avser ersättningskod 421. membership-0308: Ingen vald variabel identifierar ersättningskod 421. membership-0309: Ingen vald variabel mäter ersättningskod 421. membership-0310: Ingen vald variabel avser ersättningskod 421. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel avser ersättningskod 421. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Variablerna är skattefri respektive skattepliktig del av kod 421. membership-0315: Ingen vald variabel avser ersättningskod 421. membership-0316: Ingen vald variabel mäter ersättningskod 421. membership-0317: Inga valda variabler avser ersättningskod 421. membership-0318: Ingen vald variabel avser ersättningskod 421. membership-0319: Källan anger totalbelopp för ersättningskod 421, vilket definitionen uttryckligen omfattar. membership-0320: Ingen vald variabel avser ersättningskod 421. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id avser ersättningskod 421. membership-0323: Ingen vald variabel i denna sektion avser ersättningskod 421. membership-0324: Inga valda variabler avser ersättningskod 421. membership-0325: Inget valt mått avser ersättningskod 421. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Den uttryckligen namngivna härledda livräntevarianten behålls; beskrivningens pensionssummering kräver definitionsgranskning. membership-0308: Variabeln summerar livräntor utan pensionsbelopp. Samredovisade pensions- och livräntemått är uteslutna. membership-0309: Variabeln anger separat skattefri livränta från försäkring, utan angiven avgränsning till arbetsskadelivränta. membership-0310: De valda livräntorna är uttryckligen arbetsskadelivräntor, vilka kandidaten exkluderar. membership-0311: Sektionens livränta samredovisas med barnpension och utesluts därför från separat livränta. membership-0312: Ingen vald variabel mäter livränta. membership-0313: Inget valt sektionsmått omfattas av definitionen. membership-0314: Koderna 421, 423 och 429 avser uttryckligen livränta uppdelad efter skatteplikt. Kod 420 avser pension och kod 426 engångsbelopp. membership-0315: Ingen vald variabel avser livränta. membership-0316: INLIVR är uttryckligen deklarerad livränta enligt etiketten och den källstödda bedömningen. membership-0317: Beloppen stöds som livränta och definitionen inkluderar uttryckligen härledd redovisning. Den härledda summans pensionsinnehåll kräver granskning men dess fasta inkludering behålls. membership-0318: PARBLEP är särskilt redovisad arbetsskadelivränta och PBLIVSF en summa med pension; båda undantas. membership-0319: Beskrivningarna anger personskadelivränta eller annan livränta med skatteavgränsning. Särskilt redovisade yrkes- och arbetsskadelivräntor förs till arbetsskadeersättning. membership-0320: Ingen vald variabel särredovisar livränta. membership-0321: Separat redovisad skattefri försäkringslivränta omfattas; samredovisad pension och livränta utesluts. membership-0322: Den valda livräntan samredovisas med privat pension och är uttryckligen utesluten från separata livräntebelopp. membership-0323: Ingen vald variabel i denna sektion mäter separat livränta. membership-0324: Inga valda variabler mäter livränta. membership-0325: Inget valt mått avser livränta.\ncatalog:variable_text:30418:7305:7670\ncatalog:variable_text:30528:6574:10592\ncatalog:variable_text:30529:10592:12418\ncatalog:variable_text:30530:17532:20089\ncatalog:variable_text:30633:17167:20089\ncatalog:variable_text:30956:12784:20089\ncatalog:variable_text:30957:12784:20089\ncatalog:variable_text:30958:12784:20089\ncatalog:variable_text:30959:12784:20089\ncatalog:variable_text:30960:12784:20089\ncatalog:variable_text:30961:12784:20089\ncatalog:variable_text:30962:12784:20089\ncatalog:variable_text:30963:12784:20089\ncatalog:variable_text:30964:12784:20089\ncatalog:variable_text:30965:12784:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31292:6209:7670\ncatalog:variable_text:31315:18628:20089\ncatalog:variable_text:31316:17167:20089\ncatalog:variable_text:31317:3652:6574\ncatalog:variable_text:31318:18628:20089\ncatalog:variable_text:31319:10227:20089\ncatalog:variable_text:31449:17532:20089\ncatalog:variable_text:31452:18262:20089\ncatalog:variable_text:31463:18262:20089\ncatalog:variable_text:31504:12784:20089\ncatalog:variable_text:31505:12784:20089\ncatalog:variable_text:31506:12784:20089\ncatalog:variable_text:31507:12784:20089\ncatalog:variable_text:31508:12784:20089\ncatalog:variable_text:31509:12784:20089\ncatalog:variable_text:31670:7670:20089\ncatalog:variable_text:31674:2922:7670\ncatalog:variable_text:31840:7670:20089\ncatalog:variable_text:31841:18628:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
@@ -15428,13 +15428,13 @@ evidence = "Källmnemoniken är opak; etiketten anger ersättningskoden.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:pkuli999"
+subject = "var:summa-pensionsgrundande-ersattning-inte-utbetald"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak; etiketten anger ersättningskoden.\ncatalog:variable_text:31514:12784:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:pkuli999"
+subject = "var:summa-pensionsgrundande-ersattning-inte-utbetald"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak; etiketten anger ersättningskoden.\ncatalog:variable_text:31514:12784:20089"
 
@@ -15476,13 +15476,13 @@ evidence = "POTJPS är en ogenomskinlig källkod. Coordinator group membership: 
 
 [[statement]]
 kind = "set"
-subject = "var:pprepel"
+subject = "var:premiepension-efterlevande-belopp"
 fields = { "sets" = ["premiepension-efterlevande"] }
 evidence = "Källmnemoniken är opak för premiepension till efterlevande.\ncatalog:variable_text:31520:12053:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:pprepel"
+subject = "var:premiepension-efterlevande-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak för premiepension till efterlevande.\ncatalog:variable_text:31520:12053:20089"
 
@@ -15716,13 +15716,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31539:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:psephb"
+subject = "var:sarskild-efterlevandepension-bostadshushall"
 fields = { "sets" = ["efterlevandepension-till-vuxna"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31540:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:psephb"
+subject = "var:sarskild-efterlevandepension-bostadshushall"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31540:18628:20089"
 
@@ -15740,13 +15740,13 @@ evidence = "Källmnemonikens enskilda bokstäver är opaka. Coordinator group me
 
 [[statement]]
 kind = "set"
-subject = "var:ptillphb"
+subject = "var:tillaggspension-bostadshushall"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken och hushållsändelsen är opaka. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ålderspension, summering med delpension och de uttryckligen inkluderade garanti- och tilläggskomponenterna omfattas. membership-0308: Tilläggspension är en uttryckligen inkluderad komponent av allmän ålderspension. membership-0309: Ålderspension, folkpension/ATP och summering med delpension stöds direkt. Den uttryckligen upptagna tjänstevarianten behålls enligt den fasta kandidaten med granskningsgap. membership-0310: Ålderspension från ATP är en uttryckligen inkluderad komponent. Sektionens medlemsantal avgör inte registergruppens storlek. membership-0311: Sektionens pensionsmått avser andra pensionstyper, koder eller grader, inte definierade ålderspensionsbelopp. membership-0312: Valda pensionsgrader tillhör särskilda förmåner; ingen vald variabel mäter de belopp eller summeringar som denna kandidat omfattar. membership-0313: Sektionens tilläggspensionsgrad är ingen allmän pensionssumma eller uttrycklig ålderspensionskomponent. membership-0314: Folkpensionens uttryckliga ålderspensionskomponent omfattas av den fasta definitionen. membership-0315: Valda pensionsmått avser andra förmåner eller kodningar; garantipensionen är inte här uttryckligen en inkluderad summeringskomponent. membership-0316: Vald inkomstpension är inte en uttryckligen inkluderad pensionssumma eller komponent enligt kandidatens avgränsning. membership-0317: Sektionens tjänstepensioner och livräntor är inte allmän ålderspension. membership-0318: PALLM omfattar uttryckligen efterlevandepension och sjuk- och aktivitetsersättning; summan uppfyller inte den fasta avgränsningen för allmän ålderspension. membership-0319: ATP, garantipension, tilläggspension och inkomstpensionstillägg motsvarar kandidatens allmänna pension och uttryckligen inkluderade komponenter. membership-0320: Särskilt pensionstillägg saknar stöd för avgränsning till allmän ålderspension; särskild efterlevandepension är uttryckligen utesluten. membership-0321: Ingen vald variabel redovisar allmän ålderspension enligt avgränsningen. membership-0322: De valda pensionssummorna innehåller även tjänstepension och omfattas inte av definitionen. membership-0323: Sektionens pensionsvariabler stöder inte medlemskap som allmän ålderspension. membership-0324: Inga valda variabler mäter allmän ålderspension eller dess komponenter. membership-0325: Valt inbetalt pensionssparbelopp är ingen utbetalning av allmän ålderspension. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:variable_text:30446:16436:17532\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30453:17167:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30461:17167:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30608:17167:20089\ncatalog:variable_text:30630:10227:12053\ncatalog:variable_text:30631:10227:12053\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30670:3287:4018\ncatalog:variable_text:30690:8401:12784\ncatalog:variable_text:30691:12053:20089\ncatalog:variable_text:30692:12053:20089\ncatalog:variable_text:30795:18628:20089\ncatalog:variable_text:30796:18628:20089\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31035:12053:20089\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31082:18628:20089\ncatalog:variable_text:31083:17167:20089\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31163:12053:20089\ncatalog:variable_text:31164:18628:20089\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31292:6209:7670\ncatalog:variable_text:31316:17167:20089\ncatalog:variable_text:31317:3652:6574\ncatalog:variable_text:31319:10227:20089\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31448:12053:20089\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31498:12053:20089\ncatalog:variable_text:31499:12053:20089\ncatalog:variable_text:31501:18628:20089\ncatalog:variable_text:31502:18628:20089\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31590:17167:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31825:7670:17897\ncatalog:variable_text:31826:17897:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ptillphb"
+subject = "var:tillaggspension-bostadshushall"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken och hushållsändelsen är opaka. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ålderspension, summering med delpension och de uttryckligen inkluderade garanti- och tilläggskomponenterna omfattas. membership-0308: Tilläggspension är en uttryckligen inkluderad komponent av allmän ålderspension. membership-0309: Ålderspension, folkpension/ATP och summering med delpension stöds direkt. Den uttryckligen upptagna tjänstevarianten behålls enligt den fasta kandidaten med granskningsgap. membership-0310: Ålderspension från ATP är en uttryckligen inkluderad komponent. Sektionens medlemsantal avgör inte registergruppens storlek. membership-0311: Sektionens pensionsmått avser andra pensionstyper, koder eller grader, inte definierade ålderspensionsbelopp. membership-0312: Valda pensionsgrader tillhör särskilda förmåner; ingen vald variabel mäter de belopp eller summeringar som denna kandidat omfattar. membership-0313: Sektionens tilläggspensionsgrad är ingen allmän pensionssumma eller uttrycklig ålderspensionskomponent. membership-0314: Folkpensionens uttryckliga ålderspensionskomponent omfattas av den fasta definitionen. membership-0315: Valda pensionsmått avser andra förmåner eller kodningar; garantipensionen är inte här uttryckligen en inkluderad summeringskomponent. membership-0316: Vald inkomstpension är inte en uttryckligen inkluderad pensionssumma eller komponent enligt kandidatens avgränsning. membership-0317: Sektionens tjänstepensioner och livräntor är inte allmän ålderspension. membership-0318: PALLM omfattar uttryckligen efterlevandepension och sjuk- och aktivitetsersättning; summan uppfyller inte den fasta avgränsningen för allmän ålderspension. membership-0319: ATP, garantipension, tilläggspension och inkomstpensionstillägg motsvarar kandidatens allmänna pension och uttryckligen inkluderade komponenter. membership-0320: Särskilt pensionstillägg saknar stöd för avgränsning till allmän ålderspension; särskild efterlevandepension är uttryckligen utesluten. membership-0321: Ingen vald variabel redovisar allmän ålderspension enligt avgränsningen. membership-0322: De valda pensionssummorna innehåller även tjänstepension och omfattas inte av definitionen. membership-0323: Sektionens pensionsvariabler stöder inte medlemskap som allmän ålderspension. membership-0324: Inga valda variabler mäter allmän ålderspension eller dess komponenter. membership-0325: Valt inbetalt pensionssparbelopp är ingen utbetalning av allmän ålderspension. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:variable_text:30446:16436:17532\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30453:17167:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30461:17167:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30608:17167:20089\ncatalog:variable_text:30630:10227:12053\ncatalog:variable_text:30631:10227:12053\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30670:3287:4018\ncatalog:variable_text:30690:8401:12784\ncatalog:variable_text:30691:12053:20089\ncatalog:variable_text:30692:12053:20089\ncatalog:variable_text:30795:18628:20089\ncatalog:variable_text:30796:18628:20089\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31035:12053:20089\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31082:18628:20089\ncatalog:variable_text:31083:17167:20089\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31163:12053:20089\ncatalog:variable_text:31164:18628:20089\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31292:6209:7670\ncatalog:variable_text:31316:17167:20089\ncatalog:variable_text:31317:3652:6574\ncatalog:variable_text:31319:10227:20089\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31448:12053:20089\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31498:12053:20089\ncatalog:variable_text:31499:12053:20089\ncatalog:variable_text:31501:18628:20089\ncatalog:variable_text:31502:18628:20089\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31590:17167:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31825:7670:17897\ncatalog:variable_text:31826:17897:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
@@ -16472,13 +16472,13 @@ evidence = "Etikett och operativ definition skiljer sig om valutan.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:savpe"
+subject = "var:avkastningsskatt-pensionskostnader"
 fields = { "sets" = ["avkastningsskatt"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:31606:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:savpe"
+subject = "var:avkastningsskatt-pensionskostnader"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:31606:13879:20089"
 
@@ -16664,13 +16664,13 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31623:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sffavft"
+subject = "var:tillfalligt-nedsattningsbelopp-foraldraforsakringsavgift"
 fields = { "sets" = ["foraldraforsakringsavgift"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31624:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sffavft"
+subject = "var:tillfalligt-nedsattningsbelopp-foraldraforsakringsavgift"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31624:18262:18628"
 
@@ -16700,13 +16700,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten delas med andra variabler
 
 [[statement]]
 kind = "set"
-subject = "var:sforsf"
+subject = "var:forseningsavgift-fastighetsdeklaration"
 fields = { "sets" = ["forseningsavgift"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31627:8766:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:sforsf"
+subject = "var:forseningsavgift-fastighetsdeklaration"
 fields = { "tags" = ["taxation"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31627:8766:10227"
 
@@ -17096,13 +17096,13 @@ evidence = "Ersatta sjukpenningdagar hör till sjukpenning.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:sjukppf"
+subject = "var:sjuk-havandeskaps-smittbararpenning-familj"
 fields = { "sets" = [] }
 evidence = "Id:t innehåller opaka bokstavskoder; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31660:7305:8035"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukppf"
+subject = "var:sjuk-havandeskaps-smittbararpenning-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Id:t innehåller opaka bokstavskoder; etiketten kan kollidera och kräver målgranskning.\ncatalog:variable_text:31660:7305:8035"
 
@@ -17708,13 +17708,13 @@ evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:skink"
+subject = "var:statlig-kommunal-inkomstskatt-grund-tillaggsbelopp"
 fields = { "sets" = ["statlig-och-kommunal-inkomstskatt"] }
 evidence = "SKINK är en källkod.\ncatalog:variable_text:31711:6574:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:skink"
+subject = "var:statlig-kommunal-inkomstskatt-grund-tillaggsbelopp"
 fields = { "tags" = ["taxation"] }
 evidence = "SKINK är en källkod.\ncatalog:variable_text:31711:6574:7305"
 
@@ -17828,13 +17828,13 @@ evidence = "SKUUTLI är en opak källkod.\ncatalog:variable_text:31720:15340:200
 
 [[statement]]
 kind = "set"
-subject = "var:skuvp"
+subject = "var:skatt-inkomstranta-obligationer-vardepapper"
 fields = { "sets" = ["skatt-pa-ranta-och-utdelning"] }
 evidence = "SKUVP är en opak källkod.\ncatalog:variable_text:31721:19358:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:skuvp"
+subject = "var:skatt-inkomstranta-obligationer-vardepapper"
 fields = { "tags" = ["taxation"] }
 evidence = "SKUVP är en opak källkod.\ncatalog:variable_text:31721:19358:20089"
 
@@ -18320,13 +18320,13 @@ evidence = "Beloppet är en namngiven skattereduktion.\ncatalog:variable_text:31
 
 [[statement]]
 kind = "set"
-subject = "var:ssjuavf"
+subject = "var:sjukforsakringsavgift-fore-generell-regional-nedsattning"
 fields = { "sets" = ["sjukforsakringsavgift"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31763:11688:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ssjuavf"
+subject = "var:sjukforsakringsavgift-fore-generell-regional-nedsattning"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31763:11688:20089"
 
@@ -18368,13 +18368,13 @@ evidence = "SSLPENE är en opak källkod.\ncatalog:variable_text:31766:8766:2008
 
 [[statement]]
 kind = "set"
-subject = "var:sslut"
+subject = "var:slutlig-skatt-taxeringspopulation"
 fields = { "sets" = ["slutlig-skatt"] }
 evidence = "SSLUT är en källmnemonik med en ensam källkod före ordstammen.\ncatalog:variable_text:31767:8401:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sslut"
+subject = "var:slutlig-skatt-taxeringspopulation"
 fields = { "tags" = ["taxation"] }
 evidence = "SSLUT är en källmnemonik med en ensam källkod före ordstammen.\ncatalog:variable_text:31767:8401:20089"
 
@@ -18416,25 +18416,25 @@ evidence = "Variabeln avser statligt beskattningsbar inkomst.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:statlig-beskattningsbar-inkomst-2"
+subject = "var:statligt-beskattningsbar-inkomst-aktuellt-ar"
 fields = { "sets" = ["statligt-beskattningsbar-inkomst"] }
 evidence = "Siffersuffixet är inte hämtat från källkolumnen; mål kräver kollisionsgranskning.\ncatalog:variable_text:31771:3287:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:statlig-beskattningsbar-inkomst-2"
+subject = "var:statligt-beskattningsbar-inkomst-aktuellt-ar"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Siffersuffixet är inte hämtat från källkolumnen; mål kräver kollisionsgranskning.\ncatalog:variable_text:31771:3287:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:statlig-beskattningsbar-inkomst-3"
+subject = "var:statligt-beskattningsbar-inkomst-foregaende-ar"
 fields = { "sets" = ["statligt-beskattningsbar-inkomst"] }
 evidence = "Siffersuffixet är inte hämtat från källkolumnen; mål kräver kollisionsgranskning.\ncatalog:variable_text:31772:2922:3287"
 
 [[statement]]
 kind = "set"
-subject = "var:statlig-beskattningsbar-inkomst-3"
+subject = "var:statligt-beskattningsbar-inkomst-foregaende-ar"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Siffersuffixet är inte hämtat från källkolumnen; mål kräver kollisionsgranskning.\ncatalog:variable_text:31772:2922:3287"
 
@@ -19364,13 +19364,13 @@ evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:tabarn"
+subject = "var:avdrag-barnomsorgskostnader"
 fields = { "sets" = [] }
 evidence = "TABARN är en källkod utan igenkännbar stam för avdrag.\ncatalog:variable_text:31850:8766:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:tabarn"
+subject = "var:avdrag-barnomsorgskostnader"
 fields = { "tags" = ["taxation"] }
 evidence = "TABARN är en källkod utan igenkännbar stam för avdrag.\ncatalog:variable_text:31850:8766:9131"
 
@@ -20024,13 +20024,13 @@ evidence = "TP och E är opaka källkoder i förhållande till etiketten. Coordi
 
 [[statement]]
 kind = "set"
-subject = "var:tpenbidh"
+subject = "var:pension-bidrag-skatteplikt-exkl-arbetsmarknadsforsakr-familj"
 fields = { "sets" = [] }
 evidence = "TPENBIDH är en källmnemonik med bokstavskoder för pension, bidrag och familj.\ncatalog:variable_text:31905:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tpenbidh"
+subject = "var:pension-bidrag-skatteplikt-exkl-arbetsmarknadsforsakr-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "TPENBIDH är en källmnemonik med bokstavskoder för pension, bidrag och familj.\ncatalog:variable_text:31905:17167:20089"
 
@@ -20192,13 +20192,13 @@ evidence = "Källkoden är opak; etiketten kan kollidera och kräver målgranskn
 
 [[statement]]
 kind = "set"
-subject = "var:tsjresf"
+subject = "var:sjukpenning-rehabiliteringspenning-sarskilda-fall"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31919:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tsjresf"
+subject = "var:sjukpenning-rehabiliteringspenning-sarskilda-fall"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:31919:15340:20089"
 
@@ -20216,25 +20216,25 @@ evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:tsutkunh"
+subject = "var:sarskilt-utbildningsbidrag-kunskapslyftet-familj"
 fields = { "sets" = ["utbildningsbidrag"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31921:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:tsutkunh"
+subject = "var:sarskilt-utbildningsbidrag-kunskapslyftet-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31921:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:tsvuxah"
+subject = "var:vuxenstudiestod-studiebidrag-arbetslosa-skattepliktig-familj"
 fields = { "sets" = [] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31922:9862:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:tsvuxah"
+subject = "var:vuxenstudiestod-studiebidrag-arbetslosa-skattepliktig-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Opak källkod med beskrivande etikett.\ncatalog:variable_text:31922:9862:12418"
 
@@ -20276,61 +20276,61 @@ evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlon"
+subject = "var:kontant-bruttolon-deklaration-ruta-1-1"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31926:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlon"
+subject = "var:kontant-bruttolon-deklaration-ruta-1-1"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31926:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlonu"
+subject = "var:kontant-bruttolon-nordisk-utlandskt-beskattad-individ"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31927:18262:19358\ncatalog:variable_text:31927:19358:19723\ncatalog:variable_text:31927:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlonu"
+subject = "var:kontant-bruttolon-nordisk-utlandskt-beskattad-individ"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31927:18262:19358\ncatalog:variable_text:31927:19358:19723\ncatalog:variable_text:31927:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlonuhb"
+subject = "var:kontant-bruttolon-nordisk-utlandskt-beskattad-bostadshushall"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31928:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjlonuhb"
+subject = "var:kontant-bruttolon-nordisk-utlandskt-beskattad-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:31928:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttju"
+subject = "var:nordisk-tjansteinkomst-utlandskt-beskattad-individ"
 fields = { "sets" = ["inkomst-tjanst"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:31929:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttju"
+subject = "var:nordisk-tjansteinkomst-utlandskt-beskattad-individ"
 fields = { "tags" = ["income"] }
 evidence = "Opak källkod; etiketten delas med andra variabler.\ncatalog:variable_text:31929:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjuhb"
+subject = "var:nordisk-tjansteinkomst-utlandskt-beskattad-bostadshushall"
 fields = { "sets" = ["inkomst-tjanst"] }
 evidence = "TTJUHB är en källkod.\ncatalog:variable_text:31930:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ttjuhb"
+subject = "var:nordisk-tjansteinkomst-utlandskt-beskattad-bostadshushall"
 fields = { "tags" = ["income"] }
 evidence = "TTJUHB är en källkod.\ncatalog:variable_text:31930:18628:20089"
 
@@ -20360,25 +20360,25 @@ evidence = "Källmnemoniken är opak.\ncatalog:variable_text:31932:8401:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:tvard"
+subject = "var:vardbidrag-deklarationsuppgift"
 fields = { "sets" = [] }
 evidence = "Id innehåller en ensam källkod före vård.\ncatalog:variable_text:31933:14245:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tvard"
+subject = "var:vardbidrag-deklarationsuppgift"
 fields = { "tags" = ["transfers"] }
 evidence = "Id innehåller en ensam källkod före vård.\ncatalog:variable_text:31933:14245:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tvarda"
+subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
 fields = { "sets" = [] }
 evidence = "Id innehåller ensamma källkoder runt ordstammen vård.\ncatalog:variable_text:31934:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tvarda"
+subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
 fields = { "tags" = ["transfers"] }
 evidence = "Id innehåller ensamma källkoder runt ordstammen vård.\ncatalog:variable_text:31934:17897:20089"
 
@@ -20432,37 +20432,37 @@ evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variable
 
 [[statement]]
 kind = "set"
-subject = "var:udfform"
+subject = "var:utdomning-fel-formogenhetstaxering"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31939:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfform"
+subject = "var:utdomning-fel-formogenhetstaxering"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31939:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfgemf"
+subject = "var:utdomning-fel-gemensam-formogenhet"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31940:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfgemf"
+subject = "var:utdomning-fel-gemensam-formogenhet"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31940:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfktax"
+subject = "var:utdomning-fel-kommunal-taxering"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31941:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfktax"
+subject = "var:utdomning-fel-kommunal-taxering"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31941:5844:7670"
 
@@ -20480,49 +20480,49 @@ evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variable
 
 [[statement]]
 kind = "set"
-subject = "var:udfstax"
+subject = "var:utdomning-fel-statlig-taxering"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31943:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfstax"
+subject = "var:utdomning-fel-statlig-taxering"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31943:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udftj"
+subject = "var:utdomning-fel-inkomst-av-tjanst"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31944:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udftj"
+subject = "var:utdomning-fel-inkomst-av-tjanst"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31944:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udftna"
+subject = "var:utdomning-fel-taxeringsnamndens-anteckningar"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31945:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udftna"
+subject = "var:utdomning-fel-taxeringsnamndens-anteckningar"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31945:5844:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:udfutbo"
+subject = "var:utdomning-fel-utbotaxering-a-langden"
 fields = { "sets" = ["utdomning-och-utbotaxering"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31946:5844:6574"
 
 [[statement]]
 kind = "set"
-subject = "var:udfutbo"
+subject = "var:utdomning-fel-utbotaxering-a-langden"
 fields = { "tags" = ["taxation"] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar med andra variabler; målet kräver disambiguering.\ncatalog:variable_text:31946:5844:6574"
 
@@ -21668,13 +21668,13 @@ evidence = "Id:t innehåller opakt prefix; siffran är en källkolumnsposition.\
 
 [[statement]]
 kind = "set"
-subject = "var:usknrv"
+subject = "var:underskott-naringsverksamhet-100-tal-kronor"
 fields = { "sets" = ["underskott-av-naringsverksamhet"] }
 evidence = "USKNRV är en källmnemonik för underskott av näringsverksamhet.\ncatalog:variable_text:32042:8035:8401"
 
 [[statement]]
 kind = "set"
-subject = "var:usknrv"
+subject = "var:underskott-naringsverksamhet-100-tal-kronor"
 fields = { "tags" = ["income"] }
 evidence = "USKNRV är en källmnemonik för underskott av näringsverksamhet.\ncatalog:variable_text:32042:8035:8401"
 
@@ -21860,13 +21860,13 @@ evidence = "Variabeln mäter överskott från uthyrning av privatbostad.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:utillag"
+subject = "var:statlig-inkomstskatt-underlag-tillaggsbelopp"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32058:4748:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:utillag"
+subject = "var:statlig-inkomstskatt-underlag-tillaggsbelopp"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:32058:4748:7670"
 

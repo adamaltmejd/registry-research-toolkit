@@ -445,13 +445,13 @@ evidence = "Antalet frånluftsvärmepumpar hör till uppvärmningssätt.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:gdnorm"
+subject = "var:graddagar-normalar"
 fields = { "sets" = ["graddagar"] }
 evidence = "Gd är en bokstavskod för graddagar; normalårets graddagar ingår i kandidatgruppen.\ncatalog:variable_text:7469:13514:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:gdnorm"
+subject = "var:graddagar-normalar"
 fields = { "tags" = [] }
 evidence = "Gd är en bokstavskod för graddagar; normalårets graddagar ingår i kandidatgruppen.\ncatalog:variable_text:7469:13514:14245"
 

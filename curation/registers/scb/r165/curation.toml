@@ -1105,13 +1105,13 @@ evidence = "Källans radkod anger inte vilket instrument som omvärderas.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad122"
+subject = "var:finansiella-derivat-svenska-finansiella-foretag-omvardering"
 fields = { "sets" = ["finansiella-derivattillgangar"] }
 evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:5976:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad122"
+subject = "var:finansiella-derivat-svenska-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:5976:9862:10227"
 
@@ -1429,49 +1429,49 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad301"
+subject = "var:svenska-noterade-aktier-finansiella-foretag-omvardering"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6003:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad301"
+subject = "var:svenska-noterade-aktier-finansiella-foretag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6003:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad302"
+subject = "var:svenska-noterade-aktier-aterkop-egna-omvardering"
 fields = { "sets" = ["aterkop-av-egna-aktier"] }
 evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6004:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad302"
+subject = "var:svenska-noterade-aktier-aterkop-egna-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6004:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansforetag-omvardering"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6005:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansforetag-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6005:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad312"
+subject = "var:aktier-svenska-onoterade-koncern-intresse-omvardering"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6006:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad312"
+subject = "var:aktier-svenska-onoterade-koncern-intresse-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6006:14610:15340"
 
@@ -1489,13 +1489,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresse-omvardering"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6008:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresse-omvardering"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6008:14610:15340"
 
@@ -1549,13 +1549,13 @@ evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad51"
+subject = "var:totalt-eget-kapital-svenska-onoterade-aktiebolag-omvardering"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6013:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omvrad51"
+subject = "var:totalt-eget-kapital-svenska-onoterade-aktiebolag-omvardering"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6013:14610:15340"
 
@@ -2101,37 +2101,37 @@ evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad302"
+subject = "var:svenska-noterade-aktier-innehav-aterkop-egna-stallning"
 fields = { "sets" = ["aterkop-av-egna-aktier"] }
 evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6063:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad302"
+subject = "var:svenska-noterade-aktier-innehav-aterkop-egna-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte återköpet av egna aktier.\ncatalog:variable_text:6063:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansiella-ftg-stallning"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6064:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansiella-ftg-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6064:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad312"
+subject = "var:aktier-svenska-onoterade-koncern-intresseforetag-stallning"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6065:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad312"
+subject = "var:aktier-svenska-onoterade-koncern-intresseforetag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte de onoterade aktierna eller delposten.\ncatalog:variable_text:6065:14610:15340"
 
@@ -2149,13 +2149,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresseforetag-stallning"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6067:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:stallnrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresseforetag-stallning"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6067:14610:15340"
 
@@ -2425,13 +2425,13 @@ evidence = "Källans radkod anger inte derivaten.\ncatalog:variable_text:6091:98
 
 [[statement]]
 kind = "set"
-subject = "var:transrad122"
+subject = "var:derivat-svenska-finansiella-foretag-transaktioner"
 fields = { "sets" = ["finansiella-derivattillgangar"] }
 evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6092:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad122"
+subject = "var:derivat-svenska-finansiella-foretag-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte derivaten eller motpartsdelen.\ncatalog:variable_text:6092:9862:10227"
 
@@ -2761,25 +2761,25 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:transrad301"
+subject = "var:svenska-noterade-aktier-finansiella-foretag-transaktioner"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6120:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad301"
+subject = "var:svenska-noterade-aktier-finansiella-foretag-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6120:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansiella-ftg-transaktioner"
 fields = { "sets" = ["svenska-aktier-och-andelar"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6121:9862:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad311"
+subject = "var:ovriga-svenska-aktier-andelar-finansiella-ftg-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Källans radkod anger inte aktieinnehavet eller delposten.\ncatalog:variable_text:6121:9862:14610"
 
@@ -2797,13 +2797,13 @@ evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:transrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresse-transaktioner"
 fields = { "sets" = ["utlandska-aktier-och-andelar"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6123:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad332"
+subject = "var:aktier-utlandska-onoterade-koncern-intresse-transaktioner"
 fields = { "tags" = ["finance"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6123:14610:15340"
 
@@ -2857,13 +2857,13 @@ evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:transrad51"
+subject = "var:eget-kapital-svenska-onoterade-aktiebolag-transaktioner"
 fields = { "sets" = ["totalt-eget-kapital"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6128:14610:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:transrad51"
+subject = "var:eget-kapital-svenska-onoterade-aktiebolag-transaktioner"
 fields = { "tags" = ["business"] }
 evidence = "Radnumret kodar innehållet och är opakt utan källetiketten.\ncatalog:variable_text:6128:14610:15340"
 

@@ -367,37 +367,37 @@ evidence = "Det ensamma A är en källkodsbokstav; kodningen hör till anläggni
 
 [[statement]]
 kind = "set"
-subject = "var:bbdh"
+subject = "var:belagda-baddar-fredag-sondag-inklusive-roda-dagar"
 fields = { "sets" = ["belagda-baddar"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbdh"
+subject = "var:belagda-baddar-fredag-sondag-inklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbdtot"
+subject = "var:belagda-baddar-totalt"
 fields = { "sets" = ["belagda-baddar"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbdtot"
+subject = "var:belagda-baddar-totalt"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbdv"
+subject = "var:belagda-baddar-mandag-torsdag-exklusive-roda-dagar"
 fields = { "sets" = ["belagda-baddar"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbdv"
+subject = "var:belagda-baddar-mandag-torsdag-exklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
 
@@ -427,37 +427,37 @@ evidence = "Postorten anger geografisk tillhörighet.\ncatalog:variable_text:277
 
 [[statement]]
 kind = "set"
-subject = "var:brm"
+subject = "var:belagda-rum-stugor-alla-dagar"
 fields = { "sets" = ["belagda-rum"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:brm"
+subject = "var:belagda-rum-stugor-alla-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:brmh"
+subject = "var:belagda-rum-stugor-fredag-sondag-inklusive-roda-dagar"
 fields = { "sets" = ["belagda-rum"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:brmh"
+subject = "var:belagda-rum-stugor-fredag-sondag-inklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:brmv"
+subject = "var:belagda-rum-stugor-mandag-torsdag-exklusive-roda-dagar"
 fields = { "sets" = ["belagda-rum"] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:brmv"
+subject = "var:belagda-rum-stugor-mandag-torsdag-exklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
 
@@ -475,37 +475,37 @@ evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:dbd"
+subject = "var:disponibla-baddar-alla-dagar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:dbd"
+subject = "var:disponibla-baddar-alla-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:dbdh"
+subject = "var:disponibla-baddar-fredag-sondag-inklusive-roda-dagar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:dbdh"
+subject = "var:disponibla-baddar-fredag-sondag-inklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:dbdv"
+subject = "var:disponibla-baddar-mandag-torsdag-exklusive-roda-dagar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:dbdv"
+subject = "var:disponibla-baddar-mandag-torsdag-exklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
 
@@ -523,25 +523,25 @@ evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:drmh"
+subject = "var:disponibla-rum-fredag-sondag-inklusive-roda-dagar"
 fields = { "sets" = ["rumskapacitet"] }
 evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:drmh"
+subject = "var:disponibla-rum-fredag-sondag-inklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:drmv"
+subject = "var:disponibla-rum-mandag-torsdag-exklusive-roda-dagar"
 fields = { "sets" = ["rumskapacitet"] }
 evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:drmv"
+subject = "var:disponibla-rum-mandag-torsdag-exklusive-roda-dagar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
 
@@ -823,13 +823,13 @@ evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:sgmxcamp"
+subject = "var:storleksgrupp-tomter-stugor"
 fields = { "sets" = ["stugkapacitet", "tomtkapacitet"] }
 evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sgmxcamp"
+subject = "var:storleksgrupp-tomter-stugor"
 fields = { "tags" = ["business"] }
 evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
 

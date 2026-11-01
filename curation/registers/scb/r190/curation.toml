@@ -704,13 +704,13 @@ evidence = "Kursplanen är en utbildningsuppgift.\ncatalog:variable_text:22249:2
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204918\ncatalog:variable_text:22251:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-a-pot"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204918\ncatalog:variable_text:22251:15706:15887"
 
@@ -752,25 +752,25 @@ evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande 
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA och POM är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204923\ncatalog:variable_text:22255:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pom"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
 fields = { "tags" = ["education"] }
 evidence = "MA och POM är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204923\ncatalog:variable_text:22255:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204924\ncatalog:variable_text:22256:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-c-pot"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204924\ncatalog:variable_text:22256:15706:15887"
 
@@ -836,25 +836,25 @@ evidence = "MA är en bokstavskod för matematik och etiketten anger deltagande 
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA och POM är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204929\ncatalog:variable_text:22262:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pom"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
 fields = { "tags" = ["education"] }
 evidence = "MA och POM är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204929\ncatalog:variable_text:22262:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
 fields = { "sets" = ["provresultat-matematik"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204930\ncatalog:variable_text:22263:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-e-pot"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
 fields = { "tags" = ["education"] }
 evidence = "MA och POT är källmnemoniker; etiketten kolliderar och målnamnet behöver kolumndisambiguering.\ncatalog:occurrence:204930\ncatalog:variable_text:22263:15706:15887"
 
