@@ -321,12 +321,6 @@ evidence = "NABS03 är en kod; etiketten anger ändamålet.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:nabs03"
-fields = { "tags" = [] }
-evidence = "NABS03 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44567:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:nabs04"
 fields = { "sets" = ["fou-anslag-transport-och-telekommunikationer"] }
 evidence = "NABS04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44568:18628:18993"
@@ -413,12 +407,6 @@ evidence = "NABS10 är en kod; etiketten anger ändamålet.\ncatalog:variable_te
 kind = "set"
 subject = "var:nabs11"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
-evidence = "NABS11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44575:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:nabs11"
-fields = { "tags" = [] }
 evidence = "NABS11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44575:18628:18993"
 
 [[statement]]
@@ -741,12 +729,6 @@ evidence = "s05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:fou-medel-boendemiljo-samhallsplanering"
-fields = { "tags" = [] }
-evidence = "s05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44603:17897:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:s06"
 fields = { "sets" = ["fou-anslag-miljo-och-naturvard"] }
 evidence = "s06 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44604:17897:18628"
@@ -773,12 +755,6 @@ evidence = "s07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 kind = "set"
 subject = "var:fou-medel-socialvard-social-miljo-trygghet"
 fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
-evidence = "s08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44606:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fou-medel-socialvard-social-miljo-trygghet"
-fields = { "tags" = [] }
 evidence = "s08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44606:17897:18628"
 
 [[statement]]
@@ -825,20 +801,8 @@ evidence = "s12 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
-fields = { "tags" = [] }
-evidence = "s12 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44610:17897:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:s13"
 fields = { "sets" = ["fou-anslag-jorden-och-atmosfaren"] }
-evidence = "s13 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44611:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:s13"
-fields = { "tags" = [] }
 evidence = "s13 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44611:17897:18628"
 
 [[statement]]
@@ -1020,3 +984,39 @@ kind = "set"
 subject = "statliga-anslag-till-forskning-och-utveckling: NABS13X @2021-01-01..2021-12-31 where key = 'v42922'"
 fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor." }
 evidence = "Etiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
+fields = { "tags" = ["research"] }
+evidence = "r63 defines forecast R&D funding for public administration, economic planning and other community planning, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44609"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-boendemiljo-samhallsplanering"
+fields = { "tags" = ["research"] }
+evidence = "r61 defines forecast R&D funding for housing environment and community planning, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44417\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44602"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-socialvard-social-miljo-trygghet"
+fields = { "tags" = ["research"] }
+evidence = "r62 defines forecast R&D funding for social care, social environment and security, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44605"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs03"
+fields = { "tags" = ["research"] }
+evidence = "r59 defines the estimated R&D appropriation for space exploration and exploitation, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44426\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44567"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs11"
+fields = { "tags" = ["research"] }
+evidence = "r60 defines the estimated R&D appropriation for political and social systems, structures and processes, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44434\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44575"
+
+[[statement]]
+kind = "set"
+subject = "var:s13"
+fields = { "tags" = ["research"] }
+evidence = "r64 defines forecast R&D funding for exploring and exploiting Earth and the atmosphere, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44464\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44610"

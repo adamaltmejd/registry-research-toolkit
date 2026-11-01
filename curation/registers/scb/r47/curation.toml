@@ -3612,3 +3612,15 @@ kind = "set"
 subject = "doktorander-examina: LEx @1970-01-01..2024-12-31 where key = 'v1767'"
 fields = { "description" = "Högskolans kod för forskarexamen." }
 evidence = "Källan anger en lärosätesspecifik kod, inte benämningen.\ncatalog:variable_text:26362:0:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:myndkat"
+fields = { "tags" = ["education"] }
+evidence = "The classification explicitly covers only universities and colleges (r16); its institution categories (r13, r15) support the broad education theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10982\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11949\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26377"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade"
+fields = { "tags" = ["education"] }
+evidence = "Organizational affiliation mainly follows university faculties (r17) and includes university libraries and central administration (r14), supporting education as a broad institutional-resource theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11111\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26468"

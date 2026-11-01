@@ -806,20 +806,8 @@ evidence = "Planerade investeringar i övriga anläggningar.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-transportmedel-bilar-bkbyggm"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-bkbyggm"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-v212"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30278:14975:17532"
 
 [[statement]]
 kind = "set"
@@ -830,20 +818,8 @@ evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30278:14975:
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-transportmedel-bilar-v312"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30279:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-v312"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30279:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-v412"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30280:14975:17532"
 
 [[statement]]
 kind = "set"
@@ -854,20 +830,8 @@ evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30280:14975:
 [[statement]]
 kind = "set"
 subject = "var:investeringar-planerade-transportmedel-bilar-v512"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30281:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-v512"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30281:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:investeringar-planerade-transportmedel-bilar-v612"
-fields = { "sets" = [] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30282:14975:17532"
 
 [[statement]]
 kind = "set"
@@ -1610,299 +1574,335 @@ evidence = "Kod för undersökningens partiella bortfall.\ncatalog:valueset:4626
 [[statement]]
 kind = "set"
 subject = "var:planerade-transport-bilar"
-fields = { "sets" = [] }
+fields = { "tags" = ["business", "transport"] }
 evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30352:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-bussar"
+fields = { "sets" = ["investeringar-i-bussar"] }
+evidence = "Planerade investeringar i bussar.\ncatalog:variable_text:30353:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-bussar"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Planerade investeringar i bussar.\ncatalog:variable_text:30353:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-flygplan"
+fields = { "sets" = ["investeringar-i-flygplan"] }
+evidence = "Planerade investeringar i flygplan.\ncatalog:variable_text:30354:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-flygplan"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Planerade investeringar i flygplan.\ncatalog:variable_text:30354:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-ovrigt"
+fields = { "sets" = ["investeringar-i-ovriga-transportmedel"] }
+evidence = "Planerade investeringar i övriga transportmedel.\ncatalog:variable_text:30355:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-ovrigt"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Planerade investeringar i övriga transportmedel.\ncatalog:variable_text:30355:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-rullande"
+fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
+evidence = "Planerade investeringar i rullande spårbunden materiel.\ncatalog:variable_text:30356:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:planerade-transport-rullande"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Planerade investeringar i rullande spårbunden materiel.\ncatalog:variable_text:30356:14975:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek-strata"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "Källan avser antal företagsenheter i stratum.\ncatalog:variable_text:30357:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek-strata"
+fields = { "tags" = ["methods"] }
+evidence = "Källan avser antal företagsenheter i stratum.\ncatalog:variable_text:30357:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = ["populationsstorlek"] }
+evidence = "Källan avser populationens storlek i stratum.\ncatalog:variable_text:30358:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Källan avser populationens storlek i stratum.\ncatalog:variable_text:30358:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum beskriver undersökningens urvalsdesign.\ncatalog:variable_text:30359:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum beskriver undersökningens urvalsdesign.\ncatalog:variable_text:30359:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar"
+fields = { "sets" = ["undersokningsar"] }
+evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar"
+fields = { "tags" = [] }
+evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar-bkbyggm"
+fields = { "sets" = ["undersokningsar"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar-bkbyggm"
+fields = { "tags" = [] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar-bkelinst"
+fields = { "sets" = ["undersokningsar"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsar-bkelinst"
+fields = { "tags" = [] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang"
+fields = { "sets" = ["undersokningsomgang"] }
+evidence = "Kodning av undersökningsomgång.\ncatalog:variable_text:30363:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang"
+fields = { "tags" = [] }
+evidence = "Kodning av undersökningsomgång.\ncatalog:variable_text:30363:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang-bkbyggm"
+fields = { "sets" = ["undersokningsomgang"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang-bkbyggm"
+fields = { "tags" = [] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang-bkelinst"
+fields = { "sets" = ["undersokningsomgang"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningsomgang-bkelinst"
+fields = { "tags" = [] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "sets" = [] }
+evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:30366:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:30366:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:urval"
+fields = { "sets" = ["urval"] }
+evidence = "Källan beskriver ursprungligt urval per stratum.\ncatalog:variable_text:30368:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:urval"
+fields = { "tags" = ["methods"] }
+evidence = "Källan beskriver ursprungligt urval per stratum.\ncatalog:variable_text:30368:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-bkbyggm"
+fields = { "sets" = ["urval"] }
+evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251572\ncatalog:occurrence:251596"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-bkbyggm"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251572\ncatalog:occurrence:251596"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-bkelinst"
+fields = { "sets" = ["urval"] }
+evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251602\ncatalog:occurrence:251618"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-bkelinst"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251602\ncatalog:occurrence:251618"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-investeringar"
+fields = { "sets" = ["investeringsvarde"] }
+evidence = "Källan avser investeringsvärde per typ och period.\ncatalog:variable_text:30372:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-investeringar"
+fields = { "tags" = ["business"] }
+evidence = "Källan avser investeringsvärde per typ och period.\ncatalog:variable_text:30372:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vardesas"
+fields = { "sets" = ["investeringsvarde"] }
+evidence = "Källan avser uppräknat investeringsvärde.\ncatalog:variable_text:30373:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardesas"
+fields = { "tags" = ["business"] }
+evidence = "Källan avser uppräknat investeringsvärde.\ncatalog:variable_text:30373:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-bilar"
+fields = { "sets" = [] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-bilar"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-bussar"
+fields = { "sets" = ["investeringar-i-bussar"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251582\ncatalog:occurrence:251591"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-bussar"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251582\ncatalog:occurrence:251591"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-flygplan"
+fields = { "sets" = ["investeringar-i-flygplan"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251584\ncatalog:occurrence:251593"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-flygplan"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251584\ncatalog:occurrence:251593"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-ovrigt"
+fields = { "sets" = ["investeringar-i-ovriga-transportmedel"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251585\ncatalog:occurrence:251594"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-ovrigt"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251585\ncatalog:occurrence:251594"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-rullande"
+fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251583\ncatalog:occurrence:251592"
+
+[[statement]]
+kind = "set"
+subject = "var:verkstallda-transport-rullande"
+fields = { "tags" = ["business", "transport"] }
+evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251583\ncatalog:occurrence:251592"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-bkbyggm"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r236), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30182\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30277\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v212"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r237), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30183\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30278\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v312"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r238), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30184\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30279\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v412"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r239), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30185\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30280\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v512"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r240), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30186\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30281\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-planerade-transportmedel-bilar-v612"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r241), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30187\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30282\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"
 
 [[statement]]
 kind = "set"
 subject = "var:planerade-transport-bilar"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Planerade investeringar i bilar.\ncatalog:variable_text:30352:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-bussar"
-fields = { "sets" = ["investeringar-i-bussar"] }
-evidence = "Planerade investeringar i bussar.\ncatalog:variable_text:30353:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-bussar"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Planerade investeringar i bussar.\ncatalog:variable_text:30353:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-flygplan"
-fields = { "sets" = ["investeringar-i-flygplan"] }
-evidence = "Planerade investeringar i flygplan.\ncatalog:variable_text:30354:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-flygplan"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Planerade investeringar i flygplan.\ncatalog:variable_text:30354:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-ovrigt"
-fields = { "sets" = ["investeringar-i-ovriga-transportmedel"] }
-evidence = "Planerade investeringar i övriga transportmedel.\ncatalog:variable_text:30355:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-ovrigt"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Planerade investeringar i övriga transportmedel.\ncatalog:variable_text:30355:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-rullande"
-fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
-evidence = "Planerade investeringar i rullande spårbunden materiel.\ncatalog:variable_text:30356:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:planerade-transport-rullande"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Planerade investeringar i rullande spårbunden materiel.\ncatalog:variable_text:30356:14975:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:populationsstorlek-strata"
-fields = { "sets" = ["populationsstorlek"] }
-evidence = "Källan avser antal företagsenheter i stratum.\ncatalog:variable_text:30357:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:populationsstorlek-strata"
-fields = { "tags" = ["methods"] }
-evidence = "Källan avser antal företagsenheter i stratum.\ncatalog:variable_text:30357:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:storan"
-fields = { "sets" = ["populationsstorlek"] }
-evidence = "Källan avser populationens storlek i stratum.\ncatalog:variable_text:30358:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:storan"
-fields = { "tags" = ["methods"] }
-evidence = "Källan avser populationens storlek i stratum.\ncatalog:variable_text:30358:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:stratum"
-fields = { "sets" = [] }
-evidence = "Stratum beskriver undersökningens urvalsdesign.\ncatalog:variable_text:30359:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:stratum"
-fields = { "tags" = ["methods"] }
-evidence = "Stratum beskriver undersökningens urvalsdesign.\ncatalog:variable_text:30359:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar"
-fields = { "sets" = ["undersokningsar"] }
-evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar"
-fields = { "tags" = [] }
-evidence = "Kodning av undersökningsår.\ncatalog:variable_text:30360:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar-bkbyggm"
-fields = { "sets" = ["undersokningsar"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar-bkbyggm"
-fields = { "tags" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar-bkelinst"
-fields = { "sets" = ["undersokningsar"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsar-bkelinst"
-fields = { "tags" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang"
-fields = { "sets" = ["undersokningsomgang"] }
-evidence = "Kodning av undersökningsomgång.\ncatalog:variable_text:30363:16071:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang"
-fields = { "tags" = [] }
-evidence = "Kodning av undersökningsomgång.\ncatalog:variable_text:30363:16071:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang-bkbyggm"
-fields = { "sets" = ["undersokningsomgang"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang-bkbyggm"
-fields = { "tags" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251571\ncatalog:occurrence:251573"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang-bkelinst"
-fields = { "sets" = ["undersokningsomgang"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
-
-[[statement]]
-kind = "set"
-subject = "var:undersokningsomgang-bkelinst"
-fields = { "tags" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251601\ncatalog:occurrence:251603"
-
-[[statement]]
-kind = "set"
-subject = "var:upprakningsfaktor"
-fields = { "sets" = [] }
-evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:30366:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:upprakningsfaktor"
-fields = { "tags" = ["methods"] }
-evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:30366:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:urval"
-fields = { "sets" = ["urval"] }
-evidence = "Källan beskriver ursprungligt urval per stratum.\ncatalog:variable_text:30368:16071:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:urval"
-fields = { "tags" = ["methods"] }
-evidence = "Källan beskriver ursprungligt urval per stratum.\ncatalog:variable_text:30368:16071:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:urval-bkbyggm"
-fields = { "sets" = ["urval"] }
-evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251572\ncatalog:occurrence:251596"
-
-[[statement]]
-kind = "set"
-subject = "var:urval-bkbyggm"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251572\ncatalog:occurrence:251596"
-
-[[statement]]
-kind = "set"
-subject = "var:urval-bkelinst"
-fields = { "sets" = ["urval"] }
-evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251602\ncatalog:occurrence:251618"
-
-[[statement]]
-kind = "set"
-subject = "var:urval-bkelinst"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn används för flera olika variabler.\ncatalog:occurrence:251602\ncatalog:occurrence:251618"
-
-[[statement]]
-kind = "set"
-subject = "var:varde-investeringar"
-fields = { "sets" = ["investeringsvarde"] }
-evidence = "Källan avser investeringsvärde per typ och period.\ncatalog:variable_text:30372:16801:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:varde-investeringar"
-fields = { "tags" = ["business"] }
-evidence = "Källan avser investeringsvärde per typ och period.\ncatalog:variable_text:30372:16801:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:vardesas"
-fields = { "sets" = ["investeringsvarde"] }
-evidence = "Källan avser uppräknat investeringsvärde.\ncatalog:variable_text:30373:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:vardesas"
-fields = { "tags" = ["business"] }
-evidence = "Källan avser uppräknat investeringsvärde.\ncatalog:variable_text:30373:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-bilar"
-fields = { "sets" = [] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-bilar"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251581\ncatalog:occurrence:251590"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-bussar"
-fields = { "sets" = ["investeringar-i-bussar"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251582\ncatalog:occurrence:251591"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-bussar"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251582\ncatalog:occurrence:251591"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-flygplan"
-fields = { "sets" = ["investeringar-i-flygplan"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251584\ncatalog:occurrence:251593"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-flygplan"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251584\ncatalog:occurrence:251593"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-ovrigt"
-fields = { "sets" = ["investeringar-i-ovriga-transportmedel"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251585\ncatalog:occurrence:251594"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-ovrigt"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251585\ncatalog:occurrence:251594"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-rullande"
-fields = { "sets" = ["investeringar-i-rullande-sparbunden-materiel"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251583\ncatalog:occurrence:251592"
-
-[[statement]]
-kind = "set"
-subject = "var:verkstallda-transport-rullande"
-fields = { "tags" = ["business", "transport"] }
-evidence = "Katalogens identitetsfakt visar överlappande mappningar.\ncatalog:occurrence:251583\ncatalog:occurrence:251592"
+fields = { "sets" = ["investeringar-i-bilar"] }
+evidence = "The definition specifies quarterly planned investment in cars (r243), within the fixed group's scope (r245).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30352\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/investeringsenkaten/investeringar-i-bilar"

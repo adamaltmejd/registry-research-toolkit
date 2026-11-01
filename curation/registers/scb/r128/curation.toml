@@ -1544,12 +1544,6 @@ evidence = "Ersättningen är en inkomstkomponent.\ncatalog:variable_text:39068:
 [[statement]]
 kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
-fields = { "sets" = [] }
-evidence = "Ersättningen är en namngiven rese- och kostnadsersättningskomponent.\ncatalog:variable_text:39069:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "tags" = ["transport"] }
 evidence = "Ersättningen är en namngiven rese- och kostnadsersättningskomponent.\ncatalog:variable_text:39069:17532:20089"
 
@@ -1744,12 +1738,6 @@ kind = "set"
 subject = "var:hyresersattning"
 fields = { "tags" = ["income"] }
 evidence = "Ersättning för uthyrd lokal är en inkomst.\ncatalog:variable_text:39085:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:inrikes"
-fields = { "sets" = [] }
-evidence = "Kodningen avser inrikes tjänsteresa.\ncatalog:variable_text:39086:15340:17897"
 
 [[statement]]
 kind = "set"
@@ -2120,12 +2108,6 @@ evidence = "Representationsersättning är en namngiven kostnadsersättningskomp
 [[statement]]
 kind = "set"
 subject = "var:reseers"
-fields = { "sets" = [] }
-evidence = "Resekostnadsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39120:15340:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:reseers"
 fields = { "tags" = ["transport"] }
 evidence = "Resekostnadsersättning är en namngiven kostnadsersättningskomponent.\ncatalog:variable_text:39120:15340:17897"
 
@@ -2320,12 +2302,6 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "tags" = ["demographics"] }
 evidence = "Bakgrundsklassificeringen beskriver befolkningssammansättning.\ncatalog:valueset:8386\ncatalog:variable_text:39138:12053:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utrikes"
-fields = { "sets" = [] }
-evidence = "Kodningen avser utrikes tjänsteresa.\ncatalog:variable_text:39139:15340:17897"
 
 [[statement]]
 kind = "set"
@@ -2650,3 +2626,27 @@ kind = "set"
 subject = "foretag-kuagg: AntEjSkattEjBeskatt @2024-01-01..2024-12-31 where key = 'v41337'"
 fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
 evidence = "Definitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "sets" = ["resekostnadsersattning"] }
+evidence = "The fixed definition explicitly includes travel compensation for residents abroad (r276). This variable measures that compensation as an aggregate amount, including housing in Sweden (r266).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39069\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/resekostnadsersattning"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes"
+fields = { "sets" = ["tjansteresor"] }
+evidence = "The variable records whether a person made a domestic business trip exceeding three months (r267), within the fixed definition (r277). The foreign-trip indicator provides a supported partner (r272), independently of report-count ambiguities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38946\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39086\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39139\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/tjansteresor"
+
+[[statement]]
+kind = "set"
+subject = "var:reseers"
+fields = { "sets" = ["resekostnadsersattning"] }
+evidence = "The variable records occurrence of travel-cost reimbursement corresponding to expenses (r271), explicitly included by the fixed definition (r276). The peer's control-statement count does not establish unique recipient counts (r264).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38980\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39038\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39120\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/resekostnadsersattning"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikes"
+fields = { "sets" = ["tjansteresor"] }
+evidence = "The variable records whether a person made a foreign business trip exceeding three months (r272), within the fixed definition (r277). The domestic-trip indicator provides a supported partner (r267), independently of report-count ambiguities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39086\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39139\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/tjansteresor"

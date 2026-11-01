@@ -2199,32 +2199,14 @@ evidence = "Variabeln kodar skolform.\ncatalog:variable_text:11616:14245:20089"
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
-fields = { "sets" = [] }
-evidence = "Kommun för skolans läge.\ncatalog:variable_text:11618:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun"
 fields = { "tags" = ["geography"] }
 evidence = "Kommun för skolans läge.\ncatalog:variable_text:11618:17532:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun-kod"
-fields = { "sets" = [] }
-evidence = "Kommunkod för skolans läge.\ncatalog:variable_text:11619:14245:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun-kod"
 fields = { "tags" = ["geography"] }
 evidence = "Kommunkod för skolans läge.\ncatalog:variable_text:11619:14245:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun-text"
-fields = { "sets" = [] }
-evidence = "Skolkommun i klartext.\ncatalog:variable_text:11620:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -2879,3 +2861,21 @@ kind = "set"
 subject = "pedagogisk-personal: UppdragUtbKurs_15hp @2024-01-01..2024-12-31 where key = 'v39035'"
 fields = { "description" = "Antal genomförda högskolepoäng i kursen Folkhögskolan som särskild utbildningsform och didaktisk verkstad, 15 högskolepoäng." }
 evidence = "Beskrivningen anger genomförd kurs men variabeln mäter antal genomförda högskolepoäng.\ncatalog:variable_text:11644:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "r103 defines the school/unit's municipality, and r14 explicitly locates the folk high school there. This matches the counterpart in r104.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:100293\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11616\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11617"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-kod"
+fields = { "sets" = ["skolkommun"] }
+evidence = "r104 specifies the municipality where the school is located, matching the school municipality represented in plain text in r105.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11598\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11617\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11618"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "sets" = ["skolkommun"] }
+evidence = "r105 explicitly records the school's municipality in plain text, matching the school municipality documented in r104.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11599\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11617\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11618"

@@ -332,12 +332,6 @@ evidence = "Variabeln kodar anställningsform.\ncatalog:valueset:682\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:anstallningsform-hel-del-ovrig"
-fields = { "sets" = [] }
-evidence = "Kodningen avser anställningsform och hel- eller deltid.\ncatalog:valueset:3662\ncatalog:variable_text:42814:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:anstallningsform-hel-del-ovrig"
 fields = { "tags" = ["employment"] }
 evidence = "Kodningen avser anställningsform och hel- eller deltid.\ncatalog:valueset:3662\ncatalog:variable_text:42814:14610:15340"
 
@@ -488,12 +482,6 @@ evidence = "Ersättning vid ledighet för totalförsvarsplikt.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:faktisk-tjanstgoringsomfattning"
-fields = { "sets" = [] }
-evidence = "Mäter faktisk tjänstgöringsomfattning.\ncatalog:variable_text:42827:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:faktisk-tjanstgoringsomfattning"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter faktisk tjänstgöringsomfattning.\ncatalog:variable_text:42827:15706:20089"
 
@@ -596,32 +584,14 @@ evidence = "Ersättningen är en namngiven lönekomponent.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:faktisk-sysselsattningsgrad-hansyn-tagen-till-partiell"
-fields = { "sets" = [] }
-evidence = "Fsys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42836:9496:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:faktisk-sysselsattningsgrad-hansyn-tagen-till-partiell"
 fields = { "tags" = ["employment"] }
 evidence = "Fsys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42836:9496:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:tjanstgoringsomfattning"
-fields = { "sets" = [] }
-evidence = "Helar beskriver inte tjänstgöringsomfattning i någon period.\ncatalog:variable_text:42837:15706:18628\ncatalog:variable_text:42837:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstgoringsomfattning"
 fields = { "tags" = ["employment"] }
 evidence = "Helar beskriver inte tjänstgöringsomfattning i någon period.\ncatalog:variable_text:42837:15706:18628\ncatalog:variable_text:42837:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:heldel"
-fields = { "sets" = [] }
-evidence = "Kodningen avser heltid eller deltid.\ncatalog:variable_text:42838:15706:20089"
 
 [[statement]]
 kind = "set"
@@ -800,20 +770,8 @@ evidence = "Ersättningen avser förtroendemannauppdrag.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:osys"
-fields = { "sets" = [] }
-evidence = "Osys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42855:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:osys"
 fields = { "tags" = ["employment"] }
 evidence = "Osys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42855:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:overenskommen-sysselsattningsgrad"
-fields = { "sets" = [] }
-evidence = "Kodningen gäller hel- och deltid.\ncatalog:valueset:3662\ncatalog:variable_text:42856:15706:20089"
 
 [[statement]]
 kind = "set"
@@ -968,20 +926,8 @@ evidence = "Samma nivåaggregat som scb/slk/utbildningsniva i angränsande perio
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningsgrad-faktisk"
-fields = { "sets" = [] }
-evidence = "Mäter faktisk sysselsättningsgrad.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningsgrad-faktisk"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter faktisk sysselsättningsgrad.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningsgrad-manadsavlonade"
-fields = { "sets" = [] }
-evidence = "Mäter överenskommen sysselsättningsgrad.\ncatalog:variable_text:42871:9496:20089"
 
 [[statement]]
 kind = "set"
@@ -1360,3 +1306,57 @@ kind = "set"
 subject = "lonestrukturstatistik-kommuner: isys @2007-01-01..2007-12-31 where key = 'v3108'"
 fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
 evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r222 defines a full-time, part-time or other classification, confirmed by the complete codes in r220.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42671\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3662\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42814"
+
+[[statement]]
+kind = "set"
+subject = "var:faktisk-sysselsattningsgrad-hansyn-tagen-till-partiell"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r223 defines actual employment extent during the measurement month accounting for partial leave. It measures employment extent, not the extent of leave.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42684\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42827"
+
+[[statement]]
+kind = "set"
+subject = "var:faktisk-tjanstgoringsomfattning"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r224 defines actual service time relative to full-time during the measurement month. Its derivations retain that measure throughout the supplied history.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42828"
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r226 defines full-time or part-time service, and r221 supplies both codes. The fixed group explicitly includes this classification.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4971\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42837"
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r227 defines agreed employment extent for all employees, including a calculated extent for hourly paid employees in later periods.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42714\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42857"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommen-sysselsattningsgrad"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r228 defines agreed employment extent; r220 confirms full-time, part-time and other categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42715\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3662\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42858"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-faktisk"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r229 defines actual employment extent during the measurement month, reported as a percentage.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42728\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42871"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r230 defines agreed employment extent for monthly paid employees, which the fixed group includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42729\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42872"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "r231 explicitly defines actual service time relative to full-time and derives it from actual service extent. The earlier expansion-factor unit does not negate that definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42732\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42875"

@@ -1101,12 +1101,6 @@ evidence = "Kodningen ingår i ägarkontroll.\ncatalog:variable_text:41093:18993
 [[statement]]
 kind = "set"
 subject = "var:aktuellt-antal-anstallda"
-fields = { "sets" = [] }
-evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:41094:5479:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:aktuellt-antal-anstallda"
 fields = { "tags" = ["employment"] }
 evidence = "Antal anställda på arbetsstället.\ncatalog:variable_text:41094:5479:18993"
 
@@ -1257,12 +1251,6 @@ evidence = "Samma källkolumn övergår till ett annat mått.\ncatalog:occurrenc
 [[statement]]
 kind = "set"
 subject = "var:antal-ast"
-fields = { "sets" = [] }
-evidence = "Administrativa arbetsställeenheter är en delmängd av arbetsställen.\ncatalog:variable_text:41107:5479:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-ast"
 fields = { "tags" = ["business"] }
 evidence = "Administrativa arbetsställeenheter är en delmängd av arbetsställen.\ncatalog:variable_text:41107:5479:18993"
 
@@ -1293,19 +1281,7 @@ evidence = "Samma individmått som scb/rams/antal-kontrolluppgifter, uppdelat p�
 [[statement]]
 kind = "set"
 subject = "var:antal-kv-korteftergymn"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kv-korteftergymn"
 fields = { "tags" = ["employment"] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kv-langeftergymn"
-fields = { "sets" = [] }
 evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
@@ -1317,31 +1293,13 @@ evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Co
 [[statement]]
 kind = "set"
 subject = "var:antal-kvinnor-arbetsstallet"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kvinnor-arbetsstallet"
 fields = { "tags" = ["employment"] }
 evidence = "Arbetsställets personalantal uppdelat efter kön. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kvinnor-forgymn"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kvinnor-forgymn"
 fields = { "tags" = ["employment"] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kvinnor-gymn"
-fields = { "sets" = [] }
 evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
@@ -1353,19 +1311,7 @@ evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Co
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-eftergymn-k"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-man-ast-eftergymn-k"
 fields = { "tags" = ["employment"] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-man-ast-eftergymn-l"
-fields = { "sets" = [] }
 evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
@@ -1377,19 +1323,7 @@ evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Co
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-forgymn"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-man-ast-forgymn"
 fields = { "tags" = ["employment"] }
-evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-man-ast-gymn"
-fields = { "sets" = [] }
 evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
@@ -1397,12 +1331,6 @@ kind = "set"
 subject = "var:antal-man-ast-gymn"
 fields = { "tags" = ["employment"] }
 evidence = "Arbetsställets personalantal uppdelat efter kön och utbildning. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-man-pa-arbetsstallet"
-fields = { "sets" = [] }
-evidence = "Arbetsställets personalantal uppdelat efter kön. Coordinator group membership: Dessa mäter uttryckligen anställda på arbetsstället. Köns- och utbildningsuppdelningarnas beskrivningar anger sysselsatta och placeras därför i motsvarande kandidat. Beskrivningarna anger arbetsställets sysselsatta, totalt eller som köns- och utbildningskomponenter, enligt olika källor och jämförelseår.\ncatalog:variable_text:41094:5479:18993\ncatalog:variable_text:41110:12053:18993\ncatalog:variable_text:41111:12053:18993\ncatalog:variable_text:41112:12053:18993\ncatalog:variable_text:41113:12053:18993\ncatalog:variable_text:41114:12053:18993\ncatalog:variable_text:41115:12053:18993\ncatalog:variable_text:41116:12053:18993\ncatalog:variable_text:41117:12053:18993\ncatalog:variable_text:41118:12053:18993\ncatalog:variable_text:41119:12053:18993\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41125:17897:19358\ncatalog:variable_text:41126:17897:19358\ncatalog:variable_text:41127:17897:18993\ncatalog:variable_text:41128:17897:18993\ncatalog:variable_text:41131:17897:18993\ncatalog:variable_text:41134:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -1461,20 +1389,8 @@ evidence = "Antalet avser företaget år 2.\ncatalog:variable_text:41123:16801:1
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast"
-fields = { "sets" = [] }
-evidence = "Antalet avser sysselsatta på arbetsstället.\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41124:5479:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-ast"
 fields = { "tags" = ["employment"] }
 evidence = "Antalet avser sysselsatta på arbetsstället.\ncatalog:variable_text:41124:12053:18993\ncatalog:variable_text:41124:5479:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-ast-ar-1"
-fields = { "sets" = [] }
-evidence = "Antalet avser arbetsstället år 1.\ncatalog:variable_text:41125:17897:19358"
 
 [[statement]]
 kind = "set"
@@ -1485,32 +1401,14 @@ evidence = "Antalet avser arbetsstället år 1.\ncatalog:variable_text:41125:178
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-ar-2"
-fields = { "sets" = [] }
-evidence = "Antalet avser arbetsstället år 2.\ncatalog:variable_text:41126:17897:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-ast-ar-2"
 fields = { "tags" = ["employment"] }
 evidence = "Antalet avser arbetsstället år 2.\ncatalog:variable_text:41126:17897:19358"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-astreg"
-fields = { "sets" = [] }
-evidence = "Antalet avser arbetsstället enligt arbetsställeregistret.\ncatalog:variable_text:41127:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-ast-astreg"
 fields = { "tags" = ["employment"] }
 evidence = "Antalet avser arbetsstället enligt arbetsställeregistret.\ncatalog:variable_text:41127:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-ast-syssreg"
-fields = { "sets" = [] }
-evidence = "Antalet avser arbetsstället enligt sysselsättningsregistret.\ncatalog:variable_text:41128:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -1545,12 +1443,6 @@ evidence = "Samma företagsmått som scb/rams/antal-sysselsatta-foretag-syssreg 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
-fields = { "sets" = [] }
-evidence = "Antalet avser arbetsstället.\ncatalog:variable_text:41131:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
 fields = { "tags" = ["employment"] }
 evidence = "Antalet avser arbetsstället.\ncatalog:variable_text:41131:17897:18993"
 
@@ -1581,12 +1473,6 @@ evidence = "Antal AGI är ett läsbart namn; variabeln mäter antal arbetsgivare
 [[statement]]
 kind = "set"
 subject = "var:antalanstc"
-fields = { "sets" = [] }
-evidence = "Antal och anst är läsbara stammar; C skiljer källvarianten. Variabeln mäter anställda på arbetsstället.\ncatalog:variable_text:41134:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antalanstc"
 fields = { "tags" = ["employment"] }
 evidence = "Antal och anst är läsbara stammar; C skiljer källvarianten. Variabeln mäter anställda på arbetsstället.\ncatalog:variable_text:41134:17897:18993"
 
@@ -1617,32 +1503,14 @@ evidence = "Antal jobb är ett läsbart namn och mäter individens jobb.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:antarb"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar arbetsställen på företaget med anställda och hör till gruppen för antal arbetsställen.\ncatalog:register:227\ncatalog:variable_text:41137:5479:6209"
-
-[[statement]]
-kind = "set"
-subject = "var:antarb"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln räknar arbetsställen på företaget med anställda och hör till gruppen för antal arbetsställen.\ncatalog:register:227\ncatalog:variable_text:41137:5479:6209"
 
 [[statement]]
 kind = "set"
 subject = "var:antast1"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar arbetsställen per företag och hör till gruppen för antal arbetsställen.\ncatalog:register:227\ncatalog:variable_text:41138:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antast1"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln räknar arbetsställen per företag och hör till gruppen för antal arbetsställen.\ncatalog:register:227\ncatalog:variable_text:41138:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antast2"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar arbetsställen per företag och hör till gruppen för antal arbetsställen.\ncatalog:register:227\ncatalog:variable_text:41139:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -1773,32 +1641,14 @@ evidence = "Förekomst, belopp och inkomstandel av arbetslöshetsersättning hö
 [[statement]]
 kind = "set"
 subject = "var:arsloneink"
-fields = { "sets" = [] }
-evidence = "Årslön är en komponent i löne- eller företagarinkomst.\ncatalog:variable_text:41153:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:arsloneink"
 fields = { "tags" = ["income"] }
 evidence = "Årslön är en komponent i löne- eller företagarinkomst.\ncatalog:variable_text:41153:17897:18993"
 
 [[statement]]
 kind = "set"
 subject = "var:arslonfink"
-fields = { "sets" = [] }
-evidence = "Årlig löne- eller företagarinkomst.\ncatalog:variable_text:41154:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:arslonfink"
 fields = { "tags" = ["income"] }
 evidence = "Årlig löne- eller företagarinkomst.\ncatalog:variable_text:41154:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:arslonfinkast"
-fields = { "sets" = [] }
-evidence = "Årlig löne- eller företagarinkomst vid valt arbetsställe.\ncatalog:variable_text:41155:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -2097,12 +1947,6 @@ evidence = "Familjesammansättning är en familje- och hushållsuppgift.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:fastarbst"
-fields = { "sets" = [] }
-evidence = "Antalet är en delmängd av företagets arbetsställen.\ncatalog:variable_text:41188:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:fastarbst"
 fields = { "tags" = ["business"] }
 evidence = "Antalet är en delmängd av företagets arbetsställen.\ncatalog:variable_text:41188:17897:18993"
 
@@ -2237,12 +2081,6 @@ kind = "set"
 subject = "var:foretagets-adress"
 fields = { "tags" = ["geography"] }
 evidence = "Företagets adress och dess delar hör till postadressgruppen.\ncatalog:variable_text:41201:5479:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:forman"
-fields = { "sets" = [] }
-evidence = "Skattepliktiga förmåner är en inkomstkomponent.\ncatalog:variable_text:41203:18262:18993"
 
 [[statement]]
 kind = "set"
@@ -2985,20 +2823,8 @@ evidence = "Variabeln kodar företagets län.\ncatalog:variable_text:41268:10957
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst"
-fields = { "sets" = [] }
-evidence = "Löne- eller företagarinkomst.\ncatalog:variable_text:41269:12418:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst"
 fields = { "tags" = ["income"] }
 evidence = "Löne- eller företagarinkomst.\ncatalog:variable_text:41269:12418:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-april"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41270:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3009,20 +2835,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-augusti"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41271:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-augusti"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41271:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-december"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41272:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3033,20 +2847,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-februari"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41273:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-februari"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41273:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-januari"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41274:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3057,20 +2859,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-juli"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41275:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-juli"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41275:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-juni"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41276:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3081,20 +2871,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-maj"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41277:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-maj"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41277:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-mars"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41278:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3105,20 +2883,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-november"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41279:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-november"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41279:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-oktober"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41280:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3129,20 +2895,8 @@ evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-september"
-fields = { "sets" = [] }
-evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41281:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lone-eller-foretagarinkomst-i-september"
 fields = { "tags" = ["income"] }
 evidence = "Månadsvis löne- eller företagarinkomst.\ncatalog:variable_text:41281:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:loneink"
-fields = { "sets" = [] }
-evidence = "Kontant bruttolön är en lönekomponent.\ncatalog:variable_text:41282:5479:17897"
 
 [[statement]]
 kind = "set"
@@ -3153,20 +2907,8 @@ evidence = "Kontant bruttolön är en lönekomponent.\ncatalog:variable_text:412
 [[statement]]
 kind = "set"
 subject = "var:loneinknov"
-fields = { "sets" = [] }
-evidence = "Novemberlön från anställningar.\ncatalog:variable_text:41283:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:loneinknov"
 fields = { "tags" = ["income"] }
 evidence = "Novemberlön från anställningar.\ncatalog:variable_text:41283:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lonfinkast"
-fields = { "sets" = [] }
-evidence = "Inkomst från valt arbetsställe.\ncatalog:variable_text:41284:17167:17897"
 
 [[statement]]
 kind = "set"
@@ -3185,12 +2927,6 @@ kind = "set"
 subject = "var:lonfinkkalla"
 fields = { "tags" = ["methods"] }
 evidence = "Källa för inkomstuppgiften.\ncatalog:variable_text:41285:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lonfinknovast"
-fields = { "sets" = [] }
-evidence = "Novemberinkomst från valt arbetsställe.\ncatalog:variable_text:41286:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -3677,12 +3413,6 @@ kind = "set"
 subject = "var:raks-vardink"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "Beloppet avser föräldraledighet och närståendevård.\ncatalog:variable_text:41331:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:rorlarbst"
-fields = { "sets" = [] }
-evidence = "Antalet är en delmängd av företagets arbetsställen.\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -4089,12 +3819,6 @@ evidence = "U är en opak bokstavskod.\ncatalog:variable_text:41366:18262:19358"
 [[statement]]
 kind = "set"
 subject = "var:uppregfnovfink"
-fields = { "sets" = [] }
-evidence = "Uppräknad företagarinkomst i november.\ncatalog:variable_text:41367:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:uppregfnovfink"
 fields = { "tags" = ["income"] }
 evidence = "Uppräknad företagarinkomst i november.\ncatalog:variable_text:41367:17897:18993"
 
@@ -4197,20 +3921,8 @@ evidence = "Variabeln anger mottagen värnpliktsersättning.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:yrkesstallning"
-fields = { "sets" = [] }
-evidence = "Individens yrkesställning.\ncatalog:variable_text:41376:17532:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning"
 fields = { "tags" = ["employment"] }
 evidence = "Individens yrkesställning.\ncatalog:variable_text:41376:17532:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-per-ku"
-fields = { "sets" = [] }
-evidence = "Yrkesställning per kontrolluppgift.\ncatalog:variable_text:41377:5479:17897"
 
 [[statement]]
 kind = "set"
@@ -4221,20 +3933,8 @@ evidence = "Yrkesställning per kontrolluppgift.\ncatalog:variable_text:41377:54
 [[statement]]
 kind = "set"
 subject = "var:yrkstallnagi"
-fields = { "sets" = [] }
-evidence = "Yrkesställning per AGI.\ncatalog:variable_text:41378:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkstallnagi"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesställning per AGI.\ncatalog:variable_text:41378:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkstallnkomb"
-fields = { "sets" = [] }
-evidence = "Yrkesställning för kombinatörer.\ncatalog:variable_text:41379:12418:18993"
 
 [[statement]]
 kind = "set"
@@ -4299,3 +3999,303 @@ relation = "continues"
 object = "scb/rams/syssstat-nov-jobbet"
 at = "2019-01-01.."
 evidence = "RAMS jobs table: job-level Nov status (1998-2018) -> AGI-based Nov status (2019+); definition change."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda-pa-arbetsstallet"] }
+evidence = "r27 places this employee count in the workplace table; r620 defines employees at the measurement date under the FDB criteria.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40953\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:414088\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41094"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ast"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r621 describes administrative workplace units and operationally counts active workplaces per company.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41107"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kv-korteftergymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r622 explicitly counts employed women with short postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41111"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kv-langeftergymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r623 explicitly counts employed women with long postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41112"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvinnor-arbetsstallet"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r624 explicitly defines the total number of employed women at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41113"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvinnor-forgymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r625 explicitly counts employed women with pre-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40977\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41114"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kvinnor-gymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r626 explicitly counts employed women with upper-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40978\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41115"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-ast-eftergymn-k"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r627 explicitly counts employed men with short postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40979\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41116"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-ast-eftergymn-l"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r628 explicitly counts employed men with long postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40980\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41117"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-ast-forgymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r629 explicitly counts employed men with pre-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40981\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41118"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-ast-gymn"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r630 explicitly counts employed men with upper-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40982\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41119"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-pa-arbetsstallet"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r631 explicitly defines the total number of employed men at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40983\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41120"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r632 defines employed persons at the workplace and calculates the count from the employment register.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40989\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41126"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast-ar-1"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r633 measures employed persons at the workplace in year 1, explicitly the year before the register year.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40990\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41127"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast-ar-2"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r634 measures employed persons at the workplace in year 2, explicitly the register year.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40991\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41128"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast-astreg"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r635 counts employed persons at the workplace by summing workplace-register placements per cfarnr.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40992\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41129"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-ast-syssreg"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r636 counts employed persons at the workplace by summing employment-register placements on AstNr.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40993\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41130"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
+fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
+evidence = "r637 sums employed persons at the fixed workplace according to the employment-register definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40996\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41133"
+
+[[statement]]
+kind = "set"
+subject = "var:antalanstc"
+fields = { "sets" = ["antal-anstallda-pa-arbetsstallet"] }
+evidence = "r638 defines employees at the fixed workplace; r608 calculates the count by summing employees allocated there.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:419475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41136"
+
+[[statement]]
+kind = "set"
+subject = "var:antarb"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r639 counts workplaces on the company that have employees, matching the permitted personnel-delimited subset.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41002\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41139"
+
+[[statement]]
+kind = "set"
+subject = "var:antast1"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r640 counts workplaces per company identifier, with the operational definition specifying year t−1.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41003\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41140"
+
+[[statement]]
+kind = "set"
+subject = "var:antast2"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r641 counts workplaces per company identifier, with the operational definition specifying year t.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41004\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41141"
+
+[[statement]]
+kind = "set"
+subject = "var:arsloneink"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums an individual's annual employment income and explicitly excludes own-business income, fitting the wage component (r324).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41016\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41156"
+
+[[statement]]
+kind = "set"
+subject = "var:arslonfink"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums annual AGI/KU employment payments or net business income, directly matching the group's annual-income scope (r325).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41017\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41157"
+
+[[statement]]
+kind = "set"
+subject = "var:arslonfinkast"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums the individual's annual income from the selected workplace, including negative business income, fitting the selected-workplace scope (r326).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41018\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41158"
+
+[[statement]]
+kind = "set"
+subject = "var:fastarbst"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r644 defines and sums the company's fixed workplaces, an explicitly included subset.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41049\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41190"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums employment benefits, car benefits and fuel compensation from wage statistics or AGI/KU, fitting the permitted remuneration components (r327).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41061\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41202"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The definition specifies cash gross wages for employment or net business income for the self-employed, directly matching the fixed concept (r328).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41119\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41264"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-april"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "April cash wages or net business income, with annual KU and business amounts apportioned to months, fit the fixed scope (r273).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41120\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420563"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-augusti"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "August cash wages or net business income are monthly measures explicitly covered by the group (r274).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420564"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-december"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "December cash wages or net business income are monthly measures explicitly covered by the group (r275).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41122\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420565"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-februari"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "February cash wages or net business income are monthly measures explicitly covered by the group (r276).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41123\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420566"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-januari"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "January cash wages or net business income, with annual KU and business amounts apportioned to months, fit the fixed scope (r277).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420567"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juli"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "July cash wages or net business income are monthly measures explicitly covered by the group (r278).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420568"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juni"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "June cash wages or net business income are monthly measures explicitly covered by the group (r279).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420569"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-maj"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "May cash wages or net business income are monthly measures explicitly covered by the group (r280).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420571"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-mars"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "March cash wages or net business income are monthly measures explicitly covered by the group (r281).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420572"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-november"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "November cash wages or net business income are monthly measures explicitly covered by the group (r282).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420573"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-oktober"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "October cash wages or net business income are monthly measures explicitly covered by the group (r283).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420574"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-september"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "September cash wages or net business income are monthly measures explicitly covered by the group (r284).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:420575"
+
+[[statement]]
+kind = "set"
+subject = "var:loneink"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums annual cash gross wages, including holiday pay and commission, from employer control statements (r341).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41132\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41277"
+
+[[statement]]
+kind = "set"
+subject = "var:loneinknov"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure sums the individual's November employment income and explicitly excludes business income, fitting the monthly wage component (r342).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41133\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41278"
+
+[[statement]]
+kind = "set"
+subject = "var:lonfinkast"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "This is the person's wage or business income from the selected workplace, rather than a workplace-wide total (r343).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41134\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41279"
+
+[[statement]]
+kind = "set"
+subject = "var:lonfinknovast"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "The measure records the individual's November income from the selected workplace, including negative business income, fitting both permitted scopes (r344).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41136\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41281"
+
+[[statement]]
+kind = "set"
+subject = "var:rorlarbst"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "r645 defines and sums the company's mobile workplaces, an explicitly included subset.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41185\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41328"
+
+[[statement]]
+kind = "set"
+subject = "var:uppregfnovfink"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "November business income is multiplied by 1.6 for workplace selection; it remains an explicitly documented business-income measure (r346).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41218\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41363"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "The individual's position follows their principal workplace and employment or business income; the codes distinguish employee and entrepreneur positions (r347, r322).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41376"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-per-ku"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "The control-statement measure distinguishes seamen, employees and entrepreneurs using employment or business income, matching the fixed scope (r348, r319).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3263\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41377"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstallnagi"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "AGI occupational position is determined from employment or business income, matching the group's explicit AGI scope (r349).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41235\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41378"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstallnkomb"
+fields = { "sets" = ["yrkesstallning"] }
+evidence = "The measure classifies combinations of employee, self-employed and own-company positions during the year, explicitly covered by the group (r350, r321).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41236\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9049\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41379"

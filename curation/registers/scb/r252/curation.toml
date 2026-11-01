@@ -74,20 +74,8 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:darf-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42058:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:darf-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42058:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:darf-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42059:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -158,20 +146,8 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:darm-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42065:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:darm-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42065:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:darm-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42066:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -266,12 +242,6 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:epot-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42074:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:epot-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42074:19723:20089"
 
@@ -298,12 +268,6 @@ kind = "set"
 subject = "var:epot-lillan"
 fields = { "tags" = ["methods"] }
 evidence = "Antalet utvalda företag i stratumet är ett urvalsmått.\ncatalog:variable_text:42076:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:epot-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42077:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -446,20 +410,8 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:eptf-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:eptf-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:eptf-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42090:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -538,12 +490,6 @@ kind = "set"
 subject = "var:fkpot-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Den senaste operationella definitionen anger total mängd, medan etikett och enhet anger skörd per hektar.\ncatalog:variable_text:42096:16801:19358\ncatalog:variable_text:42096:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fkpot-obargadareal"
-fields = { "sets" = [] }
-evidence = "Den senaste operationella definitionen motsäger etikettens potatisslag.\ncatalog:variable_text:42097:16801:19358\ncatalog:variable_text:42097:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -830,20 +776,8 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:ovrf-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrf-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrf-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42123:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -914,20 +848,8 @@ evidence = "Totalarealen hör till gruppen för brukarens uppgifter och jordbruk
 [[statement]]
 kind = "set"
 subject = "var:ovrm-hektarskordkg"
-fields = { "sets" = [] }
-evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42129:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrm-hektarskordkg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Skörd per hektar hör till gruppen för hektarskörd och jordbruk.\ncatalog:variable_text:42129:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrm-obargadareal"
-fields = { "sets" = [] }
-evidence = "Obärgad potatisareal hör till gruppen och jordbruk.\ncatalog:variable_text:42130:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -1094,12 +1016,6 @@ evidence = "Familjens prefix sta är en källkod; etiketten anger brukarens tota
 [[statement]]
 kind = "set"
 subject = "var:starkelsepotatisskord-per-skordad-hektar"
-fields = { "sets" = [] }
-evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:starkelsepotatisskord-per-skordad-hektar"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger stärkelsepotatisskörd per skördad hektar.\ncatalog:occurrence:438146\ncatalog:variable_text:42144:19723:20089"
 
@@ -1114,12 +1030,6 @@ kind = "set"
 subject = "var:sta-lillan"
 fields = { "tags" = ["methods"] }
 evidence = "Familjens prefix sta är en källkod; LillaN är antalet utvalda företag i stratumet.\ncatalog:occurrence:438147\ncatalog:variable_text:42145:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-starkelsepotatis"
-fields = { "sets" = [] }
-evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stärkelsepotatisareal.\ncatalog:occurrence:438148\ncatalog:variable_text:42146:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -1486,3 +1396,93 @@ kind = "set"
 subject = "skord-av-potatis: sta_TotalskordTon @2024-01-01..2024-12-31 where key = 'v43101'"
 fields = { "description" = "Total stärkelsepotatisskörd." }
 evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r163 defines fresh-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41916\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42058\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:darf-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r164 defines an ecological subset of unharvested fresh-potato area in hectares, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41917\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42059\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r165 defines winter-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42065\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:darm-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r166 defines an ecological subset of unharvested winter-potato area in hectares, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41924\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42066\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r167 defines certified organic winter-potato yield per harvested hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42074\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:epot-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r168 describes unharvested winter-potato area; its certification/conversion discrepancy does not change this group's scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41935\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42077\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r169 defines certified organic fresh-potato yield per harvested hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41947\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42089\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r170 defines unharvested certified organic fresh-potato area in hectares, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41948\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42090\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r154 conflicts on fresh versus winter potatoes, but both definitions measure unharvested potato area, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41955\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:438100\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-starkelsepotatis"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r175 defines unharvested starch-potato area in hectares, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41979\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42120\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r176 defines fresh-potato yield per harvested hectare under organic conversion, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41983\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42124\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r177 specifies unharvested fresh-potato area under organic conversion, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41984\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42125\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-hektarskordkg"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r178 defines winter-potato yield per harvested hectare under organic conversion, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41990\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42131\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-obargadareal"
+fields = { "sets" = ["obargad-potatisareal"] }
+evidence = "r179 specifies unharvested winter-potato area under organic conversion, within the fixed scope (r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41991\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42132\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/obargad-potatisareal"
+
+[[statement]]
+kind = "set"
+subject = "var:starkelsepotatisskord-per-skordad-hektar"
+fields = { "sets" = ["hektarskord-av-potatis"] }
+evidence = "r180 defines starch-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42010\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42154\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"

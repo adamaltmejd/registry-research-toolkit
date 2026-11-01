@@ -12474,3 +12474,9 @@ kind = "set"
 subject = "elnatforetag-nat: knr @2022-01-01..2022-12-31 where key = 'v16728'"
 fields = { "variable" = "foretagets-id-nummer" }
 evidence = "Both define the company's ID number with identical operational text and selector v16728. In the network companies table, the first ends at 18993 and the second covers [18993,19358), preserving both KNr decimal and knr integer mappings without overlap between members."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring"
+fields = { "tags" = ["business"] }
+evidence = "The definition and complete codes identify facilities as newly started, purchased, unusable/scrapped or sold, supporting the business theme of production assets and investment (r33, r31).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4289\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4295"

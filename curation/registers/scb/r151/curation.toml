@@ -469,12 +469,6 @@ evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:campingnatter"
-fields = { "tags" = [] }
-evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:disponibla-baddar-alla-dagar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
@@ -577,12 +571,6 @@ evidence = "Måttet ingår i resenärskategorier; turismin­kvartering saknar en
 
 [[statement]]
 kind = "set"
-subject = "var:fritid"
-fields = { "tags" = [] }
-evidence = "Måttet ingår i resenärskategorier; turismin­kvartering saknar en tydlig tematagg.\ncatalog:variable_text:27813:13514:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:gatuadress"
 fields = { "sets" = [] }
 evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514:20089"
@@ -597,12 +585,6 @@ evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514
 kind = "set"
 subject = "var:gruppresenarer"
 fields = { "sets" = ["gaster-efter-resenarskategori"] }
-evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:gruppresenarer"
-fields = { "tags" = [] }
 evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
 
 [[statement]]
@@ -633,12 +615,6 @@ evidence = "Kommun anger anläggningens geografiska läge.\ncatalog:variable_tex
 kind = "set"
 subject = "var:konf"
 fields = { "sets" = ["gaster-efter-resenarskategori"] }
-evidence = "Måttet ingår i resenärskategorier.\ncatalog:variable_text:27818:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:konf"
-fields = { "tags" = [] }
 evidence = "Måttet ingår i resenärskategorier.\ncatalog:variable_text:27818:18262:20089"
 
 [[statement]]
@@ -733,32 +709,14 @@ evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27827:1
 
 [[statement]]
 kind = "set"
-subject = "var:nyin"
-fields = { "tags" = [] }
-evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27827:13879:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:nyinsve"
 fields = { "sets" = ["nyinskrivna-gaster"] }
 evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27828:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:nyinsve"
-fields = { "tags" = [] }
-evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27828:13514:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:nyinutl"
 fields = { "sets" = ["nyinskrivna-gaster"] }
-evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27829:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nyinutl"
-fields = { "tags" = [] }
 evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27829:13514:20089"
 
 [[statement]]
@@ -1246,3 +1204,51 @@ kind = "set"
 subject = "privata-stugor-lagenheter: Natid @2024-01-01..2024-12-31 where key = 'v27258'"
 fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard." }
 evidence = "Definitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform-camping"
+fields = { "tags" = ["business"] }
+evidence = "Classifies camping accommodation into caravan, motorhome, tent and cabin categories alongside rented-unit counts, supporting accommodation-service production (r179, r2).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11843"
+
+[[statement]]
+kind = "set"
+subject = "var:campingnatter"
+fields = { "tags" = ["business"] }
+evidence = "Explicitly counts rented camping plots or cabins, a measure of accommodation-service production (r2).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244855"
+
+[[statement]]
+kind = "set"
+subject = "var:fritid"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by leisure travellers, an accommodation-service output rather than participation in leisure activities (r53).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27723\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245407"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppresenarer"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by groups, an accommodation-service output rather than a count of group members (r54, r119).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27725\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245408\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245977"
+
+[[statement]]
+kind = "set"
+subject = "var:konf"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by conference guests, an accommodation-service output (r55, r120).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27729\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245411\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245980"
+
+[[statement]]
+kind = "set"
+subject = "var:nyin"
+fields = { "tags" = ["business"] }
+evidence = "Counts accommodation guests only on their arrival day, supporting the business theme of service production (r3, r186).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27737\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244867\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27828"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinsve"
+fields = { "tags" = ["business"] }
+evidence = "Counts Swedish arrivals at accommodation establishments, supporting the business theme of service production (r56, r143).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:246174"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinutl"
+fields = { "tags" = ["business"] }
+evidence = "Counts foreign arrivals at accommodation establishments, supporting the business theme of service production (r57, r144).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:246175"

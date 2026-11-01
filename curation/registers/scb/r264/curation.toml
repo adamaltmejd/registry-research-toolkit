@@ -2211,20 +2211,8 @@ evidence = "Posten avser delägarens andel av bokförd förlust vid avyttring.\n
 [[statement]]
 kind = "set"
 subject = "var:avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v7803"
-fields = { "sets" = [] }
-evidence = "Kapitalvinst vid värdepappersavyttring.\ncatalog:variable_text:43346:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v7803"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Kapitalvinst vid värdepappersavyttring.\ncatalog:variable_text:43346:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v7903"
-fields = { "sets" = [] }
-evidence = "Kapitalförlust vid värdepappersavyttring.\ncatalog:variable_text:43347:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -2271,20 +2259,8 @@ evidence = "Posten är ett bokfört avyttringsresultat.\ncatalog:variable_text:4
 [[statement]]
 kind = "set"
 subject = "var:avyttring-delagarratter-kapitalforlust"
-fields = { "sets" = [] }
-evidence = "Kapitalförlust vid avyttring.\ncatalog:variable_text:43351:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-delagarratter-kapitalforlust"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Kapitalförlust vid avyttring.\ncatalog:variable_text:43351:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-delagarratter-kapitalvinst"
-fields = { "sets" = [] }
-evidence = "Kapitalvinst vid avyttring.\ncatalog:variable_text:43352:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -2343,20 +2319,8 @@ evidence = "Posten avser beskattningsbar andel av kapitalvinst.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:avyttring-vardepapper-kapitalforlust"
-fields = { "sets" = [] }
-evidence = "Kapitalförlust vid avyttring.\ncatalog:variable_text:43357:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalforlust"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Kapitalförlust vid avyttring.\ncatalog:variable_text:43357:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalvinst"
-fields = { "sets" = [] }
-evidence = "Kapitalvinst vid avyttring.\ncatalog:variable_text:43358:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -3387,19 +3351,7 @@ evidence = "Posten är en avyttringsförlust i företagsredovisningen.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:formansvardet-av-fri-bil"
-fields = { "sets" = [] }
-evidence = "Bilförmånsvärde. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bilförmånsvärde. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Den valda förmånsposten samredovisar fri bil och fri bostad och är därför utesluten. membership-0451: Posten mäter förmånsvärdet av fri bil. membership-0452: Posten mäter förmånsvärdet av fri bil. membership-0453: Inga valda variabler mäter bilförmånsvärde. membership-0454: Ingen vald variabel i sektionen mäter bilförmånsvärde. membership-0455: Valda bilposter avser kostnadsavdrag, inte bilförmånsvärde. membership-0456: Den valda förmånsposten avser skattepliktiga förmåner generellt och specificerar inte fri bil. membership-0457: Ingen vald variabel mäter bilförmån. membership-0458: Bilposten avser utgifter inklusive leasing, inte förmånsvärde. membership-0459: Inga valda poster i sektionen avser bilförmånsvärde. membership-0460: Ingen vald post mäter bilförmånsvärde. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44103:13514:14610\ncatalog:variable_text:44104:13514:14610\ncatalog:variable_text:44124:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:formansvardet-av-fri-bil"
 fields = { "tags" = ["income", "taxation"] }
-evidence = "Bilförmånsvärde. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bilförmånsvärde. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Den valda förmånsposten samredovisar fri bil och fri bostad och är därför utesluten. membership-0451: Posten mäter förmånsvärdet av fri bil. membership-0452: Posten mäter förmånsvärdet av fri bil. membership-0453: Inga valda variabler mäter bilförmånsvärde. membership-0454: Ingen vald variabel i sektionen mäter bilförmånsvärde. membership-0455: Valda bilposter avser kostnadsavdrag, inte bilförmånsvärde. membership-0456: Den valda förmånsposten avser skattepliktiga förmåner generellt och specificerar inte fri bil. membership-0457: Ingen vald variabel mäter bilförmån. membership-0458: Bilposten avser utgifter inklusive leasing, inte förmånsvärde. membership-0459: Inga valda poster i sektionen avser bilförmånsvärde. membership-0460: Ingen vald post mäter bilförmånsvärde. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44103:13514:14610\ncatalog:variable_text:44104:13514:14610\ncatalog:variable_text:44124:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:formansvardet-fri-bil"
-fields = { "sets" = [] }
 evidence = "Bilförmånsvärde. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bilförmånsvärde. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Den valda förmånsposten samredovisar fri bil och fri bostad och är därför utesluten. membership-0451: Posten mäter förmånsvärdet av fri bil. membership-0452: Posten mäter förmånsvärdet av fri bil. membership-0453: Inga valda variabler mäter bilförmånsvärde. membership-0454: Ingen vald variabel i sektionen mäter bilförmånsvärde. membership-0455: Valda bilposter avser kostnadsavdrag, inte bilförmånsvärde. membership-0456: Den valda förmånsposten avser skattepliktiga förmåner generellt och specificerar inte fri bil. membership-0457: Ingen vald variabel mäter bilförmån. membership-0458: Bilposten avser utgifter inklusive leasing, inte förmånsvärde. membership-0459: Inga valda poster i sektionen avser bilförmånsvärde. membership-0460: Ingen vald post mäter bilförmånsvärde. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44103:13514:14610\ncatalog:variable_text:44104:13514:14610\ncatalog:variable_text:44124:12418:13514"
 
 [[statement]]
@@ -3555,19 +3507,7 @@ evidence = "Källan beskriver hälften av medlen på skogskonto med mera.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:hyresvarde-bostad-ovriga-formaner"
-fields = { "sets" = [] }
-evidence = "Bostadsförmån och övriga förmåner. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bostadsförmån eller övriga förmåner. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Vald förmånspost samredovisar bil och bostad, inte kandidatens särskilda bostads- och övriga förmånspost. membership-0451: Posten samredovisar fri bostad och övriga förmåner. membership-0452: Posten samredovisar fri bostad och övriga förmåner. membership-0453: Inga valda variabler mäter bostadsförmån tillsammans med övriga förmåner. membership-0454: Ingen vald variabel i sektionen mäter bostadsförmån och övriga förmåner. membership-0455: Inga valda variabler avser samredovisad bostadsförmån och övriga förmåner. membership-0456: Den valda förmånsposten specificerar inte hyresvärde av fri bostad tillsammans med övriga förmåner. membership-0457: Ingen vald variabel mäter dessa förmåner. membership-0458: Ingen vald post avser bostadsförmån tillsammans med övriga förmåner. membership-0459: Inga valda poster i sektionen avser dessa förmånsvärden. membership-0460: Ingen vald post mäter hyresvärde av fri bostad tillsammans med övriga förmåner. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44124:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:hyresvarde-bostad-ovriga-formaner"
 fields = { "tags" = ["income", "taxation"] }
-evidence = "Bostadsförmån och övriga förmåner. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bostadsförmån eller övriga förmåner. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Vald förmånspost samredovisar bil och bostad, inte kandidatens särskilda bostads- och övriga förmånspost. membership-0451: Posten samredovisar fri bostad och övriga förmåner. membership-0452: Posten samredovisar fri bostad och övriga förmåner. membership-0453: Inga valda variabler mäter bostadsförmån tillsammans med övriga förmåner. membership-0454: Ingen vald variabel i sektionen mäter bostadsförmån och övriga förmåner. membership-0455: Inga valda variabler avser samredovisad bostadsförmån och övriga förmåner. membership-0456: Den valda förmånsposten specificerar inte hyresvärde av fri bostad tillsammans med övriga förmåner. membership-0457: Ingen vald variabel mäter dessa förmåner. membership-0458: Ingen vald post avser bostadsförmån tillsammans med övriga förmåner. membership-0459: Inga valda poster i sektionen avser dessa förmånsvärden. membership-0460: Ingen vald post mäter hyresvärde av fri bostad tillsammans med övriga förmåner. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44124:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:hyresvardet-fri-bostad-formaner"
-fields = { "sets" = [] }
 evidence = "Bostadsförmån och övriga förmåner. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter bostadsförmån eller övriga förmåner. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Vald förmånspost samredovisar bil och bostad, inte kandidatens särskilda bostads- och övriga förmånspost. membership-0451: Posten samredovisar fri bostad och övriga förmåner. membership-0452: Posten samredovisar fri bostad och övriga förmåner. membership-0453: Inga valda variabler mäter bostadsförmån tillsammans med övriga förmåner. membership-0454: Ingen vald variabel i sektionen mäter bostadsförmån och övriga förmåner. membership-0455: Inga valda variabler avser samredovisad bostadsförmån och övriga förmåner. membership-0456: Den valda förmånsposten specificerar inte hyresvärde av fri bostad tillsammans med övriga förmåner. membership-0457: Ingen vald variabel mäter dessa förmåner. membership-0458: Ingen vald post avser bostadsförmån tillsammans med övriga förmåner. membership-0459: Inga valda poster i sektionen avser dessa förmånsvärden. membership-0460: Ingen vald post mäter hyresvärde av fri bostad tillsammans med övriga förmåner. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter förmånsvärden i näringsverksamhet. membership-0449: Privat dispositionsrätt och anskaffningskostnad anger inte förmånsvärden i näringsverksamheten. membership-0450: Samredovisat värde av fri bil, fri bostad och andra förmåner. membership-0451: Bilförmån och bostadsförmån med övriga förmåner ingår uttryckligen; personalkostnader för förmåner avser ett annat mått. membership-0452: Bil- och bostadsförmånsposterna mäter förmånsvärden. Lånepostens beskrivning stödjer inte att beloppet är ett förmånsvärde. membership-0453: Inga valda variabler mäter förmånsvärden i näringsverksamhet. membership-0454: Ingen vald variabel i sektionen mäter förmånsvärden i näringsverksamhet. membership-0455: Inga valda variabler mäter förmånsvärden i näringsverksamheten. membership-0456: Skattepliktiga förmåner är ett direkt förmånsvärde inom kandidatens definition. Medlemskapet bedöms absolut i denna sektion. membership-0457: Ingen vald variabel mäter förmånsvärden. membership-0458: Bilutgiften mäter faktisk kostnad, inte förmånsvärde. membership-0459: Sektionens lån till delägare är ett lånebelopp, inte ett förmånsvärde. membership-0460: Ingen vald post mäter förmånsvärden i näringsverksamhet.\ncatalog:variable_text:43372:12418:13514\ncatalog:variable_text:43447:12418:13514\ncatalog:variable_text:43448:12418:14610\ncatalog:variable_text:43463:12418:13514\ncatalog:variable_text:43464:12418:14610\ncatalog:variable_text:43535:13514:14610\ncatalog:variable_text:43734:12418:14610\ncatalog:variable_text:43931:12418:14610\ncatalog:variable_text:44030:12418:13149\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44086:13514:14610\ncatalog:variable_text:44124:12418:13514"
 
 [[statement]]
@@ -3807,20 +3747,8 @@ evidence = "Posten avser avdragsgill kapitalförlust.\ncatalog:variable_text:434
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-m-m-907-v0907"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43484:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-m-m-907-v0907"
 fields = { "tags" = ["finance"] }
 evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43484:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8702"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43485:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -3831,20 +3759,8 @@ evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:4
 [[statement]]
 kind = "set"
 subject = "var:kapitalforlust-m-m-907-v8716"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43486:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8716"
 fields = { "tags" = ["finance"] }
 evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43486:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalforlust-m-m-907-v8747"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalförlust med mera.\ncatalog:variable_text:43487:13879:14610"
 
 [[statement]]
 kind = "set"
@@ -3879,12 +3795,6 @@ evidence = "Kapitalunderlag för expansionsfond.\ncatalog:variable_text:43489:12
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinst-904"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalvinst med mera enligt utredning.\ncatalog:variable_text:43490:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinst-904"
 fields = { "tags" = ["finance"] }
 evidence = "Källan beskriver kapitalvinst med mera enligt utredning.\ncatalog:variable_text:43490:12418:14610"
 
@@ -3903,20 +3813,8 @@ evidence = "Posten avser skattepliktig kapitalvinst.\ncatalog:variable_text:4349
 [[statement]]
 kind = "set"
 subject = "var:kapitalvinster-v8636"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalvinster.\ncatalog:variable_text:43492:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinster-v8636"
 fields = { "tags" = ["finance"] }
 evidence = "Källan beskriver kapitalvinster.\ncatalog:variable_text:43492:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalvinster-v8643"
-fields = { "sets" = [] }
-evidence = "Källan beskriver kapitalvinster.\ncatalog:variable_text:43493:13879:14610"
 
 [[statement]]
 kind = "set"
@@ -4407,20 +4305,8 @@ evidence = "Posten är ett lämnat koncernbidrag; källans senare operativa avgr
 [[statement]]
 kind = "set"
 subject = "var:lan-fran-aktieagare"
-fields = { "sets" = [] }
-evidence = "Lån från ägare.\ncatalog:variable_text:43534:12418:13514\ncatalog:variable_text:43534:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-fran-aktieagare"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Lån från ägare.\ncatalog:variable_text:43534:12418:13514\ncatalog:variable_text:43534:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-till-delagare"
-fields = { "sets" = [] }
-evidence = "Lån till delägare eller närstående.\ncatalog:variable_text:43535:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -4443,20 +4329,8 @@ evidence = "Källan beskriver långfristiga fordringar och värdepappersinnehav.
 [[statement]]
 kind = "set"
 subject = "var:langfristiga-skulder"
-fields = { "sets" = [] }
-evidence = "Källan beskriver långfristiga skulder.\ncatalog:variable_text:43537:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:langfristiga-skulder"
 fields = { "tags" = ["business"] }
 evidence = "Källan beskriver långfristiga skulder.\ncatalog:variable_text:43537:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:langfristiga-skulder-v7380"
-fields = { "sets" = [] }
-evidence = "Källan beskriver långfristiga skulder.\ncatalog:variable_text:43538:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -5103,12 +4977,6 @@ evidence = "Definitionen anger negativt fördelningsbelopp.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:negativt-kapitalunderlag-rantefordelning"
-fields = { "sets" = [] }
-evidence = "Kapitalunderlag för räntefördelning.\ncatalog:variable_text:43595:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:negativt-kapitalunderlag-rantefordelning"
 fields = { "tags" = ["taxation"] }
 evidence = "Kapitalunderlag för räntefördelning.\ncatalog:variable_text:43595:13514:14610"
 
@@ -5415,20 +5283,8 @@ evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:43621:12418:13514
 [[statement]]
 kind = "set"
 subject = "var:overlatelsevinst-handelsbolag"
-fields = { "sets" = [] }
-evidence = "Skattepliktig kapitalvinst. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:overlatelsevinst-handelsbolag"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Skattepliktig kapitalvinst. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:overskott-av-naringsverksamhet"
-fields = { "sets" = [] }
-evidence = "Posten avser överskott av näringsverksamhet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter näringsverksamhetens slutliga överskott eller underskott. membership-0449: Kapitalresultat och tjänsteförda belopp är inte näringsverksamhetens slutliga överskott eller underskott. membership-0450: Slutligt överskott som överförs till inkomstdeklarationen. membership-0451: De valda resultatposterna avser bokföring, justerat resultat eller överföring mellan N-blanketter, inte uttryckligen kandidatens slutliga deklarationsbelopp. membership-0452: Valda resultatposter avser delägarinkomst eller blankettresultat; inget anger definitionens slutliga näringsresultat. membership-0453: Valda resultatposter avser egna bolagsandelar, N3B-resultat eller anskaffningsutgiftskomponenter, inte uttryckligen näringsverksamhetens slutliga resultat. membership-0454: De valda underskotten är ingående outnyttjade belopp, inte näringsverksamhetens slutliga årsresultat. membership-0455: Posten anger slutligt överskott som överförs till inkomstdeklarationen. membership-0456: Överskott som överförs till INK1 omfattas uttryckligen. Kvarvarande underskott är en särskild sparad underskottspost och annans resultatandel är en beräkningskomponent. membership-0457: Valda resultat efter skattejusteringar och handelsbolagsresultat anges inte som näringsverksamhetens slutliga överskott eller underskott. membership-0458: Bostadsresultaten och resultaten efter skattemässiga justeringar har andra uttryckliga avgränsningar än slutligt näringsresultat. membership-0459: Posterna avser näringsverksamhetens överskott respektive underskott efter skattemässiga justeringar. membership-0460: Posterna mäter näringsverksamhetens överskott respektive underskott. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43565:13514:14610\ncatalog:variable_text:43567:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43624:12418:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43628:12418:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43856:12418:14610\ncatalog:variable_text:43858:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43949:12418:14610\ncatalog:variable_text:43950:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -5483,12 +5339,6 @@ kind = "set"
 subject = "var:overskott-overfors-till-ink1-sidan-2-kod-100-eller-kod-v7680"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id:t överstiger 60 tecken.\ncatalog:variable_text:43627:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:overskott-paverkar-anskaffningsutgiften"
-fields = { "sets" = [] }
-evidence = "Posten är överskott som påverkar anskaffningsutgiften.\ncatalog:variable_text:43628:12418:14610\ncatalog:variable_text:43858:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -6663,12 +6513,6 @@ evidence = "Posten är ett beräknat positivt räntefördelningsbelopp.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:ranteformanligt-lan-handelsbolaget"
-fields = { "sets" = [] }
-evidence = "Lån till delägare.\ncatalog:variable_text:43734:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:ranteformanligt-lan-handelsbolaget"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Lån till delägare.\ncatalog:variable_text:43734:12418:14610"
 
@@ -7011,32 +6855,14 @@ evidence = "Posten avser resultat från andelar i intresseföretag.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:resultat-av-verksamheten"
-fields = { "sets" = [] }
-evidence = "Posten anger resultat av verksamheten enligt N-blankett.\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43775:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-av-verksamheten"
 fields = { "tags" = ["business"] }
 evidence = "Posten anger resultat av verksamheten enligt N-blankett.\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43775:12418:14610"
 
 [[statement]]
 kind = "set"
 subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v0777"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43764:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v0777"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Skattemässigt resultat.\ncatalog:variable_text:43764:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v0881"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43765:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -7047,20 +6873,8 @@ evidence = "Skattemässigt resultat.\ncatalog:variable_text:43765:12418:13514"
 [[statement]]
 kind = "set"
 subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v7670"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43766:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v7670"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Skattemässigt resultat.\ncatalog:variable_text:43766:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v8995"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43767:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -7071,20 +6885,8 @@ evidence = "Skattemässigt resultat.\ncatalog:variable_text:43767:13514:14610"
 [[statement]]
 kind = "set"
 subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v0778"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43768:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v0778"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Skattemässigt resultat.\ncatalog:variable_text:43768:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v0882"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43769:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -7095,20 +6897,8 @@ evidence = "Skattemässigt resultat.\ncatalog:variable_text:43769:12418:13514"
 [[statement]]
 kind = "set"
 subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v7770"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43770:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v7770"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Skattemässigt resultat.\ncatalog:variable_text:43770:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v8795"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43771:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -7155,20 +6945,8 @@ evidence = "Posten avser resultat från andelar i koncern- och intressebolag.\nc
 [[statement]]
 kind = "set"
 subject = "var:resultat-n1-n2-n3b-overskott-908"
-fields = { "sets" = [] }
-evidence = "Posten anger överskott enligt N1, N2 eller N3B.\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-n1-n2-n3b-overskott-908"
 fields = { "tags" = ["business"] }
 evidence = "Posten anger överskott enligt N1, N2 eller N3B.\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-n1-n2-n3b-underskott-909"
-fields = { "sets" = [] }
-evidence = "Posten anger underskott enligt N1, N2 eller N3B.\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -7179,19 +6957,7 @@ evidence = "Posten anger underskott enligt N1, N2 eller N3B.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:resultat-overskott-829"
-fields = { "sets" = [] }
-evidence = "Posten anger resultat som överskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-overskott-829"
 fields = { "tags" = ["taxation"] }
-evidence = "Posten anger resultat som överskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-overskott-829-v7830"
-fields = { "sets" = [] }
 evidence = "Posten anger resultat som överskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
 
 [[statement]]
@@ -7199,12 +6965,6 @@ kind = "set"
 subject = "var:resultat-overskott-829-v7830"
 fields = { "tags" = ["taxation"] }
 evidence = "Posten anger resultat som överskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-skattemassiga-justeringar"
-fields = { "sets" = [] }
-evidence = "Resultat efter justeringar.\ncatalog:variable_text:43779:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -7215,19 +6975,7 @@ evidence = "Resultat efter justeringar.\ncatalog:variable_text:43779:12418:13514
 [[statement]]
 kind = "set"
 subject = "var:resultat-underskott-850"
-fields = { "sets" = [] }
-evidence = "Posten anger resultat som underskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-underskott-850"
 fields = { "tags" = ["taxation"] }
-evidence = "Posten anger resultat som underskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-underskott-850-v7930"
-fields = { "sets" = [] }
 evidence = "Posten anger resultat som underskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
 
 [[statement]]
@@ -7235,24 +6983,12 @@ kind = "set"
 subject = "var:resultat-underskott-850-v7930"
 fields = { "tags" = ["taxation"] }
 evidence = "Posten anger resultat som underskott. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Blankettbeteckningar och uppskovsposter mäter inte verksamhetsresultat enligt N-blankett. membership-0449: Ingen vald variabel i sektionen omfattas av definitionen. membership-0450: Resultat av verksamheten enligt N-blankett; skyddat medlemskap behålls. membership-0451: Posterna avser sammanlagd verksamhetsinkomst respektive resultat som förs till N1 eller N2 och omfattas av den fasta definitionen. membership-0452: Posterna är delägarens inkomst eller resultatposter i N3A/N3B och omfattas av definitionens blankett- och delägarresultat. membership-0453: Överskott och underskott redovisas som resultat på N3B och omfattas uttryckligen av den fasta kandidatens resultatposter. membership-0454: De valda N1/N2-hänvisningarna gäller ingående outnyttjade underskott, inte verksamhetens resultat enligt N-blankett. membership-0455: Valda resultatposter är uttryckligen redovisade resultat eller slutligt överskott till INK1, inte resultat enligt eller överfört mellan de angivna N-blanketterna. membership-0456: De valda resultatposterna anger överföring till INK1, kvarvarande underskott eller enskilda andelsjusteringar, inte resultat enligt eller mellan de angivna N-blanketterna. membership-0457: De valda N3B-posterna avser uttryckligen resultat från handelsbolagsandelar inklusive kapitalresultat och tillhör den särskilda kandidaten. membership-0458: Valda resultatposter är uttryckligen bostadsresultat, bokförda avyttringsresultat eller resultat efter skattejusteringar. membership-0459: Sektionens handelsbolagsresultat, bokförda resultat och uttryckliga resultat efter skattemässiga justeringar har andra avgränsningar än denna kandidat. membership-0460: Båda posterna anger uttryckligen resultat enligt N1/N2/N3B; ospecificerat justerat resultat gör det inte. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43291:13514:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43368:13514:14610\ncatalog:variable_text:43370:12418:13514\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43775:12418:14610\ncatalog:variable_text:43776:12418:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43865:12418:14610\ncatalog:variable_text:43866:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43970:12418:13514\ncatalog:variable_text:43972:12418:13514\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-verksamheten-overskott"
-fields = { "sets" = [] }
-evidence = "Posten anger verksamhetens överskott för överföring till N1 eller N2.\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:resultat-verksamheten-overskott"
 fields = { "tags" = ["business"] }
 evidence = "Posten anger verksamhetens överskott för överföring till N1 eller N2.\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-verksamheten-underskott"
-fields = { "sets" = [] }
-evidence = "Posten anger verksamhetens underskott för överföring till N1 eller N2.\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -7539,32 +7275,14 @@ evidence = "Definitionen anger skattemässig korrigering vid fastighetsavyttring
 [[statement]]
 kind = "set"
 subject = "var:skattemassiga-justeringar-minskning"
-fields = { "sets" = [] }
-evidence = "Posten avser övriga skattemässiga resultatjusteringar.\ncatalog:variable_text:43807:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:skattemassiga-justeringar-minskning"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Posten avser övriga skattemässiga resultatjusteringar.\ncatalog:variable_text:43807:13514:14610"
 
 [[statement]]
 kind = "set"
 subject = "var:skattemassigt-resultat-overskott"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43808:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:skattemassigt-resultat-overskott"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Skattemässigt resultat.\ncatalog:variable_text:43808:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:skattemassigt-resultat-underskott"
-fields = { "sets" = [] }
-evidence = "Skattemässigt resultat.\ncatalog:variable_text:43809:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -7995,12 +7713,6 @@ evidence = "Källan beskriver summan av kortfristiga placeringar.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:summa-langfristiga-skulder"
-fields = { "sets" = [] }
-evidence = "Källan beskriver summan av långfristiga skulder.\ncatalog:variable_text:43845:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-langfristiga-skulder"
 fields = { "tags" = ["business"] }
 evidence = "Källan beskriver summan av långfristiga skulder.\ncatalog:variable_text:43845:13514:14610"
 
@@ -8079,12 +7791,6 @@ evidence = "Posten avser överskott från annan verksamhet redovisad på N1A ell
 [[statement]]
 kind = "set"
 subject = "var:total-kapitalforlust"
-fields = { "sets" = [] }
-evidence = "Total kapitalförlust. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Kapitalvinsterna avser uttryckligen begärt uppskov; uppskov utesluts av definitionen. membership-0449: De valda kapitalresultaten är uttryckligen avgränsade till aktie- och andelsavyttring och stöds därför av den värdepappersspecifika kandidaten, inte som generella kapitalresultat. membership-0450: Ingen vald variabel mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0451: De valda avyttringsresultaten är särskilt avgränsade bokförda resultat och omfattas inte. membership-0452: Valda kapitalresultat är särskilt avgränsade till fastighets-, värdepappers- eller andelsavyttring, inte generellt redovisade kapitalresultat. membership-0453: Valda kapitalresultat är särskilt avgränsade till fastighets- respektive värdepappersavyttring, inte generellt redovisade kapitalresultat. membership-0454: Ingen vald variabel i sektionen mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0456: De valda resultatposterna anger inte kapitalvinster eller kapitalförluster. membership-0457: Valda resultatposter är särskilt avgränsade till bokförda avyttringar eller samredovisade handelsbolagsresultat, inte generella kapitalresultat. membership-0458: Valda kapitalresultat är särskilt avgränsade till delägarrätter eller fastigheter; överförd avdragsrätt är ett annat begrepp. membership-0459: Sektionens andelsresultat är särskilt avgränsade handelsbolagsposter, inte generellt redovisade kapitalvinster eller kapitalförluster. membership-0460: Poster för generellt redovisade kapitalvinster och kapitalförluster omfattas.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43262:13514:14610\ncatalog:variable_text:43263:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43355:12418:14610\ncatalog:variable_text:43356:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43445:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43483:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43485:13514:14610\ncatalog:variable_text:43486:13879:14610\ncatalog:variable_text:43487:13879:14610\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43491:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43953:12418:13514\ncatalog:variable_text:43954:12418:13514\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610\ncatalog:variable_text:44058:12418:13514\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44142:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:total-kapitalforlust"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Total kapitalförlust. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Kapitalvinsterna avser uttryckligen begärt uppskov; uppskov utesluts av definitionen. membership-0449: De valda kapitalresultaten är uttryckligen avgränsade till aktie- och andelsavyttring och stöds därför av den värdepappersspecifika kandidaten, inte som generella kapitalresultat. membership-0450: Ingen vald variabel mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0451: De valda avyttringsresultaten är särskilt avgränsade bokförda resultat och omfattas inte. membership-0452: Valda kapitalresultat är särskilt avgränsade till fastighets-, värdepappers- eller andelsavyttring, inte generellt redovisade kapitalresultat. membership-0453: Valda kapitalresultat är särskilt avgränsade till fastighets- respektive värdepappersavyttring, inte generellt redovisade kapitalresultat. membership-0454: Ingen vald variabel i sektionen mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0456: De valda resultatposterna anger inte kapitalvinster eller kapitalförluster. membership-0457: Valda resultatposter är särskilt avgränsade till bokförda avyttringar eller samredovisade handelsbolagsresultat, inte generella kapitalresultat. membership-0458: Valda kapitalresultat är särskilt avgränsade till delägarrätter eller fastigheter; överförd avdragsrätt är ett annat begrepp. membership-0459: Sektionens andelsresultat är särskilt avgränsade handelsbolagsposter, inte generellt redovisade kapitalvinster eller kapitalförluster. membership-0460: Poster för generellt redovisade kapitalvinster och kapitalförluster omfattas.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43262:13514:14610\ncatalog:variable_text:43263:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43355:12418:14610\ncatalog:variable_text:43356:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43445:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43483:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43485:13514:14610\ncatalog:variable_text:43486:13879:14610\ncatalog:variable_text:43487:13879:14610\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43491:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43953:12418:13514\ncatalog:variable_text:43954:12418:13514\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610\ncatalog:variable_text:44058:12418:13514\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44142:12418:14610"
 
@@ -8123,12 +7829,6 @@ kind = "set"
 subject = "var:underskott-n1a-n2a-medhjalpande-make"
 fields = { "tags" = ["business"] }
 evidence = "Posten samredovisar resultat från annan verksamhet och medhjälpande makes andel.\ncatalog:variable_text:43625:12418:13514\ncatalog:variable_text:43857:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-paverkar-anskaffningsutgiften"
-fields = { "sets" = [] }
-evidence = "Posten är underskott som påverkar anskaffningsutgiften.\ncatalog:variable_text:43628:12418:14610\ncatalog:variable_text:43858:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -8247,20 +7947,8 @@ evidence = "Posten avser uppskov med kapitalvinst enligt N4.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:utdelning-aktier-andelar-koncern"
-fields = { "sets" = [] }
-evidence = "Utdelning på andelar.\ncatalog:variable_text:43869:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-aktier-andelar-koncern"
 fields = { "tags" = ["finance"] }
 evidence = "Utdelning på andelar.\ncatalog:variable_text:43869:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-aktier-andelar-ovriga-foretag"
-fields = { "sets" = [] }
-evidence = "Utdelning på andelar.\ncatalog:variable_text:43870:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -8751,12 +8439,6 @@ evidence = "Den enda etiketten är avkortad.\ncatalog:variable_text:43911:12418:
 [[statement]]
 kind = "set"
 subject = "var:ni-narstaende-lanat-ut-pengar-till-foretaget"
-fields = { "sets" = [] }
-evidence = "Id:t är en källkod; frågan gäller utlåning till företaget.\ncatalog:variable_text:43912:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:ni-narstaende-lanat-ut-pengar-till-foretaget"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en källkod; frågan gäller utlåning till företaget.\ncatalog:variable_text:43912:12418:13149"
 
@@ -8799,12 +8481,6 @@ evidence = "Etiketten är avkortad. Coordinator group membership: Union of compl
 [[statement]]
 kind = "set"
 subject = "var:overutdelning-om-saldot-ar-negativt-481"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43916:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:overutdelning-om-saldot-ar-negativt-481"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43916:12418:13149"
 
@@ -8831,12 +8507,6 @@ kind = "set"
 subject = "var:v0483"
 fields = { "tags" = ["taxation"] }
 evidence = "Etiketten och definitionen är ofullständiga.\ncatalog:variable_text:43918:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:skattepliktig-vinst-i-kapital-485"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Kapitalvinsterna avser uttryckligen begärt uppskov; uppskov utesluts av definitionen. membership-0449: De valda kapitalresultaten är uttryckligen avgränsade till aktie- och andelsavyttring och stöds därför av den värdepappersspecifika kandidaten, inte som generella kapitalresultat. membership-0450: Ingen vald variabel mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0451: De valda avyttringsresultaten är särskilt avgränsade bokförda resultat och omfattas inte. membership-0452: Valda kapitalresultat är särskilt avgränsade till fastighets-, värdepappers- eller andelsavyttring, inte generellt redovisade kapitalresultat. membership-0453: Valda kapitalresultat är särskilt avgränsade till fastighets- respektive värdepappersavyttring, inte generellt redovisade kapitalresultat. membership-0454: Ingen vald variabel i sektionen mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0456: De valda resultatposterna anger inte kapitalvinster eller kapitalförluster. membership-0457: Valda resultatposter är särskilt avgränsade till bokförda avyttringar eller samredovisade handelsbolagsresultat, inte generella kapitalresultat. membership-0458: Valda kapitalresultat är särskilt avgränsade till delägarrätter eller fastigheter; överförd avdragsrätt är ett annat begrepp. membership-0459: Sektionens andelsresultat är särskilt avgränsade handelsbolagsposter, inte generellt redovisade kapitalvinster eller kapitalförluster. membership-0460: Poster för generellt redovisade kapitalvinster och kapitalförluster omfattas.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43262:13514:14610\ncatalog:variable_text:43263:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43355:12418:14610\ncatalog:variable_text:43356:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43445:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43483:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43485:13514:14610\ncatalog:variable_text:43486:13879:14610\ncatalog:variable_text:43487:13879:14610\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43491:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43953:12418:13514\ncatalog:variable_text:43954:12418:13514\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610\ncatalog:variable_text:44058:12418:13514\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44142:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -8871,12 +8541,6 @@ evidence = "Id:t är en källkod; lättnadsbeloppet ingår i gruppen.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:overutdelning-negativt-belopp-vid-punkt-481-488"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43922:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:overutdelning-negativt-belopp-vid-punkt-481-488"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43922:12418:13149"
 
@@ -8903,12 +8567,6 @@ kind = "set"
 subject = "var:ersattning-minus-utgifter-for-avyttring-492"
 fields = { "tags" = ["finance"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43924:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:total-kapitalvinst-493"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: De valda kapitalvinstposterna är uttryckligen begärda uppskov, vilka definitionen utesluter. membership-0449: Beskrivningarna avser skattemässiga vinster och förluster vid aktie- eller andelsavyttring. Ersättning minus avyttringsutgifter och tjänsteförd fördelningsvinst är inte dessa kapitalresultat. membership-0450: Ingen vald variabel mäter skattemässigt kapitalresultat vid värdepappersavyttring. membership-0451: De valda värdepappersresultaten är bokförda resultat, som definitionen utesluter. membership-0452: Posterna mäter skattemässiga kapitalresultat vid avyttring av värdepapper eller handelsbolagsandel. membership-0453: Båda posterna mäter den egna andelen av skattemässig kapitalvinst eller kapitalförlust vid värdepappersavyttring. membership-0454: De valda andelsposterna mäter innehav med viss skattebehandling, inte kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter kapitalresultat vid värdepappersavyttring. membership-0456: Ingen vald variabel i sektionen mäter kapitalresultat vid värdepappersavyttring. membership-0457: Värdepappersposterna är bokförda resultat. Handelsbolagsposterna samredovisar andelsresultat med kapitalresultat och hör till den särskilda handelsbolagskandidaten. membership-0458: Posterna mäter skattemässig kapitalförlust och kapitalvinst vid avyttring av delägarrätter. membership-0459: Sektionens skattemässiga handelsbolagsresultat samredovisar löpande resultat och kapitalresultat och avser inte en avgränsad värdepappersavyttring. membership-0460: Generella kapitalresultat och resultat på övriga finansiella anläggningstillgångar specificerar inte skattemässigt värdepappersresultat. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Kapitalvinsterna avser uttryckligen begärt uppskov; uppskov utesluts av definitionen. membership-0449: De valda kapitalresultaten är uttryckligen avgränsade till aktie- och andelsavyttring och stöds därför av den värdepappersspecifika kandidaten, inte som generella kapitalresultat. membership-0450: Ingen vald variabel mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0451: De valda avyttringsresultaten är särskilt avgränsade bokförda resultat och omfattas inte. membership-0452: Valda kapitalresultat är särskilt avgränsade till fastighets-, värdepappers- eller andelsavyttring, inte generellt redovisade kapitalresultat. membership-0453: Valda kapitalresultat är särskilt avgränsade till fastighets- respektive värdepappersavyttring, inte generellt redovisade kapitalresultat. membership-0454: Ingen vald variabel i sektionen mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0455: Inga valda variabler mäter generellt redovisade kapitalvinster eller kapitalförluster. membership-0456: De valda resultatposterna anger inte kapitalvinster eller kapitalförluster. membership-0457: Valda resultatposter är särskilt avgränsade till bokförda avyttringar eller samredovisade handelsbolagsresultat, inte generella kapitalresultat. membership-0458: Valda kapitalresultat är särskilt avgränsade till delägarrätter eller fastigheter; överförd avdragsrätt är ett annat begrepp. membership-0459: Sektionens andelsresultat är särskilt avgränsade handelsbolagsposter, inte generellt redovisade kapitalvinster eller kapitalförluster. membership-0460: Poster för generellt redovisade kapitalvinster och kapitalförluster omfattas.\ncatalog:variable_text:43261:13514:14610\ncatalog:variable_text:43262:13514:14610\ncatalog:variable_text:43263:13514:14610\ncatalog:variable_text:43264:13514:14610\ncatalog:variable_text:43346:13514:14610\ncatalog:variable_text:43347:13514:14610\ncatalog:variable_text:43351:12418:14610\ncatalog:variable_text:43352:12418:14610\ncatalog:variable_text:43355:12418:14610\ncatalog:variable_text:43356:12418:14610\ncatalog:variable_text:43357:12418:14610\ncatalog:variable_text:43358:12418:14610\ncatalog:variable_text:43359:12418:14610\ncatalog:variable_text:43360:12418:12784\ncatalog:variable_text:43362:12418:14610\ncatalog:variable_text:43445:12418:14610\ncatalog:variable_text:43446:12418:14610\ncatalog:variable_text:43483:12418:14610\ncatalog:variable_text:43484:12418:13514\ncatalog:variable_text:43485:13514:14610\ncatalog:variable_text:43486:13879:14610\ncatalog:variable_text:43487:13879:14610\ncatalog:variable_text:43490:12418:14610\ncatalog:variable_text:43491:12418:14610\ncatalog:variable_text:43492:13879:14610\ncatalog:variable_text:43493:13879:14610\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43622:12418:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43784:13514:14610\ncatalog:variable_text:43785:13514:14610\ncatalog:variable_text:43786:12418:13514\ncatalog:variable_text:43787:12418:13514\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43899:12418:12784\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43924:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43938:12418:14610\ncatalog:variable_text:43953:12418:13514\ncatalog:variable_text:43954:12418:13514\ncatalog:variable_text:43958:13514:14610\ncatalog:variable_text:43959:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43961:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:43965:13514:14610\ncatalog:variable_text:44058:12418:13514\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44142:12418:14610"
 
 [[statement]]
 kind = "set"
@@ -9215,12 +8873,6 @@ kind = "set"
 subject = "var:redovisat-resultat-enligt-bokforingen-forlust"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43950:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-naringsbetingad-marknadsnoterad-innehav-under-1-ar"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43951:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -10023,20 +9675,8 @@ evidence = "Identifieraren är en källkod och källan har en tydlig benämning.
 [[statement]]
 kind = "set"
 subject = "var:kapitalunderlag-for-rantefordelning-overskott-852"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44018:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalunderlag-for-rantefordelning-overskott-852"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44018:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalunderlag-for-rantefordelning-underskott-853"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44019:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -10139,12 +9779,6 @@ kind = "set"
 subject = "var:gransbelopp-utdelning-pa-aktierna-m-m-under-inkomstaret-911"
 fields = { "tags" = ["taxation"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44027:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:ni-narstaende-haft-lan-fran-foretag-pensionsstiftelse"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44028:12418:13149"
 
 [[statement]]
 kind = "set"
@@ -10443,12 +10077,6 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:44052:12418
 [[statement]]
 kind = "set"
 subject = "var:forbjudet-lan-972"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44053:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:forbjudet-lan-972"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44053:12418:13149"
 
@@ -10707,12 +10335,6 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44075:124
 [[statement]]
 kind = "set"
 subject = "var:underskott-av-naringsverksamhet"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter näringsverksamhetens slutliga överskott eller underskott. membership-0449: Kapitalresultat och tjänsteförda belopp är inte näringsverksamhetens slutliga överskott eller underskott. membership-0450: Slutligt överskott som överförs till inkomstdeklarationen. membership-0451: De valda resultatposterna avser bokföring, justerat resultat eller överföring mellan N-blanketter, inte uttryckligen kandidatens slutliga deklarationsbelopp. membership-0452: Valda resultatposter avser delägarinkomst eller blankettresultat; inget anger definitionens slutliga näringsresultat. membership-0453: Valda resultatposter avser egna bolagsandelar, N3B-resultat eller anskaffningsutgiftskomponenter, inte uttryckligen näringsverksamhetens slutliga resultat. membership-0454: De valda underskotten är ingående outnyttjade belopp, inte näringsverksamhetens slutliga årsresultat. membership-0455: Posten anger slutligt överskott som överförs till inkomstdeklarationen. membership-0456: Överskott som överförs till INK1 omfattas uttryckligen. Kvarvarande underskott är en särskild sparad underskottspost och annans resultatandel är en beräkningskomponent. membership-0457: Valda resultat efter skattejusteringar och handelsbolagsresultat anges inte som näringsverksamhetens slutliga överskott eller underskott. membership-0458: Bostadsresultaten och resultaten efter skattemässiga justeringar har andra uttryckliga avgränsningar än slutligt näringsresultat. membership-0459: Posterna avser näringsverksamhetens överskott respektive underskott efter skattemässiga justeringar. membership-0460: Posterna mäter näringsverksamhetens överskott respektive underskott. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43565:13514:14610\ncatalog:variable_text:43567:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43624:12418:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43628:12418:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43856:12418:14610\ncatalog:variable_text:43858:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43949:12418:14610\ncatalog:variable_text:43950:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-av-naringsverksamhet"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter näringsverksamhetens slutliga överskott eller underskott. membership-0449: Kapitalresultat och tjänsteförda belopp är inte näringsverksamhetens slutliga överskott eller underskott. membership-0450: Slutligt överskott som överförs till inkomstdeklarationen. membership-0451: De valda resultatposterna avser bokföring, justerat resultat eller överföring mellan N-blanketter, inte uttryckligen kandidatens slutliga deklarationsbelopp. membership-0452: Valda resultatposter avser delägarinkomst eller blankettresultat; inget anger definitionens slutliga näringsresultat. membership-0453: Valda resultatposter avser egna bolagsandelar, N3B-resultat eller anskaffningsutgiftskomponenter, inte uttryckligen näringsverksamhetens slutliga resultat. membership-0454: De valda underskotten är ingående outnyttjade belopp, inte näringsverksamhetens slutliga årsresultat. membership-0455: Posten anger slutligt överskott som överförs till inkomstdeklarationen. membership-0456: Överskott som överförs till INK1 omfattas uttryckligen. Kvarvarande underskott är en särskild sparad underskottspost och annans resultatandel är en beräkningskomponent. membership-0457: Valda resultat efter skattejusteringar och handelsbolagsresultat anges inte som näringsverksamhetens slutliga överskott eller underskott. membership-0458: Bostadsresultaten och resultaten efter skattemässiga justeringar har andra uttryckliga avgränsningar än slutligt näringsresultat. membership-0459: Posterna avser näringsverksamhetens överskott respektive underskott efter skattemässiga justeringar. membership-0460: Posterna mäter näringsverksamhetens överskott respektive underskott. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter resultat efter skattemässiga justeringar. membership-0449: Sektionens kapitalresultat är inte verksamhetens resultat efter skattemässiga justeringar. membership-0450: Ingen vald resultatpost anges uttryckligen som resultat efter skattemässiga justeringar. membership-0451: Posten mäter resultat efter skattemässiga avskrivningar och övriga justeringar. membership-0452: De generella resultatetiketterna styrker inte definitionens uttryckliga steg efter skattemässiga justeringar. membership-0453: De valda generella N3B-resultaten saknar uttryckligt stöd för kandidatens avgränsning efter skattemässiga justeringar; den fasta N-blankettskandidatens stödda medlemskap bevaras. membership-0454: Ingen vald variabel i sektionen mäter resultat efter skattemässiga justeringar. membership-0455: Valda redovisade resultat och enskilda skattejusteringar är inte uttryckligen resultat efter skattemässiga justeringar. membership-0456: Ingen vald resultatpost benämns resultat efter skattemässiga justeringar; posterna avser slutlig INK1-överföring, kvarvarande underskott eller särskilda andelsjusteringar. membership-0457: Båda etiketterna anger resultat efter skattemässiga justeringar, med motsatta tecken. membership-0458: Samtliga fyra poster mäter uttryckligen överskott eller underskott efter skattemässiga justeringar. membership-0459: Etiketter och granskade beskrivningar anger överskott eller underskott efter skattemässiga justeringar, även för näringsverksamhetens slutresultat. membership-0460: Posterna mäter överskott respektive underskott efter skattemässiga justeringar. Justerat resultat från föregående sida preciserar inte denna beräkningsnivå.\ncatalog:variable_text:43394:12418:14610\ncatalog:variable_text:43473:12418:13514\ncatalog:variable_text:43528:13514:14610\ncatalog:variable_text:43565:13514:14610\ncatalog:variable_text:43567:13514:14610\ncatalog:variable_text:43568:12418:14610\ncatalog:variable_text:43613:12418:13514\ncatalog:variable_text:43614:12418:13514\ncatalog:variable_text:43623:13514:14610\ncatalog:variable_text:43624:12418:14610\ncatalog:variable_text:43626:13514:14610\ncatalog:variable_text:43627:13514:14610\ncatalog:variable_text:43628:12418:14610\ncatalog:variable_text:43629:12418:13514\ncatalog:variable_text:43751:13514:14610\ncatalog:variable_text:43752:13514:14610\ncatalog:variable_text:43763:12418:13514\ncatalog:variable_text:43764:12418:13514\ncatalog:variable_text:43765:12418:13514\ncatalog:variable_text:43766:13514:14610\ncatalog:variable_text:43767:13514:14610\ncatalog:variable_text:43768:12418:13514\ncatalog:variable_text:43769:12418:13514\ncatalog:variable_text:43770:13514:14610\ncatalog:variable_text:43771:13514:14610\ncatalog:variable_text:43777:12418:14610\ncatalog:variable_text:43778:13514:14610\ncatalog:variable_text:43779:12418:13514\ncatalog:variable_text:43780:12418:14610\ncatalog:variable_text:43781:13514:14610\ncatalog:variable_text:43782:12418:13514\ncatalog:variable_text:43783:12418:13514\ncatalog:variable_text:43808:13514:14610\ncatalog:variable_text:43809:13514:14610\ncatalog:variable_text:43854:12418:13149\ncatalog:variable_text:43856:12418:14610\ncatalog:variable_text:43858:12418:14610\ncatalog:variable_text:43890:12418:13514\ncatalog:variable_text:43891:12418:13514\ncatalog:variable_text:43919:12418:13149\ncatalog:variable_text:43920:12418:13149\ncatalog:variable_text:43925:12418:13149\ncatalog:variable_text:43928:12418:13149\ncatalog:variable_text:43949:12418:14610\ncatalog:variable_text:43950:12418:14610\ncatalog:variable_text:43960:12418:14610\ncatalog:variable_text:43962:12418:14610\ncatalog:variable_text:44077:13514:14610\ncatalog:variable_text:44093:13879:14610\ncatalog:variable_text:44094:13514:14610\ncatalog:variable_text:44098:13879:14610\ncatalog:variable_text:44100:13514:14610\ncatalog:variable_text:44116:13514:14610"
 
@@ -10815,12 +10437,6 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44085:135
 [[statement]]
 kind = "set"
 subject = "var:skattepliktiga-formaner"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44086:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:skattepliktiga-formaner"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44086:13514:14610"
 
@@ -10911,12 +10527,6 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44093:13879:146
 [[statement]]
 kind = "set"
 subject = "var:ovriga-intakter-min-andel"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44094:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-intakter-min-andel"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44094:13514:14610"
 
@@ -10947,12 +10557,6 @@ evidence = "Id är en opak källkod.\ncatalog:variable_text:44096:13514:14610"
 [[statement]]
 kind = "set"
 subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-okning"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44097:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-okning"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44097:13514:14610"
 
@@ -10979,12 +10583,6 @@ kind = "set"
 subject = "var:v7703"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:452661\ncatalog:occurrence:452662\ncatalog:occurrence:452754\ncatalog:occurrence:452755"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-kostnader-min-andel-skattemassig-justering"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44100:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -11075,12 +10673,6 @@ kind = "set"
 subject = "var:ersattningsfonder-ub"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:44107:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalunderlag-for-rantefordelning-positivt"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44108:13514:14610"
 
 [[statement]]
 kind = "set"
@@ -11255,12 +10847,6 @@ kind = "set"
 subject = "var:varde-av-fastighet-922-v0937"
 fields = { "tags" = ["property", "taxation"] }
 evidence = "Posten mäter fastighetsvärde i kapitalunderlagsredovisningen.\ncatalog:variable_text:44123:12418:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:varde-fri-bil-fri-bostad"
-fields = { "sets" = [] }
-evidence = "Förmånsvärden.\ncatalog:variable_text:44124:12418:13514"
 
 [[statement]]
 kind = "set"
@@ -11483,3 +11069,417 @@ kind = "set"
 subject = "var:vinst-avyttring-anlaggningstillgangar"
 fields = { "tags" = ["business"] }
 evidence = "Posten är en avyttringsvinst i företagsredovisningen.\ncatalog:variable_text:44142:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v7803"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r253 defines the taxpayer's share of securities-disposal gains to include in taxation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43222\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43358"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v7903"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r254 defines the taxpayer's share of deductible capital losses from securities disposal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43223\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43359"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-delagarratter-kapitalforlust"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r255 explicitly defines deductible capital losses from disposal of equity interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43365"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-delagarratter-kapitalvinst"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r256 explicitly defines capital gains for the tax year from disposal of equity interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43230\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43366"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-vardepapper-kapitalforlust"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r257 explicitly defines deductible capital losses from securities disposal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43235\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43371"
+
+[[statement]]
+kind = "set"
+subject = "var:avyttring-vardepapper-kapitalvinst"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r258 defines securities-disposal gains to include in taxation, not a booked disposal result.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43236\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43372"
+
+[[statement]]
+kind = "set"
+subject = "var:forbjudet-lan-972"
+fields = { "sets" = ["lan-till-delagare-och-narstaende"] }
+evidence = "r261 defines a prohibited loan, a category expressly included by the fixed candidate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43343\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43477"
+
+[[statement]]
+kind = "set"
+subject = "var:formansvardet-av-fri-bil"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r262 explicitly measures the benefit value of a free car on business form N2.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:451207\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43490"
+
+[[statement]]
+kind = "set"
+subject = "var:formansvardet-fri-bil"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r263 explicitly measures the benefit value of a free car on business form N3A.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43358\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:451694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43491"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresvarde-bostad-ovriga-formaner"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r265 measures the rental value of free housing and other benefits, rather than actual housing costs.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43384\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43517"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresvardet-fri-bostad-formaner"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r266 defines the rental value of free housing and other benefits.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43385\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43518"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-m-m-907-v0907"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r268 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43416\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43543"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-m-m-907-v8702"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r269 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43417\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43544"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-m-m-907-v8716"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r270 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43545"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-m-m-907-v8747"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r271 defines generally reported capital losses and related amounts, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43546"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalunderlag-for-rantefordelning-overskott-852"
+fields = { "sets" = ["kapitalunderlag-for-rantefordelning"] }
+evidence = "r272 explicitly defines the surplus capital base for interest allocation, not a calculated allocation amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43422\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43549"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalunderlag-for-rantefordelning-positivt"
+fields = { "sets" = ["kapitalunderlag-for-rantefordelning"] }
+evidence = "r273 explicitly defines the positive capital base for interest allocation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43423\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43550"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalunderlag-for-rantefordelning-underskott-853"
+fields = { "sets" = ["kapitalunderlag-for-rantefordelning"] }
+evidence = "r274 explicitly defines the deficit capital base for interest allocation, not a calculated allocation amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43424\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43551"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinst-904"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r275 defines general capital gains and related amounts according to an investigation, without a specified disposal category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43427\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43554"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinster-v8636"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r276 defines generic capital gains without a specified disposal category or deferral.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43429\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43556"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalvinster-v8643"
+fields = { "sets" = ["kapitalvinster-och-kapitalforluster"] }
+evidence = "r277 defines generic capital gains without a specified disposal category or deferral.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43430\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43557"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-fran-aktieagare"
+fields = { "sets" = ["lan-fran-agare-till-foretaget"] }
+evidence = "r278 explicitly defines loans from shareholders, including both long-term and short-term loans.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43490\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43614"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-till-delagare"
+fields = { "sets" = ["lan-till-delagare-och-narstaende"] }
+evidence = "r279 explicitly defines loans to owners or related persons.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43615"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-skulder"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "r280 defines a base variable for categories of long-term debt.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43617"
+
+[[statement]]
+kind = "set"
+subject = "var:langfristiga-skulder-v7380"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "r281 defines a base variable for categories of long-term debt, recorded on NE and NEA.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43494\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452531\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452811\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43618"
+
+[[statement]]
+kind = "set"
+subject = "var:negativt-kapitalunderlag-rantefordelning"
+fields = { "sets" = ["kapitalunderlag-for-rantefordelning"] }
+evidence = "r283 explicitly defines the negative capital base for interest allocation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43694"
+
+[[statement]]
+kind = "set"
+subject = "var:ni-narstaende-haft-lan-fran-foretag-pensionsstiftelse"
+fields = { "sets" = ["lan-till-delagare-och-narstaende"] }
+evidence = "r314 explicitly records whether the taxpayer or related persons borrowed from the company or its pension foundation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43581\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44091"
+
+[[statement]]
+kind = "set"
+subject = "var:ni-narstaende-lanat-ut-pengar-till-foretaget"
+fields = { "sets" = ["lan-fran-agare-till-foretaget"] }
+evidence = "r313 explicitly asks whether the taxpayer or related persons lent money to the company.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43582\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44050"
+
+[[statement]]
+kind = "set"
+subject = "var:overlatelsevinst-handelsbolag"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r285 explicitly defines taxable capital gains from transferring a partnership interest; taxation under business income does not exclude interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43613\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43726"
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-av-naringsverksamhet"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r155 links the business surplus to tax adjustments; r177 explicitly defines the corresponding post-adjustment business deficit. | r155 links the business surplus to tax adjustments; r177 explicitly defines the corresponding post-adjustment business deficit.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43614\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43727\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43997"
+
+[[statement]]
+kind = "set"
+subject = "var:overskott-paverkar-anskaffningsutgiften"
+fields = { "sets" = ["resultat-som-paverkar-anskaffningsutgiften"] }
+evidence = "r156 explicitly defines the point-7 surplus as affecting acquisition cost; r178 supplies the corresponding deficit.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43620\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43733\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44001"
+
+[[statement]]
+kind = "set"
+subject = "var:overutdelning-negativt-belopp-vid-punkt-481-488"
+fields = { "sets" = ["overutdelning"] }
+evidence = "r286 defines the negative balance at point 481 transferred as a positive overdistribution amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43622\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43735"
+
+[[statement]]
+kind = "set"
+subject = "var:overutdelning-om-saldot-ar-negativt-481"
+fields = { "sets" = ["overutdelning"] }
+evidence = "r287 explicitly defines overdistribution when the balance is negative, transferred to employment income.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43623\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43736"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-min-andel"
+fields = { "sets" = ["ovriga-skattemassiga-resultatjusteringar"] }
+evidence = "r288 defines other tax adjustments for the taxpayer's share of revenues, without specifying a particular adjustment transaction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43643\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43756"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-min-andel-skattemassig-justering"
+fields = { "sets" = ["ovriga-skattemassiga-resultatjusteringar"] }
+evidence = "r315 defines other tax adjustments for the taxpayer's share of costs, without specifying a particular adjustment transaction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43661\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44114"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-okning"
+fields = { "sets" = ["ovriga-skattemassiga-resultatjusteringar"] }
+evidence = "r290 explicitly defines other tax adjustments increasing the result.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43679\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43791"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteformanligt-lan-handelsbolaget"
+fields = { "sets" = ["lan-till-delagare-och-narstaende"] }
+evidence = "r292 explicitly describes a loan from the partnership to its partner, rather than an interest amount.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43746\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43855"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-av-verksamheten"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r157 defines the result of operations, recorded on N1 in r31–r33, matching the fixed scope. | r157 defines the result of operations, recorded on N1 in r31–r33, matching the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43778\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:450771\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:450886\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:451000\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43887"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v0777"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r158 explicitly defines a surplus after tax adjustments. | r158 explicitly defines a surplus after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43779\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43888"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v0881"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r159 explicitly defines a surplus after tax adjustments. | r159 explicitly defines a surplus after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43889"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v7670"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r160 explicitly defines a surplus after tax adjustments. | r160 explicitly defines a surplus after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43781\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43890"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-overskott-v8995"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r161 explicitly defines a surplus after tax adjustments. | r161 explicitly defines a surplus after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43891"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v0778"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r162 explicitly defines a deficit after tax adjustments. | r162 explicitly defines a deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43892"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v0882"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r163 explicitly defines a deficit after tax adjustments. | r163 explicitly defines a deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43784\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43893"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v7770"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r164 explicitly defines a deficit after tax adjustments. | r164 explicitly defines a deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43894"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-efter-skattemassiga-justeringar-underskott-v8795"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r165 explicitly defines a deficit after tax adjustments. | r165 explicitly defines a deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43786\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43895"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-n1-n2-n3b-overskott-908"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r166 explicitly defines a surplus according to N1/N2/N3B, matching the fixed group. | r166 explicitly defines a surplus according to N1/N2/N3B, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43790\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43899"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-n1-n2-n3b-underskott-909"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r167 explicitly defines a deficit according to N1/N2/N3B, matching the fixed group. | r167 explicitly defines a deficit according to N1/N2/N3B, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43791\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43900"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-overskott-829"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r168 defines a surplus result with N3B occurrences in r66, r70 and r74, matching the fixed result scope. | r168 defines a surplus result with N3B occurrences in r66, r70 and r74, matching the fixed result scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43792\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452189\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452249\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43901"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-overskott-829-v7830"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r169 defines a surplus result; r77, r81 and r85 place it on N3B, within the fixed scope. | r169 defines a surplus result; r77, r81 and r85 place it on N3B, within the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43793\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452275\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43902"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-skattemassiga-justeringar"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r170 defines the result after tax depreciation and other adjustments, rather than an individual adjustment. | r170 defines the result after tax depreciation and other adjustments, rather than an individual adjustment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43794\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43903"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-underskott-850"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r171 defines a deficit result with N3B occurrences in r67, r71 and r75, matching the fixed result scope. | r171 defines a deficit result with N3B occurrences in r67, r71 and r75, matching the fixed result scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43795\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452193\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452223\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452253\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43904"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-underskott-850-v7930"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r172 defines a deficit result; r79, r83 and r87 place it on N3B, within the fixed scope. | r172 defines a deficit result; r79, r83 and r87 place it on N3B, within the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43796\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452286\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452316\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452346\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43905"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-verksamheten-overskott"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r173 defines the operating surplus and explicitly directs its transfer to N1 or N2. | r173 defines the operating surplus and explicitly directs its transfer to N1 or N2.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43797\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43906"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-verksamheten-underskott"
+fields = { "sets" = ["resultat-av-verksamhet-enligt-n-blankett"] }
+evidence = "r174 defines the operating deficit and explicitly directs its transfer to N1 or N2. | r174 defines the operating deficit and explicitly directs its transfer to N1 or N2.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43798\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43907"
+
+[[statement]]
+kind = "set"
+subject = "var:skattemassiga-justeringar-minskning"
+fields = { "sets" = ["ovriga-skattemassiga-resultatjusteringar"] }
+evidence = "r304 explicitly defines other tax adjustments decreasing the result.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43933"
+
+[[statement]]
+kind = "set"
+subject = "var:skattemassigt-resultat-overskott"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r175 explicitly defines a surplus after tax adjustments. | r175 explicitly defines a surplus after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43826\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43935"
+
+[[statement]]
+kind = "set"
+subject = "var:skattemassigt-resultat-underskott"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r176 explicitly defines a deficit after tax adjustments. | r176 explicitly defines a deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43936"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktig-vinst-i-kapital-485"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r305 describes a taxable capital gain offset against losses on other shares, supporting the securities-specific group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43830\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43939"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-formaner"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r306 defines taxable benefits measured in SEK on business form NEA.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43831\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:452817\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43940"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-langfristiga-skulder"
+fields = { "sets" = ["langfristiga-skulder"] }
+evidence = "r310 explicitly defines total long-term debt.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43982"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kapitalforlust"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r311 explicitly defines total capital losses from disposal of shares or interests in closely held companies.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43884\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43992"
+
+[[statement]]
+kind = "set"
+subject = "var:total-kapitalvinst-493"
+fields = { "sets" = ["kapitalresultat-vid-vardepappersavyttring"] }
+evidence = "r312 explicitly defines total capital gain from disposal of shares or interests in closely held companies.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43885\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43993"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-av-naringsverksamhet"
+fields = { "sets" = ["resultat-efter-skattemassiga-justeringar"] }
+evidence = "r177 explicitly defines a business deficit after tax adjustments. | r177 explicitly defines a business deficit after tax adjustments.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43889\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43997"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-paverkar-anskaffningsutgiften"
+fields = { "sets" = ["resultat-som-paverkar-anskaffningsutgiften"] }
+evidence = "r178 explicitly defines the point-7 deficit as affecting acquisition cost; r156 supplies the corresponding surplus.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43733\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44001"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-koncern"
+fields = { "sets" = ["utdelning-pa-aktier-och-andelar"] }
+evidence = "r179 explicitly measures dividends on shares and interests in group and associated companies.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43906\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44014"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-aktier-andelar-ovriga-foretag"
+fields = { "sets" = ["utdelning-pa-aktier-och-andelar"] }
+evidence = "r180 explicitly measures dividends on shares and interests in other enterprises, matching the corporate-relation subdivision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43907\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44015"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-naringsbetingad-marknadsnoterad-innehav-under-1-ar"
+fields = { "sets" = ["utdelning-pa-aktier-och-andelar"] }
+evidence = "r182 explicitly measures dividends on listed business-related interests held for less than one year, included by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43908\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44017"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-fri-bil-fri-bostad"
+fields = { "sets" = ["formansvarden-i-naringsverksamhet"] }
+evidence = "r316 defines the value of free car, free housing and related benefits on business form N1.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:450774\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44122"

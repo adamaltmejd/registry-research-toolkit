@@ -584,12 +584,6 @@ evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57293:14975
 [[statement]]
 kind = "set"
 subject = "var:diagnos"
-fields = { "sets" = [] }
-evidence = "Fältet innehåller diagnoskoder och under en period även ATC-kod.\ncatalog:variable_text:57294:-2192:9862\ncatalog:variable_text:57294:14610:16436\ncatalog:variable_text:57294:16436:2932897\ncatalog:variable_text:57294:9862:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:diagnos"
 fields = { "tags" = ["health", "medicines"] }
 evidence = "Fältet innehåller diagnoskoder och under en period även ATC-kod.\ncatalog:variable_text:57294:-2192:9862\ncatalog:variable_text:57294:14610:16436\ncatalog:variable_text:57294:16436:2932897\ncatalog:variable_text:57294:9862:14610"
 
@@ -604,12 +598,6 @@ kind = "set"
 subject = "var:diagnos-nr"
 fields = { "tags" = [] }
 evidence = "Numret anger diagnosens position.\ncatalog:variable_text:57295:14610:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-atc-skada-forgiftning"
-fields = { "sets" = [] }
-evidence = "Fältet innehåller diagnoskod eller ATC-kod vid läkemedelsrelaterat tillstånd.\ncatalog:variable_text:57296:16436:2932897"
 
 [[statement]]
 kind = "set"
@@ -1300,3 +1288,15 @@ kind = "set"
 subject = "var:yttre-orsakskoder"
 fields = { "tags" = ["health", "medicines"] }
 evidence = "Fältet innehåller yttre orsakskoder och tidigare även ATC-kod.\ncatalog:variable_text:57371:14610:15706\ncatalog:variable_text:57371:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "sets" = ["diagnoskod"] }
+evidence = "DIAGNOS stores clinically relevant diagnosis codes, including multiple codes in a string (r13, r25, r38), matching the fixed diagnosis-code group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57113\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522690\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522872"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-atc-skada-forgiftning"
+fields = { "sets" = ["diagnoskod"] }
+evidence = "DIA stores clinically relevant diagnosis codes and may contain a drug ATC code for medication-related conditions (r19, r31), which the fixed group explicitly includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57115\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522847"

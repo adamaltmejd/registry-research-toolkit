@@ -257,20 +257,8 @@ evidence = "Uppgiften gäller utbildningsstöd.\ncatalog:variable_text:43126:200
 [[statement]]
 kind = "set"
 subject = "var:antal-amnen-ej-natt-kunskapskraven-4-grupper"
-fields = { "sets" = [] }
-evidence = "Antal är en ospecifik källkod; etiketten anger antal ämnen där kraven inte nåtts.\ncatalog:variable_text:43127:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-amnen-ej-natt-kunskapskraven-4-grupper"
 fields = { "tags" = ["education"] }
 evidence = "Antal är en ospecifik källkod; etiketten anger antal ämnen där kraven inte nåtts.\ncatalog:variable_text:43127:16617:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-amnen-ej-natt"
-fields = { "sets" = [] }
-evidence = "Antal ämnen efter betygsutfall.\ncatalog:variable_text:43128:15887:20270"
 
 [[statement]]
 kind = "set"
@@ -281,32 +269,14 @@ evidence = "Antal ämnen efter betygsutfall.\ncatalog:variable_text:43128:15887:
 [[statement]]
 kind = "set"
 subject = "var:antal-amnen-godkand"
-fields = { "sets" = [] }
-evidence = "Källans operationalisering visar samma antal godkända ämnen som föregående period hos antal-betyg.\ncatalog:occurrence:449230\ncatalog:occurrence:449294"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-amnen-godkand"
 fields = { "tags" = ["education"] }
 evidence = "Källans operationalisering visar samma antal godkända ämnen som föregående period hos antal-betyg.\ncatalog:occurrence:449230\ncatalog:occurrence:449294"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-betyg"
-fields = { "sets" = [] }
-evidence = "Operationaliseringen visar samma antal godkända ämnen som efterföljande period hos antal-amnen-godkand.\ncatalog:occurrence:449230\ncatalog:occurrence:449294"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-betyg"
 fields = { "tags" = ["education"] }
 evidence = "Operationaliseringen visar samma antal godkända ämnen som efterföljande period hos antal-amnen-godkand.\ncatalog:occurrence:449230\ncatalog:occurrence:449294"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-ettor"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en motstridig efterföljande koppling.\ncatalog:occurrence:449295\ncatalog:occurrence:449358"
 
 [[statement]]
 kind = "set"
@@ -881,12 +851,6 @@ evidence = "Beteckningen avser elevens klass.\ncatalog:variable_text:43180:20012
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "sets" = [] }
-evidence = "Koden anger kommun där skolan är placerad.\ncatalog:variable_text:43181:12965:15887\ncatalog:variable_text:43181:15887:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun"
 fields = { "tags" = ["geography"] }
 evidence = "Koden anger kommun där skolan är placerad.\ncatalog:variable_text:43181:12965:15887\ncatalog:variable_text:43181:15887:20270"
 
@@ -1201,12 +1165,6 @@ kind = "set"
 subject = "var:skolform"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln klassificerar skolform.\ncatalog:variable_text:43218:20011:20012"
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun"
-fields = { "sets" = [] }
-evidence = "Variabeln anger skolans kommun.\ncatalog:variable_text:43220:20011:20012"
 
 [[statement]]
 kind = "set"
@@ -2053,3 +2011,45 @@ kind = "set"
 subject = "betyg-ak10: Mspr2_betyg @2024-07-01..2025-06-30 where key = 'v34103'"
 fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
 evidence = "Källan anger betyg i ämnet.\ncatalog:variable_text:43196:12965:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-ej-natt"
+fields = { "sets" = ["antal-betyg-och-amnen"] }
+evidence = "r112 explicitly measures the number of subjects graded F, an outcome-specific subject count covered by the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42981\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43128"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-ej-natt-kunskapskraven-4-grupper"
+fields = { "sets" = ["antal-betyg-och-amnen"] }
+evidence = "r111 defines a grouped count of failed subjects; r105 confirms categories for zero, one, multiple or all subjects.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42982\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4373\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43127"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-amnen-godkand"
+fields = { "sets" = ["antal-betyg-och-amnen"] }
+evidence = "r113 defines the number of subjects with passing grades or better, directly within the group's outcome-specific counts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42983\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43129"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-betyg"
+fields = { "sets" = ["antal-betyg-och-amnen"] }
+evidence = "r114 defines the number of grades received; its operational definition counts subjects with passing grades. Both fit the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42984\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43130"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ettor"
+fields = { "sets" = ["antal-betyg-och-amnen"] }
+evidence = "r115 defines a count of subjects where requirements were not met, within the group's grade-outcome counts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42985\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43131"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "r116 explicitly defines the school's municipality, derived from the school or school-unit code, matching r120.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43183\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43221"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "r120 explicitly identifies the municipality where the school is located, matching the school-location coding in r116.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:43082\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43183\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43221"

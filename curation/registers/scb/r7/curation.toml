@@ -3879,3 +3879,9 @@ relation = "continues"
 object = "scb/ftr/kok-koksinredningsbyte-efter-1985"
 at = "2005-01-01.."
 evidence = "FTR: kitchen fittings replaced after 1985 (1998-2002) -> after 1990 (2005-08); reference window moved."
+
+[[statement]]
+kind = "set"
+subject = "var:skattekontor"
+fields = { "tags" = ["taxation"] }
+evidence = "Coordinator-approved audit correction: Valueset: Skattekontoret i Norrtälje/Södertälje/... — tax-office code. Row 33 (scb/iot/handlaggande-skattemyndighet, same kind of variable) got taxation; the two must agree.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:14\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21314\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:192388\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12939\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21395"

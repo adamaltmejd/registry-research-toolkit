@@ -308,12 +308,6 @@ evidence = "Avtal avser anställningsvillkor.\ncatalog:valueset:10857\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:avtalad-grundlon"
-fields = { "sets" = [] }
-evidence = "Grundlon mappas samtidigt till en annan variabel med en annan löneavgränsning.\ncatalog:occurrence:448186\ncatalog:occurrence:448187\ncatalog:variable_text:43026:15706:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:avtalad-grundlon"
 fields = { "tags" = ["income"] }
 evidence = "Grundlon mappas samtidigt till en annan variabel med en annan löneavgränsning.\ncatalog:occurrence:448186\ncatalog:occurrence:448187\ncatalog:variable_text:43026:15706:20089"
 
@@ -440,20 +434,8 @@ evidence = "Ledighetstillägg är en lönekomponent.\ncatalog:variable_text:4303
 [[statement]]
 kind = "set"
 subject = "var:lon-exklusive-tillagg-ojusterad"
-fields = { "sets" = [] }
-evidence = "Grundlon mappas samtidigt till en annan variabel med en annan löneavgränsning.\ncatalog:occurrence:448186\ncatalog:occurrence:448187\ncatalog:variable_text:43037:13149:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:lon-exklusive-tillagg-ojusterad"
 fields = { "tags" = ["income"] }
 evidence = "Grundlon mappas samtidigt till en annan variabel med en annan löneavgränsning.\ncatalog:occurrence:448186\ncatalog:occurrence:448187\ncatalog:variable_text:43037:13149:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:lon1"
-fields = { "sets" = [] }
-evidence = "Lönen exklusive tillägg ingår i grundlön och lönebelopp.\ncatalog:variable_text:43038:9496:13149"
 
 [[statement]]
 kind = "set"
@@ -952,3 +934,21 @@ kind = "set"
 subject = "lonestrukturstatistik-statlig-sektor: sun2000niva_old @2019-01-01..2019-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
 evidence = "Both measure SUN2000 education level using seven categories comparable with pre-2000 SUN levels. They occupy adjacent periods [15340,16801) and [16801,18262) in the same state-sector wage structure table and register, with the same classification. All eight codes agree in meaning; code 9 means unknown in both. The survivor has the earlier first occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-grundlon"
+fields = { "sets" = ["grundlon"] }
+evidence = "The fixed definition includes basic salary (r49). r46 defines agreed basic salary including fixed supplements, converted to full time, fitting that inclusion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42882\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43027\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/sls/grundlon"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-exklusive-tillagg-ojusterad"
+fields = { "sets" = ["grundlon"] }
+evidence = "r47 defines pay excluding fixed and variable supplements, unadjusted for service extent, matching the explicit inclusion in grundlon (r49).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43038\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/sls/grundlon"
+
+[[statement]]
+kind = "set"
+subject = "var:lon1"
+fields = { "sets" = ["grundlon"] }
+evidence = "r48 defines pay excluding fixed and variable supplements, adjusted for service extent, matching the explicit inclusion in grundlon (r49).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42894\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:43039\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/sls/grundlon"

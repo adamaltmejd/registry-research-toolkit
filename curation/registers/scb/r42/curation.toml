@@ -26,12 +26,6 @@ evidence = "Arbetstid grupperas med övriga arbetsmått och taggas som arbetsmar
 [[statement]]
 kind = "set"
 subject = "var:arbete-under-matveckan"
-fields = { "sets" = [] }
-evidence = "Variabeln anger typ av arbete snarare än mängd eller förekomst av arbete. Coordinator group membership: Arbetade timmar och minst en timmes arbete mäter mängd och förekomst under mätveckan. Typ av arbete behålls enligt fast inkludering och skyddat medlemskap. Anställningsform, sektor och huvudsaklig sysselsättning faller utanför definitionen.\ncatalog:valueset:7877\ncatalog:variable_text:39382:12053:12418\ncatalog:variable_text:39383:12053:12418\ncatalog:variable_text:39460:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-under-matveckan"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger typ av arbete snarare än mängd eller förekomst av arbete. Coordinator group membership: Arbetade timmar och minst en timmes arbete mäter mängd och förekomst under mätveckan. Typ av arbete behålls enligt fast inkludering och skyddat medlemskap. Anställningsform, sektor och huvudsaklig sysselsättning faller utanför definitionen.\ncatalog:valueset:7877\ncatalog:variable_text:39382:12053:12418\ncatalog:variable_text:39383:12053:12418\ncatalog:variable_text:39460:12053:12418"
 
@@ -950,12 +944,6 @@ evidence = "Månadslön hör till inkomst.\ncatalog:variable_text:39459:12053:12
 [[statement]]
 kind = "set"
 subject = "var:minst-en-timmes-arbete-under-matveckan"
-fields = { "sets" = [] }
-evidence = "Förekomst av arbete hör till arbetsmåtten och arbetsmarknad.\ncatalog:variable_text:39460:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:minst-en-timmes-arbete-under-matveckan"
 fields = { "tags" = ["employment"] }
 evidence = "Förekomst av arbete hör till arbetsmåtten och arbetsmarknad.\ncatalog:variable_text:39460:12053:12418"
 
@@ -1102,3 +1090,15 @@ kind = "set"
 subject = "nyborjare-i-komvux: f7j @2003-01-01..2003-12-31 where key = 'v28705'"
 fields = { "description" = "Angivet skäl till studieavbrott." }
 evidence = "Frågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:12028\ncatalog:variable_text:39436:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-under-matveckan"
+fields = { "sets" = ["arbete-under-matveckan"] }
+evidence = "F21 asks about work during 7–13 April 2003 (r5). Its work-type categories (r9) fit the fixed definition's inclusion of measurement-week work codings.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39243\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:390070\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7877"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-en-timmes-arbete-under-matveckan"
+fields = { "sets" = ["arbete-under-matveckan"] }
+evidence = "F18 asks whether any work was performed during 7–13 April 2003 (r4), with Yes/No codes (r7), matching the fixed measurement-week concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:390066\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11360"

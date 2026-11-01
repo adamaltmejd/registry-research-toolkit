@@ -596,20 +596,8 @@ evidence = "F24g har olika begrepp i de två perioderna.\ncatalog:occurrence:235
 [[statement]]
 kind = "set"
 subject = "var:f25-1"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235277\ncatalog:occurrence:235338\ncatalog:variable_text:26057:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:f25-1"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235277\ncatalog:occurrence:235338\ncatalog:variable_text:26057:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:f25-2"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235278\ncatalog:occurrence:235339\ncatalog:variable_text:26058:17532:17897"
 
 [[statement]]
 kind = "set"
@@ -620,20 +608,8 @@ evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidiga
 [[statement]]
 kind = "set"
 subject = "var:f25-3"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235279\ncatalog:occurrence:235340\ncatalog:variable_text:26059:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:f25-3"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235279\ncatalog:occurrence:235340\ncatalog:variable_text:26059:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:f25-4"
-fields = { "sets" = [] }
-evidence = "Källans etikett och de senare svarsalternativen beskriver olika omfattning av behandlingen. Gruppen omfattar den uppmätta behandlingen på arbetet.\ncatalog:register:146\ncatalog:valueset:8368\ncatalog:valueset:9175\ncatalog:valueset:9972\ncatalog:variable_text:26060:16436:16801\ncatalog:variable_text:26060:17532:17897"
 
 [[statement]]
 kind = "set"
@@ -1480,3 +1456,27 @@ kind = "set"
 subject = "hogutbildade-utrikes-fodda: F10_1 @2004-01-01..2004-12-31 where key = 'v25037'"
 fields = { "description" = "Arbete utanför Sverige efter högskoleutbildning som högskoleutbildningen är inriktad mot." }
 evidence = "Rättar ett stavfel utan att ändra betydelsen.\ncatalog:occurrence:235244\ncatalog:variable_text:26019:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-1"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair pay treatment is measured in r5. The later fair/unfair scale still explicitly measures unfair treatment (r33, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25966\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235200\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair treatment in work tasks is measured in r6. The later fair/unfair scale still explicitly measures unfair treatment (r34, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25967\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235201\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair career treatment is measured in r7. The later fair/unfair scale still explicitly measures unfair treatment (r35, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235202\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235340\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-4"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair treatment in competence development is measured in r8. The later fair/unfair scale still explicitly measures unfair treatment (r36, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235341\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"

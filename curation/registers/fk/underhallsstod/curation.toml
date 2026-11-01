@@ -250,3 +250,9 @@ kind = "set"
 subject = "var:typ-inbet"
 fields = { "tags" = ["transfers"] }
 evidence = "Inbetalningstypen avser underhållsstöd.\ncatalog:register:26\ncatalog:variable_text:565:9831:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodringsagare"
+fields = { "tags" = ["transfers"] }
+evidence = "r3 classifies the creditor as the child, Försäkringskassan or missing; r1 places this classification in maintenance-support payments, supporting the transfers theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:551\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:551"

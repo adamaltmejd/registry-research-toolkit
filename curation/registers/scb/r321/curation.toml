@@ -122,20 +122,8 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:383168\ncatalog:occurrence:383233"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
 fields = { "tags" = ["democracy"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:383168\ncatalog:occurrence:383233"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-organ-under-fullmaktige"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:382678\ncatalog:occurrence:382743"
 
 [[statement]]
 kind = "set"
@@ -518,32 +506,14 @@ evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-fr27"
-fields = { "sets" = [] }
-evidence = "Källan beskriver brukarrepresentation inom förskola.\ncatalog:occurrence:382641"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-fr27"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Källan beskriver brukarrepresentation inom förskola.\ncatalog:occurrence:382641"
 
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-utover-delegering"
-fields = { "sets" = [] }
-evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382357\ncatalog:occurrence:382412"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering"
 fields = { "tags" = ["democracy"] }
 evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382357\ncatalog:occurrence:382412"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-till-fr42-7-text"
-fields = { "sets" = [] }
-evidence = "Fritexten hör till brukarrepresentation inom annat område.\ncatalog:occurrence:382871"
 
 [[statement]]
 kind = "set"
@@ -554,20 +524,8 @@ evidence = "Fritexten hör till brukarrepresentation inom annat område.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:brukarsys-utover-delegering"
-fields = { "sets" = [] }
-evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382905\ncatalog:occurrence:382969"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsys-utover-delegering"
 fields = { "tags" = ["democracy"] }
 evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382905\ncatalog:occurrence:382969"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysald"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382492"
 
 [[statement]]
 kind = "set"
@@ -578,20 +536,8 @@ evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382492
 [[statement]]
 kind = "set"
 subject = "var:brukarsysfs"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382493"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfs"
 fields = { "tags" = ["democracy"] }
 evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382493"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfunk"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382494"
 
 [[statement]]
 kind = "set"
@@ -602,20 +548,8 @@ evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382494
 [[statement]]
 kind = "set"
 subject = "var:brukarsysgs"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382495"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgs"
 fields = { "tags" = ["democracy"] }
 evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382495"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgym"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382496"
 
 [[statement]]
 kind = "set"
@@ -626,20 +560,8 @@ evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382496
 [[statement]]
 kind = "set"
 subject = "var:brukarsysifo"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382497"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysifo"
 fields = { "tags" = ["democracy"] }
 evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382497"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysovr"
-fields = { "sets" = [] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382498"
 
 [[statement]]
 kind = "set"
@@ -686,20 +608,8 @@ evidence = "Variabeln avser samverkan genom delegering.\ncatalog:occurrence:3825
 [[statement]]
 kind = "set"
 subject = "var:delta-i-medborgardialoger-via-webbplats"
-fields = { "sets" = [] }
-evidence = "Mäter deltagande i medborgardialog via webbplats.\ncatalog:occurrence:382837"
-
-[[statement]]
-kind = "set"
-subject = "var:delta-i-medborgardialoger-via-webbplats"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Mäter deltagande i medborgardialog via webbplats.\ncatalog:occurrence:382837"
-
-[[statement]]
-kind = "set"
-subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
-fields = { "sets" = [] }
-evidence = "Mäter deltagande i medborgardialog via webbplats.\ncatalog:occurrence:383329"
 
 [[statement]]
 kind = "set"
@@ -1274,20 +1184,8 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:forekomst-av-namndsammantraden"
-fields = { "sets" = [] }
-evidence = "Mäter nämndsammanträden med allmänhetens närvarorätt.\ncatalog:occurrence:382824"
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-namndsammantraden"
 fields = { "tags" = ["democracy"] }
 evidence = "Mäter nämndsammanträden med allmänhetens närvarorätt.\ncatalog:occurrence:382824"
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-namndsammantraden-fr23a"
-fields = { "sets" = [] }
-evidence = "Mäter nämndsammanträden med allmänhetens närvarorätt.\ncatalog:occurrence:383316"
 
 [[statement]]
 kind = "set"
@@ -2042,12 +1940,6 @@ evidence = "Fr25b är en opak frågekod.\ncatalog:occurrence:382825\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:fr26"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:383160\ncatalog:variable_text:38507:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr26"
 fields = { "tags" = ["democracy", "healthcare"] }
 evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:383160\ncatalog:variable_text:38507:16801:17167"
 
@@ -2066,12 +1958,6 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 [[statement]]
 kind = "set"
 subject = "var:fr26-2-28613"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix; etiketten kräver särskiljning.\ncatalog:occurrence:383161\ncatalog:variable_text:38509:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr26-2-28613"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix; etiketten kräver särskiljning.\ncatalog:occurrence:383161\ncatalog:variable_text:38509:16801:17167"
 
@@ -2210,12 +2096,6 @@ evidence = "Fr27-2 är en opak källkod och etiketten anger medborgarkontor.\nca
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-utover-delegering-grundskola"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382642\ncatalog:variable_text:38521:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-grundskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382642\ncatalog:variable_text:38521:16801:17167"
 
@@ -2234,44 +2114,20 @@ evidence = "Fr27-3 är en opak källkod och etiketten anger medborgarkontor.\nca
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382643\ncatalog:variable_text:38523:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382643\ncatalog:variable_text:38523:16801:17167"
 
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382644\ncatalog:variable_text:38524:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382644\ncatalog:variable_text:38524:16801:17167"
 
 [[statement]]
 kind = "set"
 subject = "var:fr27-5"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382645\ncatalog:variable_text:38525:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-5"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382645\ncatalog:variable_text:38525:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-6"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382646\ncatalog:variable_text:38526:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -2282,20 +2138,8 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 [[statement]]
 kind = "set"
 subject = "var:fr27-7"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382647\ncatalog:variable_text:38527:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-7"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382647\ncatalog:variable_text:38527:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-8"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382648\ncatalog:variable_text:38528:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -2774,20 +2618,8 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383348\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:fr39"
-fields = { "sets" = [] }
-evidence = "Den operativa betydelsen ändras mellan perioderna.\ncatalog:occurrence:383249\ncatalog:occurrence:383349"
-
-[[statement]]
-kind = "set"
-subject = "var:fr39"
 fields = { "tags" = ["democracy"] }
 evidence = "Den operativa betydelsen ändras mellan perioderna.\ncatalog:occurrence:383249\ncatalog:occurrence:383349"
-
-[[statement]]
-kind = "set"
-subject = "var:region-brukarrepresentation-utover-delegering-annat"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383250\ncatalog:occurrence:383350\ncatalog:variable_text:38569:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -2810,20 +2642,8 @@ evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383351\ncatalog:variable_text:38571:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383351\ncatalog:variable_text:38571:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:383251\ncatalog:occurrence:383352\ncatalog:variable_text:38572:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -2894,20 +2714,8 @@ evidence = "Fr3b är en opak källkod och etiketten anger heltäckande kommun- e
 [[statement]]
 kind = "set"
 subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382744\ncatalog:variable_text:38578:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382744\ncatalog:variable_text:38578:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-2"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382745\ncatalog:variable_text:38579:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -2942,12 +2750,6 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 [[statement]]
 kind = "set"
 subject = "var:fr40-3"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382746\ncatalog:variable_text:38582:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-3"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382746\ncatalog:variable_text:38582:18262:18628"
 
@@ -2966,32 +2768,14 @@ evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurren
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382747\ncatalog:variable_text:38584:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382747\ncatalog:variable_text:38584:18262:18628"
 
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-aldreomsorg-2020"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382748\ncatalog:variable_text:38585:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-aldreomsorg-2020"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382748\ncatalog:variable_text:38585:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382749\ncatalog:variable_text:38586:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -3002,20 +2786,8 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 [[statement]]
 kind = "set"
 subject = "var:brukarrepresentation-annat-omrade-2020"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382750\ncatalog:variable_text:38587:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-annat-omrade-2020"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382750\ncatalog:variable_text:38587:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-inte-brukarrepresentation-2020"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382751\ncatalog:variable_text:38588:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -3178,12 +2950,6 @@ kind = "set"
 subject = "var:fullmaktige-hallbarhetsmal-samtliga-bolag-arligen"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382863\ncatalog:variable_text:38601:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382760\ncatalog:occurrence:382864"
 
 [[statement]]
 kind = "set"
@@ -3206,12 +2972,6 @@ evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occur
 [[statement]]
 kind = "set"
 subject = "var:fr42-2-28613"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382761\ncatalog:occurrence:382865"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-2-28613"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382761\ncatalog:occurrence:382865"
 
@@ -3230,20 +2990,8 @@ evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occur
 [[statement]]
 kind = "set"
 subject = "var:fr42-3-28613"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382762\ncatalog:occurrence:382866"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-3-28613"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382762\ncatalog:occurrence:382866"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382867\ncatalog:variable_text:38607:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -3266,20 +3014,8 @@ evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\n
 [[statement]]
 kind = "set"
 subject = "var:fr42-5-28613"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382868\ncatalog:variable_text:38609:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-5-28613"
 fields = { "tags" = ["democracy", "social-care"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382868\ncatalog:variable_text:38609:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-6"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382869\ncatalog:variable_text:38610:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -3290,20 +3026,8 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 [[statement]]
 kind = "set"
 subject = "var:fr42-7"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382870\ncatalog:variable_text:38611:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-7"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382870\ncatalog:variable_text:38611:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-8"
-fields = { "sets" = [] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382872\ncatalog:variable_text:38612:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4159,12 +3883,6 @@ evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:klagomalshantering-fr43"
-fields = { "tags" = [] }
-evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncatalog:occurrence:383257"
-
-[[statement]]
-kind = "set"
 subject = "var:klagomalshantering-klagom"
 fields = { "sets" = ["klagomalshantering"] }
 evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncatalog:variable_text:38684:12053:12418\ncatalog:variable_text:38684:13879:14245\ncatalog:variable_text:38684:15340:15706"
@@ -4246,12 +3964,6 @@ kind = "set"
 subject = "var:koopomr"
 fields = { "tags" = ["business"] }
 evidence = "Beskriver brukarkooperativens område.\ncatalog:occurrence:382431\ncatalog:occurrence:382984"
-
-[[statement]]
-kind = "set"
-subject = "var:landstingskod"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383016\ncatalog:occurrence:383098"
 
 [[statement]]
 kind = "set"
@@ -5006,32 +4718,14 @@ evidence = "Förekomst av offentlig utfrågning.\ncatalog:occurrence:382543\ncat
 [[statement]]
 kind = "set"
 subject = "var:offentlig-utfragning-hearing-offutfragn"
-fields = { "sets" = [] }
-evidence = "Mäter offentlig utfrågning.\ncatalog:occurrence:382453\ncatalog:occurrence:383006"
-
-[[statement]]
-kind = "set"
-subject = "var:offentlig-utfragning-hearing-offutfragn"
 fields = { "tags" = ["democracy"] }
 evidence = "Mäter offentlig utfrågning.\ncatalog:occurrence:382453\ncatalog:occurrence:383006"
 
 [[statement]]
 kind = "set"
 subject = "var:offentlig-utfragning-hearing-via-webbplatsen-fr14b"
-fields = { "sets" = [] }
-evidence = "Mäter offentlig utfrågning via webbplats.\ncatalog:occurrence:383135"
-
-[[statement]]
-kind = "set"
-subject = "var:offentlig-utfragning-hearing-via-webbplatsen-fr14b"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Mäter offentlig utfrågning via webbplats.\ncatalog:occurrence:383135"
-
-[[statement]]
-kind = "set"
-subject = "var:offentlig-utfragning-hearing-via-webbplatsen-medbdiaweb"
-fields = { "sets" = [] }
-evidence = "Mäter offentlig utfrågning via webbplats.\ncatalog:occurrence:382545"
 
 [[statement]]
 kind = "set"
@@ -5054,20 +4748,8 @@ evidence = "Mäter allmänhetens tillgång till nämndsammanträden. Coordinator
 [[statement]]
 kind = "set"
 subject = "var:organ-direkt-under-fullmaktige"
-fields = { "sets" = [] }
-evidence = "Motsvarande kommunvariabel beskriver samma organ. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0408: Den valda variabeln avser uttryckligen andra organ än nämnder och styrelser under fullmäktige. membership-0409: Beskrivningen avgränsar uttryckligen organen till andra organ än nämnder och styrelser under fullmäktige. membership-0410: Båda beskrivningarna avser organ direkt under fullmäktige med nämnder och styrelser uttryckligen undantagna. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0038: Ingen variabel i denna sektion stöder medlemskap enligt den fasta definitionen. Andra-organ-under-fullmaktige avser uttryckligen andra organ än nämnder och styrelser och är därför undantagen; förekomst-av-flerpartsstyrning mäter flerpartsstyrning. Kandidatens angivna medlemmar ingår inte i sektionens selected_ids. Beslutet gäller endast denna sektion. membership-0039: Den valda variabeln organ-direkt-under-kommunfullmaktige avser uttryckligen organ exklusive nämnder/styrelser och utesluts därför av den fasta kandidatdefinitionen, trots tidigare medlemsförslag. Övriga valda variabler ger inget stöd för medlemskap; organ under kommunstyrelsen är också uttryckligen uteslutna. membership-0040: Det skyddade medlemskapet behålls. Övriga valda variabler ger inget ytterligare stöd: andra organ än nämnder och styrelser är uttryckligen uteslutna, liksom organ under styrelsen. Sektionens enda medlem behålls inför sammanvägningen över registret.\ncatalog:occurrence:382369\ncatalog:occurrence:382425\ncatalog:occurrence:382917\ncatalog:variable_text:38345:19723:20089\ncatalog:variable_text:38346:19723:20089\ncatalog:variable_text:38442:16801:17167\ncatalog:variable_text:38768:12053:12418\ncatalog:variable_text:38769:13879:14245\ncatalog:variable_text:38774:15340:15706\ncatalog:variable_text:38775:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:organ-direkt-under-fullmaktige"
 fields = { "tags" = ["democracy"] }
 evidence = "Motsvarande kommunvariabel beskriver samma organ. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0408: Den valda variabeln avser uttryckligen andra organ än nämnder och styrelser under fullmäktige. membership-0409: Beskrivningen avgränsar uttryckligen organen till andra organ än nämnder och styrelser under fullmäktige. membership-0410: Båda beskrivningarna avser organ direkt under fullmäktige med nämnder och styrelser uttryckligen undantagna. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0038: Ingen variabel i denna sektion stöder medlemskap enligt den fasta definitionen. Andra-organ-under-fullmaktige avser uttryckligen andra organ än nämnder och styrelser och är därför undantagen; förekomst-av-flerpartsstyrning mäter flerpartsstyrning. Kandidatens angivna medlemmar ingår inte i sektionens selected_ids. Beslutet gäller endast denna sektion. membership-0039: Den valda variabeln organ-direkt-under-kommunfullmaktige avser uttryckligen organ exklusive nämnder/styrelser och utesluts därför av den fasta kandidatdefinitionen, trots tidigare medlemsförslag. Övriga valda variabler ger inget stöd för medlemskap; organ under kommunstyrelsen är också uttryckligen uteslutna. membership-0040: Det skyddade medlemskapet behålls. Övriga valda variabler ger inget ytterligare stöd: andra organ än nämnder och styrelser är uttryckligen uteslutna, liksom organ under styrelsen. Sektionens enda medlem behålls inför sammanvägningen över registret.\ncatalog:occurrence:382369\ncatalog:occurrence:382425\ncatalog:occurrence:382917\ncatalog:variable_text:38345:19723:20089\ncatalog:variable_text:38346:19723:20089\ncatalog:variable_text:38442:16801:17167\ncatalog:variable_text:38768:12053:12418\ncatalog:variable_text:38769:13879:14245\ncatalog:variable_text:38774:15340:15706\ncatalog:variable_text:38775:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:organ-direkt-under-kommunfullmaktige"
-fields = { "sets" = [] }
-evidence = "Motsvarande regionvariabel beskriver samma organ. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0408: Den valda variabeln avser uttryckligen andra organ än nämnder och styrelser under fullmäktige. membership-0409: Beskrivningen avgränsar uttryckligen organen till andra organ än nämnder och styrelser under fullmäktige. membership-0410: Båda beskrivningarna avser organ direkt under fullmäktige med nämnder och styrelser uttryckligen undantagna. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0038: Ingen variabel i denna sektion stöder medlemskap enligt den fasta definitionen. Andra-organ-under-fullmaktige avser uttryckligen andra organ än nämnder och styrelser och är därför undantagen; förekomst-av-flerpartsstyrning mäter flerpartsstyrning. Kandidatens angivna medlemmar ingår inte i sektionens selected_ids. Beslutet gäller endast denna sektion. membership-0039: Den valda variabeln organ-direkt-under-kommunfullmaktige avser uttryckligen organ exklusive nämnder/styrelser och utesluts därför av den fasta kandidatdefinitionen, trots tidigare medlemsförslag. Övriga valda variabler ger inget stöd för medlemskap; organ under kommunstyrelsen är också uttryckligen uteslutna. membership-0040: Det skyddade medlemskapet behålls. Övriga valda variabler ger inget ytterligare stöd: andra organ än nämnder och styrelser är uttryckligen uteslutna, liksom organ under styrelsen. Sektionens enda medlem behålls inför sammanvägningen över registret.\ncatalog:occurrence:382369\ncatalog:occurrence:382425\ncatalog:variable_text:38345:19723:20089\ncatalog:variable_text:38346:19723:20089\ncatalog:variable_text:38442:16801:17167\ncatalog:variable_text:38768:12053:12418\ncatalog:variable_text:38769:13879:14245\ncatalog:variable_text:38774:15340:15706\ncatalog:variable_text:38775:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -5734,24 +5416,12 @@ kind = "set"
 subject = "var:rad-kommitte-for-sarskilda-fokusgrupper-textsvar-fr24-7-text"
 fields = { "tags" = ["democracy"] }
 evidence = "Textsvar hör till fokusgruppsråd.\ncatalog:occurrence:383325"
-
-[[statement]]
-kind = "set"
-subject = "var:region"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383016\ncatalog:occurrence:383098"
 
 [[statement]]
 kind = "set"
 subject = "var:region"
 fields = { "tags" = ["geography"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383016\ncatalog:occurrence:383098"
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod"
-fields = { "sets" = [] }
-evidence = "Kodar den svarande regionen.\ncatalog:occurrence:383282\ncatalog:occurrence:383378"
 
 [[statement]]
 kind = "set"
@@ -7198,3 +6868,399 @@ kind = "set"
 subject = "regioner: VARDVALPRIVIDELANT @2012-01-01..2012-12-31 where key = 'v28609'"
 fields = { "description" = "Antal ideella leverantörer av vårdcentraler i privat regi som landstinget eller kommunen har vårdavtal med." }
 evidence = "Beskrivningen anger förekomst av avtal men variabeln mäter antal leverantörer.\ncatalog:occurrence:383114"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
+fields = { "sets" = ["andra-organ-under-fullmaktige"] }
+evidence = "r114, r99 and r104 explicitly measure other bodies directly under the council, excluding committees and boards.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38345"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-under-fullmaktige"
+fields = { "sets" = ["andra-organ-under-fullmaktige"] }
+evidence = "r115, r70 and r81 explicitly measure other bodies directly under the council, excluding committees and boards.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38206\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382743\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38346"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-aldreomsorg-2020"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r150 and r75 define representation beyond delegation within elderly care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38254\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382748\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38583"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-annat-omrade-2020"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r152 and r77 define representation beyond delegation within another area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38255\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38585"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-fr27"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r118 and r62 define representation beyond delegation within preschool.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382641\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38380"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r149 and r74 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38258\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38582"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r157 and r85 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38259\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382867\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38605"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r151 and r76 define representation beyond delegation within care for people with disabilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38260\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382749\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38584"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r119, r51 and r94 explicitly define representation beyond delegation; the operational text describes which representation system exists.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38261\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38381"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-grundskola"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r135 and r63 define representation beyond delegation within compulsory school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382642\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38521"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r136 and r64 define representation beyond delegation within upper secondary school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38263\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382643\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38523"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r137 and r65 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38264\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382644\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38524"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-till-fr42-7-text"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r120 and r89 describe representation beyond delegation within another area in free text, within the group's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382871\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38382"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsys-utover-delegering"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r121 explicitly defines representation beyond delegation throughout its supplied history; r54 and r95 describe whether a system exists.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38383"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysald"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r122 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38267\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38384"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfs"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r123 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38268\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38385"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysfunk"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r124 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38269\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38386"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgs"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r125 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38270\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38387"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysgym"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r126 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38271\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38388"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysifo"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r127 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38272\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38389"
+
+[[statement]]
+kind = "set"
+subject = "var:brukarsysovr"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r128 and r61 define representation beyond delegation and describe which representation system exists.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38273\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382498\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38390"
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats"
+fields = { "sets" = ["medborgardialog-via-webbplats"] }
+evidence = "r129 and r80 explicitly measure website participation in citizen dialogues. r130 supplies a peer with the same concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38277\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382837\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38394\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38395"
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
+fields = { "sets" = ["medborgardialog-via-webbplats"] }
+evidence = "The definition measures website participation in citizen dialogues; the candidate peer has the same definition (r86, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38278\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383329\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38394"
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden"
+fields = { "sets" = ["forekomst-av-namndsammantraden"] }
+evidence = "r131 and r79 measure whether committee meetings with citizens' attendance rights occurred, fitting the group's meeting-occurrence scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38330\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382824\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38445"
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden-fr23a"
+fields = { "sets" = ["forekomst-av-namndsammantraden"] }
+evidence = "r132 and r103 measure whether committee meetings with citizens' attendance rights occurred, fitting the group's meeting-occurrence scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38331\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383316\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38446"
+
+[[statement]]
+kind = "set"
+subject = "var:fr26"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r133 and r97 define representation beyond delegation within healthcare.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383160\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38507"
+
+[[statement]]
+kind = "set"
+subject = "var:fr26-2-28613"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r134 and r98 define representation beyond delegation within another area, which the group includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38367\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383161\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38509"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-5"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r138 and r66 define representation beyond delegation within elderly care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38375\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382645\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38525"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-6"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r139 and r67 define representation beyond delegation within care for people with disabilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38376\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382646\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38526"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-7"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r140 and r68 define representation beyond delegation within another area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38377\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382647\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38527"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27-8"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r141 and r69 measure absence of representation beyond delegation, a negative indicator of the group's concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382648\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38528"
+
+[[statement]]
+kind = "set"
+subject = "var:fr39"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r142, r100 and r105 consistently define representation beyond delegation within healthcare.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38393\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383249\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38566"
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-2"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r147 and r72 define representation beyond delegation within compulsory school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38577"
+
+[[statement]]
+kind = "set"
+subject = "var:fr40-3"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r148 and r73 define representation beyond delegation within upper secondary school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38397\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382746\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38580"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r154 and r82 define representation beyond delegation within preschool.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38407\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382864\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38600"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-2-28613"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r155 and r83 define representation beyond delegation within compulsory school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38409\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382865\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38602"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-3-28613"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r156 and r84 define representation beyond delegation within upper secondary school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38411\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382866\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38604"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-5-28613"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r158 and r86 define representation beyond delegation within elderly care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38607"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-6"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r159 and r87 define representation beyond delegation within care for people with disabilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38413\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382869\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38608"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-7"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r160 and r88 define representation beyond delegation within another area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382870\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38609"
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-8"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r161 and r90 measure absence of representation beyond delegation, a negative indicator of the group's concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38415\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382872\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38610"
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr43"
+fields = { "tags" = ["democracy"] }
+evidence = "Coordinator-approved audit correction: Def: 'fastställd rutin för att samla in och hantera klagomål över organisationens service' in the Lokal demokrati municipal survey; complaint handling is a citizen-influence/accountability channel.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:11\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38681"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r146 and r71 define representation beyond delegation within preschool.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38480\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382744\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38576"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-inte-brukarrepresentation-2020"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r153 and r78 measure absence of representation beyond delegation, a negative indicator of the group's concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38486\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382751\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38586"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsys"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures choice-system existence beyond legal requirements, and partner variables measure the same concept (r106, r115).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38500\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38698"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysald"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r107, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38501\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38690"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysannat"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r108, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38502\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38691"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfs"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r109, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38503\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38692"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfunk"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r110, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38504\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38693"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgs"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r111, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38505\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38694"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgy"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The supplied operational definition explicitly measures whether the municipality has choice systems, matching the candidate and its partners (r42, r112, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38506\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382529\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38695"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysifo"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The definition measures whether the organisation has choice systems beyond legal requirements, matching the candidate and its partners (r113, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38507\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38696"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvomr"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The operational definitions measure choice-system areas and types, expressly included with existence measures in the candidate (r57, r63, r115).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38508\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382985\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38698"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvsys"
+fields = { "sets" = ["valfrihetssystem"] }
+evidence = "The operational definition measures county-council choice-system existence, matching the candidate and other choice-system variables (r64, r106).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38509\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382986\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38689"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod"
+fields = { "sets" = ["regiontillhorighet"] }
+evidence = "The definition and complete county-council code lists establish regional affiliation, matching the region peer (r116, r89, r95, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38511\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10160\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6610\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38825"
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-offutfragn"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "The occurrence definitions explicitly measure public hearings in municipalities and county councils, matching the candidate and website-hearing partners (r26, r59, r123).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38581\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382394\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382944\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38766"
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-via-webbplatsen-fr14b"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "The definition explicitly identifies hearings conducted through the website, which the candidate includes alongside other hearing measures (r122, r121).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38582\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38765"
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-utfragning-hearing-via-webbplatsen-medbdiaweb"
+fields = { "sets" = ["offentliga-utfragningar"] }
+evidence = "The definition explicitly identifies hearings conducted through the website, which the candidate includes alongside other hearing measures (r123, r121).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38583\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38766"
+
+[[statement]]
+kind = "set"
+subject = "var:organ-direkt-under-fullmaktige"
+fields = { "sets" = ["andra-organ-under-fullmaktige"] }
+evidence = "r162 and r93 explicitly exclude committees and boards from bodies directly under the council, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38585\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382917\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38768"
+
+[[statement]]
+kind = "set"
+subject = "var:organ-direkt-under-kommunfullmaktige"
+fields = { "sets" = ["andra-organ-under-fullmaktige"] }
+evidence = "r163, r50 and r53 explicitly exclude committees and boards from bodies directly under the council, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38586\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382369\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382425\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38769"
+
+[[statement]]
+kind = "set"
+subject = "var:region"
+fields = { "sets" = ["regiontillhorighet"] }
+evidence = "The definition identifies a Swedish region or county council, matching the regional affiliation concept measured by its partners (r131, r116).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38825"
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r143, r101 and r106 consistently define representation beyond delegation within another regional area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38665\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383350\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38567"
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r144 and r107 describe representation beyond delegation within another area in free text, within the group's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38666\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383351\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38569"
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
+fields = { "sets" = ["brukarrepresentation"] }
+evidence = "r145, r102 and r108 measure absence of representation beyond delegation across regional responsibilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38672\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383251\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383352\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38570"
+
+[[statement]]
+kind = "set"
+subject = "var:regionkod"
+fields = { "sets" = ["regiontillhorighet"] }
+evidence = "Despite the broad catalogue description, both occurrences use exclusively county-council codes, and the later operational definition identifies the responding region (r85, r87, r95).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38683\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383282\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6610"
+
+[[statement]]
+kind = "set"
+subject = "var:samveumedel"
+fields = { "tags" = ["public-finance"] }
+evidence = "The definition explicitly measures cross-border cooperation financed by EU funds, supporting the public financing theme (r133).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38851"

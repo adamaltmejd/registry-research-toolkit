@@ -1442,12 +1442,6 @@ evidence = "Andelen är ett härlett barnbidragsmått.\ncatalog:occurrence-locat
 [[statement]]
 kind = "set"
 subject = "var:andel-bostb"
-fields = { "sets" = [] }
-evidence = "Andelen och beloppet hör till samma bidragsbegrepp.\ncatalog:variable_text:6404:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-bostb"
 fields = { "tags" = ["transfers"] }
 evidence = "Andelen och beloppet hör till samma bidragsbegrepp.\ncatalog:variable_text:6404:20088:20089"
 
@@ -2194,12 +2188,6 @@ kind = "set"
 subject = "var:bostadskategori"
 fields = { "tags" = ["housing"] }
 evidence = "Bostadskategori är ett bostadsmått och har ingen passande gruppkandidat.\ncatalog:occurrence-locators:variable:6466\ncatalog:valueset:9158"
-
-[[statement]]
-kind = "set"
-subject = "var:bostb-ink"
-fields = { "sets" = [] }
-evidence = "Ink-familjen får samma namnbytesbeslut som fp-ink enligt familjeregeln. Coordinator group membership: Andelen och beloppet avser bostadsbidrag. Båda skyddade medlemskap behålls trots att beloppsvariabelns tidigare förslag utelämnade gruppen.\ncatalog:variable_text:6404:20088:20089\ncatalog:variable_text:6467:20088:20089\ncatalog:variable_text:6537:20088:20089"
 
 [[statement]]
 kind = "set"
@@ -6394,3 +6382,15 @@ kind = "set"
 subject = "familjer: Underhall_INK @2024-12-31..2024-12-31 where key = 'v30639'"
 fields = { "description" = "Modellberäknat mottaget underhållsbidrag." }
 evidence = "Källan anger modellberäknade värden, inte observerat mottagande.\ncatalog:occurrence-locators:variable:6567"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-bostb"
+fields = { "sets" = ["bostadsbidrag"] }
+evidence = "r67 defines the percentage of family disposable income consisting of housing benefit. Its amount counterpart in r68 provides a partner within the fixed definition (r69).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6392\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:6404\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:6468\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/breg/bostadsbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:bostb-ink"
+fields = { "sets" = ["bostadsbidrag"] }
+evidence = "r68 defines total household housing benefit in SEK; r67 measures its share of disposable income. Together they meet the fixed amount-or-share definition (r69).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:6454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:6404\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:6468\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/breg/bostadsbidrag"

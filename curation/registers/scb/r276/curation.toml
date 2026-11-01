@@ -327,12 +327,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:adrplatsursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10152"
-
-[[statement]]
-kind = "set"
-subject = "var:adrplatsursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10152"
 
@@ -347,12 +341,6 @@ kind = "set"
 subject = "var:adrpltypdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10153"
-
-[[statement]]
-kind = "set"
-subject = "var:adrpltypursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10154"
 
 [[statement]]
 kind = "set"
@@ -383,12 +371,6 @@ kind = "set"
 subject = "var:adrstatusdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10156"
-
-[[statement]]
-kind = "set"
-subject = "var:adrstatusursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10157"
 
 [[statement]]
 kind = "set"
@@ -623,12 +605,6 @@ kind = "set"
 subject = "var:antrumdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10181"
-
-[[statement]]
-kind = "set"
-subject = "var:antrumursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10182"
 
 [[statement]]
 kind = "set"
@@ -807,12 +783,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:boareaursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10204"
-
-[[statement]]
-kind = "set"
-subject = "var:boareaursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10204"
 
@@ -827,12 +797,6 @@ kind = "set"
 subject = "var:byggardat"
 fields = { "tags" = ["methods"] }
 evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10205\ncatalog:occurrence:82446\ncatalog:variable_text:10205:20453:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:byggarursp"
-fields = { "sets" = [] }
-evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10206\ncatalog:occurrence:82447\ncatalog:variable_text:10206:20453:20454"
 
 [[statement]]
 kind = "set"
@@ -887,12 +851,6 @@ kind = "set"
 subject = "var:byggtypdat"
 fields = { "tags" = ["methods"] }
 evidence = "Datumet är uttryckligen en kvalitetsmärkning; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10211\ncatalog:occurrence:82452\ncatalog:variable_text:10211:20453:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:byggtypursp"
-fields = { "sets" = [] }
-evidence = "Ursprunget avser uttryckligen kvalitetsmärkningen; id:ts ordstammar är läsbara.\ncatalog:occurrence-locators:variable:10212\ncatalog:occurrence:82453\ncatalog:variable_text:10212:20453:20454"
 
 [[statement]]
 kind = "set"
@@ -987,12 +945,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:entretypursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10224"
-
-[[statement]]
-kind = "set"
-subject = "var:entretypursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10224"
 
@@ -1079,12 +1031,6 @@ kind = "set"
 subject = "var:kvalitetsmarkning-datum-fastighetsnyckel"
 fields = { "tags" = [] }
 evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10236"
-
-[[statement]]
-kind = "set"
-subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
-fields = { "sets" = [] }
-evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10237"
 
 [[statement]]
 kind = "set"
@@ -1347,12 +1293,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:kokgemursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10276"
-
-[[statement]]
-kind = "set"
-subject = "var:kokgemursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10276"
 
@@ -1379,12 +1319,6 @@ kind = "set"
 subject = "var:koktypdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10278"
-
-[[statement]]
-kind = "set"
-subject = "var:koktypursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10279"
 
 [[statement]]
 kind = "set"
@@ -1599,12 +1533,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:lghkatursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10301"
-
-[[statement]]
-kind = "set"
-subject = "var:lghkatursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10301"
 
@@ -1619,12 +1547,6 @@ kind = "set"
 subject = "var:lghnrdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10303"
-
-[[statement]]
-kind = "set"
-subject = "var:lghnrursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10304"
 
 [[statement]]
 kind = "set"
@@ -1655,12 +1577,6 @@ kind = "set"
 subject = "var:lghstatusdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10306"
-
-[[statement]]
-kind = "set"
-subject = "var:lghstatusursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10307"
 
 [[statement]]
 kind = "set"
@@ -1799,12 +1715,6 @@ kind = "set"
 subject = "var:ombyggardat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10326"
-
-[[statement]]
-kind = "set"
-subject = "var:ombyggarursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10327"
 
 [[statement]]
 kind = "set"
@@ -1971,12 +1881,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:popnamnursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10347"
-
-[[statement]]
-kind = "set"
-subject = "var:popnamnursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10347"
 
@@ -2031,12 +1935,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:postnrursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10352"
-
-[[statement]]
-kind = "set"
-subject = "var:postnrursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10352"
 
@@ -2075,12 +1973,6 @@ kind = "set"
 subject = "var:postortdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10355"
-
-[[statement]]
-kind = "set"
-subject = "var:postortursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10356"
 
 [[statement]]
 kind = "set"
@@ -2147,12 +2039,6 @@ kind = "set"
 subject = "var:punkttyp"
 fields = { "tags" = ["geography"] }
 evidence = "Koden anger typ av geografisk punkt.\ncatalog:occurrence-locators:variable:10361\ncatalog:valueset:8297"
-
-[[statement]]
-kind = "set"
-subject = "var:regbybetursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för registerbyggnadsbeteckning.\ncatalog:occurrence-locators:variable:10364"
 
 [[statement]]
 kind = "set"
@@ -2367,12 +2253,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:totboareaursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10396"
-
-[[statement]]
-kind = "set"
-subject = "var:totboareaursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10396"
 
@@ -2387,12 +2267,6 @@ kind = "set"
 subject = "var:totlokareadat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10397"
-
-[[statement]]
-kind = "set"
-subject = "var:totlokareaursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10398"
 
 [[statement]]
 kind = "set"
@@ -2487,12 +2361,6 @@ evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable
 [[statement]]
 kind = "set"
 subject = "var:typbebyggursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10407"
-
-[[statement]]
-kind = "set"
-subject = "var:typbebyggursp"
 fields = { "tags" = ["methods"] }
 evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10407"
 
@@ -2531,12 +2399,6 @@ kind = "set"
 subject = "var:typkodskdat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10410"
-
-[[statement]]
-kind = "set"
-subject = "var:typkodskursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10411"
 
 [[statement]]
 kind = "set"
@@ -2639,12 +2501,6 @@ kind = "set"
 subject = "var:vardeardat"
 fields = { "tags" = [] }
 evidence = "Datum för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10438"
-
-[[statement]]
-kind = "set"
-subject = "var:vardearursp"
-fields = { "sets" = [] }
-evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:variable:10439"
 
 [[statement]]
 kind = "set"
@@ -2819,3 +2675,159 @@ kind = "set"
 subject = "fastighetsinformation: TOTAR @2025-12-31..2025-12-31 where key = 'v2888'"
 fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
 evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
+
+[[statement]]
+kind = "set"
+subject = "var:adrplatsursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r32 explicitly defines quality-marking origin for the address location.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10135\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80892"
+
+[[statement]]
+kind = "set"
+subject = "var:adrpltypursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r33 explicitly defines quality-marking origin for address-location type.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10137\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80895"
+
+[[statement]]
+kind = "set"
+subject = "var:adrstatusursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r34 explicitly defines quality-marking origin for address status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10140\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80898"
+
+[[statement]]
+kind = "set"
+subject = "var:antrumursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r120 explicitly defines quality-marking origin for the number of rooms.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10165\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81466"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "sets" = ["beslutsdatum"] }
+evidence = "r121 records when the apartment number was decided, matching the fixed decision-date definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10180\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81468"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-plan-naturvardsbestammelse-utfardande"
+fields = { "sets" = ["beslutsdatum"] }
+evidence = "r329 explicitly records the decision date for issuing a plan or nature-conservation provision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10182\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:84227"
+
+[[statement]]
+kind = "set"
+subject = "var:boareaursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r122 explicitly defines quality-marking origin for residential floor area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10189\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81471"
+
+[[statement]]
+kind = "set"
+subject = "var:byggarursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r123 explicitly defines quality-marking origin for the year of new construction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10191\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81474"
+
+[[statement]]
+kind = "set"
+subject = "var:byggtypursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r124 explicitly defines quality-marking origin for detailed building type or purpose.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10197\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81479"
+
+[[statement]]
+kind = "set"
+subject = "var:entretypursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r125 explicitly defines quality-marking origin for entrance type.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10209\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81483"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgemursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r127 explicitly defines quality-marking origin for a shared kitchen.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10258\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81491"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r128 explicitly defines quality-marking origin for kitchen type.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10261\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81494"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r35 explicitly defines quality-marking origin for the property key.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10275\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80906"
+
+[[statement]]
+kind = "set"
+subject = "var:lghkatursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r129 explicitly defines quality-marking origin for apartment category.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81499"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnrursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r130 explicitly defines quality-marking origin for the apartment number.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10290\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81502"
+
+[[statement]]
+kind = "set"
+subject = "var:lghstatusursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r131 explicitly defines quality-marking origin for apartment status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10292\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81505"
+
+[[statement]]
+kind = "set"
+subject = "var:ombyggarursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r132 explicitly defines quality-marking origin for the reconstruction year.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10312\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81510"
+
+[[statement]]
+kind = "set"
+subject = "var:popnamnursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r37 explicitly defines quality-marking origin for the popular name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10333\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80918"
+
+[[statement]]
+kind = "set"
+subject = "var:postnrursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r38 explicitly defines quality-marking origin for the postal code.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80921"
+
+[[statement]]
+kind = "set"
+subject = "var:postortursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r39 explicitly defines quality-marking origin for the postal town.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10342\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80924"
+
+[[statement]]
+kind = "set"
+subject = "var:regbybetursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r133 explicitly defines quality-marking origin for the register building designation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81511"
+
+[[statement]]
+kind = "set"
+subject = "var:totboareaursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r134 explicitly defines quality-marking origin for total residential floor area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10381\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81525"
+
+[[statement]]
+kind = "set"
+subject = "var:totlokareaursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r135 explicitly measures quality-marking origin for total nonresidential floor area. NULL-only delivery does not change that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10383\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81528"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebyggursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r136 explicitly defines quality-marking origin for development type or building purpose.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10392\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81531"
+
+[[statement]]
+kind = "set"
+subject = "var:typkodskursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r137 explicitly measures quality-marking origin for the latest linked type code. NULL-only delivery does not change that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10397\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81534"
+
+[[statement]]
+kind = "set"
+subject = "var:vardearursp"
+fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
+evidence = "r138 explicitly measures quality-marking origin for the valuation year. NULL-only delivery does not change that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10424\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81543"

@@ -33110,32 +33110,14 @@ evidence = "Avstånd till service.\ncatalog:variable_text:46457:10592:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:avstand-livsmedelsbutik"
-fields = { "tags" = [] }
-evidence = "Avstånd till service.\ncatalog:variable_text:46457:10592:10957"
-
-[[statement]]
-kind = "set"
 subject = "var:avstand-till-livsmedelsbutik-tk0080"
 fields = { "sets" = [] }
 evidence = "Källan mäter avstånd till närmaste livsmedelsbutik.\ncatalog:variable_text:46460:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:avstand-till-livsmedelsbutik-tk0080"
-fields = { "tags" = [] }
-evidence = "Källan mäter avstånd till närmaste livsmedelsbutik.\ncatalog:variable_text:46460:1826:2191"
-
-[[statement]]
-kind = "set"
 subject = "var:avstand-till-livsmedelsbutik-tk0089"
 fields = { "sets" = [] }
-evidence = "Katalogen visar en perioduppdelning för samma kolumn.\ncatalog:occurrence:482121\ncatalog:occurrence:489633"
-
-[[statement]]
-kind = "set"
-subject = "var:avstand-till-livsmedelsbutik-tk0089"
-fields = { "tags" = [] }
 evidence = "Katalogen visar en perioduppdelning för samma kolumn.\ncatalog:occurrence:482121\ncatalog:occurrence:489633"
 
 [[statement]]
@@ -95990,12 +95972,6 @@ evidence = "Identitetsfaktet och temavalen behöver granskas.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:tillgang-lantbrevbarare"
-fields = { "tags" = [] }
-evidence = "Identitetsfaktet och temavalen behöver granskas.\ncatalog:occurrence:475711\ncatalog:occurrence:476553\ncatalog:occurrence:489636"
-
-[[statement]]
-kind = "set"
 subject = "var:tillgang-till-bad-dusch"
 fields = { "sets" = [] }
 evidence = "Samma bostadsfråga är perioduppdelad mot scb/ulf/tillgang-dusch-bad.\ncatalog:occurrence:497469\ncatalog:occurrence:499240"
@@ -96026,12 +96002,6 @@ evidence = "Frågan gäller tillgång till butiksbuss eller hemsändning.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:tillgang-till-butiksbuss-e-dyl-tk0183"
-fields = { "tags" = [] }
-evidence = "Frågan gäller tillgång till butiksbuss eller hemsändning.\ncatalog:variable_text:52247:7670:8035"
-
-[[statement]]
-kind = "set"
 subject = "var:tillgang-till-dator"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktet behöver granskas mot motparten.\ncatalog:occurrence:497477\ncatalog:occurrence:498610"
@@ -96050,20 +96020,8 @@ evidence = "Frågan gäller tillgång till lantbrevbärare.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:tillgang-till-lantbrevbarare-tk0194"
-fields = { "tags" = [] }
-evidence = "Frågan gäller tillgång till lantbrevbärare.\ncatalog:variable_text:52249:7670:8035"
-
-[[statement]]
-kind = "set"
 subject = "var:tillgang-till-postombud-1-tk0195"
 fields = { "sets" = [] }
-evidence = "Frågan gäller tillgång till postombud.\ncatalog:variable_text:52250:2922:3287"
-
-[[statement]]
-kind = "set"
-subject = "var:tillgang-till-postombud-1-tk0195"
-fields = { "tags" = [] }
 evidence = "Frågan gäller tillgång till postombud.\ncatalog:variable_text:52250:2922:3287"
 
 [[statement]]
@@ -96838,12 +96796,6 @@ evidence = "TK0093 är en opak källkod.\ncatalog:variable_text:52316:10592:1095
 kind = "set"
 subject = "var:tillgang-postombud-minst-3-km-till-posten"
 fields = { "sets" = [] }
-evidence = "TK0095 är en källkod; etiketten identifierar tillgång till postombud.\ncatalog:variable_text:52317:7670:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:tillgang-postombud-minst-3-km-till-posten"
-fields = { "tags" = [] }
 evidence = "TK0095 är en källkod; etiketten identifierar tillgång till postombud.\ncatalog:variable_text:52317:7670:8035"
 
 [[statement]]
@@ -108997,3 +108949,513 @@ kind = "set"
 subject = "individer-16plus-ulf: ba0099 @2014-01-01..2014-12-31 where key = 'v47817' and release = 'r19387'"
 fields = { "variable" = "antal-invanare-1-jan" }
 evidence = "ULF continues audit #149/#150: BA0098/BA0099 state 1 January/31 December in 1982-2004, then 31 December/1 January in 2006 and 2008-2014. Definitions confirm the crossed reference dates; both use Antal invånare with no value set. Follow the stated reference date across columns, not the reused spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-mor"
+fields = { "tags" = ["family-household"] }
+evidence = "r120 measures annual days meeting one's mother, directly describing contact within a family relationship.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46315\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46441"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-1-barn-3"
+fields = { "tags" = ["social-care"] }
+evidence = "r124 measures weekly hours in supervision form 1 for child 3, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46486\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46602"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-1-barn-6"
+fields = { "tags" = ["social-care"] }
+evidence = "r125 specifies weekly hours of supervision for child 6, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46489\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46605"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-2-barn-3"
+fields = { "tags" = ["social-care"] }
+evidence = "r126 measures weekly hours in supervision form 2 for child 3, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46492\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46608"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-2-barn-4"
+fields = { "tags" = ["social-care"] }
+evidence = "r127 specifies weekly hours of supervision for child 4, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46609"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-2-barn-6"
+fields = { "tags" = ["social-care"] }
+evidence = "r128 specifies weekly hours of supervision for child 6, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46495\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46611"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-3-barn-3"
+fields = { "tags" = ["social-care"] }
+evidence = "r129 measures weekly hours in supervision form 3 for child 3, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46498\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46614"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-3-barn-4"
+fields = { "tags" = ["social-care"] }
+evidence = "r130 specifies weekly hours of supervision for child 4, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46499\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46615"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-4-barn-4"
+fields = { "tags" = ["social-care"] }
+evidence = "r131 explicitly asks weekly supervision hours for child 4. Its inconsistent unit does not change the childcare topic.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46505\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46621"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillsynsform-4-barn-6"
+fields = { "tags" = ["social-care"] }
+evidence = "r132 specifies weekly hours of supervision for child 6, supporting social-care as a broad childcare theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46507\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46623"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-beroende-av-person"
+fields = { "tags" = ["transfers"] }
+evidence = "r134 explicitly asks about receiving cash contributions from other people for one's maintenance, fitting transfers' coverage of contribution receipt.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46574\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46685"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskamrater-fritiden"
+fields = { "tags" = ["culture"] }
+evidence = "r135 explicitly measures socializing with coworkers during leisure time, fitting culture's coverage of leisure activities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46656\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46760"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-fritidsbostad"
+fields = { "tags" = ["geography"] }
+evidence = "The question measures distance from home to the holiday dwelling, supporting relative geographical location (r215, r187).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5178\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46980"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-livsmedelsbutik"
+fields = { "tags" = ["geography"] }
+evidence = "The question and distance categories measure the home's geographical proximity to the nearest grocery shop (r216, r193).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46895\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8217\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46982"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-mor"
+fields = { "tags" = ["geography"] }
+evidence = "The question asks how far away the respondent's mother lives, measuring relative geographical location (r217, r191).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46896\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7071\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46983"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-narmaste-granne"
+fields = { "tags" = ["geography"] }
+evidence = "Distance to the nearest neighbour measures relative geographical location, confirmed by metre and kilometre categories (r218, r194).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46898\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8620\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:46984"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-gronomrade"
+fields = { "tags" = ["geography"] }
+evidence = "The item measures distance to an area suitable for walking, supporting geographical proximity (r219, r184).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46917\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12875\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47003"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-livsmedelsbutik-tk0080"
+fields = { "tags" = ["geography"] }
+evidence = "The question measures proximity to the nearest grocery shop, with explicit distance categories (r220, r189).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46921\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6495\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47007"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-livsmedelsbutik-tk0089"
+fields = { "tags" = ["geography"] }
+evidence = "The question and distance categories measure geographical proximity to the nearest grocery shop (r221, r184).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12875\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47008"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-mellanstadieskola"
+fields = { "tags" = ["geography"] }
+evidence = "The school-distance item uses metre and kilometre categories, supporting geographical proximity (r29, r193).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:470788\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8217"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-postkontor"
+fields = { "tags" = ["geography"] }
+evidence = "The question measures geographical proximity to the nearest post office through distance categories (r223, r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46924\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12072\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47010"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-varuhus"
+fields = { "tags" = ["geography"] }
+evidence = "The question measures geographical proximity to the nearest department store or shopping centre (r224, r193).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46927\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8217\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47013"
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-tillsyn-barn-4"
+fields = { "tags" = ["geography"] }
+evidence = "The question measures distance from home to childcare, with explicit geographical distance categories (r225, r185).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3816\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47017"
+
+[[statement]]
+kind = "set"
+subject = "var:ba0256"
+fields = { "tags" = ["agriculture"] }
+evidence = "The definition measures the father's hectares of arable land; the 2006 note directs forest hectares to BA0257 (r226, r168).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:46949\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:498537\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47042"
+
+[[statement]]
+kind = "set"
+subject = "var:barnvakt-3"
+fields = { "tags" = ["social-care"] }
+evidence = "The follow-up asks whether available babysitting has actually been used, fitting childcare support to families (r230).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47244\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47325"
+
+[[statement]]
+kind = "set"
+subject = "var:barnvakt2"
+fields = { "tags" = ["social-care"] }
+evidence = "The question measures access to childcare for several days during illness or travel, fitting support to children and families (r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47246\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47327"
+
+[[statement]]
+kind = "set"
+subject = "var:beroende-person-utanfor-hh"
+fields = { "tags" = ["transfers"] }
+evidence = "The question identifies people outside the household receiving maintenance support or cash contributions, fitting transfers (r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47282\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47359"
+
+[[statement]]
+kind = "set"
+subject = "var:diskmaskin"
+fields = { "tags" = ["housing"] }
+evidence = "The question measures access to a dishwasher in the dwelling, a housing amenity (r236).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47689\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47764"
+
+[[statement]]
+kind = "set"
+subject = "var:ek0025"
+fields = { "tags" = ["finance"] }
+evidence = "r186 identifies a colleague as a potential source of 3,000 SEK in the borrowing-access item, supporting finance through access to credit.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47848"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomisk-hjalp-till-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "r188 explicitly measures financial help to children or grandchildren outside the household, supporting family-household relationships.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47797\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47886"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomisk-kris"
+fields = { "tags" = ["consumption"] }
+evidence = "r189 explicitly asks about difficulty meeting recurring expenses for food, rent and bills, supporting consumption.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47798\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:47887"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiska-problem"
+fields = { "tags" = ["housing"] }
+evidence = "r136 and r160 explicitly derive arrears on rent, housing loans and utility bills, supporting housing costs.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47799\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:499283\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:506297"
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiska-svarigheter"
+fields = { "tags" = ["finance"] }
+evidence = "r151 and r155 derive arrears on instalments, credit-card debts and loans, directly supporting finance.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47800\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:504735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:505386"
+
+[[statement]]
+kind = "set"
+subject = "var:familjeisolerade"
+fields = { "tags" = ["family-household"] }
+evidence = "r195 defines isolation through living alone and rarely meeting close relatives, directly supporting family-household relationships.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:47920\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:48005"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-att-overklaga-1"
+fields = { "tags" = ["crime"] }
+evidence = "r227 measures knowing someone who can help appeal an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49156"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-att-overklaga-2"
+fields = { "tags" = ["crime"] }
+evidence = "r228 measures knowing where to obtain help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49157"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-arbetskamrat"
+fields = { "tags" = ["crime"] }
+evidence = "r230 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49163\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-granne"
+fields = { "tags" = ["crime"] }
+evidence = "r234 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49168\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-deklarera-av-granne"
+fields = { "tags" = ["taxation"] }
+evidence = "r240 follows MA0222; r244 establishes that the assistance concerns completing a tax return.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49001\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49194\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49214"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-deklarera-av-hushallsmedlem"
+fields = { "tags" = ["taxation"] }
+evidence = "r241 follows MA0222; r244 establishes that the assistance concerns completing a tax return.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49002\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49195\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49214"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-med-sjalvdeklaration"
+fields = { "tags" = ["taxation"] }
+evidence = "r244 explicitly measures access to assistance completing a tax return, supporting the taxation theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49021\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49214"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-overklaga-1"
+fields = { "tags" = ["crime"] }
+evidence = "r245 measures access to help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-overklaga-2"
+fields = { "tags" = ["crime"] }
+evidence = "r246 measures access to appeal assistance; r202 explicitly includes lawyers and legal aid.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49216"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-arbetskamrater-fritiden"
+fields = { "tags" = ["culture"] }
+evidence = "r248 explicitly measures socializing with coworkers outside work, supporting the leisure-activities theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49136\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49323"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-arbetskamrater-fritiden-2"
+fields = { "tags" = ["culture"] }
+evidence = "r249 explicitly measures socializing with coworkers during leisure time.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49137\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49324"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-barndomsvan"
+fields = { "tags" = ["culture"] }
+evidence = "r250 measures how often respondents meet and spend time with childhood friends, supporting the leisure-activities theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49334"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-tidigare-arbetskamrater"
+fields = { "tags" = ["culture"] }
+evidence = "r252 measures socializing with former coworkers, supporting the leisure-activities theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49201\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49386"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-traffa-andra"
+fields = { "tags" = ["culture"] }
+evidence = "r253 measures meeting and spending time with relatives, friends or acquaintances, supporting the leisure-activities theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49388"
+
+[[statement]]
+kind = "set"
+subject = "var:ip-beroende-person"
+fields = { "tags" = ["transfers"] }
+evidence = "r255 explicitly covers dependence on external financial support or receipt of cash contributions, supporting the transfers theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49441\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49603"
+
+[[statement]]
+kind = "set"
+subject = "var:kan-reparera-bilen"
+fields = { "tags" = ["transport"] }
+evidence = "r256 measures the household's ability to perform simple repairs on its car, supporting the vehicle theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49636"
+
+[[statement]]
+kind = "set"
+subject = "var:kanner-nagon-som-reparerar-bilen"
+fields = { "tags" = ["transport"] }
+evidence = "r258 explicitly measures access to help with simple car repairs, supporting the vehicle theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49485\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49643"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-diskriminerad-vid-bostadssokande"
+fields = { "tags" = ["housing"] }
+evidence = "r157 measures perceived discrimination when attempting to rent or buy a dwelling, directly concerning access to housing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49651"
+
+[[statement]]
+kind = "set"
+subject = "var:kommit-efter-med-rakningar"
+fields = { "tags" = ["consumption"] }
+evidence = "r161 records overdue household utility bills during twelve months, directly concerning payment of household goods and services expenses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49548\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49711"
+
+[[statement]]
+kind = "set"
+subject = "var:lana-till-hyra-av-annan-anhorig"
+fields = { "tags" = ["finance"] }
+evidence = "r170 identifies borrowing from another relative to pay rent on time. Borrowing falls within the finance tag's credit scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49891\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50044"
+
+[[statement]]
+kind = "set"
+subject = "var:lana-till-hyra-av-foraldrar"
+fields = { "tags" = ["finance"] }
+evidence = "r171 identifies borrowing from parents to pay rent on time. Borrowing falls within the finance tag's credit scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49894\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50047"
+
+[[statement]]
+kind = "set"
+subject = "var:lana-till-mat-av-foraldrar"
+fields = { "tags" = ["finance"] }
+evidence = "r172 identifies borrowing from parents to cover food costs. Borrowing falls within the finance tag's credit scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50052"
+
+[[statement]]
+kind = "set"
+subject = "var:mer-hjalp-av-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "r177 identifies children outside the household as additional potential helpers, describing a family support relationship.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50171\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50308"
+
+[[statement]]
+kind = "set"
+subject = "var:mer-hjalp-av-foralder"
+fields = { "tags" = ["family-household"] }
+evidence = "r178 identifies a parent outside the household as an additional potential helper, describing a family support relationship.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50172\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50309"
+
+[[statement]]
+kind = "set"
+subject = "var:nara-vanner-invandrare"
+fields = { "tags" = ["demographics"] }
+evidence = "r39 and r161 classify close friends as immigrants, Swedes or both, directly measuring the demographic composition of the friendship network.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50389\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:478232\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11216"
+
+[[statement]]
+kind = "set"
+subject = "var:person-1-beroende"
+fields = { "tags" = ["family-household"] }
+evidence = "r1 records the respondent's relationship to a financially dependent co-resident, supporting the household-relationship theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50728\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:469602"
+
+[[statement]]
+kind = "set"
+subject = "var:person-2-beroende"
+fields = { "tags" = ["family-household"] }
+evidence = "r2 identifies the relationship to a second dependent person and refers to r1's co-resident selection, supporting the household-relationship theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50736\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:469602\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:469603"
+
+[[statement]]
+kind = "set"
+subject = "var:polis-typ-av-atgard"
+fields = { "tags" = ["crime"] }
+evidence = "r154 and r132 describe recourse concerning police treatment, including written appeals, fitting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50929"
+
+[[statement]]
+kind = "set"
+subject = "var:polismyndighet-domstol-metod-2"
+fields = { "tags" = ["crime"] }
+evidence = "r155 concerns police or courts, and r150 includes written appeals and legal assistance, supporting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50967"
+
+[[statement]]
+kind = "set"
+subject = "var:simma-200-meter"
+fields = { "tags" = ["health"] }
+evidence = "r167 asks whether the respondent can swim 200 metres, measuring physical functional ability covered by health.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:590\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51371"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-dalig-ekonomi"
+fields = { "tags" = ["culture"] }
+evidence = "Coordinator-approved audit correction: Def: 'Om Up missnöjd enl FT6034: främsta skälet ... dålig ekonomi?' — the question is about dissatisfaction with leisure (model's own detail says 'missnöje med fritiden'); the model only checked for a financial theme.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:1\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51429\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5713\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51566"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-domstol"
+fields = { "tags" = ["crime"] }
+evidence = "r176 explicitly records a written appeal concerning a court, fitting judicial proceedings within the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51702"
+
+[[statement]]
+kind = "set"
+subject = "var:so-s-5-ordfragor"
+fields = { "tags" = ["education"] }
+evidence = "r182 defines a score counting correct answers on five vocabulary questions, supporting the educational-results theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51663\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51830"
+
+[[statement]]
+kind = "set"
+subject = "var:socioekonomisk-grupp-far"
+fields = { "tags" = ["employment"] }
+evidence = "r185 and r136 define the father's socioeconomic classification through occupational categories, including workers, employees and entrepreneurs.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3211\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51854"
+
+[[statement]]
+kind = "set"
+subject = "var:socioekonomisk-grupp-far-gamla"
+fields = { "tags" = ["employment"] }
+evidence = "r186 asks about the father's main activity during childhood, and r147 supplies occupational and employment-status categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51686\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51855"
+
+[[statement]]
+kind = "set"
+subject = "var:socioekonomisk-grupp-hushall"
+fields = { "tags" = ["employment"] }
+evidence = "r187 links the household classification to BA2140; r185 defines its occupational categories as workers, employees and entrepreneurs.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51854\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51863"
+
+[[statement]]
+kind = "set"
+subject = "var:socioekonomisk-grupp-mor"
+fields = { "tags" = ["employment"] }
+evidence = "r188 explicitly refers to the father's classification; r185 and r136 establish its occupational categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3211\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51854\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51866"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-att-fa-det-att-ga-ihop"
+fields = { "tags" = ["income"] }
+evidence = "Explicitly assesses whether the household's current total income is sufficient to make ends meet, supporting income (r277, r264).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51890\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8480\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52045"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-tiden-racka-till"
+fields = { "tags" = ["culture"] }
+evidence = "Asks about insufficient time for desired activities; culture explicitly includes general time use (r278).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51892\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52047"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsnamnd-metod-1"
+fields = { "tags" = ["taxation"] }
+evidence = "Records complaint and appeal actions concerning the tax assessment board, supporting taxation (r282, r270).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52005\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52181"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsnamnd-metod-2"
+fields = { "tags" = ["taxation"] }
+evidence = "Records complaint and appeal actions concerning the tax assessment board, supporting taxation (r283, r270).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52182"
+
+[[statement]]
+kind = "set"
+subject = "var:tillg-t-stereoanlaggning"
+fields = { "tags" = ["culture"] }
+evidence = "Measures access to stereo equipment at home, supporting the media and leisure theme (r284).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52115\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52277"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-lantbrevbarare"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to rural postal delivery, supporting transport services; screening conditions do not make it a disability measure (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52285"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-postombud-minst-3-km-till-posten"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to a postal agent when the post office is at least three kilometres away, supporting transport infrastructure (r293).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52386"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-butiksbuss-e-dyl-tk0183"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to a grocery bus or home delivery, explicitly identifying transport services (r286, r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3472\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52289"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-lantbrevbarare-tk0194"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to rural postal delivery, supporting the transport theme (r287).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52135\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52293"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-postombud-1-tk0195"
+fields = { "tags" = ["transport"] }
+evidence = "Explicitly measures access to a postal agent, supporting transport infrastructure (r288).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52137\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52295"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-postombud-2"
+fields = { "tags" = ["transport"] }
+evidence = "Asks about access to a postal agent, supporting the transport infrastructure theme (r289).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52138\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52296"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-postvaskebefordran"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to postal conveyance, supporting the transport theme (r290).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52139\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52297"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-postvaskebefordran-1"
+fields = { "tags" = ["transport"] }
+evidence = "Measures access to postal conveyance when the post office is at least three kilometres away (r291).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52140\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:52298"
+
+[[statement]]
+kind = "set"
+subject = "var:veta-mera-barnens-laxor"
+fields = { "tags" = ["education"] }
+evidence = "Explicitly concerns knowledge needed to help children with schoolwork, supporting education and educational resources (r309).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:52921\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:53116"

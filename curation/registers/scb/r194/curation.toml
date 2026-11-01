@@ -44,12 +44,6 @@ evidence = "Elevavgift ingår i kandidatgruppen.\ncatalog:variable_text:41998:15
 [[statement]]
 kind = "set"
 subject = "var:elevbidrag"
-fields = { "sets" = [] }
-evidence = "Statsbidrag för elever ingår i kandidatgruppen.\ncatalog:variable_text:41999:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:elevbidrag"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Statsbidrag för elever ingår i kandidatgruppen.\ncatalog:variable_text:41999:15706:16801"
 
@@ -416,12 +410,6 @@ evidence = "Kostnaden gäller utbildningsresurser.\ncatalog:variable_text:42030:
 [[statement]]
 kind = "set"
 subject = "var:lokalbidrag"
-fields = { "sets" = [] }
-evidence = "Statsbidrag för lokaler ingår i kandidatgruppen.\ncatalog:variable_text:42031:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:lokalbidrag"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Statsbidrag för lokaler ingår i kandidatgruppen.\ncatalog:variable_text:42031:15706:16801"
 
@@ -688,3 +676,15 @@ kind = "set"
 subject = "var:ytajust"
 fields = { "tags" = ["property"] }
 evidence = "Måttet avser lokalers yta.\ncatalog:variable_text:42055:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elevbidrag"
+fields = { "sets" = ["statsbidrag"] }
+evidence = "Despite the general funding-status description, r3, r5 and r7 explicitly measure pupil grant amounts in SEK. Premises grant amounts provide a distinct partner within the fixed definition (r4, r6, r8).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41856\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437172\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437204\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437326"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalbidrag"
+fields = { "sets" = ["statsbidrag"] }
+evidence = "Despite the general funding-status description, r4, r6 and r8 explicitly measure premises grant amounts in SEK. Pupil grant amounts provide a distinct partner within the fixed definition (r3, r5, r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437172\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437204\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437326"

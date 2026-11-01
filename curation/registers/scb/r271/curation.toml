@@ -229,20 +229,8 @@ evidence = "Källan beskriver antal för ett efternamn, men kolumnen är också 
 
 [[statement]]
 kind = "set"
-subject = "var:antal-efternamn"
-fields = { "tags" = [] }
-evidence = "Källan beskriver antal för ett efternamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389331\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-fornamn"
 fields = { "sets" = ["fornamn"] }
-evidence = "Källan beskriver antal för ett förnamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-fornamn"
-fields = { "tags" = [] }
 evidence = "Källan beskriver antal för ett förnamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
 
 [[statement]]
@@ -253,32 +241,14 @@ evidence = "Källan beskriver antal för ett tilltalsnamn, men kolumnen är ocks
 
 [[statement]]
 kind = "set"
-subject = "var:antal-tilltalsnamn"
-fields = { "tags" = [] }
-evidence = "Källan beskriver antal för ett tilltalsnamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389330\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
 subject = "var:efternamn"
 fields = { "sets" = ["efternamn"] }
 evidence = "Efternamn och antal efternamn ingår i samma grupp.\ncatalog:occurrence:389448\ncatalog:register:209"
 
 [[statement]]
 kind = "set"
-subject = "var:efternamn"
-fields = { "tags" = [] }
-evidence = "Efternamn och antal efternamn ingår i samma grupp.\ncatalog:occurrence:389448\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
 subject = "var:fornamn"
 fields = { "sets" = ["fornamn"] }
-evidence = "Förnamn och antal förnamn ingår i samma grupp.\ncatalog:occurrence:389449\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
-subject = "var:fornamn"
-fields = { "tags" = [] }
 evidence = "Förnamn och antal förnamn ingår i samma grupp.\ncatalog:occurrence:389449\ncatalog:register:209"
 
 [[statement]]
@@ -337,30 +307,60 @@ evidence = "Markeringen anger vilket förnamn som är tilltalsnamn och ingår i 
 
 [[statement]]
 kind = "set"
+subject = "var:tilltalsnamn"
+fields = { "sets" = ["tilltalsnamn"] }
+evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39366:19357:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tilltalsnamn-namn"
+fields = { "sets" = ["tilltalsnamn"] }
+evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39367:12417:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-efternamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Counts people in the population with a given surname (r129), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39214\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389331"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fornamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Counts people in the population with a given first name (r127), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39215\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389329"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tilltalsnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Counts people in the population with a given usual first name (r128), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39216\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389330"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Records family names of registered persons (r181), supporting searches about population name composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39217\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389441"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Records all given names of registered persons (r182), supporting searches about population name composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39218\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389442"
+
+[[statement]]
+kind = "set"
 subject = "var:tilltal"
-fields = { "tags" = [] }
-evidence = "Markeringen anger vilket förnamn som är tilltalsnamn och ingår i den angivna gruppen.\ncatalog:occurrence:389454\ncatalog:register:209"
+fields = { "tags" = ["demographics"] }
+evidence = "Identifies which recorded given name is a registered person's usual name (r183), supporting demographic name searches; individual code meanings are unnecessary.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39224\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389446"
 
 [[statement]]
 kind = "set"
 subject = "var:tilltalsnamn"
-fields = { "sets" = ["tilltalsnamn"] }
-evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39366:19357:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:tilltalsnamn"
-fields = { "tags" = [] }
-evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39366:19357:19358"
+fields = { "tags" = ["demographics"] }
+evidence = "Records registered persons' usual first names, derived from the population register's name marker (r184), supporting demographic searches.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389447"
 
 [[statement]]
 kind = "set"
 subject = "var:tilltalsnamn-namn"
-fields = { "sets" = ["tilltalsnamn"] }
-evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39367:12417:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:tilltalsnamn-namn"
-fields = { "tags" = [] }
-evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncatalog:register:209\ncatalog:variable_text:39367:12417:19358"
+fields = { "tags" = ["demographics"] }
+evidence = "Records registered persons' usual first names, derived from the population register's name marker (r134), supporting demographic searches.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39226\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389339"

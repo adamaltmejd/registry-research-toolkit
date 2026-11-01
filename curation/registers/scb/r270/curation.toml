@@ -697,12 +697,6 @@ evidence = "Samma sektorklassificering är uppdelad mellan perioder med scb/fort
 [[statement]]
 kind = "set"
 subject = "var:k-rtb"
-fields = { "sets" = [] }
-evidence = "Id:t behålls enligt RTB-familjens gemensamma läsbarhetsbedömning. Kommun är en geografisk indelning. Coordinator group membership: Samtliga anger kommun som indelning eller kod. Arbetsställets kommun är uttryckligen undantagen.\ncatalog:occurrence:133481\ncatalog:variable_text:13040:12053:12418\ncatalog:variable_text:13042:13514:13879\ncatalog:variable_text:13043:12053:12418\ncatalog:variable_text:13044:16436:16801\ncatalog:variable_text:13045:12053:12418\ncatalog:variable_text:13051:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:k-rtb"
 fields = { "tags" = ["geography"] }
 evidence = "Id:t behålls enligt RTB-familjens gemensamma läsbarhetsbedömning. Kommun är en geografisk indelning. Coordinator group membership: Samtliga anger kommun som indelning eller kod. Arbetsställets kommun är uttryckligen undantagen.\ncatalog:occurrence:133481\ncatalog:variable_text:13040:12053:12418\ncatalog:variable_text:13042:13514:13879\ncatalog:variable_text:13043:12053:12418\ncatalog:variable_text:13044:16436:16801\ncatalog:variable_text:13045:12053:12418\ncatalog:variable_text:13051:19358:19723"
 
@@ -721,12 +715,6 @@ evidence = "Kod anger inte nämndens innebörd; etiketten kolliderar och mål be
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "sets" = [] }
-evidence = "Kommunindelning för uppdraget.\ncatalog:variable_text:13042:12053:12418\ncatalog:variable_text:13042:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun"
 fields = { "tags" = ["geography"] }
 evidence = "Kommunindelning för uppdraget.\ncatalog:variable_text:13042:12053:12418\ncatalog:variable_text:13042:13514:13879"
 
@@ -745,20 +733,8 @@ evidence = "Arbetsställets geografiska läge omfattas inte av kommungruppen.\nc
 [[statement]]
 kind = "set"
 subject = "var:kommunindelning"
-fields = { "sets" = [] }
-evidence = "Kommunindelning för uppdraget.\ncatalog:variable_text:13044:12053:12418\ncatalog:variable_text:13044:14975:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunindelning"
 fields = { "tags" = ["geography"] }
 evidence = "Kommunindelning för uppdraget.\ncatalog:variable_text:13044:12053:12418\ncatalog:variable_text:13044:14975:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunkod"
-fields = { "sets" = [] }
-evidence = "Kommunangivelse i kodform.\ncatalog:variable_text:13045:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -825,12 +801,6 @@ kind = "set"
 subject = "var:landstingskod"
 fields = { "tags" = ["geography"] }
 evidence = "Samma landstingskodning är uppdelad mellan perioder med scb/fortroendevalda/landsting.\ncatalog:occurrence:133740\ncatalog:occurrence:133773\ncatalog:occurrence:133805\ncatalog:valueset:10160\ncatalog:valueset:11965"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-fortroendeuppdrag"
-fields = { "sets" = [] }
-evidence = "LLKK är en opak kod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13051:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -1521,3 +1491,33 @@ kind = "set"
 subject = "fortroendevalda-i-regioner-landsting: ant_barn18 @2019-01-01..2019-12-31 where key = 'v29608'"
 fields = { "description" = "Antal barn under 18 år." }
 evidence = "Definitionen utelämnar åldersgränsens innebörd som framgår av etiketten.\ncatalog:variable_text:13015:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:k-rtb"
+fields = { "sets" = ["kommun"] }
+evidence = "The occurrence and definition explicitly describe division into municipalities (r6, r19), which fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13020\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133481\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13039"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "The definition specifies division into municipalities; the operational text identifies where the elected assignment is performed (r7, r20). This fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133483\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13041"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fortroendeuppdrag"
+fields = { "sets" = ["kommun"] }
+evidence = "Both occurrences describe municipal division locating the elected assignment (r13, r14). This fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13024\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133632\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133661"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunindelning"
+fields = { "sets" = ["kommun"] }
+evidence = "The complete supplied history consistently defines municipal division, with later occurrences locating the elected assignment (r8, r10, r11, r12, r21). This fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133561\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133594\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13043"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "sets" = ["kommun"] }
+evidence = "The source definition explicitly identifies a municipality code (r15, r22), which the fixed kommun definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13026\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13044"

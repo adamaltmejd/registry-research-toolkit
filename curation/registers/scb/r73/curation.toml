@@ -2026,3 +2026,15 @@ kind = "set"
 subject = "priser-for-nyproducerade-bostader: UppvarmningKomplement @2024-01-01..2024-12-31 where key = 'v37425'"
 fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
 evidence = "Värdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsar"
+fields = { "sets" = ["redovisningsperiod"] }
+evidence = "This records the statistics' reference year and the objects published for that year, matching the group's explicit inclusion of reporting years (r96, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40600\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40745\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/priser-nyproducerade-bostader/redovisningsperiod"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningskvartal-justerad"
+fields = { "sets" = ["redovisningsperiod"] }
+evidence = "This is the statistics' reference quarter, adjusted by assigning certain prior-year commencements to the first reporting quarter. The group explicitly includes adjusted reporting quarters (r97, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40601\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40746\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/priser-nyproducerade-bostader/redovisningsperiod"
