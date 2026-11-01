@@ -1885,13 +1885,13 @@ evidence = "Fr23 är en opak frågekod.\ncatalog:occurrence:383227\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fr23b"
+subject = "var:narvaroratt-i-regionstyrelsen"
 fields = { "sets" = ["narvaroratt-i-styrelsen"] }
 evidence = "Fr23b är en opak frågekod.\ncatalog:occurrence:383317\ncatalog:variable_text:38494:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr23b"
+subject = "var:narvaroratt-i-regionstyrelsen"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr23b är en opak frågekod.\ncatalog:occurrence:383317\ncatalog:variable_text:38494:19723:20089"
 
@@ -2029,13 +2029,13 @@ evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382722\ncatalog:occu
 
 [[statement]]
 kind = "set"
-subject = "var:fr25b"
+subject = "var:narvaroratt-i-kommunstyrelsen"
 fields = { "sets" = ["narvaroratt-i-styrelsen"] }
 evidence = "Fr25b är en opak frågekod.\ncatalog:occurrence:382825\ncatalog:variable_text:38506:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr25b"
+subject = "var:narvaroratt-i-kommunstyrelsen"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr25b är en opak frågekod.\ncatalog:occurrence:382825\ncatalog:variable_text:38506:19723:20089"
 
@@ -2701,13 +2701,13 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b"
+subject = "var:faststallande-i-fullmaktige-av-verksamhetsmassiga-mal"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383347\ncatalog:variable_text:38562:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38b"
+subject = "var:faststallande-i-fullmaktige-av-verksamhetsmassiga-mal"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383347\ncatalog:variable_text:38562:19723:20089"
 
@@ -2761,13 +2761,13 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:382853\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fr38c"
+subject = "var:faststallande-i-fullmaktige-av-hallbarhetsmal-for-bolag"
 fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383348\ncatalog:variable_text:38567:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fr38c"
+subject = "var:faststallande-i-fullmaktige-av-hallbarhetsmal-for-bolag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383348\ncatalog:variable_text:38567:19723:20089"
 
@@ -3841,13 +3841,13 @@ evidence = "Fr9b är en opak frågekod.\ncatalog:occurrence:383280\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fstyr"
+subject = "var:fullmaktige-behandlar-beslut-i-foretag"
 fields = { "sets" = [] }
 evidence = "FSTYR är en opak källkod.\ncatalog:occurrence:382516\ncatalog:variable_text:38657:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:fstyr"
+subject = "var:fullmaktige-behandlar-beslut-i-foretag"
 fields = { "tags" = ["business", "democracy"] }
 evidence = "FSTYR är en opak källkod.\ncatalog:occurrence:382516\ncatalog:variable_text:38657:15340:15706"
 

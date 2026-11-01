@@ -385,13 +385,13 @@ evidence = "Variabeln avser köpbelopp för molntjänster inom koncernen, men et
 
 [[statement]]
 kind = "set"
-subject = "var:molnpr-e"
+subject = "var:andel-av-molntjanster-fran-extern-leverantor"
 fields = { "sets" = ["kop-av-molntjanster"] }
 evidence = "E är en enbokstavskod för extern leverantör och omfattas av R1(a).\ncatalog:variable_text:12003:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:molnpr-e"
+subject = "var:andel-av-molntjanster-fran-extern-leverantor"
 fields = { "tags" = ["business", "digital"] }
 evidence = "E är en enbokstavskod för extern leverantör och omfattas av R1(a).\ncatalog:variable_text:12003:18262:18628"
 
@@ -481,49 +481,49 @@ evidence = "Variabeln avser utgifter för telekommunikationsutrustning.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:utvantp"
+subject = "var:antal-arsverken-utforda-av-egen-personal-som-arbetar"
 fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
 evidence = "UTVANTP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger antal årsverken för egen personals programvaruutveckling.\ncatalog:occurrence:122520\ncatalog:variable_text:12014:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utvantp"
+subject = "var:antal-arsverken-utforda-av-egen-personal-som-arbetar"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "UTVANTP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger antal årsverken för egen personals programvaruutveckling.\ncatalog:occurrence:122520\ncatalog:variable_text:12014:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utveganv2"
+subject = "var:andel-av-antalet-arsverken-som-arbetar"
 fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
 evidence = "UTVEGANV2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för utveckling med investeringskaraktär.\ncatalog:occurrence:122521\ncatalog:variable_text:12015:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utveganv2"
+subject = "var:andel-av-antalet-arsverken-som-arbetar"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "UTVEGANV2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för utveckling med investeringskaraktär.\ncatalog:occurrence:122521\ncatalog:variable_text:12015:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utvexf2"
+subject = "var:andel-av-antalet-arsverken-utford-av-egen-personal"
 fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
 evidence = "UTVEXF2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för extern försäljning.\ncatalog:occurrence:122522\ncatalog:variable_text:12016:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utvexf2"
+subject = "var:andel-av-antalet-arsverken-utford-av-egen-personal"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "UTVEXF2 är en källkod. Familjens förkortningar behandlas enhetligt; etiketten anger årsverksandelen för extern försäljning.\ncatalog:occurrence:122522\ncatalog:variable_text:12016:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utvp"
+subject = "var:egen-personal-som-arbetar-med-programvaruutveckling"
 fields = { "sets" = ["egen-personals-arbete-med-programvaruutveckling"] }
 evidence = "UTVP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten och svarsalternativen anger förekomst av egen personal som arbetar med programvaruutveckling.\ncatalog:valueset:7898\ncatalog:variable_text:12017:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:utvp"
+subject = "var:egen-personal-som-arbetar-med-programvaruutveckling"
 fields = { "tags" = ["digital", "employment"] }
 evidence = "UTVP är en källkod. Familjens förkortningar behandlas enhetligt; etiketten och svarsalternativen anger förekomst av egen personal som arbetar med programvaruutveckling.\ncatalog:valueset:7898\ncatalog:variable_text:12017:18628:18993"
 

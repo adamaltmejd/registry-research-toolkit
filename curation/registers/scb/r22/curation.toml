@@ -535,25 +535,25 @@ evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7278
 
 [[statement]]
 kind = "set"
-subject = "var:hhstatus"
+subject = "var:hushallstatus"
 fields = { "sets" = [] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger hushållstatus.\ncatalog:variable_text:7279:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:hhstatus"
+subject = "var:hushallstatus"
 fields = { "tags" = ["family-household"] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger hushållstatus.\ncatalog:variable_text:7279:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:htyp"
+subject = "var:hushallstyp-i-socialbidragshushall"
 fields = { "sets" = [] }
 evidence = "H är en bokstavskod för hushåll; etiketten anger hushållstyp.\ncatalog:variable_text:7280:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:htyp"
+subject = "var:hushallstyp-i-socialbidragshushall"
 fields = { "tags" = ["family-household"] }
 evidence = "H är en bokstavskod för hushåll; etiketten anger hushållstyp.\ncatalog:variable_text:7280:13149:13514"
 
@@ -799,25 +799,25 @@ evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:730
 
 [[statement]]
 kind = "set"
-subject = "var:sbelapr"
+subject = "var:socialbidrag-i-april"
 fields = { "sets" = ["socialbidragsbelopp"] }
 evidence = "S är en bokstavskod för socialbidrag; etiketten anger aprilbeloppet.\ncatalog:variable_text:7307:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sbelapr"
+subject = "var:socialbidrag-i-april"
 fields = { "tags" = ["transfers"] }
 evidence = "S är en bokstavskod för socialbidrag; etiketten anger aprilbeloppet.\ncatalog:variable_text:7307:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sbelopp"
+subject = "var:socialbidragsbelopp"
 fields = { "sets" = ["socialbidragsbelopp"] }
 evidence = "S är en bokstavskod för socialbidrag; etiketten anger beloppet.\ncatalog:variable_text:7308:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:sbelopp"
+subject = "var:socialbidragsbelopp"
 fields = { "tags" = ["transfers"] }
 evidence = "S är en bokstavskod för socialbidrag; etiketten anger beloppet.\ncatalog:variable_text:7308:13149:13514"
 
@@ -955,25 +955,25 @@ evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7320:13149:13514
 
 [[statement]]
 kind = "set"
-subject = "var:utlhh"
+subject = "var:utlandskt-hushall"
 fields = { "sets" = [] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger utländskt hushåll.\ncatalog:variable_text:7322:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:utlhh"
+subject = "var:utlandskt-hushall"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger utländskt hushåll.\ncatalog:variable_text:7322:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:utrfoddhh"
+subject = "var:utrikesfott-hushall"
 fields = { "sets" = [] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger utrikesfött hushåll.\ncatalog:variable_text:7323:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:utrfoddhh"
+subject = "var:utrikesfott-hushall"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "Hh är en bokstavskod för hushåll; etiketten anger utrikesfött hushåll.\ncatalog:variable_text:7323:13149:13514"
 

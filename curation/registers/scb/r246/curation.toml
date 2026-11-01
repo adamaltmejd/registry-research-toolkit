@@ -73,25 +73,25 @@ evidence = "Antalet veckor beskriver den period som årslöneinkomsten avser.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:b210"
+subject = "var:arbetsmarknadspolitisk-atgard"
 fields = { "sets" = [] }
 evidence = "B210 är en ogenomskinlig källkod; etiketten anger arbetsmarknadspolitisk åtgärd.\ncatalog:variable_text:41915:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:b210"
+subject = "var:arbetsmarknadspolitisk-atgard"
 fields = { "tags" = ["employment"] }
 evidence = "B210 är en ogenomskinlig källkod; etiketten anger arbetsmarknadspolitisk åtgärd.\ncatalog:variable_text:41915:11688:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:b25"
+subject = "var:utbildningsniva"
 fields = { "sets" = [] }
 evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.\ncatalog:variable_text:41916:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:b25"
+subject = "var:utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.\ncatalog:variable_text:41916:13149:13514"
 

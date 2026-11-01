@@ -2131,37 +2131,37 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med kurs
 
 [[statement]]
 kind = "set"
-subject = "var:fedontea"
+subject = "var:kontakt-med-larare-ledare-eller-forelasare-formell"
 fields = { "sets" = ["kontakt-med-larare"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med lärare i formell utbildning.\ncatalog:variable_text:898:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedontea"
+subject = "var:kontakt-med-larare-ledare-eller-forelasare-formell"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med lärare i formell utbildning.\ncatalog:variable_text:898:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedoutcome"
+subject = "var:resultat-av-nya-kunskaper-formell-utbildning-fick-ett-nytt"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:899:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedoutcome"
+subject = "var:resultat-av-nya-kunskaper-formell-utbildning-fick-ett-nytt"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:899:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedoutcomemain"
+subject = "var:resultat-av-nya-kunskaper-formell-utbildning-viktigaste"
 fields = { "sets" = ["resultat-av-utbildning"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:900:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedoutcomemain"
+subject = "var:resultat-av-nya-kunskaper-formell-utbildning-viktigaste"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:900:18993:19358"
 
@@ -2227,13 +2227,13 @@ evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidval"
+subject = "var:kostnader-studier-formell-utbildning-avser-senaste-formella"
 fields = { "sets" = ["utbildningskostnader"] }
 evidence = "FEDPAIDVAL är en opak källkod.\ncatalog:variable_text:906:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedpaidval"
+subject = "var:kostnader-studier-formell-utbildning-avser-senaste-formella"
 fields = { "tags" = ["education"] }
 evidence = "FEDPAIDVAL är en opak källkod.\ncatalog:variable_text:906:15156:15522"
 
@@ -2419,13 +2419,13 @@ evidence = "FEDSAT är en opak källkod.\ncatalog:variable_text:921:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:fedstartmonth"
+subject = "var:utbildningens-startmanad"
 fields = { "sets" = ["utbildningens-starttid"] }
 evidence = "FED är en opak källkod i id:t.\ncatalog:variable_text:922:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:fedstartmonth"
+subject = "var:utbildningens-startmanad"
 fields = { "tags" = [] }
 evidence = "FED är en opak källkod i id:t.\ncatalog:variable_text:922:18993:19358"
 
@@ -2875,13 +2875,13 @@ evidence = "Grupperad ålder ingår i åldersgruppen.\ncatalog:variable_text:959
 
 [[statement]]
 kind = "set"
-subject = "var:guide"
+subject = "var:information-senaste-12-manaderna-radgivning-om"
 fields = { "sets" = ["innehall-i-utbildningsvagledning"] }
 evidence = "GUIDE är en opak källkod som inte återges i etiketten.\ncatalog:variable_text:960:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:guide"
+subject = "var:information-senaste-12-manaderna-radgivning-om"
 fields = { "tags" = ["education"] }
 evidence = "GUIDE är en opak källkod som inte återges i etiketten.\ncatalog:variable_text:960:18993:19358"
 
@@ -2935,25 +2935,25 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:guidemode"
+subject = "var:insamlingsmetod-fick-informationen-via-ett-personligt-samtal"
 fields = { "sets" = ["formedlingssatt-for-utbildningsinformation"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:965:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guidemode"
+subject = "var:insamlingsmetod-fick-informationen-via-ett-personligt-samtal"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:965:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guidetype"
+subject = "var:information-typ-av-gratis-information-allman-information"
 fields = { "sets" = ["innehall-i-utbildningsvagledning"] }
 evidence = "GUIDETYPE är en opak källkod.\ncatalog:variable_text:966:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:guidetype"
+subject = "var:information-typ-av-gratis-information-allman-information"
 fields = { "tags" = ["education"] }
 evidence = "GUIDETYPE är en opak källkod.\ncatalog:variable_text:966:16801:17167"
 
@@ -2983,13 +2983,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:hhincome"
+subject = "var:hushallets-ekvivalerade-manadsinkomst-netto"
 fields = { "sets" = [] }
 evidence = "HH är en opak källförkortning.\ncatalog:variable_text:969:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:hhincome"
+subject = "var:hushallets-ekvivalerade-manadsinkomst-netto"
 fields = { "tags" = ["income"] }
 evidence = "HH är en opak källförkortning.\ncatalog:variable_text:969:18993:19358"
 
@@ -3019,25 +3019,25 @@ evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:971:1515
 
 [[statement]]
 kind = "set"
-subject = "var:hhnbpers-5-13"
+subject = "var:antal-personer-5-13-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:972:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:hhnbpers-5-13"
+subject = "var:antal-personer-5-13-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:972:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:hhnbpers-65plus"
+subject = "var:antal-personer-65-ar-eller-aldre-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:973:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:hhnbpers-65plus"
+subject = "var:antal-personer-65-ar-eller-aldre-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:973:15156:15522"
 
@@ -3631,13 +3631,13 @@ evidence = "Id:t är en ogenomskinlig källkod; den delade etiketten kräver dis
 
 [[statement]]
 kind = "set"
-subject = "var:infmedia"
+subject = "var:undervisningsmetod-informell-utbildning-tv-eller-lyssna"
 fields = { "sets" = ["informella-inlarningsmetoder"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger metoden.\ncatalog:variable_text:1026:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:infmedia"
+subject = "var:undervisningsmetod-informell-utbildning-tv-eller-lyssna"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger metoden.\ncatalog:variable_text:1026:16801:17167"
 
@@ -3955,25 +3955,25 @@ evidence = "Variabeln anger hur utbildningsinformation förmedlades.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:intlang"
+subject = "var:intervjusprak"
 fields = { "sets" = [] }
 evidence = "INTLANG är en opak källkod.\ncatalog:variable_text:1053:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:intlang"
+subject = "var:intervjusprak"
 fields = { "tags" = ["methods"] }
 evidence = "INTLANG är en opak källkod.\ncatalog:variable_text:1053:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:jobstat"
+subject = "var:yrkesstallningsstatus"
 fields = { "sets" = [] }
 evidence = "JOBSTAT är en opak källkod.\ncatalog:variable_text:1054:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:jobstat"
+subject = "var:yrkesstallningsstatus"
 fields = { "tags" = ["employment"] }
 evidence = "JOBSTAT är en opak källkod.\ncatalog:variable_text:1054:18993:19358"
 
@@ -4351,13 +4351,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:locsizefirm"
+subject = "var:totalt-antal-anstallda"
 fields = { "sets" = [] }
 evidence = "LOCSIZEFIRM är en opak källkod.\ncatalog:variable_text:1086:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:locsizefirm"
+subject = "var:totalt-antal-anstallda"
 fields = { "tags" = ["business"] }
 evidence = "LOCSIZEFIRM är en opak källkod.\ncatalog:variable_text:1086:18993:19358"
 
@@ -5083,25 +5083,25 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:nfeonmat"
+subject = "var:undervisningsmaterial-icke-formell-utbildning-forsta"
 fields = { "sets" = ["undervisningsmaterial"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger undervisningsmaterial för första aktiviteten.\ncatalog:variable_text:1148:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeonmat"
+subject = "var:undervisningsmaterial-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger undervisningsmaterial för första aktiviteten.\ncatalog:variable_text:1148:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeonpar"
+subject = "var:kontakt-med-kurskamrater-icke-formell-utbildning-forsta"
 fields = { "sets" = ["kontakt-med-kurskamrater"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med kurskamrater för första aktiviteten.\ncatalog:variable_text:1149:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:nfeonpar"
+subject = "var:kontakt-med-kurskamrater-icke-formell-utbildning-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger kontakt med kurskamrater för första aktiviteten.\ncatalog:variable_text:1149:18993:19358"
 
@@ -6127,73 +6127,73 @@ evidence = "NFE är en opak källkod; etiketten kolliderar.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:nump03"
+subject = "var:antal-personer-0-3-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1236:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump03"
+subject = "var:antal-personer-0-3-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1236:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump1418"
+subject = "var:antal-personer-14-18-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1237:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump1418"
+subject = "var:antal-personer-14-18-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1237:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump1964"
+subject = "var:antal-personer-19-64-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1238:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump1964"
+subject = "var:antal-personer-19-64-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1238:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump45"
+subject = "var:antal-personer-4-5-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1239:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump45"
+subject = "var:antal-personer-4-5-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1239:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump613"
+subject = "var:antal-personer-6-13-ar-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1240:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump613"
+subject = "var:antal-personer-6-13-ar-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1240:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump65"
+subject = "var:antal-personer-65-ar-eller-mer-i-hushallet"
 fields = { "sets" = ["antal-hushallspersoner"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1241:12965:13330"
 
 [[statement]]
 kind = "set"
-subject = "var:nump65"
+subject = "var:antal-personer-65-ar-eller-mer-i-hushallet"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:1241:12965:13330"
 
@@ -6211,25 +6211,25 @@ evidence = "NUTS-region anger geografisk tillhörighet.\ncatalog:variable_text:1
 
 [[statement]]
 kind = "set"
-subject = "var:refday"
+subject = "var:mattidpunktsvariabler"
 fields = { "sets" = ["undersokningens-mattidpunkt"] }
 evidence = "REFDAY är en opak källkod för mättidpunkten.\ncatalog:variable_text:1243:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:refday"
+subject = "var:mattidpunktsvariabler"
 fields = { "tags" = [] }
 evidence = "REFDAY är en opak källkod för mättidpunkten.\ncatalog:variable_text:1243:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:respweight"
+subject = "var:gregvikt"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "RESP är en opak källkod.\ncatalog:variable_text:1244:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:respweight"
+subject = "var:gregvikt"
 fields = { "tags" = ["methods"] }
 evidence = "RESP är en opak källkod.\ncatalog:variable_text:1244:18993:19358"
 
@@ -6607,13 +6607,13 @@ evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet beh�
 
 [[statement]]
 kind = "set"
-subject = "var:seeksource"
+subject = "var:antal-informationskallor"
 fields = { "sets" = ["kallor-till-utbildningsinformation"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger antal informationskällor.\ncatalog:variable_text:1276:15156:15522"
 
 [[statement]]
 kind = "set"
-subject = "var:seeksource"
+subject = "var:antal-informationskallor"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger antal informationskällor.\ncatalog:variable_text:1276:15156:15522"
 

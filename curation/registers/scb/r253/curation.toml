@@ -7,12 +7,12 @@ evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:interna-ranteintakter"
 fields = { "sets" = [] }
 evidence = "Rad är en generisk källkolumn och anger inte variabelns innehåll. Den entydiga etiketten anger interna ränteintäkter.\ncatalog:occurrence-locators:variable:41090\ncatalog:variable_text:41090:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:rad"
+subject = "var:interna-ranteintakter"
 fields = { "tags" = ["public-finance"] }
 evidence = "Rad är en generisk källkolumn och anger inte variabelns innehåll. Den entydiga etiketten anger interna ränteintäkter.\ncatalog:occurrence-locators:variable:41090\ncatalog:variable_text:41090:16436:16801"

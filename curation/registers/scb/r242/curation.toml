@@ -175,13 +175,13 @@ evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exac
 
 [[statement]]
 kind = "set"
-subject = "var:akumed"
+subject = "var:svarande-i-aku"
 fields = { "sets" = ["svarande-i-aku"] }
 evidence = "Källförkortningen är opak; variabeln avser svarandestatus i AKU.\ncatalog:variable_text:2809:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akumed"
+subject = "var:svarande-i-aku"
 fields = { "tags" = ["methods"] }
 evidence = "Källförkortningen är opak; variabeln avser svarandestatus i AKU.\ncatalog:variable_text:2809:16071:16436"
 
@@ -379,25 +379,25 @@ evidence = "Variabeln anger arbetskraftsstatus enligt en äldre definition.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "Befolk är en opak källmnemonik för länsgruppering.\ncatalog:variable_text:2826:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "tags" = ["geography"] }
 evidence = "Befolk är en opak källmnemonik för länsgruppering.\ncatalog:variable_text:2826:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:befolk2"
+subject = "var:gruppering-av-lan-exklusive-gotland"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "Befolk är en opak källmnemonik för länsgruppering; 2 kommer från källkolumnen.\ncatalog:variable_text:2827:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:befolk2"
+subject = "var:gruppering-av-lan-exklusive-gotland"
 fields = { "tags" = ["geography"] }
 evidence = "Befolk är en opak källmnemonik för länsgruppering; 2 kommer från källkolumnen.\ncatalog:variable_text:2827:16071:16436"
 
@@ -451,13 +451,13 @@ evidence = "AKU är en källförkortning som inte skrivs ut i etiketten. Variabe
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-rtb"
+subject = "var:designvikt-for-rtb-urval"
 fields = { "sets" = ["designvikt"] }
 evidence = "RTB är en källförkortning som inte skrivs ut i etiketten. Variabeln är en designvikt.\ncatalog:variable_text:2832:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-rtb"
+subject = "var:designvikt-for-rtb-urval"
 fields = { "tags" = ["methods"] }
 evidence = "RTB är en källförkortning som inte skrivs ut i etiketten. Variabeln är en designvikt.\ncatalog:variable_text:2832:16071:16436"
 
@@ -643,13 +643,13 @@ evidence = "H-region är en geografisk indelning.\ncatalog:variable_text:2847:16
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "sets" = [] }
 evidence = "Hussyk är en opak källmnemonik för yrke i huvudsysslan.\ncatalog:variable_text:2848:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "Hussyk är en opak källmnemonik för yrke i huvudsysslan.\ncatalog:variable_text:2848:16071:16436"
 
@@ -895,13 +895,13 @@ evidence = "Lt är en opak källkod för landstingsfullmäktigval; 11 finns i k�
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-ri"
+subject = "var:kalibrerad-vikt-riksdagval"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Ri är en ogenomskinlig källförkortning för riksdagsval.\ncatalog:variable_text:2869:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-ri"
+subject = "var:kalibrerad-vikt-riksdagval"
 fields = { "tags" = ["methods"] }
 evidence = "Ri är en ogenomskinlig källförkortning för riksdagsval.\ncatalog:variable_text:2869:16071:16436"
 
@@ -943,13 +943,13 @@ evidence = "Länsnamn anger länstillhörighet.\ncatalog:variable_text:2872:1753
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-rtb"
+subject = "var:antal-i-urvalet-rtb"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är svårtolkad. Variabeln anger antal i urvalet per stratum.\ncatalog:variable_text:2873:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-rtb"
+subject = "var:antal-i-urvalet-rtb"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är svårtolkad. Variabeln anger antal i urvalet per stratum.\ncatalog:variable_text:2873:16071:16436"
 
@@ -1075,25 +1075,25 @@ evidence = "Variabeln anger en geografisk koordinat.\ncatalog:variable_text:2884
 
 [[statement]]
 kind = "set"
-subject = "var:omrost-ko"
+subject = "var:rostat-i-omval-till-kommunfullmaktige"
 fields = { "sets" = ["valdeltagande"] }
 evidence = "Ko är en svårtolkad källförkortning för kommunfullmäktige. Variabeln anger faktiskt röstande.\ncatalog:valueset:308\ncatalog:variable_text:2886:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omrost-ko"
+subject = "var:rostat-i-omval-till-kommunfullmaktige"
 fields = { "tags" = ["democracy"] }
 evidence = "Ko är en svårtolkad källförkortning för kommunfullmäktige. Variabeln anger faktiskt röstande.\ncatalog:valueset:308\ncatalog:variable_text:2886:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omrost-lt"
+subject = "var:rostat-i-omval-till-landstingsfullmaktige"
 fields = { "sets" = ["valdeltagande"] }
 evidence = "LT är en opak källförkortning för landstingsfullmäktige.\ncatalog:variable_text:2887:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:omrost-lt"
+subject = "var:rostat-i-omval-till-landstingsfullmaktige"
 fields = { "tags" = ["democracy"] }
 evidence = "LT är en opak källförkortning för landstingsfullmäktige.\ncatalog:variable_text:2887:14975:15340"
 
@@ -1279,121 +1279,121 @@ evidence = "Variabeln anger sektorn i huvudsysslan.\ncatalog:variable_text:2903:
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik; populationens numrerade etikett är källans etikett.\ncatalog:variable_text:2904:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik; populationens numrerade etikett är källans etikett.\ncatalog:variable_text:2904:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel10"
+subject = "var:population-10"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2905:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:sel10"
+subject = "var:population-10"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2905:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2906:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2906:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel3"
+subject = "var:population-3"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2907:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel3"
+subject = "var:population-3"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2907:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel4"
+subject = "var:population-4"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2908:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel4"
+subject = "var:population-4"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2908:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel5"
+subject = "var:population-5"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2909:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel5"
+subject = "var:population-5"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2909:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2910:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2910:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2911:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2911:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-av"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2912:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-av"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2912:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sel9"
+subject = "var:population-9"
 fields = { "sets" = [] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2913:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:sel9"
+subject = "var:population-9"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källmnemonik.\ncatalog:variable_text:2913:14975:15340"
 
@@ -1675,13 +1675,13 @@ evidence = "Källmnemoniken är svårtolkad. Variabeln anger andelen svarande pe
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-rtb"
+subject = "var:andel-i-urvalet-over-ar"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är svårtolkad. Variabeln anger urvalsandelar per år.\ncatalog:variable_text:2940:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-rtb"
+subject = "var:andel-i-urvalet-over-ar"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är svårtolkad. Variabeln anger urvalsandelar per år.\ncatalog:variable_text:2940:16071:16436"
 

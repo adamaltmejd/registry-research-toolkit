@@ -260,25 +260,25 @@ evidence = "Beloppet och dess kvintilgrupp hör till samma inkomstbegrepp.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "SUN2020inr är en källmnemonik; etiketten anger utbildningsinriktning. Etiketten delas med en annan variabel och målnamnet kräver D-12-prövning.\ncatalog:variable_text:7833:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
+subject = "var:utbildningsinriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020inr är en källmnemonik; etiketten anger utbildningsinriktning. Etiketten delas med en annan variabel och målnamnet kräver D-12-prövning.\ncatalog:variable_text:7833:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva"
+subject = "var:utbildningsniva"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN2020niva är en källmnemonik; etiketten anger utbildningsnivå. Målnamnet kräver D-12-prövning mot övriga nivåvariabler.\ncatalog:variable_text:7834:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva"
+subject = "var:utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "SUN2020niva är en källmnemonik; etiketten anger utbildningsnivå. Målnamnet kräver D-12-prövning mot övriga nivåvariabler.\ncatalog:variable_text:7834:19723:20089"
 

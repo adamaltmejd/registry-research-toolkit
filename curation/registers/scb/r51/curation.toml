@@ -487,13 +487,13 @@ evidence = "Semesterrätt är ett arbetsvillkor.\ncatalog:variable_text:42952:16
 
 [[statement]]
 kind = "set"
-subject = "var:arbtjm"
+subject = "var:tjanstebeteckning"
 fields = { "sets" = ["yrke"] }
 evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:arbtjm"
+subject = "var:tjanstebeteckning"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
 
@@ -655,13 +655,13 @@ evidence = "Omfattningsklassen hör till kandidatgruppen.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:hlon"
+subject = "var:timlon-for-timavlonade"
 fields = { "sets" = ["lon"] }
 evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hlon"
+subject = "var:timlon-for-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
 
@@ -859,13 +859,13 @@ evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:pcavdr"
+subject = "var:avdrag-lanedator"
 fields = { "sets" = [] }
 evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:pcavdr"
+subject = "var:avdrag-lanedator"
 fields = { "tags" = ["income"] }
 evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
 
@@ -943,13 +943,13 @@ evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perio
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "sets" = [] }
 evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "tags" = ["business"] }
 evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
 
@@ -1195,13 +1195,13 @@ evidence = "Tjänstledighetens omfattning ingår i kandidatgruppen.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:totalt-utbetald-lon"
 fields = { "sets" = ["lon"] }
 evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:totalt-utbetald-lon"
 fields = { "tags" = ["income"] }
 evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
 

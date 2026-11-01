@@ -109,13 +109,13 @@ evidence = "Variabeln anger en framskriven geografisk hemvist.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:hemfrf"
+subject = "var:hrmfr-felkod"
 fields = { "sets" = [] }
 evidence = "HEMFRF är en opak källkod; etiketten identifierar felkoden.\ncatalog:variable_text:55797:365:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:hemfrf"
+subject = "var:hrmfr-felkod"
 fields = { "tags" = ["methods"] }
 evidence = "HEMFRF är en opak källkod; etiketten identifierar felkoden.\ncatalog:variable_text:55797:365:2932897"
 
@@ -133,13 +133,13 @@ evidence = "Variabeln kodar tumörens histopatologiska diagnos.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:iarcinc"
+subject = "var:tumorer-for-incidensberakning"
 fields = { "sets" = [] }
 evidence = "IARCINC är en opak källmnemonik för tumörer som ingår i incidensberäkning.\ncatalog:variable_text:55799:-4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:iarcinc"
+subject = "var:tumorer-for-incidensberakning"
 fields = { "tags" = ["health"] }
 evidence = "IARCINC är en opak källmnemonik för tumörer som ingår i incidensberäkning.\ncatalog:variable_text:55799:-4383:2932897"
 

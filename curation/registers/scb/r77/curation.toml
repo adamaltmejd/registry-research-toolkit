@@ -133,25 +133,25 @@ evidence = "Balkonger per lägenhet beskriver bostäders egenskaper.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:b-bkbrutto"
+subject = "var:byggnadskostnad-brutto"
 fields = { "sets" = [] }
 evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bkbrutto"
+subject = "var:byggnadskostnad-brutto"
 fields = { "tags" = ["housing"] }
 evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bknetto"
+subject = "var:byggnadskostnad-netto"
 fields = { "sets" = [] }
 evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:b-bknetto"
+subject = "var:byggnadskostnad-netto"
 fields = { "tags" = ["housing"] }
 evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
 

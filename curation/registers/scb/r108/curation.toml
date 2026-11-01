@@ -421,61 +421,61 @@ evidence = "F23 används för olika begrepp i olika perioder; kännedom om dista
 
 [[statement]]
 kind = "set"
-subject = "var:f24a"
+subject = "var:generella-rad-vid-hogskolestudier-fran-foraldrar"
 fields = { "sets" = ["rad-om-hogskolestudier"] }
 evidence = "F24a är en opak frågekod och etiketten identifierar föräldrars råd.\ncatalog:variable_text:23391:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f24a"
+subject = "var:generella-rad-vid-hogskolestudier-fran-foraldrar"
 fields = { "tags" = ["education"] }
 evidence = "F24a är en opak frågekod och etiketten identifierar föräldrars råd.\ncatalog:variable_text:23391:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f24b"
+subject = "var:generella-rad-vid-hogskolestudier-fran-vanner"
 fields = { "sets" = ["rad-om-hogskolestudier"] }
 evidence = "F24b är en opak frågekod och etiketten identifierar vänners råd.\ncatalog:variable_text:23392:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f24b"
+subject = "var:generella-rad-vid-hogskolestudier-fran-vanner"
 fields = { "tags" = ["education"] }
 evidence = "F24b är en opak frågekod och etiketten identifierar vänners råd.\ncatalog:variable_text:23392:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-01"
+subject = "var:tankar-om-studielan-fordelaktigt"
 fields = { "sets" = ["attityder-till-studielan"] }
 evidence = "F25_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23393:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-01"
+subject = "var:tankar-om-studielan-fordelaktigt"
 fields = { "tags" = ["transfers"] }
 evidence = "F25_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23393:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-02"
+subject = "var:tankar-om-studielan-jobbigt-att-betala-tillbaka"
 fields = { "sets" = ["attityder-till-studielan"] }
 evidence = "F25_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23394:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-02"
+subject = "var:tankar-om-studielan-jobbigt-att-betala-tillbaka"
 fields = { "tags" = ["transfers"] }
 evidence = "F25_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23394:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-03"
+subject = "var:tankar-om-studielan-vara-sjalvstandig"
 fields = { "sets" = ["attityder-till-studielan"] }
 evidence = "F25_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23395:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-03"
+subject = "var:tankar-om-studielan-vara-sjalvstandig"
 fields = { "tags" = ["transfers"] }
 evidence = "F25_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23395:18078:18444"
 
@@ -493,13 +493,13 @@ evidence = "F25_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23396:
 
 [[statement]]
 kind = "set"
-subject = "var:f25-05"
+subject = "var:tankar-om-studielan-annat"
 fields = { "sets" = ["attityder-till-studielan"] }
 evidence = "F25_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23397:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f25-05"
+subject = "var:tankar-om-studielan-annat"
 fields = { "tags" = ["transfers"] }
 evidence = "F25_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23397:18078:18444"
 
@@ -517,193 +517,193 @@ evidence = "F25j är en opak källkod; etiketten beskriver informationskällan.\
 
 [[statement]]
 kind = "set"
-subject = "var:f27"
+subject = "var:kannedom-om-studielan-och-bidrag"
 fields = { "sets" = ["kannedom-om-studiestod"] }
 evidence = "F27 är en ogenomskinlig frågekod.\ncatalog:variable_text:23399:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f27"
+subject = "var:kannedom-om-studielan-och-bidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "F27 är en ogenomskinlig frågekod.\ncatalog:variable_text:23399:18078:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-01"
+subject = "var:distansundervisning-schema"
 fields = { "sets" = [] }
 evidence = "F29_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23400:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-01"
+subject = "var:distansundervisning-schema"
 fields = { "tags" = ["education"] }
 evidence = "F29_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23400:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-02"
+subject = "var:distansundervisning-lararhjalp"
 fields = { "sets" = [] }
 evidence = "F29_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23401:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-02"
+subject = "var:distansundervisning-lararhjalp"
 fields = { "tags" = ["education"] }
 evidence = "F29_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23401:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-03"
+subject = "var:distansundervisning-delaktighet-under-lektioner"
 fields = { "sets" = [] }
 evidence = "F29_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23402:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-03"
+subject = "var:distansundervisning-delaktighet-under-lektioner"
 fields = { "tags" = ["education"] }
 evidence = "F29_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23402:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-04"
+subject = "var:distansundervisning-aktivit-deltagande"
 fields = { "sets" = [] }
 evidence = "F29_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23403:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-04"
+subject = "var:distansundervisning-aktivit-deltagande"
 fields = { "tags" = ["education"] }
 evidence = "F29_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23403:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-05"
+subject = "var:distansundervisning-tekniska-problem"
 fields = { "sets" = [] }
 evidence = "F29_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23404:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-05"
+subject = "var:distansundervisning-tekniska-problem"
 fields = { "tags" = ["education"] }
 evidence = "F29_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23404:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-06"
+subject = "var:distansundervisning-omgivningen-stor"
 fields = { "sets" = [] }
 evidence = "F29_06 är en ogenomskinlig frågekod.\ncatalog:variable_text:23405:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-06"
+subject = "var:distansundervisning-omgivningen-stor"
 fields = { "tags" = ["education"] }
 evidence = "F29_06 är en ogenomskinlig frågekod.\ncatalog:variable_text:23405:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-07"
+subject = "var:distansundervisning-individens-maende"
 fields = { "sets" = [] }
 evidence = "F29_07 är en ogenomskinlig frågekod.\ncatalog:variable_text:23406:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-07"
+subject = "var:distansundervisning-individens-maende"
 fields = { "tags" = ["education"] }
 evidence = "F29_07 är en ogenomskinlig frågekod.\ncatalog:variable_text:23406:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-08"
+subject = "var:distansundervisning-aktiviteter-for-maende"
 fields = { "sets" = [] }
 evidence = "F29_08 är en ogenomskinlig frågekod.\ncatalog:variable_text:23407:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-08"
+subject = "var:distansundervisning-aktiviteter-for-maende"
 fields = { "tags" = ["education"] }
 evidence = "F29_08 är en ogenomskinlig frågekod.\ncatalog:variable_text:23407:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-09"
+subject = "var:distansundervisning-starka-gemenskapen"
 fields = { "sets" = [] }
 evidence = "F29_09 är en ogenomskinlig frågekod.\ncatalog:variable_text:23408:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-09"
+subject = "var:distansundervisning-starka-gemenskapen"
 fields = { "tags" = ["education"] }
 evidence = "F29_09 är en ogenomskinlig frågekod.\ncatalog:variable_text:23408:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-10"
+subject = "var:distansundervisning-hjalp-hemifran"
 fields = { "sets" = [] }
 evidence = "F29_10 är en ogenomskinlig frågekod.\ncatalog:variable_text:23409:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-10"
+subject = "var:distansundervisning-hjalp-hemifran"
 fields = { "tags" = ["education"] }
 evidence = "F29_10 är en ogenomskinlig frågekod.\ncatalog:variable_text:23409:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-11"
+subject = "var:distansundervisning-sallskap-hemma"
 fields = { "sets" = [] }
 evidence = "F29_11 är en ogenomskinlig frågekod.\ncatalog:variable_text:23410:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-11"
+subject = "var:distansundervisning-sallskap-hemma"
 fields = { "tags" = ["education"] }
 evidence = "F29_11 är en ogenomskinlig frågekod.\ncatalog:variable_text:23410:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-12"
+subject = "var:distansundervisning-foralders-intresse"
 fields = { "sets" = [] }
 evidence = "F29_12 är en ogenomskinlig frågekod.\ncatalog:variable_text:23411:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f29-12"
+subject = "var:distansundervisning-foralders-intresse"
 fields = { "tags" = ["education"] }
 evidence = "F29_12 är en ogenomskinlig frågekod.\ncatalog:variable_text:23411:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f30-01"
+subject = "var:distansundervisning-digitalt-motesverktyg"
 fields = { "sets" = ["undervisningsformer-vid-distansundervisning"] }
 evidence = "F30_01 är en ogenomskinlig frågekod.\ncatalog:occurrence:218488\ncatalog:valueset:6465\ncatalog:variable_text:23412:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f30-01"
+subject = "var:distansundervisning-digitalt-motesverktyg"
 fields = { "tags" = ["digital", "education"] }
 evidence = "F30_01 är en ogenomskinlig frågekod.\ncatalog:occurrence:218488\ncatalog:valueset:6465\ncatalog:variable_text:23412:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f30-02"
+subject = "var:distansundervisning-inspelade-lektioner"
 fields = { "sets" = ["undervisningsformer-vid-distansundervisning"] }
 evidence = "F30_02 är en ogenomskinlig frågekod.\ncatalog:occurrence:218489\ncatalog:valueset:6465\ncatalog:variable_text:23413:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f30-02"
+subject = "var:distansundervisning-inspelade-lektioner"
 fields = { "tags" = ["education"] }
 evidence = "F30_02 är en ogenomskinlig frågekod.\ncatalog:occurrence:218489\ncatalog:valueset:6465\ncatalog:variable_text:23413:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
 fields = { "sets" = [] }
 evidence = "F31 är en opak frågekod. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f31"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
 fields = { "tags" = ["education"] }
 evidence = "F31 är en opak frågekod. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
 
@@ -721,25 +721,25 @@ evidence = "Källkolumnen har olika innehåll mellan perioderna. Coordinator gro
 
 [[statement]]
 kind = "set"
-subject = "var:f33"
+subject = "var:distansundervisning-svarast-amne-inriktningsspecifikt-amne"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33 är en opak frågekod.\ncatalog:variable_text:23416:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33"
+subject = "var:distansundervisning-svarast-amne-inriktningsspecifikt-amne"
 fields = { "tags" = ["education"] }
 evidence = "F33 är en opak frågekod.\ncatalog:variable_text:23416:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-01"
+subject = "var:distansundervisning-svarast-amne-engelska"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-01 är en opak frågekod.\ncatalog:variable_text:23417:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-01"
+subject = "var:distansundervisning-svarast-amne-engelska"
 fields = { "tags" = ["education"] }
 evidence = "F33-01 är en opak frågekod.\ncatalog:variable_text:23417:18809:19174"
 
@@ -757,61 +757,61 @@ evidence = "Etikett och frågetext anger olika ämnen.\ncatalog:occurrence:21849
 
 [[statement]]
 kind = "set"
-subject = "var:f33-03"
+subject = "var:distansundervisning-svarast-amne-idrott-och-halsa"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-03 är en opak frågekod.\ncatalog:variable_text:23419:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-03"
+subject = "var:distansundervisning-svarast-amne-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "F33-03 är en opak frågekod.\ncatalog:variable_text:23419:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-04"
+subject = "var:distansundervisning-svarast-amne-matematik"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-04 är en opak frågekod.\ncatalog:variable_text:23420:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-04"
+subject = "var:distansundervisning-svarast-amne-matematik"
 fields = { "tags" = ["education"] }
 evidence = "F33-04 är en opak frågekod.\ncatalog:variable_text:23420:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-05"
+subject = "var:distansundervisning-svarast-amne-naturkunskap"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-05 är en opak frågekod.\ncatalog:variable_text:23421:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-05"
+subject = "var:distansundervisning-svarast-amne-naturkunskap"
 fields = { "tags" = ["education"] }
 evidence = "F33-05 är en opak frågekod.\ncatalog:variable_text:23421:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-06"
+subject = "var:distansundervisning-svarast-amne-religionskunskap"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-06 är en opak frågekod.\ncatalog:variable_text:23422:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-06"
+subject = "var:distansundervisning-svarast-amne-religionskunskap"
 fields = { "tags" = ["education"] }
 evidence = "F33-06 är en opak frågekod.\ncatalog:variable_text:23422:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-07"
+subject = "var:distansundervisning-svarast-amne-samhallskunskap"
 fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
 evidence = "F33-07 är en opak frågekod.\ncatalog:variable_text:23423:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f33-07"
+subject = "var:distansundervisning-svarast-amne-samhallskunskap"
 fields = { "tags" = ["education"] }
 evidence = "F33-07 är en opak frågekod.\ncatalog:variable_text:23423:18809:19174"
 
@@ -829,97 +829,97 @@ evidence = "F33-08 är en opak frågekod.\ncatalog:variable_text:23424:18809:191
 
 [[statement]]
 kind = "set"
-subject = "var:f34"
+subject = "var:distansundervisning-battre-amne-inriktningsspecifikt-amne"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34 är en opak frågekod.\ncatalog:variable_text:23425:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34"
+subject = "var:distansundervisning-battre-amne-inriktningsspecifikt-amne"
 fields = { "tags" = ["education"] }
 evidence = "F34 är en opak frågekod.\ncatalog:variable_text:23425:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-01"
+subject = "var:distansundervisning-battre-amne-engelska"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-01 är en opak frågekod.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-01"
+subject = "var:distansundervisning-battre-amne-engelska"
 fields = { "tags" = ["education"] }
 evidence = "F34-01 är en opak frågekod.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-02"
+subject = "var:distansundervisning-battre-amne-historia"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-02 är en opak frågekod.\ncatalog:variable_text:23427:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-02"
+subject = "var:distansundervisning-battre-amne-historia"
 fields = { "tags" = ["education"] }
 evidence = "F34-02 är en opak frågekod.\ncatalog:variable_text:23427:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-03"
+subject = "var:distansundervisning-battre-amne-idrott-och-halsa"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-03 är en opak frågekod.\ncatalog:variable_text:23428:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-03"
+subject = "var:distansundervisning-battre-amne-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "F34-03 är en opak frågekod.\ncatalog:variable_text:23428:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-04"
+subject = "var:distansundervisning-battre-amne-matematik"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-04 är en opak frågekod.\ncatalog:variable_text:23429:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-04"
+subject = "var:distansundervisning-battre-amne-matematik"
 fields = { "tags" = ["education"] }
 evidence = "F34-04 är en opak frågekod.\ncatalog:variable_text:23429:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-05"
+subject = "var:distansundervisning-battre-amne-naturkunskap"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-05 är en opak frågekod.\ncatalog:variable_text:23430:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-05"
+subject = "var:distansundervisning-battre-amne-naturkunskap"
 fields = { "tags" = ["education"] }
 evidence = "F34-05 är en opak frågekod.\ncatalog:variable_text:23430:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-06"
+subject = "var:distansundervisning-battre-amne-religionskunskap"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-06 är en opak frågekod.\ncatalog:variable_text:23431:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-06"
+subject = "var:distansundervisning-battre-amne-religionskunskap"
 fields = { "tags" = ["education"] }
 evidence = "F34-06 är en opak frågekod.\ncatalog:variable_text:23431:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-07"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
 fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
 evidence = "F34-07 är en opak frågekod.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
 
 [[statement]]
 kind = "set"
-subject = "var:f34-07"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
 fields = { "tags" = ["education"] }
 evidence = "F34-07 är en opak frågekod.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
 

@@ -493,13 +493,13 @@ evidence = "Årslön från anställning hör till löneinkomst.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:asni92"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "sets" = ["naringsgren-huvudsaklig-sysselsattning"] }
 evidence = "ASNI92 är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:41438:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:asni92"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "tags" = ["business"] }
 evidence = "ASNI92 är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:41438:9862:10227"
 
@@ -613,85 +613,85 @@ evidence = "Variabeln anger studietakt.\ncatalog:variable_text:41447:11323:20089
 
 [[statement]]
 kind = "set"
-subject = "var:csngy"
+subject = "var:studiemedel-for-gymnasiestudier"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNGY är en ogenomskinlig källkod för studiemedel för gymnasiestudier.\ncatalog:variable_text:41448:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csngy"
+subject = "var:studiemedel-for-gymnasiestudier"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNGY är en ogenomskinlig källkod för studiemedel för gymnasiestudier.\ncatalog:variable_text:41448:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnht"
+subject = "var:studiemedel-under-hostterminen"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNHT är en ogenomskinlig källkod.\ncatalog:variable_text:41449:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnht"
+subject = "var:studiemedel-under-hostterminen"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNHT är en ogenomskinlig källkod.\ncatalog:variable_text:41449:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnsv"
+subject = "var:studiemedel-for-studier-i-sverige"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNSV är en ogenomskinlig källkod.\ncatalog:variable_text:41450:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:csnsv"
+subject = "var:studiemedel-for-studier-i-sverige"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNSV är en ogenomskinlig källkod.\ncatalog:variable_text:41450:9131:9496"
 
 [[statement]]
 kind = "set"
-subject = "var:csnutl"
+subject = "var:studiemedel-for-utlandsstudier"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNUTL är en ogenomskinlig källkod.\ncatalog:variable_text:41451:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnutl"
+subject = "var:studiemedel-for-utlandsstudier"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNUTL är en ogenomskinlig källkod.\ncatalog:variable_text:41451:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnutlht"
+subject = "var:studiemedel-for-utlandsstudier-hostterminen"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNUTLHT är en ogenomskinlig källkod.\ncatalog:variable_text:41452:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnutlht"
+subject = "var:studiemedel-for-utlandsstudier-hostterminen"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNUTLHT är en ogenomskinlig källkod.\ncatalog:variable_text:41452:9496:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnvu"
+subject = "var:studiemedel-for-vuxenstudier"
 fields = { "sets" = ["studiemedelsmottagande"] }
 evidence = "CSNVU är en ogenomskinlig källkod.\ncatalog:variable_text:41453:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:csnvu"
+subject = "var:studiemedel-for-vuxenstudier"
 fields = { "tags" = ["transfers"] }
 evidence = "CSNVU är en ogenomskinlig källkod.\ncatalog:variable_text:41453:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:ctxfvi"
+subject = "var:taxerad-forvarvsinkomst"
 fields = { "sets" = ["forvarvsinkomst"] }
 evidence = "CTXFVI är en ogenomskinlig källkod.\ncatalog:variable_text:41454:10227:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:ctxfvi"
+subject = "var:taxerad-forvarvsinkomst"
 fields = { "tags" = ["income"] }
 evidence = "CTXFVI är en ogenomskinlig källkod.\ncatalog:variable_text:41454:10227:12418"
 
@@ -745,13 +745,13 @@ evidence = "Familjetyp beskriver familjesammansättning.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:fkarsers"
+subject = "var:arsersattning-fran-forsakringskassan"
 fields = { "sets" = [] }
 evidence = "FK är en bokstavskod och årsersättningens källa framgår av etiketten.\ncatalog:variable_text:41462:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fkarsers"
+subject = "var:arsersattning-fran-forsakringskassan"
 fields = { "tags" = ["transfers"] }
 evidence = "FK är en bokstavskod och årsersättningens källa framgår av etiketten.\ncatalog:variable_text:41462:17897:18628"
 
@@ -997,13 +997,13 @@ evidence = "Variabeln anger studiedeltagande i högskolan.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:hsgrvt"
+subject = "var:hogskolestuderande-under-varterminen"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "HSGRVT är en ogenomskinlig källkod.\ncatalog:variable_text:41485:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:hsgrvt"
+subject = "var:hogskolestuderande-under-varterminen"
 fields = { "tags" = ["education"] }
 evidence = "HSGRVT är en ogenomskinlig källkod.\ncatalog:variable_text:41485:9862:10227"
 
@@ -1357,13 +1357,13 @@ evidence = "Sammanräknad förvärvsinkomst hör till förvärvsinkomst.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:sbkommunjf"
+subject = "var:studiependling-hosttermin"
 fields = { "sets" = [] }
 evidence = "SB och JF är ogenomskinliga delar av källkoden.\ncatalog:variable_text:41524:14610:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sbkommunjf"
+subject = "var:studiependling-hosttermin"
 fields = { "tags" = ["education", "geography"] }
 evidence = "SB och JF är ogenomskinliga delar av källkoden.\ncatalog:variable_text:41524:14610:20089"
 

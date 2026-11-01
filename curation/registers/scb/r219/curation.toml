@@ -320,13 +320,13 @@ evidence = "Värdemängden ändras från sjökoder till en ja/nej-markering.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:to-antal"
+subject = "var:antal-tatorter"
 fields = { "sets" = [] }
 evidence = "To är en källmnemonik som inte är en igenkännbar stam av tätorter.\ncatalog:variable_text:35063:18627:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:to-antal"
+subject = "var:antal-tatorter"
 fields = { "tags" = ["geography"] }
 evidence = "To är en källmnemonik som inte är en igenkännbar stam av tätorter.\ncatalog:variable_text:35063:18627:18628"
 

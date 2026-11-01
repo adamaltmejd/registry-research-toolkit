@@ -457,25 +457,25 @@ evidence = "Gd är en bokstavskod för graddagar; normalårets graddagar ingår 
 
 [[statement]]
 kind = "set"
-subject = "var:gelanv"
+subject = "var:anger-om-det-finns-gemensam-uppvarmning"
 fields = { "sets" = [] }
 evidence = "GelAnv är en opak källförkortning. Familjen ge* ges samma läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:7470\ncatalog:variable_text:7470:12784:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:gelanv"
+subject = "var:anger-om-det-finns-gemensam-uppvarmning"
 fields = { "tags" = ["energy"] }
 evidence = "GelAnv är en opak källförkortning. Familjen ge* ges samma läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:7470\ncatalog:variable_text:7470:12784:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:gemarea"
+subject = "var:gemensam-uppvarmd-area-i-kvm"
 fields = { "sets" = [] }
 evidence = "Familjen ge* ges samma läsbarhetsbedömning. Gemensam uppvärmd area hör till byggnadsarea.\ncatalog:occurrence-locators:variable:7471\ncatalog:variable_text:7471:12784:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:gemarea"
+subject = "var:gemensam-uppvarmd-area-i-kvm"
 fields = { "tags" = ["housing"] }
 evidence = "Familjen ge* ges samma läsbarhetsbedömning. Gemensam uppvärmd area hör till byggnadsarea.\ncatalog:occurrence-locators:variable:7471\ncatalog:variable_text:7471:12784:14245"
 

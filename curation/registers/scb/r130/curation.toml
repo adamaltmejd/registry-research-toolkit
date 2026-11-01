@@ -547,13 +547,13 @@ evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:428
 
 [[statement]]
 kind = "set"
-subject = "var:fmgrp"
+subject = "var:formansgrupp"
 fields = { "sets" = [] }
 evidence = "Fmgrp är en ogenomskinlig källförkortning.\ncatalog:variable_text:42832:9496:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:fmgrp"
+subject = "var:formansgrupp"
 fields = { "tags" = ["employment"] }
 evidence = "Fmgrp är en ogenomskinlig källförkortning.\ncatalog:variable_text:42832:9496:11688"
 
@@ -571,13 +571,13 @@ evidence = "Beloppet avser skattepliktiga anställningsförmåner.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:fpen"
+subject = "var:foraldrarpenningstillagg"
 fields = { "sets" = [] }
 evidence = "Fpen är en ogenomskinlig källförkortning för föräldrapenningstillägg.\ncatalog:variable_text:42834:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fpen"
+subject = "var:foraldrarpenningstillagg"
 fields = { "tags" = ["transfers"] }
 evidence = "Fpen är en ogenomskinlig källförkortning för föräldrapenningstillägg.\ncatalog:variable_text:42834:9496:20089"
 
@@ -595,25 +595,25 @@ evidence = "Ersättningen är en namngiven lönekomponent.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:fsys"
+subject = "var:faktisk-sysselsattningsgrad-hansyn-tagen-till-partiell"
 fields = { "sets" = [] }
 evidence = "Fsys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42836:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fsys"
+subject = "var:faktisk-sysselsattningsgrad-hansyn-tagen-till-partiell"
 fields = { "tags" = ["employment"] }
 evidence = "Fsys är en ogenomskinlig källförkortning.\ncatalog:variable_text:42836:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:helar"
+subject = "var:tjanstgoringsomfattning"
 fields = { "sets" = [] }
 evidence = "Helar beskriver inte tjänstgöringsomfattning i någon period.\ncatalog:variable_text:42837:15706:18628\ncatalog:variable_text:42837:18628:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:helar"
+subject = "var:tjanstgoringsomfattning"
 fields = { "tags" = ["employment"] }
 evidence = "Helar beskriver inte tjänstgöringsomfattning i någon period.\ncatalog:variable_text:42837:15706:18628\ncatalog:variable_text:42837:18628:20089"
 
@@ -643,13 +643,13 @@ evidence = "Heltidslön omfattas av månadslönekandidaten.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:hlon"
+subject = "var:timlon-for-timanstallda"
 fields = { "sets" = [] }
 evidence = "H är en ogenomskinlig källförkortning för timlön.\ncatalog:variable_text:42840:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hlon"
+subject = "var:timlon-for-timanstallda"
 fields = { "tags" = ["income"] }
 evidence = "H är en ogenomskinlig källförkortning för timlön.\ncatalog:variable_text:42840:9496:20089"
 
@@ -931,13 +931,13 @@ evidence = "Skolform är en utbildningsindelning.\ncatalog:variable_text:42866:9
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "sets" = [] }
 evidence = "SNI 2007 är en klassifikationskod som inte förekommer i etiketten näringsgren.\ncatalog:variable_text:42867:16436:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sni2007"
+subject = "var:naringsgren"
 fields = { "tags" = ["business"] }
 evidence = "SNI 2007 är en klassifikationskod som inte förekommer i etiketten näringsgren.\ncatalog:variable_text:42867:16436:20089"
 
@@ -1027,49 +1027,49 @@ evidence = "Samma ledighetsmarkering som scb/slk/tjanstledighet i angränsande p
 
 [[statement]]
 kind = "set"
-subject = "var:tjlk"
+subject = "var:ledighetsmarkering"
 fields = { "sets" = ["tjanstledighet"] }
 evidence = "Tjlk är en ogenomskinlig källmnemonik.\ncatalog:variable_text:42875:9496:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:tjlk"
+subject = "var:ledighetsmarkering"
 fields = { "tags" = ["employment"] }
 evidence = "Tjlk är en ogenomskinlig källmnemonik.\ncatalog:variable_text:42875:9496:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:tjlom"
+subject = "var:ledighetens-omfattning"
 fields = { "sets" = ["tjanstledighet"] }
 evidence = "Tjlom är en ogenomskinlig källmnemonik.\ncatalog:variable_text:42876:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tjlom"
+subject = "var:ledighetens-omfattning"
 fields = { "tags" = ["employment"] }
 evidence = "Tjlom är en ogenomskinlig källmnemonik.\ncatalog:variable_text:42876:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tjtyp"
+subject = "var:ledighetstyp"
 fields = { "sets" = ["tjanstledighet"] }
 evidence = "Tj är en ogenomskinlig källmnemonik i ledighetstyp.\ncatalog:variable_text:42877:9496:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:tjtyp"
+subject = "var:ledighetstyp"
 fields = { "tags" = ["employment"] }
 evidence = "Tj är en ogenomskinlig källmnemonik i ledighetstyp.\ncatalog:variable_text:42877:9496:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:totalt-utbetald-lon"
 fields = { "sets" = [] }
 evidence = "U är en ogenomskinlig källförkortning för utbetald lön.\ncatalog:variable_text:42878:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:totalt-utbetald-lon"
 fields = { "tags" = ["income"] }
 evidence = "U är en ogenomskinlig källförkortning för utbetald lön.\ncatalog:variable_text:42878:9496:20089"
 
@@ -1183,13 +1183,13 @@ evidence = "Kodningen avser verksamhetsområde.\ncatalog:variable_text:42887:189
 
 [[statement]]
 kind = "set"
-subject = "var:vkod"
+subject = "var:verksamhetskod"
 fields = { "sets" = ["verksamhetsindelning"] }
 evidence = "V är en ogenomskinlig källförkortning för verksamhet.\ncatalog:variable_text:42888:9496:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:vkod"
+subject = "var:verksamhetskod"
 fields = { "tags" = ["business"] }
 evidence = "V är en ogenomskinlig källförkortning för verksamhet.\ncatalog:variable_text:42888:9496:18628"
 

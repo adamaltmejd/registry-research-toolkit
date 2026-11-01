@@ -31,13 +31,13 @@ evidence = "Enterprise size is a business structure measure.\ncatalog:valueset:8
 
 [[statement]]
 kind = "set"
-subject = "var:gdbeconomicactivitysubgroupl5"
+subject = "var:bransch-koncerndel"
 fields = { "sets" = [] }
 evidence = "Gdb is an opaque source mnemonic in the identifier; the source label names the group-part industry.\ncatalog:variable_text:34882:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:gdbeconomicactivitysubgroupl5"
+subject = "var:bransch-koncerndel"
 fields = { "tags" = ["business"] }
 evidence = "Gdb is an opaque source mnemonic in the identifier; the source label names the group-part industry.\ncatalog:variable_text:34882:17532:20089"
 

@@ -385,13 +385,13 @@ evidence = "Variabeln mäter momspliktiga uttag.\ncatalog:variable_text:39287:13
 
 [[statement]]
 kind = "set"
-subject = "var:m07-15-uvinstmarg"
+subject = "var:m07-beskattningsunderlag-marginalbeskattad-omsattning"
 fields = { "sets" = ["marginalbeskattad-omsattning"] }
 evidence = "Källans mnemonik för beskattningsunderlag är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:39288:13514:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:m07-15-uvinstmarg"
+subject = "var:m07-beskattningsunderlag-marginalbeskattad-omsattning"
 fields = { "tags" = ["taxation"] }
 evidence = "Källans mnemonik för beskattningsunderlag är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:39288:13514:19358"
 
@@ -445,13 +445,13 @@ evidence = "Variabeln mäter marginalbeskattad omsättning.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:m15-uomsmarg"
+subject = "var:beskattningsunderlag-marginalbeskattad-omsattning"
 fields = { "sets" = ["marginalbeskattad-omsattning"] }
 evidence = "Källans inledande U är en opak kod för beskattningsunderlag.\ncatalog:variable_text:39293:10592:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:m15-uomsmarg"
+subject = "var:beskattningsunderlag-marginalbeskattad-omsattning"
 fields = { "tags" = ["taxation"] }
 evidence = "Källans inledande U är en opak kod för beskattningsunderlag.\ncatalog:variable_text:39293:10592:13514"
 

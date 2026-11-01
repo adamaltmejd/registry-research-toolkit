@@ -1995,13 +1995,13 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:3040
 
 [[statement]]
 kind = "set"
-subject = "var:lskvux"
+subject = "var:las-och-skrivinlarning"
 fields = { "sets" = [] }
 evidence = "LSKvux är en bokstavskod för läs- och skrivinlärning.\ncatalog:variable_text:34595:16983:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lskvux"
+subject = "var:las-och-skrivinlarning"
 fields = { "tags" = ["education"] }
 evidence = "LSKvux är en bokstavskod för läs- och skrivinlärning.\ncatalog:variable_text:34595:16983:20089"
 

@@ -6,7 +6,7 @@ public = "tradbransle-produktion"
 [variables]
 "ar" = ["Oförädlat trädbränsle: Sald_Ar"]
 "bransleslag" = ["Oförädlat trädbränsle: Bid"]
-"btyp" = ["Oförädlat trädbränsle: BTyp"]
+"kategorityp" = ["Oförädlat trädbränsle: BTyp"]
 "cutoff" = ["Oförädlat trädbränsle: cutoff"]
 "enhet" = ["Oförädlat trädbränsle: Enhet"]
 "export" = ["Oförädlat trädbränsle: Export"]

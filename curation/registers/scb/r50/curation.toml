@@ -529,25 +529,25 @@ evidence = "Totallönen hör ihop med månadslönens komponenter.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:mjourber"
+subject = "var:manadslon-jour-och-beredskapsersattning-samt-formaner"
 fields = { "sets" = ["manadslon"] }
 evidence = "M är en källkod för månadslön och utgör en otydlig ensam bokstav i id:t.\ncatalog:variable_text:42917:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mjourber"
+subject = "var:manadslon-jour-och-beredskapsersattning-samt-formaner"
 fields = { "tags" = ["income"] }
 evidence = "M är en källkod för månadslön och utgör en otydlig ensam bokstav i id:t.\ncatalog:variable_text:42917:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mlong"
+subject = "var:manadslon-grundlon"
 fields = { "sets" = ["manadslon"] }
 evidence = "M och G är enbokstavskoder för månadslön respektive grundlön.\ncatalog:variable_text:42918:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mlong"
+subject = "var:manadslon-grundlon"
 fields = { "tags" = ["income"] }
 evidence = "M och G är enbokstavskoder för månadslön respektive grundlön.\ncatalog:variable_text:42918:17167:20089"
 
@@ -625,13 +625,13 @@ evidence = "Överenskommen tid och heltidsmåttet hör till avtalad arbetstid.\n
 
 [[statement]]
 kind = "set"
-subject = "var:ovktidh"
+subject = "var:veckoarbetstid-heltid"
 fields = { "sets" = ["avtalad-arbetstid"] }
 evidence = "Den avslutande bokstaven H är en källkod för heltid.\ncatalog:variable_text:42925:9496:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ovktidh"
+subject = "var:veckoarbetstid-heltid"
 fields = { "tags" = ["employment"] }
 evidence = "Den avslutande bokstaven H är en källkod för heltid.\ncatalog:variable_text:42925:9496:20089"
 
@@ -733,13 +733,13 @@ evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:sumlong"
+subject = "var:lonesumma-grundlon"
 fields = { "sets" = [] }
 evidence = "Den avslutande bokstaven G är en källkod för grundlön.\ncatalog:variable_text:42936:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sumlong"
+subject = "var:lonesumma-grundlon"
 fields = { "tags" = ["income"] }
 evidence = "Den avslutande bokstaven G är en källkod för grundlön.\ncatalog:variable_text:42936:17167:20089"
 

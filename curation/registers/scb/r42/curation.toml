@@ -73,145 +73,145 @@ evidence = "F10 är en frågekod; etiketten anger finansieringskällor.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:f11a"
+subject = "var:bedomning-av-komvuxutbildning-larare"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39387:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11a"
+subject = "var:bedomning-av-komvuxutbildning-larare"
 fields = { "tags" = ["education"] }
 evidence = "F11a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39387:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11b"
+subject = "var:bedomning-av-komvuxutbildning-kursinnehall"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39388:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11b"
+subject = "var:bedomning-av-komvuxutbildning-kursinnehall"
 fields = { "tags" = ["education"] }
 evidence = "F11b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39388:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11c"
+subject = "var:bedomning-av-komvuxutbildning-kurslitteratur"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11c är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39389:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11c"
+subject = "var:bedomning-av-komvuxutbildning-kurslitteratur"
 fields = { "tags" = ["education"] }
 evidence = "F11c är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39389:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11d"
+subject = "var:bedomning-av-komvuxutbildning-studiemiljo-i-skolan"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11d är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39390:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11d"
+subject = "var:bedomning-av-komvuxutbildning-studiemiljo-i-skolan"
 fields = { "tags" = ["education"] }
 evidence = "F11d är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39390:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11e"
+subject = "var:bedomning-av-komvuxutbildning-studieresultat"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11e är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39391:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11e"
+subject = "var:bedomning-av-komvuxutbildning-studieresultat"
 fields = { "tags" = ["education"] }
 evidence = "F11e är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39391:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11f"
+subject = "var:bedomning-av-komvuxutbildning-helhetsintryck"
 fields = { "sets" = ["bedomning-av-komvuxutbildningen"] }
 evidence = "F11f är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39392:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f11f"
+subject = "var:bedomning-av-komvuxutbildning-helhetsintryck"
 fields = { "tags" = ["education"] }
 evidence = "F11f är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39392:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f12a"
+subject = "var:bedomning-av-komvuxstudierna-studietakt"
 fields = { "sets" = ["bedomning-av-komvuxstudiernas-krav"] }
 evidence = "F12a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39393:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f12a"
+subject = "var:bedomning-av-komvuxstudierna-studietakt"
 fields = { "tags" = ["education"] }
 evidence = "F12a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39393:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f12b"
+subject = "var:bedomning-av-komvuxstudierna-svarighetsgrad"
 fields = { "sets" = ["bedomning-av-komvuxstudiernas-krav"] }
 evidence = "F12b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39394:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f12b"
+subject = "var:bedomning-av-komvuxstudierna-svarighetsgrad"
 fields = { "tags" = ["education"] }
 evidence = "F12b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39394:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13a"
+subject = "var:betydelse-av-komvuxstudierna-arbeten-efter"
 fields = { "sets" = ["komvuxstudiernas-betydelse"] }
 evidence = "F13a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39395:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13a"
+subject = "var:betydelse-av-komvuxstudierna-arbeten-efter"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F13a är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39395:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13b"
+subject = "var:betydelse-av-komvuxstudierna-studier"
 fields = { "sets" = ["komvuxstudiernas-betydelse"] }
 evidence = "F13b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39396:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13b"
+subject = "var:betydelse-av-komvuxstudierna-studier"
 fields = { "tags" = ["education"] }
 evidence = "F13b är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39396:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13c"
+subject = "var:betydelse-av-komvuxstudierna-privatliv-och-fritid"
 fields = { "sets" = ["komvuxstudiernas-betydelse"] }
 evidence = "F13c är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39397:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13c"
+subject = "var:betydelse-av-komvuxstudierna-privatliv-och-fritid"
 fields = { "tags" = ["education"] }
 evidence = "F13c är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39397:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13d"
+subject = "var:betydelse-av-komvuxstudierna-behorighet-till-hogskolestudier"
 fields = { "sets" = ["komvuxstudiernas-betydelse"] }
 evidence = "F13d är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39398:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f13d"
+subject = "var:betydelse-av-komvuxstudierna-behorighet-till-hogskolestudier"
 fields = { "tags" = ["education"] }
 evidence = "F13d är en frågekod med en beskrivande etikett.\ncatalog:variable_text:39398:12053:12418"
 

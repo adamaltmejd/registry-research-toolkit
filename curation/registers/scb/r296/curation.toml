@@ -392,25 +392,25 @@ evidence = "Produkterbjudandets vägningstal ingår i kandidatgruppen och är en
 
 [[statement]]
 kind = "set"
-subject = "var:ib2010"
+subject = "var:index-med-bas-2010"
 fields = { "sets" = ["prisindexniva"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40819:15706:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2010"
+subject = "var:index-med-bas-2010"
 fields = { "tags" = ["prices"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40819:15706:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2010eur"
+subject = "var:index-beraknad-i-euro-med-bas-2010"
 fields = { "sets" = ["prisindexniva"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40820:15706:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2010eur"
+subject = "var:index-beraknad-i-euro-med-bas-2010"
 fields = { "tags" = ["prices"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40820:15706:17167"
 
@@ -428,25 +428,25 @@ evidence = "Den tidigare generella indexvariabeln omfattar flera källkolumner; 
 
 [[statement]]
 kind = "set"
-subject = "var:ib2020"
+subject = "var:index-med-bas-2020"
 fields = { "sets" = ["prisindexniva"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40822:18993:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2020"
+subject = "var:index-med-bas-2020"
 fields = { "tags" = ["prices"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40822:18993:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2021"
+subject = "var:index-med-bas-2021"
 fields = { "sets" = ["prisindexniva"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40823:18993:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2021"
+subject = "var:index-med-bas-2021"
 fields = { "tags" = ["prices"] }
 evidence = "IB är en opak källkod för indexbas.\ncatalog:variable_text:40823:18993:20819"
 

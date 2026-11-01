@@ -49,49 +49,49 @@ evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exac
 
 [[statement]]
 kind = "set"
-subject = "var:a11"
+subject = "var:heltidsanstallda"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Koden är opak; etiketten och definitionen avser heltidsanställda.\ncatalog:occurrence:334602\ncatalog:variable_text:36063:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a11"
+subject = "var:heltidsanstallda"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är opak; etiketten och definitionen avser heltidsanställda.\ncatalog:occurrence:334602\ncatalog:variable_text:36063:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a12"
+subject = "var:deltidsanstallda"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Koden är opak; etiketten och definitionen avser deltidsanställda.\ncatalog:occurrence:334603\ncatalog:variable_text:36064:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a12"
+subject = "var:deltidsanstallda"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är opak; etiketten och definitionen avser deltidsanställda.\ncatalog:occurrence:334603\ncatalog:variable_text:36064:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a121"
+subject = "var:deltidsanstallda-i-heltidstjanster"
 fields = { "sets" = ["heltidstjanster"] }
 evidence = "Koden är opak och etiketten anger måttet.\ncatalog:occurrence:334604\ncatalog:variable_text:36065:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a121"
+subject = "var:deltidsanstallda-i-heltidstjanster"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är opak och etiketten anger måttet.\ncatalog:occurrence:334604\ncatalog:variable_text:36065:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a3"
+subject = "var:heltidstjanster"
 fields = { "sets" = ["heltidstjanster"] }
 evidence = "Koden är opak och etiketten anger måttet.\ncatalog:occurrence:334605\ncatalog:variable_text:36066:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:a3"
+subject = "var:heltidstjanster"
 fields = { "tags" = ["employment"] }
 evidence = "Koden är opak och etiketten anger måttet.\ncatalog:occurrence:334605\ncatalog:variable_text:36066:13879:14245"
 
@@ -253,37 +253,37 @@ evidence = "Källkolumnen har olika ägare och olika mått över perioderna.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:d0"
+subject = "var:total-arbetskostnad"
 fields = { "sets" = [] }
 evidence = "Koden är opak och etiketten anger den totala arbetskostnaden.\ncatalog:variable_text:36081:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d0"
+subject = "var:total-arbetskostnad"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger den totala arbetskostnaden.\ncatalog:variable_text:36081:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1"
+subject = "var:loner-och-sociala-avgifter"
 fields = { "sets" = [] }
 evidence = "Koden är opak och etiketten anger det sammanslagna beloppet.\ncatalog:variable_text:36082:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1"
+subject = "var:loner-och-sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger det sammanslagna beloppet.\ncatalog:variable_text:36082:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d11"
+subject = "var:loner"
 fields = { "sets" = ["loner"] }
 evidence = "Koden är opak och etiketten anger lönebeloppet.\ncatalog:variable_text:36083:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d11"
+subject = "var:loner"
 fields = { "tags" = ["income"] }
 evidence = "Koden är opak och etiketten anger lönebeloppet.\ncatalog:variable_text:36083:13879:14245"
 
@@ -301,241 +301,241 @@ evidence = "Källkolumnen har olika ägare och olika löneaggregat över periode
 
 [[statement]]
 kind = "set"
-subject = "var:d1141"
+subject = "var:formaner-avseende-foretagsprodukter"
 fields = { "sets" = ["naturaformaner"] }
 evidence = "Koden är opak och etiketten anger förmånen.\ncatalog:variable_text:36085:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d1141"
+subject = "var:formaner-avseende-foretagsprodukter"
 fields = { "tags" = ["income"] }
 evidence = "Koden är opak och etiketten anger förmånen.\ncatalog:variable_text:36085:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d1143"
+subject = "var:formaner-avseende-foretagsbil"
 fields = { "sets" = ["naturaformaner"] }
 evidence = "Koden är opak och etiketten anger förmånen.\ncatalog:variable_text:36086:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d1143"
+subject = "var:formaner-avseende-foretagsbil"
 fields = { "tags" = ["income"] }
 evidence = "Koden är opak och etiketten anger förmånen.\ncatalog:variable_text:36086:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d12"
+subject = "var:sociala-avgifter"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36087:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d12"
+subject = "var:sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36087:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d121"
+subject = "var:faktiska-sociala-avgifter"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36088:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d121"
+subject = "var:faktiska-sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36088:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1211"
+subject = "var:lagstadgade-sociala-avgifter"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36089:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1211"
+subject = "var:lagstadgade-sociala-avgifter"
 fields = { "tags" = ["taxation"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36089:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212"
+subject = "var:avtalade-sociala-avgifter"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36090:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212"
+subject = "var:avtalade-sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36090:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d12124"
+subject = "var:avtalsformaner-samt-ovriga-socialforsakringar"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger kostnadskomponenten.\ncatalog:variable_text:36091:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d12124"
+subject = "var:avtalsformaner-samt-ovriga-socialforsakringar"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger kostnadskomponenten.\ncatalog:variable_text:36091:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212a"
+subject = "var:sociala-avgifter-kollektivt-avtalade"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36092:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212a"
+subject = "var:sociala-avgifter-kollektivt-avtalade"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36092:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212b"
+subject = "var:sociala-avgifter-individuellt-avtalade"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36093:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212b"
+subject = "var:sociala-avgifter-individuellt-avtalade"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36093:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212c"
+subject = "var:ovriga-socialforsakringar"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger kostnadskomponenten.\ncatalog:variable_text:36094:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1212c"
+subject = "var:ovriga-socialforsakringar"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger kostnadskomponenten.\ncatalog:variable_text:36094:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d122"
+subject = "var:tillraknade-sociala-avgifter"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36095:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d122"
+subject = "var:tillraknade-sociala-avgifter"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger avgifterna.\ncatalog:variable_text:36095:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1221"
+subject = "var:lon-vid-sjukdom-m-m"
 fields = { "sets" = ["loner", "sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger lönekomponenten.\ncatalog:variable_text:36096:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1221"
+subject = "var:lon-vid-sjukdom-m-m"
 fields = { "tags" = ["income"] }
 evidence = "Koden är opak och etiketten anger lönekomponenten.\ncatalog:variable_text:36096:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1223"
+subject = "var:avgangsvederlag"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger ersättningen.\ncatalog:variable_text:36097:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1223"
+subject = "var:avgangsvederlag"
 fields = { "tags" = ["income"] }
 evidence = "Koden är opak och etiketten anger ersättningen.\ncatalog:variable_text:36097:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1224"
+subject = "var:tillraknade-sociala-formaner"
 fields = { "sets" = ["sociala-avgifter"] }
 evidence = "Koden är opak och etiketten anger förmånerna.\ncatalog:variable_text:36098:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d1224"
+subject = "var:tillraknade-sociala-formaner"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger förmånerna.\ncatalog:variable_text:36098:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d2"
+subject = "var:kostnad-for-personalutbildning"
 fields = { "sets" = [] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36099:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d2"
+subject = "var:kostnad-for-personalutbildning"
 fields = { "tags" = ["business", "education"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36099:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d3"
+subject = "var:ovriga-arbetskraftskostnader"
 fields = { "sets" = ["ovriga-arbetskraftskostnader"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36100:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d3"
+subject = "var:ovriga-arbetskraftskostnader"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36100:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d31"
+subject = "var:rekryteringskostnader"
 fields = { "sets" = ["ovriga-arbetskraftskostnader"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36101:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d31"
+subject = "var:rekryteringskostnader"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36101:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d32"
+subject = "var:arbetskraftskostnader-personalvard-och-ovriga"
 fields = { "sets" = ["ovriga-arbetskraftskostnader"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36102:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d32"
+subject = "var:arbetskraftskostnader-personalvard-och-ovriga"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger kostnaden.\ncatalog:variable_text:36102:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d4"
+subject = "var:arbetskraftskostnader-skatter"
 fields = { "sets" = [] }
 evidence = "Koden är opak och etiketten anger skatterna.\ncatalog:variable_text:36103:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d4"
+subject = "var:arbetskraftskostnader-skatter"
 fields = { "tags" = ["taxation"] }
 evidence = "Koden är opak och etiketten anger skatterna.\ncatalog:variable_text:36103:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d5"
+subject = "var:subventioner"
 fields = { "sets" = [] }
 evidence = "Koden är opak och etiketten anger subventionerna.\ncatalog:variable_text:36104:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:d5"
+subject = "var:subventioner"
 fields = { "tags" = ["business"] }
 evidence = "Koden är opak och etiketten anger subventionerna.\ncatalog:variable_text:36104:13879:14245"
 

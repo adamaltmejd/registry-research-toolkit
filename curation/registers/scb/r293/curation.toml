@@ -279,13 +279,13 @@ evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44563:20089:2
 
 [[statement]]
 kind = "set"
-subject = "var:mkod"
+subject = "var:mottagarekod"
 fields = { "sets" = [] }
 evidence = "M är en opak bokstavskod för mottagare.\ncatalog:variable_text:44564:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:mkod"
+subject = "var:mottagarekod"
 fields = { "tags" = ["public-finance", "research"] }
 evidence = "M är en opak bokstavskod för mottagare.\ncatalog:variable_text:44564:14610:14975"
 
@@ -663,13 +663,13 @@ evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44595:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:obs-value-f"
+subject = "var:slutliga-statliga-budgetanslag-for-fou"
 fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
 evidence = "Observationsvärdets F-suffix är en opak kod.\ncatalog:variable_text:44596:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:obs-value-f"
+subject = "var:slutliga-statliga-budgetanslag-for-fou"
 fields = { "tags" = ["public-finance", "research"] }
 evidence = "Observationsvärdets F-suffix är en opak kod.\ncatalog:variable_text:44596:20089:20454"
 

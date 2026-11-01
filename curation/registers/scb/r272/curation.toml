@@ -169,13 +169,13 @@ evidence = "F09a är en ogenomskinlig frågekod; samma etikett förekommer för 
 
 [[statement]]
 kind = "set"
-subject = "var:f09b"
+subject = "var:vill-ha-gemensam-faktura"
 fields = { "sets" = [] }
 evidence = "F09b är en ogenomskinlig frågekod och etiketten anger önskemålet om gemensam faktura.\ncatalog:variable_text:7338:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:f09b"
+subject = "var:vill-ha-gemensam-faktura"
 fields = { "tags" = ["energy"] }
 evidence = "F09b är en ogenomskinlig frågekod och etiketten anger önskemålet om gemensam faktura.\ncatalog:variable_text:7338:15706:16071"
 

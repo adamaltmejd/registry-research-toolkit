@@ -73,25 +73,25 @@ evidence = "Blankettvarianten är metadata för insamlingen.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:fek"
+subject = "var:ingar-i-undersokningen-foretagens-ekonomi"
 fields = { "sets" = [] }
 evidence = "FEK är en ogenomskinlig bokstavskod; etiketten beskriver undersökningsdeltagandet.\ncatalog:variable_text:45773:14610:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fek"
+subject = "var:ingar-i-undersokningen-foretagens-ekonomi"
 fields = { "tags" = ["methods"] }
 evidence = "FEK är en ogenomskinlig bokstavskod; etiketten beskriver undersökningsdeltagandet.\ncatalog:variable_text:45773:14610:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fetyp"
+subject = "var:foretagsenhetstyp"
 fields = { "sets" = [] }
 evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:45775:14610:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fetyp"
+subject = "var:foretagsenhetstyp"
 fields = { "tags" = ["business"] }
 evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:45775:14610:16436"
 

@@ -4,7 +4,7 @@ public = "gymnasieskola-prov"
 
 [variables]
 "a-poang-merit" = ["Gymnasieskola: nationella prov: MA_A_POM"]
-"anvtim" = ["Gymnasieskola: nationella prov: ANVTIM"]
+"antal-genomforda-studietimmar" = ["Gymnasieskola: nationella prov: ANVTIM"]
 "ar" = ["Gymnasieskola: nationella prov: AvserAr"]
 "arskurs" = ["Gymnasieskola: nationella prov: Arskurs"]
 "avslut" = ["Gymnasieskola: nationella prov: Avslut"]
@@ -52,7 +52,7 @@ public = "gymnasieskola-prov"
 "provbet" = ["Gymnasieskola: nationella prov: PROVBET"]
 "provbet-ord" = ["Gymnasieskola: nationella prov: PROVBET_ORD"]
 "provres" = ["Gymnasieskola: nationella prov: ProvRes"]
-"provtf" = ["Gymnasieskola: nationella prov: PROVTF"]
+"provtillfalle" = ["Gymnasieskola: nationella prov: PROVTF"]
 "senaste-invandringsdatum" = ["Gymnasieskola: nationella prov: Datinv"]
 "skolans-identitetsnummer" = ["Gymnasieskola: nationella prov: SKOLID"]
 "skolans-namn" = ["Gymnasieskola: nationella prov: SKOLA @ 2011-07-01"]

@@ -231,25 +231,25 @@ evidence = "Måttet är disponibel inkomst justerad för boendeform.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:c-antrost"
+subject = "var:antal-giltiga-roster-centerpartiet"
 fields = { "sets" = ["antal-roster"] }
 evidence = "C är en bokstavskod för Centerpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7851:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:c-antrost"
+subject = "var:antal-giltiga-roster-centerpartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "C är en bokstavskod för Centerpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7851:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fi-antrost"
+subject = "var:antal-giltiga-roster-feministiskt-inititativ"
 fields = { "sets" = ["antal-roster"] }
 evidence = "Fi är en bokstavskod för partiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7852:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fi-antrost"
+subject = "var:antal-giltiga-roster-feministiskt-inititativ"
 fields = { "tags" = ["democracy"] }
 evidence = "Fi är en bokstavskod för partiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7852:16071:16436"
 
@@ -315,13 +315,13 @@ evidence = "Giltiga röster är en komponent av röstetalen.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:jl-antrost"
+subject = "var:antal-giltiga-roster-junilistan"
 fields = { "sets" = ["antal-roster"] }
 evidence = "Jl är en bokstavskod för Junilistan och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7858:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:jl-antrost"
+subject = "var:antal-giltiga-roster-junilistan"
 fields = { "tags" = ["democracy"] }
 evidence = "Jl är en bokstavskod för Junilistan och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7858:12418:12784"
 
@@ -387,13 +387,13 @@ evidence = "Llkk är en opak källkod. Etiketten delas med kommunnamnet och mål
 
 [[statement]]
 kind = "set"
-subject = "var:m-antrost"
+subject = "var:antal-giltiga-roster-moderaterna"
 fields = { "sets" = ["antal-roster"] }
 evidence = "M är en bokstavskod för Moderaterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7864:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:m-antrost"
+subject = "var:antal-giltiga-roster-moderaterna"
 fields = { "tags" = ["democracy"] }
 evidence = "M är en bokstavskod för Moderaterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7864:19723:20089"
 
@@ -423,13 +423,13 @@ evidence = "Medborgarskapsland är ett demografiskt mått.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antrost"
+subject = "var:antal-giltiga-roster-miljopartiet"
 fields = { "sets" = ["antal-roster"] }
 evidence = "Mp är en bokstavskod för Miljöpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7867:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mp-antrost"
+subject = "var:antal-giltiga-roster-miljopartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "Mp är en bokstavskod för Miljöpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7867:19723:20089"
 
@@ -519,13 +519,13 @@ evidence = "Partiets kortnamn hör till parti och val.\ncatalog:variable_text:78
 
 [[statement]]
 kind = "set"
-subject = "var:pp-antrost"
+subject = "var:antal-giltiga-roster-piratpartiet"
 fields = { "sets" = ["antal-roster"] }
 evidence = "Pp är en bokstavskod för Piratpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7877:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:pp-antrost"
+subject = "var:antal-giltiga-roster-piratpartiet"
 fields = { "tags" = ["democracy"] }
 evidence = "Pp är en bokstavskod för Piratpartiet och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7877:14245:14610"
 
@@ -591,13 +591,13 @@ evidence = "Rösträttskoden hör till rösträtt och val.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:s-antrost"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
 fields = { "sets" = ["antal-roster"] }
 evidence = "S är en bokstavskod för Socialdemokraterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7883:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:s-antrost"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "S är en bokstavskod för Socialdemokraterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7883:19723:20089"
 
@@ -615,13 +615,13 @@ evidence = "Beloppet och kvintilgruppen beskriver sammanräknad förvärvsinkoms
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antrost"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
 fields = { "sets" = ["antal-roster"] }
 evidence = "Sd är en bokstavskod för Sverigedemokraterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7885:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sd-antrost"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
 fields = { "tags" = ["democracy"] }
 evidence = "Sd är en bokstavskod för Sverigedemokraterna och id:t är därför delvis opakt. Måttet är ett röstetal.\ncatalog:variable_text:7885:19723:20089"
 

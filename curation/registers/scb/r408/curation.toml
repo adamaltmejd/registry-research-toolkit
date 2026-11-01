@@ -85,25 +85,25 @@ evidence = "Ålder är en demografisk egenskap.\ncatalog:variable_text:3212:1862
 
 [[statement]]
 kind = "set"
-subject = "var:andel-k"
+subject = "var:andel-kvinnor"
 fields = { "sets" = ["kon-och-konsfordelning"] }
 evidence = "K är en enbokstavskod för kvinnor. Variabeln hör till könsfördelning.\ncatalog:variable_text:3213:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-k"
+subject = "var:andel-kvinnor"
 fields = { "tags" = ["demographics"] }
 evidence = "K är en enbokstavskod för kvinnor. Variabeln hör till könsfördelning.\ncatalog:variable_text:3213:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-m"
+subject = "var:andel-man"
 fields = { "sets" = ["kon-och-konsfordelning"] }
 evidence = "M är en enbokstavskod för män. Variabeln hör till könsfördelning.\ncatalog:variable_text:3214:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:andel-m"
+subject = "var:andel-man"
 fields = { "tags" = ["demographics"] }
 evidence = "M är en enbokstavskod för män. Variabeln hör till könsfördelning.\ncatalog:variable_text:3214:19723:20454"
 
@@ -397,13 +397,13 @@ evidence = "Indikatorn mäter anställningens tillstånd och hör till gruppen f
 
 [[statement]]
 kind = "set"
-subject = "var:indeb"
+subject = "var:enkelt-bolag"
 fields = { "sets" = [] }
 evidence = "EB är en bokstavskod för enkelt bolag.\ncatalog:variable_text:3248:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indeb"
+subject = "var:enkelt-bolag"
 fields = { "tags" = ["business"] }
 evidence = "EB är en bokstavskod för enkelt bolag.\ncatalog:variable_text:3248:18262:20454"
 
@@ -1309,13 +1309,13 @@ evidence = "Koden anger observationens status och imputering.\ncatalog:valueset:
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-fdb"
 fields = { "sets" = [] }
 evidence = "Storan är ett opakt källnamn för antal objekt per stratum.\ncatalog:variable_text:3343:19723:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-fdb"
 fields = { "tags" = ["methods"] }
 evidence = "Storan är ett opakt källnamn för antal objekt per stratum.\ncatalog:variable_text:3343:19723:20454"
 

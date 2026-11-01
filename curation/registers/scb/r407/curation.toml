@@ -1021,13 +1021,13 @@ evidence = "OBS_VALUE har en överlappande identitetsmappning; måttet kodar inn
 
 [[statement]]
 kind = "set"
-subject = "var:ovcovfl"
+subject = "var:overtackning"
 fields = { "sets" = [] }
 evidence = "OVCOVFL är en opak källkod; etiketten anger övertäckning.\ncatalog:variable_text:29287:18628:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:ovcovfl"
+subject = "var:overtackning"
 fields = { "tags" = ["methods"] }
 evidence = "OVCOVFL är en opak källkod; etiketten anger övertäckning.\ncatalog:variable_text:29287:18628:19358"
 

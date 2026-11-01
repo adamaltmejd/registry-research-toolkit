@@ -532,13 +532,13 @@ evidence = "Åtgärdsprogram hör till elevens särskilda stöd.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:berml"
+subject = "var:berattigad-till-modersmalsundervisning"
 fields = { "sets" = [] }
 evidence = "BERML är en opak källförkortning för berättigande till modersmålsundervisning.\ncatalog:variable_text:21862:17819:17820"
 
 [[statement]]
 kind = "set"
-subject = "var:berml"
+subject = "var:berattigad-till-modersmalsundervisning"
 fields = { "tags" = ["education"] }
 evidence = "BERML är en opak källförkortning för berättigande till modersmålsundervisning.\ncatalog:variable_text:21862:17819:17820"
 
@@ -760,13 +760,13 @@ evidence = "M2 är en opak källkod; språkvalsetiketten delas och målet behöv
 
 [[statement]]
 kind = "set"
-subject = "var:m2-spr-alt"
+subject = "var:alternativ-till-sprakval"
 fields = { "sets" = ["sprakval"] }
 evidence = "M2 är en opak källkod; alternativet hör till språkval.\ncatalog:variable_text:21885:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:m2-spr-alt"
+subject = "var:alternativ-till-sprakval"
 fields = { "tags" = ["education"] }
 evidence = "M2 är en opak källkod; alternativet hör till språkval.\ncatalog:variable_text:21885:20011:20012"
 

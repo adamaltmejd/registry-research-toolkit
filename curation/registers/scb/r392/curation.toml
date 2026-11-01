@@ -475,13 +475,13 @@ evidence = "Koden anger typen av social ersättning och hör ihop med ersättnin
 
 [[statement]]
 kind = "set"
-subject = "var:forman-som-pension-ej-ulag-sa"
+subject = "var:forman-som-pension"
 fields = { "sets" = ["pensionsersattning"] }
 evidence = "SA är en bokstavskod.\ncatalog:occurrence-locators:variable:1379\ncatalog:variable_text:1379:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:forman-som-pension-ej-ulag-sa"
+subject = "var:forman-som-pension"
 fields = { "tags" = ["transfers"] }
 evidence = "SA är en bokstavskod.\ncatalog:occurrence-locators:variable:1379\ncatalog:variable_text:1379:17897:18628"
 

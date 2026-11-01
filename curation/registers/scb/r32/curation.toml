@@ -1801,37 +1801,37 @@ evidence = "Bostadsföreståndarens bilantal ingår i biltillgång.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:bfcivil"
+subject = "var:civilstand-bostadsforestandare"
 fields = { "sets" = ["civilstand"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11154:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfcivil"
+subject = "var:civilstand-bostadsforestandare"
 fields = { "tags" = ["family-household"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11154:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bffamtyp"
+subject = "var:familjetyp-bostadsforestandare"
 fields = { "sets" = ["familjetyp"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11155:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bffamtyp"
+subject = "var:familjetyp-bostadsforestandare"
 fields = { "tags" = ["family-household"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11155:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bffodar"
+subject = "var:fodelsear-bostadsforestandare"
 fields = { "sets" = ["fodelsear"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11156:-3653:-3287"
 
 [[statement]]
 kind = "set"
-subject = "var:bffodar"
+subject = "var:fodelsear-bostadsforestandare"
 fields = { "tags" = ["demographics"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11156:-3653:-3287"
 
@@ -1849,13 +1849,13 @@ evidence = "BF är en opak rollkod.\ncatalog:variable_text:11157:-3653:-3287"
 
 [[statement]]
 kind = "set"
-subject = "var:bfinktj"
+subject = "var:inkomst-av-tjanst-bostadsforestandaren"
 fields = { "sets" = ["inkomst-av-tjanst"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11158:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfinktj"
+subject = "var:inkomst-av-tjanst-bostadsforestandaren"
 fields = { "tags" = ["income"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11158:0:365"
 
@@ -1873,13 +1873,13 @@ evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:bfmaka"
+subject = "var:maka-bostadsforestandare"
 fields = { "sets" = ["sammanboende"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11160:-3653:-3287"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmaka"
+subject = "var:maka-bostadsforestandare"
 fields = { "tags" = ["family-household"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11160:-3653:-3287"
 
@@ -1921,13 +1921,13 @@ evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakafodar"
+subject = "var:fodelsear-bostadsforestandarens-maka"
 fields = { "sets" = ["fodelsear"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11164:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakafodar"
+subject = "var:fodelsear-bostadsforestandarens-maka"
 fields = { "tags" = ["demographics"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11164:-1826:-1461"
 
@@ -1969,13 +1969,13 @@ evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakanarg"
+subject = "var:naringsgren-bostadsforestandarens-maka"
 fields = { "sets" = ["naringsgren"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11168:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakanarg"
+subject = "var:naringsgren-bostadsforestandarens-maka"
 fields = { "tags" = ["business"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11168:-1826:-1461"
 
@@ -2017,13 +2017,13 @@ evidence = "BF är en opak rollkod.\ncatalog:variable_text:11171:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakasyss"
+subject = "var:sysselsattning-bostadsforestandarens-maka"
 fields = { "sets" = ["sysselsattning"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11172:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakasyss"
+subject = "var:sysselsattning-bostadsforestandarens-maka"
 fields = { "tags" = ["employment"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11172:0:365"
 
@@ -2053,13 +2053,13 @@ evidence = "Rollspecifikt yrke ingår i gruppen.\ncatalog:variable_text:11174:0:
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakayrkest"
+subject = "var:yrkesstallning-bostadsforestandarens-maka"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11175:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfmakayrkest"
+subject = "var:yrkesstallning-bostadsforestandarens-maka"
 fields = { "tags" = ["employment"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11175:-1826:-1461"
 
@@ -2077,37 +2077,37 @@ evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:bfnarg"
+subject = "var:naringsgren-bostadsforestandare"
 fields = { "sets" = ["naringsgren"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11177:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfnarg"
+subject = "var:naringsgren-bostadsforestandare"
 fields = { "tags" = ["business"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11177:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfnetink"
+subject = "var:sammanraknad-nettoinkomst-bostadsforestandaren"
 fields = { "sets" = ["sammanraknad-nettoinkomst"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11178:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfnetink"
+subject = "var:sammanraknad-nettoinkomst-bostadsforestandaren"
 fields = { "tags" = ["income"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11178:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfnetinkund"
+subject = "var:sammanraknad-nettoinkomst-inkl-underskott"
 fields = { "sets" = ["sammanraknad-nettoinkomst"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11179:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfnetinkund"
+subject = "var:sammanraknad-nettoinkomst-inkl-underskott"
 fields = { "tags" = ["income"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11179:0:365"
 
@@ -2125,13 +2125,13 @@ evidence = "BF är en opak rollkod.\ncatalog:variable_text:11180:-3653:-3287"
 
 [[statement]]
 kind = "set"
-subject = "var:bfprelskatt"
+subject = "var:a-b-skatt-bostadsforestandare"
 fields = { "sets" = ["a-och-b-skatt"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11182:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfprelskatt"
+subject = "var:a-b-skatt-bostadsforestandare"
 fields = { "tags" = ["taxation"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11182:0:365"
 
@@ -2161,13 +2161,13 @@ evidence = "BF är en opak rollkod.\ncatalog:variable_text:11185:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfsyss"
+subject = "var:sysselsattning-bostadsforestandare"
 fields = { "sets" = ["sysselsattning"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11186:0:365"
 
 [[statement]]
 kind = "set"
-subject = "var:bfsyss"
+subject = "var:sysselsattning-bostadsforestandare"
 fields = { "tags" = ["employment"] }
 evidence = "BF är en opak rollkod.\ncatalog:variable_text:11186:0:365"
 
@@ -2185,13 +2185,13 @@ evidence = "Rollspecifikt yrke ingår i gruppen.\ncatalog:variable_text:11189:0:
 
 [[statement]]
 kind = "set"
-subject = "var:bfyrkest"
+subject = "var:yrkesstallning-bostadsforestandare"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11190:-1826:-1461"
 
 [[statement]]
 kind = "set"
-subject = "var:bfyrkest"
+subject = "var:yrkesstallning-bostadsforestandare"
 fields = { "tags" = ["employment"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11190:-1826:-1461"
 
@@ -2749,13 +2749,13 @@ evidence = "Rollspecifik ålder ingår i gruppen.\ncatalog:variable_text:11245:1
 
 [[statement]]
 kind = "set"
-subject = "var:hhfcivil"
+subject = "var:civilstand-hushallsforestandare"
 fields = { "sets" = ["civilstand"] }
 evidence = "HHF är en bokstavskod för hushållsföreståndare.\ncatalog:variable_text:11246:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:hhfcivil"
+subject = "var:civilstand-hushallsforestandare"
 fields = { "tags" = ["family-household"] }
 evidence = "HHF är en bokstavskod för hushållsföreståndare.\ncatalog:variable_text:11246:1826:2191"
 
@@ -2845,13 +2845,13 @@ evidence = "HhF är en opak rollkod.\ncatalog:variable_text:11254:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:hhfsyss"
+subject = "var:sysselsattning-hushallsforestandare"
 fields = { "sets" = ["sysselsattning"] }
 evidence = "HhF är en opak rollkod.\ncatalog:variable_text:11255:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:hhfsyss"
+subject = "var:sysselsattning-hushallsforestandare"
 fields = { "tags" = ["employment"] }
 evidence = "HhF är en opak rollkod.\ncatalog:variable_text:11255:1826:2191"
 
@@ -3769,13 +3769,13 @@ evidence = "Rp är en bokstavsförkortning för referensperson och id:t bedöms 
 
 [[statement]]
 kind = "set"
-subject = "var:rpcivil"
+subject = "var:civilstand-referensperson"
 fields = { "sets" = ["civilstand"] }
 evidence = "RP är en bokstavskod för referensperson.\ncatalog:variable_text:11341:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:rpcivil"
+subject = "var:civilstand-referensperson"
 fields = { "tags" = ["family-household"] }
 evidence = "RP är en bokstavskod för referensperson.\ncatalog:variable_text:11341:7305:7670"
 
@@ -3805,13 +3805,13 @@ evidence = "RP är en opak bokstavskod för referensperson. Variabeln anger föd
 
 [[statement]]
 kind = "set"
-subject = "var:rpinvar"
+subject = "var:invandringsar-referensperson"
 fields = { "sets" = ["invandringsar"] }
 evidence = "RP är en opak bokstavskod för referensperson. Variabeln anger invandringsår.\ncatalog:variable_text:11344:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:rpinvar"
+subject = "var:invandringsar-referensperson"
 fields = { "tags" = ["migration"] }
 evidence = "RP är en opak bokstavskod för referensperson. Variabeln anger invandringsår.\ncatalog:variable_text:11344:7305:7670"
 
@@ -4237,25 +4237,25 @@ evidence = "Sammanräknad nettoinkomst med underskott.\ncatalog:variable_text:11
 
 [[statement]]
 kind = "set"
-subject = "var:sei"
+subject = "var:socioekonomisk-grupp"
 fields = { "sets" = ["socioekonomisk-indelning"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11383:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:sei"
+subject = "var:socioekonomisk-grupp"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11383:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:seihh"
+subject = "var:socioekonomisk-indelning-for-hushallet"
 fields = { "sets" = ["socioekonomisk-indelning"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11384:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:seihh"
+subject = "var:socioekonomisk-indelning-for-hushallet"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11384:7305:7670"
 

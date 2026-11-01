@@ -117,13 +117,13 @@ evidence = "Gemensam kodning av ålder och kön.\ncatalog:valueset:4037\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:anknytningsgrad-aku"
+subject = "var:anknytningsgrad-till-arbetsmarknaden-enligt-aku-fr-o-m-2007"
 fields = { "sets" = ["arbetskraftsstatus"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Källan beskriver anknytning till arbetsmarknaden.\ncatalog:occurrence:102251\ncatalog:variable_text:11676:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:anknytningsgrad-aku"
+subject = "var:anknytningsgrad-till-arbetsmarknaden-enligt-aku-fr-o-m-2007"
 fields = { "tags" = ["employment"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Källan beskriver anknytning till arbetsmarknaden.\ncatalog:occurrence:102251\ncatalog:variable_text:11676:12053:12418"
 
@@ -153,13 +153,13 @@ evidence = "Arbetskraftsstatus ingår i kandidaten.\ncatalog:variable_text:11678
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "Befolk är inte en igenkännbar stam i källans länsgruppering.\ncatalog:variable_text:11679:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:befolk"
+subject = "var:gruppering-av-lan-inklusive-gotland"
 fields = { "tags" = ["geography"] }
 evidence = "Befolk är inte en igenkännbar stam i källans länsgruppering.\ncatalog:variable_text:11679:12053:12418"
 
@@ -189,25 +189,25 @@ evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:11681:12
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-aku"
+subject = "var:designvikt-for-aku-urval"
 fields = { "sets" = ["designvikt"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102240\ncatalog:variable_text:11682:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-aku"
+subject = "var:designvikt-for-aku-urval"
 fields = { "tags" = ["methods"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102240\ncatalog:variable_text:11682:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-rtb"
+subject = "var:designvikt-for-rtb-urval"
 fields = { "sets" = ["designvikt"] }
 evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102241\ncatalog:variable_text:11683:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:dvikt-rtb"
+subject = "var:designvikt-for-rtb-urval"
 fields = { "tags" = ["methods"] }
 evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102241\ncatalog:variable_text:11683:12053:12418"
 
@@ -321,13 +321,13 @@ evidence = "Kvintilgrupp för sammanräknad förvärvsinkomst ingår i kandidate
 
 [[statement]]
 kind = "set"
-subject = "var:frost"
+subject = "var:rostande-i-folkomrostning-kalibrering"
 fields = { "sets" = ["rostdeltagande"] }
 evidence = "F är en enskild bokstav och röst anger inte självständigt folkomröstning.\ncatalog:variable_text:11693:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:frost"
+subject = "var:rostande-i-folkomrostning-kalibrering"
 fields = { "tags" = ["democracy"] }
 evidence = "F är en enskild bokstav och röst anger inte självständigt folkomröstning.\ncatalog:variable_text:11693:12053:12418"
 
@@ -345,25 +345,25 @@ evidence = "Variabeln beskriver familje- och hushållsställning.\ncatalog:value
 
 [[statement]]
 kind = "set"
-subject = "var:hregion"
+subject = "var:homogen-region"
 fields = { "sets" = [] }
 evidence = "H är en enskild bokstav för homogen.\ncatalog:variable_text:11695:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:hregion"
+subject = "var:homogen-region"
 fields = { "tags" = ["geography"] }
 evidence = "H är en enskild bokstav för homogen.\ncatalog:variable_text:11695:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "sets" = [] }
 evidence = "SSYK är en källmnemonik och hus är inte en tydlig stam för huvudsyssla i kombinationen.\ncatalog:variable_text:11696:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:hussyk2"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "SSYK är en källmnemonik och hus är inte en tydlig stam för huvudsyssla i kombinationen.\ncatalog:variable_text:11696:12053:12418"
 
@@ -417,25 +417,25 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:11700:12053:
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-aku"
+subject = "var:kalibrerad-vikt-for-svarande-i-aku"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en kalibrerad vikt.\ncatalog:occurrence:102260\ncatalog:variable_text:11701:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-aku"
+subject = "var:kalibrerad-vikt-for-svarande-i-aku"
 fields = { "tags" = ["methods"] }
 evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en kalibrerad vikt.\ncatalog:occurrence:102260\ncatalog:variable_text:11701:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-fo"
+subject = "var:kalibrerad-vikt-folkomrostning"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Fo är en källmnemonik för folkomröstning, inte en igenkännbar ordstam.\ncatalog:variable_text:11702:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-fo"
+subject = "var:kalibrerad-vikt-folkomrostning"
 fields = { "tags" = ["methods"] }
 evidence = "Fo är en källmnemonik för folkomröstning, inte en igenkännbar ordstam.\ncatalog:variable_text:11702:12053:12418"
 
@@ -453,25 +453,25 @@ evidence = "Länstillhörighet ingår i kandidaten.\ncatalog:variable_text:11703
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-rtb"
+subject = "var:antal-i-urvalet-rtb"
 fields = { "sets" = [] }
 evidence = "Lillan är en ogenomskinlig källkod för antalet individer i urvalet per stratum.\ncatalog:occurrence:102263\ncatalog:variable_text:11704:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-rtb"
+subject = "var:antal-i-urvalet-rtb"
 fields = { "tags" = ["methods"] }
 evidence = "Lillan är en ogenomskinlig källkod för antalet individer i urvalet per stratum.\ncatalog:occurrence:102263\ncatalog:variable_text:11704:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:lillas-aku"
+subject = "var:antal-svarande-aku"
 fields = { "sets" = [] }
 evidence = "Lillas är en ogenomskinlig källkod för antalet svarande i AKU per stratum.\ncatalog:occurrence:102264\ncatalog:variable_text:11705:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:lillas-aku"
+subject = "var:antal-svarande-aku"
 fields = { "tags" = ["methods"] }
 evidence = "Lillas är en ogenomskinlig källkod för antalet svarande i AKU per stratum.\ncatalog:occurrence:102264\ncatalog:variable_text:11705:12053:12418"
 
@@ -525,13 +525,13 @@ evidence = "Naturaliseringsstatus är en demografisk uppgift.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:postrost"
+subject = "var:fortidsrostat"
 fields = { "sets" = ["rostdeltagande"] }
 evidence = "Poströst anger en annan röstningsform än den dokumenterade förtidsröstningen.\ncatalog:variable_text:11712:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:postrost"
+subject = "var:fortidsrostat"
 fields = { "tags" = ["democracy"] }
 evidence = "Poströst anger en annan röstningsform än den dokumenterade förtidsröstningen.\ncatalog:variable_text:11712:12053:12418"
 
@@ -609,61 +609,61 @@ evidence = "Sektor i huvudsysslan beskriver arbetsmarknadsställning.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11719:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel1"
+subject = "var:population-1"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11719:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11720:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel2"
+subject = "var:population-2"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11720:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11721:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel6"
+subject = "var:population-6"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11721:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11722:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel7"
+subject = "var:population-7"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11722:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-av"
 fields = { "sets" = ["populationstillhorighet"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11723:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sel8"
+subject = "var:population-8-av"
 fields = { "tags" = ["democracy"] }
 evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11723:12053:12418"
 
@@ -717,25 +717,25 @@ evidence = "Studiernas omfattning ingår i kandidaten.\ncatalog:variable_text:11
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
+subject = "var:utbildningsinriktning"
 fields = { "sets" = [] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11729:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
+subject = "var:utbildningsinriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11729:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
+subject = "var:utbildningsniva"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11730:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
+subject = "var:utbildningsniva"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11730:12053:12418"
 
@@ -777,25 +777,25 @@ evidence = "Bakgrundskodningen beskriver befolkningssammansättning.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-aku"
+subject = "var:andel-svarande-i-aku-over-ar"
 fields = { "sets" = [] }
 evidence = "Uvikt är en ogenomskinlig källkod för andelen AKU-svarande per urvalsår.\ncatalog:occurrence:102290\ncatalog:variable_text:11736:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-aku"
+subject = "var:andel-svarande-i-aku-over-ar"
 fields = { "tags" = ["methods"] }
 evidence = "Uvikt är en ogenomskinlig källkod för andelen AKU-svarande per urvalsår.\ncatalog:occurrence:102290\ncatalog:variable_text:11736:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-rtb"
+subject = "var:andel-i-urvalet-over-ar"
 fields = { "sets" = [] }
 evidence = "Uvikt är en ogenomskinlig källkod för andelen i urvalet per urvalsår.\ncatalog:occurrence:102291\ncatalog:variable_text:11737:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:uvikt1-rtb"
+subject = "var:andel-i-urvalet-over-ar"
 fields = { "tags" = ["methods"] }
 evidence = "Uvikt är en ogenomskinlig källkod för andelen i urvalet per urvalsår.\ncatalog:occurrence:102291\ncatalog:variable_text:11737:12053:12418"
 

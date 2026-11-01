@@ -441,73 +441,73 @@ evidence = "Fördelad retroaktiv lönesumma hör till gruppen lönesumma.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:rortm"
+subject = "var:rorliga-lonetillagg-manadsavlonade"
 fields = { "sets" = ["rorliga-lonetillagg"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34125:13879:20454\ncatalog:variable_text:34126:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortm"
+subject = "var:rorliga-lonetillagg-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34125:13879:20454\ncatalog:variable_text:34126:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortt"
+subject = "var:rorliga-lonetillagg-timavlonade"
 fields = { "sets" = ["rorliga-lonetillagg"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34125:13879:20454\ncatalog:variable_text:34126:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:rortt"
+subject = "var:rorliga-lonetillagg-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34125:13879:20454\ncatalog:variable_text:34126:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklm"
+subject = "var:sjuklon-manadsavlonade"
 fields = { "sets" = ["sjuklon"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34127:13879:20454\ncatalog:variable_text:34128:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklm"
+subject = "var:sjuklon-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34127:13879:20454\ncatalog:variable_text:34128:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklt"
+subject = "var:sjuklon-timavlonade"
 fields = { "sets" = ["sjuklon"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34127:13879:20454\ncatalog:variable_text:34128:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sjuklt"
+subject = "var:sjuklon-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34127:13879:20454\ncatalog:variable_text:34128:13879:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumm"
+subject = "var:teoretisk-lonesumma-manadsavlonade"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34129:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumm"
+subject = "var:teoretisk-lonesumma-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34129:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumt"
+subject = "var:teoretisk-lonesumma-timavlonade"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34130:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:telsumt"
+subject = "var:teoretisk-lonesumma-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34130:10592:20454"
 
@@ -549,24 +549,24 @@ evidence = "Utbetald retroaktiv lönesumma hör till gruppen lönesummor.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumm"
+subject = "var:utbetald-lonesumma-manadsavlonade"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34134:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumm"
+subject = "var:utbetald-lonesumma-manadsavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet M är en bokstavskod för månadsavlönade.\ncatalog:variable_text:34134:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumt"
+subject = "var:utbetald-lonesumma-timavlonade"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34135:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:utlsumt"
+subject = "var:utbetald-lonesumma-timavlonade"
 fields = { "tags" = ["income"] }
 evidence = "Slutet T är en bokstavskod för timavlönade.\ncatalog:variable_text:34135:10592:20454"

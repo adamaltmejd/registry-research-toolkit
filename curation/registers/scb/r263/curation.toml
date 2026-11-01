@@ -13,25 +13,25 @@ evidence = "The operational definition changes from an indistinguishable descrip
 
 [[statement]]
 kind = "set"
-subject = "var:ib1968"
+subject = "var:index-med-bas-1968"
 fields = { "sets" = [] }
 evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6197:19358:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib1968"
+subject = "var:index-med-bas-1968"
 fields = { "tags" = ["housing", "prices"] }
 evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6197:19358:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2015"
+subject = "var:index-med-bas-2015"
 fields = { "sets" = [] }
 evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6198:19358:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:ib2015"
+subject = "var:index-med-bas-2015"
 fields = { "tags" = ["housing", "prices"] }
 evidence = "IB är en ogenomskinlig källförkortning för index med basår.\ncatalog:variable_text:6198:19358:20819"
 

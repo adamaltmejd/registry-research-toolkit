@@ -27,4 +27,4 @@ public = "aktieagarstatistik"
 "rostvarde" = ["Aktieägarstatistik: RostVarde"]
 "sektortillhorighet" = ["Aktieägarstatistik: Sektor"]
 "vardepapperstyp" = ["Aktieägarstatistik: VPtyp"]
-"vpsort" = ["Aktieägarstatistik: VPsort"]
+"vardepapperssort" = ["Aktieägarstatistik: VPsort"]

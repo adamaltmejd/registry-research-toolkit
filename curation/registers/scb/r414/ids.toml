@@ -4,5 +4,5 @@ public = "sjalvforsorjning"
 "Självförsörjning 20-65 år" = "sjalvforsorjning-20-65-ar"
 
 [variables]
-"bsjalvf" = ["Självförsörjning 20-65 år: BSJALVF"]
+"sjalvforsorjning-rk" = ["Självförsörjning 20-65 år: BSJALVF"]
 "eget-personnr" = ["Självförsörjning 20-65 år: PERSONNR"]

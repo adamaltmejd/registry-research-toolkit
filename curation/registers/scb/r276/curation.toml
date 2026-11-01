@@ -554,37 +554,37 @@ evidence = "Anmärkningen gäller tomträttsupplåtelse.\ncatalog:occurrence-loc
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext1"
+subject = "var:andelstalen-avser-utforande-och-drift"
 fields = { "sets" = ["andelstalens-andamal"] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10175"
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext1"
+subject = "var:andelstalen-avser-utforande-och-drift"
 fields = { "tags" = ["property"] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10175"
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext2"
+subject = "var:samfallighetsforeningens-styrelse-far-besluta-om-viss"
 fields = { "sets" = [] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10176"
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext2"
+subject = "var:samfallighetsforeningens-styrelse-far-besluta-om-viss"
 fields = { "tags" = ["property"] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10176"
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext3"
+subject = "var:andelstalen-avser-endast-drift"
 fields = { "sets" = ["andelstalens-andamal"] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10177"
 
 [[statement]]
 kind = "set"
-subject = "var:anmtext3"
+subject = "var:andelstalen-avser-endast-drift"
 fields = { "tags" = ["property"] }
 evidence = "Källkod utan igenkännliga stammar för etikettens betydelse.\ncatalog:occurrence-locators:variable:10177"
 
@@ -1574,13 +1574,13 @@ evidence = "Landskod och landnamn hör till samma geografiska begrepp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "sets" = [] }
 evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10299:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:lghkat"
+subject = "var:lagenhetskategori"
 fields = { "tags" = ["housing"] }
 evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10299:20453:20454"
 
@@ -1634,13 +1634,13 @@ evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:varia
 
 [[statement]]
 kind = "set"
-subject = "var:lghstatus"
+subject = "var:lagenhetsstatus"
 fields = { "sets" = [] }
 evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10305:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:lghstatus"
+subject = "var:lagenhetsstatus"
 fields = { "tags" = ["housing"] }
 evidence = "LGH är en bokstavskod för lägenhet.\ncatalog:variable_text:10305:20453:20454"
 
@@ -2114,13 +2114,13 @@ evidence = "Preliminär köpeskillings valuta.\ncatalog:occurrence-locators:vari
 
 [[statement]]
 kind = "set"
-subject = "var:pstat"
+subject = "var:planstatus"
 fields = { "sets" = [] }
 evidence = "P är en enbokstavskod för plan.\ncatalog:variable_text:10359:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:pstat"
+subject = "var:planstatus"
 fields = { "tags" = ["property"] }
 evidence = "P är en enbokstavskod för plan.\ncatalog:variable_text:10359:20453:20454"
 
@@ -2270,13 +2270,13 @@ evidence = "Coordinator group membership: Samtliga anger senaste ändring av reg
 
 [[statement]]
 kind = "set"
-subject = "var:servut"
+subject = "var:redovisning-av-rattigheter-kan-vara-ofullstandig"
 fields = { "sets" = ["rattighetsredovisningens-fullstandighet"] }
 evidence = "SERVUT är en opak källkod; etiketten anger ofullständig rättighetsredovisning.\ncatalog:variable_text:10361:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:servut"
+subject = "var:redovisning-av-rattigheter-kan-vara-ofullstandig"
 fields = { "tags" = ["methods", "property"] }
 evidence = "SERVUT är en opak källkod; etiketten anger ofullständig rättighetsredovisning.\ncatalog:variable_text:10361:20453:20454"
 
@@ -2546,13 +2546,13 @@ evidence = "Ursprung för kvalitetsmärkning.\ncatalog:occurrence-locators:varia
 
 [[statement]]
 kind = "set"
-subject = "var:ukod"
+subject = "var:ursprungskod"
 fields = { "sets" = [] }
 evidence = "U är en opak bokstavskod för ursprung.\ncatalog:occurrence-locators:variable:10413"
 
 [[statement]]
 kind = "set"
-subject = "var:ukod"
+subject = "var:ursprungskod"
 fields = { "tags" = ["property"] }
 evidence = "U är en opak bokstavskod för ursprung.\ncatalog:occurrence-locators:variable:10413"
 
@@ -2666,25 +2666,25 @@ evidence = "Vattenarealen är en komponent av fastighetens areal.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:xl"
+subject = "var:nordlig-koordinat-i-lokalt-system"
 fields = { "sets" = ["geografiska-koordinater"] }
 evidence = "XL är en opak koordinatkod.\ncatalog:variable_text:10443:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:xl"
+subject = "var:nordlig-koordinat-i-lokalt-system"
 fields = { "tags" = ["geography"] }
 evidence = "XL är en opak koordinatkod.\ncatalog:variable_text:10443:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:yl"
+subject = "var:ostlig-koordinat-i-lokalt-system"
 fields = { "sets" = ["geografiska-koordinater"] }
 evidence = "YL är en opak koordinatkod.\ncatalog:variable_text:10444:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:yl"
+subject = "var:ostlig-koordinat-i-lokalt-system"
 fields = { "tags" = ["geography"] }
 evidence = "YL är en opak koordinatkod.\ncatalog:variable_text:10444:20453:20454"
 

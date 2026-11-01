@@ -697,13 +697,13 @@ evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55738:-3653:
 
 [[statement]]
 kind = "set"
-subject = "var:ffodland-kod"
+subject = "var:faderns-fodelseland-kod"
 fields = { "sets" = ["faderns-fodelseland"] }
 evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:ffodland-kod"
+subject = "var:faderns-fodelseland-kod"
 fields = { "tags" = ["demographics"] }
 evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
 
@@ -913,13 +913,13 @@ evidence = "M är en enskild bokstavskod för moderns; den delade etiketten krä
 
 [[statement]]
 kind = "set"
-subject = "var:mfodland-kod"
+subject = "var:moderns-fodelseland-kod"
 fields = { "sets" = ["moderns-fodelseland"] }
 evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:mfodland-kod"
+subject = "var:moderns-fodelseland-kod"
 fields = { "tags" = ["demographics"] }
 evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
 

@@ -973,25 +973,25 @@ evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i et
 
 [[statement]]
 kind = "set"
-subject = "var:kost304t"
+subject = "var:miljoskyddskostnader-lopande-interna-fou"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "T är en källkod; beloppet avser intern miljörelaterad forskning.\ncatalog:variable_text:27620:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost304t"
+subject = "var:miljoskyddskostnader-lopande-interna-fou"
 fields = { "tags" = ["business", "environment", "research"] }
 evidence = "T är en källkod; beloppet avser intern miljörelaterad forskning.\ncatalog:variable_text:27620:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost305t"
+subject = "var:miljoskyddskostnader-lopande-interna-ovrigt"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "T är en källkod; beloppet avser löpande miljöskyddskostnader.\ncatalog:variable_text:27621:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost305t"
+subject = "var:miljoskyddskostnader-lopande-interna-ovrigt"
 fields = { "tags" = ["business", "environment"] }
 evidence = "T är en källkod; beloppet avser löpande miljöskyddskostnader.\ncatalog:variable_text:27621:13149:16071"
 
@@ -1081,25 +1081,25 @@ evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i et
 
 [[statement]]
 kind = "set"
-subject = "var:kost314k"
+subject = "var:miljoskyddskostnader-lopande-externa-fou"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "K är en källkod; beloppet avser extern miljörelaterad forskning.\ncatalog:variable_text:27629:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost314k"
+subject = "var:miljoskyddskostnader-lopande-externa-fou"
 fields = { "tags" = ["business", "environment", "research"] }
 evidence = "K är en källkod; beloppet avser extern miljörelaterad forskning.\ncatalog:variable_text:27629:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost315t"
+subject = "var:miljoskyddskostnader-lopande-externa-ovrigt"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "T är en källkod; beloppet avser externa miljöskyddskostnader.\ncatalog:variable_text:27630:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:kost315t"
+subject = "var:miljoskyddskostnader-lopande-externa-ovrigt"
 fields = { "tags" = ["business", "environment"] }
 evidence = "T är en källkod; beloppet avser externa miljöskyddskostnader.\ncatalog:variable_text:27630:13149:16071"
 
@@ -1273,13 +1273,13 @@ evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponent
 
 [[statement]]
 kind = "set"
-subject = "var:pekost307t"
+subject = "var:miljoskyddskostnader-lopande-interna-personalkostnader"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27646:13149:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:pekost307t"
+subject = "var:miljoskyddskostnader-lopande-interna-personalkostnader"
 fields = { "tags" = ["business", "environment"] }
 evidence = "Den avslutande bokstaven är en källkod utan läsbar betydelse i etiketten.\ncatalog:variable_text:27646:13149:16071"
 

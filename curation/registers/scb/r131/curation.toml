@@ -187,13 +187,13 @@ evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\n
 
 [[statement]]
 kind = "set"
-subject = "var:intyp"
+subject = "var:typ-av-varde"
 fields = { "sets" = [] }
 evidence = "Intyp är en källmnemonik vars in inte återger etikettens ord.\ncatalog:variable_text:32102:13149:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:intyp"
+subject = "var:typ-av-varde"
 fields = { "tags" = ["methods"] }
 evidence = "Intyp är en källmnemonik vars in inte återger etikettens ord.\ncatalog:variable_text:32102:13149:13879"
 
@@ -619,49 +619,49 @@ evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvfast"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-fasta-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32150:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvfast"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-fasta-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32150:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvfastkal"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-fasta"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32151:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvfastkal"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-fasta"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32151:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvlopande"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-lopande-priser"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32152:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvlopande"
+subject = "var:arsforandring-av-tjansteproduktionsindex-i-lopande-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32152:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvlopandekal"
+subject = "var:arsforandringen-i-tjansteproduktionsindex-i-lopande"
 fields = { "sets" = ["tjansteproduktionsindex"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32153:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixutvlopandekal"
+subject = "var:arsforandringen-i-tjansteproduktionsindex-i-lopande"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik för tjänsteproduktionsindex.\ncatalog:variable_text:32153:15706:16436"
 
@@ -715,13 +715,13 @@ evidence = "Urvalsversion beskriver urvalets version.\ncatalog:variable_text:321
 
 [[statement]]
 kind = "set"
-subject = "var:vgr"
+subject = "var:varugrupp"
 fields = { "sets" = [] }
 evidence = "V är en bokstavskod för vara.\ncatalog:variable_text:32162:12784:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:vgr"
+subject = "var:varugrupp"
 fields = { "tags" = ["business"] }
 evidence = "V är en bokstavskod för vara.\ncatalog:variable_text:32162:12784:18993"
 

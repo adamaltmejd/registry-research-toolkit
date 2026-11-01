@@ -164,13 +164,13 @@ evidence = "Poäng på betygsnivå A hör till gruppen för betygsnivåpoäng oc
 
 [[statement]]
 kind = "set"
-subject = "var:anvtim"
+subject = "var:antal-genomforda-studietimmar"
 fields = { "sets" = ["studietimmar"] }
 evidence = "ANVTIM är en ogenomskinlig källmnemonik; etiketten anger genomförda studietimmar.\ncatalog:variable_text:23072:15156:17713"
 
 [[statement]]
 kind = "set"
-subject = "var:anvtim"
+subject = "var:antal-genomforda-studietimmar"
 fields = { "tags" = ["education"] }
 evidence = "ANVTIM är en ogenomskinlig källmnemonik; etiketten anger genomförda studietimmar.\ncatalog:variable_text:23072:15156:17713"
 

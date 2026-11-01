@@ -365,13 +365,13 @@ evidence = "Apotekets län är en geografisk uppgift.\ncatalog:variable_text:566
 
 [[statement]]
 kind = "set"
-subject = "var:fantal"
+subject = "var:forskrivet-antal-forpackningar"
 fields = { "sets" = ["forpackningsantal"] }
 evidence = "F är en enbokstavskod för förskrivet.\ncatalog:variable_text:56662:12965:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:fantal"
+subject = "var:forskrivet-antal-forpackningar"
 fields = { "tags" = ["medicines"] }
 evidence = "F är en enbokstavskod för förskrivet.\ncatalog:variable_text:56662:12965:14610"
 
@@ -557,13 +557,13 @@ evidence = "Variabeln anger produktens tillhörighet till gruppvarunummer.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:hforps"
+subject = "var:forpackningsstorlek"
 fields = { "sets" = ["forpackningsstorlek"] }
 evidence = "H är en enbokstavskod och forps är en källmnemonik.\ncatalog:variable_text:56684:12965:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:hforps"
+subject = "var:forpackningsstorlek"
 fields = { "tags" = ["medicines"] }
 evidence = "H är en enbokstavskod och forps är en källmnemonik.\ncatalog:variable_text:56684:12965:2932897"
 
@@ -653,13 +653,13 @@ evidence = "Läkemedelsform är en beredningsform.\ncatalog:variable_text:56694:
 
 [[statement]]
 kind = "set"
-subject = "var:lakemedelsform-grupp"
+subject = "var:avsedd-administreringsplats"
 fields = { "sets" = [] }
 evidence = "Id:t anger läkemedelsform men källan anger avsedd administreringsplats.\ncatalog:variable_text:56695:12965:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:lakemedelsform-grupp"
+subject = "var:avsedd-administreringsplats"
 fields = { "tags" = ["medicines"] }
 evidence = "Id:t anger läkemedelsform men källan anger avsedd administreringsplats.\ncatalog:variable_text:56695:12965:2932897"
 

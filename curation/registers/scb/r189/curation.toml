@@ -495,13 +495,13 @@ evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömni
 
 [[statement]]
 kind = "set"
-subject = "var:beh-gymn"
+subject = "var:behorighet-till-gymnasieskolans-nationella-program"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:21654\ncatalog:variable_text:21654:16983:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:beh-gymn"
+subject = "var:behorighet-till-gymnasieskolans-nationella-program"
 fields = { "tags" = ["education"] }
 evidence = "Familjen av behörighetsförkortningar ges samma läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:21654\ncatalog:variable_text:21654:16983:20270"
 
@@ -687,13 +687,13 @@ evidence = "Variabeln är ett ämnesbetyg.\ncatalog:variable_text:21669:6390:202
 
 [[statement]]
 kind = "set"
-subject = "var:bk"
+subject = "var:betyg-i-amnet-barnkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Bk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21670:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:bk"
+subject = "var:betyg-i-amnet-barnkunskap"
 fields = { "tags" = ["education"] }
 evidence = "Bk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21670:6390:10043"
 
@@ -723,49 +723,49 @@ evidence = "Blockbetyg omfattas av ämnesbetygsgruppen.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:bsp-betyg"
+subject = "var:betyg-i-b-sprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Bsp är en opak källkod för B-språk.\ncatalog:variable_text:21673:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:bsp-betyg"
+subject = "var:betyg-i-b-sprak"
 fields = { "tags" = ["education"] }
 evidence = "Bsp är en opak källkod för B-språk.\ncatalog:variable_text:21673:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:bsp-sprak"
+subject = "var:b-sprak"
 fields = { "sets" = ["sprakamne"] }
 evidence = "Bsp är en källmnemonik; etiketten anger B-språk.\ncatalog:variable_text:21674:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:bsp-sprak"
+subject = "var:b-sprak"
 fields = { "tags" = ["education"] }
 evidence = "Bsp är en källmnemonik; etiketten anger B-språk.\ncatalog:variable_text:21674:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:csp-betyg"
+subject = "var:betyg-i-c-sprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Csp är en opak källkod för C-språk.\ncatalog:variable_text:21675:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:csp-betyg"
+subject = "var:betyg-i-c-sprak"
 fields = { "tags" = ["education"] }
 evidence = "Csp är en opak källkod för C-språk.\ncatalog:variable_text:21675:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:csp-sprak"
+subject = "var:c-sprak"
 fields = { "sets" = ["sprakamne"] }
 evidence = "Csp är en källmnemonik; etiketten anger C-språk.\ncatalog:variable_text:21676:10043:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:csp-sprak"
+subject = "var:c-sprak"
 fields = { "tags" = ["education"] }
 evidence = "Csp är en källmnemonik; etiketten anger C-språk.\ncatalog:variable_text:21676:10043:11139"
 
@@ -903,25 +903,25 @@ evidence = "Variabeln är ett ämnesbetyg.\ncatalog:variable_text:21687:6390:202
 
 [[statement]]
 kind = "set"
-subject = "var:hk"
+subject = "var:betyg-i-amnet-hemkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Hk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21688:6390:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:hk"
+subject = "var:betyg-i-amnet-hemkunskap"
 fields = { "tags" = ["education"] }
 evidence = "Hk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21688:6390:11139"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Hkk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21689:11139:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "tags" = ["education"] }
 evidence = "Hkk är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21689:11139:20270"
 
@@ -939,13 +939,13 @@ evidence = "Namnet avser en utbildningshuvudman.\ncatalog:variable_text:21690:18
 
 [[statement]]
 kind = "set"
-subject = "var:hs"
+subject = "var:betyg-i-amnet-hemsprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Hs är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21691:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:hs"
+subject = "var:betyg-i-amnet-hemsprak"
 fields = { "tags" = ["education"] }
 evidence = "Hs är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21691:6390:10043"
 
@@ -1011,13 +1011,13 @@ evidence = "Variabeln är ett ämnesbetyg.\ncatalog:variable_text:21696:6390:100
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Idh är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21697:10043:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "Idh är en bokstavskod för ämnesbetyget.\ncatalog:variable_text:21697:10043:20270"
 
@@ -1659,13 +1659,13 @@ evidence = "Variabeln mäter faderns grupperade utbildningsnivå.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Sva är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:21760:6390:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "Sva är en bokstavskod för svenska som andraspråk.\ncatalog:variable_text:21760:6390:20270"
 
@@ -1683,13 +1683,13 @@ evidence = "Datumet ingår i gruppen för invandringstidpunkt och är ett hände
 
 [[statement]]
 kind = "set"
-subject = "var:tv"
+subject = "var:betyg-i-tillsvalsamne-1"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Tv är en källkod för tillvalsämnets betyg.\ncatalog:variable_text:21763:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:tv"
+subject = "var:betyg-i-tillsvalsamne-1"
 fields = { "tags" = ["education"] }
 evidence = "Tv är en källkod för tillvalsämnets betyg.\ncatalog:variable_text:21763:6390:10043"
 
@@ -1767,13 +1767,13 @@ evidence = "TV och VT är källkoder; den delade etiketten kräver disambiguerin
 
 [[statement]]
 kind = "set"
-subject = "var:tv2"
+subject = "var:betyg-i-tillsvalsamne-2"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "Tv är en källkod och 2 anger källans andra ämnesslot.\ncatalog:variable_text:21770:6390:10043"
 
 [[statement]]
 kind = "set"
-subject = "var:tv2"
+subject = "var:betyg-i-tillsvalsamne-2"
 fields = { "tags" = ["education"] }
 evidence = "Tv är en källkod och 2 anger källans andra ämnesslot.\ncatalog:variable_text:21770:6390:10043"
 

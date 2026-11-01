@@ -373,13 +373,13 @@ evidence = "Bostadsarea avser bostadsutrymme och är inte uttryckligen bruttoare
 
 [[statement]]
 kind = "set"
-subject = "var:bragemans"
+subject = "var:gemensam-area-i-huset"
 fields = { "sets" = [] }
 evidence = "Id:t innehåller ogenomskinliga källförkortningar; etiketten anger gemensam area.\ncatalog:variable_text:6782:11323:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:bragemans"
+subject = "var:gemensam-area-i-huset"
 fields = { "tags" = ["housing"] }
 evidence = "Id:t innehåller ogenomskinliga källförkortningar; etiketten anger gemensam area.\ncatalog:variable_text:6782:11323:14610"
 
@@ -589,13 +589,13 @@ evidence = "Fastighetens postnummer anger geografiskt läge.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:fbpostadress"
+subject = "var:fastighetens-postadress"
 fields = { "sets" = [] }
 evidence = "Fb är en källförkortning som inte är en igenkännlig stam av fastighet.\ncatalog:variable_text:6804:12418:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:fbpostadress"
+subject = "var:fastighetens-postadress"
 fields = { "tags" = ["geography"] }
 evidence = "Fb är en källförkortning som inte är en igenkännlig stam av fastighet.\ncatalog:variable_text:6804:12418:14245"
 

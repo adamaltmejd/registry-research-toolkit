@@ -259,13 +259,13 @@ evidence = "Variabeln kodar lägenhetstyp.\ncatalog:valueset:9396\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:population"
 fields = { "sets" = [] }
 evidence = "Storan är ett opakt källnamn; etiketten anger population.\ncatalog:variable_text:39554:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:population"
 fields = { "tags" = ["methods"] }
 evidence = "Storan är ett opakt källnamn; etiketten anger population.\ncatalog:variable_text:39554:13879:14245"
 

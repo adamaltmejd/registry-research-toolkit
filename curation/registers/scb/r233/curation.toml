@@ -448,13 +448,13 @@ evidence = "Värdena avser studiehjälp utöver ordinarie stöd.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:en-ak9"
+subject = "var:betyg-i-amnet-engelska"
 fields = { "sets" = ["amnesbetyg-ar9"] }
 evidence = "En och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:22978"
 
 [[statement]]
 kind = "set"
-subject = "var:en-ak9"
+subject = "var:betyg-i-amnet-engelska"
 fields = { "tags" = ["education"] }
 evidence = "En och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:22978"
 
@@ -772,13 +772,13 @@ evidence = "Kodning av mottagen lärlingsersättning.\ncatalog:occurrence-locato
 
 [[statement]]
 kind = "set"
-subject = "var:ma-ak9"
+subject = "var:betyg-i-amnet-matematik"
 fields = { "sets" = ["amnesbetyg-ar9"] }
 evidence = "Ma och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23006"
 
 [[statement]]
 kind = "set"
-subject = "var:ma-ak9"
+subject = "var:betyg-i-amnet-matematik"
 fields = { "tags" = ["education"] }
 evidence = "Ma och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23006"
 
@@ -808,13 +808,13 @@ evidence = "Sammanräknat meritvärde inklusive moderna språk.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:niu"
+subject = "var:registrerad-pa-nationellt-godkand-idrottsutbildning"
 fields = { "sets" = [] }
 evidence = "NIU är en bokstavskod som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:23009"
 
 [[statement]]
 kind = "set"
-subject = "var:niu"
+subject = "var:registrerad-pa-nationellt-godkand-idrottsutbildning"
 fields = { "tags" = ["education"] }
 evidence = "NIU är en bokstavskod som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:23009"
 
@@ -1300,25 +1300,25 @@ evidence = "Föräldrarnas grupperade utbildningsnivå hör till föräldragrupp
 
 [[statement]]
 kind = "set"
-subject = "var:sv-ak9"
+subject = "var:betyg-i-amnet-svenska"
 fields = { "sets" = ["amnesbetyg-ar9"] }
 evidence = "Sv och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23054"
 
 [[statement]]
 kind = "set"
-subject = "var:sv-ak9"
+subject = "var:betyg-i-amnet-svenska"
 fields = { "tags" = ["education"] }
 evidence = "Sv och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23054"
 
 [[statement]]
 kind = "set"
-subject = "var:sva-ak9"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "sets" = ["amnesbetyg-ar9"] }
 evidence = "Sva och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23055"
 
 [[statement]]
 kind = "set"
-subject = "var:sva-ak9"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "Sva och Ak är källkodförkortningar för ämnet och årskursen.\ncatalog:occurrence-locators:variable:23055"
 

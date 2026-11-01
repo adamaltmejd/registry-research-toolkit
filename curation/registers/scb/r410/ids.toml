@@ -30,5 +30,5 @@ public = "esk"
 "varde-investeringar" = ["Fasta bruttoinvesteringar: varde"]
 "variabelnamn" = ["Lagerinvesteringar: Variabel_text"]
 "variabelnummer" = ["Fasta bruttoinvesteringar: variabel"]
-"venr" = ["Fasta bruttoinvesteringar: venr"]
+"verksamhetsenhetens-identitetsnummer" = ["Fasta bruttoinvesteringar: venr"]
 "firmanamn-scbidnamn" = ["Lagerinvesteringar: SCBIDNAMN"]

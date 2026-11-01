@@ -13,37 +13,37 @@ evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exac
 
 [[statement]]
 kind = "set"
-subject = "var:aimpas"
+subject = "var:antal-imputerade-foretag-per-stratum-arbetare"
 fields = { "sets" = ["imputering"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter imputering.\ncatalog:variable_text:34050:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aimpas"
+subject = "var:antal-imputerade-foretag-per-stratum-arbetare"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter imputering.\ncatalog:variable_text:34050:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aimpts"
+subject = "var:antal-imputerade-foretag-per-stratum-tjansteman"
 fields = { "sets" = ["imputering"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter imputering.\ncatalog:variable_text:34051:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aimpts"
+subject = "var:antal-imputerade-foretag-per-stratum-tjansteman"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter imputering.\ncatalog:variable_text:34051:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:anlonavt"
+subject = "var:loneavtal-arbetare"
 fields = { "sets" = ["loneavtal"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln avser löneavtal.\ncatalog:variable_text:34052:14245:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:anlonavt"
+subject = "var:loneavtal-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln avser löneavtal.\ncatalog:variable_text:34052:14245:20454"
 
@@ -61,49 +61,49 @@ evidence = "Variabeln mäter antal anställda på företaget.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:aovrtas"
+subject = "var:antal-foretag-som-har-overtackning-per-stratum-arbetare"
 fields = { "sets" = ["antal-foretag-med-overtackning"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter övertäckning i urvalet.\ncatalog:variable_text:34054:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aovrtas"
+subject = "var:antal-foretag-som-har-overtackning-per-stratum-arbetare"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter övertäckning i urvalet.\ncatalog:variable_text:34054:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aovrtts"
+subject = "var:antal-foretag-som-har-overtackning-per-stratum-tjansteman"
 fields = { "sets" = ["antal-foretag-med-overtackning"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter övertäckning i urvalet.\ncatalog:variable_text:34055:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aovrtts"
+subject = "var:antal-foretag-som-har-overtackning-per-stratum-tjansteman"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter övertäckning i urvalet.\ncatalog:variable_text:34055:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bfallas"
+subject = "var:antal-foretag-med-objektsbortfall-per-stratum-arbetare"
 fields = { "sets" = ["antal-foretag-med-objektsbortfall"] }
 evidence = "Personalkategorins bokstavskod är opak. Variabeln mäter objektsbortfall.\ncatalog:variable_text:34056:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bfallas"
+subject = "var:antal-foretag-med-objektsbortfall-per-stratum-arbetare"
 fields = { "tags" = ["methods"] }
 evidence = "Personalkategorins bokstavskod är opak. Variabeln mäter objektsbortfall.\ncatalog:variable_text:34056:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bfallts"
+subject = "var:antal-foretag-med-objektsbortfall-per-stratum-tjansteman"
 fields = { "sets" = ["antal-foretag-med-objektsbortfall"] }
 evidence = "Personalkategorins bokstavskod är opak. Variabeln mäter objektsbortfall.\ncatalog:variable_text:34057:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bfallts"
+subject = "var:antal-foretag-med-objektsbortfall-per-stratum-tjansteman"
 fields = { "tags" = ["methods"] }
 evidence = "Personalkategorins bokstavskod är opak. Variabeln mäter objektsbortfall.\ncatalog:variable_text:34057:20089:20454"
 
@@ -133,241 +133,241 @@ evidence = "Variabeln anger urvalsstorlek per stratum.\ncatalog:variable_text:34
 
 [[statement]]
 kind = "set"
-subject = "var:maant"
+subject = "var:antal-anstallda-arbetare"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter antal anställda.\ncatalog:variable_text:34062:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maant"
+subject = "var:antal-anstallda-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter antal anställda.\ncatalog:variable_text:34062:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maarbtim"
+subject = "var:antal-arbetade-timmar-arbetare"
 fields = { "sets" = ["arbetade-timmar"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter arbetade timmar.\ncatalog:variable_text:34063:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maarbtim"
+subject = "var:antal-arbetade-timmar-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter arbetade timmar.\ncatalog:variable_text:34063:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maavttid"
+subject = "var:avtalad-arbetstid-arbetare"
 fields = { "sets" = ["avtalad-arbetstid"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter avtalad arbetstid.\ncatalog:variable_text:34064:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maavttid"
+subject = "var:avtalad-arbetstid-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter avtalad arbetstid.\ncatalog:variable_text:34064:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:malon"
+subject = "var:lonesumma-arbetare"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter lönesumma.\ncatalog:variable_text:34065:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:malon"
+subject = "var:lonesumma-arbetare"
 fields = { "tags" = ["income"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter lönesumma.\ncatalog:variable_text:34065:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maoters"
+subject = "var:overtidstillagg-arbetare"
 fields = { "sets" = ["overtidstillagg"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln mäter övertidstillägg.\ncatalog:variable_text:34066:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maoters"
+subject = "var:overtidstillagg-arbetare"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln mäter övertidstillägg.\ncatalog:variable_text:34066:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maovttim"
+subject = "var:antal-overtidstimmar-arbetare"
 fields = { "sets" = ["overtidstimmar"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter övertidstimmar.\ncatalog:variable_text:34067:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maovttim"
+subject = "var:antal-overtidstimmar-arbetare"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter övertidstimmar.\ncatalog:variable_text:34067:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maretlki"
+subject = "var:retroaktivlonesumma-12-mander-arbetare"
 fields = { "sets" = ["retroaktivlonesumma"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter retroaktiv lönesumma.\ncatalog:variable_text:34068:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:maretlki"
+subject = "var:retroaktivlonesumma-12-mander-arbetare"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter retroaktiv lönesumma.\ncatalog:variable_text:34068:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtant"
+subject = "var:antal-anstallda-tjansteman"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter antal anställda.\ncatalog:variable_text:34069:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtant"
+subject = "var:antal-anstallda-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter antal anställda.\ncatalog:variable_text:34069:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtarbtim"
+subject = "var:antal-arbetade-timmar-tjansteman"
 fields = { "sets" = ["arbetade-timmar"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter arbetade timmar.\ncatalog:variable_text:34070:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtarbtim"
+subject = "var:antal-arbetade-timmar-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter arbetade timmar.\ncatalog:variable_text:34070:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtavttid"
+subject = "var:avtalad-arbetstid-tjansteman"
 fields = { "sets" = ["avtalad-arbetstid"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter avtalad arbetstid.\ncatalog:variable_text:34071:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtavttid"
+subject = "var:avtalad-arbetstid-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter avtalad arbetstid.\ncatalog:variable_text:34071:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mthelt"
+subject = "var:antal-heltidstjanster-tjansteman"
 fields = { "sets" = [] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter heltidstjänster.\ncatalog:variable_text:34072:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mthelt"
+subject = "var:antal-heltidstjanster-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter heltidstjänster.\ncatalog:variable_text:34072:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlon"
+subject = "var:lonesumma-tjansteman"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter lönesumma.\ncatalog:variable_text:34073:12784:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlon"
+subject = "var:lonesumma-tjansteman"
 fields = { "tags" = ["income"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter lönesumma.\ncatalog:variable_text:34073:12784:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlonert"
+subject = "var:lonesumma-exkl-rorliga-tillagg-tjansteman"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter lönesumma.\ncatalog:variable_text:34074:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlonert"
+subject = "var:lonesumma-exkl-rorliga-tillagg-tjansteman"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter lönesumma.\ncatalog:variable_text:34074:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlonirt"
+subject = "var:lonesumma-inkl-rorliga-tillagg-tjansteman"
 fields = { "sets" = ["lonesumma"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter lönesumma.\ncatalog:variable_text:34075:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtlonirt"
+subject = "var:lonesumma-inkl-rorliga-tillagg-tjansteman"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter lönesumma.\ncatalog:variable_text:34075:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtoters"
+subject = "var:overtidstillagg-tjansteman"
 fields = { "sets" = ["overtidstillagg"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln mäter övertidstillägg.\ncatalog:variable_text:34076:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtoters"
+subject = "var:overtidstillagg-tjansteman"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens personalkategorikod är opak. Variabeln mäter övertidstillägg.\ncatalog:variable_text:34076:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtovttim"
+subject = "var:antal-overtidstimmar-tjansteman"
 fields = { "sets" = ["overtidstimmar"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter övertidstimmar.\ncatalog:variable_text:34077:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtovttim"
+subject = "var:antal-overtidstimmar-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln mäter övertidstimmar.\ncatalog:variable_text:34077:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtretlki"
+subject = "var:retroaktivlonesumma-12-mander-tjansteman"
 fields = { "sets" = ["retroaktivlonesumma"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter retroaktiv lönesumma.\ncatalog:variable_text:34078:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:mtretlki"
+subject = "var:retroaktivlonesumma-12-mander-tjansteman"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnens bokstavskod är opak. Variabeln mäter retroaktiv lönesumma.\ncatalog:variable_text:34078:10957:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nsvaras"
+subject = "var:antal-svarande-foretag-arbetare"
 fields = { "sets" = ["antal-svarande-foretag"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter svarande företag i urvalet.\ncatalog:variable_text:34079:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nsvaras"
+subject = "var:antal-svarande-foretag-arbetare"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter svarande företag i urvalet.\ncatalog:variable_text:34079:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nsvarts"
+subject = "var:antal-svarande-foretag-tjansteman"
 fields = { "sets" = ["antal-svarande-foretag"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter svarande företag i urvalet.\ncatalog:variable_text:34080:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nsvarts"
+subject = "var:antal-svarande-foretag-tjansteman"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens bokstavskoder är opaka. Variabeln mäter svarande företag i urvalet.\ncatalog:variable_text:34080:20089:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:reaktu"
+subject = "var:aktualitet-for-redovisningsenhet"
 fields = { "sets" = [] }
 evidence = "RE är en opak bokstavskod för redovisningsenhet. Variabeln beskriver svar och bortfall.\ncatalog:variable_text:34082:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:reaktu"
+subject = "var:aktualitet-for-redovisningsenhet"
 fields = { "tags" = ["methods"] }
 evidence = "RE är en opak bokstavskod för redovisningsenhet. Variabeln beskriver svar och bortfall.\ncatalog:variable_text:34082:17167:20454"
 
@@ -517,36 +517,36 @@ evidence = "Variabeln anger ett urvalsstratum.\ncatalog:variable_text:34096:1716
 
 [[statement]]
 kind = "set"
-subject = "var:styrka"
+subject = "var:styrkod-arbetare"
 fields = { "sets" = ["styrkod"] }
 evidence = "A är en opak personalkategorikod. Styrkoden beskriver undersökningsstatus.\ncatalog:variable_text:34097:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:styrka"
+subject = "var:styrkod-arbetare"
 fields = { "tags" = ["methods"] }
 evidence = "A är en opak personalkategorikod. Styrkoden beskriver undersökningsstatus.\ncatalog:variable_text:34097:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:styrkt"
+subject = "var:styrkod-tjansteman"
 fields = { "sets" = ["styrkod"] }
 evidence = "T är en opak personalkategorikod. Styrkoden beskriver undersökningsstatus.\ncatalog:variable_text:34098:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:styrkt"
+subject = "var:styrkod-tjansteman"
 fields = { "tags" = ["methods"] }
 evidence = "T är en opak personalkategorikod. Styrkoden beskriver undersökningsstatus.\ncatalog:variable_text:34098:17167:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tnlonavt"
+subject = "var:loneavtal-tjansteman"
 fields = { "sets" = ["loneavtal"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln avser löneavtal.\ncatalog:variable_text:34099:14245:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tnlonavt"
+subject = "var:loneavtal-tjansteman"
 fields = { "tags" = ["employment"] }
 evidence = "Den inledande personalkategorikoden är opak. Variabeln avser löneavtal.\ncatalog:variable_text:34099:14245:20454"

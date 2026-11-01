@@ -517,13 +517,13 @@ evidence = "Retroaktiv lön är en lönekomponent.\ncatalog:variable_text:34170:
 
 [[statement]]
 kind = "set"
-subject = "var:retlonki"
+subject = "var:retroaktiv-lon-12-manader"
 fields = { "sets" = ["lon"] }
 evidence = "KI är en ogenomskinlig bokstavskod som saknas i etiketten för retroaktiv lön.\ncatalog:variable_text:34171:16801:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:retlonki"
+subject = "var:retroaktiv-lon-12-manader"
 fields = { "tags" = ["income"] }
 evidence = "KI är en ogenomskinlig bokstavskod som saknas i etiketten för retroaktiv lön.\ncatalog:variable_text:34171:16801:20454"
 

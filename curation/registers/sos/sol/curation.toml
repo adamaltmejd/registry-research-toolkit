@@ -847,13 +847,13 @@ evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt 
 
 [[statement]]
 kind = "set"
-subject = "var:htjtim"
+subject = "var:hemtjansttimmar"
 fields = { "sets" = ["hemtjanst"] }
 evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57412:13787:15522\ncatalog:variable_text:57412:15522:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:htjtim"
+subject = "var:hemtjansttimmar"
 fields = { "tags" = ["social-care"] }
 evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57412:13787:15522\ncatalog:variable_text:57412:15522:2932897"
 
@@ -1087,13 +1087,13 @@ evidence = "Trygghetslarm är en socialtjänstinsats.\ncatalog:variable_text:574
 
 [[statement]]
 kind = "set"
-subject = "var:vboform"
+subject = "var:boendeform-vid-verkstallan"
 fields = { "sets" = ["boendeform"] }
 evidence = "Den inledande bokstaven V är en källkod för verkställan.\ncatalog:variable_text:57435:15522:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:vboform"
+subject = "var:boendeform-vid-verkstallan"
 fields = { "tags" = ["housing"] }
 evidence = "Den inledande bokstaven V är en källkod för verkställan.\ncatalog:variable_text:57435:15522:2932897"
 

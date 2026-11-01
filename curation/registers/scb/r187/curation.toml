@@ -451,37 +451,37 @@ evidence = "Försäljningsvärdet är en namngiven lagervärderingskomponent.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:fpfrtillv"
+subject = "var:fardiga-produkter-i-frammande-tillverkning"
 fields = { "sets" = ["lagervarde"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34793:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fpfrtillv"
+subject = "var:fardiga-produkter-i-frammande-tillverkning"
 fields = { "tags" = ["business"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34793:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fppalagg"
+subject = "var:palagg-fardiga-produkter"
 fields = { "sets" = ["lagervarde"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34794:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fppalagg"
+subject = "var:palagg-fardiga-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34794:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fptillvkost"
+subject = "var:tillverkningskostnad-for-fardiga-produkter"
 fields = { "sets" = ["lagervarde"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34795:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:fptillvkost"
+subject = "var:tillverkningskostnad-for-fardiga-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Fp är en opak bokstavskod för färdiga produkter.\ncatalog:variable_text:34795:10227:16436"
 
@@ -667,13 +667,13 @@ evidence = "Katalogen anger en angränsande mappning med annan benämning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:levtot"
+subject = "var:total-nettoomsattning"
 fields = { "sets" = ["nettoomsattning"] }
 evidence = "Lev är en källförkortning som inte uttrycker nettoomsättning.\ncatalog:variable_text:34814:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:levtot"
+subject = "var:total-nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "Lev är en källförkortning som inte uttrycker nettoomsättning.\ncatalog:variable_text:34814:16071:16436"
 
@@ -763,25 +763,25 @@ evidence = "Katalogen anger överlappande mappningar; variabeln mäter ordering�
 
 [[statement]]
 kind = "set"
-subject = "var:papalagg"
+subject = "var:palagg-produkter-i-arbete"
 fields = { "sets" = ["lagervarde"] }
 evidence = "Pa är en opak bokstavskod för produkter i arbete.\ncatalog:variable_text:34832:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:papalagg"
+subject = "var:palagg-produkter-i-arbete"
 fields = { "tags" = ["business"] }
 evidence = "Pa är en opak bokstavskod för produkter i arbete.\ncatalog:variable_text:34832:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:patillvkost"
+subject = "var:tillverkningskostnad-av-produkter-i-arbete"
 fields = { "sets" = ["lagervarde"] }
 evidence = "Pa är en opak bokstavskod för produkter i arbete.\ncatalog:variable_text:34833:10227:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:patillvkost"
+subject = "var:tillverkningskostnad-av-produkter-i-arbete"
 fields = { "tags" = ["business"] }
 evidence = "Pa är en opak bokstavskod för produkter i arbete.\ncatalog:variable_text:34833:10227:16436"
 

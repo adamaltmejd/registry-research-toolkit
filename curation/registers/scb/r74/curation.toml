@@ -139,13 +139,13 @@ evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar 
 
 [[statement]]
 kind = "set"
-subject = "var:biokwhprod"
+subject = "var:biobransleanvandning"
 fields = { "sets" = ["biobransleanvandning", "energianvandning"] }
 evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:biokwhprod"
+subject = "var:biobransleanvandning"
 fields = { "tags" = ["energy"] }
 evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245"
 
@@ -211,13 +211,13 @@ evidence = "Klassificerad uppvärmd boyta.\ncatalog:valueset:8056\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:bvarm"
+subject = "var:befintligt-uppvarmningssatt"
 fields = { "sets" = ["uppvarmningssatt"] }
 evidence = "B är en bokstavskod för befintligt och varm är inte en läsbar återgivning av uppvärmningssätt.\ncatalog:variable_text:7567:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:bvarm"
+subject = "var:befintligt-uppvarmningssatt"
 fields = { "tags" = ["energy"] }
 evidence = "B är en bokstavskod för befintligt och varm är inte en läsbar återgivning av uppvärmningssätt.\ncatalog:variable_text:7567:10957:14245"
 
@@ -475,13 +475,13 @@ evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7589:1241
 
 [[statement]]
 kind = "set"
-subject = "var:kwhtot"
+subject = "var:totalt-anvand-mangd-energi-i-mwh"
 fields = { "sets" = ["energianvandning"] }
 evidence = "Källförkortningen är en ogenomskinlig kod för etiketten.\ncatalog:variable_text:7590:10957:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:kwhtot"
+subject = "var:totalt-anvand-mangd-energi-i-mwh"
 fields = { "tags" = ["energy"] }
 evidence = "Källförkortningen är en ogenomskinlig kod för etiketten.\ncatalog:variable_text:7590:10957:11323"
 
@@ -511,13 +511,13 @@ evidence = "Län är en geografisk indelning.\ncatalog:variable_text:7592:10957:
 
 [[statement]]
 kind = "set"
-subject = "var:narvkwhprod"
+subject = "var:narvarmeanvandning"
 fields = { "sets" = ["energianvandning"] }
 evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7593:11688:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:narvkwhprod"
+subject = "var:narvarmeanvandning"
 fields = { "tags" = ["energy"] }
 evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7593:11688:14245"
 
@@ -619,13 +619,13 @@ evidence = "Kodad åtgärd med reglersystem.\ncatalog:valueset:2029\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:populationsstorlek"
 fields = { "sets" = [] }
 evidence = "Storan är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:7603:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:storan"
+subject = "var:populationsstorlek"
 fields = { "tags" = ["methods"] }
 evidence = "Storan är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:7603:10957:14245"
 
@@ -703,13 +703,13 @@ evidence = "Typ av taxeringsenhet är en fastighetsegenskap.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:tzon"
+subject = "var:temperaturzon"
 fields = { "sets" = [] }
 evidence = "T är en bokstavskod för temperatur i källmnemoniken.\ncatalog:variable_text:7610:10957:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:tzon"
+subject = "var:temperaturzon"
 fields = { "tags" = ["geography"] }
 evidence = "T är en bokstavskod för temperatur i källmnemoniken.\ncatalog:variable_text:7610:10957:14245"
 

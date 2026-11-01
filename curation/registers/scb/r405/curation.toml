@@ -97,49 +97,49 @@ evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLega
 
 [[statement]]
 kind = "set"
-subject = "var:a-fath"
+subject = "var:relationer-overens-med-pappa"
 fields = { "sets" = ["samforstand-med-foraldrar"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5195:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:a-fath"
+subject = "var:relationer-overens-med-pappa"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5195:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:a-fcoh"
+subject = "var:relationer-overens-med-pappas-sambo"
 fields = { "sets" = ["samforstand-med-foraldrar"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5196:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:a-fcoh"
+subject = "var:relationer-overens-med-pappas-sambo"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5196:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:a-mcoh"
+subject = "var:relationer-overens-med-mammas-sambo"
 fields = { "sets" = ["samforstand-med-foraldrar"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5197:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:a-mcoh"
+subject = "var:relationer-overens-med-mammas-sambo"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5197:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:a-moth"
+subject = "var:relationer-overens-med-mamma"
 fields = { "sets" = ["samforstand-med-foraldrar"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5198:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:a-moth"
+subject = "var:relationer-overens-med-mamma"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:5198:13879:18262"
 
@@ -277,85 +277,85 @@ evidence = "Antal barn i familjen.\ncatalog:variable_text:5209:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-adult4-h"
+subject = "var:relationer-pratar-med-annan-vuxen-i-hemmet"
 fields = { "sets" = ["samtalsstod"] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5210:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-adult4-h"
+subject = "var:relationer-pratar-med-annan-vuxen-i-hemmet"
 fields = { "tags" = [] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5210:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-frie4-h"
+subject = "var:relationer-pratar-med-kompis"
 fields = { "sets" = ["samtalsstod"] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5211:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-frie4-h"
+subject = "var:relationer-pratar-med-kompis"
 fields = { "tags" = [] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5211:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-scho4-h"
+subject = "var:relationer-pratar-med-vuxen-pa-skolan"
 fields = { "sets" = ["samtalsstod"] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5212:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-scho4-h"
+subject = "var:relationer-pratar-med-vuxen-pa-skolan"
 fields = { "tags" = [] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5212:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-sibl4-h"
+subject = "var:relationer-pratar-med-syskon"
 fields = { "sets" = ["samtalsstod"] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5213:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:anx-sibl4-h"
+subject = "var:relationer-pratar-med-syskon"
 fields = { "tags" = [] }
 evidence = "Källkolumnens engelska kod är ogenomskinlig.\ncatalog:variable_text:5213:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:asle-oth"
+subject = "var:tid-somnar-annan-tid"
 fields = { "sets" = ["insomningstidpunkt"] }
 evidence = "Källkolumnens engelska förkortningar är ogenomskinliga.\ncatalog:variable_text:5214:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:asle-oth"
+subject = "var:tid-somnar-annan-tid"
 fields = { "tags" = ["culture"] }
 evidence = "Källkolumnens engelska förkortningar är ogenomskinliga.\ncatalog:variable_text:5214:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:asleep"
+subject = "var:tid-somnar-pa-kvallen"
 fields = { "sets" = ["insomningstidpunkt"] }
 evidence = "Den engelska källkoden är inte en igenkännbar stam i etiketten.\ncatalog:variable_text:5215:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:asleep"
+subject = "var:tid-somnar-pa-kvallen"
 fields = { "tags" = ["culture"] }
 evidence = "Den engelska källkoden är inte en igenkännbar stam i etiketten.\ncatalog:variable_text:5215:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:avoid"
+subject = "var:undvikit-ata-pga-banta"
 fields = { "sets" = [] }
 evidence = "Källnamnet är en engelsk källkod utan igenkännbar motsvarighet i etiketten.\ncatalog:variable_text:5216:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:avoid"
+subject = "var:undvikit-ata-pga-banta"
 fields = { "tags" = ["health"] }
 evidence = "Källnamnet är en engelsk källkod utan igenkännbar motsvarighet i etiketten.\ncatalog:variable_text:5216:13879:14245"
 
@@ -613,73 +613,73 @@ evidence = "Variabeln kodar svensk eller utländsk bakgrund.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:bar-break"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-eller-raster-i-skolan"
 fields = { "sets" = ["hinder-for-deltagande-i-lektioner-och-raster"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5240:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-break"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-eller-raster-i-skolan"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5240:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-excur"
+subject = "var:ej-kunnat-vara-med-pa-utflykter-med-skolan"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5241:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-excur"
+subject = "var:ej-kunnat-vara-med-pa-utflykter-med-skolan"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5241:14610:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-leisure"
+subject = "var:ej-kunnat-vara-med-pa-fritidsaktiviteter"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5242:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-leisure"
+subject = "var:ej-kunnat-vara-med-pa-fritidsaktiviteter"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5242:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-obreak"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-eller-raster-annan-orsak"
 fields = { "sets" = ["hinder-for-deltagande-i-lektioner-och-raster"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5243:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-obreak"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-eller-raster-annan-orsak"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5243:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-oexcur"
+subject = "var:ej-kunnat-vara-med-pa-utflykter-annan-orsak"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5244:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-oexcur"
+subject = "var:ej-kunnat-vara-med-pa-utflykter-annan-orsak"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5244:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-oleis"
+subject = "var:ej-kunnat-vara-med-pa-fritidsaktiviteter-annan-orsak"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5245:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-oleis"
+subject = "var:ej-kunnat-vara-med-pa-fritidsaktiviteter-annan-orsak"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5245:14245:15706"
 
@@ -697,13 +697,13 @@ evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5246
 
 [[statement]]
 kind = "set"
-subject = "var:bar-sch"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-raster-eller-utflykter"
 fields = { "sets" = ["hinder-for-deltagande-i-skolaktiviteter"] }
 evidence = "Källmnemoniken är opak och mäter samlade hinder för skolaktiviteter.\ncatalog:variable_text:5247:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:bar-sch"
+subject = "var:ej-kunnat-vara-med-pa-lektioner-raster-eller-utflykter"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och mäter samlade hinder för skolaktiviteter.\ncatalog:variable_text:5247:14245:14610"
 
@@ -793,13 +793,13 @@ evidence = "Mottagande av barnbidrag hör ihop med beloppet.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:bed"
+subject = "var:hushallssysslor-badda-sangen"
 fields = { "sets" = [] }
 evidence = "Engelska källnamnet anger inte den svenska etikettens ord.\ncatalog:variable_text:5256:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:bed"
+subject = "var:hushallssysslor-badda-sangen"
 fields = { "tags" = ["family-household"] }
 evidence = "Engelska källnamnet anger inte den svenska etikettens ord.\ncatalog:variable_text:5256:13879:16436"
 
@@ -853,13 +853,13 @@ evidence = "Variabeln är en intervjuvikt.\ncatalog:variable_text:5260:15340:157
 
 [[statement]]
 kind = "set"
-subject = "var:bo0930"
+subject = "var:bakgrund-familjetyp"
 fields = { "sets" = ["barnets-familje-och-boendetyp"] }
 evidence = "Källkolumnens sifferkod är inte en läsbar etikett.\ncatalog:variable_text:5261:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:bo0930"
+subject = "var:bakgrund-familjetyp"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkolumnens sifferkod är inte en läsbar etikett.\ncatalog:variable_text:5261:13879:18262"
 
@@ -877,37 +877,37 @@ evidence = "Boendeformen har en kalibreringskodning.\ncatalog:variable_text:5262
 
 [[statement]]
 kind = "set"
-subject = "var:break-hand"
+subject = "var:lektioner-eller-raster-funktionsnedsattning-eller-sjukdom"
 fields = { "sets" = ["hinder-for-deltagande-i-lektioner-och-raster"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5263:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:break-hand"
+subject = "var:lektioner-eller-raster-funktionsnedsattning-eller-sjukdom"
 fields = { "tags" = ["disability", "education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5263:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:break-oth"
+subject = "var:lektioner-eller-raster-annat-skal"
 fields = { "sets" = ["hinder-for-deltagande-i-lektioner-och-raster"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5264:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:break-oth"
+subject = "var:lektioner-eller-raster-annat-skal"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5264:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:break-par"
+subject = "var:lektioner-eller-raster-far-inte-for-foraldrar"
 fields = { "sets" = ["hinder-for-deltagande-i-lektioner-och-raster"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5265:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:break-par"
+subject = "var:lektioner-eller-raster-far-inte-for-foraldrar"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5265:14245:15706"
 
@@ -1069,25 +1069,25 @@ evidence = "CD-spelare är en medieutrustning.\ncatalog:variable_text:5278:13879
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kevx"
+subject = "var:bakgrund-disponibel-inkomst-per-ke"
 fields = { "sets" = ["disponibel-hushallsinkomst"] }
 evidence = "Kolumnnamnet är en ogenomskinlig källkod.\ncatalog:variable_text:5279:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04kevx"
+subject = "var:bakgrund-disponibel-inkomst-per-ke"
 fields = { "tags" = ["income"] }
 evidence = "Kolumnnamnet är en ogenomskinlig källkod.\ncatalog:variable_text:5279:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04vxhb"
+subject = "var:bakgrund-disponibel-inkomst-for-hushallet"
 fields = { "sets" = ["disponibel-hushallsinkomst"] }
 evidence = "Kolumnnamnet är en ogenomskinlig källkod.\ncatalog:variable_text:5280:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp04vxhb"
+subject = "var:bakgrund-disponibel-inkomst-for-hushallet"
 fields = { "tags" = ["income"] }
 evidence = "Kolumnnamnet är en ogenomskinlig källkod.\ncatalog:variable_text:5280:19358:19723"
 
@@ -1225,37 +1225,37 @@ evidence = "Diskussion av samhällsfrågor på nätet mäter politiskt deltagand
 
 [[statement]]
 kind = "set"
-subject = "var:dec-hwor"
+subject = "var:skola-med-och-bestamma-dagar-for-prov"
 fields = { "sets" = ["elevinflytande"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5293:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:dec-hwor"
+subject = "var:skola-med-och-bestamma-dagar-for-prov"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5293:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:dec-mak"
+subject = "var:ovrigt-kontaktat-beslutsfattare"
 fields = { "sets" = [] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5294:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:dec-mak"
+subject = "var:ovrigt-kontaktat-beslutsfattare"
 fields = { "tags" = ["democracy"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5294:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:dec-senv"
+subject = "var:skola-med-och-bestamma-skolmiljo"
 fields = { "sets" = ["elevinflytande"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5295:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:dec-senv"
+subject = "var:skola-med-och-bestamma-skolmiljo"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5295:13879:16436"
 
@@ -1273,49 +1273,49 @@ evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5296
 
 [[statement]]
 kind = "set"
-subject = "var:dem-none"
+subject = "var:krav-ingen"
 fields = { "sets" = ["kravstallare"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5297:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-none"
+subject = "var:krav-ingen"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5297:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-par"
+subject = "var:krav-fran-foraldrar"
 fields = { "sets" = ["kravstallare"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5298:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-par"
+subject = "var:krav-fran-foraldrar"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5298:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-self"
+subject = "var:krav-fran-mig-sjalv"
 fields = { "sets" = ["kravstallare"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5299:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-self"
+subject = "var:krav-fran-mig-sjalv"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5299:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-teac"
+subject = "var:krav-fran-larare"
 fields = { "sets" = ["kravstallare"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5300:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:dem-teac"
+subject = "var:krav-fran-larare"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5300:13879:14245"
 
@@ -1477,49 +1477,49 @@ evidence = "Variabeln mäter sommarjobb.\ncatalog:variable_text:5313:19358:19723
 
 [[statement]]
 kind = "set"
-subject = "var:excur-cash"
+subject = "var:utflykter-har-inte-rad"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5314:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-cash"
+subject = "var:utflykter-har-inte-rad"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5314:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-hand"
+subject = "var:utflykter-funktionsnedsattning-eller-sjukdom"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5315:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-hand"
+subject = "var:utflykter-funktionsnedsattning-eller-sjukdom"
 fields = { "tags" = ["disability", "education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5315:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-oth"
+subject = "var:utflykter-annat-skal"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5316:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-oth"
+subject = "var:utflykter-annat-skal"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5316:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-par"
+subject = "var:utflykter-far-inte-for-foraldrarna"
 fields = { "sets" = ["hinder-for-deltagande-i-skolutflykter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5317:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:excur-par"
+subject = "var:utflykter-far-inte-for-foraldrarna"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5317:14245:15706"
 
@@ -2485,13 +2485,13 @@ evidence = "Måttet avser huvudvärk.\ncatalog:variable_text:5398:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:hhw"
+subject = "var:berakning-hushallsvikt"
 fields = { "sets" = ["statistiska-vikter"] }
 evidence = "HHW är en ogenomskinlig bokstavskod.\ncatalog:variable_text:5400:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:hhw"
+subject = "var:berakning-hushallsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "HHW är en ogenomskinlig bokstavskod.\ncatalog:variable_text:5400:13879:18262"
 
@@ -2677,37 +2677,37 @@ evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5415:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-fath"
+subject = "var:laxhjalp-pappa"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5416:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-fath"
+subject = "var:laxhjalp-pappa"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5416:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-fcoh"
+subject = "var:laxhjalp-pappas-sambo"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5417:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-fcoh"
+subject = "var:laxhjalp-pappas-sambo"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5417:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-frie"
+subject = "var:laxhjalp-kompis"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5418:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-frie"
+subject = "var:laxhjalp-kompis"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5418:13879:14245"
 
@@ -2749,49 +2749,49 @@ evidence = "HW och hrs är ogenomskinliga källförkortningar.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:hw-mcoh"
+subject = "var:laxhjalp-mammas-sambo"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5422:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-mcoh"
+subject = "var:laxhjalp-mammas-sambo"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5422:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-moth"
+subject = "var:laxhjalp-mamma"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5423:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-moth"
+subject = "var:laxhjalp-mamma"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5423:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-nneed"
+subject = "var:laxhjalp-behover-ingen"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5424:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-nneed"
+subject = "var:laxhjalp-behover-ingen"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5424:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-none"
+subject = "var:laxhjalp-ingen"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5425:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-none"
+subject = "var:laxhjalp-ingen"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5425:13879:14245"
 
@@ -2809,25 +2809,25 @@ evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5426:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-sch"
+subject = "var:laxhjalp-i-skolan"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5427:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-sch"
+subject = "var:laxhjalp-i-skolan"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5427:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-sib"
+subject = "var:laxhjalp-syskon"
 fields = { "sets" = ["laxhjalp"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5428:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:hw-sib"
+subject = "var:laxhjalp-syskon"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5428:13879:14245"
 
@@ -2857,13 +2857,13 @@ evidence = "Insamlingsmetod hör till undersökningsmetod.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:int-wend"
+subject = "var:fritid-tid-for-internet-helg"
 fields = { "sets" = ["internettid"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5434:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:int-wend"
+subject = "var:fritid-tid-for-internet-helg"
 fields = { "tags" = ["culture", "digital"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5434:16801:18262"
 
@@ -2893,13 +2893,13 @@ evidence = "Variabeln kodar kön.\ncatalog:variable_text:5437:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:kon-ip"
+subject = "var:bakgrund-kon-foralder-i-ulf"
 fields = { "sets" = [] }
 evidence = "IP är en bokstavskod.\ncatalog:variable_text:5438:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:kon-ip"
+subject = "var:bakgrund-kon-foralder-i-ulf"
 fields = { "tags" = ["demographics"] }
 evidence = "IP är en bokstavskod.\ncatalog:variable_text:5438:16801:18262"
 
@@ -2929,85 +2929,85 @@ evidence = "Måttet avser inkomstkvintiler.\ncatalog:variable_text:5440:19358:19
 
 [[statement]]
 kind = "set"
-subject = "var:leis-cash"
+subject = "var:fritidsaktivitet-har-inte-rad"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5441:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-cash"
+subject = "var:fritidsaktivitet-har-inte-rad"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5441:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-far"
+subject = "var:fritidsaktivitet-finns-inte-nara-hemmet"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5442:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-far"
+subject = "var:fritidsaktivitet-finns-inte-nara-hemmet"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5442:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-frien"
+subject = "var:fritidsaktivitet-inga-kompisar-att-gora-det-man-vill-med"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5443:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-frien"
+subject = "var:fritidsaktivitet-inga-kompisar-att-gora-det-man-vill-med"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5443:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-hand"
+subject = "var:fritidsaktivitet-funktionsnedsattning-eller-sjukdom"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5444:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-hand"
+subject = "var:fritidsaktivitet-funktionsnedsattning-eller-sjukdom"
 fields = { "tags" = ["culture", "disability"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5444:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-oth"
+subject = "var:fritidsaktivitet-annat-skal"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5445:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-oth"
+subject = "var:fritidsaktivitet-annat-skal"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5445:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-par"
+subject = "var:fritidsaktivitet-far-inte-for-foraldrar"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5446:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-par"
+subject = "var:fritidsaktivitet-far-inte-for-foraldrar"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5446:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-time"
+subject = "var:fritidsaktivitet-har-inte-tid"
 fields = { "sets" = ["hinder-for-deltagande-i-fritidsaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5447:14245:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:leis-time"
+subject = "var:fritidsaktivitet-har-inte-tid"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5447:14245:15706"
 
@@ -3037,13 +3037,13 @@ evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5449:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:lillam-h"
+subject = "var:berakning-antal-svarande-per-stratum"
 fields = { "sets" = [] }
 evidence = "M och H är bokstavskoder som inte förklaras i etiketten.\ncatalog:variable_text:5450:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:lillam-h"
+subject = "var:berakning-antal-svarande-per-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "M och H är bokstavskoder som inte förklaras i etiketten.\ncatalog:variable_text:5450:19358:19723"
 
@@ -3061,13 +3061,13 @@ evidence = "Variabeln mäter urvalsstorlek per stratum.\ncatalog:variable_text:5
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-h"
+subject = "var:berakning-urvalsstorlek-per-stratum"
 fields = { "sets" = ["urvalsstorlek-per-stratum"] }
 evidence = "N och H är bokstavskoder som inte förekommer i etiketten.\ncatalog:variable_text:5452:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:lillan-h"
+subject = "var:berakning-urvalsstorlek-per-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "N och H är bokstavskoder som inte förekommer i etiketten.\ncatalog:variable_text:5452:19358:19723"
 
@@ -3145,13 +3145,13 @@ evidence = "Måttet avser relativ hushållsinkomst.\ncatalog:variable_text:5458:
 
 [[statement]]
 kind = "set"
-subject = "var:meet-par"
+subject = "var:ovrigt-mote-med-politiskt-parti"
 fields = { "sets" = [] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5459:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:meet-par"
+subject = "var:ovrigt-mote-med-politiskt-parti"
 fields = { "tags" = ["democracy"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5459:13879:16436"
 
@@ -3265,13 +3265,13 @@ evidence = "Förkortningsfamiljen behålls enhetligt. B-frågan mäter frekvense
 
 [[statement]]
 kind = "set"
-subject = "var:month"
+subject = "var:far-manadspeng"
 fields = { "sets" = ["manadspeng"] }
 evidence = "Den engelska källkoden är ogenomskinlig i förhållande till etiketten.\ncatalog:variable_text:5469:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:month"
+subject = "var:far-manadspeng"
 fields = { "tags" = ["income"] }
 evidence = "Den engelska källkoden är ogenomskinlig i förhållande till etiketten.\ncatalog:variable_text:5469:13879:14245"
 
@@ -3889,157 +3889,157 @@ evidence = "Mottagande av studiebidrag hör ihop med beloppet.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:sch-cash"
+subject = "var:lektioner-raster-eller-utflykter-har-inte-rad"
 fields = { "sets" = ["hinder-for-deltagande-i-skolaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5526:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-cash"
+subject = "var:lektioner-raster-eller-utflykter-har-inte-rad"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5526:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-good"
+subject = "var:duktig-i-skolan"
 fields = { "sets" = [] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5527:13879:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-good"
+subject = "var:duktig-i-skolan"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5527:13879:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-hand"
+subject = "var:lektioner-raster-eller-utflykter-funktionsnedsattning"
 fields = { "sets" = ["hinder-for-deltagande-i-skolaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5528:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-hand"
+subject = "var:lektioner-raster-eller-utflykter-funktionsnedsattning"
 fields = { "tags" = ["disability", "education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5528:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-oth"
+subject = "var:lektioner-raster-eller-utflykter-annat-skal"
 fields = { "sets" = ["hinder-for-deltagande-i-skolaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5529:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-oth"
+subject = "var:lektioner-raster-eller-utflykter-annat-skal"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5529:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-pace"
+subject = "var:bra-takt-pa-skolarbetet"
 fields = { "sets" = ["skolarbetets-takt"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5530:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-pace"
+subject = "var:bra-takt-pa-skolarbetet"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5530:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-par"
+subject = "var:lektioner-raster-eller-utflykter-far-inte-for-foraldrar"
 fields = { "sets" = ["hinder-for-deltagande-i-skolaktiviteter"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5531:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:sch-par"
+subject = "var:lektioner-raster-eller-utflykter-far-inte-for-foraldrar"
 fields = { "tags" = ["education"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5531:14245:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:scho-62a"
+subject = "var:skola-larare-behandlar-mig-orattvist"
 fields = { "sets" = ["illa-behandlad-av-larare"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5532:15706:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:scho-62a"
+subject = "var:skola-larare-behandlar-mig-orattvist"
 fields = { "tags" = ["education"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5532:15706:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sec-natu"
+subject = "var:trygg-i-naturen"
 fields = { "sets" = [] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5533:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sec-natu"
+subject = "var:trygg-i-naturen"
 fields = { "tags" = ["crime"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5533:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sec-none"
+subject = "var:trygghet-inget-av-dessa"
 fields = { "sets" = [] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5534:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sec-none"
+subject = "var:trygghet-inget-av-dessa"
 fields = { "tags" = ["crime"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5534:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-b"
+subject = "var:kronor-barnbidrag"
 fields = { "sets" = ["barnbidrag"] }
 evidence = "Den ensamma bokstaven b är en ogenomskinlig källkod.\ncatalog:variable_text:5535:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-b"
+subject = "var:kronor-barnbidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Den ensamma bokstaven b är en ogenomskinlig källkod.\ncatalog:variable_text:5535:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-m"
+subject = "var:kronor-manadspeng"
 fields = { "sets" = ["manadspeng"] }
 evidence = "Den ensamma bokstaven m är en ogenomskinlig källkod.\ncatalog:variable_text:5536:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-m"
+subject = "var:kronor-manadspeng"
 fields = { "tags" = ["income"] }
 evidence = "Den ensamma bokstaven m är en ogenomskinlig källkod.\ncatalog:variable_text:5536:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-s"
+subject = "var:kronor-studiebidrag"
 fields = { "sets" = ["studiebidrag"] }
 evidence = "Den ensamma bokstaven s är en ogenomskinlig källkod.\ncatalog:variable_text:5537:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-s"
+subject = "var:kronor-studiebidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Den ensamma bokstaven s är en ogenomskinlig källkod.\ncatalog:variable_text:5537:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-w"
+subject = "var:kronor-veckopeng"
 fields = { "sets" = ["veckopeng"] }
 evidence = "Den ensamma bokstaven w är en ogenomskinlig källkod.\ncatalog:variable_text:5538:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:sek-w"
+subject = "var:kronor-veckopeng"
 fields = { "tags" = ["income"] }
 evidence = "Den ensamma bokstaven w är en ogenomskinlig källkod.\ncatalog:variable_text:5538:13879:14245"
 
@@ -4933,49 +4933,49 @@ evidence = "Frågan gäller kontroll av barnets vistelse.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ti-fath"
+subject = "var:relationer-pappa-har-tid-for-mig"
 fields = { "sets" = ["foraldrars-tid-for-barnet"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5615:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-fath"
+subject = "var:relationer-pappa-har-tid-for-mig"
 fields = { "tags" = ["family-household"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5615:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-fcoh"
+subject = "var:relationer-pappas-sambo-har-tid-for-mig"
 fields = { "sets" = ["foraldrars-tid-for-barnet"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5616:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-fcoh"
+subject = "var:relationer-pappas-sambo-har-tid-for-mig"
 fields = { "tags" = ["family-household"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5616:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-mcoh"
+subject = "var:relationer-mammas-sambo-har-tid-for-mig"
 fields = { "sets" = ["foraldrars-tid-for-barnet"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5617:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-mcoh"
+subject = "var:relationer-mammas-sambo-har-tid-for-mig"
 fields = { "tags" = ["family-household"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5617:13879:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-moth"
+subject = "var:relationer-mamma-har-tid-for-mig"
 fields = { "sets" = ["foraldrars-tid-for-barnet"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5618:13879:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ti-moth"
+subject = "var:relationer-mamma-har-tid-for-mig"
 fields = { "tags" = ["family-household"] }
 evidence = "Ogenomskinlig källkod.\ncatalog:variable_text:5618:13879:18262"
 
@@ -5353,13 +5353,13 @@ evidence = "Frågan avser kostvanor.\ncatalog:variable_text:5651:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:victim"
+subject = "var:med-och-mobbar-andra-elever"
 fields = { "sets" = [] }
 evidence = "Victim anger en utsatt person, medan frågan gäller att själv mobba andra.\ncatalog:variable_text:5652:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:victim"
+subject = "var:med-och-mobbar-andra-elever"
 fields = { "tags" = ["crime"] }
 evidence = "Victim anger en utsatt person, medan frågan gäller att själv mobba andra.\ncatalog:variable_text:5652:13879:14245"
 
@@ -5377,61 +5377,61 @@ evidence = "Måttet avser vistelsetid efter invandring.\ncatalog:variable_text:5
 
 [[statement]]
 kind = "set"
-subject = "var:w-fath"
+subject = "var:kontakt-med-pappa-pa-jobbet"
 fields = { "sets" = ["kontakt-med-foraldrar-pa-arbetet"] }
 evidence = "W är en ensam bokstavskod.\ncatalog:variable_text:5654:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:w-fath"
+subject = "var:kontakt-med-pappa-pa-jobbet"
 fields = { "tags" = ["family-household"] }
 evidence = "W är en ensam bokstavskod.\ncatalog:variable_text:5654:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:w-moth"
+subject = "var:kontakt-med-mamma-pa-jobbet"
 fields = { "sets" = ["kontakt-med-foraldrar-pa-arbetet"] }
 evidence = "W är en ensam bokstavskod.\ncatalog:variable_text:5655:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:w-moth"
+subject = "var:kontakt-med-mamma-pa-jobbet"
 fields = { "tags" = ["family-household"] }
 evidence = "W är en ensam bokstavskod.\ncatalog:variable_text:5655:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:wake"
+subject = "var:tid-vaknar-pa-morgonen"
 fields = { "sets" = ["uppvakningstidpunkt"] }
 evidence = "Den engelska källkoden är inte en igenkännbar stam i etiketten.\ncatalog:variable_text:5656:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:wake"
+subject = "var:tid-vaknar-pa-morgonen"
 fields = { "tags" = ["culture"] }
 evidence = "Den engelska källkoden är inte en igenkännbar stam i etiketten.\ncatalog:variable_text:5656:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:wake-oth"
+subject = "var:tid-vaknar-annan-tid"
 fields = { "sets" = ["uppvakningstidpunkt"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5657:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:wake-oth"
+subject = "var:tid-vaknar-annan-tid"
 fields = { "tags" = ["culture"] }
 evidence = "Källans engelska kod är ogenomskinlig.\ncatalog:variable_text:5657:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:week"
+subject = "var:far-veckopeng"
 fields = { "sets" = ["veckopeng"] }
 evidence = "Den engelska källkoden är ogenomskinlig i förhållande till etiketten.\ncatalog:variable_text:5658:13879:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:week"
+subject = "var:far-veckopeng"
 fields = { "tags" = ["income"] }
 evidence = "Den engelska källkoden är ogenomskinlig i förhållande till etiketten.\ncatalog:variable_text:5658:13879:14245"
 
@@ -5533,25 +5533,25 @@ evidence = "Frågan avser deltagande genom insändare.\ncatalog:variable_text:56
 
 [[statement]]
 kind = "set"
-subject = "var:x-bakg"
+subject = "var:kalibrering-utrikes-inrikes-fodd"
 fields = { "sets" = [] }
 evidence = "X är en ensam bokstavskod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Mäter födelseland eller födelselandsgrupp för barnet och föräldrapersoner enligt R10. membership-0041: Ingen vald variabel kodar födelseland eller dess grupperingar. membership-0042: De valda bakgrundsvariablerna kodar svensk eller utländsk bakgrund, inte födelseland ensamt. membership-0043: Barnets födelseland och kalibreringen efter barnets och föräldrarnas födelse i Sverige omfattas av den fasta definitionen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Valda uppgifter avser födelseland och födelselandsgrupper, inte sammansatt svensk eller utländsk bakgrund. membership-0041: Ingen vald variabel kodar svensk eller utländsk bakgrund. membership-0042: Båda kodar svensk eller utländsk bakgrund för föräldrapersoner enligt R10. membership-0043: Barnets sammansatta bakgrundskodning ingår. x-bakg avser födelseland och omfattas uttryckligen av kandidaten fodelseland.\ncatalog:variable_text:5227:13879:18262\ncatalog:variable_text:5238:19358:19723\ncatalog:variable_text:5239:16436:18262\ncatalog:variable_text:5319:19358:19723\ncatalog:variable_text:5320:13879:18262\ncatalog:variable_text:5321:13879:18262\ncatalog:variable_text:5322:13879:18262\ncatalog:variable_text:5650:16436:18262\ncatalog:variable_text:5667:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:x-bakg"
+subject = "var:kalibrering-utrikes-inrikes-fodd"
 fields = { "tags" = ["demographics"] }
 evidence = "X är en ensam bokstavskod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Mäter födelseland eller födelselandsgrupp för barnet och föräldrapersoner enligt R10. membership-0041: Ingen vald variabel kodar födelseland eller dess grupperingar. membership-0042: De valda bakgrundsvariablerna kodar svensk eller utländsk bakgrund, inte födelseland ensamt. membership-0043: Barnets födelseland och kalibreringen efter barnets och föräldrarnas födelse i Sverige omfattas av den fasta definitionen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Valda uppgifter avser födelseland och födelselandsgrupper, inte sammansatt svensk eller utländsk bakgrund. membership-0041: Ingen vald variabel kodar svensk eller utländsk bakgrund. membership-0042: Båda kodar svensk eller utländsk bakgrund för föräldrapersoner enligt R10. membership-0043: Barnets sammansatta bakgrundskodning ingår. x-bakg avser födelseland och omfattas uttryckligen av kandidaten fodelseland.\ncatalog:variable_text:5227:13879:18262\ncatalog:variable_text:5238:19358:19723\ncatalog:variable_text:5239:16436:18262\ncatalog:variable_text:5319:19358:19723\ncatalog:variable_text:5320:13879:18262\ncatalog:variable_text:5321:13879:18262\ncatalog:variable_text:5322:13879:18262\ncatalog:variable_text:5650:16436:18262\ncatalog:variable_text:5667:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:x-boform"
+subject = "var:kalibrering-boform"
 fields = { "sets" = ["boendeform"] }
 evidence = "X är en ensam bokstavskod.\ncatalog:variable_text:5668:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:x-boform"
+subject = "var:kalibrering-boform"
 fields = { "tags" = ["housing"] }
 evidence = "X är en ensam bokstavskod.\ncatalog:variable_text:5668:19358:19723"
 
@@ -5569,13 +5569,13 @@ evidence = "Kalibrering efter boföräldrars sysselsättning.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:x-boforutb"
+subject = "var:kalibrering-foraldrars-utbildning"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "Den ensamma bokstaven x är en ogenomskinlig källkod.\ncatalog:variable_text:5670:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:x-boforutb"
+subject = "var:kalibrering-foraldrars-utbildning"
 fields = { "tags" = ["education", "methods"] }
 evidence = "Den ensamma bokstaven x är en ogenomskinlig källkod.\ncatalog:variable_text:5670:19358:19723"
 

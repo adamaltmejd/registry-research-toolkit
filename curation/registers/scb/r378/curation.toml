@@ -304,13 +304,13 @@ evidence = "Åtgärdsprogrammet gäller pedagogiskt stöd.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:berml"
+subject = "var:berattigad-till-modersmalsundervisning"
 fields = { "sets" = [] }
 evidence = "BERML är en ogenomskinlig källkod.\ncatalog:variable_text:12952:17819:17820"
 
 [[statement]]
 kind = "set"
-subject = "var:berml"
+subject = "var:berattigad-till-modersmalsundervisning"
 fields = { "tags" = ["education"] }
 evidence = "BERML är en ogenomskinlig källkod.\ncatalog:variable_text:12952:17819:17820"
 
@@ -568,13 +568,13 @@ evidence = "Stödundervisning gäller utbildning.\ncatalog:variable_text:12986:2
 
 [[statement]]
 kind = "set"
-subject = "var:stud-handl-ml"
+subject = "var:studiehandledning-pa-modersmal"
 fields = { "sets" = [] }
 evidence = "ML är en bokstavskod för modersmål.\ncatalog:variable_text:12987:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:stud-handl-ml"
+subject = "var:studiehandledning-pa-modersmal"
 fields = { "tags" = ["education"] }
 evidence = "ML är en bokstavskod för modersmål.\ncatalog:variable_text:12987:20011:20012"
 

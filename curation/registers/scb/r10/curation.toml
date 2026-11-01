@@ -1547,13 +1547,13 @@ evidence = "Astat är en källkod och labeln ger en benämning; kodlistan visar 
 
 [[statement]]
 kind = "set"
-subject = "var:avlidna"
+subject = "var:jordbruksforetaget-har-upphort"
 fields = { "sets" = [] }
 evidence = "Id:t anger avlidna medan källan genomgående anger att jordbruksföretaget har upphört.\ncatalog:valueset:11298\ncatalog:variable_text:35811:13879:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:avlidna"
+subject = "var:jordbruksforetaget-har-upphort"
 fields = { "tags" = ["agriculture", "business"] }
 evidence = "Id:t anger avlidna medan källan genomgående anger att jordbruksföretaget har upphört.\ncatalog:valueset:11298\ncatalog:variable_text:35811:13879:16801"
 
@@ -1823,25 +1823,25 @@ evidence = "Koden och djurnamnet beskriver djurslag.\ncatalog:variable_text:3583
 
 [[statement]]
 kind = "set"
-subject = "var:dstat"
+subject = "var:djurskotsel"
 fields = { "sets" = ["djurskotselstatus"] }
 evidence = "Dstat är en källmnemonik; etiketten anger djurskötsel och värdemängderna kodar status.\ncatalog:valueset:3309\ncatalog:valueset:8076\ncatalog:variable_text:35834:12053:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:dstat"
+subject = "var:djurskotsel"
 fields = { "tags" = ["agriculture"] }
 evidence = "Dstat är en källmnemonik; etiketten anger djurskötsel och värdemängderna kodar status.\ncatalog:valueset:3309\ncatalog:valueset:8076\ncatalog:variable_text:35834:12053:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:dstat-eu"
+subject = "var:djurskotsel-ny"
 fields = { "sets" = ["djurskotselstatus"] }
 evidence = "Dstat-eu är en källmnemonik; etiketten anger djurskötsel och värdemängden kodar status.\ncatalog:valueset:8076\ncatalog:variable_text:35835:14610:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:dstat-eu"
+subject = "var:djurskotsel-ny"
 fields = { "tags" = ["agriculture"] }
 evidence = "Dstat-eu är en källmnemonik; etiketten anger djurskötsel och värdemängden kodar status.\ncatalog:valueset:8076\ncatalog:variable_text:35835:14610:14975"
 
@@ -1943,13 +1943,13 @@ evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:fdsugga"
+subject = "var:antal-fodersuggor"
 fields = { "sets" = ["antal-suggor-och-gyltor"] }
 evidence = "Fd är en ogenomskinlig förkortning av foder.\ncatalog:variable_text:35846:9131:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:fdsugga"
+subject = "var:antal-fodersuggor"
 fields = { "tags" = ["agriculture"] }
 evidence = "Fd är en ogenomskinlig förkortning av foder.\ncatalog:variable_text:35846:9131:10227"
 
@@ -2639,13 +2639,13 @@ evidence = "Fältet anger höstveteareal.\ncatalog:variable_text:35903:10592:109
 
 [[statement]]
 kind = "set"
-subject = "var:hvbr"
+subject = "var:huvudbrukare"
 fields = { "sets" = [] }
 evidence = "Hvbr är en bokstavskod för huvudbrukare.\ncatalog:variable_text:35904:10227:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:hvbr"
+subject = "var:huvudbrukare"
 fields = { "tags" = ["agriculture"] }
 evidence = "Hvbr är en bokstavskod för huvudbrukare.\ncatalog:variable_text:35904:10227:20454"
 
@@ -2687,25 +2687,25 @@ evidence = "Imputering är en statistisk kvalitetsmarkering.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:jkod"
+subject = "var:driftsinriktning"
 fields = { "sets" = ["driftsinriktning"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35908:15340:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:jkod"
+subject = "var:driftsinriktning"
 fields = { "tags" = ["agriculture", "business"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35908:15340:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:jtext"
+subject = "var:klartext-for-huvudsaklig-driftsinriktning"
 fields = { "sets" = ["driftsinriktning"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35909:15340:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:jtext"
+subject = "var:klartext-for-huvudsaklig-driftsinriktning"
 fields = { "tags" = ["agriculture", "business"] }
 evidence = "J är en källkod som inte återger etikettens ord.\ncatalog:variable_text:35909:15340:20454"
 
@@ -3035,13 +3035,13 @@ evidence = "Länsnamn och länskod beskriver samma geografiska indelning.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:lbr"
+subject = "var:tillhor-populationen"
 fields = { "sets" = [] }
 evidence = "LBR är en registerförkortning som inte anger variabelns innebörd. Variabeln avser tillhörighet till populationen.\ncatalog:variable_text:35941:14610:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:lbr"
+subject = "var:tillhor-populationen"
 fields = { "tags" = ["methods"] }
 evidence = "LBR är en registerförkortning som inte anger variabelns innebörd. Variabeln avser tillhörighet till populationen.\ncatalog:variable_text:35941:14610:20454"
 
@@ -3143,13 +3143,13 @@ evidence = "Uppgiften avser jordbruksföretagets produktion.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:njo"
+subject = "var:naturliga-jordbruksomraden"
 fields = { "sets" = [] }
 evidence = "Njo är en bokstavskod för naturliga jordbruksområden.\ncatalog:variable_text:35951:13514:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:njo"
+subject = "var:naturliga-jordbruksomraden"
 fields = { "tags" = ["geography"] }
 evidence = "Njo är en bokstavskod för naturliga jordbruksområden.\ncatalog:variable_text:35951:13514:20454"
 
@@ -3515,13 +3515,13 @@ evidence = "Samma riksområdesindelning är uppdelad mellan perioder med riksomr
 
 [[statement]]
 kind = "set"
-subject = "var:sko"
+subject = "var:skordeomrade"
 fields = { "sets" = [] }
 evidence = "Sko är en bokstavskod för skördeområde.\ncatalog:variable_text:35985:12784:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:sko"
+subject = "var:skordeomrade"
 fields = { "tags" = ["geography"] }
 evidence = "Sko är en bokstavskod för skördeområde.\ncatalog:variable_text:35985:12784:20454"
 
@@ -3659,13 +3659,13 @@ evidence = "Sockerbetsareal hör till kandidatgruppen.\ncatalog:variable_text:35
 
 [[statement]]
 kind = "set"
-subject = "var:stgjord"
+subject = "var:hektar-aker-och-betesareal"
 fields = { "sets" = [] }
 evidence = "Stgjord är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:35997:14610:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:stgjord"
+subject = "var:hektar-aker-och-betesareal"
 fields = { "tags" = ["agriculture"] }
 evidence = "Stgjord är en källmnemonik vars delar inte återger etikettens ord.\ncatalog:variable_text:35997:14610:20454"
 
@@ -3731,13 +3731,13 @@ evidence = "Måttet avser antal suggor.\ncatalog:variable_text:35749:9131:10957\
 
 [[statement]]
 kind = "set"
-subject = "var:suggorfg"
+subject = "var:antal-suggor-forsta-gangen-draktiga"
 fields = { "sets" = ["antal-suggor-och-gyltor"] }
 evidence = "Fg är en bokstavskod för första gången.\ncatalog:variable_text:36004:10227:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:suggorfg"
+subject = "var:antal-suggor-forsta-gangen-draktiga"
 fields = { "tags" = ["agriculture"] }
 evidence = "Fg är en bokstavskod för första gången.\ncatalog:variable_text:36004:10227:10957"
 
@@ -4235,13 +4235,13 @@ evidence = "Fältet anger antal traktorer i jordbruksföretag.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:tstat"
+subject = "var:tradgardsodling"
 fields = { "sets" = ["tradgardsodlingsstatus"] }
 evidence = "T är en ensam källbokstav och stat är en källmnemonik för odlingsstatus.\ncatalog:valueset:8984\ncatalog:variable_text:36046:12053:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:tstat"
+subject = "var:tradgardsodling"
 fields = { "tags" = ["agriculture"] }
 evidence = "T är en ensam källbokstav och stat är en källmnemonik för odlingsstatus.\ncatalog:valueset:8984\ncatalog:variable_text:36046:12053:20454"
 
@@ -4271,13 +4271,13 @@ evidence = "Samma undergrödekod är uppdelad mellan perioder med kod-for-underg
 
 [[statement]]
 kind = "set"
-subject = "var:uphtxt"
+subject = "var:information-om-foretaget"
 fields = { "sets" = [] }
 evidence = "Uphtxt är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:36050:15340:15706"
 
 [[statement]]
 kind = "set"
-subject = "var:uphtxt"
+subject = "var:information-om-foretaget"
 fields = { "tags" = ["business"] }
 evidence = "Uphtxt är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:36050:15340:15706"
 

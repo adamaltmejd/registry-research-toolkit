@@ -247,13 +247,13 @@ evidence = "Ämnesbetyg är utbildningsresultat.\ncatalog:variable_text:7357:157
 
 [[statement]]
 kind = "set"
-subject = "var:bi"
+subject = "var:betyg-i-amnet-biologi"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "BI är en ämneskod; källan anger betyg i biologi.\ncatalog:variable_text:7358:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:bi"
+subject = "var:betyg-i-amnet-biologi"
 fields = { "tags" = ["education"] }
 evidence = "BI är en ämneskod; källan anger betyg i biologi.\ncatalog:variable_text:7358:15706:15887"
 
@@ -283,13 +283,13 @@ evidence = "Undervisningsdeltagande hör till utbildning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "sets" = [] }
 evidence = "SVA är en bokstavsförkortning; familjen ges samma läsbarhetsbedömning.\ncatalog:variable_text:7361:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:deltagit-sva"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "SVA är en bokstavsförkortning; familjen ges samma läsbarhetsbedömning.\ncatalog:variable_text:7361:18262:18444"
 
@@ -319,13 +319,13 @@ evidence = "Terminskodning av elevens val hör till utbildning.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:en"
+subject = "var:betyg-i-amnet-engelska"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "EN är en ämneskod; källan anger betyg i engelska.\ncatalog:variable_text:7365:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:en"
+subject = "var:betyg-i-amnet-engelska"
 fields = { "tags" = ["education"] }
 evidence = "EN är en ämneskod; källan anger betyg i engelska.\ncatalog:variable_text:7365:15706:15887"
 
@@ -391,49 +391,49 @@ evidence = "Betygsförekomst är ett utbildningsresultat.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:fy"
+subject = "var:betyg-i-amnet-fysik"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "FY är en ämneskod; källan anger betyg i fysik.\ncatalog:variable_text:7371:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:fy"
+subject = "var:betyg-i-amnet-fysik"
 fields = { "tags" = ["education"] }
 evidence = "FY är en ämneskod; källan anger betyg i fysik.\ncatalog:variable_text:7371:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ge"
+subject = "var:betyg-i-amnet-geografi"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "GE är en ämneskod; källan anger betyg i geografi.\ncatalog:variable_text:7372:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ge"
+subject = "var:betyg-i-amnet-geografi"
 fields = { "tags" = ["education"] }
 evidence = "GE är en ämneskod; källan anger betyg i geografi.\ncatalog:variable_text:7372:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:hi"
+subject = "var:betyg-i-amnet-historia"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "HI är en ämneskod; källan anger betyg i historia.\ncatalog:variable_text:7373:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:hi"
+subject = "var:betyg-i-amnet-historia"
 fields = { "tags" = ["education"] }
 evidence = "HI är en ämneskod; källan anger betyg i historia.\ncatalog:variable_text:7373:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "HKK är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7374:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "tags" = ["education"] }
 evidence = "HKK är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7374:15706:15887"
 
@@ -451,25 +451,25 @@ evidence = "Skolhuvudman beskriver utbildningens organisation.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "IDH är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7376:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:idh"
+subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "tags" = ["education"] }
 evidence = "IDH är en bokstavskod; källan anger ämnesbetyget.\ncatalog:variable_text:7376:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ke"
+subject = "var:betyg-i-amnet-kemi"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "KE är en ämneskod; källan anger betyg i kemi.\ncatalog:variable_text:7377:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ke"
+subject = "var:betyg-i-amnet-kemi"
 fields = { "tags" = ["education"] }
 evidence = "KE är en ämneskod; källan anger betyg i kemi.\ncatalog:variable_text:7377:15706:15887"
 
@@ -487,13 +487,13 @@ evidence = "Kön är demografiskt.\ncatalog:variable_text:7379:18262:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:ma"
+subject = "var:betyg-i-amnet-matematik"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "MA är en ämneskod; källan anger betyg i matematik.\ncatalog:variable_text:7380:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ma"
+subject = "var:betyg-i-amnet-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en ämneskod; källan anger betyg i matematik.\ncatalog:variable_text:7380:15706:15887"
 
@@ -583,13 +583,13 @@ evidence = "Betyget hör till ämnesbetyg och utbildning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:mu"
+subject = "var:betyg-i-amnet-musik"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "MU är en ämneskod; källan anger betyg i musik.\ncatalog:variable_text:7388:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:mu"
+subject = "var:betyg-i-amnet-musik"
 fields = { "tags" = ["education"] }
 evidence = "MU är en ämneskod; källan anger betyg i musik.\ncatalog:variable_text:7388:15706:15887"
 
@@ -643,13 +643,13 @@ evidence = "Skolkod efter flytt hör till skoltillhörighet.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:ovr"
+subject = "var:betyg-i-ovrigt-amne"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "OVR är en källkod för betyg i övrigt ämne.\ncatalog:variable_text:7393:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:ovr"
+subject = "var:betyg-i-ovrigt-amne"
 fields = { "tags" = ["education"] }
 evidence = "OVR är en källkod för betyg i övrigt ämne.\ncatalog:variable_text:7393:15706:15887"
 
@@ -787,13 +787,13 @@ evidence = "Föräldrarnas utbildningsnivåer hör till samma grupp.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "SVA är en bokstavsförkortning; variabeln mäter ämnesbetyg och hör till gruppen ämnesbetyg.\ncatalog:valueset:296\ncatalog:variable_text:7407:15706:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:sva"
+subject = "var:betyg-i-amnet-svenska-som-andrasprak"
 fields = { "tags" = ["education"] }
 evidence = "SVA är en bokstavsförkortning; variabeln mäter ämnesbetyg och hör till gruppen ämnesbetyg.\ncatalog:valueset:296\ncatalog:variable_text:7407:15706:15887"
 

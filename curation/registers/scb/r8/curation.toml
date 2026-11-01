@@ -1681,13 +1681,13 @@ evidence = "Samma källkolumn och kodverk fortsätter som scb/fordonsreg/fordons
 
 [[statement]]
 kind = "set"
-subject = "var:fwd"
+subject = "var:fyrhjulsdrift"
 fields = { "sets" = [] }
 evidence = "Fwd är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11854:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fwd"
+subject = "var:fyrhjulsdrift"
 fields = { "tags" = ["transport"] }
 evidence = "Fwd är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11854:20453:20454"
 
@@ -1753,13 +1753,13 @@ evidence = "Genomsnittlig nyttolast och maximal lastvikt mäter lastens vikt.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:grpkod"
+subject = "var:modellgruppkod"
 fields = { "sets" = [] }
 evidence = "Grpkod är en opak källmnemonik för modellgruppkod.\ncatalog:variable_text:11855:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:grpkod"
+subject = "var:modellgruppkod"
 fields = { "tags" = ["transport"] }
 evidence = "Grpkod är en opak källmnemonik för modellgruppkod.\ncatalog:variable_text:11855:20453:20454"
 
@@ -1909,13 +1909,13 @@ evidence = "Tillägget kompletterar karosserikoden.\ncatalog:occurrence:105146"
 
 [[statement]]
 kind = "set"
-subject = "var:kb-scb"
+subject = "var:klimatbonusbil"
 fields = { "sets" = ["miljobilsklassning"] }
 evidence = "KB_SCB är en opak bokstavskod för klimatbonusbil.\ncatalog:variable_text:11867:20453:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:kb-scb"
+subject = "var:klimatbonusbil"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "KB_SCB är en opak bokstavskod för klimatbonusbil.\ncatalog:variable_text:11867:20453:20454"
 
@@ -2329,13 +2329,13 @@ evidence = "Variabeln klassar fordon som miljöbil.\ncatalog:occurrence:105152\n
 
 [[statement]]
 kind = "set"
-subject = "var:mklass"
+subject = "var:miljoklass"
 fields = { "sets" = ["utslappsklass"] }
 evidence = "M är en bokstavskod för miljö i källmnemoniken.\ncatalog:occurrence-locators:variable:11902"
 
 [[statement]]
 kind = "set"
-subject = "var:mklass"
+subject = "var:miljoklass"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "M är en bokstavskod för miljö i källmnemoniken.\ncatalog:occurrence-locators:variable:11902"
 
@@ -2761,13 +2761,13 @@ evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:vari
 
 [[statement]]
 kind = "set"
-subject = "var:sklass"
+subject = "var:skatteklass"
 fields = { "sets" = [] }
 evidence = "S är en bokstavskod för skatte i källmnemoniken.\ncatalog:occurrence-locators:variable:11940"
 
 [[statement]]
 kind = "set"
-subject = "var:sklass"
+subject = "var:skatteklass"
 fields = { "tags" = ["taxation"] }
 evidence = "S är en bokstavskod för skatte i källmnemoniken.\ncatalog:occurrence-locators:variable:11940"
 
@@ -2953,13 +2953,13 @@ evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:vari
 
 [[statement]]
 kind = "set"
-subject = "var:ygods"
+subject = "var:yrkesmassig-trafik-gods"
 fields = { "sets" = ["yrkesmassig-trafik"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11958"
 
 [[statement]]
 kind = "set"
-subject = "var:ygods"
+subject = "var:yrkesmassig-trafik-gods"
 fields = { "tags" = ["transport"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11958"
 
@@ -3025,48 +3025,48 @@ evidence = "Källkolumnen har olika ägare efter period och definitionerna skilj
 
 [[statement]]
 kind = "set"
-subject = "var:yskola"
+subject = "var:yrkesmassig-trafik-trafikskola"
 fields = { "sets" = ["yrkesmassig-trafik"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11964"
 
 [[statement]]
 kind = "set"
-subject = "var:yskola"
+subject = "var:yrkesmassig-trafik-trafikskola"
 fields = { "tags" = ["transport"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11964"
 
 [[statement]]
 kind = "set"
-subject = "var:ytaxi"
+subject = "var:yrkesmassig-trafik-taxi"
 fields = { "sets" = ["yrkesmassig-trafik"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11965"
 
 [[statement]]
 kind = "set"
-subject = "var:ytaxi"
+subject = "var:yrkesmassig-trafik-taxi"
 fields = { "tags" = ["transport"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11965"
 
 [[statement]]
 kind = "set"
-subject = "var:ytform"
+subject = "var:yrkesmassig-trafik-formedling"
 fields = { "sets" = ["yrkesmassig-trafik"] }
 evidence = "Y och T är bokstavskoder för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11966"
 
 [[statement]]
 kind = "set"
-subject = "var:ytform"
+subject = "var:yrkesmassig-trafik-formedling"
 fields = { "tags" = ["transport"] }
 evidence = "Y och T är bokstavskoder för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11966"
 
 [[statement]]
 kind = "set"
-subject = "var:yuthyr"
+subject = "var:yrkesmassig-trafik-uthyrning"
 fields = { "sets" = ["yrkesmassig-trafik"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11967"
 
 [[statement]]
 kind = "set"
-subject = "var:yuthyr"
+subject = "var:yrkesmassig-trafik-uthyrning"
 fields = { "tags" = ["transport"] }
 evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11967"

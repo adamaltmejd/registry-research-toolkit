@@ -487,13 +487,13 @@ evidence = "Statistisk verksamhetsstatus hör till gruppen; begreppet avser för
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "sets" = [] }
 evidence = "AE är en källkod utan igenkännbar ordstam i etiketten.\ncatalog:variable_text:10446:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "tags" = ["business"] }
 evidence = "AE är en källkod utan igenkännbar ordstam i etiketten.\ncatalog:variable_text:10446:10592:20454"
 
@@ -799,25 +799,25 @@ evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komp
 
 [[statement]]
 kind = "set"
-subject = "var:bgatunr"
+subject = "var:belagenhetsadress-gatunummer"
 fields = { "sets" = ["belagenhetsadress"] }
 evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10478:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bgatunr"
+subject = "var:belagenhetsadress-gatunummer"
 fields = { "tags" = ["geography"] }
 evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10478:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bgaturest"
+subject = "var:ytterligare-specificering-av-belagenhetsadressens-gatudel"
 fields = { "sets" = ["belagenhetsadress"] }
 evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10479:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:bgaturest"
+subject = "var:ytterligare-specificering-av-belagenhetsadressens-gatudel"
 fields = { "tags" = ["geography"] }
 evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10479:10592:20454"
 
@@ -871,25 +871,25 @@ evidence = "Både belopp och storleksklass ingår i gruppen; källorna motsäger
 
 [[statement]]
 kind = "set"
-subject = "var:festat"
+subject = "var:verksamhetsstatus-fe"
 fields = { "sets" = [] }
 evidence = "FEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10490:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:festat"
+subject = "var:verksamhetsstatus-fe"
 fields = { "tags" = ["business"] }
 evidence = "FEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10490:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fetyp"
+subject = "var:foretagsenhetstyp"
 fields = { "sets" = [] }
 evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10491:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:fetyp"
+subject = "var:foretagsenhetstyp"
 fields = { "tags" = ["business"] }
 evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10491:10592:20454"
 
@@ -1123,13 +1123,13 @@ evidence = "Lönesumman är en företagskostnad.\ncatalog:variable_text:10515:16
 
 [[statement]]
 kind = "set"
-subject = "var:lvestat"
+subject = "var:verksamhetsstatus-lve"
 fields = { "sets" = [] }
 evidence = "LVEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10517:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:lvestat"
+subject = "var:verksamhetsstatus-lve"
 fields = { "tags" = ["business"] }
 evidence = "LVEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10517:10592:20454"
 
@@ -1207,13 +1207,13 @@ evidence = "Ng är en ogenomskinlig källkod för näringsgren; 1 är källkolum
 
 [[statement]]
 kind = "set"
-subject = "var:nggrund"
+subject = "var:naringsgrenens-rangordningsgrund"
 fields = { "sets" = [] }
 evidence = "NG är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10528:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:nggrund"
+subject = "var:naringsgrenens-rangordningsgrund"
 fields = { "tags" = ["business"] }
 evidence = "NG är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10528:10592:20454"
 
@@ -1243,13 +1243,13 @@ evidence = "NgS är en ogenomskinlig källkod; 1 är källkolumnens platsnummer.
 
 [[statement]]
 kind = "set"
-subject = "var:ngsdiff"
+subject = "var:naringsgrensdifferens"
 fields = { "sets" = [] }
 evidence = "NgS är en ogenomskinlig källkod för statistisk näringsgren.\ncatalog:variable_text:10531:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ngsdiff"
+subject = "var:naringsgrensdifferens"
 fields = { "tags" = ["business"] }
 evidence = "NgS är en ogenomskinlig källkod för statistisk näringsgren.\ncatalog:variable_text:10531:10592:20454"
 
@@ -1327,13 +1327,13 @@ evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan
 
 [[statement]]
 kind = "set"
-subject = "var:plandskod"
+subject = "var:landskod-till-postadress"
 fields = { "sets" = ["postadress"] }
 evidence = "P är en enbokstavskod för postadress.\ncatalog:variable_text:10540:17897:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:plandskod"
+subject = "var:landskod-till-postadress"
 fields = { "tags" = ["geography"] }
 evidence = "P är en enbokstavskod för postadress.\ncatalog:variable_text:10540:17897:20454"
 
@@ -1507,13 +1507,13 @@ evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:vestat"
+subject = "var:verksamhetsstatus-ve"
 fields = { "sets" = [] }
 evidence = "VEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10559:10592:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:vestat"
+subject = "var:verksamhetsstatus-ve"
 fields = { "tags" = ["business"] }
 evidence = "VEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10559:10592:20454"
 

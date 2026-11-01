@@ -266,73 +266,73 @@ evidence = "Modellutfall för äldreomsorg.\ncatalog:variable_text:34182:19358:1
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-65-79"
+subject = "var:antal-gifta-65-79-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34183:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-65-79"
+subject = "var:antal-gifta-65-79-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34183:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-80-89"
+subject = "var:antal-gifta-80-89-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34184:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-80-89"
+subject = "var:antal-gifta-80-89-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34184:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-90-w"
+subject = "var:antal-gifta-90-w-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34185:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-g-90-w"
+subject = "var:antal-gifta-90-w-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "G är en bokstavskod för gifta.\ncatalog:variable_text:34185:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-65-79"
+subject = "var:antal-ogifta-65-79-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34186:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-65-79"
+subject = "var:antal-ogifta-65-79-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34186:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-80-89"
+subject = "var:antal-ogifta-80-89-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34187:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-80-89"
+subject = "var:antal-ogifta-80-89-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34187:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-90-w"
+subject = "var:antal-ogifta-90-w-ar"
 fields = { "sets" = ["antal-aldre-efter-civilstand"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34188:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:ant-o-90-w"
+subject = "var:antal-ogifta-90-w-ar"
 fields = { "tags" = ["demographics", "family-household"] }
 evidence = "O är en bokstavskod för ogifta.\ncatalog:variable_text:34188:16071:18262"
 

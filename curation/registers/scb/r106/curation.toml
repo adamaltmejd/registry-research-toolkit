@@ -211,109 +211,109 @@ evidence = "F14G är en opak frågekod; etiketten delas med andra variabler och 
 
 [[statement]]
 kind = "set"
-subject = "var:f15"
+subject = "var:tillracklig-utbildningsniva-vid-anstallningstillfalle"
 fields = { "sets" = ["tillracklig-utbildningsniva"] }
 evidence = "F15 är en opak frågekod.\ncatalog:variable_text:12829:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f15"
+subject = "var:tillracklig-utbildningsniva-vid-anstallningstillfalle"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F15 är en opak frågekod.\ncatalog:variable_text:12829:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:tillracklig-utbildningsniva"
 fields = { "sets" = ["tillracklig-utbildningsniva"] }
 evidence = "F16 är en opak frågekod.\ncatalog:variable_text:12830:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f16"
+subject = "var:tillracklig-utbildningsniva"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F16 är en opak frågekod.\ncatalog:variable_text:12830:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:bisyssla-eller-annat-arbete"
 fields = { "sets" = ["bisyssla"] }
 evidence = "F17 är en opak frågekod.\ncatalog:variable_text:12831:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f17"
+subject = "var:bisyssla-eller-annat-arbete"
 fields = { "tags" = ["employment"] }
 evidence = "F17 är en opak frågekod.\ncatalog:variable_text:12831:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f18"
+subject = "var:typ-av-bisyssla-eller-annat-arbete"
 fields = { "sets" = ["bisyssla"] }
 evidence = "F18 är en opak frågekod.\ncatalog:variable_text:12832:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f18"
+subject = "var:typ-av-bisyssla-eller-annat-arbete"
 fields = { "tags" = ["employment"] }
 evidence = "F18 är en opak frågekod.\ncatalog:variable_text:12832:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:arbetsinkomst-fore-skatt-per-manad"
 fields = { "sets" = [] }
 evidence = "F19 är en opak frågekod.\ncatalog:variable_text:12833:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f19"
+subject = "var:arbetsinkomst-fore-skatt-per-manad"
 fields = { "tags" = ["income"] }
 evidence = "F19 är en opak frågekod.\ncatalog:variable_text:12833:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:arbetslos-efter-forskarutbildningen"
 fields = { "sets" = ["arbetsloshet-efter-forskarutbildning"] }
 evidence = "F21 är en opak frågekod.\ncatalog:variable_text:12834:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f21"
+subject = "var:arbetslos-efter-forskarutbildningen"
 fields = { "tags" = ["employment"] }
 evidence = "F21 är en opak frågekod.\ncatalog:variable_text:12834:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23"
+subject = "var:forskningsanslag-efter-forskarexamen"
 fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
 evidence = "F23 är en opak frågekod.\ncatalog:variable_text:12835:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23"
+subject = "var:forskningsanslag-efter-forskarexamen"
 fields = { "tags" = ["research"] }
 evidence = "F23 är en opak frågekod.\ncatalog:variable_text:12835:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-1"
+subject = "var:antal-sokta-forskningsanslag-efter-forskarexamen"
 fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
 evidence = "F23_1 är en opak frågekod.\ncatalog:variable_text:12836:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-1"
+subject = "var:antal-sokta-forskningsanslag-efter-forskarexamen"
 fields = { "tags" = ["research"] }
 evidence = "F23_1 är en opak frågekod.\ncatalog:variable_text:12836:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-2"
+subject = "var:antal-beviljade-forskningsanslag-efter-forskarexamen"
 fields = { "sets" = ["forskningsanslag-efter-forskarexamen"] }
 evidence = "F23_2 är en opak frågekod.\ncatalog:variable_text:12837:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f23-2"
+subject = "var:antal-beviljade-forskningsanslag-efter-forskarexamen"
 fields = { "tags" = ["research"] }
 evidence = "F23_2 är en opak frågekod.\ncatalog:variable_text:12837:12053:12418"
 
@@ -739,25 +739,25 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:12872:12053:
 
 [[statement]]
 kind = "set"
-subject = "var:la2ex2ko"
+subject = "var:lasar-examenstyp-och-kon-i-kombination"
 fields = { "sets" = [] }
 evidence = "LA2EX2KO är en opak sammansatt kod.\ncatalog:variable_text:12873:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:la2ex2ko"
+subject = "var:lasar-examenstyp-och-kon-i-kombination"
 fields = { "tags" = ["demographics", "education"] }
 evidence = "LA2EX2KO är en opak sammansatt kod.\ncatalog:variable_text:12873:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:la2konn2"
+subject = "var:lasar-amnesomrade-och-kon-i-kombination"
 fields = { "sets" = [] }
 evidence = "LA2KONN2 är en opak sammansatt kod.\ncatalog:variable_text:12874:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:la2konn2"
+subject = "var:lasar-amnesomrade-och-kon-i-kombination"
 fields = { "tags" = ["demographics", "education"] }
 evidence = "LA2KONN2 är en opak sammansatt kod.\ncatalog:variable_text:12874:12053:12418"
 

@@ -1895,7 +1895,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:bstyrelse"
+subject = "var:ledamot-i-styrelse"
 relation = "derived_from"
 object = "scb/bas"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A148\n\nLISA Grundregister: BAS. BAS: SCB r404: Befolkningens arbetsmarknadsstatus (BAS)."
@@ -2063,7 +2063,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-bokslutsdispositioner"
+subject = "var:summa-bokslutsdispositioner"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A106\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2077,28 +2077,28 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-extraordinara-poster"
+subject = "var:extraordinara-poster"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A105\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-finansiella-poster"
+subject = "var:summa-finansiella-poster"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A103\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g1"
+subject = "var:avkastning-pa-eget-kapital"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A53\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g10"
+subject = "var:kapitalets-omsattningshastighet"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A62\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2119,35 +2119,35 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g2"
+subject = "var:avkastning-pa-totalt-kapital"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A54\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g3"
+subject = "var:skuldranta"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A55\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g4"
+subject = "var:riskbuffert-pa-totalt-kapital"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A56\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g5"
+subject = "var:rorelsemarginal"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A57\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g6"
+subject = "var:nettomarginal"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A58\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2168,28 +2168,28 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-g9"
+subject = "var:soliditet-kapitalstruktur"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A61\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-rorelsekostnader"
+subject = "var:vissa-rorelsekostnader"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A101\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t1"
+subject = "var:bruttovinstmarginal"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A65\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t10"
+subject = "var:finansnetto-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A74\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2210,7 +2210,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t13"
+subject = "var:maskiner-och-inventarier-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A77\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2231,7 +2231,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t16"
+subject = "var:kundfordringar-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A80\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2252,28 +2252,28 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t19"
+subject = "var:kortfristiga-skulder-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A83\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t2"
+subject = "var:foradlingsgrad"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A66\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t20"
+subject = "var:eget-kapital-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A84\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t21"
+subject = "var:obeskattade-reserver-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A85\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2287,21 +2287,21 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t26"
+subject = "var:skuldsattningsgrad"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A87\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t27"
+subject = "var:vinstprocent"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A88\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t3"
+subject = "var:rantetackningsgrad"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A67\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2322,28 +2322,28 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t6"
+subject = "var:nettoresultat-per-anstalld"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A70\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t7"
+subject = "var:personalkostnader-i-relation-till-foradlingsvardet"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A71\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t8"
+subject = "var:personalkostnader-per-anstalld"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A72\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
 
 [[statement]]
 kind = "link"
-subject = "var:ftg-t9"
+subject = "var:avskrivningar-i-relation-till-nettoomsattningen"
 relation = "derived_from"
 object = "scb/fek"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A73\n\nLISA Grundregister: FEK. FEK: SCB r168: Företagens ekonomi (FEK)."
@@ -2490,7 +2490,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:sei"
+subject = "var:socioekonomisk-grupp"
 relation = "derived_from"
 object = "scb/fob"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A68\n\nLISA Grundregister: FoB90. FoB90: SCB r32: Folk- och bostadsräkningen; LISA overview names FoB1990 as input."
@@ -2560,7 +2560,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:hsdelt"
+subject = "var:registrerad-pa-hogskola-grundutbildning"
 relation = "derived_from"
 object = "scb/hreg"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A136\n\nLISA Grundregister: Härledd-Högskolereg.. Högskolereg.: SCB r47: Universitets- och högskoleregistret."
@@ -2651,7 +2651,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:gmutyp"
+subject = "var:forekomst-av-ersattningar-i-samband-med-militar-utbildning"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A472\n\nLISA Grundregister: Härledd-IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -2777,7 +2777,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:vpltyp"
+subject = "var:forekomst-av-ersattning-till-varnpliktiga-totalt"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A470\n\nLISA Grundregister: Härledd-IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -3309,7 +3309,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:arblostyp"
+subject = "var:ersattning-fran-arbetsloshetskassa-forekomst-av"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A579\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -3722,7 +3722,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:istipk"
+subject = "var:krisstipendium-skattefritt"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A745\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -3736,7 +3736,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:kas"
+subject = "var:kontant-arbetsmarknadsstod-kontrolluppgift"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A575\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -3939,7 +3939,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:raks-etablgrad"
+subject = "var:individens-etablering-till-arbetsmarknaden"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A790\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -4023,7 +4023,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:sarvux"
+subject = "var:studiestod-vid-las-och-skrivsvarigheter"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A458\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -4058,7 +4058,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:svuxsvuxa"
+subject = "var:vuxenstudiestod-studiebidrag"
 relation = "derived_from"
 object = "scb/iot"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A451\n\nLISA Grundregister: IoT. IoT: SCB r25: Inkomst- och taxeringsregistret (IoT)."
@@ -5668,7 +5668,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "link"
-subject = "var:statusf"
+subject = "var:status-for-egna-foretagare"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A160\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
@@ -13052,13 +13052,13 @@ evidence = "The compared Org_Sni92 code lists differ only by two removed 'Okänt
 
 [[statement]]
 kind = "set"
-subject = "var:adeldag"
+subject = "var:antal-dagar-i-deltidsarbetsloshet"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig; variabeln mäter dagar i deltidsarbetslöshet.\ncatalog:variable_text:37374:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:adeldag"
+subject = "var:antal-dagar-i-deltidsarbetsloshet"
 fields = { "tags" = ["employment"] }
 evidence = "Källkoden är ogenomskinlig; variabeln mäter dagar i deltidsarbetslöshet.\ncatalog:variable_text:37374:16801:19723"
 
@@ -13412,13 +13412,13 @@ evidence = "AGI3 är en källkod; etiketten anger yrkesställning för den tredj
 
 [[statement]]
 kind = "set"
-subject = "var:ak14dag"
+subject = "var:antal-dagar-som-arbetssokande-med-forhinder"
 fields = { "sets" = [] }
 evidence = "AK14 är en ogenomskinlig källkod.\ncatalog:variable_text:37413:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ak14dag"
+subject = "var:antal-dagar-som-arbetssokande-med-forhinder"
 fields = { "tags" = ["employment"] }
 evidence = "AK14 är en ogenomskinlig källkod.\ncatalog:variable_text:37413:16801:19723"
 
@@ -13652,13 +13652,13 @@ evidence = "Förekomst av pensionsinkomst hör till samlad pension.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:alkod"
+subject = "var:arbetsloshetskod"
 fields = { "sets" = [] }
 evidence = "AL är en bokstavskod för arbetslöshet.\ncatalog:variable_text:37433:8035:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:alkod"
+subject = "var:arbetsloshetskod"
 fields = { "tags" = ["employment"] }
 evidence = "AL är en bokstavskod för arbetslöshet.\ncatalog:variable_text:37433:8035:19723"
 
@@ -14708,13 +14708,13 @@ evidence = "Arbetsställets näringsgren ingår i gruppen.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:arblostyp"
+subject = "var:ersattning-fran-arbetsloshetskassa-forekomst-av"
 fields = { "sets" = [] }
 evidence = "Id:t anger arbetslöshetstyp men variabeln anger förekomst av ersättning under alla perioder.\ncatalog:valueset:10571\ncatalog:variable_text:37522:10957:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:arblostyp"
+subject = "var:ersattning-fran-arbetsloshetskassa-forekomst-av"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "Id:t anger arbetslöshetstyp men variabeln anger förekomst av ersättning under alla perioder.\ncatalog:valueset:10571\ncatalog:variable_text:37522:10957:19723"
 
@@ -15176,13 +15176,13 @@ evidence = "Investeringarna ingår i företagsinvesteringar.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:bstyrelse"
+subject = "var:ledamot-i-styrelse"
 fields = { "sets" = [] }
 evidence = "B är en ogenomskinlig bokstavskod.\ncatalog:variable_text:37563:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:bstyrelse"
+subject = "var:ledamot-i-styrelse"
 fields = { "tags" = ["business"] }
 evidence = "B är en ogenomskinlig bokstavskod.\ncatalog:variable_text:37563:18993:19723"
 
@@ -16184,25 +16184,25 @@ evidence = "Beloppet tillhör förtidspension.\ncatalog:variable_text:37656:8766
 
 [[statement]]
 kind = "set"
-subject = "var:fortpens-bman"
+subject = "var:fortidspension-bruttomanader"
 fields = { "sets" = ["fortidspension"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:37657:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:fortpens-bman"
+subject = "var:fortidspension-bruttomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:37657:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:fortpens-nman"
+subject = "var:fortidspension-nettomanader"
 fields = { "sets" = ["fortidspension"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:37658:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:fortpens-nman"
+subject = "var:fortidspension-nettomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:37658:8766:12053"
 
@@ -16304,13 +16304,13 @@ evidence = "Den avslutande bokstaven A är en källkod, inte en ordstam.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-bokslutsdispositioner"
+subject = "var:summa-bokslutsdispositioner"
 fields = { "sets" = [] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37667:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-bokslutsdispositioner"
+subject = "var:summa-bokslutsdispositioner"
 fields = { "tags" = ["business"] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37667:9862:19723"
 
@@ -16328,49 +16328,49 @@ evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-extraordinara-poster"
+subject = "var:extraordinara-poster"
 fields = { "sets" = [] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37669:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-extraordinara-poster"
+subject = "var:extraordinara-poster"
 fields = { "tags" = ["business"] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37669:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-finansiella-poster"
+subject = "var:summa-finansiella-poster"
 fields = { "sets" = ["finansnetto"] }
 evidence = "Ftg är en källförkortning. Finansiella poster och finansnetto i relation till nettoomsättningen ingår i samma kandidatgrupp.\ncatalog:variable_text:37670:9862:19723\ncatalog:variable_text:37685:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-finansiella-poster"
+subject = "var:summa-finansiella-poster"
 fields = { "tags" = ["business"] }
 evidence = "Ftg är en källförkortning. Finansiella poster och finansnetto i relation till nettoomsättningen ingår i samma kandidatgrupp.\ncatalog:variable_text:37670:9862:19723\ncatalog:variable_text:37685:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g1"
+subject = "var:avkastning-pa-eget-kapital"
 fields = { "sets" = ["kapitalavkastning"] }
 evidence = "G1 är en opak källkod för avkastning på eget kapital.\ncatalog:variable_text:37671:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g1"
+subject = "var:avkastning-pa-eget-kapital"
 fields = { "tags" = ["business"] }
 evidence = "G1 är en opak källkod för avkastning på eget kapital.\ncatalog:variable_text:37671:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g10"
+subject = "var:kapitalets-omsattningshastighet"
 fields = { "sets" = [] }
 evidence = "G10 är en opak källkod för kapitalets omsättningshastighet.\ncatalog:variable_text:37672:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g10"
+subject = "var:kapitalets-omsattningshastighet"
 fields = { "tags" = ["business"] }
 evidence = "G10 är en opak källkod för kapitalets omsättningshastighet.\ncatalog:variable_text:37672:9862:19723"
 
@@ -16400,61 +16400,61 @@ evidence = "G12 är en opak källkod för kassalikviditet.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g2"
+subject = "var:avkastning-pa-totalt-kapital"
 fields = { "sets" = ["kapitalavkastning"] }
 evidence = "G2 är en opak källkod för avkastning på totalt kapital.\ncatalog:variable_text:37675:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g2"
+subject = "var:avkastning-pa-totalt-kapital"
 fields = { "tags" = ["business"] }
 evidence = "G2 är en opak källkod för avkastning på totalt kapital.\ncatalog:variable_text:37675:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g3"
+subject = "var:skuldranta"
 fields = { "sets" = [] }
 evidence = "G3 är en opak källkod för skuldränta.\ncatalog:variable_text:37676:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g3"
+subject = "var:skuldranta"
 fields = { "tags" = ["business"] }
 evidence = "G3 är en opak källkod för skuldränta.\ncatalog:variable_text:37676:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g4"
+subject = "var:riskbuffert-pa-totalt-kapital"
 fields = { "sets" = [] }
 evidence = "G4 är en opak källkod för riskbuffert på totalt kapital.\ncatalog:variable_text:37677:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g4"
+subject = "var:riskbuffert-pa-totalt-kapital"
 fields = { "tags" = ["business"] }
 evidence = "G4 är en opak källkod för riskbuffert på totalt kapital.\ncatalog:variable_text:37677:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g5"
+subject = "var:rorelsemarginal"
 fields = { "sets" = ["rorelseresultat"] }
 evidence = "G5 är en opak källkod för rörelsemarginal.\ncatalog:variable_text:37678:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g5"
+subject = "var:rorelsemarginal"
 fields = { "tags" = ["business"] }
 evidence = "G5 är en opak källkod för rörelsemarginal.\ncatalog:variable_text:37678:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g6"
+subject = "var:nettomarginal"
 fields = { "sets" = ["nettoresultat"] }
 evidence = "G6 är en opak källkod för nettomarginal.\ncatalog:variable_text:37679:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g6"
+subject = "var:nettomarginal"
 fields = { "tags" = ["business"] }
 evidence = "G6 är en opak källkod för nettomarginal.\ncatalog:variable_text:37679:9862:19723"
 
@@ -16484,49 +16484,49 @@ evidence = "G8 är en opak källkod för personalkostnader i relation till omsä
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g9"
+subject = "var:soliditet-kapitalstruktur"
 fields = { "sets" = [] }
 evidence = "G9 är en opak källkod för soliditet.\ncatalog:variable_text:37682:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-g9"
+subject = "var:soliditet-kapitalstruktur"
 fields = { "tags" = ["business"] }
 evidence = "G9 är en opak källkod för soliditet.\ncatalog:variable_text:37682:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-rorelsekostnader"
+subject = "var:vissa-rorelsekostnader"
 fields = { "sets" = [] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37683:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-rorelsekostnader"
+subject = "var:vissa-rorelsekostnader"
 fields = { "tags" = ["business"] }
 evidence = "Ftg är en källförkortning; familjen ges samma namnbytesbedömning.\ncatalog:variable_text:37683:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t1"
+subject = "var:bruttovinstmarginal"
 fields = { "sets" = [] }
 evidence = "T1 är en ogenomskinlig källkod.\ncatalog:variable_text:37684:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t1"
+subject = "var:bruttovinstmarginal"
 fields = { "tags" = ["business"] }
 evidence = "T1 är en ogenomskinlig källkod.\ncatalog:variable_text:37684:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t10"
+subject = "var:finansnetto-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["finansnetto"] }
 evidence = "T10 är en ogenomskinlig källkod. Måttet ingår med finansiella poster i kandidatgruppen finansnetto.\ncatalog:variable_text:37670:9862:19723\ncatalog:variable_text:37685:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t10"
+subject = "var:finansnetto-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T10 är en ogenomskinlig källkod. Måttet ingår med finansiella poster i kandidatgruppen finansnetto.\ncatalog:variable_text:37670:9862:19723\ncatalog:variable_text:37685:9862:19723"
 
@@ -16556,13 +16556,13 @@ evidence = "T12 är en ogenomskinlig källkod. Måttet är en namngiven komponen
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t13"
+subject = "var:maskiner-och-inventarier-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["anlaggningstillgangar"] }
 evidence = "T13 är en ogenomskinlig källkod. Maskiner och inventarier är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37688:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t13"
+subject = "var:maskiner-och-inventarier-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T13 är en ogenomskinlig källkod. Maskiner och inventarier är en namngiven komponent av anläggningstillgångar.\ncatalog:variable_text:37453:9862:19723\ncatalog:variable_text:37688:9862:19723"
 
@@ -16592,13 +16592,13 @@ evidence = "T15 är en ogenomskinlig källkod. Lager och pågående arbeten är 
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t16"
+subject = "var:kundfordringar-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["omsattningstillgangar"] }
 evidence = "T16 är en ogenomskinlig källkod. Kundfordringar är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37691:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t16"
+subject = "var:kundfordringar-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T16 är en ogenomskinlig källkod. Kundfordringar är en namngiven komponent av omsättningstillgångar.\ncatalog:variable_text:37691:9862:19723\ncatalog:variable_text:38142:9862:19723"
 
@@ -16628,49 +16628,49 @@ evidence = "T18 är en ogenomskinlig källkod. Måttet är en namngiven komponen
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t19"
+subject = "var:kortfristiga-skulder-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["kortfristiga-skulder"] }
 evidence = "T19 är en ogenomskinlig källkod. Måttet ingår tillsammans med skuldbeloppet i kandidatgruppen.\ncatalog:variable_text:37694:9862:19723\ncatalog:variable_text:38138:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t19"
+subject = "var:kortfristiga-skulder-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T19 är en ogenomskinlig källkod. Måttet ingår tillsammans med skuldbeloppet i kandidatgruppen.\ncatalog:variable_text:37694:9862:19723\ncatalog:variable_text:38138:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t2"
+subject = "var:foradlingsgrad"
 fields = { "sets" = ["foradlingsvarde"] }
 evidence = "T2 är en ogenomskinlig källkod. Förädlingsgrad ingår med förädlingsvärde i kandidatgruppen.\ncatalog:variable_text:37629:9862:19723\ncatalog:variable_text:37695:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t2"
+subject = "var:foradlingsgrad"
 fields = { "tags" = ["business"] }
 evidence = "T2 är en ogenomskinlig källkod. Förädlingsgrad ingår med förädlingsvärde i kandidatgruppen.\ncatalog:variable_text:37629:9862:19723\ncatalog:variable_text:37695:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t20"
+subject = "var:eget-kapital-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["eget-kapital"] }
 evidence = "T20 är en ogenomskinlig källkod. Måttet ingår tillsammans med eget kapital som belopp i kandidatgruppen.\ncatalog:variable_text:37696:9862:19723\ncatalog:variable_text:38136:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t20"
+subject = "var:eget-kapital-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T20 är en ogenomskinlig källkod. Måttet ingår tillsammans med eget kapital som belopp i kandidatgruppen.\ncatalog:variable_text:37696:9862:19723\ncatalog:variable_text:38136:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t21"
+subject = "var:obeskattade-reserver-i-relation-till-nettoomsattningen"
 fields = { "sets" = ["obeskattade-reserver"] }
 evidence = "T21 är en ogenomskinlig källkod. Måttet ingår tillsammans med reservernas belopp i kandidatgruppen.\ncatalog:variable_text:37697:9862:19723\ncatalog:variable_text:38141:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t21"
+subject = "var:obeskattade-reserver-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T21 är en ogenomskinlig källkod. Måttet ingår tillsammans med reservernas belopp i kandidatgruppen.\ncatalog:variable_text:37697:9862:19723\ncatalog:variable_text:38141:9862:19723"
 
@@ -16688,37 +16688,37 @@ evidence = "T22 är en ogenomskinlig källkod. Det kombinerade måttet ingår me
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t26"
+subject = "var:skuldsattningsgrad"
 fields = { "sets" = [] }
 evidence = "T26 är en ogenomskinlig källkod.\ncatalog:variable_text:37699:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t26"
+subject = "var:skuldsattningsgrad"
 fields = { "tags" = ["business"] }
 evidence = "T26 är en ogenomskinlig källkod.\ncatalog:variable_text:37699:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t27"
+subject = "var:vinstprocent"
 fields = { "sets" = [] }
 evidence = "T27 är en ogenomskinlig källkod.\ncatalog:variable_text:37700:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t27"
+subject = "var:vinstprocent"
 fields = { "tags" = ["business"] }
 evidence = "T27 är en ogenomskinlig källkod.\ncatalog:variable_text:37700:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t3"
+subject = "var:rantetackningsgrad"
 fields = { "sets" = [] }
 evidence = "T3 är en ogenomskinlig källkod.\ncatalog:variable_text:37701:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t3"
+subject = "var:rantetackningsgrad"
 fields = { "tags" = ["business"] }
 evidence = "T3 är en ogenomskinlig källkod.\ncatalog:variable_text:37701:9862:19723"
 
@@ -16748,49 +16748,49 @@ evidence = "T5 är en opak källkod för rörelseresultat per anställd.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t6"
+subject = "var:nettoresultat-per-anstalld"
 fields = { "sets" = ["nettoresultat"] }
 evidence = "T6 är en opak källkod för nettoresultat per anställd.\ncatalog:variable_text:37704:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t6"
+subject = "var:nettoresultat-per-anstalld"
 fields = { "tags" = ["business"] }
 evidence = "T6 är en opak källkod för nettoresultat per anställd.\ncatalog:variable_text:37704:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t7"
+subject = "var:personalkostnader-i-relation-till-foradlingsvardet"
 fields = { "sets" = ["personalkostnader"] }
 evidence = "T7 är en opak källkod för personalkostnader i relation till förädlingsvärdet.\ncatalog:variable_text:37705:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t7"
+subject = "var:personalkostnader-i-relation-till-foradlingsvardet"
 fields = { "tags" = ["business"] }
 evidence = "T7 är en opak källkod för personalkostnader i relation till förädlingsvärdet.\ncatalog:variable_text:37705:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t8"
+subject = "var:personalkostnader-per-anstalld"
 fields = { "sets" = ["personalkostnader"] }
 evidence = "T8 är en opak källkod för personalkostnader per anställd.\ncatalog:variable_text:37706:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t8"
+subject = "var:personalkostnader-per-anstalld"
 fields = { "tags" = ["business"] }
 evidence = "T8 är en opak källkod för personalkostnader per anställd.\ncatalog:variable_text:37706:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t9"
+subject = "var:avskrivningar-i-relation-till-nettoomsattningen"
 fields = { "sets" = [] }
 evidence = "T9 är en ogenomskinlig källkod.\ncatalog:variable_text:37707:9862:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ftg-t9"
+subject = "var:avskrivningar-i-relation-till-nettoomsattningen"
 fields = { "tags" = ["business"] }
 evidence = "T9 är en ogenomskinlig källkod.\ncatalog:variable_text:37707:9862:19723"
 
@@ -16844,13 +16844,13 @@ evidence = "Givet underhållsbidrag grupperas med mottaget underhållsbidrag.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:gmutyp"
+subject = "var:forekomst-av-ersattningar-i-samband-med-militar-utbildning"
 fields = { "sets" = ["ersattning-vid-militar-tjanstgoring"] }
 evidence = "GMU är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:37712:14975:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:gmutyp"
+subject = "var:forekomst-av-ersattningar-i-samband-med-militar-utbildning"
 fields = { "tags" = ["defence", "transfers"] }
 evidence = "GMU är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:37712:14975:19723"
 
@@ -16916,13 +16916,13 @@ evidence = "Ersättningen hör till militär tjänstgöring.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:hsdelt"
+subject = "var:registrerad-pa-hogskola-grundutbildning"
 fields = { "sets" = ["studiedeltagande"] }
 evidence = "HS är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:37718:9131:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:hsdelt"
+subject = "var:registrerad-pa-hogskola-grundutbildning"
 fields = { "tags" = ["education"] }
 evidence = "HS är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:37718:9131:19723"
 
@@ -17012,13 +17012,13 @@ evidence = "Kodning av huvudsaklig inkomstkälla.\ncatalog:variable_text:37726:1
 
 [[statement]]
 kind = "set"
-subject = "var:iakod"
+subject = "var:atgard-handelse-och-ersattning"
 fields = { "sets" = [] }
 evidence = "IA är en opak bokstavskod; källan anger åtgärd, händelse och ersättning.\ncatalog:variable_text:37727:8035:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:iakod"
+subject = "var:atgard-handelse-och-ersattning"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "IA är en opak bokstavskod; källan anger åtgärd, händelse och ersättning.\ncatalog:variable_text:37727:8035:19723"
 
@@ -17372,13 +17372,13 @@ evidence = "Detaljerad institutionell sektorkod.\ncatalog:variable_text:37756:11
 
 [[statement]]
 kind = "set"
-subject = "var:istipk"
+subject = "var:krisstipendium-skattefritt"
 fields = { "sets" = ["skattefria-stipendier"] }
 evidence = "ISTIPK är en opak källkod; etiketten anger skattefritt krisstipendium.\ncatalog:variable_text:37757:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:istipk"
+subject = "var:krisstipendium-skattefritt"
 fields = { "tags" = ["transfers"] }
 evidence = "ISTIPK är en opak källkod; etiketten anger skattefritt krisstipendium.\ncatalog:variable_text:37757:18262:19358"
 
@@ -17528,13 +17528,13 @@ evidence = "Variabeln mäter karensersättning.\ncatalog:variable_text:37769:182
 
 [[statement]]
 kind = "set"
-subject = "var:kas"
+subject = "var:kontant-arbetsmarknadsstod-kontrolluppgift"
 fields = { "sets" = [] }
 evidence = "KAS är en bokstavskod som inte förekommer i etiketten. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser inkomst vid arbetslöshet. membership-0401: Sektionen innehåller ingen inkomst vid arbetslöshet. membership-0402: Belopp, inkomstandel och förekomst avser arbetslöshetsersättning. membership-0403: Variablerna mäter ersättning eller summerad inkomst föranledd av arbetslöshet. membership-0404: Variabeln mäter arbetslöshetsinkomstens andel av totalinkomsten. membership-0405: Ingen vald variabel mäter samlad arbetslöshetsinkomst, dess förekomst eller andel. membership-0406: De operativa beskrivningarna och granskningarna stöder arbetslöshetsersättning. ALU-varianterna hålls utanför eftersom programersättning undantas och r56 är motstridig.\ncatalog:variable_text:37414:9131:19723\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37442:18993:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37522:10957:19723\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37599:18993:19723\ncatalog:variable_text:37735:10957:19723\ncatalog:variable_text:37736:16801:17167\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38004:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
 
 [[statement]]
 kind = "set"
-subject = "var:kas"
+subject = "var:kontant-arbetsmarknadsstod-kontrolluppgift"
 fields = { "tags" = ["transfers"] }
 evidence = "KAS är en bokstavskod som inte förekommer i etiketten. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser inkomst vid arbetslöshet. membership-0401: Sektionen innehåller ingen inkomst vid arbetslöshet. membership-0402: Belopp, inkomstandel och förekomst avser arbetslöshetsersättning. membership-0403: Variablerna mäter ersättning eller summerad inkomst föranledd av arbetslöshet. membership-0404: Variabeln mäter arbetslöshetsinkomstens andel av totalinkomsten. membership-0405: Ingen vald variabel mäter samlad arbetslöshetsinkomst, dess förekomst eller andel. membership-0406: De operativa beskrivningarna och granskningarna stöder arbetslöshetsersättning. ALU-varianterna hålls utanför eftersom programersättning undantas och r56 är motstridig.\ncatalog:variable_text:37414:9131:19723\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37442:18993:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37522:10957:19723\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37599:18993:19723\ncatalog:variable_text:37735:10957:19723\ncatalog:variable_text:37736:16801:17167\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38004:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
 
@@ -20192,13 +20192,13 @@ evidence = "Variabeln mäter individualiserat ekonomiskt bistånd.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:raks-etablgrad"
+subject = "var:individens-etablering-till-arbetsmarknaden"
 fields = { "sets" = [] }
 evidence = "RAKS är en källakronym som inte förekommer i etiketten.\ncatalog:variable_text:38013:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:raks-etablgrad"
+subject = "var:individens-etablering-till-arbetsmarknaden"
 fields = { "tags" = ["employment"] }
 evidence = "RAKS är en källakronym som inte förekommer i etiketten.\ncatalog:variable_text:38013:17167:18993"
 
@@ -20444,13 +20444,13 @@ evidence = "Variabeln mäter företagets resultat.\ncatalog:variable_text:38033:
 
 [[statement]]
 kind = "set"
-subject = "var:riskgrupp-bdag"
+subject = "var:riskgrupp-antal-bruttodagar"
 fields = { "sets" = ["ersattning-till-riskgrupper"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38034:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:riskgrupp-bdag"
+subject = "var:riskgrupp-antal-bruttodagar"
 fields = { "tags" = ["transfers"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38034:18262:19358"
 
@@ -20468,13 +20468,13 @@ evidence = "Beloppet ingår i ersättning till riskgrupper.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:riskgrupp-ndag"
+subject = "var:riskgrupp-antal-nettodagar"
 fields = { "sets" = ["ersattning-till-riskgrupper"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38036:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:riskgrupp-ndag"
+subject = "var:riskgrupp-antal-nettodagar"
 fields = { "tags" = ["transfers"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38036:18262:19358"
 
@@ -20528,13 +20528,13 @@ evidence = "Variabeln mäter utbildningsbidrag.\ncatalog:variable_text:38040:986
 
 [[statement]]
 kind = "set"
-subject = "var:sarvux"
+subject = "var:studiestod-vid-las-och-skrivsvarigheter"
 fields = { "sets" = [] }
 evidence = "Sarvux är ett källnamn vars ord inte motsvarar etikettens ordstammar.\ncatalog:variable_text:38041:7305:11688"
 
 [[statement]]
 kind = "set"
-subject = "var:sarvux"
+subject = "var:studiestod-vid-las-och-skrivsvarigheter"
 fields = { "tags" = ["transfers"] }
 evidence = "Sarvux är ett källnamn vars ord inte motsvarar etikettens ordstammar.\ncatalog:variable_text:38041:7305:11688"
 
@@ -20552,13 +20552,13 @@ evidence = "Säteskommun är företagets geografiska tillhörighet.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:sei"
+subject = "var:socioekonomisk-grupp"
 fields = { "sets" = ["socioekonomisk-gruppering"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:38043:7305:7670"
 
 [[statement]]
 kind = "set"
-subject = "var:sei"
+subject = "var:socioekonomisk-grupp"
 fields = { "tags" = ["employment"] }
 evidence = "SEI är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:38043:7305:7670"
 
@@ -20696,25 +20696,25 @@ evidence = "Beloppet tillhör sjukbidrag.\ncatalog:variable_text:38055:8766:1205
 
 [[statement]]
 kind = "set"
-subject = "var:sjukbidr-bman"
+subject = "var:sjukbidrag-bruttomanader"
 fields = { "sets" = ["sjukbidrag"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38056:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukbidr-bman"
+subject = "var:sjukbidrag-bruttomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "B är en bokstavskod för brutto.\ncatalog:variable_text:38056:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukbidr-nman"
+subject = "var:sjukbidrag-nettomanader"
 fields = { "sets" = ["sjukbidrag"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38057:8766:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukbidr-nman"
+subject = "var:sjukbidrag-nettomanader"
 fields = { "tags" = ["transfers"] }
 evidence = "N är en bokstavskod för netto.\ncatalog:variable_text:38057:8766:12053"
 
@@ -20888,13 +20888,13 @@ evidence = "Nettodagarna avser sjukfall med flera ersättningsslag.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:sjukfall-pg"
+subject = "var:sjukfall-pagar-markering-for"
 fields = { "sets" = ["sjukfall"] }
 evidence = "Pg är en bokstavskod för pågående.\ncatalog:variable_text:38072:16436:17167\ncatalog:variable_text:38072:8401:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukfall-pg"
+subject = "var:sjukfall-pagar-markering-for"
 fields = { "tags" = ["transfers"] }
 evidence = "Pg är en bokstavskod för pågående.\ncatalog:variable_text:38072:16436:17167\ncatalog:variable_text:38072:8401:16071"
 
@@ -21536,13 +21536,13 @@ evidence = "Måttet är en statlig tjänstepensionskomponent.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:statusf"
+subject = "var:status-for-egna-foretagare"
 fields = { "sets" = [] }
 evidence = "Ensamstående f är en bokstavskod för företagare.\ncatalog:variable_text:38127:12418:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:statusf"
+subject = "var:status-for-egna-foretagare"
 fields = { "tags" = ["employment"] }
 evidence = "Ensamstående f är en bokstavskod för företagare.\ncatalog:variable_text:38127:12418:18993"
 
@@ -21860,13 +21860,13 @@ evidence = "SUN är en bokstavskod som inte förekommer i etiketten.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:svuxsvuxa"
+subject = "var:vuxenstudiestod-studiebidrag"
 fields = { "sets" = ["vuxenstudiestod"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:38154:7305:9862"
 
 [[statement]]
 kind = "set"
-subject = "var:svuxsvuxa"
+subject = "var:vuxenstudiestod-studiebidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:38154:7305:9862"
 
@@ -22268,13 +22268,13 @@ evidence = "Variabeln mäter utbetalt vårdnadsbidrag.\ncatalog:variable_text:38
 
 [[statement]]
 kind = "set"
-subject = "var:vpltyp"
+subject = "var:forekomst-av-ersattning-till-varnpliktiga-totalt"
 fields = { "sets" = ["ersattning-vid-militar-tjanstgoring"] }
 evidence = "VPL är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:38188:10957:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:vpltyp"
+subject = "var:forekomst-av-ersattning-till-varnpliktiga-totalt"
 fields = { "tags" = ["defence", "transfers"] }
 evidence = "VPL är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:38188:10957:14975"
 

@@ -55,49 +55,49 @@ evidence = "Källkolumnens bokstavskoder är inte läsbara delar av etiketten. V
 
 [[statement]]
 kind = "set"
-subject = "var:tixfast"
+subject = "var:index-i-fasta-priser"
 fields = { "sets" = [] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40942:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfast"
+subject = "var:index-i-fasta-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40942:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfastkal"
+subject = "var:index-i-fasta-och-kalenderkorrigerade-priser"
 fields = { "sets" = [] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40943:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixfastkal"
+subject = "var:index-i-fasta-och-kalenderkorrigerade-priser"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40943:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixsasongsrensad"
+subject = "var:index-sasongsjusterade"
 fields = { "sets" = [] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40944:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixsasongsrensad"
+subject = "var:index-sasongsjusterade"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40944:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixtrend"
+subject = "var:index-trend"
 fields = { "sets" = [] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40945:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:tixtrend"
+subject = "var:index-trend"
 fields = { "tags" = ["business"] }
 evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40945:16071:16436"
 

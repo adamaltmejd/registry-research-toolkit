@@ -734,13 +734,13 @@ evidence = "Samma begrepp är uppdelat mellan observerade perioder. Gruppen omfa
 
 [[statement]]
 kind = "set"
-subject = "var:antlika"
+subject = "var:antal-smahus-som-tillhor-varderingsenheten"
 fields = { "sets" = [] }
 evidence = "Antlika är en källmnemonik vars delar inte återger etikettens betydelse.\ncatalog:variable_text:21185:19358:19359"
 
 [[statement]]
 kind = "set"
-subject = "var:antlika"
+subject = "var:antal-smahus-som-tillhor-varderingsenheten"
 fields = { "tags" = ["housing"] }
 evidence = "Antlika är en källmnemonik vars delar inte återger etikettens betydelse.\ncatalog:variable_text:21185:19358:19359"
 
@@ -1334,25 +1334,25 @@ evidence = "Samma källkolumn har olika perioddefinitioner; variabeln kodar elsy
 
 [[statement]]
 kind = "set"
-subject = "var:eneell"
+subject = "var:energi-el-lantbruksenheter"
 fields = { "sets" = ["elstandard"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21237:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneell"
+subject = "var:energi-el-lantbruksenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21237:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneels"
+subject = "var:energi-el-smahusenheter"
 fields = { "sets" = ["elstandard"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21238:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneels"
+subject = "var:energi-el-smahusenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21238:12418:12419"
 
@@ -1370,25 +1370,25 @@ evidence = "Fönsterkodningarna beskriver fönsterstandard.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:enefonsterl"
+subject = "var:energi-fonster-lantbruksenheter"
 fields = { "sets" = ["fonsterstandard"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21240:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:enefonsterl"
+subject = "var:energi-fonster-lantbruksenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21240:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:enefonsters"
+subject = "var:energi-fonster-smahusenheter"
 fields = { "sets" = ["fonsterstandard"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21241:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:enefonsters"
+subject = "var:energi-fonster-smahusenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21241:12418:12419"
 
@@ -1406,25 +1406,25 @@ evidence = "Kodningarna beskriver isolering för olika enhetstyper.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:eneisoleringl"
+subject = "var:energi-isolering-lantbruksenheter"
 fields = { "sets" = ["isolering"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21243:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneisoleringl"
+subject = "var:energi-isolering-lantbruksenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21243:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneisolerings"
+subject = "var:energi-isolering-smahusenheter"
 fields = { "sets" = ["isolering"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21244:12418:12419"
 
 [[statement]]
 kind = "set"
-subject = "var:eneisolerings"
+subject = "var:energi-isolering-smahusenheter"
 fields = { "tags" = ["property"] }
 evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21244:12418:12419"
 
@@ -1922,13 +1922,13 @@ evidence = "Stockholms församlingar är en geografisk indelning.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:fstat"
+subject = "var:foretagsstatus"
 fields = { "sets" = [] }
 evidence = "Fstat är en opak källmnemonik.\ncatalog:variable_text:21288:17897:17898"
 
 [[statement]]
 kind = "set"
-subject = "var:fstat"
+subject = "var:foretagsstatus"
 fields = { "tags" = ["business"] }
 evidence = "Fstat är en opak källmnemonik.\ncatalog:variable_text:21288:17897:17898"
 
@@ -3326,13 +3326,13 @@ evidence = "Totalt taxeringsvärde och dess namngivna komponenter hör till samm
 
 [[statement]]
 kind = "set"
-subject = "var:textdodsbo"
+subject = "var:adress-ovrigt"
 fields = { "sets" = ["adressuppgifter"] }
 evidence = "Dödsbo anges inte som variabelns betydelse; källan beskriver kompletterande adress- eller namnfält.\ncatalog:occurrence:192480\ncatalog:variable_text:21420:11688:11689"
 
 [[statement]]
 kind = "set"
-subject = "var:textdodsbo"
+subject = "var:adress-ovrigt"
 fields = { "tags" = [] }
 evidence = "Dödsbo anges inte som variabelns betydelse; källan beskriver kompletterande adress- eller namnfält.\ncatalog:occurrence:192480\ncatalog:variable_text:21420:11688:11689"
 
@@ -3554,13 +3554,13 @@ evidence = "Första siffran i typkoden är samma klassificering som scb/ftr/fast
 
 [[statement]]
 kind = "set"
-subject = "var:ub"
+subject = "var:under-byggnation"
 fields = { "sets" = [] }
 evidence = "UB är en bokstavskod för under byggnation.\ncatalog:variable_text:21439:19358:19359"
 
 [[statement]]
 kind = "set"
-subject = "var:ub"
+subject = "var:under-byggnation"
 fields = { "tags" = ["property"] }
 evidence = "UB är en bokstavskod för under byggnation.\ncatalog:variable_text:21439:19358:19359"
 

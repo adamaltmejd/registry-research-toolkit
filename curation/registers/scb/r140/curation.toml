@@ -415,13 +415,13 @@ evidence = "Typ av taxeringsenhet är en fastighetsegenskap.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:tzon"
+subject = "var:temperaturzon"
 fields = { "sets" = [] }
 evidence = "T är en ogenomskinlig bokstavskod för temperatur.\ncatalog:valueset:4635\ncatalog:variable_text:7541:13514:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:tzon"
+subject = "var:temperaturzon"
 fields = { "tags" = ["geography"] }
 evidence = "T är en ogenomskinlig bokstavskod för temperatur.\ncatalog:valueset:4635\ncatalog:variable_text:7541:13514:14245"
 

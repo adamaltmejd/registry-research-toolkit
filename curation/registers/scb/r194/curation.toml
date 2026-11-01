@@ -379,13 +379,13 @@ evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42027:157
 
 [[statement]]
 kind = "set"
-subject = "var:kvxform"
+subject = "var:komvuxform"
 fields = { "sets" = [] }
 evidence = "Kvx är en ogenomskinlig källförkortning för komvux.\ncatalog:variable_text:42028:15706:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:kvxform"
+subject = "var:komvuxform"
 fields = { "tags" = ["education"] }
 evidence = "Kvx är en ogenomskinlig källförkortning för komvux.\ncatalog:variable_text:42028:15706:16801"
 

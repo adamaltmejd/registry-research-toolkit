@@ -61,25 +61,25 @@ evidence = "Värdena beskriver arbets- och studiesituation vid avslut.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:bas6man"
+subject = "var:arbetsmarknadsstatus6man"
 fields = { "sets" = [] }
 evidence = "Bas är en ogenomskinlig källkod; etiketten anger arbetsmarknadsstatus.\ncatalog:variable_text:7911:18628:21184"
 
 [[statement]]
 kind = "set"
-subject = "var:bas6man"
+subject = "var:arbetsmarknadsstatus6man"
 fields = { "tags" = ["employment"] }
 evidence = "Bas är en ogenomskinlig källkod; etiketten anger arbetsmarknadsstatus.\ncatalog:variable_text:7911:18628:21184"
 
 [[statement]]
 kind = "set"
-subject = "var:degurba19"
+subject = "var:landsbygdsomrade"
 fields = { "sets" = [] }
 evidence = "Degurba19 är en kod som inte återges i etiketten.\ncatalog:variable_text:7912:18628:21184"
 
 [[statement]]
 kind = "set"
-subject = "var:degurba19"
+subject = "var:landsbygdsomrade"
 fields = { "tags" = ["geography"] }
 evidence = "Degurba19 är en kod som inte återges i etiketten.\ncatalog:variable_text:7912:18628:21184"
 
@@ -133,13 +133,13 @@ evidence = "Projektets inriktning gäller gymnasiet.\ncatalog:variable_text:7919
 
 [[statement]]
 kind = "set"
-subject = "var:klar"
+subject = "var:granskningskontroll"
 fields = { "sets" = [] }
 evidence = "Klar är inte en igenkännbar stam i etiketten granskningskontroll.\ncatalog:variable_text:7921:16071:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:klar"
+subject = "var:granskningskontroll"
 fields = { "tags" = ["methods"] }
 evidence = "Klar är inte en igenkännbar stam i etiketten granskningskontroll.\ncatalog:variable_text:7921:16071:18628"
 

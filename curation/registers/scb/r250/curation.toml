@@ -386,13 +386,13 @@ evidence = "Antal kurser på gymnasial nivå är ett utbildningsmått.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:avb"
+subject = "var:avbrott-i-kurs"
 fields = { "sets" = [] }
 evidence = "Avb är en ogenomskinlig källförkortning för avbrott.\ncatalog:variable_text:34498:19905:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:avb"
+subject = "var:avbrott-i-kurs"
 fields = { "tags" = ["education"] }
 evidence = "Avb är en ogenomskinlig källförkortning för avbrott.\ncatalog:variable_text:34498:19905:20089"
 
@@ -890,13 +890,13 @@ evidence = "Samma studienivåbegrepp som studieniva-anpassad är perioduppdelat 
 
 [[statement]]
 kind = "set"
-subject = "var:tpoang"
+subject = "var:poangomfattning"
 fields = { "sets" = ["poangomfattning"] }
 evidence = "T är en enbokstavskod i källkolumnen och anger inte en läsbar del av etiketten.\ncatalog:variable_text:34549:19905:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:tpoang"
+subject = "var:poangomfattning"
 fields = { "tags" = ["education"] }
 evidence = "T är en enbokstavskod i källkolumnen och anger inte en läsbar del av etiketten.\ncatalog:variable_text:34549:19905:20089"
 

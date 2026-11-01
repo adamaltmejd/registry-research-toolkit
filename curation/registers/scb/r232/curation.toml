@@ -2190,13 +2190,13 @@ evidence = "Kodning av yrkesämne.\ncatalog:variable_text:35389:16252:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:impgm"
+subject = "var:undervisning-pa-introduktionsprogrammet"
 fields = { "sets" = [] }
 evidence = "IM och pgm är källmnemonik som inte återger etikettens ord som läsbara stammar.\ncatalog:variable_text:35390:16252:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:impgm"
+subject = "var:undervisning-pa-introduktionsprogrammet"
 fields = { "tags" = ["education"] }
 evidence = "IM och pgm är källmnemonik som inte återger etikettens ord som läsbara stammar.\ncatalog:variable_text:35390:16252:20270"
 
@@ -2238,13 +2238,13 @@ evidence = "Skolornas inriktningar hör till samma begrepp.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:ivpgm"
+subject = "var:undervisning-pa-individuella-programmet"
 fields = { "sets" = [] }
 evidence = "IV och pgm är källmnemonik som inte återger etikettens ord som läsbara stammar.\ncatalog:variable_text:35395:15156:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:ivpgm"
+subject = "var:undervisning-pa-individuella-programmet"
 fields = { "tags" = ["education"] }
 evidence = "IV och pgm är källmnemonik som inte återger etikettens ord som läsbara stammar.\ncatalog:variable_text:35395:15156:20270"
 
@@ -2334,13 +2334,13 @@ evidence = "Identitetsfaktet kopplar kolumnen till en variabel med bredare etike
 
 [[statement]]
 kind = "set"
-subject = "var:korr"
+subject = "var:imputerad"
 fields = { "sets" = [] }
 evidence = "Korr är en stam för korrigerad, medan den dokumenterade variabeln avser imputering; etiketten ger ett tydligt namn.\ncatalog:valueset:267\ncatalog:variable_text:35403:12600:14791"
 
 [[statement]]
 kind = "set"
-subject = "var:korr"
+subject = "var:imputerad"
 fields = { "tags" = ["methods"] }
 evidence = "Korr är en stam för korrigerad, medan den dokumenterade variabeln avser imputering; etiketten ger ett tydligt namn.\ncatalog:valueset:267\ncatalog:variable_text:35403:12600:14791"
 
@@ -3306,13 +3306,13 @@ evidence = "Samma skolformsbegrepp som skolform-prskolform är uppdelat mellan p
 
 [[statement]]
 kind = "set"
-subject = "var:prtjbl"
+subject = "var:prioriterad-tjanstledighet"
 fields = { "sets" = ["tjanstledighet"] }
 evidence = "Källans bokstavskod är ogenomskinlig; etiketten anger prioriterad tjänstledighet.\ncatalog:variable_text:35492:10773:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:prtjbl"
+subject = "var:prioriterad-tjanstledighet"
 fields = { "tags" = ["employment"] }
 evidence = "Källans bokstavskod är ogenomskinlig; etiketten anger prioriterad tjänstledighet.\ncatalog:variable_text:35492:10773:20270"
 
@@ -3570,13 +3570,13 @@ evidence = "Höstterminens och läsårets studieveckor hör samman.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:sumfa"
+subject = "var:totalt-antal-tjanstgoringstimmar"
 fields = { "sets" = ["tjanstgoringstid"] }
 evidence = "Sumfa är en källförkortning som inte framgår av etiketten.\ncatalog:variable_text:35521:3834:8217"
 
 [[statement]]
 kind = "set"
-subject = "var:sumfa"
+subject = "var:totalt-antal-tjanstgoringstimmar"
 fields = { "tags" = ["employment"] }
 evidence = "Sumfa är en källförkortning som inte framgår av etiketten.\ncatalog:variable_text:35521:3834:8217"
 
@@ -4206,13 +4206,13 @@ evidence = "Mått benämnt tjänstgöringsomfattning. Coordinator group membersh
 
 [[statement]]
 kind = "set"
-subject = "var:tpanst"
+subject = "var:prioriterad-tjanst"
 fields = { "sets" = [] }
 evidence = "Det inledande t är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:35576:8947:9312"
 
 [[statement]]
 kind = "set"
-subject = "var:tpanst"
+subject = "var:prioriterad-tjanst"
 fields = { "tags" = ["employment"] }
 evidence = "Det inledande t är en ogenomskinlig källkod i id:t.\ncatalog:variable_text:35576:8947:9312"
 

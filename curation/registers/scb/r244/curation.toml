@@ -61,37 +61,37 @@ evidence = "Variabeln avser personens kön.\ncatalog:variable_text:11742:12053:1
 
 [[statement]]
 kind = "set"
-subject = "var:ll"
+subject = "var:lan"
 fields = { "sets" = [] }
 evidence = "LL är en ogenomskinlig källkod för län.\ncatalog:valueset:2748\ncatalog:variable_text:11743:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:ll"
+subject = "var:lan"
 fields = { "tags" = ["geography"] }
 evidence = "LL är en ogenomskinlig källkod för län.\ncatalog:valueset:2748\ncatalog:variable_text:11743:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommun"
 fields = { "sets" = [] }
 evidence = "LLkk är en ogenomskinlig källkod för kommun.\ncatalog:variable_text:11744:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:llkk"
+subject = "var:kommun"
 fields = { "tags" = ["geography"] }
 evidence = "LLkk är en ogenomskinlig källkod för kommun.\ncatalog:variable_text:11744:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:partikod"
+subject = "var:rostningsalternativ-vid-folkomrostning"
 fields = { "sets" = [] }
 evidence = "Id:et anger partikod, men variabeln kodar röstningsalternativ inklusive blanka och ogiltiga röster.\ncatalog:valueset:8252\ncatalog:variable_text:11745:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:partikod"
+subject = "var:rostningsalternativ-vid-folkomrostning"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:et anger partikod, men variabeln kodar röstningsalternativ inklusive blanka och ogiltiga röster.\ncatalog:valueset:8252\ncatalog:variable_text:11745:12053:12418"
 

@@ -153,13 +153,13 @@ evidence = "Kommun är en geografisk tillhörighet.\ncatalog:variable_text:56977
 
 [[statement]]
 kind = "set"
-subject = "var:foddatn"
+subject = "var:fodelsedatum"
 fields = { "sets" = [] }
 evidence = "Slutbokstaven N är en formatkod; födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56978:8766:8768\ncatalog:variable_text:56978:8768:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:foddatn"
+subject = "var:fodelsedatum"
 fields = { "tags" = ["demographics"] }
 evidence = "Slutbokstaven N är en formatkod; födelsedatum är en demografisk uppgift.\ncatalog:variable_text:56978:8766:8768\ncatalog:variable_text:56978:8768:2932897"
 

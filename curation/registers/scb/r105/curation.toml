@@ -890,13 +890,13 @@ evidence = "Kursbetyg.\ncatalog:variable_text:11491:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:csnkod"
+subject = "var:utbildningsgrupp"
 fields = { "sets" = ["kursinriktning"] }
 evidence = "CSN är en bokstavskod som inte ingår i etiketten; utbildningsgrupp är källans benämning.\ncatalog:variable_text:11492:17167:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:csnkod"
+subject = "var:utbildningsgrupp"
 fields = { "tags" = ["education"] }
 evidence = "CSN är en bokstavskod som inte ingår i etiketten; utbildningsgrupp är källans benämning.\ncatalog:variable_text:11492:17167:20089"
 
@@ -1082,25 +1082,25 @@ evidence = "Kursens placering på filial.\ncatalog:variable_text:11509:18262:200
 
 [[statement]]
 kind = "set"
-subject = "var:fn12"
+subject = "var:utrikes-fodd-med-brist-i-svenska-spraket"
 fields = { "sets" = ["brister-i-svenska-spraket"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11510:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fn12"
+subject = "var:utrikes-fodd-med-brist-i-svenska-spraket"
 fields = { "tags" = ["education"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11510:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fn13"
+subject = "var:forstarkningsbidrag-till-folkhogskolan"
 fields = { "sets" = ["forstarkningsbidrag"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11511:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fn13"
+subject = "var:forstarkningsbidrag-till-folkhogskolan"
 fields = { "tags" = ["transfers"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11511:17897:20089"
 
@@ -1358,13 +1358,13 @@ evidence = "Antal gäststuderande från Norden.\ncatalog:variable_text:11535:160
 
 [[statement]]
 kind = "set"
-subject = "var:gfbgrupp"
+subject = "var:grund-for-bosattning"
 fields = { "sets" = [] }
 evidence = "GFB är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11536:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:gfbgrupp"
+subject = "var:grund-for-bosattning"
 fields = { "tags" = ["migration"] }
 evidence = "GFB är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11536:17532:20089"
 
@@ -1490,157 +1490,157 @@ evidence = "Samma terminskommun är uppdelad på angränsande perioder med folkb
 
 [[statement]]
 kind = "set"
-subject = "var:hk1"
+subject = "var:funktionshinder-rorelsehinder"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk1 är en opak källkod; etiketten anger rörelsehinder.\ncatalog:variable_text:11547:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk1"
+subject = "var:funktionshinder-rorelsehinder"
 fields = { "tags" = ["disability"] }
 evidence = "Hk1 är en opak källkod; etiketten anger rörelsehinder.\ncatalog:variable_text:11547:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk10"
+subject = "var:funktionshinder-aspergers-damp-m-fl"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk10 är en opak källkod; etiketten anger funktionshinderkategorin.\ncatalog:variable_text:11548:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk10"
+subject = "var:funktionshinder-aspergers-damp-m-fl"
 fields = { "tags" = ["disability"] }
 evidence = "Hk10 är en opak källkod; etiketten anger funktionshinderkategorin.\ncatalog:variable_text:11548:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk11"
+subject = "var:funktionshinder-dyslexi"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk11 är en opak källkod; etiketten anger dyslexi.\ncatalog:variable_text:11549:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk11"
+subject = "var:funktionshinder-dyslexi"
 fields = { "tags" = ["disability"] }
 evidence = "Hk11 är en opak källkod; etiketten anger dyslexi.\ncatalog:variable_text:11549:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk12"
+subject = "var:funktionshinder-brister-i-svenska-spraket"
 fields = { "sets" = ["brister-i-svenska-spraket"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11550:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:hk12"
+subject = "var:funktionshinder-brister-i-svenska-spraket"
 fields = { "tags" = ["education"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11550:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:hk13"
+subject = "var:forstarkningsbidrag"
 fields = { "sets" = ["forstarkningsbidrag"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11551:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk13"
+subject = "var:forstarkningsbidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Bokstavskoden är ogenomskinlig.\ncatalog:variable_text:11551:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk2"
+subject = "var:funktionshinder-synskada"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk2 är en opak källkod; etiketten anger synskada.\ncatalog:variable_text:11552:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk2"
+subject = "var:funktionshinder-synskada"
 fields = { "tags" = ["disability"] }
 evidence = "Hk2 är en opak källkod; etiketten anger synskada.\ncatalog:variable_text:11552:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk3"
+subject = "var:funktionshinder-horselskada"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk3 är en opak källkod; etiketten anger hörselskada.\ncatalog:variable_text:11553:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk3"
+subject = "var:funktionshinder-horselskada"
 fields = { "tags" = ["disability"] }
 evidence = "Hk3 är en opak källkod; etiketten anger hörselskada.\ncatalog:variable_text:11553:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk4"
+subject = "var:funktionshinder-dov"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk4 är en opak källkod; etiketten anger dövhet.\ncatalog:variable_text:11554:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk4"
+subject = "var:funktionshinder-dov"
 fields = { "tags" = ["disability"] }
 evidence = "Hk4 är en opak källkod; etiketten anger dövhet.\ncatalog:variable_text:11554:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk5"
+subject = "var:funktionshinder-dovblind"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk5 är en opak källkod; etiketten anger dövblindhet.\ncatalog:variable_text:11555:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk5"
+subject = "var:funktionshinder-dovblind"
 fields = { "tags" = ["disability"] }
 evidence = "Hk5 är en opak källkod; etiketten anger dövblindhet.\ncatalog:variable_text:11555:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk6"
+subject = "var:funktionshinder-utvecklingsstorning"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk6 är en opak källkod; etiketten anger utvecklingsstörning.\ncatalog:variable_text:11556:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk6"
+subject = "var:funktionshinder-utvecklingsstorning"
 fields = { "tags" = ["disability"] }
 evidence = "Hk6 är en opak källkod; etiketten anger utvecklingsstörning.\ncatalog:variable_text:11556:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk7"
+subject = "var:funktionshinder-hjarnskada-i-vuxen-alder"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk7 är en opak källkod; etiketten anger hjärnskada i vuxen ålder.\ncatalog:variable_text:11557:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk7"
+subject = "var:funktionshinder-hjarnskada-i-vuxen-alder"
 fields = { "tags" = ["disability"] }
 evidence = "Hk7 är en opak källkod; etiketten anger hjärnskada i vuxen ålder.\ncatalog:variable_text:11557:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk8"
+subject = "var:funktionshinder-psykiskt-funktionshinder"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk8 är en opak källkod; etiketten anger psykiskt funktionshinder.\ncatalog:variable_text:11558:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk8"
+subject = "var:funktionshinder-psykiskt-funktionshinder"
 fields = { "tags" = ["disability"] }
 evidence = "Hk8 är en opak källkod; etiketten anger psykiskt funktionshinder.\ncatalog:variable_text:11558:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk9"
+subject = "var:funktionshinder-medicinskt-funktionshinder"
 fields = { "sets" = ["funktionsnedsattning"] }
 evidence = "Hk9 är en opak källkod; etiketten anger medicinskt funktionshinder.\ncatalog:variable_text:11559:16071:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:hk9"
+subject = "var:funktionshinder-medicinskt-funktionshinder"
 fields = { "tags" = ["disability"] }
 evidence = "Hk9 är en opak källkod; etiketten anger medicinskt funktionshinder.\ncatalog:variable_text:11559:16071:17532"
 
@@ -1994,13 +1994,13 @@ evidence = "Utbildningens längd i terminer.\ncatalog:variable_text:11595:18262:
 
 [[statement]]
 kind = "set"
-subject = "var:lskvux"
+subject = "var:las-och-skrivinlarning"
 fields = { "sets" = [] }
 evidence = "LSK är en bokstavskod och vux saknas i etiketten.\ncatalog:variable_text:11596:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lskvux"
+subject = "var:las-och-skrivinlarning"
 fields = { "tags" = ["education"] }
 evidence = "LSK är en bokstavskod och vux saknas i etiketten.\ncatalog:variable_text:11596:17532:20089"
 
@@ -2618,13 +2618,13 @@ evidence = "Antal med tvåårigt gymnasium.\ncatalog:variable_text:11654:14245:1
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-gymnasium-utbbak4"
+subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-utbbak4-2"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11655:13879:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-gymnasium-utbbak4"
+subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-utbbak4-2"
 fields = { "tags" = ["education"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11655:13879:14610"
 
@@ -2642,13 +2642,13 @@ evidence = "Antal med treårigt gymnasium.\ncatalog:variable_text:11656:14245:16
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-utbbak5"
+subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-utbbak5-2"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11657:13879:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-utbbak5"
+subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-utbbak5-2"
 fields = { "tags" = ["education"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11657:13879:14610"
 
@@ -2726,13 +2726,13 @@ evidence = "Antal med påbörjad gymnasieutbildning.\ncatalog:variable_text:1166
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-utbbak3"
+subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-utbbak3-2"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11664:13879:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-utbbak3"
+subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-utbbak3-2"
 fields = { "tags" = ["education"] }
 evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11664:13879:14610"
 

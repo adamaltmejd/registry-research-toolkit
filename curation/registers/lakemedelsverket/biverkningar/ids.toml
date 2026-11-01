@@ -19,5 +19,5 @@
 "meddra-soc" = ["arbetsflode: Soc"]
 "outcome" = ["arbetsflode: Outcome"]
 "reportertype" = ["arbetsflode: ReporterType"]
-"seqrpt" = ["arbetsflode: SeqRpt"]
+"lopnummer-biverkningsrapport" = ["arbetsflode: SeqRpt"]
 "vaccin" = ["arbetsflode: Vaccin"]

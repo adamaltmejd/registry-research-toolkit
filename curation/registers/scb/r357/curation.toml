@@ -109,37 +109,37 @@ evidence = "Årshyra är en boendeutgift.\ncatalog:variable_text:6669:19723:2008
 
 [[statement]]
 kind = "set"
-subject = "var:bandboz"
+subject = "var:hushallets-andel-av-bostaden"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten beskriver hushållets andel av bostaden.\ncatalog:variable_text:6670:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bandboz"
+subject = "var:hushallets-andel-av-bostaden"
 fields = { "tags" = ["property"] }
 evidence = "Källkoden är opak och etiketten beskriver hushållets andel av bostaden.\ncatalog:variable_text:6670:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:banduboz"
+subject = "var:boendeutgiftsprocent"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkoden är opak; måttet är boendeutgiftens andel av inkomsten.\ncatalog:variable_text:6671:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:banduboz"
+subject = "var:boendeutgiftsprocent"
 fields = { "tags" = ["housing", "income"] }
 evidence = "Källkoden är opak; måttet är boendeutgiftens andel av inkomsten.\ncatalog:variable_text:6671:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:banthusmedz"
+subject = "var:antal-personer"
 fields = { "sets" = ["hushallsstorlek"] }
 evidence = "Källkoden är opak och variabeln anger antal personer i hushållet.\ncatalog:variable_text:6672:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:banthusmedz"
+subject = "var:antal-personer"
 fields = { "tags" = ["family-household"] }
 evidence = "Källkoden är opak och variabeln anger antal personer i hushållet.\ncatalog:variable_text:6672:19723:20089"
 
@@ -157,13 +157,13 @@ evidence = "Källkoden är opak; etiketten delas med lånebeloppet och kräver d
 
 [[statement]]
 kind = "set"
-subject = "var:bbut"
+subject = "var:redovisningsgruppering"
 fields = { "sets" = [] }
 evidence = "BBUT är en opak källkod; etiketten anger redovisningsgruppering.\ncatalog:variable_text:6674:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbut"
+subject = "var:redovisningsgruppering"
 fields = { "tags" = ["methods"] }
 evidence = "BBUT är en opak källkod; etiketten anger redovisningsgruppering.\ncatalog:variable_text:6674:19723:20089"
 
@@ -289,13 +289,13 @@ evidence = "CDISP3KZ är en opak källkod.\ncatalog:variable_text:6685:19723:200
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp3z"
+subject = "var:konsumtionsutrymme"
 fields = { "sets" = ["konsumtionsutrymme"] }
 evidence = "CDISP3Z är en opak källkod.\ncatalog:variable_text:6686:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp3z"
+subject = "var:konsumtionsutrymme"
 fields = { "tags" = ["consumption", "income"] }
 evidence = "CDISP3Z är en opak källkod.\ncatalog:variable_text:6686:19723:20089"
 
@@ -349,13 +349,13 @@ evidence = "Källkoden är opak; etiketten delas med en indikator för bostadsl�
 
 [[statement]]
 kind = "set"
-subject = "var:ftaxboz"
+subject = "var:totalt-taxeringsvarde-boendet"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger bostadens totala taxeringsvärde.\ncatalog:variable_text:6692:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ftaxboz"
+subject = "var:totalt-taxeringsvarde-boendet"
 fields = { "tags" = ["property"] }
 evidence = "Källkoden är opak och etiketten anger bostadens totala taxeringsvärde.\ncatalog:variable_text:6692:19723:20089"
 
@@ -433,13 +433,13 @@ evidence = "Förekomst av inneboende.\ncatalog:variable_text:6700:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:katomboz"
+subject = "var:tomtrattsavgald"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkoden är opak och etiketten anger tomträttsavgäld.\ncatalog:variable_text:6701:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:katomboz"
+subject = "var:tomtrattsavgald"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Källkoden är opak och etiketten anger tomträttsavgäld.\ncatalog:variable_text:6701:19723:20089"
 
@@ -889,37 +889,37 @@ evidence = "Relation till urvalspersonen. Coordinator group membership: Variable
 
 [[statement]]
 kind = "set"
-subject = "var:seffboz"
+subject = "var:skatteeffekt-av-boendet"
 fields = { "sets" = ["skatteeffekt-av-boendet"] }
 evidence = "Källkoden är opak och etiketten anger boendets skatteeffekt.\ncatalog:variable_text:6740:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:seffboz"
+subject = "var:skatteeffekt-av-boendet"
 fields = { "tags" = ["housing", "taxation"] }
 evidence = "Källkoden är opak och etiketten anger boendets skatteeffekt.\ncatalog:variable_text:6740:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:seffz"
+subject = "var:skattereduktion-ranteutgift"
 fields = { "sets" = ["skatteeffekt-av-boendet"] }
 evidence = "Källkoden är opak och etiketten anger skattereduktion för ränteutgift.\ncatalog:variable_text:6741:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:seffz"
+subject = "var:skattereduktion-ranteutgift"
 fields = { "tags" = ["housing", "taxation"] }
 evidence = "Källkoden är opak och etiketten anger skattereduktion för ränteutgift.\ncatalog:variable_text:6741:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sfavgboz"
+subject = "var:fastighetsavgift"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkoden är opak och etiketten anger fastighetsavgift.\ncatalog:variable_text:6742:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sfavgboz"
+subject = "var:fastighetsavgift"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak och etiketten anger fastighetsavgift.\ncatalog:variable_text:6742:19723:20089"
 
@@ -937,13 +937,13 @@ evidence = "Skattereduktion för bostadens underhåll och reparation.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:srotomz"
+subject = "var:skattereduktion-for-ombyggnation"
 fields = { "sets" = ["skatteeffekt-av-boendet"] }
 evidence = "SROTOMZ är en opak källkod.\ncatalog:variable_text:6744:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:srotomz"
+subject = "var:skattereduktion-for-ombyggnation"
 fields = { "tags" = ["housing", "taxation"] }
 evidence = "SROTOMZ är en opak källkod.\ncatalog:variable_text:6744:19723:20089"
 
@@ -973,13 +973,13 @@ evidence = "Urvalsstratum.\ncatalog:variable_text:6746:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:suppskboz"
+subject = "var:skatt-pa-uppskovsbelopp"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkoden är opak och etiketten anger skatt på uppskovsbelopp.\ncatalog:variable_text:6747:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:suppskboz"
+subject = "var:skatt-pa-uppskovsbelopp"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är opak och etiketten anger skatt på uppskovsbelopp.\ncatalog:variable_text:6747:18262:18628"
 
@@ -1009,13 +1009,13 @@ evidence = "Summa andra bostadsutgifter.\ncatalog:variable_text:6749:19723:20089
 
 [[statement]]
 kind = "set"
-subject = "var:uboz"
+subject = "var:boendeutgift"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkoden är opak och etiketten anger boendeutgift.\ncatalog:variable_text:6750:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:uboz"
+subject = "var:boendeutgift"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Källkoden är opak och etiketten anger boendeutgift.\ncatalog:variable_text:6750:19723:20089"
 
@@ -1165,25 +1165,25 @@ evidence = "Utgift för sotning ingår i boendeutgiften.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:uvagundz"
+subject = "var:vagunderhall"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6764:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:uvagundz"
+subject = "var:vagunderhall"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6764:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:uvaz"
+subject = "var:vatten-o-avlopp"
 fields = { "sets" = ["boendeutgift"] }
 evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6765:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:uvaz"
+subject = "var:vatten-o-avlopp"
 fields = { "tags" = ["consumption", "housing"] }
 evidence = "Källkolumnens förkortning är opak. Variabeln mäter en komponent i hushållets boendeutgift.\ncatalog:register:67\ncatalog:variable_text:6765:19723:20089"
 

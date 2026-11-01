@@ -97,13 +97,13 @@ evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "sets" = [] }
 evidence = "AETyp är en källkod vars bokstavsdel inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:54684:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:aetyp"
+subject = "var:arbetsstalletyp"
 fields = { "tags" = ["business"] }
 evidence = "AETyp är en källkod vars bokstavsdel inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:54684:15340:20089"
 
@@ -373,13 +373,13 @@ evidence = "Län och kommun anger arbetsställets geografiska tillhörighet.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "sets" = [] }
 evidence = "Ng är en källmnemonik och inte en läsbar ordstam för näringsgren; 1 är en källkolumnsposition.\ncatalog:variable_text:54713:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ng1"
+subject = "var:naringsgren-huvudsaklig"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en källmnemonik och inte en läsbar ordstam för näringsgren; 1 är en källkolumnsposition.\ncatalog:variable_text:54713:15340:20089"
 

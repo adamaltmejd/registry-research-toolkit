@@ -469,13 +469,13 @@ evidence = "Variabeln anger en alternativ indelning av svensk och utländsk bakg
 
 [[statement]]
 kind = "set"
-subject = "var:vform"
+subject = "var:verksamhetsform-folkbildning"
 fields = { "sets" = [] }
 evidence = "V är en enbokstavskod för verksamhet.\ncatalog:variable_text:44791:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:vform"
+subject = "var:verksamhetsform-folkbildning"
 fields = { "tags" = ["education"] }
 evidence = "V är en enbokstavskod för verksamhet.\ncatalog:variable_text:44791:15340:20089"
 

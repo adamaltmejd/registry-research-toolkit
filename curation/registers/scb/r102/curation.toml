@@ -1559,13 +1559,13 @@ evidence = "Ämneskod för en betygsplats.\ncatalog:variable_text:22468:5295:967
 
 [[statement]]
 kind = "set"
-subject = "var:an"
+subject = "var:annan-utbildning"
 fields = { "sets" = [] }
 evidence = "AN är en ogenomskinlig bokstavskod för annan utbildning.\ncatalog:variable_text:22469:15522:15887"
 
 [[statement]]
 kind = "set"
-subject = "var:an"
+subject = "var:annan-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "AN är en ogenomskinlig bokstavskod för annan utbildning.\ncatalog:variable_text:22469:15522:15887"
 
@@ -1859,13 +1859,13 @@ evidence = "Gymnasiepoäng mäter utbildningens omfattning.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:ap"
+subject = "var:lokalt-tillagg-amnesanknuten-praktik"
 fields = { "sets" = [] }
 evidence = "AP är en ogenomskinlig bokstavskod.\ncatalog:variable_text:22494:9678:12965"
 
 [[statement]]
 kind = "set"
-subject = "var:ap"
+subject = "var:lokalt-tillagg-amnesanknuten-praktik"
 fields = { "tags" = ["education"] }
 evidence = "AP är en ogenomskinlig bokstavskod.\ncatalog:variable_text:22494:9678:12965"
 
@@ -1907,13 +1907,13 @@ evidence = "Markeringen avser avgång från gymnasieskolan.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:avgb-dat"
+subject = "var:betygsdatum-for-betygstypen"
 fields = { "sets" = ["betygsdatum"] }
 evidence = "Avgb-dat är en ogenomskinlig källmnemonik; variabeln avser betygsdatum.\ncatalog:variable_text:22502:19905:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:avgb-dat"
+subject = "var:betygsdatum-for-betygstypen"
 fields = { "tags" = [] }
 evidence = "Avgb-dat är en ogenomskinlig källmnemonik; variabeln avser betygsdatum.\ncatalog:variable_text:22502:19905:20270"
 
@@ -3983,13 +3983,13 @@ evidence = "Hman är en ogenomskinlig källförkortning; etiketten kolliderar oc
 
 [[statement]]
 kind = "set"
-subject = "var:ht-traff"
+subject = "var:eleven-finns-i-register-for-elever-i-gymnasiet"
 fields = { "sets" = [] }
 evidence = "HT-träff är en ogenomskinlig källmnemonik för registrering i elevregistret.\ncatalog:variable_text:22676:16252:19905"
 
 [[statement]]
 kind = "set"
-subject = "var:ht-traff"
+subject = "var:eleven-finns-i-register-for-elever-i-gymnasiet"
 fields = { "tags" = ["education"] }
 evidence = "HT-träff är en ogenomskinlig källmnemonik för registrering i elevregistret.\ncatalog:variable_text:22676:16252:19905"
 
@@ -4871,13 +4871,13 @@ evidence = "Kurskod anger vilken kurs uppgiften gäller.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-anm"
+subject = "var:sprak-som-studeras"
 fields = { "sets" = ["studerat-sprak"] }
 evidence = "Anm är en ogenomskinlig källförkortning för den angivna språkuppgiften.\ncatalog:variable_text:22751:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-anm"
+subject = "var:sprak-som-studeras"
 fields = { "tags" = ["education"] }
 evidence = "Anm är en ogenomskinlig källförkortning för den angivna språkuppgiften.\ncatalog:variable_text:22751:15156:16252"
 
@@ -5015,13 +5015,13 @@ evidence = "Variabeln markerar en lokal kurs.\ncatalog:variable_text:22762:9678:
 
 [[statement]]
 kind = "set"
-subject = "var:lt"
+subject = "var:lokalt-tillagg"
 fields = { "sets" = [] }
 evidence = "LT är en ogenomskinlig bokstavskod.\ncatalog:variable_text:22763:11139:12600"
 
 [[statement]]
 kind = "set"
-subject = "var:lt"
+subject = "var:lokalt-tillagg"
 fields = { "tags" = ["education"] }
 evidence = "LT är en ogenomskinlig bokstavskod.\ncatalog:variable_text:22763:11139:12600"
 

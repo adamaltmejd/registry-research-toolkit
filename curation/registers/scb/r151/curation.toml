@@ -319,13 +319,13 @@ evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:aff"
+subject = "var:affarsresenarer"
 fields = { "sets" = ["gaster-efter-resenarskategori"] }
 evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:aff"
+subject = "var:affarsresenarer"
 fields = { "tags" = [] }
 evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
 
@@ -463,13 +463,13 @@ evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:cn"
+subject = "var:campingnatter"
 fields = { "sets" = ["vistelsedygn"] }
 evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cn"
+subject = "var:campingnatter"
 fields = { "tags" = [] }
 evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
 
@@ -547,25 +547,25 @@ evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:dstu"
+subject = "var:disponibla-stugor"
 fields = { "sets" = ["stugkapacitet"] }
 evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:dstu"
+subject = "var:disponibla-stugor"
 fields = { "tags" = [] }
 evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:dtom"
+subject = "var:disponibla-tomter"
 fields = { "sets" = ["tomtkapacitet"] }
 evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:dtom"
+subject = "var:disponibla-tomter"
 fields = { "tags" = [] }
 evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
 
@@ -595,13 +595,13 @@ evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514
 
 [[statement]]
 kind = "set"
-subject = "var:grp"
+subject = "var:gruppresenarer"
 fields = { "sets" = ["gaster-efter-resenarskategori"] }
 evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:grp"
+subject = "var:gruppresenarer"
 fields = { "tags" = [] }
 evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
 
@@ -667,61 +667,61 @@ evidence = "Logiintäkt är en företagsintäkt.\ncatalog:variable_text:27820:17
 
 [[statement]]
 kind = "set"
-subject = "var:mxbd"
+subject = "var:maxbaddar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxbd"
+subject = "var:maxbaddar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxrm"
+subject = "var:maxrum"
 fields = { "sets" = ["rumskapacitet"] }
 evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxrm"
+subject = "var:maxrum"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxstu"
+subject = "var:max-stugor"
 fields = { "sets" = ["stugkapacitet"] }
 evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxstu"
+subject = "var:max-stugor"
 fields = { "tags" = [] }
 evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxtom"
+subject = "var:max-tomter"
 fields = { "sets" = ["tomtkapacitet"] }
 evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mxtom"
+subject = "var:max-tomter"
 fields = { "tags" = [] }
 evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:natid"
+subject = "var:hemland"
 fields = { "sets" = [] }
 evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:natid"
+subject = "var:hemland"
 fields = { "tags" = ["geography"] }
 evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
 
@@ -919,13 +919,13 @@ evidence = "Totalen ingår i vistelsedygn.\ncatalog:variable_text:27843:13879:20
 
 [[statement]]
 kind = "set"
-subject = "var:xbd"
+subject = "var:extrabaddar"
 fields = { "sets" = ["baddkapacitet"] }
 evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:xbd"
+subject = "var:extrabaddar"
 fields = { "tags" = [] }
 evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
 

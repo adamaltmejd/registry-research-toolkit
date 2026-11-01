@@ -607,13 +607,13 @@ evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:bid"
+subject = "var:bransleslagets-identitetsnummer"
 fields = { "sets" = ["bransleslag"] }
 evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bid"
+subject = "var:bransleslagets-identitetsnummer"
 fields = { "tags" = ["energy"] }
 evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
 

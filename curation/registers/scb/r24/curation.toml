@@ -1244,25 +1244,25 @@ evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:53332:
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2000-tre-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2000-tre-forsta"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53333:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2000-tre-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2000-tre-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53333:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2000-tva-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2000-tva-forsta"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53334:17167:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2000-tva-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2000-tva-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53334:17167:18993"
 
@@ -1280,25 +1280,25 @@ evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:53335:
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2020-tre-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2020-tre-forsta"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53336:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2020-tre-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2020-tre-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53336:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2020-tva-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2020-tva-forsta"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53337:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-inriktning-sun2020-tva-forsta-positionerna"
+subject = "var:hogsta-utbildningens-inriktning-sun2020-tva-forsta"
 fields = { "tags" = ["education"] }
 evidence = "Identiteten överstiger 60 tecken.\ncatalog:variable_text:53337:18262:20089"
 
@@ -1340,13 +1340,13 @@ evidence = "ISCED-nivån ingår i utbildningsnivå.\ncatalog:variable_text:53340
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+subject = "var:hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53341:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+subject = "var:hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53341:17167:17897"
 
@@ -1364,13 +1364,13 @@ evidence = "SUN-kodens första nivåposition ingår i utbildningsnivå.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra-varden"
+subject = "var:hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53343:17167:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra-varden"
+subject = "var:hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53343:17167:17897"
 
@@ -1388,13 +1388,13 @@ evidence = "SUN-kodens två första nivåpositioner ingår i utbildningsnivå.\n
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju-varden"
+subject = "var:hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53345:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju-varden"
+subject = "var:hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53345:18262:20089"
 
@@ -1412,13 +1412,13 @@ evidence = "SUN-kodens första nivåposition ingår i utbildningsnivå.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra-varden"
+subject = "var:hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53347:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra-varden"
+subject = "var:hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra"
 fields = { "tags" = ["education"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53347:18262:20089"
 
@@ -1556,13 +1556,13 @@ evidence = "Poängkategorin och poängmåtten beskriver poängomfattning.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:sun"
+subject = "var:utbildningens-niva-och-inriktning"
 fields = { "sets" = ["utbildningsgrupp"] }
 evidence = "SUN är en klassifikationsförkortning som saknas i etiketten.\ncatalog:variable_text:53362:9862:10957"
 
 [[statement]]
 kind = "set"
-subject = "var:sun"
+subject = "var:utbildningens-niva-och-inriktning"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationsförkortning som saknas i etiketten.\ncatalog:variable_text:53362:9862:10957"
 
@@ -1724,13 +1724,13 @@ evidence = "Variabeln anger undervisningstid i timmar.\ncatalog:variable_text:53
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams-och-lisa"
+subject = "var:utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams"
 fields = { "sets" = ["utbildningsuppgiftens-kalla"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53376:13879:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams-och-lisa"
+subject = "var:utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams"
 fields = { "tags" = ["methods"] }
 evidence = "Identifieraren överstiger 60 tecken.\ncatalog:variable_text:53376:13879:20089"
 

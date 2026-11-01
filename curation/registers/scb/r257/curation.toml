@@ -6048,97 +6048,97 @@ evidence = "Samma källkolumn har olika ägare och beskrivningarna visar inte sa
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-ass-prof-ind"
+subject = "var:kunskap-branschorganisationer"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27909:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-ass-prof-ind"
+subject = "var:kunskap-branschorganisationer"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27909:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-b2b-os"
+subject = "var:kunskap-oppna-plattformar"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27910:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-b2b-os"
+subject = "var:kunskap-oppna-plattformar"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27910:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-conf-trdf-exhib"
+subject = "var:kunskap-konferenser"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27911:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-conf-trdf-exhib"
+subject = "var:kunskap-konferenser"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27911:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-doc-std-com"
+subject = "var:kunskap-standardiseringsdokument"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27912:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-doc-std-com"
+subject = "var:kunskap-standardiseringsdokument"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27912:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-jrnst-trdp"
+subject = "var:kunskap-tidsskrifter"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27913:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-jrnst-trdp"
+subject = "var:kunskap-tidsskrifter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27913:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-pat-publ"
+subject = "var:kunskap-patent"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27915:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-pat-publ"
+subject = "var:kunskap-patent"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27915:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-re"
+subject = "var:kunskap-reverse-engeneering"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27916:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-re"
+subject = "var:kunskap-reverse-engeneering"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27916:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-web-net-cds"
+subject = "var:kunskap-sociala-natverk"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27917:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:ckno-web-net-cds"
+subject = "var:kunskap-sociala-natverk"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger kunskapskällan.\ncatalog:variable_text:27917:16801:17897"
 
@@ -6192,85 +6192,85 @@ evidence = "Id:t är en ogenomskinlig källkod och etiketten anger klimatrelater
 
 [[statement]]
 kind = "set"
-subject = "var:clim-weath"
+subject = "var:paverkan-av-extrema-vaderforhallanden"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger påverkan av extrema väderförhållanden.\ncatalog:variable_text:27922:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:clim-weath"
+subject = "var:paverkan-av-extrema-vaderforhallanden"
 fields = { "tags" = ["business", "environment"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger påverkan av extrema väderförhållanden.\ncatalog:variable_text:27922:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-co"
+subject = "var:samskapade-produkter"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser samskapande i produktutbudet.\ncatalog:variable_text:27959:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-co"
+subject = "var:samskapade-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser samskapande i produktutbudet.\ncatalog:variable_text:27959:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-cus"
+subject = "var:anvandaranpassade-produkter"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser användaranpassning i produktutbudet.\ncatalog:variable_text:27960:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-cus"
+subject = "var:anvandaranpassade-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser användaranpassning i produktutbudet.\ncatalog:variable_text:27960:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-std"
+subject = "var:standardiserade-produkter"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser standardisering i produktutbudet.\ncatalog:variable_text:27962:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-prd-std"
+subject = "var:standardiserade-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är en opak förkortning. Variabeln avser standardisering i produktutbudet.\ncatalog:variable_text:27962:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-ind-hh"
+subject = "var:anvandare-individer-eller-hushall"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27963:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-ind-hh"
+subject = "var:anvandare-individer-eller-hushall"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27963:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-npo"
+subject = "var:anvandare-icke-vinstdrivande-sektorn"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27965:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-npo"
+subject = "var:anvandare-icke-vinstdrivande-sektorn"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27965:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-prv"
+subject = "var:anvandare-privata-foretag"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27966:16801:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:conc-usr-prv"
+subject = "var:anvandare-privata-foretag"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog:variable_text:27966:16801:17897"
 
@@ -6288,481 +6288,481 @@ evidence = "Källkoden är opak och etiketten anger användarkategorin.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr"
+subject = "var:stark-konkurrens-fran-utlandet"
 fields = { "sets" = ["stark-konkurrens-fran-utlandet"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger konkurrens från utlandet.\ncatalog:variable_text:27968:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr"
+subject = "var:stark-konkurrens-fran-utlandet"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger konkurrens från utlandet.\ncatalog:variable_text:27968:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-af"
+subject = "var:stark-konkurrens-utland-mycket-val"
 fields = { "sets" = ["stark-konkurrens-fran-utlandet"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27969:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-af"
+subject = "var:stark-konkurrens-utland-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27969:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-al"
+subject = "var:stark-konkurrens-utland-delvis"
 fields = { "sets" = ["stark-konkurrens-fran-utlandet"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27970:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-al"
+subject = "var:stark-konkurrens-utland-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27970:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-as"
+subject = "var:stark-konkurrens-utland-val"
 fields = { "sets" = ["stark-konkurrens-fran-utlandet"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27971:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-as"
+subject = "var:stark-konkurrens-utland-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27971:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-nall"
+subject = "var:stark-konkurrens-utland-inte-alls"
 fields = { "sets" = ["stark-konkurrens-fran-utlandet"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27972:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cabr-nall"
+subject = "var:stark-konkurrens-utland-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27972:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem"
+subject = "var:forandringar-i-efterfragan-var-svara-att-forutsaga"
 fields = { "sets" = ["svarforutsagbara-efterfrageforandringar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27973:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem"
+subject = "var:forandringar-i-efterfragan-var-svara-att-forutsaga"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27973:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-af"
+subject = "var:forandring-efterfragan-svar-forutsaga-mycket-val"
 fields = { "sets" = ["svarforutsagbara-efterfrageforandringar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27974:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-af"
+subject = "var:forandring-efterfragan-svar-forutsaga-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27974:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-al"
+subject = "var:forandring-efterfragan-svar-forutsaga-delvis"
 fields = { "sets" = ["svarforutsagbara-efterfrageforandringar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27975:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-al"
+subject = "var:forandring-efterfragan-svar-forutsaga-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27975:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-as"
+subject = "var:forandring-efterfragan-svar-forutsaga-val"
 fields = { "sets" = ["svarforutsagbara-efterfrageforandringar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27976:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-as"
+subject = "var:forandring-efterfragan-svar-forutsaga-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27976:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-nall"
+subject = "var:forandring-efterfragan-svar-forutsaga-inte-alls"
 fields = { "sets" = ["svarforutsagbara-efterfrageforandringar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27977:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-chdem-nall"
+subject = "var:forandring-efterfragan-svar-forutsaga-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27977:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos"
+subject = "var:prisokning-medforde-forlust-av-kunder"
 fields = { "sets" = ["kundforlust-vid-prisokning"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27978:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos"
+subject = "var:prisokning-medforde-forlust-av-kunder"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27978:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-af"
+subject = "var:prisokning-medforde-forlust-av-kund-mycket-val"
 fields = { "sets" = ["kundforlust-vid-prisokning"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27979:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-af"
+subject = "var:prisokning-medforde-forlust-av-kund-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27979:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-al"
+subject = "var:prisokning-medforde-forlust-av-kund-delvis"
 fields = { "sets" = ["kundforlust-vid-prisokning"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27980:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-al"
+subject = "var:prisokning-medforde-forlust-av-kund-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27980:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-as"
+subject = "var:prisokning-medforde-forlust-av-kund-val"
 fields = { "sets" = ["kundforlust-vid-prisokning"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27981:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-as"
+subject = "var:prisokning-medforde-forlust-av-kund-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27981:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-nall"
+subject = "var:prisokning-medforde-forlust-av-kund-inte-alls"
 fields = { "sets" = ["kundforlust-vid-prisokning"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27982:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cllos-nall"
+subject = "var:prisokning-medforde-forlust-av-kund-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27982:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred"
+subject = "var:konkurrenters-handlingar-var-svara-att-forutsaga"
 fields = { "sets" = ["svarforutsagbara-konkurrenthandlingar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27983:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred"
+subject = "var:konkurrenters-handlingar-var-svara-att-forutsaga"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27983:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-af"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-mycket-val"
 fields = { "sets" = ["svarforutsagbara-konkurrenthandlingar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27984:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-af"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27984:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-al"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-delvis"
 fields = { "sets" = ["svarforutsagbara-konkurrenthandlingar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27985:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-al"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27985:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-as"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-val"
 fields = { "sets" = ["svarforutsagbara-konkurrenthandlingar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27986:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-as"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27986:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-nall"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-inte-alls"
 fields = { "sets" = ["svarforutsagbara-konkurrenthandlingar"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27987:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cpred-nall"
+subject = "var:konkurrenters-handlingar-svara-forutsaga-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27987:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr"
+subject = "var:intrade-av-nya-konkurrenter-utgor-ett-stort-hot-mot-ert"
 fields = { "sets" = ["hot-fran-nya-konkurrenter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27988:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr"
+subject = "var:intrade-av-nya-konkurrenter-utgor-ett-stort-hot-mot-ert"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27988:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-af"
+subject = "var:nya-konkurrenter-utgjorde-hot-mycket-val"
 fields = { "sets" = ["hot-fran-nya-konkurrenter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27989:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-af"
+subject = "var:nya-konkurrenter-utgjorde-hot-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27989:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-al"
+subject = "var:nya-konkurrenter-utgjorde-hot-delvis"
 fields = { "sets" = ["hot-fran-nya-konkurrenter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27990:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-al"
+subject = "var:nya-konkurrenter-utgjorde-hot-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27990:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-as"
+subject = "var:nya-konkurrenter-utgjorde-hot-val"
 fields = { "sets" = ["hot-fran-nya-konkurrenter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27991:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-as"
+subject = "var:nya-konkurrenter-utgjorde-hot-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27991:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-nall"
+subject = "var:nya-konkurrenter-utgjorde-hot-inte-alls"
 fields = { "sets" = ["hot-fran-nya-konkurrenter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27992:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-cthr-nall"
+subject = "var:nya-konkurrenter-utgjorde-hot-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27992:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub"
+subject = "var:konkurrenters-varor-eller-tjanster-kan-latt-ersattas-med-ert"
 fields = { "sets" = ["ersattbarhet-av-konkurrenters-produkter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27993:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub"
+subject = "var:konkurrenters-varor-eller-tjanster-kan-latt-ersattas-med-ert"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27993:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-af"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-mycket-val"
 fields = { "sets" = ["ersattbarhet-av-konkurrenters-produkter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27994:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-af"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27994:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-al"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-delvis"
 fields = { "sets" = ["ersattbarhet-av-konkurrenters-produkter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27995:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-al"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27995:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-as"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-val"
 fields = { "sets" = ["ersattbarhet-av-konkurrenters-produkter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27996:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-as"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27996:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-nall"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-inte-alls"
 fields = { "sets" = ["ersattbarhet-av-konkurrenters-produkter"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27997:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-esub-nall"
+subject = "var:konkurrenters-produkter-ersattas-med-foretagets-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27997:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout"
+subject = "var:varor-och-tjanster-blev-snabbt-omoderna"
 fields = { "sets" = ["snabb-produktforaldring"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27998:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout"
+subject = "var:varor-och-tjanster-blev-snabbt-omoderna"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:27998:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-af"
+subject = "var:produkter-snabbt-omoderna-mycket-val"
 fields = { "sets" = ["snabb-produktforaldring"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27999:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-af"
+subject = "var:produkter-snabbt-omoderna-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:27999:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-al"
+subject = "var:produkter-snabbt-omoderna-delvis"
 fields = { "sets" = ["snabb-produktforaldring"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28000:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-al"
+subject = "var:produkter-snabbt-omoderna-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28000:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-as"
+subject = "var:produkter-snabbt-omoderna-val"
 fields = { "sets" = ["snabb-produktforaldring"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28001:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-as"
+subject = "var:produkter-snabbt-omoderna-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28001:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-nall"
+subject = "var:produkter-snabbt-omoderna-inte-alls"
 fields = { "sets" = ["snabb-produktforaldring"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28002:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-gout-nall"
+subject = "var:produkter-snabbt-omoderna-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28002:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred"
+subject = "var:framtida-tekniska-utvecklingar-var-svara-att-forutsaga"
 fields = { "sets" = ["svarforutsagbar-teknisk-utveckling"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:28003:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred"
+subject = "var:framtida-tekniska-utvecklingar-var-svara-att-forutsaga"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver måttet.\ncatalog:variable_text:28003:17532:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-af"
+subject = "var:teknisk-utveckling-svar-forutsaga-mycket-val"
 fields = { "sets" = ["svarforutsagbar-teknisk-utveckling"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28004:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-af"
+subject = "var:teknisk-utveckling-svar-forutsaga-mycket-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28004:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-al"
+subject = "var:teknisk-utveckling-svar-forutsaga-delvis"
 fields = { "sets" = ["svarforutsagbar-teknisk-utveckling"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28005:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-al"
+subject = "var:teknisk-utveckling-svar-forutsaga-delvis"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28005:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-as"
+subject = "var:teknisk-utveckling-svar-forutsaga-val"
 fields = { "sets" = ["svarforutsagbar-teknisk-utveckling"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28006:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-as"
+subject = "var:teknisk-utveckling-svar-forutsaga-val"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28006:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-nall"
+subject = "var:teknisk-utveckling-svar-forutsaga-inte-alls"
 fields = { "sets" = ["svarforutsagbar-teknisk-utveckling"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28007:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:cond-tpred-nall"
+subject = "var:teknisk-utveckling-svar-forutsaga-inte-alls"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger svarsnivån.\ncatalog:variable_text:28007:18262:19358"
 
@@ -7248,13 +7248,13 @@ evidence = "Id:t är en ogenomskinlig källkod. Gruppen omfattar processinnovati
 
 [[statement]]
 kind = "set"
-subject = "var:deve-pcs-oth"
+subject = "var:utvecklare-av-processinnovation-andra-foretag"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Variabeln anger andra företag som utvecklare.\ncatalog:variable_text:28058:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:deve-pcs-oth"
+subject = "var:utvecklare-av-processinnovation-andra-foretag"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är en opak förkortning. Variabeln anger andra företag som utvecklare.\ncatalog:variable_text:28058:18262:20089"
 
@@ -7296,13 +7296,13 @@ evidence = "Id:t är en ogenomskinlig källkod. Gruppen omfattar produktinnovati
 
 [[statement]]
 kind = "set"
-subject = "var:deve-prd-oth"
+subject = "var:utvecklare-av-produktinnovation-andra-foretag"
 fields = { "sets" = ["utvecklare-av-produktinnovation"] }
 evidence = "Källkoden är en opak förkortning. Variabeln anger andra företag som utvecklare.\ncatalog:variable_text:28062:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:deve-prd-oth"
+subject = "var:utvecklare-av-produktinnovation-andra-foretag"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är en opak förkortning. Variabeln anger andra företag som utvecklare.\ncatalog:variable_text:28062:18262:20089"
 
@@ -7632,49 +7632,49 @@ evidence = "Källkolumnens förkortning är en opak kod; etiketten anger koncern
 
 [[statement]]
 kind = "set"
-subject = "var:entgrp-hd-for"
+subject = "var:huvudkontor-utanfor-se"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger huvudkontorets läge.\ncatalog:variable_text:28142:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:entgrp-hd-for"
+subject = "var:huvudkontor-utanfor-se"
 fields = { "tags" = ["geography"] }
 evidence = "Källkoden är opak; etiketten anger huvudkontorets läge.\ncatalog:variable_text:28142:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:entgrp-hd-nat"
+subject = "var:huvudkontor-se"
 fields = { "sets" = [] }
 evidence = "Id:t består av opaka källförkortningar. Etiketten anger huvudkontor i Sverige.\ncatalog:occurrence:248155\ncatalog:variable_text:28143:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:entgrp-hd-nat"
+subject = "var:huvudkontor-se"
 fields = { "tags" = ["business", "geography"] }
 evidence = "Id:t består av opaka källförkortningar. Etiketten anger huvudkontor i Sverige.\ncatalog:occurrence:248155\ncatalog:variable_text:28143:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enagr"
+subject = "var:frivilliga-projekt-for-att-forbattra-miljopraxis-inom-er"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Frivilliga initiativ är en drivkraft för miljöinnovation.\ncatalog:variable_text:28144:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enagr"
+subject = "var:frivilliga-projekt-for-att-forbattra-miljopraxis-inom-er"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkoden är en opak förkortning. Frivilliga initiativ är en drivkraft för miljöinnovation.\ncatalog:variable_text:28144:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-encost"
+subject = "var:hoga-kostnader-for-energi-vatten-eller-material"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28145:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-encost"
+subject = "var:hoga-kostnader-for-energi-vatten-eller-material"
 fields = { "tags" = ["energy", "environment", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28145:18262:20089"
 
@@ -7704,25 +7704,25 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2481
 
 [[statement]]
 kind = "set"
-subject = "var:env-enereg"
+subject = "var:radande-miljoregleringar"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28148:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enereg"
+subject = "var:radande-miljoregleringar"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28148:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enetx"
+subject = "var:radande-miljoskatter-kostnader-eller-avgifter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28149:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enetx"
+subject = "var:radande-miljoskatter-kostnader-eller-avgifter"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28149:18262:20089"
 
@@ -7752,37 +7752,37 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2481
 
 [[statement]]
 kind = "set"
-subject = "var:env-enregf"
+subject = "var:forvantade-miljoregleringar-eller-skatter-i-framtiden"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Förväntade regleringar eller skatter är en drivkraft för miljöinnovation.\ncatalog:variable_text:28152:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enregf"
+subject = "var:forvantade-miljoregleringar-eller-skatter-i-framtiden"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkoden är en opak förkortning. Förväntade regleringar eller skatter är en drivkraft för miljöinnovation.\ncatalog:variable_text:28152:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enrep"
+subject = "var:forbattrat-rykte-om-ert-foretag"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28153:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enrep"
+subject = "var:forbattrat-rykte-om-ert-foretag"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28153:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enrequ"
+subject = "var:behov-att-uppfylla-krav-for-upphandlingskontrakt"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28154:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:env-enrequ"
+subject = "var:behov-att-uppfylla-krav-for-upphandlingskontrakt"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28154:18262:20089"
 
@@ -7812,73 +7812,73 @@ evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovati
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-obr"
+subject = "var:obrusade-innovationsutgifter-totalt"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade totala innovationsutgifter exklusive FoU.\ncatalog:variable_text:28177:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-obr"
+subject = "var:obrusade-innovationsutgifter-totalt"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade totala innovationsutgifter exklusive FoU.\ncatalog:variable_text:28177:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-oth"
+subject = "var:innovationsutgifter-ovriga"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger övriga innovationsutgifter.\ncatalog:variable_text:28178:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-oth"
+subject = "var:innovationsutgifter-ovriga"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger övriga innovationsutgifter.\ncatalog:variable_text:28178:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-oth-obr"
+subject = "var:obrusade-innovationsutgifter-ovriga"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade övriga innovationsutgifter.\ncatalog:variable_text:28179:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-oth-obr"
+subject = "var:obrusade-innovationsutgifter-ovriga"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade övriga innovationsutgifter.\ncatalog:variable_text:28179:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-own-per"
+subject = "var:innovationsutgifter-personal"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger innovationsutgifter för personal.\ncatalog:variable_text:28180:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-own-per"
+subject = "var:innovationsutgifter-personal"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger innovationsutgifter för personal.\ncatalog:variable_text:28180:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-own-per-obr"
+subject = "var:obrusade-innovationsutgifter-personal"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för personal.\ncatalog:variable_text:28181:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-own-per-obr"
+subject = "var:obrusade-innovationsutgifter-personal"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för personal.\ncatalog:variable_text:28181:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-smsp-obr"
+subject = "var:obrusade-innovationsutgifter-forvarv-av-material"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för material.\ncatalog:variable_text:28182:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:exp-inno-inn-xrnd-smsp-obr"
+subject = "var:obrusade-innovationsutgifter-forvarv-av-material"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger obrusade innovationsutgifter för material.\ncatalog:variable_text:28182:18993:20089"
 
@@ -7956,13 +7956,13 @@ evidence = "Reviewed memberships; legacy groups default dissolve.\n"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-aut-loc-reg"
+subject = "var:stod-fran-kommun"
 fields = { "sets" = ["kommunalt-stod"] }
 evidence = "Id är en ogenomskinlig källkod; etiketten beskriver stöd från kommun.\ncatalog:variable_text:28398:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-aut-loc-reg"
+subject = "var:stod-fran-kommun"
 fields = { "tags" = ["business", "public-finance"] }
 evidence = "Id är en ogenomskinlig källkod; etiketten beskriver stöd från kommun.\ncatalog:variable_text:28398:16801:20089"
 
@@ -7980,13 +7980,13 @@ evidence = "Samma källkolumn är mappad till två variabler under överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-nsucc"
+subject = "var:finansieringkalla-forsok-till-lanefinansiering-lyckades-inte"
 fields = { "sets" = ["lanefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28400:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-nsucc"
+subject = "var:finansieringkalla-forsok-till-lanefinansiering-lyckades-inte"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28400:18262:20089"
 
@@ -8016,13 +8016,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28402:168
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-nsucc"
+subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
 fields = { "sets" = ["aktiefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-nsucc"
+subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
@@ -8076,13 +8076,13 @@ evidence = "Samma källkolumn har överlappande ägare. Variabeln gäller EU-st�
 
 [[statement]]
 kind = "set"
-subject = "var:fund-gov-ctl"
+subject = "var:stod-fran-staten"
 fields = { "sets" = ["statligt-stod"] }
 evidence = "Id är en ogenomskinlig källkod; etiketten beskriver stöd från staten.\ncatalog:variable_text:28408:16801:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-gov-ctl"
+subject = "var:stod-fran-staten"
 fields = { "tags" = ["business", "public-finance"] }
 evidence = "Id är en ogenomskinlig källkod; etiketten beskriver stöd från staten.\ncatalog:variable_text:28408:16801:20089"
 
@@ -8100,49 +8100,49 @@ evidence = "Samma källkolumn är mappad till två variabler under överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ig-loan-rndinn"
+subject = "var:finansieringskalla-koncerninterna-lan-for-fou"
 fields = { "sets" = ["koncerninterna-lan"] }
 evidence = "Källkod ersätts med den dokumenterade etiketten.\ncatalog:variable_text:28410:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ig-loan-rndinn"
+subject = "var:finansieringskalla-koncerninterna-lan-for-fou"
 fields = { "tags" = ["finance", "research"] }
 evidence = "Källkod ersätts med den dokumenterade etiketten.\ncatalog:variable_text:28410:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ig-loan-succ"
+subject = "var:finansieringskalla-koncerninterna-lan"
 fields = { "sets" = ["koncerninterna-lan"] }
 evidence = "Källkoden är opak; etiketten anger finansieringskällan.\ncatalog:variable_text:28411:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ig-loan-succ"
+subject = "var:finansieringskalla-koncerninterna-lan"
 fields = { "tags" = ["finance"] }
 evidence = "Källkoden är opak; etiketten anger finansieringskällan.\ncatalog:variable_text:28411:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ndebt"
+subject = "var:finansieringkalla-ingen-lanefinansiering"
 fields = { "sets" = ["lanefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28413:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ndebt"
+subject = "var:finansieringkalla-ingen-lanefinansiering"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28413:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-nequit"
+subject = "var:finansieringkalla-ingen-aktiefinansiering"
 fields = { "sets" = ["aktiefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28414:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-nequit"
+subject = "var:finansieringkalla-ingen-aktiefinansiering"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28414:18262:20089"
 
@@ -8160,121 +8160,121 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28416:16
 
 [[statement]]
 kind = "set"
-subject = "var:fwturn"
+subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver andelen.\ncatalog:variable_text:28417:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:fwturn"
+subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver andelen.\ncatalog:variable_text:28417:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:g15a"
+subject = "var:syfte-produkt-och-process-produktsortiment"
 fields = { "sets" = [] }
 evidence = "G15a är en opak frågekod; källan anger syftet produktsortiment.\ncatalog:variable_text:28418:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15a"
+subject = "var:syfte-produkt-och-process-produktsortiment"
 fields = { "tags" = ["research"] }
 evidence = "G15a är en opak frågekod; källan anger syftet produktsortiment.\ncatalog:variable_text:28418:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15b"
+subject = "var:syfte-produkt-och-process-ersattning"
 fields = { "sets" = [] }
 evidence = "G15b är en opak frågekod; källan anger syftet ersättning.\ncatalog:variable_text:28419:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15b"
+subject = "var:syfte-produkt-och-process-ersattning"
 fields = { "tags" = ["research"] }
 evidence = "G15b är en opak frågekod; källan anger syftet ersättning.\ncatalog:variable_text:28419:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15c"
+subject = "var:syfte-produkt-och-process-intrade"
 fields = { "sets" = [] }
 evidence = "G15c är en opak frågekod; källan anger syftet inträde.\ncatalog:variable_text:28420:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15c"
+subject = "var:syfte-produkt-och-process-intrade"
 fields = { "tags" = ["research"] }
 evidence = "G15c är en opak frågekod; källan anger syftet inträde.\ncatalog:variable_text:28420:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15d"
+subject = "var:syfte-produkt-och-process-marknadsandelar"
 fields = { "sets" = [] }
 evidence = "G15d är en opak frågekod; källan anger syftet marknadsandelar.\ncatalog:variable_text:28421:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15d"
+subject = "var:syfte-produkt-och-process-marknadsandelar"
 fields = { "tags" = ["research"] }
 evidence = "G15d är en opak frågekod; källan anger syftet marknadsandelar.\ncatalog:variable_text:28421:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15e"
+subject = "var:syfte-produkt-och-process-kvalitet"
 fields = { "sets" = [] }
 evidence = "G15e är en opak frågekod; källan anger syftet kvalitet.\ncatalog:variable_text:28422:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15e"
+subject = "var:syfte-produkt-och-process-kvalitet"
 fields = { "tags" = ["research"] }
 evidence = "G15e är en opak frågekod; källan anger syftet kvalitet.\ncatalog:variable_text:28422:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15f"
+subject = "var:syfte-produkt-och-process-flexibilitet"
 fields = { "sets" = [] }
 evidence = "G15f är en opak frågekod; källan anger syftet flexibilitet.\ncatalog:variable_text:28423:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15f"
+subject = "var:syfte-produkt-och-process-flexibilitet"
 fields = { "tags" = ["research"] }
 evidence = "G15f är en opak frågekod; källan anger syftet flexibilitet.\ncatalog:variable_text:28423:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15g"
+subject = "var:syfte-produkt-och-process-kapacitet"
 fields = { "sets" = [] }
 evidence = "G15g är en opak frågekod; källan anger syftet kapacitet.\ncatalog:variable_text:28424:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15g"
+subject = "var:syfte-produkt-och-process-kapacitet"
 fields = { "tags" = ["research"] }
 evidence = "G15g är en opak frågekod; källan anger syftet kapacitet.\ncatalog:variable_text:28424:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15h"
+subject = "var:syfte-produkt-och-process-halsa"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28425:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15h"
+subject = "var:syfte-produkt-och-process-halsa"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28425:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15i"
+subject = "var:syfte-produkt-och-process-arbetskraftskostnad"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28426:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:g15i"
+subject = "var:syfte-produkt-och-process-arbetskraftskostnad"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28426:13149:14245"
 
@@ -8424,61 +8424,61 @@ evidence = "The indicator measures a geographic sales market.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:h17a"
+subject = "var:syfte-organisation-minskad-tid"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28456:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17a"
+subject = "var:syfte-organisation-minskad-tid"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28456:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17b"
+subject = "var:syfte-organisation-forbattrad-formaga"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28457:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17b"
+subject = "var:syfte-organisation-forbattrad-formaga"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28457:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17c"
+subject = "var:syfte-organisation-forbattrad-kvalitet"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28458:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17c"
+subject = "var:syfte-organisation-forbattrad-kvalitet"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28458:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17d"
+subject = "var:syfte-organisation-minskad-kostnad"
 fields = { "sets" = [] }
 evidence = "H17d är en opak frågekod; källan anger syftet minskad kostnad.\ncatalog:variable_text:28459:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17d"
+subject = "var:syfte-organisation-minskad-kostnad"
 fields = { "tags" = ["research"] }
 evidence = "H17d är en opak frågekod; källan anger syftet minskad kostnad.\ncatalog:variable_text:28459:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17e"
+subject = "var:syfte-organisation-forbattrad-kommunikaiton"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28460:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:h17e"
+subject = "var:syfte-organisation-forbattrad-kommunikaiton"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger syftet.\ncatalog:variable_text:28460:13149:14245"
 
@@ -8496,61 +8496,61 @@ evidence = "Källkoden är en ogenomskinlig förkortning; etiketten anger innova
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-dprior"
+subject = "var:hinder-for-innovationsverksamhet-olika-prioriteringar"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28491:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-dprior"
+subject = "var:hinder-for-innovationsverksamhet-olika-prioriteringar"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28491:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-hcomp"
+subject = "var:hinder-for-innovationsverksamhet-hog-konkurrens"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger konkurrens som innovationshinder.\ncatalog:variable_text:28492:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-hcomp"
+subject = "var:hinder-for-innovationsverksamhet-hog-konkurrens"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger konkurrens som innovationshinder.\ncatalog:variable_text:28492:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-hcost"
+subject = "var:hinder-for-innovationsverksamhet-hoga-kostnader"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28493:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-hcost"
+subject = "var:hinder-for-innovationsverksamhet-hoga-kostnader"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28493:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lacs-know"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-extern-kunskap"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28494:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lacs-know"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-extern-kunskap"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28494:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lcoll-ptn"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-samarbetspartners"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger brist på samarbetspartner som innovationshinder.\ncatalog:variable_text:28495:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lcoll-ptn"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-samarbetspartners"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger brist på samarbetspartner som innovationshinder.\ncatalog:variable_text:28495:16801:18628"
 
@@ -8568,25 +8568,25 @@ evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lfin-int"
+subject = "var:hinder-for-innovationsverksamhet-brist-intern-finansiering"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28497:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lfin-int"
+subject = "var:hinder-for-innovationsverksamhet-brist-intern-finansiering"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28497:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lqlf-sal"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-kompetens"
 fields = { "sets" = [] }
 evidence = "Källkoden är en opak förkortning. Källan anger kompetensbrist som innovationshinder.\ncatalog:variable_text:28498:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:hamp-lqlf-sal"
+subject = "var:hinder-for-innovationsverksamhet-brist-pa-kompetens"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är en opak förkortning. Källan anger kompetensbrist som innovationshinder.\ncatalog:variable_text:28498:16801:18628"
 
@@ -8604,85 +8604,85 @@ evidence = "Id:t är en ogenomskinlig källkod. Gruppen omfattar osäker efterfr
 
 [[statement]]
 kind = "set"
-subject = "var:hcom-hbar"
+subject = "var:utan-innovationsverksamhet-anledning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28502:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcom-hbar"
+subject = "var:utan-innovationsverksamhet-anledning"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28502:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcomph"
+subject = "var:utan-innovationsverksamhet-konkurrens"
 fields = { "sets" = [] }
 evidence = "HCOMPH är en opak källkod. Källan anger konkurrens som anledning utan innovationsverksamhet.\ncatalog:variable_text:28503:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcomph"
+subject = "var:utan-innovationsverksamhet-konkurrens"
 fields = { "tags" = ["research"] }
 evidence = "HCOMPH är en opak källkod. Källan anger konkurrens som anledning utan innovationsverksamhet.\ncatalog:variable_text:28503:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcompl"
+subject = "var:utan-innovationsverksamhet-inget-behov-minimal-konkurrens"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger anledningen.\ncatalog:variable_text:28504:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcompl"
+subject = "var:utan-innovationsverksamhet-inget-behov-minimal-konkurrens"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger anledningen.\ncatalog:variable_text:28504:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcre"
+subject = "var:utan-innovationsverksamhet-brist-pa-kredit"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28509:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hcre"
+subject = "var:utan-innovationsverksamhet-brist-pa-kredit"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28509:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hdem"
+subject = "var:utan-innovationsverksamhet-osaker-efterfragan"
 fields = { "sets" = [] }
 evidence = "HDEM är en opak källkod. Källan anger osäker efterfrågan som anledning utan innovationsverksamhet.\ncatalog:variable_text:28510:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hdem"
+subject = "var:utan-innovationsverksamhet-osaker-efterfragan"
 fields = { "tags" = ["research"] }
 evidence = "HDEM är en opak källkod. Källan anger osäker efterfrågan som anledning utan innovationsverksamhet.\ncatalog:variable_text:28510:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hfent"
+subject = "var:utan-innovationsverksamhet-brist-pa-finansiering"
 fields = { "sets" = [] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter intern finansieringsbrist. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Fhfent saknar definition; intern finansieringsbrist är inte belagd. membership-0293: HAMP_LFIN_INT anger uttryckligen intern finansieringsbrist. HFENT hålls utanför eftersom den tillgängliga etiketten inte skiljer intern från extern finansiering. membership-0294: Ingen vald variabel i denna sektion har belagd intern finansieringsbrist. membership-0295: Inga valda variabler har styrkt mått på intern finansieringsbrist. membership-0296: Variabeln mäter intern finansieringsbrist som innovationshinder. membership-0297: Inga valda variabler mäter intern finansieringsbrist som hinder.\ncatalog:variable_text:28276:11688:18628\ncatalog:variable_text:28497:16801:18628\ncatalog:variable_text:28517:16071:17167\ncatalog:variable_text:28941:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:hfent"
+subject = "var:utan-innovationsverksamhet-brist-pa-finansiering"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter intern finansieringsbrist. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Fhfent saknar definition; intern finansieringsbrist är inte belagd. membership-0293: HAMP_LFIN_INT anger uttryckligen intern finansieringsbrist. HFENT hålls utanför eftersom den tillgängliga etiketten inte skiljer intern från extern finansiering. membership-0294: Ingen vald variabel i denna sektion har belagd intern finansieringsbrist. membership-0295: Inga valda variabler har styrkt mått på intern finansieringsbrist. membership-0296: Variabeln mäter intern finansieringsbrist som innovationshinder. membership-0297: Inga valda variabler mäter intern finansieringsbrist som hinder.\ncatalog:variable_text:28276:11688:18628\ncatalog:variable_text:28497:16801:18628\ncatalog:variable_text:28517:16071:17167\ncatalog:variable_text:28941:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:hidin"
+subject = "var:utan-innovationsverksamhet-brist-pa-ideer"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28521:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hidin"
+subject = "var:utan-innovationsverksamhet-brist-pa-ideer"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28521:16071:17167"
 
@@ -8700,49 +8700,49 @@ evidence = "Den äldre levererade kolumnens betydelse är inte fastställd.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:hpar"
+subject = "var:utan-innovationsverksamhet-brist-pa-samarbetspartner"
 fields = { "sets" = [] }
 evidence = "HPAR är en opak källkod. Källan anger brist på samarbetspartner som anledning utan innovationsverksamhet.\ncatalog:variable_text:28530:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hpar"
+subject = "var:utan-innovationsverksamhet-brist-pa-samarbetspartner"
 fields = { "tags" = ["research"] }
 evidence = "HPAR är en opak källkod. Källan anger brist på samarbetspartner som anledning utan innovationsverksamhet.\ncatalog:variable_text:28530:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hper"
+subject = "var:utan-innovationsverksamhet-brist-pa-personal"
 fields = { "sets" = [] }
 evidence = "HPER är en opak källkod. Källan anger personalbrist som anledning utan innovationsverksamhet.\ncatalog:variable_text:28532:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hper"
+subject = "var:utan-innovationsverksamhet-brist-pa-personal"
 fields = { "tags" = ["research"] }
 evidence = "HPER är en opak källkod. Källan anger personalbrist som anledning utan innovationsverksamhet.\ncatalog:variable_text:28532:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hprior"
+subject = "var:utan-innovationsverksamhet-inget-behov-tidigare-innovationer"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger anledningen.\ncatalog:variable_text:28534:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hprior"
+subject = "var:utan-innovationsverksamhet-inget-behov-tidigare-innovationer"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger anledningen.\ncatalog:variable_text:28534:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hsubs"
+subject = "var:utan-innovationsverksamhet-inget-bidrag"
 fields = { "sets" = ["bidragsbrist-som-innovationshinder"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28536:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:hsubs"
+subject = "var:utan-innovationsverksamhet-inget-bidrag"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28536:16071:17167"
 
@@ -8772,37 +8772,37 @@ evidence = "Källan anger huvudkontorets läge.\ncatalog:variable_text:28540:116
 
 [[statement]]
 kind = "set"
-subject = "var:i19a"
+subject = "var:syfte-marknadsforing-marknadsandelar"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger syftet.\ncatalog:variable_text:28541:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:i19a"
+subject = "var:syfte-marknadsforing-marknadsandelar"
 fields = { "tags" = ["research"] }
 evidence = "Frågekoden är opak; etiketten anger syftet.\ncatalog:variable_text:28541:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:i19b"
+subject = "var:syfte-marknadsforing-nya-kundgrupper"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger syftet.\ncatalog:variable_text:28542:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:i19b"
+subject = "var:syfte-marknadsforing-nya-kundgrupper"
 fields = { "tags" = ["research"] }
 evidence = "Frågekoden är opak; etiketten anger syftet.\ncatalog:variable_text:28542:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:i19c"
+subject = "var:syfte-marknadsforing-nya-geografiska-marknader"
 fields = { "sets" = [] }
 evidence = "I19c är en opak frågekod; källan anger syfte avseende nya geografiska marknader.\ncatalog:variable_text:28543:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:i19c"
+subject = "var:syfte-marknadsforing-nya-geografiska-marknader"
 fields = { "tags" = ["research"] }
 evidence = "I19c är en opak frågekod; källan anger syfte avseende nya geografiska marknader.\ncatalog:variable_text:28543:13149:14245"
 
@@ -8928,25 +8928,25 @@ evidence = "The variable concerns trademark registration.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:infl-finres-for"
+subject = "var:koncerninterna-relationer-finansiella-resurser-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28555:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-finres-for"
+subject = "var:koncerninterna-relationer-finansiella-resurser-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28555:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-finres-nat"
+subject = "var:koncerninterna-relationer-finansiella-resurser-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella resurser.\ncatalog:variable_text:28556:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-finres-nat"
+subject = "var:koncerninterna-relationer-finansiella-resurser-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella resurser.\ncatalog:variable_text:28556:16801:18628"
 
@@ -8964,13 +8964,13 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28557:16
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nper"
+subject = "var:koncerninterna-relationer-inget-utbyte-personal"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28558:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-nper"
+subject = "var:koncerninterna-relationer-inget-utbyte-personal"
 fields = { "tags" = ["business", "employment"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28558:16801:18628"
 
@@ -8988,289 +8988,289 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28559:16
 
 [[statement]]
 kind = "set"
-subject = "var:infl-ntknow"
+subject = "var:koncerninterna-relationer-inget-utbyte-teknisk-kunskap"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28560:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-ntknow"
+subject = "var:koncerninterna-relationer-inget-utbyte-teknisk-kunskap"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28560:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-per-for"
+subject = "var:koncerninterna-relationer-personal-utl"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28561:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-per-for"
+subject = "var:koncerninterna-relationer-personal-utl"
 fields = { "tags" = ["business", "employment"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28561:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-per-nat"
+subject = "var:koncerninterna-relationer-personal-se"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt personalutbyte.\ncatalog:variable_text:28562:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-per-nat"
+subject = "var:koncerninterna-relationer-personal-se"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt personalutbyte.\ncatalog:variable_text:28562:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-sourc-for"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28563:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-sourc-for"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28563:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-sourc-nat"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna företagsaktiviteter.\ncatalog:variable_text:28564:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-sourc-nat"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna företagsaktiviteter.\ncatalog:variable_text:28564:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-tknow-for"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28565:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-tknow-for"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28565:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-tknow-nat"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt utbyte av teknisk kunskap.\ncatalog:variable_text:28566:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:infl-tknow-nat"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt utbyte av teknisk kunskap.\ncatalog:variable_text:28566:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:inn"
+subject = "var:innovationsaktivt-foretag"
 fields = { "sets" = [] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28570:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn"
+subject = "var:innovationsaktivt-foretag"
 fields = { "tags" = ["research"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28570:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-oslo"
+subject = "var:innovativt-foretag"
 fields = { "sets" = [] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28571:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-oslo"
+subject = "var:innovativt-foretag"
 fields = { "tags" = ["research"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28571:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1"
+subject = "var:innovationsprofil-1"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF1 är en opak källkod. Källan anger innovationsprofil 1.\ncatalog:variable_text:28572:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1"
+subject = "var:innovationsprofil-1"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF1 är en opak källkod. Källan anger innovationsprofil 1.\ncatalog:variable_text:28572:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1-nrnd"
+subject = "var:innovationsprofil-1-varav-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF1_NRND är en opak källkod. Källan anger innovationsprofil 1 och FoU-aktiva.\ncatalog:variable_text:28573:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1-nrnd"
+subject = "var:innovationsprofil-1-varav-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF1_NRND är en opak källkod. Källan anger innovationsprofil 1 och FoU-aktiva.\ncatalog:variable_text:28573:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1-rnd"
+subject = "var:innovationsprofil-1-varav-ej-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF1_RND är en opak källkod. Källan anger innovationsprofil 1 och ej FoU-aktiva.\ncatalog:variable_text:28574:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf1-rnd"
+subject = "var:innovationsprofil-1-varav-ej-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF1_RND är en opak källkod. Källan anger innovationsprofil 1 och ej FoU-aktiva.\ncatalog:variable_text:28574:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2"
+subject = "var:innovationsprofil-2"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF2 är en opak källkod. Källan anger innovationsprofil 2.\ncatalog:variable_text:28575:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2"
+subject = "var:innovationsprofil-2"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF2 är en opak källkod. Källan anger innovationsprofil 2.\ncatalog:variable_text:28575:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2-nrnd"
+subject = "var:innovationsprofil-2-varav-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF2_NRND är en opak källkod. Källan anger innovationsprofil 2 och FoU-aktiva.\ncatalog:variable_text:28576:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2-nrnd"
+subject = "var:innovationsprofil-2-varav-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF2_NRND är en opak källkod. Källan anger innovationsprofil 2 och FoU-aktiva.\ncatalog:variable_text:28576:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2-rnd"
+subject = "var:innovationsprofil-2-varav-ej-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF2_RND är en opak källkod. Källan anger innovationsprofil 2 och ej FoU-aktiva.\ncatalog:variable_text:28577:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf2-rnd"
+subject = "var:innovationsprofil-2-varav-ej-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF2_RND är en opak källkod. Källan anger innovationsprofil 2 och ej FoU-aktiva.\ncatalog:variable_text:28577:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3"
+subject = "var:innovationsprofil-3"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF3 är en opak källkod. Källan anger innovationsprofil 3.\ncatalog:variable_text:28578:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3"
+subject = "var:innovationsprofil-3"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF3 är en opak källkod. Källan anger innovationsprofil 3.\ncatalog:variable_text:28578:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3-nrnd"
+subject = "var:innovationsprofil-3-varav-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF3_NRND är en opak källkod. Källan anger innovationsprofil 3 och FoU-aktiva.\ncatalog:variable_text:28579:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3-nrnd"
+subject = "var:innovationsprofil-3-varav-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF3_NRND är en opak källkod. Källan anger innovationsprofil 3 och FoU-aktiva.\ncatalog:variable_text:28579:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3-rnd"
+subject = "var:innovationsprofil-3-varav-ej-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF3_RND är en opak källkod. Källan anger innovationsprofil 3 och ej FoU-aktiva.\ncatalog:variable_text:28580:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf3-rnd"
+subject = "var:innovationsprofil-3-varav-ej-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF3_RND är en opak källkod. Källan anger innovationsprofil 3 och ej FoU-aktiva.\ncatalog:variable_text:28580:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4"
+subject = "var:innovationsprofil-4"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF4 är en opak källkod. Källan anger innovationsprofil 4.\ncatalog:variable_text:28581:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4"
+subject = "var:innovationsprofil-4"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF4 är en opak källkod. Källan anger innovationsprofil 4.\ncatalog:variable_text:28581:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4-nrnd"
+subject = "var:innovationsprofil-4-varav-ej-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF4_NRND är en opak källkod. Källan anger innovationsprofil 4 och ej FoU-aktiva.\ncatalog:variable_text:28582:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4-nrnd"
+subject = "var:innovationsprofil-4-varav-ej-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF4_NRND är en opak källkod. Källan anger innovationsprofil 4 och ej FoU-aktiva.\ncatalog:variable_text:28582:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4-rnd"
+subject = "var:innovationsprofil-4-varav-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF4_RND är en opak källkod. Källan anger innovationsprofil 4 och FoU-aktiva.\ncatalog:variable_text:28583:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf4-rnd"
+subject = "var:innovationsprofil-4-varav-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF4_RND är en opak källkod. Källan anger innovationsprofil 4 och FoU-aktiva.\ncatalog:variable_text:28583:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5"
+subject = "var:innovationsprofil-5"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF5 är en opak källkod. Källan anger innovationsprofil 5.\ncatalog:variable_text:28584:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5"
+subject = "var:innovationsprofil-5"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF5 är en opak källkod. Källan anger innovationsprofil 5.\ncatalog:variable_text:28584:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5-nrnd"
+subject = "var:innovationsprofil-5-varav-ej-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF5_NRND är en opak källkod. Källan anger innovationsprofil 5 och ej FoU-aktiva.\ncatalog:variable_text:28585:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5-nrnd"
+subject = "var:innovationsprofil-5-varav-ej-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF5_NRND är en opak källkod. Källan anger innovationsprofil 5 och ej FoU-aktiva.\ncatalog:variable_text:28585:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5-rnd"
+subject = "var:innovationsprofil-5-varav-fou-aktiva"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "INN_PF5_RND är en opak källkod. Källan anger innovationsprofil 5 och FoU-aktiva.\ncatalog:variable_text:28586:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-pf5-rnd"
+subject = "var:innovationsprofil-5-varav-fou-aktiva"
 fields = { "tags" = ["research"] }
 evidence = "INN_PF5_RND är en opak källkod. Källan anger innovationsprofil 5 och FoU-aktiva.\ncatalog:variable_text:28586:18993:20089"
 
@@ -9288,13 +9288,13 @@ evidence = "Variabeln avser andra innovationsförberedelser.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:inna-compl"
+subject = "var:slutforda-innovationsaktiviteter"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28588:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-compl"
+subject = "var:slutforda-innovationsaktiviteter"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28588:18993:20089"
 
@@ -9348,25 +9348,25 @@ evidence = "Samma källkolumn är mappad till två variabler under överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-cont"
+subject = "var:kontinuerlig-fouverksamhet"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger kontinuerlig FoU-verksamhet.\ncatalog:occurrence:248580\ncatalog:variable_text:28593:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-cont"
+subject = "var:kontinuerlig-fouverksamhet"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en källkod och etiketten anger kontinuerlig FoU-verksamhet.\ncatalog:occurrence:248580\ncatalog:variable_text:28593:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-occ"
+subject = "var:sporadisk-fou-verksamhet"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger sporadisk FoU-verksamhet.\ncatalog:occurrence:248581\ncatalog:variable_text:28595:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-occ"
+subject = "var:sporadisk-fou-verksamhet"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en källkod och etiketten anger sporadisk FoU-verksamhet.\ncatalog:occurrence:248581\ncatalog:variable_text:28595:18993:20089"
 
@@ -9420,13 +9420,13 @@ evidence = "The variable measures outsourced research and development.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:inno-bpcs"
+subject = "var:processinnovativt-foretag"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28601:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-bpcs"
+subject = "var:processinnovativt-foretag"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28601:18262:20089"
 
@@ -9456,13 +9456,13 @@ evidence = "Samma källkolumn har överlappande ägare med olika avgränsningar.
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-comm"
+subject = "var:introduktion-av-metoder-for-kommunikation"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28604:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-comm"
+subject = "var:introduktion-av-metoder-for-kommunikation"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28604:18993:20089"
 
@@ -9504,13 +9504,13 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2482
 
 [[statement]]
 kind = "set"
-subject = "var:inno-prd"
+subject = "var:produktinnovativt-foretag"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger produktinnovativt företag.\ncatalog:variable_text:28609:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-prd"
+subject = "var:produktinnovativt-foretag"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger produktinnovativt företag.\ncatalog:variable_text:28609:18262:20089"
 
@@ -9936,49 +9936,49 @@ evidence = "The variable measures outsourced research and development.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfc"
+subject = "var:produktinnovation-ny-for-sverige"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28655:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfc"
+subject = "var:produktinnovation-ny-for-sverige"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28655:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfe"
+subject = "var:produktinnovation-ny-for-europa"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28656:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfe"
+subject = "var:produktinnovation-ny-for-europa"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28656:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfw"
+subject = "var:produktinnovation-ny-for-varlden"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28657:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpdfw"
+subject = "var:produktinnovation-ny-for-varlden"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28657:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:inpsnm"
+subject = "var:nya-eller-vasentligt-forbattrade-processer-pa-foretagets"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger processinnovationens nyhetsgrad. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Sektionens nyhetsgradsuppgifter gäller omsättningsandelar, vilka definitionen uttryckligen utesluter. membership-0291: Produktvariablerna anger utvecklare och anpassning, inte nyhetsgrad. membership-0292: De valda koderna saknar tolkning; produktinnovationens nyhetsgrad är inte belagd. membership-0293: FWTURN mäter omsättningsandel efter nyhetsgrad, vilket definitionen utesluter; ingen annan vald variabel dokumenterar själva nyhetsgraden. membership-0294: Tre variabler anger produktinnovationers nyhet för Sverige, Europa och världen. INPSNM utesluts enligt den fasta definitionens uttryckliga avgränsning till produkter. membership-0295: Variablerna skiljer produktinnovationer nya endast för företaget från sådana som är nya för marknaden. De odefinierade NEWFRM_O och NEWMKT_O ger inte stöd för fler medlemskap. membership-0296: Variablerna anger om produktinnovationer är nya endast för företaget eller för dess marknad. membership-0297: Valda nyhetsgradsrelaterade mått avser omsättning, vilket definitionen utesluter.\ncatalog:variable_text:27852:11688:13514\ncatalog:variable_text:27853:16071:17167\ncatalog:variable_text:27854:11688:13514\ncatalog:variable_text:27855:16801:19358\ncatalog:variable_text:27856:16071:17167\ncatalog:variable_text:27857:16801:19358\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28060:18262:20089\ncatalog:variable_text:28061:18262:20089\ncatalog:variable_text:28062:18262:20089\ncatalog:variable_text:28297:11688:18628\ncatalog:variable_text:28312:11688:18628\ncatalog:variable_text:28313:11688:18628\ncatalog:variable_text:28417:16071:17167\ncatalog:variable_text:28655:16071:17167\ncatalog:variable_text:28656:16071:17167\ncatalog:variable_text:28657:16071:17167\ncatalog:variable_text:28679:16071:17167\ncatalog:variable_text:28827:11688:18628\ncatalog:variable_text:28828:11688:18628\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28839:16071:17167\ncatalog:variable_text:28840:11688:13514\ncatalog:variable_text:28841:16071:17167\ncatalog:variable_text:28842:11688:13514\ncatalog:variable_text:28924:13149:14245\ncatalog:variable_text:28925:13149:14245\ncatalog:variable_text:29109:18993:20089\ncatalog:variable_text:29110:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:inpsnm"
+subject = "var:nya-eller-vasentligt-forbattrade-processer-pa-foretagets"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger processinnovationens nyhetsgrad. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Sektionens nyhetsgradsuppgifter gäller omsättningsandelar, vilka definitionen uttryckligen utesluter. membership-0291: Produktvariablerna anger utvecklare och anpassning, inte nyhetsgrad. membership-0292: De valda koderna saknar tolkning; produktinnovationens nyhetsgrad är inte belagd. membership-0293: FWTURN mäter omsättningsandel efter nyhetsgrad, vilket definitionen utesluter; ingen annan vald variabel dokumenterar själva nyhetsgraden. membership-0294: Tre variabler anger produktinnovationers nyhet för Sverige, Europa och världen. INPSNM utesluts enligt den fasta definitionens uttryckliga avgränsning till produkter. membership-0295: Variablerna skiljer produktinnovationer nya endast för företaget från sådana som är nya för marknaden. De odefinierade NEWFRM_O och NEWMKT_O ger inte stöd för fler medlemskap. membership-0296: Variablerna anger om produktinnovationer är nya endast för företaget eller för dess marknad. membership-0297: Valda nyhetsgradsrelaterade mått avser omsättning, vilket definitionen utesluter.\ncatalog:variable_text:27852:11688:13514\ncatalog:variable_text:27853:16071:17167\ncatalog:variable_text:27854:11688:13514\ncatalog:variable_text:27855:16801:19358\ncatalog:variable_text:27856:16071:17167\ncatalog:variable_text:27857:16801:19358\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28060:18262:20089\ncatalog:variable_text:28061:18262:20089\ncatalog:variable_text:28062:18262:20089\ncatalog:variable_text:28297:11688:18628\ncatalog:variable_text:28312:11688:18628\ncatalog:variable_text:28313:11688:18628\ncatalog:variable_text:28417:16071:17167\ncatalog:variable_text:28655:16071:17167\ncatalog:variable_text:28656:16071:17167\ncatalog:variable_text:28657:16071:17167\ncatalog:variable_text:28679:16071:17167\ncatalog:variable_text:28827:11688:18628\ncatalog:variable_text:28828:11688:18628\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28839:16071:17167\ncatalog:variable_text:28840:11688:13514\ncatalog:variable_text:28841:16071:17167\ncatalog:variable_text:28842:11688:13514\ncatalog:variable_text:28924:13149:14245\ncatalog:variable_text:28925:13149:14245\ncatalog:variable_text:29109:18993:20089\ncatalog:variable_text:29110:18993:20089"
 
@@ -10512,13 +10512,13 @@ evidence = "Variabeln mäter registrering av varumärke.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:j20b"
+subject = "var:miljoinnovation-minskad-energiatgang"
 fields = { "sets" = [] }
 evidence = "J20b är en opak frågekod. Källan avser minskad energiåtgång inom företaget.\ncatalog:variable_text:28733:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j20b"
+subject = "var:miljoinnovation-minskad-energiatgang"
 fields = { "tags" = ["energy", "environment", "research"] }
 evidence = "J20b är en opak frågekod. Källan avser minskad energiåtgång inom företaget.\ncatalog:variable_text:28733:13149:14245"
 
@@ -10536,121 +10536,121 @@ evidence = "J20c är en opak frågekod. Källan avser miljöfördel inom företa
 
 [[statement]]
 kind = "set"
-subject = "var:j20g"
+subject = "var:miljoinnovation-minskad-energiforbrukning"
 fields = { "sets" = [] }
 evidence = "J20g är en opak frågekod. Källan avser minskad energiförbrukning vid slutanvändning.\ncatalog:variable_text:28735:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j20g"
+subject = "var:miljoinnovation-minskad-energiforbrukning"
 fields = { "tags" = ["energy", "environment", "research"] }
 evidence = "J20g är en opak frågekod. Källan avser minskad energiförbrukning vid slutanvändning.\ncatalog:variable_text:28735:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j20i"
+subject = "var:miljoinnovation-forbattrad-ateranvandning-for-slutanvandaren"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger miljöfördelen.\ncatalog:variable_text:28736:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j20i"
+subject = "var:miljoinnovation-forbattrad-ateranvandning-for-slutanvandaren"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Frågekoden är opak; etiketten anger miljöfördelen.\ncatalog:variable_text:28736:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21a"
+subject = "var:miljoinnovation-som-svar-pa-befintliga-miljobestammelser"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28737:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21a"
+subject = "var:miljoinnovation-som-svar-pa-befintliga-miljobestammelser"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28737:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21b"
+subject = "var:miljoinnovation-som-svar-pa-forvantade-miljobestammelser"
 fields = { "sets" = [] }
 evidence = "J21b är en opak frågekod. Källan anger förväntade miljöbestämmelser som drivkraft.\ncatalog:variable_text:28738:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21b"
+subject = "var:miljoinnovation-som-svar-pa-forvantade-miljobestammelser"
 fields = { "tags" = ["environment", "research"] }
 evidence = "J21b är en opak frågekod. Källan anger förväntade miljöbestämmelser som drivkraft.\ncatalog:variable_text:28738:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21c"
+subject = "var:miljoinnovation-som-svar-pa-forvantade-skatter"
 fields = { "sets" = [] }
 evidence = "J21c är en opak frågekod. Källan anger förväntade skatter som drivkraft.\ncatalog:variable_text:28739:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21c"
+subject = "var:miljoinnovation-som-svar-pa-forvantade-skatter"
 fields = { "tags" = ["environment", "research"] }
 evidence = "J21c är en opak frågekod. Källan anger förväntade skatter som drivkraft.\ncatalog:variable_text:28739:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21d"
+subject = "var:miljoinnovation-som-svar-pa-statliga-bidrag"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28740:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21d"
+subject = "var:miljoinnovation-som-svar-pa-statliga-bidrag"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28740:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21e"
+subject = "var:miljoinnovation-som-svar-pa-subventioner"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28741:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21e"
+subject = "var:miljoinnovation-som-svar-pa-subventioner"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28741:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21f"
+subject = "var:miljoinnovation-som-svar-pa-marknadsefterfragan"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28742:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21f"
+subject = "var:miljoinnovation-som-svar-pa-marknadsefterfragan"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger innovationsdrivkraften.\ncatalog:variable_text:28742:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21g"
+subject = "var:miljoinnovation-som-svar-pa-frivilliga-uppforandekoder"
 fields = { "sets" = [] }
 evidence = "J21g är en opak frågekod. Källan anger frivilliga uppförandekoder som drivkraft.\ncatalog:variable_text:28743:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j21g"
+subject = "var:miljoinnovation-som-svar-pa-frivilliga-uppforandekoder"
 fields = { "tags" = ["environment", "research"] }
 evidence = "J21g är en opak frågekod. Källan anger frivilliga uppförandekoder som drivkraft.\ncatalog:variable_text:28743:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j22"
+subject = "var:miljoinnovation-identifiering-av-miljopaverkan"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger miljöpåverkan.\ncatalog:variable_text:28744:13149:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:j22"
+subject = "var:miljoinnovation-identifiering-av-miljopaverkan"
 fields = { "tags" = ["environment"] }
 evidence = "Frågekoden är opak; etiketten anger miljöpåverkan.\ncatalog:variable_text:28744:13149:14245"
 
@@ -10764,169 +10764,169 @@ evidence = "Kolumnnamnet antyder säteslän men källan saknar definition.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:larmar"
+subject = "var:geografisk-marknad-storsta-omradet"
 fields = { "sets" = [] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28756:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:larmar"
+subject = "var:geografisk-marknad-storsta-omradet"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28756:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgdsmgt"
+subject = "var:logistikinnovationer-digital-styrning"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgdsmgt"
+subject = "var:logistikinnovationer-digital-styrning"
 fields = { "tags" = ["digital", "research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgeproc"
+subject = "var:logistikinnovationer-e-upphandling"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgeproc"
+subject = "var:logistikinnovationer-e-upphandling"
 fields = { "tags" = ["digital", "research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgimpf"
+subject = "var:logistikinnovationer-betydelse-forbattra-resultat"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28759:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgimpf"
+subject = "var:logistikinnovationer-betydelse-forbattra-resultat"
 fields = { "tags" = ["research", "transport"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28759:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgimps"
+subject = "var:logistikinnovationer-forbattrade-sandningar"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgimps"
+subject = "var:logistikinnovationer-forbattrade-sandningar"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lginwmt"
+subject = "var:logistikinnovationer-betydelse-nya-marknadsmojligheter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28761:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lginwmt"
+subject = "var:logistikinnovationer-betydelse-nya-marknadsmojligheter"
 fields = { "tags" = ["research", "transport"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28761:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgiresc"
+subject = "var:logistikinnovationer-betydelse-kostnadstryck"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28762:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgiresc"
+subject = "var:logistikinnovationer-betydelse-kostnadstryck"
 fields = { "tags" = ["research", "transport"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger logistikinnovationens betydelse.\ncatalog:variable_text:28762:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgmgsy"
+subject = "var:logistikinnovationer-lagerstyrningssystem"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgmgsy"
+subject = "var:logistikinnovationer-lagerstyrningssystem"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgnwdm"
+subject = "var:logistikinnovationer-nya-leveransmodeller"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgnwdm"
+subject = "var:logistikinnovationer-nya-leveransmodeller"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgoth"
+subject = "var:logistikinnovationer-annat"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen.\ncatalog:variable_text:28765:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgoth"
+subject = "var:logistikinnovationer-annat"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen.\ncatalog:variable_text:28765:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgresmt"
+subject = "var:logistikinnovationer-betydelse-mota-marknadstryck"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger drivkraften.\ncatalog:variable_text:28766:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgresmt"
+subject = "var:logistikinnovationer-betydelse-mota-marknadstryck"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger drivkraften.\ncatalog:variable_text:28766:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgrev"
+subject = "var:logistikinnovationer-omvand-logistik"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgrev"
+subject = "var:logistikinnovationer-omvand-logistik"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lgrsprv"
+subject = "var:logistikinnovationer-betydelse-rattsliga-foreskrifter"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger drivkraften.\ncatalog:variable_text:28768:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lgrsprv"
+subject = "var:logistikinnovationer-betydelse-rattsliga-foreskrifter"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger drivkraften.\ncatalog:variable_text:28768:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:lguaid"
+subject = "var:logistikinnovationer-unik-identifiering"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:lguaid"
+subject = "var:logistikinnovationer-unik-identifiering"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger logistikinnovationen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
 
@@ -11448,25 +11448,25 @@ evidence = "Variabeln avser företagsenhetens nettoomsättning.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:ninn-pf6"
+subject = "var:innovationsprofil-6"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "NINN_PF6 är en opak källkod. Källan anger innovationsprofil 6.\ncatalog:variable_text:28830:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ninn-pf6"
+subject = "var:innovationsprofil-6"
 fields = { "tags" = ["research"] }
 evidence = "NINN_PF6 är en opak källkod. Källan anger innovationsprofil 6.\ncatalog:variable_text:28830:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ninn-pf7"
+subject = "var:innovationsprofil-7"
 fields = { "sets" = ["innovationsprofil"] }
 evidence = "NINN_PF7 är en opak källkod. Källan anger innovationsprofil 7.\ncatalog:variable_text:28831:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ninn-pf7"
+subject = "var:innovationsprofil-7"
 fields = { "tags" = ["research"] }
 evidence = "NINN_PF7 är en opak källkod. Källan anger innovationsprofil 7.\ncatalog:variable_text:28831:18993:20089"
 
@@ -11616,25 +11616,25 @@ evidence = "The variable measures the turnover share from unchanged products.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-finres-for"
+subject = "var:koncerninterna-relationer-finansiella-resurser-till-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28898:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-finres-for"
+subject = "var:koncerninterna-relationer-finansiella-resurser-till-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28898:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-finres-nat"
+subject = "var:koncerninterna-relationer-finansiella-resurser-till-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-finansiella-resurser"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella resurser.\ncatalog:variable_text:28899:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-finres-nat"
+subject = "var:koncerninterna-relationer-finansiella-resurser-till-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna finansiella resurser.\ncatalog:variable_text:28899:16801:18628"
 
@@ -11652,13 +11652,13 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28900:16
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nper"
+subject = "var:koncerninterna-relationer-inget-utbyte-personal-ut"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28901:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-nper"
+subject = "var:koncerninterna-relationer-inget-utbyte-personal-ut"
 fields = { "tags" = ["business", "employment"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28901:16801:18628"
 
@@ -11676,85 +11676,85 @@ evidence = "Källkod ersätts med källans etikett.\ncatalog:variable_text:28902
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-ntknow"
+subject = "var:koncerninterna-relationer-inget-utbyte-teknisk-kunskap-ut"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28903:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-ntknow"
+subject = "var:koncerninterna-relationer-inget-utbyte-teknisk-kunskap-ut"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28903:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-per-for"
+subject = "var:koncerninterna-relationer-personal-till-utl"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28904:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-per-for"
+subject = "var:koncerninterna-relationer-personal-till-utl"
 fields = { "tags" = ["business", "employment"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28904:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-per-nat"
+subject = "var:koncerninterna-relationer-personal-till-se"
 fields = { "sets" = ["koncerninternt-personalutbyte"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt personalutbyte.\ncatalog:variable_text:28905:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-per-nat"
+subject = "var:koncerninterna-relationer-personal-till-se"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt personalutbyte.\ncatalog:variable_text:28905:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-sourc-for"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-till-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28906:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-sourc-for"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-till-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28906:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-sourc-nat"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-till-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-foretagsaktiviteter"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna företagsaktiviteter.\ncatalog:variable_text:28907:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-sourc-nat"
+subject = "var:koncerninterna-relationer-foretagsaktiviteter-till-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninterna företagsaktiviteter.\ncatalog:variable_text:28907:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-tknow-for"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-till-utl"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28908:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-tknow-for"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-till-utl"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28908:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-tknow-nat"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-till-se"
 fields = { "sets" = ["koncerninternt-utbyte-av-teknisk-kunskap"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt utbyte av teknisk kunskap.\ncatalog:variable_text:28909:16801:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:outfl-tknow-nat"
+subject = "var:koncerninterna-relationer-teknisk-kunskap-till-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt utbyte av teknisk kunskap.\ncatalog:variable_text:28909:16801:18628"
 
@@ -11784,13 +11784,13 @@ evidence = "Variabeln markerar en observation som inte är representativ för si
 
 [[statement]]
 kind = "set"
-subject = "var:ovcovfl"
+subject = "var:overtackning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger övertäckning.\ncatalog:occurrence:248612\ncatalog:variable_text:28912:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ovcovfl"
+subject = "var:overtackning"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger övertäckning.\ncatalog:occurrence:248612\ncatalog:variable_text:28912:18993:20089"
 
@@ -11904,145 +11904,145 @@ evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:pubdom"
+subject = "var:avtal-svenska-organisationer"
 fields = { "sets" = ["upphandlingsavtal-efter-motpartens-land"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger avtal med svenska organisationer.\ncatalog:occurrence:247906\ncatalog:variable_text:28926:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:pubdom"
+subject = "var:avtal-svenska-organisationer"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger avtal med svenska organisationer.\ncatalog:occurrence:247906\ncatalog:variable_text:28926:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:pubfor"
+subject = "var:avtal-utlandska-organisationer"
 fields = { "sets" = ["upphandlingsavtal-efter-motpartens-land"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger avtal med utländska organisationer.\ncatalog:occurrence:247907\ncatalog:variable_text:28927:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:pubfor"
+subject = "var:avtal-utlandska-organisationer"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger avtal med utländska organisationer.\ncatalog:occurrence:247907\ncatalog:variable_text:28927:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:q10a1"
+subject = "var:innovationsverksamhet-aterkommande-fou"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod och källan anger återkommande FoU.\ncatalog:occurrence:247107\ncatalog:variable_text:28928:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q10a1"
+subject = "var:innovationsverksamhet-aterkommande-fou"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en frågekod och källan anger återkommande FoU.\ncatalog:occurrence:247107\ncatalog:variable_text:28928:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15a"
+subject = "var:effekter-produktsortiment"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28929:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15a"
+subject = "var:effekter-produktsortiment"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28929:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15b"
+subject = "var:effekter-intrade"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28930:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15b"
+subject = "var:effekter-intrade"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28930:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15c"
+subject = "var:effekter-kvalitet"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28931:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15c"
+subject = "var:effekter-kvalitet"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger effekten.\ncatalog:variable_text:28931:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15d"
+subject = "var:effekter-flexibilitet"
 fields = { "sets" = [] }
 evidence = "Q15d är en opak frågekod. Källan anger innovationseffekt på flexibilitet.\ncatalog:variable_text:28932:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15d"
+subject = "var:effekter-flexibilitet"
 fields = { "tags" = ["research"] }
 evidence = "Q15d är en opak frågekod. Källan anger innovationseffekt på flexibilitet.\ncatalog:variable_text:28932:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15e"
+subject = "var:effekter-kapacitet"
 fields = { "sets" = [] }
 evidence = "Q15e är en opak frågekod. Källan anger innovationseffekt på kapacitet.\ncatalog:variable_text:28933:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15e"
+subject = "var:effekter-kapacitet"
 fields = { "tags" = ["research"] }
 evidence = "Q15e är en opak frågekod. Källan anger innovationseffekt på kapacitet.\ncatalog:variable_text:28933:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15f"
+subject = "var:effekter-arbetskraftkostnad"
 fields = { "sets" = [] }
 evidence = "Q15f är en opak frågekod. Källan anger innovationseffekt på arbetskraftkostnad.\ncatalog:variable_text:28934:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15f"
+subject = "var:effekter-arbetskraftkostnad"
 fields = { "tags" = ["business", "research"] }
 evidence = "Q15f är en opak frågekod. Källan anger innovationseffekt på arbetskraftkostnad.\ncatalog:variable_text:28934:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15g"
+subject = "var:effekter-materialatgang"
 fields = { "sets" = [] }
 evidence = "Q15g är en opak frågekod. Källan anger innovationseffekt på materialåtgång.\ncatalog:variable_text:28935:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15g"
+subject = "var:effekter-materialatgang"
 fields = { "tags" = ["business", "research"] }
 evidence = "Q15g är en opak frågekod. Källan anger innovationseffekt på materialåtgång.\ncatalog:variable_text:28935:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15h"
+subject = "var:effekter-miljo-och-halsa"
 fields = { "sets" = [] }
 evidence = "Q15h är en opak frågekod. Källan anger innovationseffekt på miljö och hälsa.\ncatalog:variable_text:28936:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15h"
+subject = "var:effekter-miljo-och-halsa"
 fields = { "tags" = ["environment", "health", "research"] }
 evidence = "Q15h är en opak frågekod. Källan anger innovationseffekt på miljö och hälsa.\ncatalog:variable_text:28936:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15i"
+subject = "var:effekter-regler"
 fields = { "sets" = [] }
 evidence = "Q15i är en opak frågekod. Källan anger innovationseffekt på uppfyllelse av regler.\ncatalog:variable_text:28937:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q15i"
+subject = "var:effekter-regler"
 fields = { "tags" = ["research"] }
 evidence = "Q15i är en opak frågekod. Källan anger innovationseffekt på uppfyllelse av regler.\ncatalog:variable_text:28937:11688:13514"
 
@@ -12060,13 +12060,13 @@ evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group memb
 
 [[statement]]
 kind = "set"
-subject = "var:q16b"
+subject = "var:innovationshinder-efter-start"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Uppskjuten eller avbruten innovationsaktivitet mäter aktivitetsutfall, inte i vilket skede ett innovationshinder inträffade. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: De valda koderna saknar definitioner; de belägger inte när innovationshinder inträffar. membership-0293: Ingen vald variabel har dokumenterat innehåll om hindrets skede. HBEG-, HCON- och HDLAY-koderna saknar tolkning. membership-0294: Ingen vald variabel i denna sektion har belagt skede för innovationshinder. membership-0295: Logistikhindren anger orsaker, inte innovationshindrets skede. membership-0296: Variablerna mäter nedläggning i olika skeden och allvarlig försening, vilket definitionen omfattar. membership-0297: Uppskjuten eller avbruten aktivitet är en aktivitetskodning, inte en kodning av innovationshindrets skede. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Beskrivningen anger uttryckligen aktivitet som skjutits upp eller avbrutits innan den slutförts. Medlemmen behålls oberoende av sektionsgränsen. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInaba saknar definition; uppskjuten eller avbruten aktivitet är inte belagd. membership-0293: Ingen vald variabel dokumenterar uppskjuten eller avbruten innovationsaktivitet. HDLAY-koderna saknar tolkning. membership-0294: INONAB och INONAB_O saknar definition och kan inte beläggas som uppskjuten eller avbruten innovationsaktivitet. membership-0295: Logistikhindren mäter anledningar till uteblivna innovationer, inte kodning av uppskjuten eller avbruten innovationsaktivitet. membership-0296: Båda kodar uttryckligen nedlagd innovationsverksamhet. Allvarlig försening i q16c belägger inte uppskjutande, och q9 skiljer inte avbruten från enbart pågående verksamhet. membership-0297: Båda definitionerna avser innovationsaktivitet som skjutits upp eller avbrutits före slutförande. De skyddade medlemskapen behålls.\ncatalog:variable_text:27868:13149:14245\ncatalog:variable_text:28267:11688:18628\ncatalog:variable_text:28268:11688:18628\ncatalog:variable_text:28269:11688:18628\ncatalog:variable_text:28270:11688:18628\ncatalog:variable_text:28274:11688:18628\ncatalog:variable_text:28285:11688:18628\ncatalog:variable_text:28500:11688:18628\ncatalog:variable_text:28501:11688:18628\ncatalog:variable_text:28505:11688:18628\ncatalog:variable_text:28506:11688:18628\ncatalog:variable_text:28512:11688:18628\ncatalog:variable_text:28513:11688:18628\ncatalog:variable_text:28647:11688:18628\ncatalog:variable_text:28648:11688:18628\ncatalog:variable_text:28774:16071:17167\ncatalog:variable_text:28775:16071:17167\ncatalog:variable_text:28776:16071:17167\ncatalog:variable_text:28777:16071:17167\ncatalog:variable_text:28778:16071:17167\ncatalog:variable_text:28938:11688:13514\ncatalog:variable_text:28939:11688:13514\ncatalog:variable_text:28940:11688:13514\ncatalog:variable_text:28952:11688:13514\ncatalog:variable_text:29162:16071:17167\ncatalog:variable_text:29163:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:q16b"
+subject = "var:innovationshinder-efter-start"
 fields = { "tags" = ["research"] }
 evidence = "Frågekoden är opak; etiketten anger skedet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Uppskjuten eller avbruten innovationsaktivitet mäter aktivitetsutfall, inte i vilket skede ett innovationshinder inträffade. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: De valda koderna saknar definitioner; de belägger inte när innovationshinder inträffar. membership-0293: Ingen vald variabel har dokumenterat innehåll om hindrets skede. HBEG-, HCON- och HDLAY-koderna saknar tolkning. membership-0294: Ingen vald variabel i denna sektion har belagt skede för innovationshinder. membership-0295: Logistikhindren anger orsaker, inte innovationshindrets skede. membership-0296: Variablerna mäter nedläggning i olika skeden och allvarlig försening, vilket definitionen omfattar. membership-0297: Uppskjuten eller avbruten aktivitet är en aktivitetskodning, inte en kodning av innovationshindrets skede. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Beskrivningen anger uttryckligen aktivitet som skjutits upp eller avbrutits innan den slutförts. Medlemmen behålls oberoende av sektionsgränsen. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInaba saknar definition; uppskjuten eller avbruten aktivitet är inte belagd. membership-0293: Ingen vald variabel dokumenterar uppskjuten eller avbruten innovationsaktivitet. HDLAY-koderna saknar tolkning. membership-0294: INONAB och INONAB_O saknar definition och kan inte beläggas som uppskjuten eller avbruten innovationsaktivitet. membership-0295: Logistikhindren mäter anledningar till uteblivna innovationer, inte kodning av uppskjuten eller avbruten innovationsaktivitet. membership-0296: Båda kodar uttryckligen nedlagd innovationsverksamhet. Allvarlig försening i q16c belägger inte uppskjutande, och q9 skiljer inte avbruten från enbart pågående verksamhet. membership-0297: Båda definitionerna avser innovationsaktivitet som skjutits upp eller avbrutits före slutförande. De skyddade medlemskapen behålls.\ncatalog:variable_text:27868:13149:14245\ncatalog:variable_text:28267:11688:18628\ncatalog:variable_text:28268:11688:18628\ncatalog:variable_text:28269:11688:18628\ncatalog:variable_text:28270:11688:18628\ncatalog:variable_text:28274:11688:18628\ncatalog:variable_text:28285:11688:18628\ncatalog:variable_text:28500:11688:18628\ncatalog:variable_text:28501:11688:18628\ncatalog:variable_text:28505:11688:18628\ncatalog:variable_text:28506:11688:18628\ncatalog:variable_text:28512:11688:18628\ncatalog:variable_text:28513:11688:18628\ncatalog:variable_text:28647:11688:18628\ncatalog:variable_text:28648:11688:18628\ncatalog:variable_text:28774:16071:17167\ncatalog:variable_text:28775:16071:17167\ncatalog:variable_text:28776:16071:17167\ncatalog:variable_text:28777:16071:17167\ncatalog:variable_text:28778:16071:17167\ncatalog:variable_text:28938:11688:13514\ncatalog:variable_text:28939:11688:13514\ncatalog:variable_text:28940:11688:13514\ncatalog:variable_text:28952:11688:13514\ncatalog:variable_text:29162:16071:17167\ncatalog:variable_text:29163:18993:20089"
 
@@ -12084,205 +12084,205 @@ evidence = "Etiketten och definitionen anger olika orsakssamband.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:q17a"
+subject = "var:hinder-brist-pa-finansiering-inom-foretaget"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28941:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17a"
+subject = "var:hinder-brist-pa-finansiering-inom-foretaget"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28941:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17b"
+subject = "var:hinder-brist-pa-finansiering-utanfor-foretaget"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28942:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17b"
+subject = "var:hinder-brist-pa-finansiering-utanfor-foretaget"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28942:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17c"
+subject = "var:hinder-hoga-innovationskostnader"
 fields = { "sets" = [] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28943:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17c"
+subject = "var:hinder-hoga-innovationskostnader"
 fields = { "tags" = ["research"] }
 evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28943:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17d"
+subject = "var:hinder-kvalificerad-personal"
 fields = { "sets" = [] }
 evidence = "Q17d är en opak frågekod. Källan anger kvalificerad personal som innovationshinder.\ncatalog:variable_text:28944:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17d"
+subject = "var:hinder-kvalificerad-personal"
 fields = { "tags" = ["research"] }
 evidence = "Q17d är en opak frågekod. Källan anger kvalificerad personal som innovationshinder.\ncatalog:variable_text:28944:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17e"
+subject = "var:hinder-teknik"
 fields = { "sets" = [] }
 evidence = "Q17e är en opak frågekod. Källan anger brist på teknikinformation som innovationshinder.\ncatalog:variable_text:28945:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17e"
+subject = "var:hinder-teknik"
 fields = { "tags" = ["research"] }
 evidence = "Q17e är en opak frågekod. Källan anger brist på teknikinformation som innovationshinder.\ncatalog:variable_text:28945:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17f"
+subject = "var:hinder-marknaden"
 fields = { "sets" = [] }
 evidence = "Q17f är en opak frågekod. Källan anger brist på marknadsinformation som innovationshinder.\ncatalog:variable_text:28946:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17f"
+subject = "var:hinder-marknaden"
 fields = { "tags" = ["research"] }
 evidence = "Q17f är en opak frågekod. Källan anger brist på marknadsinformation som innovationshinder.\ncatalog:variable_text:28946:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17g"
+subject = "var:hinder-samarbetspartner"
 fields = { "sets" = [] }
 evidence = "Q17g är en opak frågekod. Källan anger brist på samarbetspartner som innovationshinder.\ncatalog:variable_text:28947:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17g"
+subject = "var:hinder-samarbetspartner"
 fields = { "tags" = ["research"] }
 evidence = "Q17g är en opak frågekod. Källan anger brist på samarbetspartner som innovationshinder.\ncatalog:variable_text:28947:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17h"
+subject = "var:hinder-dominans"
 fields = { "sets" = [] }
 evidence = "Q17h är en opak frågekod. Källan anger marknadsdominans som innovationshinder.\ncatalog:variable_text:28948:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17h"
+subject = "var:hinder-dominans"
 fields = { "tags" = ["research"] }
 evidence = "Q17h är en opak frågekod. Källan anger marknadsdominans som innovationshinder.\ncatalog:variable_text:28948:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17i"
+subject = "var:hinder-efterfragan"
 fields = { "sets" = [] }
 evidence = "Q17i är en opak frågekod. Källan anger osäker efterfrågan som innovationshinder.\ncatalog:variable_text:28949:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17i"
+subject = "var:hinder-efterfragan"
 fields = { "tags" = ["research"] }
 evidence = "Q17i är en opak frågekod. Källan anger osäker efterfrågan som innovationshinder.\ncatalog:variable_text:28949:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17j"
+subject = "var:hinder-behov"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger hindret.\ncatalog:variable_text:28950:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17j"
+subject = "var:hinder-behov"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger hindret.\ncatalog:variable_text:28950:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17k"
+subject = "var:hinder-ingen-efterfragan"
 fields = { "sets" = [] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger hindret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter avsaknad av innovationsbehov. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FHPRIOR är endast en odefinierad kod; avsaknad av innovationsbehov är inte belagd för någon vald variabel. membership-0293: Etiketten anger uttryckligen inget innovationsbehov vid minimal konkurrens. Medlemskapet gäller även när andra medlemmar ligger i andra sektioner. membership-0294: Variablerna anger uteblivet innovationsbehov, inklusive på grund av tidigare innovationer. Populationsskillnader omfattas av definitionen. membership-0295: Inga valda variabler i denna sektion mäter avsaknad av innovationsbehov. membership-0296: Båda mäter uttryckligen inget innovationsbehov, på grund av tidigare innovationer respektive ingen efterfrågan. membership-0297: Inga valda variabler mäter avsaknad av innovationsbehov.\ncatalog:variable_text:28283:11688:18628\ncatalog:variable_text:28504:16071:17167\ncatalog:variable_text:28534:16071:17167\ncatalog:variable_text:28549:18262:19358\ncatalog:variable_text:28550:18993:20089\ncatalog:variable_text:28618:18993:20089\ncatalog:variable_text:28619:18262:19358\ncatalog:variable_text:28950:11688:13514\ncatalog:variable_text:28951:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q17k"
+subject = "var:hinder-ingen-efterfragan"
 fields = { "tags" = ["research"] }
 evidence = "Källkolumnens frågekod är ogenomskinlig och etiketten anger hindret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter avsaknad av innovationsbehov. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FHPRIOR är endast en odefinierad kod; avsaknad av innovationsbehov är inte belagd för någon vald variabel. membership-0293: Etiketten anger uttryckligen inget innovationsbehov vid minimal konkurrens. Medlemskapet gäller även när andra medlemmar ligger i andra sektioner. membership-0294: Variablerna anger uteblivet innovationsbehov, inklusive på grund av tidigare innovationer. Populationsskillnader omfattas av definitionen. membership-0295: Inga valda variabler i denna sektion mäter avsaknad av innovationsbehov. membership-0296: Båda mäter uttryckligen inget innovationsbehov, på grund av tidigare innovationer respektive ingen efterfrågan. membership-0297: Inga valda variabler mäter avsaknad av innovationsbehov.\ncatalog:variable_text:28283:11688:18628\ncatalog:variable_text:28504:16071:17167\ncatalog:variable_text:28534:16071:17167\ncatalog:variable_text:28549:18262:19358\ncatalog:variable_text:28550:18993:20089\ncatalog:variable_text:28618:18993:20089\ncatalog:variable_text:28619:18262:19358\ncatalog:variable_text:28950:11688:13514\ncatalog:variable_text:28951:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q9"
+subject = "var:pagaende-eller-avbruten-innovationsverkssamhet"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod och källan anger pågående eller avbruten innovationsverksamhet.\ncatalog:occurrence:247162\ncatalog:variable_text:28952:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:q9"
+subject = "var:pagaende-eller-avbruten-innovationsverkssamhet"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en frågekod och källan anger pågående eller avbruten innovationsverksamhet.\ncatalog:occurrence:247162\ncatalog:variable_text:28952:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:rdsg"
+subject = "var:innovationsverksamhet-design"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger design som innovationsverksamhet.\ncatalog:occurrence:247909\ncatalog:variable_text:28958:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:rdsg"
+subject = "var:innovationsverksamhet-design"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger design som innovationsverksamhet.\ncatalog:occurrence:247909\ncatalog:variable_text:28958:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-acc"
+subject = "var:risk-tillgang-till-marknader-utanfor-eu"
 fields = { "sets" = [] }
 evidence = "RISKS_ACC är en opak källkod. Källan anger risker med internationell handel.\ncatalog:variable_text:28961:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-acc"
+subject = "var:risk-tillgang-till-marknader-utanfor-eu"
 fields = { "tags" = ["business", "trade"] }
 evidence = "RISKS_ACC är en opak källkod. Källan anger risker med internationell handel.\ncatalog:variable_text:28961:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-acc-miti"
+subject = "var:riskminimering-tillgang-till-marknader-utanfor-eu"
 fields = { "sets" = [] }
 evidence = "RISKS_ACC_MITI är en opak källkod. Källan anger riskminimering för tillgång till marknader.\ncatalog:variable_text:28962:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-acc-miti"
+subject = "var:riskminimering-tillgang-till-marknader-utanfor-eu"
 fields = { "tags" = ["business", "trade"] }
 evidence = "RISKS_ACC_MITI är en opak källkod. Källan anger riskminimering för tillgång till marknader.\ncatalog:variable_text:28962:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-depe"
+subject = "var:risk-beroende-av-leverantorer"
 fields = { "sets" = ["risk-for-leverantorsberoende"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28963:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-depe"
+subject = "var:risk-beroende-av-leverantorer"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28963:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-depe-miti"
+subject = "var:riskminimering-beroende-av-leverantorer"
 fields = { "sets" = ["riskminimering-av-leverantorsberoende"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28964:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-depe-miti"
+subject = "var:riskminimering-beroende-av-leverantorer"
 fields = { "tags" = ["business"] }
 evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28964:18993:20089"
 
@@ -12312,49 +12312,49 @@ evidence = "Samma källkolumn är knuten till olika begrepp. Definitionen avser 
 
 [[statement]]
 kind = "set"
-subject = "var:risks-eng"
+subject = "var:risk-energiforsojning"
 fields = { "sets" = [] }
 evidence = "RISKS_ENG är en opak källkod. Källan anger risker i energiförsörjning.\ncatalog:variable_text:28967:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-eng"
+subject = "var:risk-energiforsojning"
 fields = { "tags" = ["business", "energy"] }
 evidence = "RISKS_ENG är en opak källkod. Källan anger risker i energiförsörjning.\ncatalog:variable_text:28967:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-eng-miti"
+subject = "var:riskminimering-energiforsorjning"
 fields = { "sets" = [] }
 evidence = "RISKS_ENG_MITI är en opak källkod. Källan anger riskminimering i energiförsörjning.\ncatalog:variable_text:28968:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-eng-miti"
+subject = "var:riskminimering-energiforsorjning"
 fields = { "tags" = ["business", "energy"] }
 evidence = "RISKS_ENG_MITI är en opak källkod. Källan anger riskminimering i energiförsörjning.\ncatalog:variable_text:28968:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-it"
+subject = "var:risk-it-sakerhetsrisk"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger it-säkerhetsrisk.\ncatalog:occurrence:248627\ncatalog:variable_text:28969:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-it"
+subject = "var:risk-it-sakerhetsrisk"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod och etiketten anger it-säkerhetsrisk.\ncatalog:occurrence:248627\ncatalog:variable_text:28969:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-it-miti"
+subject = "var:riskminimering-it-sakerhetsrisker"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger riskminimering för it-säkerhet.\ncatalog:occurrence:248628\ncatalog:variable_text:28970:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-it-miti"
+subject = "var:riskminimering-it-sakerhetsrisker"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en källkod och etiketten anger riskminimering för it-säkerhet.\ncatalog:occurrence:248628\ncatalog:variable_text:28970:18993:20089"
 
@@ -12384,49 +12384,49 @@ evidence = "Id:t är en källkod och etiketten anger minimering av andra operati
 
 [[statement]]
 kind = "set"
-subject = "var:risks-supch"
+subject = "var:risk-leverantorskedjor-exkl-energiforsorjning"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger risker i leverantörskedjor.\ncatalog:occurrence:248633\ncatalog:variable_text:28975:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-supch"
+subject = "var:risk-leverantorskedjor-exkl-energiforsorjning"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod och etiketten anger risker i leverantörskedjor.\ncatalog:occurrence:248633\ncatalog:variable_text:28975:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-supch-miti"
+subject = "var:riskminimering-leverantorskedjor-exkl-energiforsorjning"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod och etiketten anger minimering av risker i leverantörskedjor.\ncatalog:occurrence:248634\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:risks-supch-miti"
+subject = "var:riskminimering-leverantorskedjor-exkl-energiforsorjning"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod och etiketten anger minimering av risker i leverantörskedjor.\ncatalog:occurrence:248634\ncatalog:variable_text:28976:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:rmacx"
+subject = "var:utgifter-for-forvarv-av-maskin-utrustning-programvara"
 fields = { "sets" = [] }
 evidence = "RMACX är en opak källkod. Källan anger utgifter för förvärv av maskiner, utrustning och programvara.\ncatalog:variable_text:28978:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:rmacx"
+subject = "var:utgifter-for-forvarv-av-maskin-utrustning-programvara"
 fields = { "tags" = ["business", "research"] }
 evidence = "RMACX är en opak källkod. Källan anger utgifter för förvärv av maskiner, utrustning och programvara.\ncatalog:variable_text:28978:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:rpre"
+subject = "var:innovationsverksamhet-ovrigt"
 fields = { "sets" = ["andra-innovationsforberedelser"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger övrig innovationsverksamhet.\ncatalog:occurrence:247916\ncatalog:variable_text:28986:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:rpre"
+subject = "var:innovationsverksamhet-ovrigt"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger övrig innovationsverksamhet.\ncatalog:occurrence:247916\ncatalog:variable_text:28986:16071:17167"
 
@@ -13008,121 +13008,121 @@ evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\n
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fbrgs"
+subject = "var:strategier-variation-av-produkter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29081:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fbrgs"
+subject = "var:strategier-variation-av-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29081:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fcsol"
+subject = "var:strategier-kundspecifika-losningar"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Tre variabler mäter uttryckligen samskapade, användaranpassade respektive standardiserade produkter. Den odefinierade NO-koden inkluderas inte. membership-0291: Anpassningsvariablerna gäller vem som utvecklade innovationer, vilket definitionen utesluter. membership-0292: Ingen vald variabel är belagd som produktutbudets standardisering, användaranpassning eller samskapande. membership-0293: Ingen vald variabel dokumenterar produktutbudets standardisering, användaranpassning eller samskapande. membership-0294: Ingen vald variabel i denna sektion har belagd standardisering, användaranpassning eller samskapande av produktutbudet. membership-0295: De valda produktfrågorna mäter innovation och nyhetsgrad, inte standardisering, användaranpassning eller samskapande. membership-0296: Anpassning i processinnovationernas utveckling mäter inte produktutbudets anpassningsform. membership-0297: STR A-strategierna anger vad som är viktigt för ekonomisk tillväxt, inte produktutbudets faktiska anpassningsform. Innovationsutvecklare mäter ett annat begrepp.\ncatalog:variable_text:27959:16801:18628\ncatalog:variable_text:27960:16801:18628\ncatalog:variable_text:27961:11688:18628\ncatalog:variable_text:27962:16801:18628\ncatalog:variable_text:28056:18262:20089\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28705:13149:14245\ncatalog:variable_text:28709:13149:14245\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28919:16071:17167\ncatalog:variable_text:29082:18262:20089\ncatalog:variable_text:29090:18262:20089\ncatalog:variable_text:29099:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fcsol"
+subject = "var:strategier-kundspecifika-losningar"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Tre variabler mäter uttryckligen samskapade, användaranpassade respektive standardiserade produkter. Den odefinierade NO-koden inkluderas inte. membership-0291: Anpassningsvariablerna gäller vem som utvecklade innovationer, vilket definitionen utesluter. membership-0292: Ingen vald variabel är belagd som produktutbudets standardisering, användaranpassning eller samskapande. membership-0293: Ingen vald variabel dokumenterar produktutbudets standardisering, användaranpassning eller samskapande. membership-0294: Ingen vald variabel i denna sektion har belagd standardisering, användaranpassning eller samskapande av produktutbudet. membership-0295: De valda produktfrågorna mäter innovation och nyhetsgrad, inte standardisering, användaranpassning eller samskapande. membership-0296: Anpassning i processinnovationernas utveckling mäter inte produktutbudets anpassningsform. membership-0297: STR A-strategierna anger vad som är viktigt för ekonomisk tillväxt, inte produktutbudets faktiska anpassningsform. Innovationsutvecklare mäter ett annat begrepp.\ncatalog:variable_text:27959:16801:18628\ncatalog:variable_text:27960:16801:18628\ncatalog:variable_text:27961:11688:18628\ncatalog:variable_text:27962:16801:18628\ncatalog:variable_text:28056:18262:20089\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28705:13149:14245\ncatalog:variable_text:28709:13149:14245\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28919:16071:17167\ncatalog:variable_text:29082:18262:20089\ncatalog:variable_text:29090:18262:20089\ncatalog:variable_text:29099:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-festcus"
+subject = "var:strategier-befintliga-kundkretsar"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29083:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-festcus"
+subject = "var:strategier-befintliga-kundkretsar"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29083:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fhqual"
+subject = "var:strategier-hog-kvalitet"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29084:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fhqual"
+subject = "var:strategier-hog-kvalitet"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29084:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fimpgs"
+subject = "var:strategier-utveckla-befintliga-produkter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29085:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fimpgs"
+subject = "var:strategier-utveckla-befintliga-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29085:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-flowp"
+subject = "var:strategier-laga-priser"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29086:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-flowp"
+subject = "var:strategier-laga-priser"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29086:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fnwcus"
+subject = "var:strategier-na-nya-kundkretsar"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29087:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fnwcus"
+subject = "var:strategier-na-nya-kundkretsar"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29087:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fnwgs"
+subject = "var:strategier-introducera-nya-produkter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29088:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fnwgs"
+subject = "var:strategier-introducera-nya-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29088:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fsmgs"
+subject = "var:strategier-nyckelprodukter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29089:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fsmgs"
+subject = "var:strategier-nyckelprodukter"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin.\ncatalog:variable_text:29089:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fstdgs"
+subject = "var:strategier-standardiserade-produkter"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Tre variabler mäter uttryckligen samskapade, användaranpassade respektive standardiserade produkter. Den odefinierade NO-koden inkluderas inte. membership-0291: Anpassningsvariablerna gäller vem som utvecklade innovationer, vilket definitionen utesluter. membership-0292: Ingen vald variabel är belagd som produktutbudets standardisering, användaranpassning eller samskapande. membership-0293: Ingen vald variabel dokumenterar produktutbudets standardisering, användaranpassning eller samskapande. membership-0294: Ingen vald variabel i denna sektion har belagd standardisering, användaranpassning eller samskapande av produktutbudet. membership-0295: De valda produktfrågorna mäter innovation och nyhetsgrad, inte standardisering, användaranpassning eller samskapande. membership-0296: Anpassning i processinnovationernas utveckling mäter inte produktutbudets anpassningsform. membership-0297: STR A-strategierna anger vad som är viktigt för ekonomisk tillväxt, inte produktutbudets faktiska anpassningsform. Innovationsutvecklare mäter ett annat begrepp.\ncatalog:variable_text:27959:16801:18628\ncatalog:variable_text:27960:16801:18628\ncatalog:variable_text:27961:11688:18628\ncatalog:variable_text:27962:16801:18628\ncatalog:variable_text:28056:18262:20089\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28705:13149:14245\ncatalog:variable_text:28709:13149:14245\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28919:16071:17167\ncatalog:variable_text:29082:18262:20089\ncatalog:variable_text:29090:18262:20089\ncatalog:variable_text:29099:16071:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:stra-fstdgs"
+subject = "var:strategier-standardiserade-produkter"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger strategin. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Tre variabler mäter uttryckligen samskapade, användaranpassade respektive standardiserade produkter. Den odefinierade NO-koden inkluderas inte. membership-0291: Anpassningsvariablerna gäller vem som utvecklade innovationer, vilket definitionen utesluter. membership-0292: Ingen vald variabel är belagd som produktutbudets standardisering, användaranpassning eller samskapande. membership-0293: Ingen vald variabel dokumenterar produktutbudets standardisering, användaranpassning eller samskapande. membership-0294: Ingen vald variabel i denna sektion har belagd standardisering, användaranpassning eller samskapande av produktutbudet. membership-0295: De valda produktfrågorna mäter innovation och nyhetsgrad, inte standardisering, användaranpassning eller samskapande. membership-0296: Anpassning i processinnovationernas utveckling mäter inte produktutbudets anpassningsform. membership-0297: STR A-strategierna anger vad som är viktigt för ekonomisk tillväxt, inte produktutbudets faktiska anpassningsform. Innovationsutvecklare mäter ett annat begrepp.\ncatalog:variable_text:27959:16801:18628\ncatalog:variable_text:27960:16801:18628\ncatalog:variable_text:27961:11688:18628\ncatalog:variable_text:27962:16801:18628\ncatalog:variable_text:28056:18262:20089\ncatalog:variable_text:28059:18262:20089\ncatalog:variable_text:28705:13149:14245\ncatalog:variable_text:28709:13149:14245\ncatalog:variable_text:28837:18262:20089\ncatalog:variable_text:28838:18262:20089\ncatalog:variable_text:28919:16071:17167\ncatalog:variable_text:29082:18262:20089\ncatalog:variable_text:29090:18262:20089\ncatalog:variable_text:29099:16071:17167"
 

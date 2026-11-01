@@ -31,61 +31,61 @@ evidence = "Vatten och avlopp är en angiven komponent av övriga externa kostna
 
 [[statement]]
 kind = "set"
-subject = "var:impavd11"
+subject = "var:imputerat-varde-for-avdelning-1-1"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27720:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd11"
+subject = "var:imputerat-varde-for-avdelning-1-1"
 fields = { "tags" = ["business", "methods"] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27720:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd12"
+subject = "var:imputerat-varde-for-avdelning-1-2"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27721:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd12"
+subject = "var:imputerat-varde-for-avdelning-1-2"
 fields = { "tags" = ["business", "methods"] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27721:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd13"
+subject = "var:imputerat-varde-for-avdelning-1-3"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27722:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd13"
+subject = "var:imputerat-varde-for-avdelning-1-3"
 fields = { "tags" = ["business", "methods"] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27722:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd2"
+subject = "var:imputerat-varde-for-avdelning-2"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27723:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd2"
+subject = "var:imputerat-varde-for-avdelning-2"
 fields = { "tags" = ["business", "methods"] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27723:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd3"
+subject = "var:imputerat-varde-for-avdelning-3"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27724:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:impavd3"
+subject = "var:imputerat-varde-for-avdelning-3"
 fields = { "tags" = ["business", "methods"] }
 evidence = "Källkolumnen är en ogenomskinlig förkortning; värdet avser imputering av kostnader.\ncatalog:variable_text:27724:10592:12784"
 
@@ -115,61 +115,61 @@ evidence = "Näringsgren är en företagsklassificering.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:v1101"
+subject = "var:kostnader-for-transportmedel-drivmedel"
 fields = { "sets" = ["kostnader-for-transportmedel"] }
 evidence = "Källkoden är opak; drivmedel är en angiven transportmedelskostnad.\ncatalog:variable_text:27729:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1101"
+subject = "var:kostnader-for-transportmedel-drivmedel"
 fields = { "tags" = ["business", "energy", "transport"] }
 evidence = "Källkoden är opak; drivmedel är en angiven transportmedelskostnad.\ncatalog:variable_text:27729:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1102"
+subject = "var:kostnader-for-transportmedel-forsakringar-och-skatt"
 fields = { "sets" = ["kostnader-for-transportmedel"] }
 evidence = "Källkoden är opak; försäkringar och skatt är angivna transportmedelskostnader.\ncatalog:variable_text:27730:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1102"
+subject = "var:kostnader-for-transportmedel-forsakringar-och-skatt"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; försäkringar och skatt är angivna transportmedelskostnader.\ncatalog:variable_text:27730:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1103"
+subject = "var:kostnader-for-transportmedel-reparation-och-underhall"
 fields = { "sets" = ["kostnader-for-transportmedel"] }
 evidence = "Källkoden är opak; reparation och underhåll är angivna transportmedelskostnader.\ncatalog:variable_text:27731:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1103"
+subject = "var:kostnader-for-transportmedel-reparation-och-underhall"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; reparation och underhåll är angivna transportmedelskostnader.\ncatalog:variable_text:27731:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1104"
+subject = "var:kostnader-for-transportmedel-ovriga-kostnader"
 fields = { "sets" = ["kostnader-for-transportmedel"] }
 evidence = "Källkoden är opak; posten är en angiven transportmedelskostnad.\ncatalog:variable_text:27732:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1104"
+subject = "var:kostnader-for-transportmedel-ovriga-kostnader"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; posten är en angiven transportmedelskostnad.\ncatalog:variable_text:27732:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1105"
+subject = "var:kostnader-for-transportmedel-summa-kostnader"
 fields = { "sets" = ["kostnader-for-transportmedel"] }
 evidence = "Källkoden är opak; posten är summan av transportmedelskostnader.\ncatalog:variable_text:27733:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1105"
+subject = "var:kostnader-for-transportmedel-summa-kostnader"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; posten är summan av transportmedelskostnader.\ncatalog:variable_text:27733:10592:12418"
 
@@ -199,457 +199,457 @@ evidence = "Källkoden är opak; posten är en angiven komponent av köpta tjän
 
 [[statement]]
 kind = "set"
-subject = "var:v1203"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-it-tjanster"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; IT-tjänster är en angiven komponent.\ncatalog:variable_text:27736:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1203"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-it-tjanster"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; IT-tjänster är en angiven komponent.\ncatalog:variable_text:27736:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1204"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-bankkostnader"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; bankkostnader är en angiven komponent.\ncatalog:variable_text:27737:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1204"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-bankkostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; bankkostnader är en angiven komponent.\ncatalog:variable_text:27737:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1205"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-kopta-fou-tjanster"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; köpta FoU-tjänster är en angiven komponent.\ncatalog:variable_text:27738:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1205"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-kopta-fou-tjanster"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkoden är opak; köpta FoU-tjänster är en angiven komponent.\ncatalog:variable_text:27738:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1206"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-ovriga-kostnader"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27739:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1206"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-ovriga-kostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27739:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1207"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-summa-konstnader"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; posten är totalen. Etikettens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27740:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1207"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-summa-konstnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är totalen. Etikettens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27740:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1208"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-konsultarvoden"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; konsultarvoden är en angiven komponent.\ncatalog:variable_text:27741:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1208"
+subject = "var:kopta-tjanster-och-forvaltningskostnader-konsultarvoden"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; konsultarvoden är en angiven komponent.\ncatalog:variable_text:27741:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1302"
+subject = "var:ovriga-externa-kostnader-stadning-och-renhallning"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27742:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1302"
+subject = "var:ovriga-externa-kostnader-stadning-och-renhallning"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent av övriga externa kostnader.\ncatalog:variable_text:27742:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1303"
+subject = "var:ovriga-externa-kostnader-dataprogram"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; dataprogram är en angiven komponent.\ncatalog:variable_text:27743:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1303"
+subject = "var:ovriga-externa-kostnader-dataprogram"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; dataprogram är en angiven komponent.\ncatalog:variable_text:27743:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v1304"
+subject = "var:ovriga-externa-kostnader-forbrukningsemballage"
 fields = { "sets" = ["emballagekostnader", "ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1304"
+subject = "var:ovriga-externa-kostnader-forbrukningsemballage"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1305"
+subject = "var:ovriga-externa-kostnader-forbrukningsmaterial-arbetsklader"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27745:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1305"
+subject = "var:ovriga-externa-kostnader-forbrukningsmaterial-arbetsklader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27745:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1306"
+subject = "var:ovriga-externa-kostnader-resekostnader"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; resekostnader är en angiven komponent.\ncatalog:variable_text:27746:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1306"
+subject = "var:ovriga-externa-kostnader-resekostnader"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; resekostnader är en angiven komponent.\ncatalog:variable_text:27746:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1307"
+subject = "var:ovriga-externa-kostnader-kontorsmaterial-och-trycksaker"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27747:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1307"
+subject = "var:ovriga-externa-kostnader-kontorsmaterial-och-trycksaker"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27747:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1308"
+subject = "var:ovriga-externa-kostnader-tele-och-datakommunikation"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27748:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1308"
+subject = "var:ovriga-externa-kostnader-tele-och-datakommunikation"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27748:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1309"
+subject = "var:ovriga-externa-kostnader-postbefordran"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; postbefordran är en angiven komponent.\ncatalog:variable_text:27749:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1309"
+subject = "var:ovriga-externa-kostnader-postbefordran"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; postbefordran är en angiven komponent.\ncatalog:variable_text:27749:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1310"
+subject = "var:ovriga-externa-kostnader-garantikostnader"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; garantikostnader är en angiven komponent.\ncatalog:variable_text:27750:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1310"
+subject = "var:ovriga-externa-kostnader-garantikostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; garantikostnader är en angiven komponent.\ncatalog:variable_text:27750:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1311"
+subject = "var:ovriga-externa-kostnader-kostnader-for-bevakning-och-larm"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27751:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1311"
+subject = "var:ovriga-externa-kostnader-kostnader-for-bevakning-och-larm"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27751:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1312"
+subject = "var:ovriga-externa-kostnader-andra-ej-ovan-specificerade"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; restposten är en angiven komponent.\ncatalog:variable_text:27752:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1312"
+subject = "var:ovriga-externa-kostnader-andra-ej-ovan-specificerade"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; restposten är en angiven komponent.\ncatalog:variable_text:27752:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1313"
+subject = "var:ovriga-externa-kostnader-summa-kostnader"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är totalen.\ncatalog:variable_text:27753:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1313"
+subject = "var:ovriga-externa-kostnader-summa-kostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är totalen.\ncatalog:variable_text:27753:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1314"
+subject = "var:ovriga-externa-kostnader-forsaljningskostnader"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; försäljningskostnader är en angiven komponent.\ncatalog:variable_text:27754:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1314"
+subject = "var:ovriga-externa-kostnader-forsaljningskostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; försäljningskostnader är en angiven komponent.\ncatalog:variable_text:27754:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1315"
+subject = "var:ovriga-externa-kostnader-licensavgifter-och-royalties"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27755:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1315"
+subject = "var:ovriga-externa-kostnader-licensavgifter-och-royalties"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent.\ncatalog:variable_text:27755:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1316"
+subject = "var:ovriga-externa-kostnader-tillsynsavgifter-till-myndigheter"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent. Definitionens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27756:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1316"
+subject = "var:ovriga-externa-kostnader-tillsynsavgifter-till-myndigheter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent. Definitionens stavfel ändrar inte betydelsen.\ncatalog:variable_text:27756:12418:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v2001"
+subject = "var:kostnader-for-emballageslag-tra"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; trä är en angiven emballagekomponent.\ncatalog:variable_text:27757:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2001"
+subject = "var:kostnader-for-emballageslag-tra"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; trä är en angiven emballagekomponent.\ncatalog:variable_text:27757:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2002"
+subject = "var:kostnader-for-emballageslag-wellpapp"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; wellpapp är en angiven emballagekomponent.\ncatalog:variable_text:27758:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2002"
+subject = "var:kostnader-for-emballageslag-wellpapp"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; wellpapp är en angiven emballagekomponent.\ncatalog:variable_text:27758:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2003"
+subject = "var:kostnader-for-emballageslag-papper-papp-kartong"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; posten är en angiven emballagekomponent.\ncatalog:variable_text:27759:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2003"
+subject = "var:kostnader-for-emballageslag-papper-papp-kartong"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven emballagekomponent.\ncatalog:variable_text:27759:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2004"
+subject = "var:kostnader-for-emballageslag-plast"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; plast är en angiven emballagekomponent.\ncatalog:variable_text:27760:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2004"
+subject = "var:kostnader-for-emballageslag-plast"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; plast är en angiven emballagekomponent.\ncatalog:variable_text:27760:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2005"
+subject = "var:kostnader-for-emballageslag-glas"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; glas är en angiven emballagekomponent.\ncatalog:variable_text:27761:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2005"
+subject = "var:kostnader-for-emballageslag-glas"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; glas är en angiven emballagekomponent.\ncatalog:variable_text:27761:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2006"
+subject = "var:kostnader-for-emballageslag-aluminium"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; aluminium är en angiven emballagekomponent.\ncatalog:variable_text:27762:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2006"
+subject = "var:kostnader-for-emballageslag-aluminium"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; aluminium är en angiven emballagekomponent.\ncatalog:variable_text:27762:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2007"
+subject = "var:kostnader-for-emballageslag-stal"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; stål är en angiven emballagekomponent.\ncatalog:variable_text:27763:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2007"
+subject = "var:kostnader-for-emballageslag-stal"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; stål är en angiven emballagekomponent.\ncatalog:variable_text:27763:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2008"
+subject = "var:kostnader-for-emballageslag-annat-material"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; annat material är en angiven emballagekomponent.\ncatalog:variable_text:27764:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2008"
+subject = "var:kostnader-for-emballageslag-annat-material"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; annat material är en angiven emballagekomponent.\ncatalog:variable_text:27764:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2009"
+subject = "var:kostnader-for-emballageslag-summa-kostnader"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; posten är totalen för emballageslag.\ncatalog:variable_text:27765:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v2009"
+subject = "var:kostnader-for-emballageslag-summa-kostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är totalen för emballageslag.\ncatalog:variable_text:27765:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v3201"
+subject = "var:kostnader-for-produktemballage-tra"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; trä är en angiven produktemballagekomponent.\ncatalog:variable_text:27766:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3201"
+subject = "var:kostnader-for-produktemballage-tra"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; trä är en angiven produktemballagekomponent.\ncatalog:variable_text:27766:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3202"
+subject = "var:kostnader-for-produktemballage-wellpapp"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; wellpapp är en angiven produktemballagekomponent.\ncatalog:variable_text:27767:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3202"
+subject = "var:kostnader-for-produktemballage-wellpapp"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; wellpapp är en angiven produktemballagekomponent.\ncatalog:variable_text:27767:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3203"
+subject = "var:kostnader-for-produktemballage-papper-papp-kartong"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; posten är en angiven produktemballagekomponent.\ncatalog:variable_text:27768:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3203"
+subject = "var:kostnader-for-produktemballage-papper-papp-kartong"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven produktemballagekomponent.\ncatalog:variable_text:27768:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3204"
+subject = "var:kostnader-for-produktemballage-plast"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; plast är en angiven produktemballagekomponent.\ncatalog:variable_text:27769:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3204"
+subject = "var:kostnader-for-produktemballage-plast"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; plast är en angiven produktemballagekomponent.\ncatalog:variable_text:27769:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3205"
+subject = "var:kostnader-for-produktemballage-glas"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; glas är en angiven produktemballagekomponent.\ncatalog:variable_text:27770:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3205"
+subject = "var:kostnader-for-produktemballage-glas"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; glas är en angiven produktemballagekomponent.\ncatalog:variable_text:27770:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3206"
+subject = "var:kostnader-for-produktemballage-aluminium"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; aluminium är en angiven produktemballagekomponent.\ncatalog:variable_text:27771:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3206"
+subject = "var:kostnader-for-produktemballage-aluminium"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; aluminium är en angiven produktemballagekomponent.\ncatalog:variable_text:27771:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3207"
+subject = "var:kostnader-for-produktemballage-stal"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; stål är en angiven produktemballagekomponent.\ncatalog:variable_text:27772:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3207"
+subject = "var:kostnader-for-produktemballage-stal"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; stål är en angiven produktemballagekomponent.\ncatalog:variable_text:27772:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3208"
+subject = "var:kostnader-for-produktemballage-annat-material"
 fields = { "sets" = ["emballagekostnader"] }
 evidence = "Källkoden är opak; annat material är en angiven produktemballagekomponent.\ncatalog:variable_text:27773:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v3208"
+subject = "var:kostnader-for-produktemballage-annat-material"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; annat material är en angiven produktemballagekomponent.\ncatalog:variable_text:27773:19358:19723"
 

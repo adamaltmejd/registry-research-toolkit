@@ -823,25 +823,25 @@ evidence = "Kodlistan anger metoder för assisterad befruktning.\ncatalog:values
 
 [[statement]]
 kind = "set"
-subject = "var:bfoddat"
+subject = "var:fodelsedatum-barnet"
 fields = { "sets" = ["barnets-fodelsetidpunkt"] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57058:-1826:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bfoddat"
+subject = "var:fodelsedatum-barnet"
 fields = { "tags" = ["demographics"] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57058:-1826:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bfoddatn"
+subject = "var:fodelsedatum-numeriskt-barnet"
 fields = { "sets" = ["barnets-fodelsetidpunkt"] }
 evidence = "B och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57059:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bfoddatn"
+subject = "var:fodelsedatum-numeriskt-barnet"
 fields = { "tags" = ["demographics"] }
 evidence = "B och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57059:1096:2932897"
 
@@ -931,61 +931,61 @@ evidence = "Börduppgift.\ncatalog:variable_text:57066:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpnrq-fb"
+subject = "var:personnummerkvalitet-barn-i-flerborder"
 fields = { "sets" = ["personnummerkvalitet"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57067:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpnrq-fb"
+subject = "var:personnummerkvalitet-barn-i-flerborder"
 fields = { "tags" = ["methods"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57067:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpsmdat"
+subject = "var:beraknad-forlossning-enl-sm-datum"
 fields = { "sets" = ["beraknat-forlossningsdatum"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57069:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpsmdat"
+subject = "var:beraknad-forlossning-enl-sm-datum"
 fields = { "tags" = [] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57069:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpuldat"
+subject = "var:beraknad-forlossning-enl-ultraljud"
 fields = { "sets" = ["beraknat-forlossningsdatum"] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57070:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:bpuldat"
+subject = "var:beraknad-forlossning-enl-ultraljud"
 fields = { "tags" = [] }
 evidence = "Källmnemoniken är opak.\ncatalog:variable_text:57070:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:butdat"
+subject = "var:utskrivningsdatum-barnet"
 fields = { "sets" = ["utskrivningsdatum"] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57071:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:butdat"
+subject = "var:utskrivningsdatum-barnet"
 fields = { "tags" = [] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57071:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:butsatt"
+subject = "var:utskrivningssatt-barnet"
 fields = { "sets" = ["utskrivningssatt"] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57072:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:butsatt"
+subject = "var:utskrivningssatt-barnet"
 fields = { "tags" = ["healthcare"] }
 evidence = "B är en opak bokstavskod för barnet.\ncatalog:variable_text:57072:1096:2932897"
 
@@ -1039,13 +1039,13 @@ evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:ddagar"
+subject = "var:dodsalder-i-dagar-barnet"
 fields = { "sets" = [] }
 evidence = "D är en opak bokstavskod för dödsålder.\ncatalog:variable_text:57078:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ddagar"
+subject = "var:dodsalder-i-dagar-barnet"
 fields = { "tags" = ["mortality", "pregnancy-birth"] }
 evidence = "D är en opak bokstavskod för dödsålder.\ncatalog:variable_text:57078:1096:2932897"
 
@@ -1507,13 +1507,13 @@ evidence = "Geografisk distriktskod.\ncatalog:variable_text:57116:16801:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:dklass"
+subject = "var:overlevnad-nyfoddhetsperioden"
 fields = { "sets" = ["barnets-overlevnad"] }
 evidence = "D är en opak bokstavskod och klass anger inte begreppet.\ncatalog:variable_text:57117:-1826:1096\ncatalog:variable_text:57117:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:dklass"
+subject = "var:overlevnad-nyfoddhetsperioden"
 fields = { "tags" = ["mortality", "pregnancy-birth"] }
 evidence = "D är en opak bokstavskod och klass anger inte begreppet.\ncatalog:variable_text:57117:-1826:1096\ncatalog:variable_text:57117:1096:2932897"
 
@@ -1579,25 +1579,25 @@ evidence = "Familjesituation vid inskrivning.\ncatalog:valueset:5722\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:flindukt"
+subject = "var:forlossningsstart-induktion"
 fields = { "sets" = ["forlossningsstart"] }
 evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57125:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:flindukt"
+subject = "var:forlossningsstart-induktion"
 fields = { "tags" = ["healthcare", "pregnancy-birth"] }
 evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57125:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:flspont"
+subject = "var:forlossningsstart-spontant"
 fields = { "sets" = ["forlossningsstart"] }
 evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57126:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:flspont"
+subject = "var:forlossningsstart-spontant"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "FL är en opak bokstavskod för förlossning.\ncatalog:variable_text:57126:7305:2932897"
 
@@ -1795,13 +1795,13 @@ evidence = "Graviditetslängd enligt ultraljud.\ncatalog:variable_text:57142:105
 
 [[statement]]
 kind = "set"
-subject = "var:grmetod"
+subject = "var:graviditetslangd-metod-for-skattning"
 fields = { "sets" = [] }
 evidence = "GR är en opak bokstavskod för graviditetslängd.\ncatalog:variable_text:57143:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:grmetod"
+subject = "var:graviditetslangd-metod-for-skattning"
 fields = { "tags" = ["methods"] }
 evidence = "GR är en opak bokstavskod för graviditetslängd.\ncatalog:variable_text:57143:1096:2932897"
 
@@ -1999,25 +1999,25 @@ evidence = "Smärtlindring vid förlossning.\ncatalog:variable_text:57163:1096:2
 
 [[statement]]
 kind = "set"
-subject = "var:malder"
+subject = "var:alder-den-forlosta"
 fields = { "sets" = [] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57164:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:malder"
+subject = "var:alder-den-forlosta"
 fields = { "tags" = ["demographics"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57164:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mdiagnos"
+subject = "var:diagnoskod-1-12-den-forlosta"
 fields = { "sets" = ["diagnoskod-forlosta"] }
 evidence = "M är en ensam bokstavskod för den förlösta; etiketten anger den samlade diagnoskoden.\ncatalog:variable_text:57165:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mdiagnos"
+subject = "var:diagnoskod-1-12-den-forlosta"
 fields = { "tags" = ["health", "pregnancy-birth"] }
 evidence = "M är en ensam bokstavskod för den förlösta; etiketten anger den samlade diagnoskoden.\ncatalog:variable_text:57165:1096:2932897"
 
@@ -2071,61 +2071,61 @@ evidence = "M och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:mfodland"
+subject = "var:fodelseland-den-forlosta"
 fields = { "sets" = [] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57170:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mfodland"
+subject = "var:fodelseland-den-forlosta"
 fields = { "tags" = ["demographics"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57170:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mlangd"
+subject = "var:langd-den-gravida"
 fields = { "sets" = [] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57171:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mlangd"
+subject = "var:langd-den-gravida"
 fields = { "tags" = ["health", "pregnancy-birth"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57171:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mutdat"
+subject = "var:utskrivningsdatum-fran-forlossning-den-forlosta"
 fields = { "sets" = ["utskrivningsdatum"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57173:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mutdat"
+subject = "var:utskrivningsdatum-fran-forlossning-den-forlosta"
 fields = { "tags" = [] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57173:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mutsatt"
+subject = "var:utskrivningsatt-fran-forlossning-den-forlosta"
 fields = { "sets" = ["utskrivningssatt"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57174:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mutsatt"
+subject = "var:utskrivningsatt-fran-forlossning-den-forlosta"
 fields = { "tags" = ["healthcare"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57174:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mviktfv"
+subject = "var:vikt-vid-forlossning-den-gravida"
 fields = { "sets" = ["gravidas-vikt"] }
 evidence = "M och FV är opaka bokstavskoder.\ncatalog:variable_text:57175:4383:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mviktfv"
+subject = "var:vikt-vid-forlossning-den-gravida"
 fields = { "tags" = ["health", "pregnancy-birth"] }
 evidence = "M och FV är opaka bokstavskoder.\ncatalog:variable_text:57175:4383:2932897"
 
@@ -2395,49 +2395,49 @@ evidence = "Rökning under graviditet.\ncatalog:variable_text:57203:7305:2932897
 
 [[statement]]
 kind = "set"
-subject = "var:secavsl"
+subject = "var:forlossningsavslut-kejsarsnitt"
 fields = { "sets" = ["forlossningsavslut"] }
 evidence = "SECAVSL är en opak källförkortning. Variabeln anger förlossningsavslut med kejsarsnitt.\ncatalog:variable_text:57204:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:secavsl"
+subject = "var:forlossningsavslut-kejsarsnitt"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "SECAVSL är en opak källförkortning. Variabeln anger förlossningsavslut med kejsarsnitt.\ncatalog:variable_text:57204:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:secfore"
+subject = "var:forlossningsstart-kejsarsnitt"
 fields = { "sets" = ["forlossningsstart"] }
 evidence = "SECFORE är en opak källförkortning. Variabeln anger förlossningsstart med kejsarsnitt före värkdebut.\ncatalog:variable_text:57205:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:secfore"
+subject = "var:forlossningsstart-kejsarsnitt"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "SECFORE är en opak källförkortning. Variabeln anger förlossningsstart med kejsarsnitt före värkdebut.\ncatalog:variable_text:57205:7305:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:secmark"
+subject = "var:markering-kejsarnitt"
 fields = { "sets" = ["forlossningsavslut"] }
 evidence = "SECMARK är en opak källförkortning. Markeringen avser förlossning avslutad med kejsarsnitt.\ncatalog:variable_text:57206:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:secmark"
+subject = "var:markering-kejsarnitt"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "SECMARK är en opak källförkortning. Markeringen avser förlossning avslutad med kejsarsnitt.\ncatalog:variable_text:57206:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:sectio"
+subject = "var:elektiv-eller-ej-elektiv-kejsarnsitt"
 fields = { "sets" = ["kejsarsnittets-planeringsgrad"] }
 evidence = "SECTIO är en opak källbeteckning för kejsarsnittets planeringsgrad.\ncatalog:variable_text:57207:4383:7305"
 
 [[statement]]
 kind = "set"
-subject = "var:sectio"
+subject = "var:elektiv-eller-ej-elektiv-kejsarnsitt"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "SECTIO är en opak källbeteckning för kejsarsnittets planeringsgrad.\ncatalog:variable_text:57207:4383:7305"
 
@@ -2479,13 +2479,13 @@ evidence = "Sjukhuskod.\ncatalog:variable_text:57211:-1826:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukhus-s"
+subject = "var:sjukhuskod-bearbetad"
 fields = { "sets" = ["sjukhuskod"] }
 evidence = "S är en opak bokstavskod från källkolumnen.\ncatalog:variable_text:57212:-1826:1096\ncatalog:variable_text:57212:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukhus-s"
+subject = "var:sjukhuskod-bearbetad"
 fields = { "tags" = ["healthcare"] }
 evidence = "S är en opak bokstavskod från källkolumnen.\ncatalog:variable_text:57212:-1826:1096\ncatalog:variable_text:57212:1096:2932897"
 
@@ -2767,13 +2767,13 @@ evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:5723
 
 [[statement]]
 kind = "set"
-subject = "var:tsectio"
+subject = "var:genomgatt-kejsarsnitt-tidigare"
 fields = { "sets" = ["tidigare-kejsarsnitt"] }
 evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57237:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:tsectio"
+subject = "var:genomgatt-kejsarsnitt-tidigare"
 fields = { "tags" = ["healthcare", "pregnancy-birth"] }
 evidence = "T är en opak bokstavskod för tidigare.\ncatalog:variable_text:57237:1096:2932897"
 
