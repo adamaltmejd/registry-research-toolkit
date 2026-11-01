@@ -171,13 +171,13 @@ evidence = "F01 är en opak frågekod; etiketten anger fiske föregående år.\n
 
 [[statement]]
 kind = "set"
-subject = "var:f02"
+subject = "var:fiskat-januari-april-enkatomgang-januari-april"
 fields = { "sets" = [] }
 evidence = "F02 är en opak frågekod. Coordinator group membership: Antalsvariablerna mäter fiskedagar. F02 och F02a–c kodar uttryckligen också antal dagar i storleksintervall och omfattas därför. Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21018:17897:18628\ncatalog:variable_text:21019:17897:18628\ncatalog:variable_text:21020:17897:18628\ncatalog:variable_text:21021:17897:18628\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21052:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21054:17167:17532\ncatalog:variable_text:21055:17167:17532\ncatalog:variable_text:21056:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f02"
+subject = "var:fiskat-januari-april-enkatomgang-januari-april"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F02 är en opak frågekod. Coordinator group membership: Antalsvariablerna mäter fiskedagar. F02 och F02a–c kodar uttryckligen också antal dagar i storleksintervall och omfattas därför. Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21018:17897:18628\ncatalog:variable_text:21019:17897:18628\ncatalog:variable_text:21020:17897:18628\ncatalog:variable_text:21021:17897:18628\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21052:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21054:17167:17532\ncatalog:variable_text:21055:17167:17532\ncatalog:variable_text:21056:17167:17532"
 
@@ -219,109 +219,109 @@ evidence = "F02c är en opak frågekod. Coordinator group membership: Antalsvari
 
 [[statement]]
 kind = "set"
-subject = "var:f03-01"
+subject = "var:inte-fiskat-inte-intresserad-fiske"
 fields = { "sets" = [] }
 evidence = "F03-01 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-01"
+subject = "var:inte-fiskat-inte-intresserad-fiske"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-01 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-02"
+subject = "var:inte-fiskat-fiskar-andra-tider-aret"
 fields = { "sets" = [] }
 evidence = "F03-02 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-02"
+subject = "var:inte-fiskat-fiskar-andra-tider-aret"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-02 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-03"
+subject = "var:inte-fiskat-fiskar-andra-lander-an-sverige"
 fields = { "sets" = [] }
 evidence = "F03-03 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-03"
+subject = "var:inte-fiskat-fiskar-andra-lander-an-sverige"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-03 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-04"
+subject = "var:inte-fiskat-ekonomiska-skal"
 fields = { "sets" = [] }
 evidence = "F03-04 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-04"
+subject = "var:inte-fiskat-ekonomiska-skal"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-04 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-05"
+subject = "var:inte-fiskat-tidsbrist"
 fields = { "sets" = [] }
 evidence = "F03-05 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-05"
+subject = "var:inte-fiskat-tidsbrist"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-05 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-06"
+subject = "var:inte-fiskat-halsoskal"
 fields = { "sets" = [] }
 evidence = "F03-06 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-06"
+subject = "var:inte-fiskat-halsoskal"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-06 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-07"
+subject = "var:inte-fiskat-for-liten-mojlighet-fa-fisk"
 fields = { "sets" = [] }
 evidence = "F03-07 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-07"
+subject = "var:inte-fiskat-for-liten-mojlighet-fa-fisk"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-07 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-08"
+subject = "var:inte-fiskat-saknar-information-var-fiska-regler"
 fields = { "sets" = [] }
 evidence = "F03-08 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-08"
+subject = "var:inte-fiskat-saknar-information-var-fiska-regler"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-08 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-09"
+subject = "var:inte-fiskat-annan-anledning"
 fields = { "sets" = [] }
 evidence = "F03-09 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f03-09"
+subject = "var:inte-fiskat-annan-anledning"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03-09 är en opak frågekod; etiketten delas av flera komponenter. Coordinator group membership: Medlemmarna anger uttryckligen om personen fiskat under angivna perioder. F02 och F02a–c innehåller även dagintervall men mäter också deltagande. F03-01–F03-09 beskriver anledningar till uteblivet fiske och hålls utanför.\ncatalog:variable_text:21004:17532:19723\ncatalog:variable_text:21005:17897:18628\ncatalog:variable_text:21006:18628:19723\ncatalog:variable_text:21007:18628:19723\ncatalog:variable_text:21008:18628:19723\ncatalog:variable_text:21009:18628:19723\ncatalog:variable_text:21010:18628:19723\ncatalog:variable_text:21011:18628:19723\ncatalog:variable_text:21012:18628:19723\ncatalog:variable_text:21013:18628:19723\ncatalog:variable_text:21014:18628:19723\ncatalog:variable_text:21015:18628:19723\ncatalog:variable_text:21016:18628:19723\ncatalog:variable_text:21017:18628:19723\ncatalog:variable_text:21049:16801:17532\ncatalog:variable_text:21050:16801:17532\ncatalog:variable_text:21051:16801:17532\ncatalog:variable_text:21053:17167:17532\ncatalog:variable_text:21055:17167:17532"
 
@@ -339,85 +339,85 @@ evidence = "F03b-0 är en opak frågekod; etiketten delas av flera månadskompon
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-02"
+subject = "var:antal-fiskedagar-februari-juni-oktober"
 fields = { "sets" = ["antal-fiskedagar"] }
 evidence = "F03b-02 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21019:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-02"
+subject = "var:antal-fiskedagar-februari-juni-oktober"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03b-02 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21019:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-03"
+subject = "var:antal-fiskedagar-mars-juli-november"
 fields = { "sets" = ["antal-fiskedagar"] }
 evidence = "F03b-03 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21020:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-03"
+subject = "var:antal-fiskedagar-mars-juli-november"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03b-03 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21020:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-04"
+subject = "var:antal-fiskedagar-april-augusti-december"
 fields = { "sets" = ["antal-fiskedagar"] }
 evidence = "F03b-04 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21021:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f03b-04"
+subject = "var:antal-fiskedagar-april-augusti-december"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F03b-04 är en opak frågekod; etiketten delas av flera månadskomponenter.\ncatalog:variable_text:21021:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f13a"
+subject = "var:finns-barn-under-16-ar-hushall-fritidsfiskat"
 fields = { "sets" = ["barn-som-fritidsfiskat"] }
 evidence = "F13a är en opak frågekod; etiketten delas med antal barn.\ncatalog:variable_text:21022:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f13a"
+subject = "var:finns-barn-under-16-ar-hushall-fritidsfiskat"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F13a är en opak frågekod; etiketten delas med antal barn.\ncatalog:variable_text:21022:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f13b"
+subject = "var:antal-barn-under-16-ar-hushall-fritidsfiskat"
 fields = { "sets" = ["barn-som-fritidsfiskat"] }
 evidence = "F13b är en opak frågekod; etiketten delas med förekomst av barns fiske.\ncatalog:variable_text:21023:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f13b"
+subject = "var:antal-barn-under-16-ar-hushall-fritidsfiskat"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F13b är en opak frågekod; etiketten delas med förekomst av barns fiske.\ncatalog:variable_text:21023:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-1"
+subject = "var:antal-meter-fiskenat-fiskat-med"
 fields = { "sets" = ["langd-fiskenat"] }
 evidence = "F17-1 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21025:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-1"
+subject = "var:antal-meter-fiskenat-fiskat-med"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17-1 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21025:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-2"
+subject = "var:antal-meter-fiskenat-forlorat-vattnet"
 fields = { "sets" = ["langd-fiskenat"] }
 evidence = "F17-2 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21026:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-2"
+subject = "var:antal-meter-fiskenat-forlorat-vattnet"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17-2 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21026:18262:18628"
 
@@ -435,253 +435,253 @@ evidence = "F17-3 är en opak frågekod; etiketten delas av flera komponenter.\n
 
 [[statement]]
 kind = "set"
-subject = "var:f17-4"
+subject = "var:antal-meter-fiskenat-kopt"
 fields = { "sets" = ["langd-fiskenat"] }
 evidence = "F17-4 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21028:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f17-4"
+subject = "var:antal-meter-fiskenat-kopt"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17-4 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21028:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f17a"
+subject = "var:betydelse-mojlighet-fanga-fisk"
 fields = { "sets" = ["mojlighet-att-fanga-fisk"] }
 evidence = "F17a är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21029:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17a"
+subject = "var:betydelse-mojlighet-fanga-fisk"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17a är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21029:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17b"
+subject = "var:betydelse-mojlighet-fanga-stor-fisk"
 fields = { "sets" = ["mojlighet-att-fanga-stor-fisk"] }
 evidence = "F17b är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21030:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17b"
+subject = "var:betydelse-mojlighet-fanga-stor-fisk"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17b är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21030:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c"
+subject = "var:betydelse-mojlighet-behalla-fangad-fisk"
 fields = { "sets" = ["mojlighet-att-behalla-fangad-fisk"] }
 evidence = "F17c är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21031:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17c"
+subject = "var:betydelse-mojlighet-behalla-fangad-fisk"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17c är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21031:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17d"
+subject = "var:naturupplevelse-fritidsfiske-betydelse"
 fields = { "sets" = ["naturupplevelse-vid-fritidsfiske"] }
 evidence = "F17d är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21032:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17d"
+subject = "var:naturupplevelse-fritidsfiske-betydelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17d är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21032:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17e"
+subject = "var:tillganglighet-fritidsfiske-betydelse"
 fields = { "sets" = ["tillganglighet-vid-fritidsfiske"] }
 evidence = "F17e är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21033:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17e"
+subject = "var:tillganglighet-fritidsfiske-betydelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17e är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21033:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17f"
+subject = "var:ensam-fiskeplatsen-betydelse"
 fields = { "sets" = ["ensamhet-pa-fiskeplatsen"] }
 evidence = "F17f är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21034:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17f"
+subject = "var:ensam-fiskeplatsen-betydelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17f är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21034:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17g"
+subject = "var:information-fiskeregler-betydelse"
 fields = { "sets" = ["information-om-fiskeregler"] }
 evidence = "F17g är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21035:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17g"
+subject = "var:information-fiskeregler-betydelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F17g är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21035:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17h"
+subject = "var:pris-fiskekort-betydelse"
 fields = { "sets" = ["pris-pa-fiskekort"] }
 evidence = "F17h är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21036:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f17h"
+subject = "var:pris-fiskekort-betydelse"
 fields = { "tags" = ["culture", "forestry-fishing", "prices"] }
 evidence = "F17h är en opak frågekod; etiketten delas med uppfyllelsevariabeln.\ncatalog:variable_text:21036:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-1"
+subject = "var:antal-burar-tinor-fiskat-med-tertial"
 fields = { "sets" = ["antal-burar-och-tinor"] }
 evidence = "F18-1 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21037:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-1"
+subject = "var:antal-burar-tinor-fiskat-med-tertial"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18-1 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21037:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-2"
+subject = "var:antal-burar-tinor-forlorade-i-vattnet-tertial"
 fields = { "sets" = ["antal-burar-och-tinor"] }
 evidence = "F18-2 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21038:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-2"
+subject = "var:antal-burar-tinor-forlorade-i-vattnet-tertial"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18-2 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21038:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-3"
+subject = "var:antal-burar-tinor-slangda-tertial"
 fields = { "sets" = ["antal-burar-och-tinor"] }
 evidence = "F18-3 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21039:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-3"
+subject = "var:antal-burar-tinor-slangda-tertial"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18-3 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21039:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-4"
+subject = "var:antal-burar-tinor-kopta-tertial"
 fields = { "sets" = ["antal-burar-och-tinor"] }
 evidence = "F18-4 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21040:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18-4"
+subject = "var:antal-burar-tinor-kopta-tertial"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18-4 är en opak frågekod; etiketten delas av flera komponenter.\ncatalog:variable_text:21040:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:f18a"
+subject = "var:mojlighet-fanga-fisk-uppfyllelse"
 fields = { "sets" = ["mojlighet-att-fanga-fisk"] }
 evidence = "F18a är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21041:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18a"
+subject = "var:mojlighet-fanga-fisk-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18a är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21041:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18b"
+subject = "var:mojlighet-fanga-stor-fisk-uppfyllelse"
 fields = { "sets" = ["mojlighet-att-fanga-stor-fisk"] }
 evidence = "F18b är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21042:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18b"
+subject = "var:mojlighet-fanga-stor-fisk-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18b är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21042:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c"
+subject = "var:mojlighet-behalla-fangad-fisk-uppfyllelse"
 fields = { "sets" = ["mojlighet-att-behalla-fangad-fisk"] }
 evidence = "F18c är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21043:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18c"
+subject = "var:mojlighet-behalla-fangad-fisk-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18c är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21043:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d"
+subject = "var:naturupplevelse-fritidsfiske-uppfyllelse"
 fields = { "sets" = ["naturupplevelse-vid-fritidsfiske"] }
 evidence = "F18d är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21044:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18d"
+subject = "var:naturupplevelse-fritidsfiske-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18d är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21044:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18e"
+subject = "var:tillganglighet-fritidsfiske-uppfyllelse"
 fields = { "sets" = ["tillganglighet-vid-fritidsfiske"] }
 evidence = "F18e är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21045:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18e"
+subject = "var:tillganglighet-fritidsfiske-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18e är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21045:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18f"
+subject = "var:ensam-fiskeplatsen-uppfyllelse"
 fields = { "sets" = ["ensamhet-pa-fiskeplatsen"] }
 evidence = "F18f är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21046:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18f"
+subject = "var:ensam-fiskeplatsen-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18f är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21046:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18g"
+subject = "var:information-fiskeregler-uppfyllelse"
 fields = { "sets" = ["information-om-fiskeregler"] }
 evidence = "F18g är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21047:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18g"
+subject = "var:information-fiskeregler-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F18g är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21047:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18h"
+subject = "var:pris-fiskekort-uppfyllelse"
 fields = { "sets" = ["pris-pa-fiskekort"] }
 evidence = "F18h är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21048:17532:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:f18h"
+subject = "var:pris-fiskekort-uppfyllelse"
 fields = { "tags" = ["culture", "forestry-fishing", "prices"] }
 evidence = "F18h är en opak frågekod; etiketten delas med betydelsevariabeln.\ncatalog:variable_text:21048:17532:18262"
 
@@ -699,13 +699,13 @@ evidence = "F1a är en opak frågekod; etiketten delas med andra variabler.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:f1b"
+subject = "var:antal-fiskedagar-ifjol"
 fields = { "sets" = [] }
 evidence = "F1b är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21050:16801:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:f1b"
+subject = "var:antal-fiskedagar-ifjol"
 fields = { "tags" = ["culture", "forestry-fishing"] }
 evidence = "F1b är en opak frågekod; etiketten delas med andra variabler.\ncatalog:variable_text:21050:16801:17532"
 
@@ -999,13 +999,13 @@ evidence = "Variabeln anger grupperad förvärvsinkomst.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-2"
+subject = "var:sammanraknad-forvarvsinkomst-aret-innan-referensaret"
 fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
 evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen CSFVI; etiketten delas med inkomstklassvariabeln.\ncatalog:variable_text:21079:16801:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-2"
+subject = "var:sammanraknad-forvarvsinkomst-aret-innan-referensaret"
 fields = { "tags" = ["income"] }
 evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen CSFVI; etiketten delas med inkomstklassvariabeln.\ncatalog:variable_text:21079:16801:19723"
 

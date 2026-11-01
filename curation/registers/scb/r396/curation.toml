@@ -283,49 +283,49 @@ evidence = "LUA är en bokstavskod som inte förekommer i etiketten; variabeln a
 
 [[statement]]
 kind = "set"
-subject = "var:regso"
+subject = "var:regionala-statistikomraden-omradesnamn"
 fields = { "sets" = ["regso"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:regso"
+subject = "var:regionala-statistikomraden-omradesnamn"
 fields = { "tags" = ["geography"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41391:9862:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:regso-namn"
+subject = "var:regionala-statistikomraden-kommun-omradesnamn"
 fields = { "sets" = ["regso"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41392:10227:18262\ncatalog:variable_text:41392:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:regso-namn"
+subject = "var:regionala-statistikomraden-kommun-omradesnamn"
 fields = { "tags" = ["geography"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Variabeln anger geografiska områdesnamn.\ncatalog:variable_text:41392:10227:18262\ncatalog:variable_text:41392:9862:10227"
 
 [[statement]]
 kind = "set"
-subject = "var:regso-varde"
+subject = "var:regionala-statistikomraden-kod-registerdata-integration"
 fields = { "sets" = ["regso"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41393:9862:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:regso-varde"
+subject = "var:regionala-statistikomraden-kod-registerdata-integration"
 fields = { "tags" = ["geography"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41393:9862:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:regsokod"
+subject = "var:regionala-statistikomraden-kod"
 fields = { "sets" = ["regso"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41394:18262:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:regsokod"
+subject = "var:regionala-statistikomraden-kod"
 fields = { "tags" = ["geography"] }
 evidence = "RegSO är en bokstavskod som inte förekommer i etiketten. Koden hör till gruppen för regionala statistikområden och anger geografisk tillhörighet.\ncatalog:var_set:189\ncatalog:variable_text:41394:18262:19723"
 

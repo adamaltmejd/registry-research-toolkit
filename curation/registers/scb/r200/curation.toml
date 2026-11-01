@@ -1605,13 +1605,13 @@ evidence = "N2rad är en källkod utan läsbara ordstammar; etiketten anger elan
 
 [[statement]]
 kind = "set"
-subject = "var:n2radn"
+subject = "var:overford-el-slutlig-forbrukare-naringsgren-sni-2007"
 fields = { "sets" = [] }
 evidence = "N2radn är en opak källkod; etiketten anger överförd el till slutlig förbrukare.\ncatalog:variable_text:4353:14245:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:n2radn"
+subject = "var:overford-el-slutlig-forbrukare-naringsgren-sni-2007"
 fields = { "tags" = ["energy"] }
 evidence = "N2radn är en opak källkod; etiketten anger överförd el till slutlig förbrukare.\ncatalog:variable_text:4353:14245:19358"
 
@@ -9585,25 +9585,25 @@ evidence = "Variabeln mäter tillförd el från batterier.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:tkr-hsp"
+subject = "var:rorelseintakter-hogspanning"
 fields = { "sets" = [] }
 evidence = "Tkr-hsp är en opak källmnemonik; etiketten kolliderar med lågspänningsvariabeln och behöver målgranskning.\ncatalog:variable_text:5126:14245:17532\ncatalog:variable_text:5127:14245:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:tkr-hsp"
+subject = "var:rorelseintakter-hogspanning"
 fields = { "tags" = ["business"] }
 evidence = "Tkr-hsp är en opak källmnemonik; etiketten kolliderar med lågspänningsvariabeln och behöver målgranskning.\ncatalog:variable_text:5126:14245:17532\ncatalog:variable_text:5127:14245:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:tkr-lsp"
+subject = "var:rorelseintakter-lagspanning"
 fields = { "sets" = [] }
 evidence = "Tkr-lsp är en opak källmnemonik; etiketten kolliderar med högspänningsvariabeln och behöver målgranskning.\ncatalog:variable_text:5126:14245:17532\ncatalog:variable_text:5127:14245:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:tkr-lsp"
+subject = "var:rorelseintakter-lagspanning"
 fields = { "tags" = ["business"] }
 evidence = "Tkr-lsp är en opak källmnemonik; etiketten kolliderar med högspänningsvariabeln och behöver målgranskning.\ncatalog:variable_text:5126:14245:17532\ncatalog:variable_text:5127:14245:17532"
 

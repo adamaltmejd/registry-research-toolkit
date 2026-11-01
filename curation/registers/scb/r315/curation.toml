@@ -73,25 +73,25 @@ evidence = "F14_3 är en ogenomskinlig frågekod för ett motiv till sfi-deltaga
 
 [[statement]]
 kind = "set"
-subject = "var:f14-4"
+subject = "var:sfi-anledning-traffa-vanner-social-kontakt"
 fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
 evidence = "F14_4 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41949:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:f14-4"
+subject = "var:sfi-anledning-traffa-vanner-social-kontakt"
 fields = { "tags" = ["education"] }
 evidence = "F14_4 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41949:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:f14-5"
+subject = "var:sfi-anledning-fa-ersattning-forsorjning"
 fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
 evidence = "F14_5 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41950:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:f14-5"
+subject = "var:sfi-anledning-fa-ersattning-forsorjning"
 fields = { "tags" = ["education", "transfers"] }
 evidence = "F14_5 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41950:14061:14245"
 
@@ -145,13 +145,13 @@ evidence = "F17 är en ogenomskinlig frågekod för tidsplan i studieplaneringen
 
 [[statement]]
 kind = "set"
-subject = "var:f18"
+subject = "var:latt-eller-svart-att-lasa-i-sfi"
 fields = { "sets" = [] }
 evidence = "F18 är en ogenomskinlig frågekod för upplevd svårighet i sfi.\ncatalog:variable_text:41955:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:f18"
+subject = "var:latt-eller-svart-att-lasa-i-sfi"
 fields = { "tags" = ["education"] }
 evidence = "F18 är en ogenomskinlig frågekod för upplevd svårighet i sfi.\ncatalog:variable_text:41955:14061:14245"
 
@@ -421,13 +421,13 @@ evidence = "F9_2 är en ogenomskinlig frågekod för information om hälso- och 
 
 [[statement]]
 kind = "set"
-subject = "var:f9-3"
+subject = "var:information-om-kultur-fritid"
 fields = { "sets" = ["samhallsinformation-inom-sfi"] }
 evidence = "F9_3 är en ogenomskinlig frågekod för information om kultur och fritid.\ncatalog:variable_text:41979:14061:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-3"
+subject = "var:information-om-kultur-fritid"
 fields = { "tags" = ["culture", "integration"] }
 evidence = "F9_3 är en ogenomskinlig frågekod för information om kultur och fritid.\ncatalog:variable_text:41979:14061:14245"
 

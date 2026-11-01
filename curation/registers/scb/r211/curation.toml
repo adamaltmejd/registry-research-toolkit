@@ -385,13 +385,13 @@ evidence = "OrdPo8 är en opak källkod för produktionsområde; etiketten delas
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "Po18 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42187:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18"
 fields = { "tags" = ["geography"] }
 evidence = "Po18 är en opak källkod för produktionsområde; etiketten delas av flera variabler och målnamnet kräver särskiljning.\ncatalog:variable_text:42187:19723:20089"
 

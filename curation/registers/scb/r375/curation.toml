@@ -895,13 +895,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:12187:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0251"
+subject = "var:egna-arrangemang-paketresor-brutto"
 fields = { "sets" = ["reseintakter"] }
 evidence = "Källkoden är opak; posten avser bruttointäkter från egna resor.\ncatalog:variable_text:12188:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0251"
+subject = "var:egna-arrangemang-paketresor-brutto"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; posten avser bruttointäkter från egna resor.\ncatalog:variable_text:12188:9862:12053"
 
@@ -943,13 +943,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:12191:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0256"
+subject = "var:ersattning-transporttjanster-egna-fordon-egen-personal"
 fields = { "sets" = ["ersattning-transporttjanster"] }
 evidence = "Källkoden är opak; posten avser ersättning för utförda transporter.\ncatalog:variable_text:12192:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0256"
+subject = "var:ersattning-transporttjanster-egna-fordon-egen-personal"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; posten avser ersättning för utförda transporter.\ncatalog:variable_text:12192:9862:12053"
 
@@ -1447,13 +1447,13 @@ evidence = "Källkoden är opak; posten är en geografisk del av underentreprena
 
 [[statement]]
 kind = "set"
-subject = "var:bl0505"
+subject = "var:tomtrattsavgald-arrendeavgifter"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:12234:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0505"
+subject = "var:tomtrattsavgald-arrendeavgifter"
 fields = { "tags" = ["business", "property"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:12234:9862:12053"
 
@@ -1531,13 +1531,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:12240:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0531"
+subject = "var:energikostnader-inkl-varme-belysning"
 fields = { "sets" = ["energikostnader"] }
 evidence = "Källkoden är opak; posten avser energikostnader.\ncatalog:variable_text:12241:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0531"
+subject = "var:energikostnader-inkl-varme-belysning"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källkoden är opak; posten avser energikostnader.\ncatalog:variable_text:12241:9862:12053"
 
@@ -1651,13 +1651,13 @@ evidence = "Källkoden är opak; posten avser transportmedelskostnader.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:bl0547"
+subject = "var:kostnader-egna-arrangemang-paketresor"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:12251:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0547"
+subject = "var:kostnader-egna-arrangemang-paketresor"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:12251:9862:12053"
 
@@ -1735,13 +1735,13 @@ evidence = "Källkoden är opak; posten avser ersättning för inköpta transpor
 
 [[statement]]
 kind = "set"
-subject = "var:bl0557"
+subject = "var:inkop-transporttjanster-delagares-fordon-lejda-transporter"
 fields = { "sets" = ["frakt-och-transportkostnader"] }
 evidence = "Källkoden är opak; posten avser inköpta transporter.\ncatalog:variable_text:12258:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0557"
+subject = "var:inkop-transporttjanster-delagares-fordon-lejda-transporter"
 fields = { "tags" = ["business", "transport"] }
 evidence = "Källkoden är opak; posten avser inköpta transporter.\ncatalog:variable_text:12258:9862:12053"
 
@@ -1855,13 +1855,13 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:12267:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0599"
+subject = "var:ovrigt-ovrig-verksamhet"
 fields = { "sets" = [] }
 evidence = "Källkoden är opak; den generiska etiketten kräver disambiguering.\ncatalog:variable_text:12268:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0599"
+subject = "var:ovrigt-ovrig-verksamhet"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; den generiska etiketten kräver disambiguering.\ncatalog:variable_text:12268:9862:12053"
 
@@ -1999,13 +1999,13 @@ evidence = "Källkoden är opak; posten avser avyttringsresultat för värdepapp
 
 [[statement]]
 kind = "set"
-subject = "var:bl0911"
+subject = "var:nedskrivning-inkl-aterforing-aktier-andelar"
 fields = { "sets" = ["finansiella-nedskrivningar"] }
 evidence = "Källkoden är opak; posten avser finansiella nedskrivningar.\ncatalog:variable_text:12280:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl0911"
+subject = "var:nedskrivning-inkl-aterforing-aktier-andelar"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är opak; posten avser finansiella nedskrivningar.\ncatalog:variable_text:12280:9862:12053"
 
@@ -2203,13 +2203,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12296:986
 
 [[statement]]
 kind = "set"
-subject = "var:bl2114"
+subject = "var:ovriga-fordringar-koncernforetag"
 fields = { "sets" = ["koncernfordringar"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12297:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2114"
+subject = "var:ovriga-fordringar-koncernforetag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12297:9862:12053"
 
@@ -2419,13 +2419,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12314:986
 
 [[statement]]
 kind = "set"
-subject = "var:bl2336"
+subject = "var:ovriga-skulder-till-intresseforetag"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12315:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2336"
+subject = "var:ovriga-skulder-till-intresseforetag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12315:9862:12053"
 
@@ -2551,49 +2551,49 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12325:9862:1205
 
 [[statement]]
 kind = "set"
-subject = "var:bl2542"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader"
 fields = { "sets" = ["pagaende-arbete-annans-rakning"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12326:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2542"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12326:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2543"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp"
 fields = { "sets" = ["pagaende-arbete-annans-rakning"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12327:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2543"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12327:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2547"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader-ingaende"
 fields = { "sets" = ["pagaende-arbete-annans-rakning"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12328:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2547"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader-ingaende"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12328:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2548"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp-ingaende"
 fields = { "sets" = ["pagaende-arbete-annans-rakning"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12329:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl2548"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp-ingaende"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12329:9862:12053"
 
@@ -2755,25 +2755,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12342:9862:1205
 
 [[statement]]
 kind = "set"
-subject = "var:bl3302"
+subject = "var:anskaffning-pagaende-nyanlaggning-maskiner-inventarier"
 fields = { "sets" = ["anskaffningar-pagaende-nyanlaggningar"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12343:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl3302"
+subject = "var:anskaffning-pagaende-nyanlaggning-maskiner-inventarier"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12343:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl3303"
+subject = "var:anskaffning-pagaende-nyanlaggning-fartyg-offshoreplattform"
 fields = { "sets" = ["anskaffningar-pagaende-nyanlaggningar"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12344:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl3303"
+subject = "var:anskaffning-pagaende-nyanlaggning-fartyg-offshoreplattform"
 fields = { "tags" = ["business", "housing"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12344:9862:12053"
 
@@ -2995,13 +2995,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12362:986
 
 [[statement]]
 kind = "set"
-subject = "var:bl3513"
+subject = "var:nettoinvesteringar-ovriga-maskiner-inventarier"
 fields = { "sets" = ["nettoinvesteringar-maskiner-inventarier"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12363:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl3513"
+subject = "var:nettoinvesteringar-ovriga-maskiner-inventarier"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12363:9862:12053"
 
@@ -3103,13 +3103,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12371:986
 
 [[statement]]
 kind = "set"
-subject = "var:bl9000"
+subject = "var:jamforelsestorande-extraordinara-poster-totalt"
 fields = { "sets" = ["jamforelsestorande-extraordinara-poster"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12372:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:bl9000"
+subject = "var:jamforelsestorande-extraordinara-poster-totalt"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12372:9862:12053"
 
@@ -3523,13 +3523,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12407:986
 
 [[statement]]
 kind = "set"
-subject = "var:gem0442"
+subject = "var:valutakursvinster-fordringar-skulder-rorelsekaraktar"
 fields = { "sets" = ["valutakursresultat"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12408:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0442"
+subject = "var:valutakursvinster-fordringar-skulder-rorelsekaraktar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12408:9862:12053"
 
@@ -3559,37 +3559,37 @@ evidence = "Etiketten och definitionen anger endast övrigt och preciserar inte 
 
 [[statement]]
 kind = "set"
-subject = "var:gem0449"
+subject = "var:ovriga-rorelseintakter-ovrigt"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12411:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0449"
+subject = "var:ovriga-rorelseintakter-ovrigt"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12411:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0451"
+subject = "var:nettoomsattning-lokal-verksamhetsenhet"
 fields = { "sets" = ["nettoomsattning"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12412:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0451"
+subject = "var:nettoomsattning-lokal-verksamhetsenhet"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12412:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0459"
+subject = "var:ovriga-rorelseintakter-verksamhetsenhet"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12413:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0459"
+subject = "var:ovriga-rorelseintakter-verksamhetsenhet"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12413:9862:12053"
 
@@ -3703,13 +3703,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12422:986
 
 [[statement]]
 kind = "set"
-subject = "var:gem0842"
+subject = "var:valutakursforluster-fordringar-skulder-rorelsekaraktar"
 fields = { "sets" = ["valutakursresultat"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12423:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0842"
+subject = "var:valutakursforluster-fordringar-skulder-rorelsekaraktar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12423:9862:12053"
 
@@ -3751,37 +3751,37 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12426:986
 
 [[statement]]
 kind = "set"
-subject = "var:gem0853"
+subject = "var:ovriga-externa-kostnader-verksamhetsenhet"
 fields = { "sets" = ["ovriga-externa-kostnader"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12427:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0853"
+subject = "var:ovriga-externa-kostnader-verksamhetsenhet"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12427:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0854"
+subject = "var:personalkostnader-verksamhetsenhet"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12428:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0854"
+subject = "var:personalkostnader-verksamhetsenhet"
 fields = { "tags" = ["business", "employment"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12428:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0859"
+subject = "var:ovriga-rorelsekostnader-verksamhetsenhet"
 fields = { "sets" = ["ovriga-rorelsekostnader"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12429:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem0859"
+subject = "var:ovriga-rorelsekostnader-verksamhetsenhet"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12429:9862:12053"
 
@@ -3955,13 +3955,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12443:986
 
 [[statement]]
 kind = "set"
-subject = "var:gem2713"
+subject = "var:okning-minskning-insatskapital"
 fields = { "sets" = ["forandring-insatskapital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12444:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem2713"
+subject = "var:okning-minskning-insatskapital"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:12444:9862:12053"
 
@@ -3979,13 +3979,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12445:986
 
 [[statement]]
 kind = "set"
-subject = "var:gem2735"
+subject = "var:egna-insattningar-uttag"
 fields = { "sets" = ["egna-insattningar-uttag"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12446:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:gem2735"
+subject = "var:egna-insattningar-uttag"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:12446:9862:12053"
 

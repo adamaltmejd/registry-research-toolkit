@@ -2065,13 +2065,13 @@ evidence = "AG är en opak bokstavskod.\ncatalog:variable_text:3939:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:agvetaob"
+subject = "var:arbetsgivarens-kannedom-arbetet-orsakar-besvar"
 fields = { "sets" = ["arbetsgivarens-kannedom-om-besvar"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:3940:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:agvetaob"
+subject = "var:arbetsgivarens-kannedom-arbetet-orsakar-besvar"
 fields = { "tags" = ["employment", "health"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:3940:18993:19358"
 
@@ -2389,13 +2389,13 @@ evidence = "AOB is an opaque source mnemonic. The variable describes other work-
 
 [[statement]]
 kind = "set"
-subject = "var:aobblod"
+subject = "var:blod-blodbildande-organ-besvar-av-arbetet"
 fields = { "sets" = ["blodbesvar"] }
 evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade blodbesvär.\ncatalog:register:51\ncatalog:variable_text:3967:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:aobblod"
+subject = "var:blod-blodbildande-organ-besvar-av-arbetet"
 fields = { "tags" = ["employment", "health"] }
 evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade blodbesvär.\ncatalog:register:51\ncatalog:variable_text:3967:18993:19358"
 
@@ -2413,13 +2413,13 @@ evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsr
 
 [[statement]]
 kind = "set"
-subject = "var:aobbuk"
+subject = "var:buk-mage-tarmar-ovriga-bukorgan-besvar-av-arbetet"
 fields = { "sets" = ["buk-och-backenbesvar"] }
 evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bukbesvär.\ncatalog:register:51\ncatalog:variable_text:3969:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:aobbuk"
+subject = "var:buk-mage-tarmar-ovriga-bukorgan-besvar-av-arbetet"
 fields = { "tags" = ["employment", "health"] }
 evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bukbesvär.\ncatalog:register:51\ncatalog:variable_text:3969:18993:19358"
 
@@ -2545,13 +2545,13 @@ evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3979:18993
 
 [[statement]]
 kind = "set"
-subject = "var:aoblungor"
+subject = "var:lungor-luftvagar-besvar-av-arbetet"
 fields = { "sets" = ["lung-och-luftvagsbesvar"] }
 evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3980:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:aoblungor"
+subject = "var:lungor-luftvagar-besvar-av-arbetet"
 fields = { "tags" = ["employment", "health"] }
 evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3980:18993:19358"
 
@@ -3109,13 +3109,13 @@ evidence = "Variabeln gäller bildskärmsarbete som besvärsorsak.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:biologis"
+subject = "var:vaxter-djur-orsak-besvar"
 fields = { "sets" = [] }
 evidence = "Biologis är inte en igenkännbar stam av källans ord.\ncatalog:variable_text:4028:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:biologis"
+subject = "var:vaxter-djur-orsak-besvar"
 fields = { "tags" = ["employment", "health"] }
 evidence = "Biologis är inte en igenkännbar stam av källans ord.\ncatalog:variable_text:4028:16801:17167"
 

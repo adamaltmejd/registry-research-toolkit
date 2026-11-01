@@ -1070,25 +1070,25 @@ evidence = "Markeringen avser registerkvalitet.\ncatalog:occurrence-locators:var
 
 [[statement]]
 kind = "set"
-subject = "var:fnrdat"
+subject = "var:kvalitetsmarkning-datum-fastighetsnyckel"
 fields = { "sets" = ["kvalitetsmarkningens-datum"] }
 evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10236"
 
 [[statement]]
 kind = "set"
-subject = "var:fnrdat"
+subject = "var:kvalitetsmarkning-datum-fastighetsnyckel"
 fields = { "tags" = [] }
 evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10236"
 
 [[statement]]
 kind = "set"
-subject = "var:fnrursp"
+subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
 fields = { "sets" = [] }
 evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10237"
 
 [[statement]]
 kind = "set"
-subject = "var:fnrursp"
+subject = "var:kvalitetsmarkning-ursprung-fastighetsnyckel"
 fields = { "tags" = ["methods"] }
 evidence = "FNR är en källkod som inte är en läsbar ordstam i etiketten; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10237"
 
@@ -1298,13 +1298,13 @@ evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6
 
 [[statement]]
 kind = "set"
-subject = "var:kdatum"
+subject = "var:kvalitetsmarkning-datum-adress-byggnad"
 fields = { "sets" = ["kvalitetsmarkningens-datum"] }
 evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10272"
 
 [[statement]]
 kind = "set"
-subject = "var:kdatum"
+subject = "var:kvalitetsmarkning-datum-adress-byggnad"
 fields = { "tags" = [] }
 evidence = "K är en opak bokstavskod; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:occurrence-locators:variable:10272"
 
@@ -2126,13 +2126,13 @@ evidence = "P är en enbokstavskod för plan.\ncatalog:variable_text:10359:20453
 
 [[statement]]
 kind = "set"
-subject = "var:ptypkod"
+subject = "var:typkod-preliminar-taxeringsenhet"
 fields = { "sets" = ["fastighetstypkod"] }
 evidence = "P är en opak bokstavskod för preliminär.\ncatalog:occurrence-locators:variable:10360"
 
 [[statement]]
 kind = "set"
-subject = "var:ptypkod"
+subject = "var:typkod-preliminar-taxeringsenhet"
 fields = { "tags" = ["property"] }
 evidence = "P är en opak bokstavskod för preliminär.\ncatalog:occurrence-locators:variable:10360"
 

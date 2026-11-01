@@ -57,13 +57,13 @@ evidence = "Variabeln beskriver svarsdeltagande i undersökningen.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "sets" = ["arbetskraftsstatus"] }
 evidence = "Källnamnet är en opak bokstavskod.\ncatalog:variable_text:11671:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "tags" = ["employment"] }
 evidence = "Källnamnet är en opak bokstavskod.\ncatalog:variable_text:11671:12053:12418"
 

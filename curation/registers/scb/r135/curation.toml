@@ -235,25 +235,25 @@ evidence = "Undersökningens delpopulation och svarskategori.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:imp-pbf-levkvant"
+subject = "var:partiellt-bortfall-levererad-kvantitet"
 fields = { "sets" = ["partiellt-bortfall"] }
 evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33823:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:imp-pbf-levkvant"
+subject = "var:partiellt-bortfall-levererad-kvantitet"
 fields = { "tags" = ["methods"] }
 evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33823:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:imp-pbf-totkvant"
+subject = "var:partiellt-bortfall-totalt-producerad-kvantitet"
 fields = { "sets" = ["partiellt-bortfall"] }
 evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33824:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:imp-pbf-totkvant"
+subject = "var:partiellt-bortfall-totalt-producerad-kvantitet"
 fields = { "tags" = ["methods"] }
 evidence = "PBF är en opak bokstavskod för partiellt bortfall; etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33824:18993:20089"
 
@@ -763,13 +763,13 @@ evidence = "Varuklassificering enligt kombinerade nomenklaturen.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:vengs"
+subject = "var:naringsgren-verksamhetsenhet"
 fields = { "sets" = ["naringsgren"] }
 evidence = "VEngs är en opak källmnemonik; den generella etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33871:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:vengs"
+subject = "var:naringsgren-verksamhetsenhet"
 fields = { "tags" = ["business"] }
 evidence = "VEngs är en opak källmnemonik; den generella etiketten kolliderar och målet behöver disambiguering enligt D-12.\ncatalog:variable_text:33871:17532:20089"
 

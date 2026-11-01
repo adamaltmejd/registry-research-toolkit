@@ -763,13 +763,13 @@ evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-18
 
 [[statement]]
 kind = "set"
-subject = "var:barnets-fodelselangd-2"
+subject = "var:barnets-fodelselangd-cm"
 fields = { "sets" = ["barnets-fodelselangd"] }
 evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:barnets-fodelselangd-2"
+subject = "var:barnets-fodelselangd-cm"
 fields = { "tags" = ["pregnancy-birth"] }
 evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
 
@@ -1015,25 +1015,25 @@ evidence = "Civilstånd.\ncatalog:variable_text:57074:1096:4383"
 
 [[statement]]
 kind = "set"
-subject = "var:cvbanm"
+subject = "var:fosterdiagnostik-chorionvillibiopsi-anmarkning"
 fields = { "sets" = ["chorionvillibiopsi"] }
 evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57076:8766:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:cvbanm"
+subject = "var:fosterdiagnostik-chorionvillibiopsi-anmarkning"
 fields = { "tags" = ["healthcare", "pregnancy-birth"] }
 evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57076:8766:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:cvbdat"
+subject = "var:chorionvillibiopsi-provtagningsdatum"
 fields = { "sets" = ["chorionvillibiopsi"] }
 evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57077:8766:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:cvbdat"
+subject = "var:chorionvillibiopsi-provtagningsdatum"
 fields = { "tags" = [] }
 evidence = "CVB är en opak bokstavskod som saknas i etiketten.\ncatalog:variable_text:57077:8766:2932897"
 
@@ -2047,25 +2047,25 @@ evidence = "Den förlöstas medborgarskap.\ncatalog:variable_text:57167:1096:293
 
 [[statement]]
 kind = "set"
-subject = "var:mfoddat"
+subject = "var:fodelsedatum-gravida-forlosta-textstrang"
 fields = { "sets" = ["moderns-fodelsedatum"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57168:-1826:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mfoddat"
+subject = "var:fodelsedatum-gravida-forlosta-textstrang"
 fields = { "tags" = ["demographics"] }
 evidence = "M är en opak bokstavskod för modern.\ncatalog:variable_text:57168:-1826:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mfoddatn"
+subject = "var:fodelsedatum-gravida-forlosta-datumformat"
 fields = { "sets" = ["moderns-fodelsedatum"] }
 evidence = "M och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57169:1096:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:mfoddatn"
+subject = "var:fodelsedatum-gravida-forlosta-datumformat"
 fields = { "tags" = ["demographics"] }
 evidence = "M och formatsuffixet N är opaka bokstavskoder.\ncatalog:variable_text:57169:1096:2932897"
 

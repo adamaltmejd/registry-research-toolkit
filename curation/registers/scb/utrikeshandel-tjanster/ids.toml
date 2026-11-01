@@ -9,5 +9,5 @@
 "person-orgnr" = ["Peorgnr"]
 "redovisningsar" = ["Ar"]
 "riktning" = ["Riktning"]
-"scbkod" = ["Scbkod"]
+"tjansteslag" = ["Scbkod"]
 "varde" = ["Varde"]

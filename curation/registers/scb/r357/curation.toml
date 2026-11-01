@@ -145,13 +145,13 @@ evidence = "Källkoden är opak och variabeln anger antal personer i hushållet.
 
 [[statement]]
 kind = "set"
-subject = "var:bbolanz"
+subject = "var:bostadslan-forekomst"
 fields = { "sets" = ["bostadslan"] }
 evidence = "Källkoden är opak; etiketten delas med lånebeloppet och kräver disambiguering.\ncatalog:variable_text:6673:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bbolanz"
+subject = "var:bostadslan-forekomst"
 fields = { "tags" = ["finance", "housing"] }
 evidence = "Källkoden är opak; etiketten delas med lånebeloppet och kräver disambiguering.\ncatalog:variable_text:6673:19723:20089"
 
@@ -169,25 +169,25 @@ evidence = "BBUT är en opak källkod; etiketten anger redovisningsgruppering.\n
 
 [[statement]]
 kind = "set"
-subject = "var:begsz"
+subject = "var:hushallstyp-vuxna-kosthushall"
 fields = { "sets" = ["hushallstyp"] }
 evidence = "BEGSZ är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6675:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:begsz"
+subject = "var:hushallstyp-vuxna-kosthushall"
 fields = { "tags" = ["family-household"] }
 evidence = "BEGSZ är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6675:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bht9z"
+subject = "var:hushallstyp-hushallssammansattning"
 fields = { "sets" = ["hushallstyp"] }
 evidence = "BHT9Z är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6676:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bht9z"
+subject = "var:hushallstyp-hushallssammansattning"
 fields = { "tags" = ["family-household"] }
 evidence = "BHT9Z är en opak källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:6676:19723:20089"
 
@@ -253,13 +253,13 @@ evidence = "Relation till hushållsföreståndaren.\ncatalog:variable_text:6682:
 
 [[statement]]
 kind = "set"
-subject = "var:bsmedv"
+subject = "var:upprakningstal-individ-okalibrerad-hushallsvikt"
 fields = { "sets" = ["hushallsvikt"] }
 evidence = "BSMEDV är en opak källkod.\ncatalog:variable_text:6683:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:bsmedv"
+subject = "var:upprakningstal-individ-okalibrerad-hushallsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "BSMEDV är en opak källkod.\ncatalog:variable_text:6683:19723:20089"
 
@@ -277,13 +277,13 @@ evidence = "Åldersbaserad kodning som barn eller vuxen.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp3kz"
+subject = "var:konsumtionsutrymme-kronor-per-konsumtionsenhet"
 fields = { "sets" = ["konsumtionsutrymme"] }
 evidence = "CDISP3KZ är en opak källkod.\ncatalog:variable_text:6685:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdisp3kz"
+subject = "var:konsumtionsutrymme-kronor-per-konsumtionsenhet"
 fields = { "tags" = ["consumption", "income"] }
 evidence = "CDISP3KZ är en opak källkod.\ncatalog:variable_text:6685:19723:20089"
 
@@ -301,13 +301,13 @@ evidence = "CDISP3Z är en opak källkod.\ncatalog:variable_text:6686:19723:2008
 
 [[statement]]
 kind = "set"
-subject = "var:cdispbokez"
+subject = "var:disponibel-inkomst-skattejusterad-per-konsumtionsenhet"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "CDISPBOKEZ är en opak källkod.\ncatalog:variable_text:6687:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:cdispbokez"
+subject = "var:disponibel-inkomst-skattejusterad-per-konsumtionsenhet"
 fields = { "tags" = ["income"] }
 evidence = "CDISPBOKEZ är en opak källkod.\ncatalog:variable_text:6687:19723:20089"
 
@@ -337,13 +337,13 @@ evidence = "Disponibel inkomst enligt 2004 års definition.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:fbolanz"
+subject = "var:bostadslan-belopp-kronor"
 fields = { "sets" = ["bostadslan"] }
 evidence = "Källkoden är opak; etiketten delas med en indikator för bostadslån.\ncatalog:variable_text:6691:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:fbolanz"
+subject = "var:bostadslan-belopp-kronor"
 fields = { "tags" = ["finance", "housing"] }
 evidence = "Källkoden är opak; etiketten delas med en indikator för bostadslån.\ncatalog:variable_text:6691:19723:20089"
 
@@ -577,25 +577,25 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:mbboytaz"
+subject = "var:imputerat-bostadsarea"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6713:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mbboytaz"
+subject = "var:imputerat-bostadsarea"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6713:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mbkokz"
+subject = "var:imputerat-kokstyp"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6714:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:mbkokz"
+subject = "var:imputerat-kokstyp"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6714:19723:20089"
 
@@ -637,13 +637,13 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:muamorteringz"
+subject = "var:imputerat-amortering"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6718:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muamorteringz"
+subject = "var:imputerat-amortering"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6718:19723:20089"
 
@@ -661,25 +661,25 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:muhuselz"
+subject = "var:imputerat-hushallsel"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6720:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:muhuselz"
+subject = "var:imputerat-hushallsel"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6720:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:muombyinstz"
+subject = "var:imputerat-ombyggnad-tillbyggnad"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6721:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muombyinstz"
+subject = "var:imputerat-ombyggnad-tillbyggnad"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6721:19723:20089"
 
@@ -697,25 +697,25 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:murepz"
+subject = "var:imputerat-underhall-reparation"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6723:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:murepz"
+subject = "var:imputerat-underhall-reparation"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6723:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:murotomz"
+subject = "var:imputerat-skattereduktion-ombyggnation"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6724:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:murotomz"
+subject = "var:imputerat-skattereduktion-ombyggnation"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6724:19723:20089"
 
@@ -733,25 +733,25 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:musopz"
+subject = "var:imputerat-sophamtning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6726:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:musopz"
+subject = "var:imputerat-sophamtning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6726:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:musotz"
+subject = "var:imputerat-sotning"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6727:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:musotz"
+subject = "var:imputerat-sotning"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6727:19723:20089"
 
@@ -805,13 +805,13 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:muuppvvedz"
+subject = "var:imputerat-uppvarmningsutgift-pellets-ved-flis-span"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6732:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muuppvvedz"
+subject = "var:imputerat-uppvarmningsutgift-pellets-ved-flis-span"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6732:19723:20089"
 
@@ -829,25 +829,25 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:muvaz"
+subject = "var:imputerat-vatten-avlopp"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6734:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muvaz"
+subject = "var:imputerat-vatten-avlopp"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6734:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muvforsz"
+subject = "var:imputerat-villaforsakring"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6735:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:muvforsz"
+subject = "var:imputerat-villaforsakring"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6735:19723:20089"
 

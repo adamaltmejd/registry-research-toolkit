@@ -859,13 +859,13 @@ evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:23153:5844
 
 [[statement]]
 kind = "set"
-subject = "var:alefu"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-val-1"
 fields = { "sets" = ["arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning"] }
 evidence = "ALEFU är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23154:5479:5844"
 
 [[statement]]
 kind = "set"
-subject = "var:alefu"
+subject = "var:arbetslivserfarenhet-eller-forutbildning-val-1"
 fields = { "tags" = ["education", "employment"] }
 evidence = "ALEFU är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23154:5479:5844"
 
@@ -1603,13 +1603,13 @@ evidence = "Variabeln kodar skolhuvudman.\ncatalog:variable_text:23220:19905:200
 
 [[statement]]
 kind = "set"
-subject = "var:igren"
+subject = "var:studievag-slutligt-antagen-utbildningsgren"
 fields = { "sets" = ["studievag-i-gymnasieskolan"] }
 evidence = "Det inledande i är en ogenomskinlig bokstavskod för den antagna utbildningsgrenen.\ncatalog:variable_text:23221:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:igren"
+subject = "var:studievag-slutligt-antagen-utbildningsgren"
 fields = { "tags" = ["education"] }
 evidence = "Det inledande i är en ogenomskinlig bokstavskod för den antagna utbildningsgrenen.\ncatalog:variable_text:23221:5479:8766"
 
@@ -1687,25 +1687,25 @@ evidence = "Variabeln kodar inriktning för fristående skola och hör till utbi
 
 [[statement]]
 kind = "set"
-subject = "var:isektor"
+subject = "var:utbildningssektor-slutligt-antagen-utbildning"
 fields = { "sets" = ["utbildningssektor"] }
 evidence = "Id innehåller en enskild källbokstav före sektor.\ncatalog:variable_text:23230:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:isektor"
+subject = "var:utbildningssektor-slutligt-antagen-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Id innehåller en enskild källbokstav före sektor.\ncatalog:variable_text:23230:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:iskenh"
+subject = "var:skola-slutligt-antagen"
 fields = { "sets" = ["skola"] }
 evidence = "ISKENH är en ogenomskinlig källkod för skola.\ncatalog:variable_text:23231:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:iskenh"
+subject = "var:skola-slutligt-antagen"
 fields = { "tags" = [] }
 evidence = "ISKENH är en ogenomskinlig källkod för skola.\ncatalog:variable_text:23231:5479:8766"
 
@@ -1723,73 +1723,73 @@ evidence = "ISVGG är en ogenomskinlig bokstavskod.\ncatalog:variable_text:23232
 
 [[statement]]
 kind = "set"
-subject = "var:jmft"
+subject = "var:jamforelsetal-utbildningsansokan-val-1"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal.\ncatalog:variable_text:23233:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft"
+subject = "var:jamforelsetal-utbildningsansokan-val-1"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal.\ncatalog:variable_text:23233:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft2"
+subject = "var:jamforelsetal-utbildningsansokan-val-2"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23234:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft2"
+subject = "var:jamforelsetal-utbildningsansokan-val-2"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23234:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft3"
+subject = "var:jamforelsetal-utbildningsansokan-val-3"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23235:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft3"
+subject = "var:jamforelsetal-utbildningsansokan-val-3"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23235:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft4"
+subject = "var:jamforelsetal-utbildningsansokan-val-4"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23236:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft4"
+subject = "var:jamforelsetal-utbildningsansokan-val-4"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23236:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft5"
+subject = "var:jamforelsetal-utbildningsansokan-val-5"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23237:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft5"
+subject = "var:jamforelsetal-utbildningsansokan-val-5"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23237:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft6"
+subject = "var:jamforelsetal-utbildningsansokan-val-6"
 fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23238:5479:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:jmft6"
+subject = "var:jamforelsetal-utbildningsansokan-val-6"
 fields = { "tags" = ["education"] }
 evidence = "JMFT är en ogenomskinlig källkod för jämförelsetal; siffran är ett källslotnummer.\ncatalog:variable_text:23238:5479:8766"
 
@@ -2059,13 +2059,13 @@ evidence = "Meritvärde är ett utbildningsresultat.\ncatalog:variable_text:2326
 
 [[statement]]
 kind = "set"
-subject = "var:meritvarde-m2-ak9"
+subject = "var:meritvarde-17-basta-betyg-inkl-moderna-sprak"
 fields = { "sets" = ["meritvarde"] }
 evidence = "M2 är en ogenomskinlig källkod i id:t; etiketten anger meritvärde.\ncatalog:variable_text:23262:19905:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:meritvarde-m2-ak9"
+subject = "var:meritvarde-17-basta-betyg-inkl-moderna-sprak"
 fields = { "tags" = ["education"] }
 evidence = "M2 är en ogenomskinlig källkod i id:t; etiketten anger meritvärde.\ncatalog:variable_text:23262:19905:20089"
 
@@ -2119,73 +2119,73 @@ evidence = "Enskilt S före grupp är en källbokstav.\ncatalog:variable_text:23
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp2"
+subject = "var:sokgrupp-gymnasieprogram-val-2"
 fields = { "sets" = ["sokgrupp"] }
 evidence = "Enskilt S före grupp är en källbokstav; 2 är källans valnummer.\ncatalog:variable_text:23274:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp2"
+subject = "var:sokgrupp-gymnasieprogram-val-2"
 fields = { "tags" = ["education"] }
 evidence = "Enskilt S före grupp är en källbokstav; 2 är källans valnummer.\ncatalog:variable_text:23274:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp3"
+subject = "var:sokgrupp-gymnasieprogram-val-3"
 fields = { "sets" = ["sokgrupp"] }
 evidence = "Enskilt S före grupp är en källbokstav; 3 är källans valnummer.\ncatalog:variable_text:23275:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp3"
+subject = "var:sokgrupp-gymnasieprogram-val-3"
 fields = { "tags" = ["education"] }
 evidence = "Enskilt S före grupp är en källbokstav; 3 är källans valnummer.\ncatalog:variable_text:23275:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp4"
+subject = "var:sokgrupp-gymnasieprogram-val-4"
 fields = { "sets" = ["sokgrupp"] }
 evidence = "Enskilt S före grupp är en källbokstav; 4 är källans valnummer.\ncatalog:variable_text:23276:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp4"
+subject = "var:sokgrupp-gymnasieprogram-val-4"
 fields = { "tags" = ["education"] }
 evidence = "Enskilt S före grupp är en källbokstav; 4 är källans valnummer.\ncatalog:variable_text:23276:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp5"
+subject = "var:sokgrupp-gymnasieprogram-val-5"
 fields = { "sets" = ["sokgrupp"] }
 evidence = "Enskilt S före grupp är en källbokstav; 5 är källans valnummer.\ncatalog:variable_text:23277:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp5"
+subject = "var:sokgrupp-gymnasieprogram-val-5"
 fields = { "tags" = ["education"] }
 evidence = "Enskilt S före grupp är en källbokstav; 5 är källans valnummer.\ncatalog:variable_text:23277:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp6"
+subject = "var:sokgrupp-gymnasieprogram-val-6"
 fields = { "sets" = ["sokgrupp"] }
 evidence = "Enskilt S före grupp är en källbokstav; 6 är källans valnummer.\ncatalog:variable_text:23278:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgrupp6"
+subject = "var:sokgrupp-gymnasieprogram-val-6"
 fields = { "tags" = ["education"] }
 evidence = "Enskilt S före grupp är en källbokstav; 6 är källans valnummer.\ncatalog:variable_text:23278:5844:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgyreg"
+subject = "var:gymnasieregion-sokt-skola-val-1"
 fields = { "sets" = ["gymnasieregion"] }
 evidence = "SGYREG är en ogenomskinlig källmnemonik.\ncatalog:variable_text:23279:8401:8766"
 
 [[statement]]
 kind = "set"
-subject = "var:sgyreg"
+subject = "var:gymnasieregion-sokt-skola-val-1"
 fields = { "tags" = ["geography"] }
 evidence = "SGYREG är en ogenomskinlig källmnemonik.\ncatalog:variable_text:23279:8401:8766"
 
@@ -2863,13 +2863,13 @@ evidence = "U och S är enskilda källbokstäver.\ncatalog:variable_text:23337:1
 
 [[statement]]
 kind = "set"
-subject = "var:u-stv"
+subject = "var:studievag-sokt-utbildning"
 fields = { "sets" = ["studievag-i-gymnasieskolan"] }
 evidence = "Det inledande u är en ogenomskinlig bokstavskod i källkolumnen.\ncatalog:variable_text:23341:19905:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:u-stv"
+subject = "var:studievag-sokt-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Det inledande u är en ogenomskinlig bokstavskod i källkolumnen.\ncatalog:variable_text:23341:19905:20089"
 

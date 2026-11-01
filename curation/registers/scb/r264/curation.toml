@@ -5702,13 +5702,13 @@ evidence = "Intäkt utanför redovisat resultat.\ncatalog:variable_text:43645:13
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-intakter-skall-tas-upp-2"
+subject = "var:ovriga-intakter-tas-upp-inte-redovisat-resultat"
 fields = { "sets" = ["skattepliktiga-intakter-utanfor-redovisat-resultat"] }
 evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnen.\ncatalog:variable_text:43646:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-intakter-skall-tas-upp-2"
+subject = "var:ovriga-intakter-tas-upp-inte-redovisat-resultat"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnen.\ncatalog:variable_text:43646:13514:14610"
 
@@ -8450,25 +8450,25 @@ evidence = "Posten avser uttag från skogs- eller upphovsmannakonto.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:v0044"
+subject = "var:rantebidrag-kapitalintakter-ovriga-intakter"
 fields = { "sets" = ["ranteinkomster-och-andra-kapitalintakter"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43886:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0044"
+subject = "var:rantebidrag-kapitalintakter-ovriga-intakter"
 fields = { "tags" = ["finance"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43886:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0045"
+subject = "var:outnyttjat-underskott-tidigare-ar-bostad"
 fields = { "sets" = ["outnyttjade-underskott-fran-tidigare-ar"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43887:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0045"
+subject = "var:outnyttjat-underskott-tidigare-ar-bostad"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43887:12418:13514"
 
@@ -8606,13 +8606,13 @@ evidence = "Identifieraren är en källkod och källan har en tydlig benämning.
 
 [[statement]]
 kind = "set"
-subject = "var:v0188"
+subject = "var:behallning-skogskonto-upphovsmannakonto-arsutgang"
 fields = { "sets" = ["behallning-pa-skogskonto-och-upphovsmannakonto"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:43900:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0188"
+subject = "var:behallning-skogskonto-upphovsmannakonto-arsutgang"
 fields = { "tags" = ["taxation"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:43900:12418:13514"
 
@@ -8678,25 +8678,25 @@ evidence = "Källtexten efter övergången anger inte fondens årgång. Coordina
 
 [[statement]]
 kind = "set"
-subject = "var:v0350"
+subject = "var:aktiekapital-insatskapital"
 fields = { "sets" = ["eget-kapital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43906:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0350"
+subject = "var:aktiekapital-insatskapital"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43906:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0360"
+subject = "var:ingaende-eget-kapital-hb-kb-enskilda-naringsidkare"
 fields = { "sets" = ["eget-kapital"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43907:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0360"
+subject = "var:ingaende-eget-kapital-hb-kb-enskilda-naringsidkare"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43907:12418:14610"
 
@@ -8714,25 +8714,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43908:12418:135
 
 [[statement]]
 kind = "set"
-subject = "var:v0367"
+subject = "var:ovriga-tillskott-hb-kb"
 fields = { "sets" = ["delagartillskott"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43909:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0367"
+subject = "var:ovriga-tillskott-hb-kb"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43909:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0370"
+subject = "var:utgaende-eget-kapital-hb-kb-enskilda-naringsidkare"
 fields = { "sets" = ["eget-kapital"] }
 evidence = "Id:t är en källkod; utgående eget kapital ingår i gruppen.\ncatalog:variable_text:43910:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0370"
+subject = "var:utgaende-eget-kapital-hb-kb-enskilda-naringsidkare"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod; utgående eget kapital ingår i gruppen.\ncatalog:variable_text:43910:12418:14610"
 
@@ -8750,37 +8750,37 @@ evidence = "Den enda etiketten är avkortad.\ncatalog:variable_text:43911:12418:
 
 [[statement]]
 kind = "set"
-subject = "var:v0476"
+subject = "var:ni-narstaende-lanat-ut-pengar-till-foretaget"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod; frågan gäller utlåning till företaget.\ncatalog:variable_text:43912:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0476"
+subject = "var:ni-narstaende-lanat-ut-pengar-till-foretaget"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en källkod; frågan gäller utlåning till företaget.\ncatalog:variable_text:43912:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0477"
+subject = "var:ni-narstaende-avyttrat-egendom-till-foretaget-inkomstaret-ja"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43913:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0477"
+subject = "var:ni-narstaende-avyttrat-egendom-till-foretaget-inkomstaret-ja"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43913:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0478"
+subject = "var:ni-narstaende-forvarvat-egendom-fran-foretaget-inkomstaret"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43914:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0478"
+subject = "var:ni-narstaende-forvarvat-egendom-fran-foretaget-inkomstaret"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43914:12418:13149"
 
@@ -9218,37 +9218,37 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43950:124
 
 [[statement]]
 kind = "set"
-subject = "var:utdelning-pa-naringsbetingad-andel-som-ar-marknadsnoterad"
+subject = "var:utdelning-naringsbetingad-marknadsnoterad-innehav-under-1-ar"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43951:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:utdelning-pa-naringsbetingad-andel-som-ar-marknadsnoterad"
+subject = "var:utdelning-naringsbetingad-marknadsnoterad-innehav-under-1-ar"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:43951:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0613"
+subject = "var:ersattning-naringsandel-aktiedelagarratt-noterad-under-1-ar"
 fields = { "sets" = [] }
 evidence = "Id:t är en källkod; etiketten anger ersättning för avyttrad andel eller delägarrätt.\ncatalog:variable_text:43952:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0613"
+subject = "var:ersattning-naringsandel-aktiedelagarratt-noterad-under-1-ar"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en källkod; etiketten anger ersättning för avyttrad andel eller delägarrätt.\ncatalog:variable_text:43952:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0614"
+subject = "var:kapitalforlust-delagarratt-fastighet-overlaten-avdragsratt"
 fields = { "sets" = ["overford-avdragsratt-for-kapitalforluster"] }
 evidence = "Id:t är en källkod; överlåten avdragsrätt ingår i gruppen.\ncatalog:variable_text:43953:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0614"
+subject = "var:kapitalforlust-delagarratt-fastighet-overlaten-avdragsratt"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id:t är en källkod; överlåten avdragsrätt ingår i gruppen.\ncatalog:variable_text:43953:12418:13514"
 
@@ -9278,25 +9278,25 @@ evidence = "Id är en opak källkod.\ncatalog:variable_text:43955:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0623"
+subject = "var:korrigering-forsaljning-naringsfastighet-bostadsratt"
 fields = { "sets" = ["skattemassig-resultatkorrigering-vid-fastighetsavyttring"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43956:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0623"
+subject = "var:korrigering-forsaljning-naringsfastighet-bostadsratt"
 fields = { "tags" = ["business", "property", "taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43956:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0625"
+subject = "var:korrigering-forsaljning-naringsfastighet-akta-bostadsratt"
 fields = { "sets" = ["skattemassig-resultatkorrigering-vid-fastighetsavyttring"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43957:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0625"
+subject = "var:korrigering-forsaljning-naringsfastighet-akta-bostadsratt"
 fields = { "tags" = ["business", "property", "taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43957:12418:13514"
 
@@ -9458,13 +9458,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43970:124
 
 [[statement]]
 kind = "set"
-subject = "var:v0676"
+subject = "var:avskrivningar-avdrag-specifikation-sidan-3"
 fields = { "sets" = ["arets-avskrivningar"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43971:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0676"
+subject = "var:avskrivningar-avdrag-specifikation-sidan-3"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43971:12418:13514"
 
@@ -9542,13 +9542,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43977:124
 
 [[statement]]
 kind = "set"
-subject = "var:v0706"
+subject = "var:arets-avskrivning-markanlaggningar-fore-1-juli-1990"
 fields = { "sets" = ["arets-avskrivningar"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43978:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0706"
+subject = "var:arets-avskrivning-markanlaggningar-fore-1-juli-1990"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43978:12418:14610"
 
@@ -9566,25 +9566,25 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43979:124
 
 [[statement]]
 kind = "set"
-subject = "var:v0708"
+subject = "var:oavskrivet-varde-utgang-markanlaggningar-fore-1-juli-1990"
 fields = { "sets" = ["oavskrivet-varde-pa-materiella-tillgangar"] }
 evidence = "Källkoden är opak; etiketten anger oavskrivet värde på markanläggningar.\ncatalog:variable_text:43980:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0708"
+subject = "var:oavskrivet-varde-utgang-markanlaggningar-fore-1-juli-1990"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger oavskrivet värde på markanläggningar.\ncatalog:variable_text:43980:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0710"
+subject = "var:anskaffningsvarde-maskin-hyresfastighet-fore-1-juli-1990"
 fields = { "sets" = ["tidigare-anskaffningsvarden-for-materiella-tillgangar"] }
 evidence = "Källkoden är opak; etiketten anger tidigare anskaffningsvärde.\ncatalog:variable_text:43981:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0710"
+subject = "var:anskaffningsvarde-maskin-hyresfastighet-fore-1-juli-1990"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger tidigare anskaffningsvärde.\ncatalog:variable_text:43981:12418:14610"
 
@@ -9602,13 +9602,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43982:124
 
 [[statement]]
 kind = "set"
-subject = "var:v0712"
+subject = "var:avskrivning-tidigare-maskin-hyresfastighet-fore-1-juli-1990"
 fields = { "sets" = ["ackumulerade-avskrivningar"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43983:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0712"
+subject = "var:avskrivning-tidigare-maskin-hyresfastighet-fore-1-juli-1990"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43983:12418:14610"
 
@@ -9626,25 +9626,25 @@ evidence = "Källkoden är opak; etiketten anger oavskrivet värde på maskinell
 
 [[statement]]
 kind = "set"
-subject = "var:v0720"
+subject = "var:anskaffningsvarde-byggnader-fore-beskattningsaret"
 fields = { "sets" = ["tidigare-anskaffningsvarden-for-materiella-tillgangar"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger tidigare anskaffningsvärde för byggnader.\ncatalog:variable_text:43985:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0720"
+subject = "var:anskaffningsvarde-byggnader-fore-beskattningsaret"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger tidigare anskaffningsvärde för byggnader.\ncatalog:variable_text:43985:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0721"
+subject = "var:anskaffningar-byggnader-under-beskattningsaret"
 fields = { "sets" = ["arets-anskaffningar-av-materiella-tillgangar"] }
 evidence = "Källkoden är opak; etiketten anger årets anskaffningar av byggnader.\ncatalog:variable_text:43986:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0721"
+subject = "var:anskaffningar-byggnader-under-beskattningsaret"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger årets anskaffningar av byggnader.\ncatalog:variable_text:43986:12418:14610"
 
@@ -9686,13 +9686,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:43989:124
 
 [[statement]]
 kind = "set"
-subject = "var:v0726"
+subject = "var:oavskrivet-varde-byggnader-beskattningsarets-utgang"
 fields = { "sets" = ["oavskrivet-varde-pa-materiella-tillgangar"] }
 evidence = "Källkoden är opak; etiketten anger byggnaders oavskrivna värde.\ncatalog:variable_text:43990:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0726"
+subject = "var:oavskrivet-varde-byggnader-beskattningsarets-utgang"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger byggnaders oavskrivna värde.\ncatalog:variable_text:43990:12418:14610"
 
@@ -9734,13 +9734,13 @@ evidence = "Källkoden är opak; etiketten anger inköp under andra året före 
 
 [[statement]]
 kind = "set"
-subject = "var:v0749"
+subject = "var:inkop-maskin-inventarier-kvar-tredje-ar-fore-beskattningsar"
 fields = { "sets" = ["inkop-av-kvarvarande-maskiner-och-inventarier"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under tredje året före beskattningsåret.\ncatalog:variable_text:43994:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0749"
+subject = "var:inkop-maskin-inventarier-kvar-tredje-ar-fore-beskattningsar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under tredje året före beskattningsåret.\ncatalog:variable_text:43994:12418:14610"
 
@@ -9794,13 +9794,13 @@ evidence = "Källkoden är opak; etiketten anger skattemässigt värde vid året
 
 [[statement]]
 kind = "set"
-subject = "var:v0758"
+subject = "var:inkop-maskiner-inventarier-kvar-beskattningsaret"
 fields = { "sets" = ["arets-anskaffningar-av-materiella-tillgangar", "inkop-av-kvarvarande-maskiner-och-inventarier"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under beskattningsåret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter årets anskaffningar av materiella tillgångar. membership-0449: Företagets anskaffningskostnad för privat disponerad egendom anger inte årets anskaffningar av de definierade tillgångsslagen. membership-0450: Årets anskaffningar, inklusive årets anskaffningar som finns kvar vid årets slut. membership-0451: Båda posterna mäter anskaffningar under beskattningsåret, även när inventarierna avgränsas till kvarvarande innehav. membership-0452: Ingen vald post avser definitionens årsanskaffningar av materiella tillgångar. membership-0453: Inga valda variabler mäter årets anskaffningar av materiella tillgångar. membership-0454: Ingen vald variabel i sektionen mäter årets anskaffningar av materiella tillgångar. membership-0455: Valda tillgångsvärden avser inte årets anskaffningar. membership-0456: Ingen vald variabel i sektionen mäter årets anskaffningar av materiella tillgångar. membership-0457: Ingen vald variabel mäter årets materiella anskaffningar. membership-0458: Ingen vald post avser årets anskaffningar av materiella tillgångar. membership-0459: Sektionens tillgångsvärden och förskott är inte årets anskaffningsflöden enligt definitionen. membership-0460: Sektionens tillgångsvärden avser inte årets anskaffningsflöden. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter inköp av kvarvarande maskiner eller inventarier. membership-0449: Anskaffningskostnaden för privat disponerad egendom anger inte kvarvarande maskiner och inventarier efter anskaffningsår. membership-0450: v0751 anger årets kvarvarande anskaffningar men saknar avgörande uppgift om maskiner och inventarier för denna snävare kandidat. membership-0451: Posterna mäter inköp av kvarvarande maskiner och inventarier uppdelade efter anskaffningsår. membership-0452: Ingen vald post mäter dessa inköpsbelopp. membership-0453: Inga valda variabler mäter inköp av kvarvarande maskiner eller inventarier. membership-0454: Ingen vald variabel i sektionen mäter inköp av kvarvarande maskiner och inventarier. membership-0455: Valda inventarieposter mäter tillgångsvärde, avskrivning eller ersättning, inte inköp av kvarvarande inventarier. membership-0456: Ingen vald variabel i sektionen mäter inköp av kvarvarande maskiner och inventarier. membership-0457: Ingen vald variabel mäter dessa inköpsbelopp. membership-0458: Ingen vald post avser inköp av kvarvarande maskiner eller inventarier. membership-0459: Sektionens maskin- och inventarievärde är inte inköpsbelopp uppdelat efter anskaffningsår. membership-0460: Valt maskin- och inventarievärde är inte inköpsbelopp uppdelat efter anskaffningsår.\ncatalog:variable_text:43276:12418:14610\ncatalog:variable_text:43277:12418:13514\ncatalog:variable_text:43341:13514:14610\ncatalog:variable_text:43389:13514:14610\ncatalog:variable_text:43390:13514:14610\ncatalog:variable_text:43391:13514:14610\ncatalog:variable_text:43449:13514:14610\ncatalog:variable_text:43552:13514:14610\ncatalog:variable_text:43553:13514:14610\ncatalog:variable_text:43559:13514:14610\ncatalog:variable_text:43560:13514:14610\ncatalog:variable_text:43561:13514:14610\ncatalog:variable_text:43986:12418:14610\ncatalog:variable_text:43993:12418:14610\ncatalog:variable_text:43994:12418:14610\ncatalog:variable_text:43996:12418:14610\ncatalog:variable_text:43999:12418:14610\ncatalog:variable_text:44002:12418:14610\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44106:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0758"
+subject = "var:inkop-maskiner-inventarier-kvar-beskattningsaret"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under beskattningsåret. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter årets anskaffningar av materiella tillgångar. membership-0449: Företagets anskaffningskostnad för privat disponerad egendom anger inte årets anskaffningar av de definierade tillgångsslagen. membership-0450: Årets anskaffningar, inklusive årets anskaffningar som finns kvar vid årets slut. membership-0451: Båda posterna mäter anskaffningar under beskattningsåret, även när inventarierna avgränsas till kvarvarande innehav. membership-0452: Ingen vald post avser definitionens årsanskaffningar av materiella tillgångar. membership-0453: Inga valda variabler mäter årets anskaffningar av materiella tillgångar. membership-0454: Ingen vald variabel i sektionen mäter årets anskaffningar av materiella tillgångar. membership-0455: Valda tillgångsvärden avser inte årets anskaffningar. membership-0456: Ingen vald variabel i sektionen mäter årets anskaffningar av materiella tillgångar. membership-0457: Ingen vald variabel mäter årets materiella anskaffningar. membership-0458: Ingen vald post avser årets anskaffningar av materiella tillgångar. membership-0459: Sektionens tillgångsvärden och förskott är inte årets anskaffningsflöden enligt definitionen. membership-0460: Sektionens tillgångsvärden avser inte årets anskaffningsflöden. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0448: Ingen vald variabel mäter inköp av kvarvarande maskiner eller inventarier. membership-0449: Anskaffningskostnaden för privat disponerad egendom anger inte kvarvarande maskiner och inventarier efter anskaffningsår. membership-0450: v0751 anger årets kvarvarande anskaffningar men saknar avgörande uppgift om maskiner och inventarier för denna snävare kandidat. membership-0451: Posterna mäter inköp av kvarvarande maskiner och inventarier uppdelade efter anskaffningsår. membership-0452: Ingen vald post mäter dessa inköpsbelopp. membership-0453: Inga valda variabler mäter inköp av kvarvarande maskiner eller inventarier. membership-0454: Ingen vald variabel i sektionen mäter inköp av kvarvarande maskiner och inventarier. membership-0455: Valda inventarieposter mäter tillgångsvärde, avskrivning eller ersättning, inte inköp av kvarvarande inventarier. membership-0456: Ingen vald variabel i sektionen mäter inköp av kvarvarande maskiner och inventarier. membership-0457: Ingen vald variabel mäter dessa inköpsbelopp. membership-0458: Ingen vald post avser inköp av kvarvarande maskiner eller inventarier. membership-0459: Sektionens maskin- och inventarievärde är inte inköpsbelopp uppdelat efter anskaffningsår. membership-0460: Valt maskin- och inventarievärde är inte inköpsbelopp uppdelat efter anskaffningsår.\ncatalog:variable_text:43276:12418:14610\ncatalog:variable_text:43277:12418:13514\ncatalog:variable_text:43341:13514:14610\ncatalog:variable_text:43389:13514:14610\ncatalog:variable_text:43390:13514:14610\ncatalog:variable_text:43391:13514:14610\ncatalog:variable_text:43449:13514:14610\ncatalog:variable_text:43552:13514:14610\ncatalog:variable_text:43553:13514:14610\ncatalog:variable_text:43559:13514:14610\ncatalog:variable_text:43560:13514:14610\ncatalog:variable_text:43561:13514:14610\ncatalog:variable_text:43986:12418:14610\ncatalog:variable_text:43993:12418:14610\ncatalog:variable_text:43994:12418:14610\ncatalog:variable_text:43996:12418:14610\ncatalog:variable_text:43999:12418:14610\ncatalog:variable_text:44002:12418:14610\ncatalog:variable_text:44057:12418:13149\ncatalog:variable_text:44106:13514:14610"
 
@@ -9830,37 +9830,37 @@ evidence = "Källkoden är opak; etiketten anger summan av avdragsgrundande skog
 
 [[statement]]
 kind = "set"
-subject = "var:v0762"
+subject = "var:inkop-maskin-inventarier-kvar-aret-fore-beskattningsaret"
 fields = { "sets" = ["inkop-av-kvarvarande-maskiner-och-inventarier"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under året före beskattningsåret.\ncatalog:variable_text:44002:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0762"
+subject = "var:inkop-maskin-inventarier-kvar-aret-fore-beskattningsaret"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod; etiketten anger inköp under året före beskattningsåret.\ncatalog:variable_text:44002:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0763"
+subject = "var:avdragsutrymme-skogsavdrag-beskattningsarets-ingang"
 fields = { "sets" = ["avdragsutrymme-for-skogsavdrag"] }
 evidence = "Källkoden är opak; etiketten anger avdragsutrymme vid årets ingång.\ncatalog:variable_text:44003:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0763"
+subject = "var:avdragsutrymme-skogsavdrag-beskattningsarets-ingang"
 fields = { "tags" = ["forestry-fishing", "taxation"] }
 evidence = "Källkoden är opak; etiketten anger avdragsutrymme vid årets ingång.\ncatalog:variable_text:44003:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:okat-avdragsutrymme-pa-grund-av-forvarv-av-skogsmark-under"
+subject = "var:okat-avdragsutrymme-forvarv-skogsmark"
 fields = { "sets" = ["avdragsutrymme-for-skogsavdrag"] }
 evidence = "Källkoden är opak; etiketten anger ökat avdragsutrymme vid markförvärv.\ncatalog:variable_text:44004:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:okat-avdragsutrymme-pa-grund-av-forvarv-av-skogsmark-under"
+subject = "var:okat-avdragsutrymme-forvarv-skogsmark"
 fields = { "tags" = ["forestry-fishing", "taxation"] }
 evidence = "Källkoden är opak; etiketten anger ökat avdragsutrymme vid markförvärv.\ncatalog:variable_text:44004:12418:13514"
 
@@ -9914,25 +9914,25 @@ evidence = "Id:t är en ogenomskinlig källkod; etiketten anger ett kvoterat bel
 
 [[statement]]
 kind = "set"
-subject = "var:v0770"
+subject = "var:kvarvarande-restvarde-beskattningsarets-ingang"
 fields = { "sets" = ["restvarde-och-vardeforandring-for-takt"] }
 evidence = "Källkoden är opak; etiketten anger restvärde vid årets ingång.\ncatalog:variable_text:44009:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0770"
+subject = "var:kvarvarande-restvarde-beskattningsarets-ingang"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger restvärde vid årets ingång.\ncatalog:variable_text:44009:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:okat-anskaffningsvarde-pa-grund-av-forvarv"
+subject = "var:okat-anskaffningsvarde-forvarv-nyexploatering-takt"
 fields = { "sets" = ["restvarde-och-vardeforandring-for-takt"] }
 evidence = "Källkoden är opak; etiketten anger ökat anskaffningsvärde för täkt.\ncatalog:variable_text:44010:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:okat-anskaffningsvarde-pa-grund-av-forvarv"
+subject = "var:okat-anskaffningsvarde-forvarv-nyexploatering-takt"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; etiketten anger ökat anskaffningsvärde för täkt.\ncatalog:variable_text:44010:12418:13514"
 
@@ -9974,25 +9974,25 @@ evidence = "Id:t är en ogenomskinlig källkod. Coordinator group membership: Un
 
 [[statement]]
 kind = "set"
-subject = "var:v0807"
+subject = "var:positivt-justerad-anskaffningsutgift-fore-expansionsfond"
 fields = { "sets" = ["justerad-anskaffningsutgift-for-handelsbolagsandel"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:44014:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0807"
+subject = "var:positivt-justerad-anskaffningsutgift-fore-expansionsfond"
 fields = { "tags" = ["taxation"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:44014:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0808"
+subject = "var:negativt-justerad-anskaffningsutgift-fore-expansionsfond"
 fields = { "sets" = ["justerad-anskaffningsutgift-for-handelsbolagsandel"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:44015:12418:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v0808"
+subject = "var:negativt-justerad-anskaffningsutgift-fore-expansionsfond"
 fields = { "tags" = ["taxation"] }
 evidence = "Identifieraren är en källkod och källan har en tydlig benämning.\ncatalog:variable_text:44015:12418:14610"
 
@@ -10106,13 +10106,13 @@ evidence = "Id:t är en källkod och etiketten anger momspliktig omsättning ino
 
 [[statement]]
 kind = "set"
-subject = "var:v0890"
+subject = "var:momsfri-omsattning-sverige"
 fields = { "sets" = ["momsfri-omsattning"] }
 evidence = "Id:t är en källkod; momsfri omsättning ingår i gruppen.\ncatalog:variable_text:44025:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0890"
+subject = "var:momsfri-omsattning-sverige"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id:t är en källkod; momsfri omsättning ingår i gruppen.\ncatalog:variable_text:44025:12418:13514"
 
@@ -10142,13 +10142,13 @@ evidence = "Id är en opak källkod.\ncatalog:variable_text:44027:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0912"
+subject = "var:ni-narstaende-haft-lan-fran-foretag-pensionsstiftelse"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44028:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0912"
+subject = "var:ni-narstaende-haft-lan-fran-foretag-pensionsstiftelse"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44028:12418:13149"
 
@@ -10166,13 +10166,13 @@ evidence = "Källans enhet strider mot prisets betydelse.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:v0915"
+subject = "var:ni-narstaende-privatbruk-foretagsbekostad-egendom"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44030:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v0915"
+subject = "var:ni-narstaende-privatbruk-foretagsbekostad-egendom"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44030:12418:13149"
 
@@ -10226,13 +10226,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44034:12418:131
 
 [[statement]]
 kind = "set"
-subject = "var:v0932"
+subject = "var:icke-varaktiga-kapitaltillskott-foregaende-verksamhetsar"
 fields = { "sets" = ["icke-varaktiga-kapitaltillskott"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44035:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0932"
+subject = "var:icke-varaktiga-kapitaltillskott-foregaende-verksamhetsar"
 fields = { "tags" = ["business"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44035:12418:13514"
 
@@ -10370,25 +10370,25 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44046:12418:135
 
 [[statement]]
 kind = "set"
-subject = "var:v0963"
+subject = "var:utgaende-moms-varuforvarv-annat-eg-land"
 fields = { "sets" = ["utgaende-moms"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44047:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0963"
+subject = "var:utgaende-moms-varuforvarv-annat-eg-land"
 fields = { "tags" = ["taxation"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44047:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0964"
+subject = "var:utgaende-moms-tjansteforvarv-utlandet"
 fields = { "sets" = ["utgaende-moms"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44048:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v0964"
+subject = "var:utgaende-moms-tjansteforvarv-utlandet"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44048:12418:13514"
 
@@ -10514,13 +10514,13 @@ evidence = "Id är en opak källkod.\ncatalog:variable_text:44058:12418:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:v2000"
+subject = "var:ni-narstaende-betydande-verksam-aret-fem-foregaende-ar-ja"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44060:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2000"
+subject = "var:ni-narstaende-betydande-verksam-aret-fem-foregaende-ar-ja"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44060:12418:13149"
 
@@ -10562,13 +10562,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44063:12418:131
 
 [[statement]]
 kind = "set"
-subject = "var:v2005"
+subject = "var:foretagsledares-maka-make"
 fields = { "sets" = ["stallning-i-famansforetag"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44064:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2005"
+subject = "var:foretagsledares-maka-make"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44064:12418:13149"
 
@@ -10658,37 +10658,37 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44071:12418:131
 
 [[statement]]
 kind = "set"
-subject = "var:sparat-utdelningsutrymme-och-lattnadsutrymme-om-saldot-ar"
+subject = "var:sparat-utdelningsutrymme-lattnadsutrymme-positivt-saldo"
 fields = { "sets" = ["sparat-utdelningsutrymme"] }
 evidence = "Id:t är en källkod; samredovisat utdelnings- och lättnadsutrymme ingår i gruppen.\ncatalog:variable_text:44072:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:sparat-utdelningsutrymme-och-lattnadsutrymme-om-saldot-ar"
+subject = "var:sparat-utdelningsutrymme-lattnadsutrymme-positivt-saldo"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en källkod; samredovisat utdelnings- och lättnadsutrymme ingår i gruppen.\ncatalog:variable_text:44072:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2180"
+subject = "var:sparat-lattnadsutrymme-positivt-saldo"
 fields = { "sets" = ["sparat-lattnadsutrymme"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44073:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2180"
+subject = "var:sparat-lattnadsutrymme-positivt-saldo"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44073:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2181"
+subject = "var:utnyttjat-sparat-utdelningsutrymme-salda-aktier"
 fields = { "sets" = ["utnyttjat-sparat-utdelnings-och-lattnadsutrymme"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44074:12418:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:v2181"
+subject = "var:utnyttjat-sparat-utdelningsutrymme-salda-aktier"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44074:12418:13149"
 
@@ -10898,13 +10898,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44092:135
 
 [[statement]]
 kind = "set"
-subject = "var:v7603"
+subject = "var:avgar-annans-underskottsandel-gemensam-verksamhet"
 fields = { "sets" = ["annans-resultatandel-vid-gemensam-verksamhet"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44093:13879:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v7603"
+subject = "var:avgar-annans-underskottsandel-gemensam-verksamhet"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44093:13879:14610"
 
@@ -10934,13 +10934,13 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44095:13879:146
 
 [[statement]]
 kind = "set"
-subject = "var:skattemassiga-korrigering-av-bokort-resultat-vid-avyttring"
+subject = "var:skattekorrigering-avyttring-naringsfastighet-intakt"
 fields = { "sets" = ["skattemassig-resultatkorrigering-vid-fastighetsavyttring"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44096:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:skattemassiga-korrigering-av-bokort-resultat-vid-avyttring"
+subject = "var:skattekorrigering-avyttring-naringsfastighet-intakt"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44096:13514:14610"
 
@@ -10982,13 +10982,13 @@ evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:452661\n
 
 [[statement]]
 kind = "set"
-subject = "var:v7704"
+subject = "var:ovriga-kostnader-min-andel-skattemassig-justering"
 fields = { "sets" = [] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44100:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v7704"
+subject = "var:ovriga-kostnader-min-andel-skattemassig-justering"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44100:13514:14610"
 
@@ -11006,13 +11006,13 @@ evidence = "Identifieraren är en källkod och källan har en tydlig benämning.
 
 [[statement]]
 kind = "set"
-subject = "var:skattemassig-korrigering-av-bokfort-resultat-vid-avyttring"
+subject = "var:skattekorrigering-avyttring-naringsfastighet-minskning"
 fields = { "sets" = ["skattemassig-resultatkorrigering-vid-fastighetsavyttring"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44102:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:skattemassig-korrigering-av-bokfort-resultat-vid-avyttring"
+subject = "var:skattekorrigering-avyttring-naringsfastighet-minskning"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Id är en opak källkod.\ncatalog:variable_text:44102:13514:14610"
 
@@ -11042,13 +11042,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44104:135
 
 [[statement]]
 kind = "set"
-subject = "var:v8003"
+subject = "var:avdragna-ranteutgifter-naringsverksamhet-ku"
 fields = { "sets" = ["rantekostnader-och-ranteutgifter"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44105:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:v8003"
+subject = "var:avdragna-ranteutgifter-naringsverksamhet-ku"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:44105:13514:14610"
 

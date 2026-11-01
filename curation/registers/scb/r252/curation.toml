@@ -985,25 +985,25 @@ evidence = "Total potatisskörd hör till gruppen och jordbruk.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-brukningscentrum"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42135:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
+subject = "var:produktionsomrade-18-brukningscentrum"
 fields = { "tags" = ["geography"] }
 evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42135:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-areal-skattning"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42136:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:po8"
+subject = "var:produktionsomrade-8-areal-skattning"
 fields = { "tags" = ["geography"] }
 evidence = "Po är en bokstavskod och etiketten delas.\ncatalog:variable_text:42136:19723:20089"
 
@@ -1057,25 +1057,25 @@ evidence = "Koden anger skördeområde.\ncatalog:variable_text:42140:19723:20089
 
 [[statement]]
 kind = "set"
-subject = "var:sta-arealenlsam"
+subject = "var:registerareal-starkelsepotatis-sam"
 fields = { "sets" = ["potatisareal-enligt-sam"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger areal enligt SAM.\ncatalog:occurrence:438143\ncatalog:variable_text:42141:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-arealenlsam"
+subject = "var:registerareal-starkelsepotatis-sam"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger areal enligt SAM.\ncatalog:occurrence:438143\ncatalog:variable_text:42141:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-bortfallskod"
+subject = "var:bortfallskod-objektsbortfall-starkelsepotatis"
 fields = { "sets" = ["objektsbortfall"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger objektsbortfall.\ncatalog:occurrence:438144\ncatalog:variable_text:42142:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-bortfallskod"
+subject = "var:bortfallskod-objektsbortfall-starkelsepotatis"
 fields = { "tags" = ["methods"] }
 evidence = "Familjens prefix sta är en källkod; etiketten anger objektsbortfall.\ncatalog:occurrence:438144\ncatalog:variable_text:42142:19723:20089"
 
@@ -1129,37 +1129,37 @@ evidence = "Familjens prefix sta är en källkod; etiketten anger obärgad stär
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordlan"
+subject = "var:lan-brukningscentrum-starkelsepotatis"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och klassificeringen anger län.\ncatalog:occurrence:438149\ncatalog:valueset:7128\ncatalog:variable_text:42147:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordlan"
+subject = "var:lan-brukningscentrum-starkelsepotatis"
 fields = { "tags" = ["geography"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och klassificeringen anger län.\ncatalog:occurrence:438149\ncatalog:valueset:7128\ncatalog:variable_text:42147:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordpo8"
+subject = "var:produktionsomrade-8-starkelsepotatis"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger produktionsområde.\ncatalog:occurrence:438150\ncatalog:valueset:10438\ncatalog:variable_text:42148:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordpo8"
+subject = "var:produktionsomrade-8-starkelsepotatis"
 fields = { "tags" = ["geography"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger produktionsområde.\ncatalog:occurrence:438150\ncatalog:valueset:10438\ncatalog:variable_text:42148:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordsko"
+subject = "var:skordeomrade-starkelsepotatis"
 fields = { "sets" = ["skordeomrade"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger skördeområde.\ncatalog:occurrence:438151\ncatalog:variable_text:42149:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-ordsko"
+subject = "var:skordeomrade-starkelsepotatis"
 fields = { "tags" = ["geography"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger skördeområde.\ncatalog:occurrence:438151\ncatalog:variable_text:42149:19723:20089"
 
@@ -1201,13 +1201,13 @@ evidence = "Familjens prefix sta är en källkod; etiketten anger skördad stär
 
 [[statement]]
 kind = "set"
-subject = "var:sta-skotsavannanbrukare"
+subject = "var:starkelsepotatisareal-skots-av-annan-brukare"
 fields = { "sets" = ["annan-brukare"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger om arealen brukas av annan brukare.\ncatalog:occurrence:438155\ncatalog:valueset:1340\ncatalog:variable_text:42153:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-skotsavannanbrukare"
+subject = "var:starkelsepotatisareal-skots-av-annan-brukare"
 fields = { "tags" = ["agriculture"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och värdena anger om arealen brukas av annan brukare.\ncatalog:occurrence:438155\ncatalog:valueset:1340\ncatalog:variable_text:42153:19723:20089"
 
@@ -1225,13 +1225,13 @@ evidence = "Familjens prefix sta är en källkod; StoraN är antalet företag i 
 
 [[statement]]
 kind = "set"
-subject = "var:sta-stratum"
+subject = "var:stratum-starkelsepotatis"
 fields = { "sets" = ["urvalsstratum"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger urvalsstratum.\ncatalog:occurrence:438157\ncatalog:variable_text:42155:19723:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:sta-stratum"
+subject = "var:stratum-starkelsepotatis"
 fields = { "tags" = ["methods"] }
 evidence = "Familjens prefix sta är en källkod; etiketten och definitionen anger urvalsstratum.\ncatalog:occurrence:438157\ncatalog:variable_text:42155:19723:20089"
 

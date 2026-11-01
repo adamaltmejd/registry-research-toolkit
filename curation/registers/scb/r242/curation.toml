@@ -10,7 +10,7 @@ evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.tom
 kind = "link"
 subject = "var:kommungrupp-2017-namn"
 relation = "label_of"
-object = "scb/allmanna-val-valdeltagande/grupp"
+object = "scb/allmanna-val-valdeltagande/kommungrupp-2017-kod"
 evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:29\n\nLegacy code_label_pair declaration"
 
 [[statement]]
@@ -38,7 +38,7 @@ evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.tom
 kind = "link"
 subject = "var:medborgarland-varldsdel-namn"
 relation = "label_of"
-object = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
+object = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-landgrupp-kod-2010"
 evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:14\n\nLegacy code_label_pair declaration"
 
 [[statement]]
@@ -187,13 +187,13 @@ evidence = "Källförkortningen är opak; variabeln avser svarandestatus i AKU.\
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "sets" = ["arbetskraftsstatus"] }
 evidence = "Akus är en opak källkod för arbetskraftsstatus vid tabellframställning.\ncatalog:variable_text:2810:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "tags" = ["employment"] }
 evidence = "Akus är en opak källkod för arbetskraftsstatus vid tabellframställning.\ncatalog:variable_text:2810:16071:16436"
 
@@ -223,13 +223,13 @@ evidence = "Ålder vid årets slut ingår i åldersgruppen.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:aldg-1781"
+subject = "var:aldersgrupp-arsslut-2010"
 fields = { "sets" = ["alder"] }
 evidence = "1781 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2813\ncatalog:variable_text:2813:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:aldg-1781"
+subject = "var:aldersgrupp-arsslut-2010"
 fields = { "tags" = ["demographics"] }
 evidence = "1781 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2813\ncatalog:variable_text:2813:16071:16436"
 
@@ -283,49 +283,49 @@ evidence = "Variabeln grupperar ålder och kön.\ncatalog:variable_text:2817:160
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon3-11"
+subject = "var:kon-alder-medborgarskap-landstingsval-omval-2011"
 fields = { "sets" = ["alder-och-kon"] }
 evidence = "Familjens källkoder är svårtolkade förkortningar. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2818:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon3-11"
+subject = "var:kon-alder-medborgarskap-landstingsval-omval-2011"
 fields = { "tags" = ["demographics"] }
 evidence = "Familjens källkoder är svårtolkade förkortningar. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2818:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon3-21887"
+subject = "var:kon-alder-medborgarskap-landstingsval-2010"
 fields = { "sets" = ["alder-och-kon"] }
 evidence = "Suffixet 21887 finns inte i källkolumnen. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2819:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon3-21887"
+subject = "var:kon-alder-medborgarskap-landstingsval-2010"
 fields = { "tags" = ["demographics"] }
 evidence = "Suffixet 21887 finns inte i källkolumnen. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2819:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon6-11"
+subject = "var:kon-alder-medborgarskap-kommunval-omval-2011"
 fields = { "sets" = ["alder-och-kon"] }
 evidence = "Familjens källkoder är svårtolkade förkortningar. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2820:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon6-11"
+subject = "var:kon-alder-medborgarskap-kommunval-omval-2011"
 fields = { "tags" = ["demographics"] }
 evidence = "Familjens källkoder är svårtolkade förkortningar. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2820:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon6-22256"
+subject = "var:kon-alder-medborgarskap-kommunval-2010"
 fields = { "sets" = ["alder-och-kon"] }
 evidence = "Suffixet 22256 finns inte i källkolumnen. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2821:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:aldgkon6-22256"
+subject = "var:kon-alder-medborgarskap-kommunval-2010"
 fields = { "tags" = ["demographics"] }
 evidence = "Suffixet 22256 finns inte i källkolumnen. Variabeln grupperar kön, ålder och medborgarskap.\ncatalog:valueset:5133\ncatalog:variable_text:2821:16071:16436"
 
@@ -619,13 +619,13 @@ evidence = "Variabeln beskriver familje- och samlevnadsförhållanden.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:grupp"
+subject = "var:kommungrupp-2017-kod"
 fields = { "sets" = ["kommungrupp"] }
 evidence = "Grupp anger inte vilken indelning som avses och är en opak källmnemonik.\ncatalog:variable_text:2846:17532:17897"
 
 [[statement]]
 kind = "set"
-subject = "var:grupp"
+subject = "var:kommungrupp-2017-kod"
 fields = { "tags" = ["geography"] }
 evidence = "Grupp anger inte vilken indelning som avses och är en opak källmnemonik.\ncatalog:variable_text:2846:17532:17897"
 
@@ -811,13 +811,13 @@ evidence = "Id:t innehåller opaka källförkortningar och en räknarsuffix som 
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-ko-aku11"
+subject = "var:kalibrerad-vikt-aku-svarande-kommunval-omval-2011"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Id:t innehåller opaka källförkortningar. Etiketten delas med en annan variabel och målet kräver därför disambiguering enligt D-12.\ncatalog:variable_text:2862:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-ko-aku11"
+subject = "var:kalibrerad-vikt-aku-svarande-kommunval-omval-2011"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t innehåller opaka källförkortningar. Etiketten delas med en annan variabel och målet kräver därför disambiguering enligt D-12.\ncatalog:variable_text:2862:14975:15340"
 
@@ -847,13 +847,13 @@ evidence = "Variabeln är en kalibrerad urvalsvikt.\ncatalog:variable_text:2864:
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt-20805"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-2010"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "20805 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2865\ncatalog:variable_text:2865:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt-20805"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-2010"
 fields = { "tags" = ["methods"] }
 evidence = "20805 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2865\ncatalog:variable_text:2865:16071:16436"
 
@@ -871,25 +871,25 @@ evidence = "Id:t innehåller opaka källförkortningar och en räknarsuffix som 
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt-aku11"
+subject = "var:kalibrerad-vikt-aku-svarande-landstingsval-omval-2011"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Lt är en ogenomskinlig källförkortning för landstingsfullmäktigval.\ncatalog:variable_text:2867:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt-aku11"
+subject = "var:kalibrerad-vikt-aku-svarande-landstingsval-omval-2011"
 fields = { "tags" = ["methods"] }
 evidence = "Lt är en ogenomskinlig källförkortning för landstingsfullmäktigval.\ncatalog:variable_text:2867:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt11"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-omval-2011"
 fields = { "sets" = ["kalibrerad-vikt"] }
 evidence = "Lt är en opak källkod för landstingsfullmäktigval; 11 finns i källkolumnen.\ncatalog:variable_text:2868:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:kvikt-lt11"
+subject = "var:kalibrerad-vikt-rostberattigade-landstingsval-omval-2011"
 fields = { "tags" = ["methods"] }
 evidence = "Lt är en opak källkod för landstingsfullmäktigval; 11 finns i källkolumnen.\ncatalog:variable_text:2868:14975:15340"
 
@@ -1015,13 +1015,13 @@ evidence = "Variabeln grupperar medborgarskapsländer.\ncatalog:variable_text:28
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarland-varldsdel-2"
+subject = "var:medborgarland-varldsdel-landgrupp-kod-2010"
 fields = { "sets" = ["medborgarskap"] }
 evidence = "2 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2879\ncatalog:variable_text:2879:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarland-varldsdel-2"
+subject = "var:medborgarland-varldsdel-landgrupp-kod-2010"
 fields = { "tags" = ["demographics"] }
 evidence = "2 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2879\ncatalog:variable_text:2879:16071:16436"
 
@@ -1123,13 +1123,13 @@ evidence = "Variabeln anger en geografisk koordinat.\ncatalog:variable_text:2889
 
 [[statement]]
 kind = "set"
-subject = "var:postrost-7188"
+subject = "var:fortidsrostat-allmanna-val-2010"
 fields = { "sets" = ["fortidsrostning"] }
 evidence = "Sifferändelsen 7188 kommer inte från källkolumnen.\ncatalog:variable_text:2891:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:postrost-7188"
+subject = "var:fortidsrostat-allmanna-val-2010"
 fields = { "tags" = ["democracy"] }
 evidence = "Sifferändelsen 7188 kommer inte från källkolumnen.\ncatalog:variable_text:2891:16071:16436"
 
@@ -1195,13 +1195,13 @@ evidence = "Källkolumnen delas med rrost, vars kalibreringskodning skiljer sig 
 
 [[statement]]
 kind = "set"
-subject = "var:rostratt-25358"
+subject = "var:rostrattskod-2010"
 fields = { "sets" = ["rostratt"] }
 evidence = "Sifferändelsen 25358 kommer inte från källkolumnen.\ncatalog:variable_text:2897:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:rostratt-25358"
+subject = "var:rostrattskod-2010"
 fields = { "tags" = ["democracy"] }
 evidence = "Sifferändelsen 25358 kommer inte från källkolumnen.\ncatalog:variable_text:2897:18993:19358"
 
@@ -1543,13 +1543,13 @@ evidence = "Variabeln anger utbildningsnivå i text.\ncatalog:variable_text:2926
 
 [[statement]]
 kind = "set"
-subject = "var:svmedb-28724"
+subject = "var:svensk-utlandsk-medborgare-2010"
 fields = { "sets" = ["medborgarskap"] }
 evidence = "28724 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2927\ncatalog:variable_text:2927:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:svmedb-28724"
+subject = "var:svensk-utlandsk-medborgare-2010"
 fields = { "tags" = ["demographics"] }
 evidence = "28724 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2927\ncatalog:variable_text:2927:16071:16436"
 
@@ -1579,13 +1579,13 @@ evidence = "Variabeln kodar skäl att inte vilja ha arbete.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:undnr-15413"
+subject = "var:urvalsdel-id-2010"
 fields = { "sets" = [] }
 evidence = "15413 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2932\ncatalog:variable_text:2932:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:undnr-15413"
+subject = "var:urvalsdel-id-2010"
 fields = { "tags" = ["methods"] }
 evidence = "15413 är ett tillagt löpnummer som inte finns i källkolumnen.\ncatalog:occurrence-locators:variable:2932\ncatalog:variable_text:2932:16071:16436"
 
@@ -1699,13 +1699,13 @@ evidence = "Variabeln anger valdistrikt.\ncatalog:variable_text:2941:18993:19358
 
 [[statement]]
 kind = "set"
-subject = "var:valdistrikt-2"
+subject = "var:valdistrikt-kod-ordinarie-val-2010"
 fields = { "sets" = ["valdistrikt"] }
 evidence = "Sifferändelsen 2 kommer inte från källkolumnen.\ncatalog:variable_text:2942:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:valdistrikt-2"
+subject = "var:valdistrikt-kod-ordinarie-val-2010"
 fields = { "tags" = ["democracy", "geography"] }
 evidence = "Sifferändelsen 2 kommer inte från källkolumnen.\ncatalog:variable_text:2942:16071:16436"
 
@@ -1735,13 +1735,13 @@ evidence = "Variabeln anger valdistriktets namn.\ncatalog:variable_text:2944:175
 
 [[statement]]
 kind = "set"
-subject = "var:xrost"
+subject = "var:kalibrering-rostande-ej-rostande-kommunval-orebro-uppdelat"
 fields = { "sets" = ["valdeltagande"] }
 evidence = "X är en opak källkod i variabelnamnet.\ncatalog:variable_text:2945:14975:15340"
 
 [[statement]]
 kind = "set"
-subject = "var:xrost"
+subject = "var:kalibrering-rostande-ej-rostande-kommunval-orebro-uppdelat"
 fields = { "tags" = ["democracy"] }
 evidence = "X är en opak källkod i variabelnamnet.\ncatalog:variable_text:2945:14975:15340"
 

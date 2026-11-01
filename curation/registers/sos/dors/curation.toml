@@ -470,13 +470,13 @@ evidence = "Intervallrepresentation av effektueringsdatum.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:dbavser"
+subject = "var:dodsbevis-avser-vuxen-barn"
 fields = { "sets" = ["dodsalder"] }
 evidence = "DB är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsålder i år, månader, dagar och åldersklasser. Dödsbevisets indelning i barn under 24 timmar, barn 1–6 dagar och äldre är också en åldersklassificering vid dödsfallet.\ncatalog:variable_text:55838:-719162:2932897\ncatalog:variable_text:55844:-3287:2932897\ncatalog:variable_text:55845:-6575:2932897\ncatalog:variable_text:55847:6209:14245\ncatalog:variable_text:55852:-3287:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:dbavser"
+subject = "var:dodsbevis-avser-vuxen-barn"
 fields = { "tags" = ["demographics"] }
 evidence = "DB är en ogenomskinlig bokstavskod. Coordinator group membership: Omfattar dödsålder i år, månader, dagar och åldersklasser. Dödsbevisets indelning i barn under 24 timmar, barn 1–6 dagar och äldre är också en åldersklassificering vid dödsfallet.\ncatalog:variable_text:55838:-719162:2932897\ncatalog:variable_text:55844:-3287:2932897\ncatalog:variable_text:55845:-6575:2932897\ncatalog:variable_text:55847:6209:14245\ncatalog:variable_text:55852:-3287:2932897"
 
@@ -1454,13 +1454,13 @@ evidence = "Ofullständig anger inte den dokumenterade gränsen.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:opdatn"
+subject = "var:operationsdatum-inom-4-veckor-fore-doden-sas-datum"
 fields = { "sets" = ["operationsdatum"] }
 evidence = "Ensam bokstav N är en ogenomskinlig formatsuffix.\ncatalog:variable_text:55980:18262:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:opdatn"
+subject = "var:operationsdatum-inom-4-veckor-fore-doden-sas-datum"
 fields = { "tags" = [] }
 evidence = "Ensam bokstav N är en ogenomskinlig formatsuffix.\ncatalog:variable_text:55980:18262:2932897"
 
@@ -2174,13 +2174,13 @@ evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:620
 
 [[statement]]
 kind = "set"
-subject = "var:ulorsak"
+subject = "var:underliggande-dodsorsak"
 fields = { "sets" = ["dodsorsak"] }
 evidence = "UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:ulorsak"
+subject = "var:underliggande-dodsorsak"
 fields = { "tags" = ["mortality"] }
 evidence = "UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
 

@@ -1051,13 +1051,13 @@ evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:sun96tre"
+subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
 fields = { "sets" = ["utbildningsklassificering"] }
 evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
 
 [[statement]]
 kind = "set"
-subject = "var:sun96tre"
+subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
 

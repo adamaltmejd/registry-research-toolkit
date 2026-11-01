@@ -835,13 +835,13 @@ evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumn
 
 [[statement]]
 kind = "set"
-subject = "var:htjavan"
+subject = "var:hemtjanst-avlosning-anhorig-verkstallighet"
 fields = { "sets" = ["avlosning-av-anhorig", "hemtjanst"] }
 evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57411:15522:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:htjavan"
+subject = "var:hemtjanst-avlosning-anhorig-verkstallighet"
 fields = { "tags" = ["social-care"] }
 evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57411:15522:2932897"
 

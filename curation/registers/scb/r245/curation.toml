@@ -156,13 +156,13 @@ evidence = "Svarande och bortfall i AKU är undersökningsmetodik.\ncatalog:valu
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "sets" = ["arbetskraftsstatus"] }
 evidence = "AKUS är en ogenomskinlig källkod; etiketten anger arbetskraftsstatus för tabellframställning.\ncatalog:valueset:10978\ncatalog:variable_text:7718:16071:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:akus"
+subject = "var:arbetskraftsstatus-tabellframstallning"
 fields = { "tags" = ["employment"] }
 evidence = "AKUS är en ogenomskinlig källkod; etiketten anger arbetskraftsstatus för tabellframställning.\ncatalog:valueset:10978\ncatalog:variable_text:7718:16071:16436"
 

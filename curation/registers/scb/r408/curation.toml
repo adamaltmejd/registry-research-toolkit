@@ -1033,49 +1033,49 @@ evidence = "IndMan är ett opakt källnamn; månadsnumret kommer från källkolu
 
 [[statement]]
 kind = "set"
-subject = "var:indman3"
+subject = "var:anstallning-tre-manader-fore-referensmanaden"
 fields = { "sets" = ["anstallningsforekomst-och-status"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3303:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman3"
+subject = "var:anstallning-tre-manader-fore-referensmanaden"
 fields = { "tags" = ["employment"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3303:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman4"
+subject = "var:anstallning-fyra-manader-fore-referensmanaden"
 fields = { "sets" = ["anstallningsforekomst-och-status"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3304:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman4"
+subject = "var:anstallning-fyra-manader-fore-referensmanaden"
 fields = { "tags" = ["employment"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3304:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman5"
+subject = "var:anstallning-fem-manader-fore-referensmanaden"
 fields = { "sets" = ["anstallningsforekomst-och-status"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3305:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman5"
+subject = "var:anstallning-fem-manader-fore-referensmanaden"
 fields = { "tags" = ["employment"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3305:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman6"
+subject = "var:anstallning-sex-manader-fore-referensmanaden"
 fields = { "sets" = ["anstallningsforekomst-och-status"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3306:18262:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:indman6"
+subject = "var:anstallning-sex-manader-fore-referensmanaden"
 fields = { "tags" = ["employment"] }
 evidence = "IndMan är ett opakt källnamn för anställning; siffran kommer från källkolumnen.\ncatalog:variable_text:3306:18262:20454"
 

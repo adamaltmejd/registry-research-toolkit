@@ -169,61 +169,61 @@ evidence = "Bränsleenheten beskriver energimätning.\ncatalog:variable_text:766
 
 [[statement]]
 kind = "set"
-subject = "var:euton1"
+subject = "var:fartygsvikt-fartyg-1"
 fields = { "sets" = ["fartygsvikt"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56236\ncatalog:variable_text:7667:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton1"
+subject = "var:fartygsvikt-fartyg-1"
 fields = { "tags" = ["transport"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56236\ncatalog:variable_text:7667:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton2"
+subject = "var:fartygsvikt-fartyg-2"
 fields = { "sets" = ["fartygsvikt"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56237\ncatalog:variable_text:7668:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton2"
+subject = "var:fartygsvikt-fartyg-2"
 fields = { "tags" = ["transport"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56237\ncatalog:variable_text:7668:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton3"
+subject = "var:fartygsvikt-fartyg-3"
 fields = { "sets" = ["fartygsvikt"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56238\ncatalog:variable_text:7669:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton3"
+subject = "var:fartygsvikt-fartyg-3"
 fields = { "tags" = ["transport"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56238\ncatalog:variable_text:7669:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton4"
+subject = "var:fartygsvikt-fartyg-4"
 fields = { "sets" = ["fartygsvikt"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56239\ncatalog:variable_text:7670:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton4"
+subject = "var:fartygsvikt-fartyg-4"
 fields = { "tags" = ["transport"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56239\ncatalog:variable_text:7670:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton5"
+subject = "var:fartygsvikt-fartyg-5"
 fields = { "sets" = ["fartygsvikt"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56240\ncatalog:variable_text:7671:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:euton5"
+subject = "var:fartygsvikt-fartyg-5"
 fields = { "tags" = ["transport"] }
 evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56240\ncatalog:variable_text:7671:18993:19358"
 
@@ -289,61 +289,61 @@ evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7680:1278
 
 [[statement]]
 kind = "set"
-subject = "var:kw1"
+subject = "var:motoreffektnorm-fartyg-1"
 fields = { "sets" = ["motoreffektnorm"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56243\ncatalog:variable_text:7683:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw1"
+subject = "var:motoreffektnorm-fartyg-1"
 fields = { "tags" = ["transport"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56243\ncatalog:variable_text:7683:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw2"
+subject = "var:motoreffektnorm-fartyg-2"
 fields = { "sets" = ["motoreffektnorm"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56244\ncatalog:variable_text:7684:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw2"
+subject = "var:motoreffektnorm-fartyg-2"
 fields = { "tags" = ["transport"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56244\ncatalog:variable_text:7684:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw3"
+subject = "var:motoreffektnorm-fartyg-3"
 fields = { "sets" = ["motoreffektnorm"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56245\ncatalog:variable_text:7685:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw3"
+subject = "var:motoreffektnorm-fartyg-3"
 fields = { "tags" = ["transport"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56245\ncatalog:variable_text:7685:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw4"
+subject = "var:motoreffektnorm-fartyg-4"
 fields = { "sets" = ["motoreffektnorm"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56246\ncatalog:variable_text:7686:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw4"
+subject = "var:motoreffektnorm-fartyg-4"
 fields = { "tags" = ["transport"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56246\ncatalog:variable_text:7686:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw5"
+subject = "var:motoreffektnorm-fartyg-5"
 fields = { "sets" = ["motoreffektnorm"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56247\ncatalog:variable_text:7687:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:kw5"
+subject = "var:motoreffektnorm-fartyg-5"
 fields = { "tags" = ["transport"] }
 evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56247\ncatalog:variable_text:7687:18993:19358"
 
@@ -565,24 +565,24 @@ evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:771
 
 [[statement]]
 kind = "set"
-subject = "var:value"
+subject = "var:bransleforbrukning-naturligt-matt"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "Value är ett generiskt källord utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56264\ncatalog:variable_text:7715:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:value"
+subject = "var:bransleforbrukning-naturligt-matt"
 fields = { "tags" = ["energy"] }
 evidence = "Value är ett generiskt källord utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56264\ncatalog:variable_text:7715:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:value-num"
+subject = "var:bransleforbrukning-mwh"
 fields = { "sets" = ["bransleforbrukning"] }
 evidence = "Value_num är ett generiskt källmnemonik utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56265\ncatalog:variable_text:7716:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:value-num"
+subject = "var:bransleforbrukning-mwh"
 fields = { "tags" = ["energy"] }
 evidence = "Value_num är ett generiskt källmnemonik utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56265\ncatalog:variable_text:7716:18993:19358"

@@ -997,13 +997,13 @@ evidence = "Kodning av placeringsform.\ncatalog:variable_text:55766:17532:293289
 
 [[statement]]
 kind = "set"
-subject = "var:plac-lk"
+subject = "var:placeringskommun"
 fields = { "sets" = ["placeringskommun"] }
 evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:plac-lk"
+subject = "var:placeringskommun"
 fields = { "tags" = ["geography"] }
 evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
 

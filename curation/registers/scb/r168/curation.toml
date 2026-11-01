@@ -2433,13 +2433,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier oc
 
 [[statement]]
 kind = "set"
-subject = "var:fgb239"
+subject = "var:pagaende-nyanlaggningar-maskiner-inventarier"
 fields = { "sets" = ["pagaende-nyanlaggningar-och-forskott"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för maskiner och inventarier.\ncatalog:variable_text:10660:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgb239"
+subject = "var:pagaende-nyanlaggningar-maskiner-inventarier"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger pågående nyanläggningar för maskiner och inventarier.\ncatalog:variable_text:10660:18993:19723"
 
@@ -2481,13 +2481,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger en annan känd kapi
 
 [[statement]]
 kind = "set"
-subject = "var:fgr550"
+subject = "var:vinst-forlust-avyttring-vardepapper"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak; etiketten anger vinst eller förlust vid avyttring av värdepapper.\ncatalog:variable_text:10664:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr550"
+subject = "var:vinst-forlust-avyttring-vardepapper"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkolumnens kod är opak; etiketten anger vinst eller förlust vid avyttring av värdepapper.\ncatalog:variable_text:10664:12053:13514"
 
@@ -2553,13 +2553,13 @@ evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga 
 
 [[statement]]
 kind = "set"
-subject = "var:fgr583"
+subject = "var:nedskrivn-finansiella-anlaggningstillg-kortfrist-placeringar"
 fields = { "sets" = ["nedskrivningar-av-finansiella-tillgangar"] }
 evidence = "Id:t är en källkod; etiketten anger nedskrivningar av finansiella tillgångar och placeringar.\ncatalog:variable_text:10670:13514:18993\ncatalog:variable_text:10670:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr583"
+subject = "var:nedskrivn-finansiella-anlaggningstillg-kortfrist-placeringar"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod; etiketten anger nedskrivningar av finansiella tillgångar och placeringar.\ncatalog:variable_text:10670:13514:18993\ncatalog:variable_text:10670:18993:19723"
 
@@ -2577,13 +2577,13 @@ evidence = "Källkolumnens kod är opak; etiketten anger resultat från övriga 
 
 [[statement]]
 kind = "set"
-subject = "var:fgr594"
+subject = "var:ovriga-bokslutsdispositioner-daravpost"
 fields = { "sets" = ["bokslutsdispositioner"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger en delpost till övriga bokslutsdispositioner.\ncatalog:variable_text:10672:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fgr594"
+subject = "var:ovriga-bokslutsdispositioner-daravpost"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger en delpost till övriga bokslutsdispositioner.\ncatalog:variable_text:10672:18993:19723"
 
@@ -2805,25 +2805,25 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger summan av pågåend
 
 [[statement]]
 kind = "set"
-subject = "var:fsum903"
+subject = "var:summa-varulager-kortfristiga-fordringar"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak; etiketten anger varulager och kortfristiga fordringar. Kandidatgruppen för kortfristiga fordringar utesluter denna sammanslagning.\ncatalog:variable_text:10691:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum903"
+subject = "var:summa-varulager-kortfristiga-fordringar"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är opak; etiketten anger varulager och kortfristiga fordringar. Kandidatgruppen för kortfristiga fordringar utesluter denna sammanslagning.\ncatalog:variable_text:10691:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum904"
+subject = "var:summa-kortfristiga-placeringar-kassa-bank"
 fields = { "sets" = [] }
 evidence = "Källkolumnens kod är opak; etiketten anger summan av kortfristiga placeringar och kassa eller bank. Kandidatgruppen för kortfristiga placeringar utesluter kassa och bank.\ncatalog:variable_text:10692:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum904"
+subject = "var:summa-kortfristiga-placeringar-kassa-bank"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källkolumnens kod är opak; etiketten anger summan av kortfristiga placeringar och kassa eller bank. Kandidatgruppen för kortfristiga placeringar utesluter kassa och bank.\ncatalog:variable_text:10692:18993:19723"
 
@@ -2841,13 +2841,13 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger summa fritt eget ka
 
 [[statement]]
 kind = "set"
-subject = "var:fsum907"
+subject = "var:ovriga-avsattningar-inklusive-skatter-garantier"
 fields = { "sets" = ["avsattningar"] }
 evidence = "Källkolumnens kod är opak; etiketten anger övriga avsättningar inklusive skatter och garantier.\ncatalog:variable_text:10694:18993:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:fsum907"
+subject = "var:ovriga-avsattningar-inklusive-skatter-garantier"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnens kod är opak; etiketten anger övriga avsättningar inklusive skatter och garantier.\ncatalog:variable_text:10694:18993:19723"
 
@@ -4161,37 +4161,37 @@ evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:ng-styr"
+subject = "var:naringsgren-sni-2002-administrativ-enhet"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10806:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:ng-styr"
+subject = "var:naringsgren-sni-2002-administrativ-enhet"
 fields = { "tags" = ["business"] }
 evidence = "Ng är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10806:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs-styr"
+subject = "var:naringsgren-sni-2002-statistisk-enhet"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Ngs är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10807:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs-styr"
+subject = "var:naringsgren-sni-2002-statistisk-enhet"
 fields = { "tags" = ["business"] }
 evidence = "Ngs är en ogenomskinlig källkod; etiketten anger näringsgren.\ncatalog:variable_text:10807:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:nrbr-upd"
+subject = "var:nationalrakenskaper-branschindelning-statistiskt-sni-2002"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger nationalräkenskapernas branschindelning.\ncatalog:variable_text:10808:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:nrbr-upd"
+subject = "var:nationalrakenskaper-branschindelning-statistiskt-sni-2002"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger nationalräkenskapernas branschindelning.\ncatalog:variable_text:10808:13514:13879"
 
@@ -5265,13 +5265,13 @@ evidence = "Posten avser företagets varulager.\ncatalog:variable_text:10901:189
 
 [[statement]]
 kind = "set"
-subject = "var:vga12"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar"
 fields = { "sets" = ["bruttoinvesteringar-byggnader-och-markanlaggningar"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger bruttoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10904:12053:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:vga12"
+subject = "var:bruttoinvesteringar-byggnader-markanlaggningar"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger bruttoinvesteringar i byggnader och markanläggningar.\ncatalog:variable_text:10904:12053:13514"
 

@@ -54,7 +54,7 @@
 "befattningskod-vid-monstring" = ["mofbtkd"]
 "monstringsdag" = ["mofdag"]
 "status-vid-monstring" = ["mofstat"]
-"mofvfri" = ["mofvfri"]
+"vapenfri-efter-monstring" = ["mofvfri"]
 "monstringstatus" = ["statu"]
 "muskelfaktor" = ["mufak"]
 "muskkap" = ["muskkap"]

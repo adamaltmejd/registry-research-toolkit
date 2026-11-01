@@ -127,85 +127,85 @@ evidence = "Examenstyp avser utbildning.\ncatalog:variable_text:12821:12053:1241
 
 [[statement]]
 kind = "set"
-subject = "var:f14a"
+subject = "var:arbetskrav-specialistkunskaper-avhandlingsomrade"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14A är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12822:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14a"
+subject = "var:arbetskrav-specialistkunskaper-avhandlingsomrade"
 fields = { "tags" = ["employment"] }
 evidence = "F14A är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12822:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14b"
+subject = "var:arbetskrav-kunskaper-amnes-vetenskapsomrade"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14B är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12823:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14b"
+subject = "var:arbetskrav-kunskaper-amnes-vetenskapsomrade"
 fields = { "tags" = ["employment"] }
 evidence = "F14B är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12823:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14c"
+subject = "var:arbetskrav-kunskaper-aktuella-forskningsresultat"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14C är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12824:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14c"
+subject = "var:arbetskrav-kunskaper-aktuella-forskningsresultat"
 fields = { "tags" = ["employment"] }
 evidence = "F14C är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12824:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14d"
+subject = "var:arbetskrav-kritiskt-vetenskapligt-tankande"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14D är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12825:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14d"
+subject = "var:arbetskrav-kritiskt-vetenskapligt-tankande"
 fields = { "tags" = ["employment"] }
 evidence = "F14D är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12825:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14e"
+subject = "var:arbetskrav-skriftliga-presentationer"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14E är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12826:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14e"
+subject = "var:arbetskrav-skriftliga-presentationer"
 fields = { "tags" = ["employment"] }
 evidence = "F14E är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12826:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14f"
+subject = "var:arbetskrav-kommunikation-engelska-annat-frammande-sprak"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14F är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12827:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14f"
+subject = "var:arbetskrav-kommunikation-engelska-annat-frammande-sprak"
 fields = { "tags" = ["employment"] }
 evidence = "F14F är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12827:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14g"
+subject = "var:arbetskrav-ledarskap-projektledning"
 fields = { "sets" = ["arbetsuppgifternas-krav"] }
 evidence = "F14G är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12828:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f14g"
+subject = "var:arbetskrav-ledarskap-projektledning"
 fields = { "tags" = ["employment"] }
 evidence = "F14G är en opak frågekod; etiketten delas med andra variabler och kräver särskiljning.\ncatalog:variable_text:12828:12053:12418"
 
@@ -319,37 +319,37 @@ evidence = "F23_2 är en opak frågekod.\ncatalog:variable_text:12837:12053:1241
 
 [[statement]]
 kind = "set"
-subject = "var:f24-1"
+subject = "var:postdoc-tjanst-efter-forskarexamen-sverige"
 fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
 evidence = "F24_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12838:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f24-1"
+subject = "var:postdoc-tjanst-efter-forskarexamen-sverige"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F24_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12838:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f24-2"
+subject = "var:postdoc-tjanst-efter-forskarexamen-utomlands"
 fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
 evidence = "F24_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12839:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f24-2"
+subject = "var:postdoc-tjanst-efter-forskarexamen-utomlands"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F24_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12839:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f24-3"
+subject = "var:inte-postdoc-tjanst-efter-forskarexamen-sverige-utomlands"
 fields = { "sets" = ["postdoktorstjanst-efter-forskarexamen"] }
 evidence = "F24_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12840:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f24-3"
+subject = "var:inte-postdoc-tjanst-efter-forskarexamen-sverige-utomlands"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F24_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12840:12053:12418"
 
@@ -475,85 +475,85 @@ evidence = "F26_5 är en opak frågekod; den delade etiketten kräver särskiljn
 
 [[statement]]
 kind = "set"
-subject = "var:f28-1"
+subject = "var:inte-hemmavarande-barn-under-17-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12851:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-1"
+subject = "var:inte-hemmavarande-barn-under-17-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12851:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-2"
+subject = "var:har-hemmavarande-barn-0-5-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12852:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-2"
+subject = "var:har-hemmavarande-barn-0-5-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12852:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-2ant"
+subject = "var:antal-hemmavarande-barn-0-5-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_2ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12853:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-2ant"
+subject = "var:antal-hemmavarande-barn-0-5-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_2ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12853:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-3"
+subject = "var:har-hemmavarande-barn-6-12-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12854:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-3"
+subject = "var:har-hemmavarande-barn-6-12-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12854:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-3ant"
+subject = "var:antal-hemmavarande-barn-6-12-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_3ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12855:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-3ant"
+subject = "var:antal-hemmavarande-barn-6-12-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_3ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12855:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-4"
+subject = "var:har-hemmavarande-barn-13-16-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12856:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-4"
+subject = "var:har-hemmavarande-barn-13-16-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12856:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-4ant"
+subject = "var:antal-hemmavarande-barn-13-16-ar"
 fields = { "sets" = ["hemmavarande-barn"] }
 evidence = "F28_4ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12857:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f28-4ant"
+subject = "var:antal-hemmavarande-barn-13-16-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "F28_4ANT är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12857:12053:12418"
 
@@ -571,109 +571,109 @@ evidence = "F29 är en opak frågekod.\ncatalog:variable_text:12858:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5"
+subject = "var:forskning-utveckling-i-arbete-efter-utbildning"
 fields = { "sets" = ["arbete-efter-utbildning"] }
 evidence = "F5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12859:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f5"
+subject = "var:forskning-utveckling-i-arbete-efter-utbildning"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F5 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12859:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-1"
+subject = "var:andel-arbetstid-grundforskning-av-total-arbetstid"
 fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
 evidence = "F6_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12860:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-1"
+subject = "var:andel-arbetstid-grundforskning-av-total-arbetstid"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F6_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12860:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-2"
+subject = "var:andel-arbetstid-tillampad-forskning-av-total-arbetstid"
 fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
 evidence = "F6_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12861:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-2"
+subject = "var:andel-arbetstid-tillampad-forskning-av-total-arbetstid"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F6_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12861:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-3"
+subject = "var:andel-arbetstid-utvecklingsarbete-av-total-arbetstid"
 fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
 evidence = "F6_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12862:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-3"
+subject = "var:andel-arbetstid-utvecklingsarbete-av-total-arbetstid"
 fields = { "tags" = ["employment", "research"] }
 evidence = "F6_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12862:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-4"
+subject = "var:andel-arbetstid-annat-av-total-arbetstid"
 fields = { "sets" = ["arbetstidens-verksamhetsfordelning"] }
 evidence = "F6_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12863:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f6-4"
+subject = "var:andel-arbetstid-annat-av-total-arbetstid"
 fields = { "tags" = ["employment"] }
 evidence = "F6_4 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12863:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f8"
+subject = "var:arbete-universitet-hogskola-31-mars-6-april-2003"
 fields = { "sets" = ["arbete-efter-utbildning"] }
 evidence = "F8 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12864:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f8"
+subject = "var:arbete-universitet-hogskola-31-mars-6-april-2003"
 fields = { "tags" = ["employment"] }
 evidence = "F8 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12864:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-1"
+subject = "var:undervisning-grundutbildning-universitet-hogskola"
 fields = { "sets" = ["arbete-inom-olika-omraden"] }
 evidence = "F9_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12865:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-1"
+subject = "var:undervisning-grundutbildning-universitet-hogskola"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F9_1 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12865:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-2"
+subject = "var:undervisning-forskarutbildning-universitet-hogskola"
 fields = { "sets" = ["arbete-inom-olika-omraden"] }
 evidence = "F9_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12866:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-2"
+subject = "var:undervisning-forskarutbildning-universitet-hogskola"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F9_2 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12866:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-3"
+subject = "var:handledning-studenter-universitet-hogskola"
 fields = { "sets" = ["arbete-inom-olika-omraden"] }
 evidence = "F9_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12867:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:f9-3"
+subject = "var:handledning-studenter-universitet-hogskola"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F9_3 är en opak frågekod; den delade etiketten kräver särskiljning.\ncatalog:variable_text:12867:12053:12418"
 

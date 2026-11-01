@@ -205,13 +205,13 @@ evidence = "F7b är en ogenomskinlig frågekod; samma etikett förekommer för a
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:forsok-andring-elavtal-nuvarande-elleverantor"
 fields = { "sets" = [] }
 evidence = "F8b är en ogenomskinlig frågekod och etiketten anger försök till ändring av elavtal.\ncatalog:variable_text:7341:13514:14610"
 
 [[statement]]
 kind = "set"
-subject = "var:f8b"
+subject = "var:forsok-andring-elavtal-nuvarande-elleverantor"
 fields = { "tags" = ["energy"] }
 evidence = "F8b är en ogenomskinlig frågekod och etiketten anger försök till ändring av elavtal.\ncatalog:variable_text:7341:13514:14610"
 

@@ -175,25 +175,25 @@ evidence = "Källkoden är opak; posten är summan av transportmedelskostnader.\
 
 [[statement]]
 kind = "set"
-subject = "var:v1201"
+subject = "var:forvaltningskostnader"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; posten är en angiven förvaltningskostnad.\ncatalog:variable_text:27734:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1201"
+subject = "var:forvaltningskostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven förvaltningskostnad.\ncatalog:variable_text:27734:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1202"
+subject = "var:redovisningstjanster-advokat-rattegangskostnader"
 fields = { "sets" = ["kopta-tjanster-och-forvaltningskostnader"] }
 evidence = "Källkoden är opak; posten är en angiven komponent av köpta tjänster.\ncatalog:variable_text:27735:10592:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:v1202"
+subject = "var:redovisningstjanster-advokat-rattegangskostnader"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är en angiven komponent av köpta tjänster.\ncatalog:variable_text:27735:10592:12784"
 
@@ -655,61 +655,61 @@ evidence = "Källkoden är opak; annat material är en angiven produktemballagek
 
 [[statement]]
 kind = "set"
-subject = "var:v4000"
+subject = "var:ravaror-fornodenheter-inkopskostnader-utover-pris"
 fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
 evidence = "Källkoden är opak; direkta inköpskostnader är ett angivet tillägg.\ncatalog:variable_text:27774:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v4000"
+subject = "var:ravaror-fornodenheter-inkopskostnader-utover-pris"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; direkta inköpskostnader är ett angivet tillägg.\ncatalog:variable_text:27774:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v5000"
+subject = "var:ravaror-fornodenheter-lagerforandring"
 fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
 evidence = "Källkoden är opak; lagerförändring ingår uttryckligen i kandidatgruppen.\ncatalog:variable_text:27775:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v5000"
+subject = "var:ravaror-fornodenheter-lagerforandring"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; lagerförändring ingår uttryckligen i kandidatgruppen.\ncatalog:variable_text:27775:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v6000"
+subject = "var:ravaror-fornodenheter-ovrigt"
 fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
 evidence = "Källkoden är opak; restposten ingår i kandidatgruppen.\ncatalog:variable_text:27776:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v6000"
+subject = "var:ravaror-fornodenheter-ovrigt"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; restposten ingår i kandidatgruppen.\ncatalog:variable_text:27776:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v7000"
+subject = "var:ravaror-fornodenheter-icke-varufordelat-bortfall"
 fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
 evidence = "Källkoden är opak; den icke varufördelade restposten ingår i kandidatgruppen.\ncatalog:variable_text:27777:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v7000"
+subject = "var:ravaror-fornodenheter-icke-varufordelat-bortfall"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; den icke varufördelade restposten ingår i kandidatgruppen.\ncatalog:variable_text:27777:10592:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:v9000"
+subject = "var:summa-ravaror-fornodenheter"
 fields = { "sets" = ["kostnader-for-ravaror-och-fornodenheter"] }
 evidence = "Källkoden är opak; posten är totalen för råvaror och förnödenheter.\ncatalog:variable_text:27778:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v9000"
+subject = "var:summa-ravaror-fornodenheter"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är opak; posten är totalen för råvaror och förnödenheter.\ncatalog:variable_text:27778:19358:19723"
 

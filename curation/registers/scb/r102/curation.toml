@@ -1871,13 +1871,13 @@ evidence = "AP är en ogenomskinlig bokstavskod.\ncatalog:variable_text:22494:96
 
 [[statement]]
 kind = "set"
-subject = "var:arb201"
+subject = "var:betyg-arbetsmiljo-yrkesliv"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "ARB201 är en opak kurskod; etiketten anger betyget.\ncatalog:variable_text:22498:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:arb201"
+subject = "var:betyg-arbetsmiljo-yrkesliv"
 fields = { "tags" = ["education"] }
 evidence = "ARB201 är en opak kurskod; etiketten anger betyget.\ncatalog:variable_text:22498:9678:11869"
 
@@ -3563,49 +3563,49 @@ evidence = "Folkbokföringskommun är en geografisk kommunangivelse.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:fr205"
+subject = "var:betyg-franska-c-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "FR205 är en ogenomskinlig kurskod; variabeln avser ett kursbetyg.\ncatalog:variable_text:22640:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr205"
+subject = "var:betyg-franska-c-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "FR205 är en ogenomskinlig kurskod; variabeln avser ett kursbetyg.\ncatalog:variable_text:22640:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr206"
+subject = "var:betyg-franska-c-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "FR206 är en ogenomskinlig kurskod; variabeln avser ett kursbetyg.\ncatalog:variable_text:22641:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr206"
+subject = "var:betyg-franska-c-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "FR206 är en ogenomskinlig kurskod; variabeln avser ett kursbetyg.\ncatalog:variable_text:22641:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr207"
+subject = "var:betyg-franska-b-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "FR207 är en opak kurskod.\ncatalog:variable_text:22642:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr207"
+subject = "var:betyg-franska-b-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "FR207 är en opak kurskod.\ncatalog:variable_text:22642:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr208"
+subject = "var:betyg-franska-b-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "FR208 är en opak kurskod.\ncatalog:variable_text:22643:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:fr208"
+subject = "var:betyg-franska-b-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "FR208 är en opak kurskod.\ncatalog:variable_text:22643:9678:11869"
 
@@ -3959,25 +3959,25 @@ evidence = "Kursbetyget hör till ämnes- och kursbetyg.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-hem-konsumentkunskap"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "HKK är en bokstavsförkortning som inte förekommer i etiketten.\ncatalog:variable_text:22674:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:hkk"
+subject = "var:betyg-hem-konsumentkunskap"
 fields = { "tags" = ["education"] }
 evidence = "HKK är en bokstavsförkortning som inte förekommer i etiketten.\ncatalog:variable_text:22674:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:hman-ar9"
+subject = "var:huvudmannatyp-avslutad-grundskola"
 fields = { "sets" = ["skolhuvudman"] }
 evidence = "Hman är en ogenomskinlig källförkortning; etiketten kolliderar och målet behöver hållas för disambiguering.\ncatalog:variable_text:22675:15156:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:hman-ar9"
+subject = "var:huvudmannatyp-avslutad-grundskola"
 fields = { "tags" = ["education"] }
 evidence = "Hman är en ogenomskinlig källförkortning; etiketten kolliderar och målet behöver hållas för disambiguering.\ncatalog:variable_text:22675:15156:20270"
 
@@ -4175,25 +4175,25 @@ evidence = "Variabeln klassificerar svensk och utländsk bakgrund.\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:it205"
+subject = "var:betyg-italienska-c-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "IT205 är en opak kurskod; etiketten anger betygets ämne och nivå.\ncatalog:variable_text:22692:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:it205"
+subject = "var:betyg-italienska-c-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "IT205 är en opak kurskod; etiketten anger betygets ämne och nivå.\ncatalog:variable_text:22692:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:it206"
+subject = "var:betyg-italienska-c-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "IT206 är en opak kurskod; etiketten anger betygets ämne och nivå.\ncatalog:variable_text:22693:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:it206"
+subject = "var:betyg-italienska-c-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "IT206 är en opak kurskod; etiketten anger betygets ämne och nivå.\ncatalog:variable_text:22693:9678:11869"
 
@@ -4427,37 +4427,37 @@ evidence = "Karaktärsämnets kod är en ämnesangivelse.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:ke"
+subject = "var:betyg-kemi"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "Ke är en opak ämneskod för kemi; variabeln mäter ett ämnesbetyg.\ncatalog:variable_text:22713:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ke"
+subject = "var:betyg-kemi"
 fields = { "tags" = ["education"] }
 evidence = "Ke är en opak ämneskod för kemi; variabeln mäter ett ämnesbetyg.\ncatalog:variable_text:22713:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:ke-a"
+subject = "var:betyg-kemi-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "KE är en opak ämneskod; etiketten anger kursbetyget.\ncatalog:variable_text:22714:12600:16617"
 
 [[statement]]
 kind = "set"
-subject = "var:ke-a"
+subject = "var:betyg-kemi-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "KE är en opak ämneskod; etiketten anger kursbetyget.\ncatalog:variable_text:22714:12600:16617"
 
 [[statement]]
 kind = "set"
-subject = "var:ke-b"
+subject = "var:betyg-kemi-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "KE är en opak ämneskod; etiketten anger kursbetyget.\ncatalog:variable_text:22715:12600:16617"
 
 [[statement]]
 kind = "set"
-subject = "var:ke-b"
+subject = "var:betyg-kemi-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "KE är en opak ämneskod; etiketten anger kursbetyget.\ncatalog:variable_text:22715:12600:16617"
 
@@ -4691,13 +4691,13 @@ evidence = "Kompletteringsmarkering.\ncatalog:variable_text:22735:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-hkk"
+subject = "var:betyg-hem-konsumentkunskap-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Hkk är en bokstavskod för ämnet.\ncatalog:variable_text:22736:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-hkk"
+subject = "var:betyg-hem-konsumentkunskap-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Hkk är en bokstavskod för ämnet.\ncatalog:variable_text:22736:15156:16252"
 
@@ -4715,13 +4715,13 @@ evidence = "Idh är en bokstavskod för ämnet.\ncatalog:variable_text:22737:151
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ke"
+subject = "var:betyg-kemi-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "KE är en opak ämneskod. Etiketten kolliderar med betygsvariabler och mål-id:t kräver R6-prövning.\ncatalog:variable_text:22738:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ke"
+subject = "var:betyg-kemi-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "KE är en opak ämneskod. Etiketten kolliderar med betygsvariabler och mål-id:t kräver R6-prövning.\ncatalog:variable_text:22738:15156:16252"
 
@@ -4739,73 +4739,73 @@ evidence = "MA är en opak ämneskod. Etiketten kolliderar med betygsvariabler o
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ml-betyg"
+subject = "var:modersmal-betyg-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Ml är en ämneskod; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22740:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ml-betyg"
+subject = "var:modersmal-betyg-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Ml är en ämneskod; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22740:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ml-sprak"
+subject = "var:modersmal-sprak-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Ml är en ämneskod; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22741:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-ml-sprak"
+subject = "var:modersmal-sprak-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Ml är en ämneskod; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22741:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr1-betyg"
+subject = "var:moderna-sprak-elevens-val-betyg-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22742:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr1-betyg"
+subject = "var:moderna-sprak-elevens-val-betyg-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22742:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr1-sprak"
+subject = "var:moderna-sprak-elevens-val-sprak-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22743:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr1-sprak"
+subject = "var:moderna-sprak-elevens-val-sprak-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22743:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr2-betyg"
+subject = "var:moderna-sprak-sprakval-betyg-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22744:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr2-betyg"
+subject = "var:moderna-sprak-sprakval-betyg-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22744:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr2-sprak"
+subject = "var:moderna-sprak-sprakval-sprak-kompletterat-arskurs-9"
 fields = { "sets" = ["betygskomplettering"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22745:15156:16252"
 
 [[statement]]
 kind = "set"
-subject = "var:kompl-mspr2-sprak"
+subject = "var:moderna-sprak-sprakval-sprak-kompletterat-arskurs-9"
 fields = { "tags" = ["education"] }
 evidence = "Mspr är ett källmnemonic; etiketten kolliderar och målnamnet behöver R6-prövning.\ncatalog:variable_text:22745:15156:16252"
 
@@ -5999,25 +5999,25 @@ evidence = "Kursbetyget hör till ämnes- och kursbetyg.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ry205"
+subject = "var:betyg-ryska-c-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "RY205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22849:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ry205"
+subject = "var:betyg-ryska-c-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "RY205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22849:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ry206"
+subject = "var:betyg-ryska-c-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "RY206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22850:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ry206"
+subject = "var:betyg-ryska-c-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "RY206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22850:9678:11869"
 
@@ -6155,49 +6155,49 @@ evidence = "Sluttyp anger inte läroplan i någon av perioderna.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:sp205"
+subject = "var:betyg-spanska-c-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SP205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22876:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp205"
+subject = "var:betyg-spanska-c-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "SP205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22876:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp206"
+subject = "var:betyg-spanska-c-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SP206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22877:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp206"
+subject = "var:betyg-spanska-c-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "SP206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22877:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp207"
+subject = "var:betyg-spanska-b-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SP207 är en opak kurskod.\ncatalog:variable_text:22878:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp207"
+subject = "var:betyg-spanska-b-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "SP207 är en opak kurskod.\ncatalog:variable_text:22878:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp208"
+subject = "var:betyg-spanska-b-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SP208 är en opak kurskod.\ncatalog:variable_text:22879:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:sp208"
+subject = "var:betyg-spanska-b-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "SP208 är en opak kurskod.\ncatalog:variable_text:22879:9678:11869"
 
@@ -6671,25 +6671,25 @@ evidence = "SV och GR är opaka källförkortningar; etiketten anger grundskoleb
 
 [[statement]]
 kind = "set"
-subject = "var:sv201l"
+subject = "var:betyg-svenska-b-litteratur"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SV201L är en opak källkod; den kolliderande etiketten kräver målgranskning.\ncatalog:variable_text:22923:9678:10408"
 
 [[statement]]
 kind = "set"
-subject = "var:sv201l"
+subject = "var:betyg-svenska-b-litteratur"
 fields = { "tags" = ["education"] }
 evidence = "SV201L är en opak källkod; den kolliderande etiketten kräver målgranskning.\ncatalog:variable_text:22923:9678:10408"
 
 [[statement]]
 kind = "set"
-subject = "var:sv201s"
+subject = "var:betyg-svenska-b-svenska-spraket"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "SV201S är en opak källkod; den kolliderande etiketten kräver målgranskning.\ncatalog:variable_text:22924:9678:10408"
 
 [[statement]]
 kind = "set"
-subject = "var:sv201s"
+subject = "var:betyg-svenska-b-svenska-spraket"
 fields = { "tags" = ["education"] }
 evidence = "SV201S är en opak källkod; den kolliderande etiketten kräver målgranskning.\ncatalog:variable_text:22924:9678:10408"
 
@@ -6851,49 +6851,49 @@ evidence = "Gymnasiepoäng mäter utbildningens omfattning.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:ty205"
+subject = "var:betyg-tyska-c-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "TY205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22939:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty205"
+subject = "var:betyg-tyska-c-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "TY205 är en ogenomskinlig kurskod.\ncatalog:variable_text:22939:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty206"
+subject = "var:betyg-tyska-c-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "TY206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22940:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty206"
+subject = "var:betyg-tyska-c-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "TY206 är en ogenomskinlig kurskod.\ncatalog:variable_text:22940:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty207"
+subject = "var:betyg-tyska-b-sprak-niva-a"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "TY207 är en opak kurskod.\ncatalog:variable_text:22941:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty207"
+subject = "var:betyg-tyska-b-sprak-niva-a"
 fields = { "tags" = ["education"] }
 evidence = "TY207 är en opak kurskod.\ncatalog:variable_text:22941:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty208"
+subject = "var:betyg-tyska-b-sprak-niva-b"
 fields = { "sets" = ["amnes-och-kursbetyg"] }
 evidence = "TY208 är en opak kurskod.\ncatalog:variable_text:22942:9678:11869"
 
 [[statement]]
 kind = "set"
-subject = "var:ty208"
+subject = "var:betyg-tyska-b-sprak-niva-b"
 fields = { "tags" = ["education"] }
 evidence = "TY208 är en opak kurskod.\ncatalog:variable_text:22942:9678:11869"
 

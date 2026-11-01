@@ -9241,13 +9241,13 @@ evidence = "Arbetsplatsbesöket och företagshälsovårdens arbetsmiljöbedömni
 
 [[statement]]
 kind = "set"
-subject = "var:fhvchef"
+subject = "var:foretagshalsovard-godkannande-chef-forst"
 fields = { "sets" = [] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3526:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvchef"
+subject = "var:foretagshalsovard-godkannande-chef-forst"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3526:18628:18993"
 
@@ -9289,13 +9289,13 @@ evidence = "FHV är en bokstavskod som saknas i etiketten.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:fhvkombi"
+subject = "var:foretagshalsovard-arbetsplatsbesok-eller-miljobedomning"
 fields = { "sets" = ["foretagshalsovardens-arbetsmiljobedomning"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3530:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvkombi"
+subject = "var:foretagshalsovard-arbetsplatsbesok-eller-miljobedomning"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3530:18628:18993"
 
@@ -9373,13 +9373,13 @@ evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3536:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvtunga"
+subject = "var:foretagshalsovard-insats-tungt-pafrestande-arbete"
 fields = { "sets" = ["foretagshalsovardens-insatsomraden"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3537:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:fhvtunga"
+subject = "var:foretagshalsovard-insats-tungt-pafrestande-arbete"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "FHV är en bokstavskod.\ncatalog:variable_text:3537:15706:16071"
 
@@ -9961,13 +9961,13 @@ evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3585:18628
 
 [[statement]]
 kind = "set"
-subject = "var:hsottot"
+subject = "var:overtid-mertid-totalt-huvudsysslan-anstallda-2021"
 fields = { "sets" = [] }
 evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3586:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:hsottot"
+subject = "var:overtid-mertid-totalt-huvudsysslan-anstallda-2021"
 fields = { "tags" = ["employment"] }
 evidence = "Källans mnemonik är en opak kod.\ncatalog:variable_text:3586:18628:18993"
 
@@ -10333,13 +10333,13 @@ evidence = "Mäter kemikalier i arbetsluften.\ncatalog:variable_text:3616:18628:
 
 [[statement]]
 kind = "set"
-subject = "var:kkindex"
+subject = "var:krav-och-kontrollindex"
 fields = { "sets" = [] }
 evidence = "KK är en bokstavskod för krav och kontroll.\ncatalog:variable_text:3617:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:kkindex"
+subject = "var:krav-och-kontrollindex"
 fields = { "tags" = ["employment"] }
 evidence = "KK är en bokstavskod för krav och kontroll.\ncatalog:variable_text:3617:18628:18993"
 
@@ -10873,13 +10873,13 @@ evidence = "Lördagsarbete.\ncatalog:variable_text:3661:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:lsansvar"
+subject = "var:for-litet-eller-for-stort-ansvar-arbetet"
 fields = { "sets" = [] }
 evidence = "LS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3662:12053:12418"
 
 [[statement]]
 kind = "set"
-subject = "var:lsansvar"
+subject = "var:for-litet-eller-for-stort-ansvar-arbetet"
 fields = { "tags" = ["employment"] }
 evidence = "LS är en bokstavskod som saknas i etiketten.\ncatalog:variable_text:3662:12053:12418"
 
@@ -13453,13 +13453,13 @@ evidence = "Mäter typ av kontorsarbetsplats.\ncatalog:variable_text:3877:19723:
 
 [[statement]]
 kind = "set"
-subject = "var:uannsak"
+subject = "var:viktigt-eller-ej-arbetet-annat-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25059\ncatalog:variable_text:3878:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:uannsak"
+subject = "var:viktigt-eller-ej-arbetet-annat-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25059\ncatalog:variable_text:3878:12784:13149"
 
@@ -13477,49 +13477,49 @@ evidence = "U är en bokstavskod.\ncatalog:variable_text:3879:18628:18993"
 
 [[statement]]
 kind = "set"
-subject = "var:ufastjobb"
+subject = "var:viktigt-eller-ej-arbetet-fast-jobb-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25062\ncatalog:variable_text:3880:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:ufastjobb"
+subject = "var:viktigt-eller-ej-arbetet-fast-jobb-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25062\ncatalog:variable_text:3880:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:ukompis"
+subject = "var:viktigt-eller-ej-arbetet-arbetskamrater-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25063\ncatalog:variable_text:3881:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:ukompis"
+subject = "var:viktigt-eller-ej-arbetet-arbetskamrater-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25063\ncatalog:variable_text:3881:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:viktigt-eller-ej-arbetet-lon-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25064\ncatalog:variable_text:3882:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:ulon"
+subject = "var:viktigt-eller-ej-arbetet-lon-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25064\ncatalog:variable_text:3882:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:umiljo"
+subject = "var:viktigt-eller-ej-arbetet-arbetsmiljo-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25065\ncatalog:variable_text:3883:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:umiljo"
+subject = "var:viktigt-eller-ej-arbetet-arbetsmiljo-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25065\ncatalog:variable_text:3883:12784:13149"
 
@@ -13969,13 +13969,13 @@ evidence = "Gäller fysisk trötthet efter arbetet.\ncatalog:variable_text:3920:
 
 [[statement]]
 kind = "set"
-subject = "var:uuppgift"
+subject = "var:viktigt-eller-ej-arbetet-arbetsuppgifter-ungdomar-16-29"
 fields = { "sets" = ["vardering-av-arbetets-egenskaper"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25077\ncatalog:variable_text:3921:12784:13149"
 
 [[statement]]
 kind = "set"
-subject = "var:uuppgift"
+subject = "var:viktigt-eller-ej-arbetet-arbetsuppgifter-ungdomar-16-29"
 fields = { "tags" = ["employment"] }
 evidence = "U är en bokstavskod och etiketten kolliderar; målet behöver R6-prövning.\ncatalog:occurrence:25077\ncatalog:variable_text:3921:12784:13149"
 

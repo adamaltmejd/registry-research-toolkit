@@ -542,13 +542,13 @@ evidence = "Antal lågutbildade personer.\ncatalog:variable_text:34205:16071:182
 
 [[statement]]
 kind = "set"
-subject = "var:antutl65-w"
+subject = "var:tillagg-avdrag-modersmal-kr-per-invanare"
 fields = { "sets" = ["sprakrelaterade-tillagg-och-avdrag"] }
 evidence = "Id anger antal utrikes födda äldre men källan anger tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34206:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:antutl65-w"
+subject = "var:tillagg-avdrag-modersmal-kr-per-invanare"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Id anger antal utrikes födda äldre men källan anger tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34206:16071:18262"
 
@@ -770,13 +770,13 @@ evidence = "Modellutfall för gymnasieskola.\ncatalog:variable_text:34225:19358:
 
 [[statement]]
 kind = "set"
-subject = "var:gyprgvf-1"
+subject = "var:programvalsfaktor-foregaende-utjamningsar-kr-per-invanare"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är en ogenomskinlig bokstavskod.\ncatalog:variable_text:34226:18262:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:gyprgvf-1"
+subject = "var:programvalsfaktor-foregaende-utjamningsar-kr-per-invanare"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Källmnemoniken är en ogenomskinlig bokstavskod.\ncatalog:variable_text:34226:18262:19358"
 
@@ -854,13 +854,13 @@ evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34232:1
 
 [[statement]]
 kind = "set"
-subject = "var:ifo"
+subject = "var:utfall-individ-familjeomsorg-kr-per-invanare"
 fields = { "sets" = [] }
 evidence = "IFO är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:34233:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:ifo"
+subject = "var:utfall-individ-familjeomsorg-kr-per-invanare"
 fields = { "tags" = ["public-finance", "social-care"] }
 evidence = "IFO är en bokstavskod som inte står i etiketten.\ncatalog:variable_text:34233:19358:19723"
 

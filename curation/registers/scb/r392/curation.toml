@@ -319,109 +319,109 @@ evidence = "Bilersättning är en kostnadsersättning.\ncatalog:variable_text:13
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ej-ulag-sa"
+subject = "var:bostadsforman-inte-smahus-inte-underlag-arbetsgivaravgift"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1363\ncatalog:variable_text:1363:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ej-ulag-sa"
+subject = "var:bostadsforman-inte-smahus-inte-underlag-arbetsgivaravgift"
 fields = { "tags" = ["housing", "income"] }
 evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1363\ncatalog:variable_text:1363:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ulag-ag"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1364\ncatalog:variable_text:1364:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ulag-ag"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "tags" = ["housing", "income"] }
 evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1364\ncatalog:variable_text:1364:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ulag-ea"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1365\ncatalog:variable_text:1365:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-ej-smahus-ulag-ea"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
 fields = { "tags" = ["housing", "income"] }
 evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1365\ncatalog:variable_text:1365:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ej-ulag-sa"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1366\ncatalog:variable_text:1366:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ej-ulag-sa"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
 fields = { "tags" = ["housing", "income"] }
 evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1366\ncatalog:variable_text:1366:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ag"
+subject = "var:bostadsforman-smahus-underlag-arbetsgivaravgift-slf"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1367\ncatalog:variable_text:1367:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ag"
+subject = "var:bostadsforman-smahus-underlag-arbetsgivaravgift-slf"
 fields = { "tags" = ["housing", "income"] }
 evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1367\ncatalog:variable_text:1367:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ea"
+subject = "var:bostadsforman-smahus-underlag-egenavgift"
 fields = { "sets" = ["bostadsforman"] }
 evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1368\ncatalog:variable_text:1368:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ea"
+subject = "var:bostadsforman-smahus-underlag-egenavgift"
 fields = { "tags" = ["housing", "income"] }
 evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1368\ncatalog:variable_text:1368:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ej-ulag-sa"
+subject = "var:drivmedel-bilforman-inte-underlag-socialavgift"
 fields = { "sets" = ["drivmedelsforman"] }
 evidence = "DM och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1369\ncatalog:variable_text:1369:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ej-ulag-sa"
+subject = "var:drivmedel-bilforman-inte-underlag-socialavgift"
 fields = { "tags" = ["income"] }
 evidence = "DM och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1369\ncatalog:variable_text:1369:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ulag-ag"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
 fields = { "sets" = ["drivmedelsforman"] }
 evidence = "DM och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1370\ncatalog:variable_text:1370:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ulag-ag"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "DM och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1370\ncatalog:variable_text:1370:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ulag-ea"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
 fields = { "sets" = ["drivmedelsforman"] }
 evidence = "DM och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1371\ncatalog:variable_text:1371:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:dm-vid-bilforman-ulag-ea"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
 fields = { "tags" = ["income"] }
 evidence = "DM och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1371\ncatalog:variable_text:1371:17897:18628"
 
@@ -535,25 +535,25 @@ evidence = "Kontant bruttolön är arbetsinkomst.\ncatalog:variable_text:1384:17
 
 [[statement]]
 kind = "set"
-subject = "var:kontant-ersattning-ej-ulag-sa"
+subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
 fields = { "sets" = ["ersattning-for-egenavgifter"] }
 evidence = "SA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1385\ncatalog:variable_text:1385:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:kontant-ersattning-ej-ulag-sa"
+subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "SA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1385\ncatalog:variable_text:1385:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:kontant-ersattning-ulag-ea"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
 fields = { "sets" = ["ersattning-for-egenavgifter"] }
 evidence = "EA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1386\ncatalog:variable_text:1386:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:kontant-ersattning-ulag-ea"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
 fields = { "tags" = ["income"] }
 evidence = "EA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1386\ncatalog:variable_text:1386:17897:18628"
 
@@ -691,73 +691,73 @@ evidence = "Uppgiften gäller skattepliktig ersättning.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ej-ulag-sa"
+subject = "var:bilforman-utom-drivmedel-inte-underlag-arbetsgivaravgift"
 fields = { "sets" = ["bilforman"] }
 evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1404\ncatalog:variable_text:1404:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ej-ulag-sa"
+subject = "var:bilforman-utom-drivmedel-inte-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1404\ncatalog:variable_text:1404:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ulag-ag"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
 fields = { "sets" = ["bilforman"] }
 evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1405\ncatalog:variable_text:1405:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ulag-ag"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1405\ncatalog:variable_text:1405:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ulag-ea"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
 fields = { "sets" = ["bilforman"] }
 evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1406\ncatalog:variable_text:1406:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-bilforman-ulag-ea"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1406\ncatalog:variable_text:1406:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ej-ulag-sa"
+subject = "var:andra-formaner-inte-underlag-arbetsgivaravgift"
 fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
 evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1407\ncatalog:variable_text:1407:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ej-ulag-sa"
+subject = "var:andra-formaner-inte-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1407\ncatalog:variable_text:1407:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ulag-ag"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
 fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
 evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1408\ncatalog:variable_text:1408:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ulag-ag"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1408\ncatalog:variable_text:1408:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ulag-ea"
+subject = "var:andra-formaner-underlag-egenavgift"
 fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
 evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1409\ncatalog:variable_text:1409:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:sp-ovriga-formaner-ulag-ea"
+subject = "var:andra-formaner-underlag-egenavgift"
 fields = { "tags" = ["income"] }
 evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1409\ncatalog:variable_text:1409:17897:18628"
 

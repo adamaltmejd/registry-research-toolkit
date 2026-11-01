@@ -332,25 +332,25 @@ evidence = "Folkbokföringskommun är geografisk tillhörighet.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:fth"
+subject = "var:inskriven-fritidshem-oavsett-vistelsetid"
 fields = { "sets" = ["inskrivning-i-fritidshem"] }
 evidence = "FTH är en opak bokstavskod; källan anger inskrivning i fritidshem.\ncatalog:variable_text:21101:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:fth"
+subject = "var:inskriven-fritidshem-oavsett-vistelsetid"
 fields = { "tags" = ["education"] }
 evidence = "FTH är en opak bokstavskod; källan anger inskrivning i fritidshem.\ncatalog:variable_text:21101:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:grrektfth"
+subject = "var:fritidshem-samma-rektor-grundskola"
 fields = { "sets" = [] }
 evidence = "GRREKTFTH är en opak källkod; etiketten kolliderar med den dokumenterade markeringen och målet behöver granskas.\ncatalog:variable_text:21102:20011:20012"
 
 [[statement]]
 kind = "set"
-subject = "var:grrektfth"
+subject = "var:fritidshem-samma-rektor-grundskola"
 fields = { "tags" = ["education"] }
 evidence = "GRREKTFTH är en opak källkod; etiketten kolliderar med den dokumenterade markeringen och målet behöver granskas.\ncatalog:variable_text:21102:20011:20012"
 
@@ -524,13 +524,13 @@ evidence = "Kommunen avser fritidshemmets läge.\ncatalog:variable_text:21127:20
 
 [[statement]]
 kind = "set"
-subject = "var:skom"
+subject = "var:fritidshemmets-belagenhetskommun"
 fields = { "sets" = ["skolkommun"] }
 evidence = "SKom innehåller en enstaka bokstav som källkod och är inte en läsbar förkortning av etiketten Kommun.\ncatalog:variable_text:21128:17089:17090"
 
 [[statement]]
 kind = "set"
-subject = "var:skom"
+subject = "var:fritidshemmets-belagenhetskommun"
 fields = { "tags" = ["geography"] }
 evidence = "SKom innehåller en enstaka bokstav som källkod och är inte en läsbar förkortning av etiketten Kommun.\ncatalog:variable_text:21128:17089:17090"
 
@@ -548,13 +548,13 @@ evidence = "Variabeln gäller deltagande i undervisning.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-hogsta-utbildningsniva-forsta-sun-position"
 fields = { "sets" = ["moderns-utbildningsniva"] }
 evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln avser moderns utbildningsnivå och ingår i den gemensamma gruppen för detta begrepp.\ncatalog:valueset:12323\ncatalog:variable_text:21130:15628:15629"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-1-mor"
+subject = "var:moderns-hogsta-utbildningsniva-forsta-sun-position"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln avser moderns utbildningsnivå och ingår i den gemensamma gruppen för detta begrepp.\ncatalog:valueset:12323\ncatalog:variable_text:21130:15628:15629"
 

@@ -49,13 +49,13 @@ evidence = "Riktningskoden skiljer export från import och hör till handel.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:scbkod"
+subject = "var:tjansteslag"
 fields = { "sets" = [] }
 evidence = "Scbkod är en källmnemonik som inte beskriver tjänsteslaget; källans etikett ger ett tydligt namn. Tjänsteslag klassificerar tjänstehandeln.\ncatalog:register:272\ncatalog:variable_text:54874:12418:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:scbkod"
+subject = "var:tjansteslag"
 fields = { "tags" = ["trade"] }
 evidence = "Scbkod är en källmnemonik som inte beskriver tjänsteslaget; källans etikett ger ett tydligt namn. Tjänsteslag klassificerar tjänstehandeln.\ncatalog:register:272\ncatalog:variable_text:54874:12418:2932897"
 

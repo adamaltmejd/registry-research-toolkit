@@ -211,13 +211,13 @@ evidence = "Samma källkolumn har överlappande ägare med olika identitetsbeskr
 
 [[statement]]
 kind = "set"
-subject = "var:gdnorm"
+subject = "var:graddagar-normalar"
 fields = { "sets" = ["graddagar"] }
 evidence = "Gd är en ogenomskinlig bokstavskod för graddagar.\ncatalog:variable_text:7522:13514:14245"
 
 [[statement]]
 kind = "set"
-subject = "var:gdnorm"
+subject = "var:graddagar-normalar"
 fields = { "tags" = ["energy"] }
 evidence = "Gd är en ogenomskinlig bokstavskod för graddagar.\ncatalog:variable_text:7522:13514:14245"
 

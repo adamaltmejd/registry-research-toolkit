@@ -626,25 +626,25 @@ evidence = "Ämnesbetyg.\ncatalog:variable_text:21817:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:modersmal-betyg"
 fields = { "sets" = ["amnesbetyg"] }
 evidence = "ML är en ogenomskinlig bokstavskod; etiketten delas med språkvariabeln och målnamnet behöver kollisionsprövning.\ncatalog:variable_text:21818:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-betyg"
+subject = "var:modersmal-betyg"
 fields = { "tags" = ["education"] }
 evidence = "ML är en ogenomskinlig bokstavskod; etiketten delas med språkvariabeln och målnamnet behöver kollisionsprövning.\ncatalog:variable_text:21818:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:modersmal-sprak"
 fields = { "sets" = ["undervisningsamnets-sprak"] }
 evidence = "ML är en ogenomskinlig bokstavskod; etiketten delas med betygsvariabeln och målnamnet behöver kollisionsprövning.\ncatalog:variable_text:21819:15706:20454"
 
 [[statement]]
 kind = "set"
-subject = "var:ml-sprak"
+subject = "var:modersmal-sprak"
 fields = { "tags" = ["education"] }
 evidence = "ML är en ogenomskinlig bokstavskod; etiketten delas med betygsvariabeln och målnamnet behöver kollisionsprövning.\ncatalog:variable_text:21819:15706:20454"
 
@@ -794,13 +794,13 @@ evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Vari
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-omkodad"
+subject = "var:moderns-utbildningsniva-3-nivaer"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en kod som inte förekommer i etiketten. Variabeln mäter moderns omkodade utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå samt temat utbildning.\ncatalog:occurrence-locators:variable:21839\ncatalog:variable_text:21839:15706:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-omkodad"
+subject = "var:moderns-utbildningsniva-3-nivaer"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en kod som inte förekommer i etiketten. Variabeln mäter moderns omkodade utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå samt temat utbildning.\ncatalog:occurrence-locators:variable:21839\ncatalog:variable_text:21839:15706:16436"
 

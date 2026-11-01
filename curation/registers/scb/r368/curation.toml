@@ -373,25 +373,25 @@ evidence = "Kodningen avser utbildningsresultat och elevtyp.\ncatalog:valueset:1
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-far"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-far"
 fields = { "sets" = ["foraldrars-socioekonomiska-gruppering"] }
 evidence = "ESEG är en bokstavskod för europeisk socioekonomisk gruppering; etiketten delas och målnamnet behöver särskiljas.\ncatalog:variable_text:34382:17167:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-far"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-far"
 fields = { "tags" = ["employment"] }
 evidence = "ESEG är en bokstavskod för europeisk socioekonomisk gruppering; etiketten delas och målnamnet behöver särskiljas.\ncatalog:variable_text:34382:17167:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-mor"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-mor"
 fields = { "sets" = ["foraldrars-socioekonomiska-gruppering"] }
 evidence = "ESEG är en bokstavskod för europeisk socioekonomisk gruppering; etiketten delas och målnamnet behöver särskiljas.\ncatalog:variable_text:34383:17167:18444"
 
 [[statement]]
 kind = "set"
-subject = "var:eseg-mor"
+subject = "var:europeisk-socioekonomisk-gruppering-biologisk-mor"
 fields = { "tags" = ["employment"] }
 evidence = "ESEG är en bokstavskod för europeisk socioekonomisk gruppering; etiketten delas och målnamnet behöver särskiljas.\ncatalog:variable_text:34383:17167:18444"
 
@@ -541,13 +541,13 @@ evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särsk
 
 [[statement]]
 kind = "set"
-subject = "var:hkomrkom"
+subject = "var:folkbokford-rapporterande-kommun-halvar-eller-inte"
 fields = { "sets" = [] }
 evidence = "H och R är opaka bokstavskoder; kommunetiketten delas med andra variabler. Variabeln anger om folkbokföringskommunen är rapporterande kommun, inte en kommunangivelse. Coordinator group membership: Kommunvariabler för olika roller och referenstidpunkter omfattas. Samtliga skyddade medlemskap behålls, inklusive hkomrkom trots källkonflikten. Kursort och lärosäte är uttryckligen undantagna.\ncatalog:variable_text:34391:16436:17167\ncatalog:variable_text:34392:20089:20270\ncatalog:variable_text:34393:19905:20089\ncatalog:variable_text:34394:20089:20270\ncatalog:variable_text:34395:20089:20270\ncatalog:variable_text:34396:19905:20270\ncatalog:variable_text:34400:16436:16801\ncatalog:variable_text:34412:16801:20270\ncatalog:variable_text:34417:16801:16983"
 
 [[statement]]
 kind = "set"
-subject = "var:hkomrkom"
+subject = "var:folkbokford-rapporterande-kommun-halvar-eller-inte"
 fields = { "tags" = ["geography"] }
 evidence = "H och R är opaka bokstavskoder; kommunetiketten delas med andra variabler. Variabeln anger om folkbokföringskommunen är rapporterande kommun, inte en kommunangivelse. Coordinator group membership: Kommunvariabler för olika roller och referenstidpunkter omfattas. Samtliga skyddade medlemskap behålls, inklusive hkomrkom trots källkonflikten. Kursort och lärosäte är uttryckligen undantagna.\ncatalog:variable_text:34391:16436:17167\ncatalog:variable_text:34392:20089:20270\ncatalog:variable_text:34393:19905:20089\ncatalog:variable_text:34394:20089:20270\ncatalog:variable_text:34395:20089:20270\ncatalog:variable_text:34396:19905:20270\ncatalog:variable_text:34400:16436:16801\ncatalog:variable_text:34412:16801:20270\ncatalog:variable_text:34417:16801:16983"
 
@@ -721,13 +721,13 @@ evidence = "Variabeln anger orsak till upphört aktivitetsansvar.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:rkom"
+subject = "var:registrerande-kommun-aktivitetsansvar"
 fields = { "sets" = [] }
 evidence = "R är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34412:16801:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:rkom"
+subject = "var:registrerande-kommun-aktivitetsansvar"
 fields = { "tags" = ["geography"] }
 evidence = "R är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34412:16801:20270"
 

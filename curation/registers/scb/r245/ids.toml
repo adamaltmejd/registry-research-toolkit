@@ -4,7 +4,7 @@ public = "ep-val-deltagande"
 
 [variables]
 "akumed" = ["Valdeltagande: akumed"]
-"akus" = ["Valdeltagande: akus"]
+"arbetskraftsstatus-tabellframstallning" = ["Valdeltagande: akus"]
 "alder-31-12" = ["Valdeltagande: AlderSlut"]
 "aldg" = ["Valdeltagande: aldg"]
 "aldgkon" = ["Valdeltagande: aldgkon"]

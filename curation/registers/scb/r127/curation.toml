@@ -235,61 +235,61 @@ evidence = "Variabeln mäter lediga jobb bemannade av vikarie.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1"
+subject = "var:naringsgren-sni-2002-2007"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Id:t är en ogenomskinlig källkod för näringsgren.\ncatalog:variable_text:35077:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:ngs1"
+subject = "var:naringsgren-sni-2002-2007"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för näringsgren.\ncatalog:variable_text:35077:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:snia"
+subject = "var:naringsgren-sni-2002"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Id:t är en källkod med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35078:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:snia"
+subject = "var:naringsgren-sni-2002"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en källkod med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35078:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa"
+subject = "var:aktuellt-antal-anstallda"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Id:t är en källförkortning med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35079:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa"
+subject = "var:aktuellt-antal-anstallda"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en källförkortning med ett ensamt bokstavssuffix som inte framgår av etiketten.\ncatalog:variable_text:35079:12784:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa02"
+subject = "var:aktuellt-antal-anstallda-offentlig-forvaltning"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35080:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa02"
+subject = "var:aktuellt-antal-anstallda-offentlig-forvaltning"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35080:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa98"
+subject = "var:aktuellt-antal-anstallda-naringslivet"
 fields = { "sets" = ["antal-anstallda"] }
 evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35081:18993:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:syssa98"
+subject = "var:aktuellt-antal-anstallda-naringslivet"
 fields = { "tags" = ["employment"] }
 evidence = "Id:t är en ogenomskinlig källkod; siffersuffixet kommer från källkolumnen.\ncatalog:variable_text:35081:18993:20089"
 
