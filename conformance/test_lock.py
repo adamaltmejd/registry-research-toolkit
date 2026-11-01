@@ -48,6 +48,46 @@ def test_assignments_refuse_concurrent_folds_at_lock(tmp_path):
     ] == expected["located_errors"]
 
 
+def test_inherited_identity_uses_remaining_ledger_anchors(tmp_path):
+    # Regression: the alphabetically first ledger id owns the whole default source
+    # key, so assigning its earlier spelling silently absorbs the later spelling.
+    # Existing assignment cases use different source keys. The dated anchor must
+    # also identify the year after its day. Untouched X/Y keep their default ids
+    # despite a spanning anchor and later single-group anchors: an unrelated Z
+    # assignment must not rename X from a to b. Fixture source/ledger are the oracle.
+    case = Path(__file__).parent / "cases/lock/ledger-inheritance"
+    expected = json.loads((case / "expected.json").read_text())
+    curation = tmp_path / "curation"
+    shutil.copytree(case / "curation", curation)
+    catalog = tmp_path / "catalog.db"
+    for command in ("lock", "build"):
+        result = subprocess.run(
+            [
+                REG_BUILD,
+                command,
+                "--inputs",
+                case / "inputs",
+                "--curation",
+                curation,
+                *(["--release", "--out", catalog] if command == "build" else []),
+            ],
+            cwd=REPO,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+    with sqlite3.connect(catalog) as db:
+        assert [
+            list(row)
+            for row in db.execute(
+                "SELECT v.pid, s.exact, date(o.start * 86400, 'unixepoch') "
+                "FROM occurrence o JOIN variable v ON v.id=o.variable_id "
+                "JOIN spelling s ON s.id=o.spelling_id ORDER BY o.start, s.exact"
+            )
+        ] == expected
+
+
 @pytest.mark.parametrize("change", ["singleton", "unknown-tag", "retired-set"])
 def test_membership_refusals(tmp_path, membership_case, change):
     # Regression: source occurrences are counted as set members instead of final
