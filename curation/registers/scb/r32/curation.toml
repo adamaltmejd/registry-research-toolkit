@@ -158,20 +158,8 @@ evidence = "Variabeln avser anställningens art.\ncatalog:variable_text:11014:18
 [[statement]]
 kind = "set"
 subject = "var:ant0hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11015:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant0hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11015:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant10hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11016:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -182,20 +170,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant11hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11017:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant11hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11017:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant12hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11018:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -206,20 +182,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant13hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11019:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant13hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11019:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant14hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11020:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -230,20 +194,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant15hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11021:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant15hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11021:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant1619hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11022:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -254,20 +206,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant16hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11023:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant16hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11023:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant17hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11024:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -278,20 +218,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant18hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11025:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant18hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11025:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant18whh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11026:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -302,20 +230,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant19hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11027:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant19hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11027:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant1hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11028:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -326,20 +242,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant2024hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11029:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant2024hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11029:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant2059hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11030:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -350,20 +254,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant2064hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11031:5479:5844"
-
-[[statement]]
-kind = "set"
-subject = "var:ant2064hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11031:5479:5844"
-
-[[statement]]
-kind = "set"
-subject = "var:ant2529hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11032:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -374,20 +266,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant2hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11033:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant2hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11033:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant3034hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11034:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -398,20 +278,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant3539hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11035:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant3539hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11035:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant3hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11036:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -422,20 +290,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant4044hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11037:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant4044hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11037:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant4549hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11038:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -446,20 +302,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant4hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11039:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant4hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11039:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant5054hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11040:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -470,20 +314,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant5559hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11041:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant5559hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11041:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant5hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11042:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -494,20 +326,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant6064hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11043:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant6064hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11043:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant6569hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11044:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -518,20 +338,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant67whh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11045:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:ant67whh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11045:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:ant6hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11046:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -542,20 +350,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant7074hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11047:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant7074hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11047:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant7579hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11048:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -566,20 +362,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant75whh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11049:3652:4018"
-
-[[statement]]
-kind = "set"
-subject = "var:ant75whh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11049:3652:4018"
-
-[[statement]]
-kind = "set"
-subject = "var:ant7hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11050:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -590,20 +374,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant8084hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11051:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant8084hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11051:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant8589hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11052:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -614,20 +386,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant85whh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11053:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant85whh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11053:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant8hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11054:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -638,20 +398,8 @@ evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:110
 [[statement]]
 kind = "set"
 subject = "var:ant90whh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11055:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant90whh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11055:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ant9hh"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11056:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -794,20 +542,8 @@ evidence = "Antal förvärvsarbetande i hushållet.\ncatalog:variable_text:11067
 [[statement]]
 kind = "set"
 subject = "var:antb016hh"
-fields = { "sets" = [] }
-evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:11068:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb016hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:11068:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb017bfmaka"
-fields = { "sets" = [] }
-evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11069:0:365"
 
 [[statement]]
 kind = "set"
@@ -830,20 +566,8 @@ evidence = "Måttet gäller barn som inte förvärvsarbetar; gruppkandidaten bar
 [[statement]]
 kind = "set"
 subject = "var:antb017fam"
-fields = { "sets" = [] }
-evidence = "Antal barn i familjen ingår i barnantal.\ncatalog:variable_text:11071:0:365\ncatalog:variable_text:11071:1826:2191\ncatalog:variable_text:11071:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb017fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn i familjen ingår i barnantal.\ncatalog:variable_text:11071:0:365\ncatalog:variable_text:11071:1826:2191\ncatalog:variable_text:11071:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb017hh"
-fields = { "sets" = [] }
-evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:11072:0:365\ncatalog:variable_text:11072:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -854,20 +578,8 @@ evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:1
 [[statement]]
 kind = "set"
 subject = "var:antb017hhfmaka"
-fields = { "sets" = [] }
-evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11073:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:antb017hhfmaka"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11073:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:antb04hh"
-fields = { "sets" = [] }
-evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:11074:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -878,20 +590,8 @@ evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:1
 [[statement]]
 kind = "set"
 subject = "var:antb06fam"
-fields = { "sets" = [] }
-evidence = "Antal barn i familjen ingår i barnantal.\ncatalog:variable_text:11075:0:365\ncatalog:variable_text:11075:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:antb06fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn i familjen ingår i barnantal.\ncatalog:variable_text:11075:0:365\ncatalog:variable_text:11075:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:antb06hh"
-fields = { "sets" = [] }
-evidence = "Antal barn i familj eller hushåll ingår i barnantal.\ncatalog:variable_text:11076:0:365\ncatalog:variable_text:11076:1826:2191\ncatalog:variable_text:11076:3652:4018\ncatalog:variable_text:11076:5479:5844\ncatalog:variable_text:11076:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -902,20 +602,8 @@ evidence = "Antal barn i familj eller hushåll ingår i barnantal.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:antb0fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11077:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb0fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11077:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb10fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11078:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -926,20 +614,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb11fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11079:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb11fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11079:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb12fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11080:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -950,20 +626,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb1619hh"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11081:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb1619hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11081:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb16whh"
-fields = { "sets" = [] }
-evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:11082:0:365"
 
 [[statement]]
 kind = "set"
@@ -974,20 +638,8 @@ evidence = "Antal barn i hushållet ingår i barnantal.\ncatalog:variable_text:1
 [[statement]]
 kind = "set"
 subject = "var:antb18wbfmaka"
-fields = { "sets" = [] }
-evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11083:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb18wbfmaka"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11083:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb1fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11084:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -998,20 +650,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb2024hh"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11085:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb2024hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11085:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb2fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11086:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1022,20 +662,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb3fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb3fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11087:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb4fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11088:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1046,20 +674,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb5fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11089:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb5fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11089:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb6fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11090:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1070,20 +686,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb715fam"
-fields = { "sets" = [] }
-evidence = "Antal hemmavarande barn i familjen ingår i barnantal.\ncatalog:variable_text:11091:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb715fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal hemmavarande barn i familjen ingår i barnantal.\ncatalog:variable_text:11091:0:365"
-
-[[statement]]
-kind = "set"
-subject = "var:antb7fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11092:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1094,20 +698,8 @@ evidence = "Antal barn till sammanboende par eller ensamstående förälder ing�
 [[statement]]
 kind = "set"
 subject = "var:antb8fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11093:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb8fam"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11093:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:antb9fam"
-fields = { "sets" = [] }
-evidence = "Antal barn till sammanboende par eller ensamstående förälder ingår i barnantal.\ncatalog:variable_text:11094:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1130,20 +722,8 @@ evidence = "Behåller det läsbara förkortningsmönstret för antb-familjen. Va
 [[statement]]
 kind = "set"
 subject = "var:antbbfmaka"
-fields = { "sets" = [] }
-evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11096:-1826:-1461\ncatalog:variable_text:11096:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:antbbfmaka"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11096:-1826:-1461\ncatalog:variable_text:11096:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:antbbfmakafod4560"
-fields = { "sets" = [] }
-evidence = "Antal barn till angivna föreståndare ingår i barnantal.\ncatalog:variable_text:11097:-3653:-3287"
 
 [[statement]]
 kind = "set"
@@ -1238,32 +818,14 @@ evidence = "Variabeln mäter ett åldersavgränsat antal förvärvsarbetande bar
 [[statement]]
 kind = "set"
 subject = "var:antfod4553p1"
-fields = { "sets" = [] }
-evidence = "Antalet personer i en åldersgrupp hör till hushållets personantal.\ncatalog:occurrence:97500\ncatalog:variable_text:11105:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:antfod4553p1"
 fields = { "tags" = ["family-household"] }
 evidence = "Antalet personer i en åldersgrupp hör till hushållets personantal.\ncatalog:occurrence:97500\ncatalog:variable_text:11105:-3653:-3287"
 
 [[statement]]
 kind = "set"
 subject = "var:antfod4553p2"
-fields = { "sets" = [] }
-evidence = "Antalet personer i en åldersgrupp hör till hushållets personantal.\ncatalog:occurrence:97501\ncatalog:variable_text:11106:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:antfod4553p2"
 fields = { "tags" = ["family-household"] }
 evidence = "Antalet personer i en åldersgrupp hör till hushållets personantal.\ncatalog:occurrence:97501\ncatalog:variable_text:11106:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:antfod5060hh"
-fields = { "sets" = [] }
-evidence = "Antalet personer i en åldersgrupp hör till hushållets personantal.\ncatalog:occurrence:97503\ncatalog:variable_text:11107:-3653:-3287"
 
 [[statement]]
 kind = "set"
@@ -1430,20 +992,8 @@ evidence = "Delantal utländska medborgare i hushållet.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:antvuxbbfmaka"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar vuxna barn i hushållet.\ncatalog:variable_text:11121:-1826:-1461"
-
-[[statement]]
-kind = "set"
-subject = "var:antvuxbbfmaka"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar vuxna barn i hushållet.\ncatalog:variable_text:11121:-1826:-1461"
-
-[[statement]]
-kind = "set"
-subject = "var:antvuxnahh"
-fields = { "sets" = [] }
-evidence = "Antal vuxna i hushållet.\ncatalog:variable_text:11122:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1598,20 +1148,8 @@ evidence = "Bad- eller duschrum är bostadens utrustning.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:barn-0-15-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11137:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-0-15-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar barn.\ncatalog:variable_text:11137:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-10-12-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11138:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1622,20 +1160,8 @@ evidence = "Variabeln räknar barn.\ncatalog:variable_text:11138:7305:7670"
 [[statement]]
 kind = "set"
 subject = "var:barn-10-12-ar-antb1012hh"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11139:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-10-12-ar-antb1012hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar barn.\ncatalog:variable_text:11139:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-13-15-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11140:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1646,20 +1172,8 @@ evidence = "Variabeln räknar barn.\ncatalog:variable_text:11140:7305:7670"
 [[statement]]
 kind = "set"
 subject = "var:barn-13-15-ar-antb1315hh"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11141:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-13-15-ar-antb1315hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar barn.\ncatalog:variable_text:11141:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-16-17-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11142:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1670,20 +1184,8 @@ evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11142:73
 [[statement]]
 kind = "set"
 subject = "var:barn-16-17-ar-antb1617hh"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11143:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-16-17-ar-antb1617hh"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11143:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-18-19-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11144:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -1694,20 +1196,8 @@ evidence = "Variabeln räknar hemmavarande barn.\ncatalog:variable_text:11144:73
 [[statement]]
 kind = "set"
 subject = "var:barn-7-12-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn i familjen.\ncatalog:variable_text:11145:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-7-12-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar barn i familjen.\ncatalog:variable_text:11145:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-7-12-ar-antb712hh"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn i hushållet.\ncatalog:variable_text:11146:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -1718,20 +1208,8 @@ evidence = "Variabeln räknar barn i hushållet.\ncatalog:variable_text:11146:18
 [[statement]]
 kind = "set"
 subject = "var:barn-7-9-ar"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11147:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-7-9-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Variabeln räknar barn.\ncatalog:variable_text:11147:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-7-9-ar-antb79hh"
-fields = { "sets" = [] }
-evidence = "Variabeln räknar barn.\ncatalog:variable_text:11148:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -2194,12 +1672,6 @@ kind = "set"
 subject = "var:yrkesstallning-bostadsforestandare"
 fields = { "tags" = ["employment"] }
 evidence = "BF är en bokstavskod för bostadsföreståndare.\ncatalog:variable_text:11190:-1826:-1461"
-
-[[statement]]
-kind = "set"
-subject = "var:boende-i-hushallet"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet.\ncatalog:variable_text:11192:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -3638,32 +3110,14 @@ evidence = "Variabeln klassificerar husets användning.\ncatalog:variable_text:1
 [[statement]]
 kind = "set"
 subject = "var:personer-0-15-ar"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11328:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:personer-0-15-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11328:7305:7670"
 
 [[statement]]
 kind = "set"
 subject = "var:personer-0-6-ar"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11329:-1826:-1461"
-
-[[statement]]
-kind = "set"
-subject = "var:personer-0-6-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11329:-1826:-1461"
-
-[[statement]]
-kind = "set"
-subject = "var:personer-16-w-ar"
-fields = { "sets" = [] }
-evidence = "Antal personer i hushållet efter ålder.\ncatalog:variable_text:11330:-1826:-1461"
 
 [[statement]]
 kind = "set"
@@ -4166,20 +3620,8 @@ evidence = "Sammanboendes sysselsättning.\ncatalog:variable_text:11376:7305:767
 [[statement]]
 kind = "set"
 subject = "var:samrakink"
-fields = { "sets" = [] }
-evidence = "Individens sammanräknade inkomst.\ncatalog:variable_text:11378:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:samrakink"
 fields = { "tags" = ["income"] }
 evidence = "Individens sammanräknade inkomst.\ncatalog:variable_text:11378:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:samrakinkhh"
-fields = { "sets" = [] }
-evidence = "Hushållets sammanräknade inkomst.\ncatalog:variable_text:11379:7305:7670"
 
 [[statement]]
 kind = "set"
@@ -5194,3 +4636,561 @@ kind = "set"
 subject = "lagenhet-och-hushall: husnr @1980-01-01..1980-12-31 where key = 'v42532'"
 fields = { "variable" = "husnr" }
 evidence = "Both definitions specify sequential numbering of buildings or houses within a property. Both use character column HusNr in the individual and dwelling-and-household tables. Building number occurs in [3652,4018), between nonoverlapping house-number observations in [1826,2191) and [5479,5844)."
+
+[[statement]]
+kind = "set"
+subject = "var:ant0hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r208 counts household persons aged 0 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11016"
+
+[[statement]]
+kind = "set"
+subject = "var:ant10hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r209 counts household persons aged 10 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11000\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11017"
+
+[[statement]]
+kind = "set"
+subject = "var:ant11hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r210 counts household persons aged 11 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11001\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11018"
+
+[[statement]]
+kind = "set"
+subject = "var:ant12hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r211 counts household persons aged 12 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11002\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11019"
+
+[[statement]]
+kind = "set"
+subject = "var:ant13hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r212 counts household persons aged 13 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11003\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11020"
+
+[[statement]]
+kind = "set"
+subject = "var:ant14hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r213 counts household persons aged 14 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11004\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11021"
+
+[[statement]]
+kind = "set"
+subject = "var:ant15hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r214 counts household persons aged 15 without a child-relationship restriction, within personantal-i-hushall.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11005\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11022"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1619hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r257 defines the number of household members aged 16–19, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11023\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant16hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r258 defines the number of 16-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11007\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11024\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant17hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r259 defines the number of 17-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11008\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11025\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant18hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r260 defines the number of 18-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11009\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11026\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant18whh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r261 defines the number of household members aged 18 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11010\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11027\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant19hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r262 defines the number of 19-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11011\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11028\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant1hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r263 defines the number of 1-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11012\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11029\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant2024hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r264 defines the number of household members aged 20–24, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11013\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11030\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant2059hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r265 defines the number of household members aged 20–59, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11014\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11031\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant2064hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r266 defines the number of household members aged 20–64, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11015\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11032\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant2529hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r267 defines the number of household members aged 25–29, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11016\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11033\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant2hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r268 defines the number of 2-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11017\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11034\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant3034hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r269 defines the number of household members aged 30–34, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11018\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11035\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant3539hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r270 defines the number of household members aged 35–39, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11019\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11036\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant3hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r271 defines the number of 3-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11020\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11037\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant4044hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r272 defines the number of household members aged 40–44, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11021\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11038\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant4549hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r273 defines the number of household members aged 45–49, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11039\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant4hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r274 defines the number of 4-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11040\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant5054hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r275 defines the number of household members aged 50–54, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11024\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11041\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant5559hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r276 defines the number of household members aged 55–59, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11042\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant5hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r277 defines the number of 5-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11026\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11043\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant6064hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r278 defines the number of household members aged 60–64, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11027\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11044\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant6569hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r279 defines the number of household members aged 65–69, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11028\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11045\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant67whh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r280 defines the number of household members aged 67 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11029\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11046\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant6hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r281 defines the number of 6-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11030\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11047\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7074hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r282 defines the number of household members aged 70–74, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11031\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11048\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7579hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r283 defines the number of household members aged 75–79, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11032\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11049\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant75whh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r284 defines the number of household members aged 75 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11033\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11050\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant7hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r285 defines the number of 7-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11034\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11051\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant8084hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r286 defines the number of household members aged 80–84, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11035\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11052\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant8589hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r287 defines the number of household members aged 85–89, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11036\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11053\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant85whh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r288 defines the number of household members aged 85 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11037\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11054\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant8hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r289 defines the number of 8-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11038\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11055\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant90whh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r290 defines the number of household members aged 90 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11039\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11056\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:ant9hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r291 defines the number of 9-year-olds in the household, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11057\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:antb016hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r250 defines the number of children aged 0–16 in the household, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11052\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11069"
+
+[[statement]]
+kind = "set"
+subject = "var:antb017bfmaka"
+fields = { "sets" = ["barnantal"] }
+evidence = "r251 counts children aged 0–17 of the household head or spouse, expressly covered by barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11053\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11070"
+
+[[statement]]
+kind = "set"
+subject = "var:antb017fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r253 defines the number of resident children aged 0–17 in the family, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11055\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11072"
+
+[[statement]]
+kind = "set"
+subject = "var:antb017hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r254 defines a resident-child count; r172 explicitly counts children aged 0–17 in the household, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11056\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97744\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11073"
+
+[[statement]]
+kind = "set"
+subject = "var:antb017hhfmaka"
+fields = { "sets" = ["barnantal"] }
+evidence = "r255 counts children aged 0–17 of the household head or partner, expressly covered by barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11057\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11074"
+
+[[statement]]
+kind = "set"
+subject = "var:antb04hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r256 defines the number of children aged 0–4 in the household, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11058\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11075"
+
+[[statement]]
+kind = "set"
+subject = "var:antb06fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r257 defines the number of resident children aged 0–6 in the family, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11059\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11076"
+
+[[statement]]
+kind = "set"
+subject = "var:antb06hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r258 defines a resident-child count; r175 counts household children and r151 specifies the parental relationship, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11060\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97387\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11077"
+
+[[statement]]
+kind = "set"
+subject = "var:antb0fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r259 counts children aged 0 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11061\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11078"
+
+[[statement]]
+kind = "set"
+subject = "var:antb10fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r260 counts children aged 10 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11062\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11079"
+
+[[statement]]
+kind = "set"
+subject = "var:antb11fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r261 counts children aged 11 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11063\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11080"
+
+[[statement]]
+kind = "set"
+subject = "var:antb12fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r262 counts children aged 12 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11064\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11081"
+
+[[statement]]
+kind = "set"
+subject = "var:antb1619hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r263 counts children aged 16–19 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11065\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11082"
+
+[[statement]]
+kind = "set"
+subject = "var:antb16whh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r264 defines a household count of children aged 16 and over, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11066\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11083"
+
+[[statement]]
+kind = "set"
+subject = "var:antb18wbfmaka"
+fields = { "sets" = ["barnantal"] }
+evidence = "r265 counts children aged 18 and over of the household head or spouse, expressly covered by barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11067\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11084"
+
+[[statement]]
+kind = "set"
+subject = "var:antb1fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r266 counts children aged 1 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11068\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11085"
+
+[[statement]]
+kind = "set"
+subject = "var:antb2024hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r267 counts children aged 20–24 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11069\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11086"
+
+[[statement]]
+kind = "set"
+subject = "var:antb2fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r268 counts children aged 2 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11070\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11087"
+
+[[statement]]
+kind = "set"
+subject = "var:antb3fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r269 counts children aged 3 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11071\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11088"
+
+[[statement]]
+kind = "set"
+subject = "var:antb4fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r270 counts children aged 4 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11072\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11089"
+
+[[statement]]
+kind = "set"
+subject = "var:antb5fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r271 counts children aged 5 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11073\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11090"
+
+[[statement]]
+kind = "set"
+subject = "var:antb6fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r272 counts children aged 6 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11074\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11091"
+
+[[statement]]
+kind = "set"
+subject = "var:antb715fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r273 defines the number of resident children aged 7–15 in the family, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11075\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11092"
+
+[[statement]]
+kind = "set"
+subject = "var:antb7fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r274 counts children aged 7 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11076\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11093"
+
+[[statement]]
+kind = "set"
+subject = "var:antb8fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r275 counts children aged 8 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11077\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11094"
+
+[[statement]]
+kind = "set"
+subject = "var:antb9fam"
+fields = { "sets" = ["barnantal"] }
+evidence = "r276 counts children aged 9 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11078\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11095"
+
+[[statement]]
+kind = "set"
+subject = "var:antbbfmaka"
+fields = { "sets" = ["barnantal"] }
+evidence = "r277 counts children of the dwelling head or spouse, expressly covered by barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11080\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11097"
+
+[[statement]]
+kind = "set"
+subject = "var:antbbfmakafod4560"
+fields = { "sets" = ["barnantal"] }
+evidence = "r278 counts children aged 0–15 of the dwelling head or spouse, expressly covered by barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11081\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11098"
+
+[[statement]]
+kind = "set"
+subject = "var:antfod4553p1"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r292 defines a household count of ages 7–15, within r306's scope. r124 reports missing values without changing that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11089\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97500\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11106\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:antfod4553p2"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r293 defines the number of household members aged 7–15, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11107\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:antfod5060hh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r294 defines the number of household members aged 0–10, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11091\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11108\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:antvuxbbfmaka"
+fields = { "sets" = ["barnantal"] }
+evidence = "r282 counts adult children aged 16 and over of the dwelling head or spouse, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11105\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11122"
+
+[[statement]]
+kind = "set"
+subject = "var:antvuxnahh"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r296 defines the number of adults in the household; r306 explicitly includes adult counts.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11106\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11123\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-0-15-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r284 defines a count of resident family children aged 0–15; r127 also specifies children of a couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97158\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11138"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-10-12-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r285 defines a count of children aged 10–12 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11122\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11139"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-10-12-ar-antb1012hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r286 defines a count of children aged 10–12 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11123\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11140"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-13-15-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r287 counts children aged 13–15 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11141"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-13-15-ar-antb1315hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r288 counts children aged 13–15 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11142"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r289 defines a count of resident children aged 16–17, and r102 specifies the parental relationship, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:96900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11143"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar-antb1617hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r290 defines a count of resident children aged 16–17, and r154 specifies the parental relationship, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97390\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11144"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-18-19-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r291 defines the number of resident children aged 18–19, within barnantal's child-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11145"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-12-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r119 explicitly counts resident children aged 7–12 in the family, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97090"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-12-ar-antb712hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r176 explicitly counts children aged 7–12 in the household, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97748"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-9-ar"
+fields = { "sets" = ["barnantal"] }
+evidence = "r294 counts children aged 7–9 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11148"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-7-9-ar-antb79hh"
+fields = { "sets" = ["barnantal"] }
+evidence = "r295 counts children aged 7–9 belonging to a cohabiting couple or lone parent, within barnantal.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11132\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11149"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-i-hushallet"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r298 defines the total number of people belonging to the same household, explicitly covered by r306.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11177\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:personer-0-15-ar"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r299 defines the number of household members aged 0–15, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11309\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11323\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:personer-0-6-ar"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r300 defines the number of household members aged 0–6, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11310\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11324\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:personer-16-w-ar"
+fields = { "sets" = ["personantal-i-hushall"] }
+evidence = "r301 defines the number of household members aged 16 or older, within r306's age-count scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11311\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:11325\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/personantal-i-hushall"
+
+[[statement]]
+kind = "set"
+subject = "var:samrakink"
+fields = { "sets" = ["sammanraknad-inkomst"] }
+evidence = "r61, r97 and r121 define individual total income from the specified income sources, within r307's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97325\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97453\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/sammanraknad-inkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:samrakinkhh"
+fields = { "sets" = ["sammanraknad-inkomst"] }
+evidence = "r198 and r231 define household total income, including maritime income, within r307's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97993\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:98114\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/sammanraknad-inkomst"

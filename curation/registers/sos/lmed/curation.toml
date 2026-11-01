@@ -222,12 +222,6 @@ evidence = "Begränsning av läkemedelsförmånen.\ncatalog:variable_text:56647:
 [[statement]]
 kind = "set"
 subject = "var:beredningsform"
-fields = { "sets" = [] }
-evidence = "Produktens beredningsform.\ncatalog:variable_text:56648:12965:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:beredningsform"
 fields = { "tags" = ["medicines"] }
 evidence = "Produktens beredningsform.\ncatalog:variable_text:56648:12965:2932897"
 
@@ -638,12 +632,6 @@ kind = "set"
 subject = "var:lakemedel"
 fields = { "tags" = ["medicines"] }
 evidence = "Produktens läkemedelsstatus.\ncatalog:variable_text:56693:12965:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedelsform"
-fields = { "sets" = [] }
-evidence = "Läkemedelsform är en beredningsform.\ncatalog:variable_text:56694:12965:2932897"
 
 [[statement]]
 kind = "set"
@@ -1298,3 +1286,15 @@ kind = "set"
 subject = "var:yrke"
 fields = { "tags" = ["employment", "healthcare"] }
 evidence = "Förskrivarens yrkeskategori.\ncatalog:variable_text:56765:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beredningsform"
+fields = { "sets" = ["beredningsform"] }
+evidence = "r5 and r8 explicitly describe the product's medicinal form, with codes issued by Läkemedelsverket and usually mapped to EDQM Standard Terms.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56649"
+
+[[statement]]
+kind = "set"
+subject = "var:lakemedelsform"
+fields = { "sets" = ["beredningsform"] }
+evidence = "r6 and r10 explicitly define the variable as the form in which a medicine occurs, matching the fixed group's dosage-form concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56510\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522024\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56694"

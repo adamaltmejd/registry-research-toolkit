@@ -2480,3 +2480,9 @@ relation = "continues"
 object = "scb/komvux-sfi/sfi-prov-betyg-tal"
 at = "2022-01-01.."
 evidence = "SFI national tests BetT: grade (2009-2021) -> points (2022+); result measure replaced."
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "tags" = ["demographics"] }
+evidence = "The person's mother tongue (r101), recorded as a language code (r57), describes population composition and fits demographics.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:305219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34596"

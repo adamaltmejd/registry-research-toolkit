@@ -446,20 +446,8 @@ evidence = "Löneform beskriver anställningens löneperiod.\ncatalog:valueset:1
 [[statement]]
 kind = "set"
 subject = "var:lonesumma-formaner"
-fields = { "sets" = [] }
-evidence = "Identitetskopplingen har motstridiga definitioner för angränsande perioder.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
-
-[[statement]]
-kind = "set"
-subject = "var:lonesumma-formaner"
 fields = { "tags" = ["income"] }
 evidence = "Identitetskopplingen har motstridiga definitioner för angränsande perioder.\ncatalog:occurrence:445648\ncatalog:occurrence:445693"
-
-[[statement]]
-kind = "set"
-subject = "var:lonesumma-jour-beredskap"
-fields = { "sets" = [] }
-evidence = "Beloppet är en komponent av lönesumman.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
 
 [[statement]]
 kind = "set"
@@ -470,20 +458,8 @@ evidence = "Beloppet är en komponent av lönesumman.\ncatalog:variable_text:429
 [[statement]]
 kind = "set"
 subject = "var:lonesumma-skift-ob"
-fields = { "sets" = [] }
-evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42911:12784:13149\ncatalog:variable_text:42911:17167:20089\ncatalog:variable_text:42911:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:lonesumma-skift-ob"
 fields = { "tags" = ["income"] }
 evidence = "Äldre källor anger hektar medan andra perioder anger kronor.\ncatalog:variable_text:42911:12784:13149\ncatalog:variable_text:42911:17167:20089\ncatalog:variable_text:42911:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:lonesumma-totalt"
-fields = { "sets" = [] }
-evidence = "Totalen hör ihop med lönesummans komponenter.\ncatalog:variable_text:42910:17167:20089\ncatalog:variable_text:42912:17167:20089"
 
 [[statement]]
 kind = "set"
@@ -722,20 +698,8 @@ evidence = "Källkolumnen är densamma som för lonesumma-formaner men den äldr
 [[statement]]
 kind = "set"
 subject = "var:sumhelglon"
-fields = { "sets" = [] }
-evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable_text:42935:12418:12784\ncatalog:variable_text:42935:17167:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:sumhelglon"
 fields = { "tags" = ["income"] }
 evidence = "En period anger hektar medan övriga anger kronor.\ncatalog:variable_text:42935:12418:12784\ncatalog:variable_text:42935:17167:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:lonesumma-grundlon"
-fields = { "sets" = [] }
-evidence = "Den avslutande bokstaven G är en källkod för grundlön.\ncatalog:variable_text:42936:17167:20089"
 
 [[statement]]
 kind = "set"
@@ -990,3 +954,39 @@ relation = "continues"
 object = "scb/slp/sumforman"
 at = "2015-01-01.."
 evidence = "SLP SumFormaner: FTE monthly benefits (2014) -> benefits wage sum (2015+); measure redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-formaner"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r164 explicitly defines the wage sum of benefits in SEK, an included component alongside the total wage sum in r168.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42766\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42909\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42913"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-grundlon"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r165 defines the wage sum of basic pay in SEK, an included component alongside the total wage sum in r168.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42767\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42910\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42913"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-jour-beredskap"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r166 defines the wage sum of on-call and standby compensation plus benefits in SEK, fitting the included components alongside the total in r168.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42911\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42913"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-skift-ob"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r167 explicitly defines the wage sum of shift and OB supplements; r163 records it in SEK. Conflicting hectare units in r12 do not negate this explicit component definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:444910\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42912"
+
+[[statement]]
+kind = "set"
+subject = "var:lonesumma-totalt"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r168 explicitly defines the total wage sum in SEK, with the basic-pay component in r165 providing a supported group partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42770\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42910\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42913"
+
+[[statement]]
+kind = "set"
+subject = "var:sumhelglon"
+fields = { "sets" = ["lonesumma"] }
+evidence = "r170 defines compensation for wages lost on public holidays, and r159 records the derived holiday-pay wage sum in SEK. This fits the included holiday-pay component despite the conflicting hectare unit in r48.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42792\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:445229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446108\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42935"

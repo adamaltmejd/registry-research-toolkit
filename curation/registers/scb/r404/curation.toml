@@ -554,32 +554,14 @@ evidence = "Alternativa antal sysselsatta på arbetsstället grupperas.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus"
-fields = { "sets" = [] }
-evidence = "Kodning av arbetsmarknadsstatus.\ncatalog:variable_text:5698:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsmarknadsstatus"
 fields = { "tags" = ["employment"] }
 evidence = "Kodning av arbetsmarknadsstatus.\ncatalog:variable_text:5698:20089:20454"
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus-alt"
-fields = { "sets" = [] }
-evidence = "Alternativ kodning av arbetsmarknadsstatus.\ncatalog:variable_text:5699:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsmarknadsstatus-alt"
 fields = { "tags" = ["employment"] }
 evidence = "Alternativ kodning av arbetsmarknadsstatus.\ncatalog:variable_text:5699:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsmarknadsstatus-fel"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar arbetsmarknadsstatus och hör till gruppen för statusklassificering.\ncatalog:valueset:2845\ncatalog:variable_text:5700:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -694,12 +676,6 @@ kind = "set"
 subject = "var:arbink1m"
 fields = { "tags" = ["income"] }
 evidence = "Belopp och nivå är redovisningar av arbetsrelaterad inkomst.\ncatalog:variable_text:5703:18262:20454\ncatalog:variable_text:5710:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:klassificerad-som-arbetslos"
-fields = { "sets" = [] }
-evidence = "Källmnemoniken är ogenomskinlig; variabeln klassificerar arbetslöshet.\ncatalog:variable_text:5711:20089:20454"
 
 [[statement]]
 kind = "set"
@@ -926,20 +902,8 @@ evidence = "Ordinarie och särskilda bostadstillägg för pensionärer grupperas
 [[statement]]
 kind = "set"
 subject = "var:klassificerad-som-pensionar"
-fields = { "sets" = [] }
-evidence = "Källmnemoniken är ogenomskinlig. Coordinator group membership: Statuskodningar och direkta klassificeringsindikatorer ingår. Tillfällig frånvaro är ett klassificeringsunderlag och undantas enligt den fasta definitionen. Pensionsbelopp, inkomstandel, namngivna pensionskomponenter och pensionsindikatorer omfattas enligt den fasta definitionen.\ncatalog:variable_text:5687:20089:20454\ncatalog:variable_text:5698:20089:20454\ncatalog:variable_text:5699:20089:20454\ncatalog:variable_text:5700:18628:18993\ncatalog:variable_text:5711:20089:20454\ncatalog:variable_text:5719:18262:20089\ncatalog:variable_text:5730:20089:20454\ncatalog:variable_text:5731:20089:20454\ncatalog:variable_text:5735:20089:20454\ncatalog:variable_text:5737:18628:18993\ncatalog:variable_text:5771:18262:20454\ncatalog:variable_text:5772:18262:20089\ncatalog:variable_text:5780:18262:20454\ncatalog:variable_text:5781:18262:20089\ncatalog:variable_text:5782:18628:20454\ncatalog:variable_text:5789:20089:20454\ncatalog:variable_text:5824:20089:20454\ncatalog:variable_text:5825:18262:20089\ncatalog:variable_text:5826:18262:20089\ncatalog:variable_text:5830:18262:20454\ncatalog:variable_text:5831:18262:20089\ncatalog:variable_text:5839:18262:20454\ncatalog:variable_text:5840:18262:20089\ncatalog:variable_text:5862:18262:20454\ncatalog:variable_text:5863:18262:20089\ncatalog:variable_text:5864:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:klassificerad-som-pensionar"
 fields = { "tags" = ["employment"] }
 evidence = "Källmnemoniken är ogenomskinlig. Coordinator group membership: Statuskodningar och direkta klassificeringsindikatorer ingår. Tillfällig frånvaro är ett klassificeringsunderlag och undantas enligt den fasta definitionen. Pensionsbelopp, inkomstandel, namngivna pensionskomponenter och pensionsindikatorer omfattas enligt den fasta definitionen.\ncatalog:variable_text:5687:20089:20454\ncatalog:variable_text:5698:20089:20454\ncatalog:variable_text:5699:20089:20454\ncatalog:variable_text:5700:18628:18993\ncatalog:variable_text:5711:20089:20454\ncatalog:variable_text:5719:18262:20089\ncatalog:variable_text:5730:20089:20454\ncatalog:variable_text:5731:20089:20454\ncatalog:variable_text:5735:20089:20454\ncatalog:variable_text:5737:18628:18993\ncatalog:variable_text:5771:18262:20454\ncatalog:variable_text:5772:18262:20089\ncatalog:variable_text:5780:18262:20454\ncatalog:variable_text:5781:18262:20089\ncatalog:variable_text:5782:18628:20454\ncatalog:variable_text:5789:20089:20454\ncatalog:variable_text:5824:20089:20454\ncatalog:variable_text:5825:18262:20089\ncatalog:variable_text:5826:18262:20089\ncatalog:variable_text:5830:18262:20454\ncatalog:variable_text:5831:18262:20089\ncatalog:variable_text:5839:18262:20454\ncatalog:variable_text:5840:18262:20089\ncatalog:variable_text:5862:18262:20454\ncatalog:variable_text:5863:18262:20089\ncatalog:variable_text:5864:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:klassificerad-som-sjuk"
-fields = { "sets" = [] }
-evidence = "Källmnemoniken är ogenomskinlig.\ncatalog:variable_text:5731:20089:20454"
 
 [[statement]]
 kind = "set"
@@ -982,12 +946,6 @@ kind = "set"
 subject = "var:bstudovr"
 fields = { "tags" = ["education"] }
 evidence = "Indikatorn gäller inskrivning i utbildning och ingår i studerandestatus.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:bstudstat"
-fields = { "sets" = [] }
-evidence = "Indikatorn är en klassificering som studerande och ingår i båda kandidatgruppernas omfattning.\ncatalog:variable_text:5735:18262:18993\ncatalog:variable_text:5735:18993:19358\ncatalog:variable_text:5735:19358:20089\ncatalog:variable_text:5735:20089:20454"
 
 [[statement]]
 kind = "set"
@@ -1006,12 +964,6 @@ kind = "set"
 subject = "var:bstyrelse"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln avser en persons roll i en organisations ledning.\ncatalog:variable_text:5736:18262:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:bsyssstat-fel"
-fields = { "sets" = [] }
-evidence = "Indikatorn klassificerar personen som sysselsatt och hör till statusgruppen.\ncatalog:variable_text:5737:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -1606,12 +1558,6 @@ kind = "set"
 subject = "var:kallkod"
 fields = { "tags" = ["methods"] }
 evidence = "Källkod anger statistikens källa.\ncatalog:variable_text:5788:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:klassificerad-sysselsatt"
-fields = { "sets" = [] }
-evidence = "Indikator för klassificering som sysselsatt.\ncatalog:variable_text:5789:20089:20454"
 
 [[statement]]
 kind = "set"
@@ -3316,3 +3262,57 @@ kind = "set"
 subject = "slutliga-manadsuppgifter: TVARDp @2024-01-01..2024-12-31 where key = 'v1197'"
 fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Texten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r148 defines classification by labour-market situation and a hierarchy of statuses; r147 supplies the corresponding status codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5691\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2845\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5698"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r149 explicitly describes a coarse labour-market status classification; r146 confirms employed, unemployed, outside the labour force, and child categories.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5692\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1383\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5699"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-fel"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r150 defines a labour-market status classification and r147 lists its status codes. The erroneous, discontinued values noted in r65 do not change its concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5693\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:37478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2845\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5700"
+
+[[statement]]
+kind = "set"
+subject = "var:bstudstat"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r151 defines classification as a student using alternative qualifying criteria, with yes/no codes in r145. Student classification indicators are explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5725\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5731"
+
+[[statement]]
+kind = "set"
+subject = "var:bsyssstat-fel"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r152 defines classification as employed and r145 supplies yes/no codes. The erroneous, discontinued values noted in r71 do not change its concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5727\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:37489\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5733"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificerad-som-arbetslos"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r153 defines classification as registered unemployed under stated criteria, with yes/no codes in r145. This classification indicator is explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5786"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificerad-som-pensionar"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r154 defines classification as a pensioner, and r145 supplies yes/no codes. This classification indicator is explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5787"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificerad-som-sjuk"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r155 defines classification as sick under stated criteria, with yes/no codes in r145. It measures the classification, rather than an individual input criterion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5784\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5788"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificerad-sysselsatt"
+fields = { "sets" = ["arbetsmarknadsstatus"] }
+evidence = "r156 defines classification as employed using alternative qualifying criteria, with yes/no codes in r145. The resulting classification is explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5789"

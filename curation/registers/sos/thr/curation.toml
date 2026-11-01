@@ -382,3 +382,9 @@ kind = "set"
 subject = "var:transtyp"
 fields = { "tags" = ["healthcare"] }
 evidence = "Transaktionstyperna beskriver olika slags tandvårdsbesök och ärenden.\ncatalog:variable_text:57473:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elementstatus"
+fields = { "tags" = ["healthcare"] }
+evidence = "The codes include Abonnemangstandvård and Förhandsprövning krävs alongside approval and rejection states, supporting the healthcare theme for dental-care administration (r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10297"

@@ -3920,20 +3920,8 @@ evidence = "Ekologisk hektarskörd ingår i gruppen.\ncatalog:variable_text:4252
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-1"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42524:16801:17897\ncatalog:variable_text:42524:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-1"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42524:16801:17897\ncatalog:variable_text:42524:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-12"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42525:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -3944,20 +3932,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-2"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42526:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-2"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42526:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-20"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42527:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -3968,20 +3944,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-21"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42528:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-21"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42528:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-22"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42529:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -3992,20 +3956,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-23"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42530:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-23"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42530:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-29"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42531:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4016,20 +3968,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-3"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42532:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-3"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42532:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-30"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42533:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4040,20 +3980,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-32"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42534:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-32"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42534:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-4"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42535:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4064,20 +3992,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-40"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42536:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-40"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42536:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-5"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42537:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4088,20 +4004,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-501"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42538:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-501"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42538:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-7"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42539:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4112,20 +4016,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-8"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42540:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-8"
 fields = { "tags" = ["agriculture"] }
 evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42540:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-9"
-fields = { "sets" = [] }
-evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42541:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4136,20 +4028,8 @@ evidence = "Obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-1"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42542:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-1"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42542:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-12"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42543:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4160,20 +4040,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-2"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42544:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-2"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42544:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-20"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42545:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4184,20 +4052,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-21"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42546:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-21"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42546:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-22"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42547:16801:19358"
 
 [[statement]]
 kind = "set"
@@ -4220,20 +4076,8 @@ evidence = "Den operationella definitionen växlar mellan tröskning och grönfo
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-29"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42549:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-29"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42549:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-3"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42550:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4244,20 +4088,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-30"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42551:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-30"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42551:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-32"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42552:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4268,20 +4100,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-4"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42553:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-4"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42553:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-40"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42554:16801:18628"
 
 [[statement]]
 kind = "set"
@@ -4292,20 +4112,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-5"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42555:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-5"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42555:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-501"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42556:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -4316,20 +4124,8 @@ evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-7"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42557:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-7"
 fields = { "tags" = ["agriculture"] }
 evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42557:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:karnfroobargadareal-dar-8"
-fields = { "sets" = [] }
-evidence = "Ekologisk obärgad areal för kärna och frö är ett jordbruksmått.\ncatalog:variable_text:42558:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -5552,12 +5348,6 @@ evidence = "Kod för odlingsarealens län.\ncatalog:variable_text:42659:19723:20
 [[statement]]
 kind = "set"
 subject = "var:obargad-areal-majs"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare för obärgad och tröskad areal.\ncatalog:occurrence:439366\ncatalog:occurrence:439367"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-majs"
 fields = { "tags" = ["agriculture"] }
 evidence = "Samma kolumn har överlappande ägare för obärgad och tröskad areal.\ncatalog:occurrence:439366\ncatalog:occurrence:439367"
 
@@ -5572,12 +5362,6 @@ kind = "set"
 subject = "var:obargad-areal-oljelin-gronfoderobargadareal-dar-21"
 fields = { "tags" = ["agriculture"] }
 evidence = "Samma kolumn har överlappande ägare med olika grödor.\ncatalog:occurrence:439668\ncatalog:occurrence:439669"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-varrybs"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare för obärgad och tröskad areal.\ncatalog:occurrence:440445\ncatalog:occurrence:440446"
 
 [[statement]]
 kind = "set"
@@ -6472,3 +6256,219 @@ kind = "set"
 subject = "skord-av-spannmal-trindsad-och-oljevaxter: KarnfroObargadAreal_Dar_12 @2024-01-01..2024-12-31 where key = 'v44305'"
 fields = { "description" = "Obärgad areal blandsäd strå" }
 evidence = "Rättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-1"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r316 defines unharvested winter barley area in hectares and explicitly specifies threshing in its operational history.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42381\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42524"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-12"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r317 explicitly defines unharvested mixed cereal area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42382\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42525"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-2"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r318 defines unharvested spring barley area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42383\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42526"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-20"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r319 defines unharvested winter oilseed rape area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42384\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42527"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-21"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r320 defines unharvested spring oilseed rape area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42385\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42528"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-22"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r321 defines unharvested winter turnip rape area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42529"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-23"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r322 defines unharvested spring turnip rape area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42387\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42530"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-29"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r323 defines unharvested spring triticale area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42388\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42531"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-3"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r324 defines unharvested oat area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42389\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42532"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-30"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r325 defines unharvested pea area for threshing, explicitly excluding canning peas, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42390\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42533"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-32"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r326 defines unharvested field bean area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42391\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42534"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-4"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r327 defines unharvested winter wheat area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42392\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42535"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-40"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r328 defines unharvested oilseed flax area for threshing in hectares, matching the fixed group's seed-harvest scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42393\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42536"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-5"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r329 defines unharvested spring wheat area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42394\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42537"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-501"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r330 defines unharvested mixed legume and cereal area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42395\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42538"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-7"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r331 defines unharvested winter triticale area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42539"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-8"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r332 defines unharvested rye area for threshing in hectares, matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42397\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42540"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-9"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r333 explicitly defines unharvested maize area for threshing in hectares, supporting grain-harvest inclusion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42398\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42541"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-1"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r334 defines unharvested winter barley area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42399\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42542"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-12"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r335 defines unharvested mixed cereal area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42400\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42543"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-2"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r336 defines unharvested spring barley area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42401\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42544"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-20"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r337 defines unharvested winter oilseed rape area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42545"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-21"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r338 defines unharvested spring oilseed rape area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42403\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42546"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-22"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r339 defines unharvested winter turnip rape area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42404\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42547"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-29"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r341 defines unharvested spring triticale area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42406\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42549"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-3"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r342 defines unharvested oat area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42407\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42550"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-30"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r343 defines unharvested pea area, excluding canning peas, as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42408\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42551"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-32"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r344 defines unharvested field bean area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42409\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42552"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-4"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r345 defines unharvested winter wheat area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42410\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42553"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-40"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r346 defines unharvested oilseed flax area as an organic subset of unharvested area for threshing, within the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42411\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42554"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-5"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r347 defines unharvested spring wheat area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42555"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-501"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r348 defines unharvested mixed legume and cereal area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42413\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42556"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-7"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r349 defines unharvested winter triticale area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42414\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42557"
+
+[[statement]]
+kind = "set"
+subject = "var:karnfroobargadareal-dar-8"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r350 defines unharvested rye area as an organic subset of unharvested area for threshing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42415\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42558"
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-majs"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r351 defines unharvested maize area as an organic subset of unharvested area for threshing, within the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42519\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42661"
+
+[[statement]]
+kind = "set"
+subject = "var:obargad-areal-varrybs"
+fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
+evidence = "r352 explicitly defines unharvested spring turnip rape area as an organic subset of unharvested area for threshing, supporting inclusion despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42521\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42663"

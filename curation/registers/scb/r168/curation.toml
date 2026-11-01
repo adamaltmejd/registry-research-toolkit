@@ -1342,32 +1342,14 @@ evidence = "Aktiekapital är en beståndsdel av eget kapital.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:aktier-och-andelar"
-fields = { "sets" = [] }
-evidence = "Källan anger innehav av aktier och andelar.\ncatalog:variable_text:10566:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-och-andelar"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källan anger innehav av aktier och andelar.\ncatalog:variable_text:10566:12053:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:aktier-svenska-koncern-intresse"
-fields = { "sets" = [] }
-evidence = "Källan anger aktieinnehav i svenska koncern- och intresseföretag.\ncatalog:variable_text:10567:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-svenska-koncern-intresse"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källan anger aktieinnehav i svenska koncern- och intresseföretag.\ncatalog:variable_text:10567:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:aktier-utlandska-koncern-intresse"
-fields = { "sets" = [] }
-evidence = "Källan anger aktieinnehav i utländska koncern- och intresseföretag.\ncatalog:variable_text:10568:12053:13514"
 
 [[statement]]
 kind = "set"
@@ -1402,20 +1384,8 @@ evidence = "Antalet är ett anställningsmått.\ncatalog:variable_text:10570:127
 [[statement]]
 kind = "set"
 subject = "var:andelar-intresseforetag"
-fields = { "sets" = [] }
-evidence = "Källan anger ägarandelar i intresseföretag.\ncatalog:variable_text:10571:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andelar-intresseforetag"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Källan anger ägarandelar i intresseföretag.\ncatalog:variable_text:10571:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andelar-koncernforetag"
-fields = { "sets" = [] }
-evidence = "Källan anger ägarandelar i koncernföretag.\ncatalog:variable_text:10572:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -2418,12 +2388,6 @@ kind = "set"
 subject = "var:kortfristiga-skulder-hos-koncern-och-intresseforetag"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger kortfristiga skulder hos koncern- och intresseföretag.\ncatalog:variable_text:10658:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-aktier-och-andelar-i-koncern-och-intresseforetag"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger summan av aktier och andelar.\ncatalog:variable_text:10659:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -3490,20 +3454,8 @@ evidence = "Variabeln mäter kostnader för handelsvaror.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
-fields = { "sets" = [] }
-evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10748:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
 fields = { "tags" = ["business"] }
 evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10748:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnader-for-ovriga-sociala-avgifter-vgr520"
-fields = { "sets" = [] }
-evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10749:12053:13514"
 
 [[statement]]
 kind = "set"
@@ -3582,12 +3534,6 @@ kind = "set"
 subject = "var:kostnader-loner-ersattningar"
 fields = { "tags" = ["business"] }
 evidence = "Måttet hör till kostnader för löner och andra ersättningar.\ncatalog:variable_text:10755:19358:19723\ncatalog:variable_text:10766:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnader-ovriga-sociala-avgifter"
-fields = { "sets" = [] }
-evidence = "Posten avser övriga sociala avgifter.\ncatalog:variable_text:10756:12053:13514"
 
 [[statement]]
 kind = "set"
@@ -3690,12 +3636,6 @@ kind = "set"
 subject = "var:leverantorsskulder"
 fields = { "tags" = ["business"] }
 evidence = "Leverantörsskulder är en kortfristig skuldpost.\ncatalog:variable_text:10764:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-sociala-avgifter"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger övriga sociala avgifter.\ncatalog:variable_text:10765:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -4786,12 +4726,6 @@ evidence = "Den levererade kolumnens namn anger SNI92 men någon sakdefinition s
 [[statement]]
 kind = "set"
 subject = "var:sociala-kostnader-personalkostnader"
-fields = { "sets" = [] }
-evidence = "Posten omfattar sociala och andra personalkostnader.\ncatalog:variable_text:10859:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:sociala-kostnader-personalkostnader"
 fields = { "tags" = ["business"] }
 evidence = "Posten omfattar sociala och andra personalkostnader.\ncatalog:variable_text:10859:18993:19723"
 
@@ -5310,3 +5244,69 @@ kind = "set"
 subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-vgr552"
 fields = { "tags" = ["business"] }
 evidence = "Måttet avser vinst vid avyttring av icke-finansiella anläggningstillgångar.\ncatalog:variable_text:10907:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-och-andelar"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition specifies shares and interests, recorded as a monetary amount (r37, r265), matching the fixed holdings category (r283).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10549\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:88802\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10566\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/aktier-och-andelar"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-svenska-koncern-intresse"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition specifies shares in Swedish group and associated companies, recorded as a monetary amount (r38, r266), within the fixed holdings scope (r283).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10550\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:88809\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10567\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/aktier-och-andelar"
+
+[[statement]]
+kind = "set"
+subject = "var:aktier-utlandska-koncern-intresse"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition specifies shares in foreign group and associated companies, recorded as a monetary amount (r39, r267), within the fixed holdings scope (r283).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10551\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:88810\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10568\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/aktier-och-andelar"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-intresseforetag"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition explicitly describes financial assets consisting of ownership interests in associated companies (r268).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10554\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10571"
+
+[[statement]]
+kind = "set"
+subject = "var:andelar-koncernforetag"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition explicitly describes financial assets consisting of ownership interests in group companies (r269).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10555\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10572"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-kgr520"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "The definition specifies costs for other social charges, recorded in SEK (r199, r274), explicitly included by the fixed group (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10715\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:94283\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10738\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-ovriga-sociala-avgifter-vgr520"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "The definition specifies costs for other social charges, recorded in SEK (r239, r275), explicitly included by the fixed group (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10716\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:95430\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10739\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-ovriga-sociala-avgifter"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "The definition specifies costs for other social charges, recorded in SEK (r117, r276), explicitly included by the fixed group (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10723\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:91183\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10746\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-sociala-avgifter"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "The definition specifies other social charges, recorded as a monetary amount (r217, r280), explicitly included by the fixed group (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10802\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:94735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10822\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "The definition explicitly measures combined social costs and other personnel costs (r281), matching the fixed inclusion (r285).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10837\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10856\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-aktier-och-andelar-i-koncern-och-intresseforetag"
+fields = { "sets" = ["aktier-och-andelar"] }
+evidence = "The definition explicitly identifies financial assets consisting of shares and interests in group and associated companies (r282).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10840\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10859"

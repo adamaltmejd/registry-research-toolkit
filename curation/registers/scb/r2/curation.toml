@@ -5065,20 +5065,8 @@ evidence = "Variabeln och dess tidigare motsvarighet anger icke territoriell fö
 
 [[statement]]
 kind = "set"
-subject = "var:icke-territoriell-forsamling"
-fields = { "tags" = [] }
-evidence = "Variabeln och dess tidigare motsvarighet anger icke territoriell församling.\ncatalog:variable_text:41782:9862:10227\ncatalog:variable_text:41783:-731:10227"
-
-[[statement]]
-kind = "set"
 subject = "var:icketerrforsfg"
 fields = { "sets" = ["icke-territoriell-forsamling"] }
-evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare icke territoriell församling.\ncatalog:variable_text:41783:-731:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:icketerrforsfg"
-fields = { "tags" = [] }
 evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare icke territoriell församling.\ncatalog:variable_text:41783:-731:10227"
 
 [[statement]]
@@ -5300,20 +5288,8 @@ evidence = "Nyckeln anger relationspersonens bostadslägenhet.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:lan"
-fields = { "sets" = [] }
-evidence = "Variabeln anger bostadslän i flera tabeller.\nregisters/scb/r2/curation.toml:291"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger bostadslän i flera tabeller.\nregisters/scb/r2/curation.toml:291"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-tidigare"
-fields = { "sets" = [] }
-evidence = "Variabeln anger tidigare bostadslän.\ncatalog:variable_text:41804:-731:10227\ncatalog:variable_text:41804:10227:20454"
 
 [[statement]]
 kind = "set"
@@ -5324,32 +5300,14 @@ evidence = "Variabeln anger tidigare bostadslän.\ncatalog:variable_text:41804:-
 [[statement]]
 kind = "set"
 subject = "var:lanfar"
-fields = { "sets" = [] }
-evidence = "Variabeln anger faderns bostadslän.\ncatalog:variable_text:41805:10227:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:lanfar"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger faderns bostadslän.\ncatalog:variable_text:41805:10227:20454"
 
 [[statement]]
 kind = "set"
 subject = "var:lanmor"
-fields = { "sets" = [] }
-evidence = "Variabeln anger moderns bostadslän.\ncatalog:variable_text:41806:10227:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:lanmor"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger moderns bostadslän.\ncatalog:variable_text:41806:10227:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:lanrel"
-fields = { "sets" = [] }
-evidence = "Variabeln anger relationspersonens bostadslän.\ncatalog:variable_text:41807:10227:20454"
 
 [[statement]]
 kind = "set"
@@ -5420,20 +5378,8 @@ evidence = "Föregående mantalsskrivningskommun hör till kommungruppen och geo
 [[statement]]
 kind = "set"
 subject = "var:mantlan"
-fields = { "sets" = [] }
-evidence = "Variabeln anger län för aktuell mantalsskrivning.\ncatalog:occurrence:429686"
-
-[[statement]]
-kind = "set"
-subject = "var:mantlan"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger län för aktuell mantalsskrivning.\ncatalog:occurrence:429686"
-
-[[statement]]
-kind = "set"
-subject = "var:mantlanfg"
-fields = { "sets" = [] }
-evidence = "Variabeln anger län för föregående mantalsskrivning.\ncatalog:occurrence:429687"
 
 [[statement]]
 kind = "set"
@@ -7530,3 +7476,63 @@ relation = "continues"
 object = "scb/rtb/grund-for-bosattning-grupperad-prioriterad"
 at = "2006-01-01.."
 evidence = "RTB settlement grounds: derived grouping (1987-2005) -> Migration Agency code (2006+); classification replaced."
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "tags" = ["culture"] }
+evidence = "Membership in named religious congregations fits culture's associational-life theme (r199, r303).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41641\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:539"
+
+[[statement]]
+kind = "set"
+subject = "var:icketerrforsfg"
+fields = { "tags" = ["culture"] }
+evidence = "Previous congregation membership fits culture's associational-life theme; the operational definition and codes establish its meaning (r200, r299).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41642\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432970\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4183"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Registered residence and event-time residence fit lan (r282, r11). Birth entries specify the child's registered residence at birth (r225), rather than birthplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:423540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:427595\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428861"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-tidigare"
+fields = { "sets" = ["lan"] }
+evidence = "The county moved from and the registered county before moving (r374, r434) measure previous residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41665\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:433830"
+
+[[statement]]
+kind = "set"
+subject = "var:lanfar"
+fields = { "sets" = ["lan"] }
+evidence = "The father's registered county at the child's birth (r140) measures parental residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41666\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:425906"
+
+[[statement]]
+kind = "set"
+subject = "var:lanmor"
+fields = { "sets" = ["lan"] }
+evidence = "The mother's registered county at the child's birth (r141) measures parental residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41667\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:425907"
+
+[[statement]]
+kind = "set"
+subject = "var:lanrel"
+fields = { "sets" = ["lan"] }
+evidence = "The relationsperson's registered county at the civil-status change (r16) is expressly included in lan's residential-county definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41668\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:423632"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlan"
+fields = { "sets" = ["lan"] }
+evidence = "Current mantal registration county explicitly fits lan; the previous registration county supplies a distinct partner (r41, r42).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41677\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428869"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlanfg"
+fields = { "sets" = ["lan"] }
+evidence = "Previous mantal registration county explicitly fits lan; the current registration county supplies a distinct partner (r42, r41).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41678\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428869"
+
+[[statement]]
+kind = "set"
+subject = "var:omyndig"
+fields = { "tags" = ["crime"] }
+evidence = "Court-imposed removal of an adult's legal capacity is a legal proceeding, covered by crime's justice scope (r322).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41845"

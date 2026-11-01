@@ -13053,12 +13053,6 @@ evidence = "The compared Org_Sni92 code lists differ only by two removed 'Okänt
 [[statement]]
 kind = "set"
 subject = "var:antal-dagar-i-deltidsarbetsloshet"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig; variabeln mäter dagar i deltidsarbetslöshet.\ncatalog:variable_text:37374:16801:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-dagar-i-deltidsarbetsloshet"
 fields = { "tags" = ["employment"] }
 evidence = "Källkoden är ogenomskinlig; variabeln mäter dagar i deltidsarbetslöshet.\ncatalog:variable_text:37374:16801:19723"
 
@@ -13425,12 +13419,6 @@ evidence = "AK14 är en ogenomskinlig källkod.\ncatalog:variable_text:37413:168
 [[statement]]
 kind = "set"
 subject = "var:akassa-arbetsloshet"
-fields = { "sets" = [] }
-evidence = "Ersättningsbeloppet ingår i inkomst vid arbetslöshet.\ncatalog:variable_text:37414:9131:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:akassa-arbetsloshet"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "Ersättningsbeloppet ingår i inkomst vid arbetslöshet.\ncatalog:variable_text:37414:9131:19723"
 
@@ -13653,12 +13641,6 @@ evidence = "Förekomst av pensionsinkomst hör till samlad pension.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:arbetsloshetskod"
-fields = { "sets" = [] }
-evidence = "AL är en bokstavskod för arbetslöshet.\ncatalog:variable_text:37433:8035:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsloshetskod"
 fields = { "tags" = ["employment"] }
 evidence = "AL är en bokstavskod för arbetslöshet.\ncatalog:variable_text:37433:8035:19723"
 
@@ -13689,32 +13671,14 @@ evidence = "Pensions- eller programgrupp kan inte fastställas från den motstri
 [[statement]]
 kind = "set"
 subject = "var:alukas"
-fields = { "sets" = [] }
-evidence = "ALU är en ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37436:8766:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:alukas"
 fields = { "tags" = ["transfers"] }
 evidence = "ALU är en ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37436:8766:10227"
 
 [[statement]]
 kind = "set"
 subject = "var:ampol"
-fields = { "sets" = [] }
-evidence = "Variabeln summerar ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37437:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:ampol"
 fields = { "tags" = ["transfers"] }
 evidence = "Variabeln summerar ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37437:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:ampoltyp"
-fields = { "sets" = [] }
-evidence = "Variabeln anger förekomst av ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37438:18262:19723"
 
 [[statement]]
 kind = "set"
@@ -13761,12 +13725,6 @@ evidence = "Vilande ersättningsgrad ingår i sjukersättning.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:andel-ink-arbetsloshet"
-fields = { "sets" = [] }
-evidence = "Andelen avser ersättning vid arbetslöshet.\ncatalog:variable_text:37442:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-ink-arbetsloshet"
 fields = { "tags" = ["employment", "income", "transfers"] }
 evidence = "Andelen avser ersättning vid arbetslöshet.\ncatalog:variable_text:37442:18993:19723"
 
@@ -13793,12 +13751,6 @@ kind = "set"
 subject = "var:andel-ink-foraldraledighet"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "Andelen ingår i samlad inkomst vid föräldraledighet.\ncatalog:variable_text:37444:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-ink-nedsatt-arbetsformaga"
-fields = { "sets" = [] }
-evidence = "Andelen tillhör den samlade ersättningen vid långvarigt nedsatt arbetsförmåga.\ncatalog:variable_text:37445:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -14241,12 +14193,6 @@ evidence = "Antalet barn beskriver hushållets sammansättning.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:antal-dagar-arbetsloshet"
-fields = { "sets" = [] }
-evidence = "Dagar i arbetslöshet ingår i gruppen.\ncatalog:variable_text:37482:16801:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-dagar-arbetsloshet"
 fields = { "tags" = ["employment"] }
 evidence = "Dagar i arbetslöshet ingår i gruppen.\ncatalog:variable_text:37482:16801:19723"
 
@@ -14541,12 +14487,6 @@ evidence = "Arbetad tid och arbetade månader hör samman.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:arbetslivsutvecklingsbidrag-fran-amk"
-fields = { "sets" = [] }
-evidence = "ALU-bidrag är ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37507:8766:9862"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetslivsutvecklingsbidrag-fran-amk"
 fields = { "tags" = ["transfers"] }
 evidence = "ALU-bidrag är ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37507:8766:9862"
 
@@ -14705,12 +14645,6 @@ kind = "set"
 subject = "var:arbetsstallets-naringsgren-sni2002-begransad-niva-42"
 fields = { "tags" = ["business"] }
 evidence = "Arbetsställets näringsgren ingår i gruppen.\ncatalog:variable_text:37521:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-fran-arbetsloshetskassa-forekomst-av"
-fields = { "sets" = [] }
-evidence = "Id:t anger arbetslöshetstyp men variabeln anger förekomst av ersättning under alla perioder.\ncatalog:valueset:10571\ncatalog:variable_text:37522:10957:19723"
 
 [[statement]]
 kind = "set"
@@ -15417,32 +15351,14 @@ evidence = "Underskottet hör till inkomst av näringsverksamhet.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:ersattning-amprogram-skattefri"
-fields = { "sets" = [] }
-evidence = "Skattefri programersättning hör till ersättning vid arbetsmarknadsåtgärd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser utvecklingsersättning. membership-0401: Sektionen innehåller ingen utvecklingsersättning. membership-0402: De valda utbildningsstödsbeloppen och dagarna gäller aktivitetsstöd, som definitionen uttryckligen utesluter. membership-0403: Den granskade beskrivningen identifierar beloppet uttryckligen som utvecklingsersättning. membership-0404: Ingen vald variabel i sektionen mäter utvecklingsersättning. membership-0405: Belopp och dagar mäter utvecklingsersättning, inklusive den uttryckligen inkluderade sjukdomsvarianten. membership-0406: Ingen vald variabel mäter utvecklingsersättning.\ncatalog:variable_text:37424:17167:19723\ncatalog:variable_text:37425:17167:19723\ncatalog:variable_text:37426:17167:17532\ncatalog:variable_text:37427:17167:17532\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-amprogram-skattefri"
 fields = { "tags" = ["transfers"] }
 evidence = "Skattefri programersättning hör till ersättning vid arbetsmarknadsåtgärd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser utvecklingsersättning. membership-0401: Sektionen innehåller ingen utvecklingsersättning. membership-0402: De valda utbildningsstödsbeloppen och dagarna gäller aktivitetsstöd, som definitionen uttryckligen utesluter. membership-0403: Den granskade beskrivningen identifierar beloppet uttryckligen som utvecklingsersättning. membership-0404: Ingen vald variabel i sektionen mäter utvecklingsersättning. membership-0405: Belopp och dagar mäter utvecklingsersättning, inklusive den uttryckligen inkluderade sjukdomsvarianten. membership-0406: Ingen vald variabel mäter utvecklingsersättning.\ncatalog:variable_text:37424:17167:19723\ncatalog:variable_text:37425:17167:19723\ncatalog:variable_text:37426:17167:17532\ncatalog:variable_text:37427:17167:17532\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
 
 [[statement]]
 kind = "set"
 subject = "var:ersattning-amprogram-skattepliktig"
-fields = { "sets" = [] }
-evidence = "Skattepliktig programersättning hör till ersättning vid arbetsmarknadsåtgärd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser aktivitetsstöd. membership-0401: Sektionen innehåller inga mått på aktivitetsstöd. membership-0402: Belopp och dagar avser aktivitetsstöd inklusive sjukdomsvarianten. membership-0403: Den granskade beskrivningen anger aktivitetsstöd/utbildningsbidrag inklusive starta eget-bidrag. membership-0404: Ingen variabel mäter aktivitetsstöd vid utbildning; den granskade beskrivningen av RAKS-andelen avser sjuk- eller aktivitetsersättning. membership-0405: Utvecklingsersättningen är uttryckligen utesluten; ingen vald variabel mäter aktivitetsstöd. membership-0406: Ingen vald variabel mäter aktivitetsstöd enligt definitionen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning.\ncatalog:variable_text:37424:17167:19723\ncatalog:variable_text:37425:17167:19723\ncatalog:variable_text:37426:17167:17532\ncatalog:variable_text:37427:17167:17532\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38006:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:6375\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-amprogram-skattepliktig"
 fields = { "tags" = ["transfers"] }
 evidence = "Skattepliktig programersättning hör till ersättning vid arbetsmarknadsåtgärd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser aktivitetsstöd. membership-0401: Sektionen innehåller inga mått på aktivitetsstöd. membership-0402: Belopp och dagar avser aktivitetsstöd inklusive sjukdomsvarianten. membership-0403: Den granskade beskrivningen anger aktivitetsstöd/utbildningsbidrag inklusive starta eget-bidrag. membership-0404: Ingen variabel mäter aktivitetsstöd vid utbildning; den granskade beskrivningen av RAKS-andelen avser sjuk- eller aktivitetsersättning. membership-0405: Utvecklingsersättningen är uttryckligen utesluten; ingen vald variabel mäter aktivitetsstöd. membership-0406: Ingen vald variabel mäter aktivitetsstöd enligt definitionen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning.\ncatalog:variable_text:37424:17167:19723\ncatalog:variable_text:37425:17167:19723\ncatalog:variable_text:37426:17167:17532\ncatalog:variable_text:37427:17167:17532\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38006:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:6375\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-arbetsloshetskassa-alu"
-fields = { "sets" = [] }
-evidence = "ALU är ersättning vid arbetsmarknadsåtgärd.\ncatalog:variable_text:37589:8401:13514"
 
 [[statement]]
 kind = "set"
@@ -15489,32 +15405,14 @@ evidence = "Samlad ersättning vid föräldraledighet ingår i gruppen.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:ersattning-fran-statlig-arbetsmarknadskassa"
-fields = { "sets" = [] }
-evidence = "Ersättningen är inkomstrelaterad dagpenning vid arbetslöshet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser inkomst vid arbetslöshet. membership-0401: Sektionen innehåller ingen inkomst vid arbetslöshet. membership-0402: Belopp, inkomstandel och förekomst avser arbetslöshetsersättning. membership-0403: Variablerna mäter ersättning eller summerad inkomst föranledd av arbetslöshet. membership-0404: Variabeln mäter arbetslöshetsinkomstens andel av totalinkomsten. membership-0405: Ingen vald variabel mäter samlad arbetslöshetsinkomst, dess förekomst eller andel. membership-0406: De operativa beskrivningarna och granskningarna stöder arbetslöshetsersättning. ALU-varianterna hålls utanför eftersom programersättning undantas och r56 är motstridig.\ncatalog:variable_text:37414:9131:19723\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37442:18993:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37522:10957:19723\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37599:18993:19723\ncatalog:variable_text:37735:10957:19723\ncatalog:variable_text:37736:16801:17167\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38004:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-fran-statlig-arbetsmarknadskassa"
 fields = { "tags" = ["transfers"] }
 evidence = "Ersättningen är inkomstrelaterad dagpenning vid arbetslöshet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser inkomst vid arbetslöshet. membership-0401: Sektionen innehåller ingen inkomst vid arbetslöshet. membership-0402: Belopp, inkomstandel och förekomst avser arbetslöshetsersättning. membership-0403: Variablerna mäter ersättning eller summerad inkomst föranledd av arbetslöshet. membership-0404: Variabeln mäter arbetslöshetsinkomstens andel av totalinkomsten. membership-0405: Ingen vald variabel mäter samlad arbetslöshetsinkomst, dess förekomst eller andel. membership-0406: De operativa beskrivningarna och granskningarna stöder arbetslöshetsersättning. ALU-varianterna hålls utanför eftersom programersättning undantas och r56 är motstridig.\ncatalog:variable_text:37414:9131:19723\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37442:18993:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37522:10957:19723\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37599:18993:19723\ncatalog:variable_text:37735:10957:19723\ncatalog:variable_text:37736:16801:17167\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38004:17167:18993\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
 
 [[statement]]
 kind = "set"
 subject = "var:ersattning-inkomst-anstallning"
-fields = { "sets" = [] }
-evidence = "AGS-komponenten ingår i den angivna gruppen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0401: Sektionen innehåller ingen samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0402: Andelen gäller samlad ersättning vid långvarigt nedsatt arbetsförmåga; de enskilda förmånernas detaljerade mått utesluts. membership-0403: Samlad inkomst, förekomst och den uttryckliga AGS-komponenten för långvarigt nedsatt arbetsförmåga inkluderas. Generell AGS/TFA-ersättning saknar denna avgränsning. membership-0404: Den granskade beskrivningen anger inkomstandel från sjuk- eller aktivitetsersättning, vilket omfattas av samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0405: De valda sjukersättningsvariablerna är enskilda förmånsmått, vilka uttryckligen utesluts från den samlade inkomstkandidaten. membership-0406: Valda förtidspensions- och sjukbidragsvariabler är detaljerade förmånsbelopp eller periodmått, vilket definitionen undantar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Den valda inkomstvariabeln blandar löne- och företagarinkomst och utesluts uttryckligen från rena löneinkomstserier. membership-0401: Blandad löne- eller företagarinkomst och arbetsgivarens lönekostnader är uttryckligen uteslutna. membership-0402: De valda lönerelaterade beloppen kombinerar lön och företagarinkomst, vilket definitionen uttryckligen utesluter. membership-0403: Kontant bruttolön och den fasta kandidatens uttryckligen angivna närliggande anställningsersättning behålls. membership-0404: Kontant bruttolön och deklarerad löneinkomst omfattas; de blandade löne- eller företagarinkomsterna undantas. membership-0405: Sammanräknad förvärvsinkomst och sysselsättningsmarkering utifrån nordisk inkomst är inte rena lönebelopp. membership-0406: Kontant bruttolön enligt justerad metod omfattas uttryckligen.\ncatalog:variable_text:37380:18993:19723\ncatalog:variable_text:37382:18993:19723\ncatalog:variable_text:37393:18993:19723\ncatalog:variable_text:37395:18993:19723\ncatalog:variable_text:37406:18993:19723\ncatalog:variable_text:37408:18993:19723\ncatalog:variable_text:37418:12053:19723\ncatalog:variable_text:37440:12053:19723\ncatalog:variable_text:37445:18993:19723\ncatalog:variable_text:37452:12053:19723\ncatalog:variable_text:37534:7305:8401\ncatalog:variable_text:37535:8401:11688\ncatalog:variable_text:37594:9131:19723\ncatalog:variable_text:37595:18993:19723\ncatalog:variable_text:37622:7305:8401\ncatalog:variable_text:37623:8401:11688\ncatalog:variable_text:37652:10957:19723\ncatalog:variable_text:37655:19358:19723\ncatalog:variable_text:37656:8766:12053\ncatalog:variable_text:37737:9131:19723\ncatalog:variable_text:37738:16801:17167\ncatalog:variable_text:37777:18993:19723\ncatalog:variable_text:37778:12053:12418\ncatalog:variable_text:37781:9862:19723\ncatalog:variable_text:37815:17167:17897\ncatalog:variable_text:37831:18993:19723\ncatalog:variable_text:37832:18993:19723\ncatalog:variable_text:37877:18993:19723\ncatalog:variable_text:37878:7670:19723\ncatalog:variable_text:38006:17167:18993\ncatalog:variable_text:38038:18262:19723\ncatalog:variable_text:38055:8766:12053\ncatalog:variable_text:38060:12053:16436\ncatalog:variable_text:38061:12053:16436\ncatalog:variable_text:38062:13879:16436\ncatalog:variable_text:38063:12053:19723\ncatalog:variable_text:38064:17167:19723\ncatalog:variable_text:38065:17167:19723\ncatalog:variable_text:38066:17167:19723\ncatalog:variable_text:38143:19358:19723\ncatalog:variable_text:38155:18993:19723\nregisters/scb/r34/curation.toml:1070\nregisters/scb/r34/curation.toml:6375\nregisters/scb/r34/curation.toml:8547\nregisters/scb/r34/curation.toml:9891"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-inkomst-anstallning"
 fields = { "tags" = ["transfers"] }
 evidence = "AGS-komponenten ingår i den angivna gruppen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0401: Sektionen innehåller ingen samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0402: Andelen gäller samlad ersättning vid långvarigt nedsatt arbetsförmåga; de enskilda förmånernas detaljerade mått utesluts. membership-0403: Samlad inkomst, förekomst och den uttryckliga AGS-komponenten för långvarigt nedsatt arbetsförmåga inkluderas. Generell AGS/TFA-ersättning saknar denna avgränsning. membership-0404: Den granskade beskrivningen anger inkomstandel från sjuk- eller aktivitetsersättning, vilket omfattas av samlad inkomst vid långvarigt nedsatt arbetsförmåga. membership-0405: De valda sjukersättningsvariablerna är enskilda förmånsmått, vilka uttryckligen utesluts från den samlade inkomstkandidaten. membership-0406: Valda förtidspensions- och sjukbidragsvariabler är detaljerade förmånsbelopp eller periodmått, vilket definitionen undantar. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Den valda inkomstvariabeln blandar löne- och företagarinkomst och utesluts uttryckligen från rena löneinkomstserier. membership-0401: Blandad löne- eller företagarinkomst och arbetsgivarens lönekostnader är uttryckligen uteslutna. membership-0402: De valda lönerelaterade beloppen kombinerar lön och företagarinkomst, vilket definitionen uttryckligen utesluter. membership-0403: Kontant bruttolön och den fasta kandidatens uttryckligen angivna närliggande anställningsersättning behålls. membership-0404: Kontant bruttolön och deklarerad löneinkomst omfattas; de blandade löne- eller företagarinkomsterna undantas. membership-0405: Sammanräknad förvärvsinkomst och sysselsättningsmarkering utifrån nordisk inkomst är inte rena lönebelopp. membership-0406: Kontant bruttolön enligt justerad metod omfattas uttryckligen.\ncatalog:variable_text:37380:18993:19723\ncatalog:variable_text:37382:18993:19723\ncatalog:variable_text:37393:18993:19723\ncatalog:variable_text:37395:18993:19723\ncatalog:variable_text:37406:18993:19723\ncatalog:variable_text:37408:18993:19723\ncatalog:variable_text:37418:12053:19723\ncatalog:variable_text:37440:12053:19723\ncatalog:variable_text:37445:18993:19723\ncatalog:variable_text:37452:12053:19723\ncatalog:variable_text:37534:7305:8401\ncatalog:variable_text:37535:8401:11688\ncatalog:variable_text:37594:9131:19723\ncatalog:variable_text:37595:18993:19723\ncatalog:variable_text:37622:7305:8401\ncatalog:variable_text:37623:8401:11688\ncatalog:variable_text:37652:10957:19723\ncatalog:variable_text:37655:19358:19723\ncatalog:variable_text:37656:8766:12053\ncatalog:variable_text:37737:9131:19723\ncatalog:variable_text:37738:16801:17167\ncatalog:variable_text:37777:18993:19723\ncatalog:variable_text:37778:12053:12418\ncatalog:variable_text:37781:9862:19723\ncatalog:variable_text:37815:17167:17897\ncatalog:variable_text:37831:18993:19723\ncatalog:variable_text:37832:18993:19723\ncatalog:variable_text:37877:18993:19723\ncatalog:variable_text:37878:7670:19723\ncatalog:variable_text:38006:17167:18993\ncatalog:variable_text:38038:18262:19723\ncatalog:variable_text:38055:8766:12053\ncatalog:variable_text:38060:12053:16436\ncatalog:variable_text:38061:12053:16436\ncatalog:variable_text:38062:13879:16436\ncatalog:variable_text:38063:12053:19723\ncatalog:variable_text:38064:17167:19723\ncatalog:variable_text:38065:17167:19723\ncatalog:variable_text:38066:17167:19723\ncatalog:variable_text:38143:19358:19723\ncatalog:variable_text:38155:18993:19723\nregisters/scb/r34/curation.toml:1070\nregisters/scb/r34/curation.toml:6375\nregisters/scb/r34/curation.toml:8547\nregisters/scb/r34/curation.toml:9891"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-nedsatt-arbetsformaga"
-fields = { "sets" = [] }
-evidence = "Samlad ersättning vid långvarigt nedsatt arbetsförmåga.\ncatalog:variable_text:37595:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -15753,12 +15651,6 @@ evidence = "Variabeln avser registrering på forskarutbildning och hör till stu
 [[statement]]
 kind = "set"
 subject = "var:folkald"
-fields = { "sets" = ["lisa-pension"] }
-evidence = "Ålderspension från folkpension är en uttrycklig komponent.\ncatalog:variable_text:37620:9131:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:folkald"
 fields = { "tags" = ["transfers"] }
 evidence = "Ålderspension från folkpension är en uttrycklig komponent.\ncatalog:variable_text:37620:9131:11688"
 
@@ -15813,20 +15705,8 @@ evidence = "Hustrutillägget är en folkpensionskomponent. Coordinator group mem
 [[statement]]
 kind = "set"
 subject = "var:folkpension"
-fields = { "sets" = [] }
-evidence = "Beloppet hör till folkpension.\ncatalog:variable_text:37625:7305:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:folkpension"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet hör till folkpension.\ncatalog:variable_text:37625:7305:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:folkpension-egen-forman"
-fields = { "sets" = [] }
-evidence = "Egen förmån hör till folkpension.\ncatalog:variable_text:37626:7305:12053"
 
 [[statement]]
 kind = "set"
@@ -16121,12 +16001,6 @@ kind = "set"
 subject = "var:forsamling"
 fields = { "tags" = ["geography"] }
 evidence = "Församlingen är en geografisk indelning för folkbokföringen.\ncatalog:variable_text:37651:7305:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:fortidags"
-fields = { "sets" = [] }
-evidence = "Uttrycklig AGS-komponent till samlad inkomst vid långvarigt nedsatt arbetsförmåga.\ncatalog:variable_text:37652:10957:19723"
 
 [[statement]]
 kind = "set"
@@ -17109,20 +16983,8 @@ evidence = "Näringsinkomsten ingår i gruppen.\ncatalog:variable_text:37734:171
 [[statement]]
 kind = "set"
 subject = "var:inkomst-foranledd-arbetsloshet"
-fields = { "sets" = [] }
-evidence = "Summan avser inkomst vid arbetslöshet.\ncatalog:variable_text:37735:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-foranledd-arbetsloshet"
 fields = { "tags" = ["employment", "income", "transfers"] }
 evidence = "Summan avser inkomst vid arbetslöshet.\ncatalog:variable_text:37735:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-foranledd-arbetsloshet-2"
-fields = { "sets" = [] }
-evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:variable_text:37736:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -17601,20 +17463,8 @@ evidence = "Hushållets konsumtionsvikt hör till samma begrepp som familjens ko
 [[statement]]
 kind = "set"
 subject = "var:kontant-bruttolon"
-fields = { "sets" = [] }
-evidence = "Nordisk löneinkomst ingår i löneinkomstgruppen.\ncatalog:variable_text:37777:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:kontant-bruttolon"
 fields = { "tags" = ["income"] }
 evidence = "Nordisk löneinkomst ingår i löneinkomstgruppen.\ncatalog:variable_text:37777:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:kontant-bruttolon-enligt-justerad-metod"
-fields = { "sets" = [] }
-evidence = "Kontant bruttolön ingår i löneinkomstgruppen.\ncatalog:variable_text:37778:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -18681,12 +18531,6 @@ evidence = "Månadsbelopp för löne- eller företagarinkomst.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst"
-fields = { "sets" = [] }
-evidence = "Löneinkomst ingår i gruppen.\ncatalog:variable_text:37878:7670:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:loneinkomst"
 fields = { "tags" = ["income"] }
 evidence = "Löneinkomst ingår i gruppen.\ncatalog:variable_text:37878:7670:19723"
 
@@ -19713,12 +19557,6 @@ evidence = "Nettoomsättning ingår i gruppen.\ncatalog:variable_text:37965:9862
 [[statement]]
 kind = "set"
 subject = "var:offentligt-tillfalligt-arbete-ota"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter ersättning vid en arbetsmarknadsåtgärd.\ncatalog:variable_text:37966:9862:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:offentligt-tillfalligt-arbete-ota"
 fields = { "tags" = ["transfers"] }
 evidence = "Variabeln mäter ersättning vid en arbetsmarknadsåtgärd.\ncatalog:variable_text:37966:9862:10227"
 
@@ -20085,12 +19923,6 @@ evidence = "Inkomstandelen hör till samlad pensionsinkomst.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:raks-andelarblosink"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter andelen inkomst från arbetslöshet.\ncatalog:variable_text:38004:17167:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:raks-andelarblosink"
 fields = { "tags" = ["employment", "income", "transfers"] }
 evidence = "Variabeln mäter andelen inkomst från arbetslöshet.\ncatalog:variable_text:38004:17167:18993"
 
@@ -20153,12 +19985,6 @@ kind = "set"
 subject = "var:raks-andelstudink"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "Andelen avser studieinkomst.\ncatalog:variable_text:38009:17167:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:raks-andelutbbidrink"
-fields = { "sets" = [] }
-evidence = "Andelen gäller inkomst från arbetsmarknadspolitiska åtgärder.\ncatalog:variable_text:38010:17167:18993"
 
 [[statement]]
 kind = "set"
@@ -20249,12 +20075,6 @@ kind = "set"
 subject = "var:raks-summaink"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "RAKS totalinkomst ingår i den angivna gruppen.\ncatalog:variable_text:38017:17167:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:raks-utbbidrink"
-fields = { "sets" = [] }
-evidence = "Summan gäller inkomst från arbetsmarknadspolitiska åtgärder.\ncatalog:variable_text:38018:17167:18993"
 
 [[statement]]
 kind = "set"
@@ -20913,20 +20733,8 @@ evidence = "Antalet avser startade sjukfall med förmåner.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:sjukp-08-bdag"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens bruttodagar.\ncatalog:variable_text:38075:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-08-bdag"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser sjukpenningens bruttodagar.\ncatalog:variable_text:38075:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-08-belopp"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens ersättningsbelopp.\ncatalog:variable_text:38076:13879:15340"
 
 [[statement]]
 kind = "set"
@@ -20937,20 +20745,8 @@ evidence = "Måttet avser sjukpenningens ersättningsbelopp.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:sjukp-08-ndag"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens nettodagar.\ncatalog:variable_text:38077:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-08-ndag"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser sjukpenningens nettodagar.\ncatalog:variable_text:38077:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-forlangd-bdag"
-fields = { "sets" = [] }
-evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38078:13879:15340"
 
 [[statement]]
 kind = "set"
@@ -20961,20 +20757,8 @@ evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38078:1
 [[statement]]
 kind = "set"
 subject = "var:sjukp-forlangd-belopp"
-fields = { "sets" = [] }
-evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38079:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-forlangd-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38079:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-forlangd-ndag"
-fields = { "sets" = [] }
-evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38080:13879:15340"
 
 [[statement]]
 kind = "set"
@@ -20985,20 +20769,8 @@ evidence = "Måttet avser förlängd sjukpenning.\ncatalog:variable_text:38080:1
 [[statement]]
 kind = "set"
 subject = "var:sjukp-fortsatt-bdag"
-fields = { "sets" = [] }
-evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38081:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-fortsatt-bdag"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38081:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-fortsatt-belopp"
-fields = { "sets" = [] }
-evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38082:13879:15340"
 
 [[statement]]
 kind = "set"
@@ -21009,20 +20781,8 @@ evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38082:138
 [[statement]]
 kind = "set"
 subject = "var:sjukp-fortsatt-ndag"
-fields = { "sets" = [] }
-evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38083:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukp-fortsatt-ndag"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser fortsatt sjukpenning.\ncatalog:variable_text:38083:13879:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-bruttodagar"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens bruttodagar.\ncatalog:variable_text:38084:17167:19723\ncatalog:variable_text:38084:8401:16801"
 
 [[statement]]
 kind = "set"
@@ -21045,20 +20805,8 @@ evidence = "Källan benämner beloppet sjukpenning utan arbetsgivarinträde.\nca
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning-ersattningsbelopp"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens ersättningsbelopp.\ncatalog:variable_text:38086:17167:19723\ncatalog:variable_text:38086:8401:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-ersattningsbelopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser sjukpenningens ersättningsbelopp.\ncatalog:variable_text:38086:17167:19723\ncatalog:variable_text:38086:8401:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-nettodagar"
-fields = { "sets" = [] }
-evidence = "Måttet avser sjukpenningens nettodagar.\ncatalog:variable_text:38087:17167:19723\ncatalog:variable_text:38087:8401:16801"
 
 [[statement]]
 kind = "set"
@@ -22145,12 +21893,6 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning-storst"
 fields = { "tags" = ["employment"] }
 evidence = "Måttet avser tjänstgöringsomfattning.\ncatalog:variable_text:38177:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:utbbarb"
-fields = { "sets" = [] }
-evidence = "Familjens förkortningar är läsbara. Dagpenningen är en namngiven ersättning vid arbetsmarknadsutbildning.\ncatalog:occurrence-locators:variable:38178\ncatalog:variable_text:38178:8401:9496"
 
 [[statement]]
 kind = "set"
@@ -26301,3 +26043,267 @@ relation = "continues"
 object = "scb/lisa/yrkesbaserad-seg-eseg"
 at = "2016-01-01.."
 evidence = "LISA ESeG: ISCO-88 based (2015) -> ISCO-08 based (2016); classification revision."
+
+[[statement]]
+kind = "set"
+subject = "var:akassa-arbetsloshet"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The definition identifies compensation from an unemployment fund during unemployment, within the fixed scope (r574, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37272\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37412\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:alukas"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r314 operationally defines ALU development grants paid as cash labour-market support, establishing programme compensation. | r314 operationally defines ALU development grants paid as cash labour-market support, establishing programme compensation. | r314 operationally defines ALU development grants paid as cash labour-market support, establishing programme compensation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37293\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:376855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37433"
+
+[[statement]]
+kind = "set"
+subject = "var:ampol"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r315 defines annual programme income and documents the sum of taxable and tax-free programme compensation. | r315 defines annual programme income and documents the sum of taxable and tax-free programme compensation. | r315 defines annual programme income and documents the sum of taxable and tax-free programme compensation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37294\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:378274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37434"
+
+[[statement]]
+kind = "set"
+subject = "var:ampoltyp"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r316 records whether programme-related income was received; r311 supplies complete yes/no codes, supporting the included receipt measure. | r316 records whether programme-related income was received; r311 supplies complete yes/no codes, supporting the included receipt measure. | r316 records whether programme-related income was received; r311 supplies complete yes/no codes, supporting the included receipt measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37435"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-ink-arbetsloshet"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The operational definition measures the net share of total earnings and transfers consisting of unemployment compensation, an included share measure (r575, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37439\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-ink-nedsatt-arbetsformaga"
+fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
+evidence = "The operational definition measures the net income share from long-term reduced-work-capacity compensation, expressly covered by the group (r576, r615).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37302\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37442\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-arbetsloshet"
+fields = { "sets" = ["arbetsloshet"] }
+evidence = "r317 measures unemployment days derived from registration dates, directly within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37479\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-i-deltidsarbetsloshet"
+fields = { "sets" = ["arbetsloshet"] }
+evidence = "r318 measures part-time unemployment days derived from registration dates, explicitly included in the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37340\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37480\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetslivsutvecklingsbidrag-fran-amk"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r319 explicitly defines ALU development grants from the state labour-market fund, measured in hundreds of kronor. | r319 explicitly defines ALU development grants from the state labour-market fund, measured in hundreds of kronor. | r319 explicitly defines ALU development grants from the state labour-market fund, measured in hundreds of kronor.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37366\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37506"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsloshetskod"
+fields = { "sets" = ["arbetsloshet"] }
+evidence = "r320 combines unemployment events and compensation information; r312 explicitly codes unemployment status, within the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37367\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4913\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37507\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-amprogram-skattefri"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r322 explicitly measures tax-free compensation for participation in labour-market programmes. | r322 explicitly measures tax-free compensation for participation in labour-market programmes. | r322 explicitly measures tax-free compensation for participation in labour-market programmes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37452\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37591"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-amprogram-skattepliktig"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r323 explicitly measures taxable compensation for participation in labour-market programmes. | r323 explicitly measures taxable compensation for participation in labour-market programmes. | r323 explicitly measures taxable compensation for participation in labour-market programmes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37453\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37592"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-arbetsloshetskassa-alu"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r324 explicitly defines unemployment-fund compensation during ALU, a named programme component. | r324 explicitly defines unemployment-fund compensation during ALU, a named programme component. | r324 explicitly defines unemployment-fund compensation during ALU, a named programme component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37593"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-fran-arbetsloshetskassa-forekomst-av"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The history defines an indicator of receiving unemployment income; the complete codes are no/yes, matching the group's occurrence measure (r578, r573, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37458\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37597\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-fran-statlig-arbetsmarknadskassa"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The definition specifies income-related daily compensation for unemployed people outside an unemployment fund, fitting unemployment income (r579, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37459\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37598\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-inkomst-anstallning"
+fields = { "sets" = ["loneinkomst"] }
+evidence = "AGS/TFA payments compensate lost employment earnings, fitting the fixed inclusion of related employment compensation (r580, r616).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37460\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37599\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/loneinkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-nedsatt-arbetsformaga"
+fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
+evidence = "The operational definition aggregates sickness/activity compensation, associated housing supplement and injury annuity as long-term reduced-work-capacity income (r581, r615).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37461\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37600\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:folkald"
+fields = { "sets" = ["folkpension", "lisa-pension"] }
+evidence = "r326 derives the own-benefit old-age component from paid folkpension and pension-type codes, expressly within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37627\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/folkpension"
+
+[[statement]]
+kind = "set"
+subject = "var:folkpension"
+fields = { "sets" = ["folkpension"] }
+evidence = "The history defines a folkpension amount, which the fixed group explicitly includes alongside own-benefit amounts (r584, r585, r613).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37632\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37633\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/folkpension"
+
+[[statement]]
+kind = "set"
+subject = "var:folkpension-egen-forman"
+fields = { "sets" = ["folkpension"] }
+evidence = "The history explicitly defines folkpension own benefit, included by the fixed definition and partnered by the total amount (r585, r584, r613).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37494\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37632\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37633\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/folkpension"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidags"
+fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
+evidence = "The history explicitly sums AGS associated with early-retirement, sickness or activity compensation, the component expressly included in the group (r586, r615).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37523\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37662\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-arbetsloshet"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The operational history sums unemployment-fund or unemployment-insurance compensation, within the fixed unemployment-income scope (r588, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37567\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37716\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-arbetsloshet-2"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The definition specifies annual summed income caused by unemployment, fitting the fixed aggregate-income scope (r589, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37568\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37717\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "sets" = ["loneinkomst"] }
+evidence = "The definition specifies cash gross wages; the operational text identifies Nordic employment income, fitting the fixed wage-income scope (r593, r616).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37618\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37758\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/loneinkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-enligt-justerad-metod"
+fields = { "sets" = ["loneinkomst"] }
+evidence = "The definition specifies cash gross wages calculated using the adjusted RAMS method, explicitly included in the group (r594, r616).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37619\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37759\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/loneinkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:loneink"
+fields = { "sets" = ["loneinkomst"] }
+evidence = "The history covers cash gross wages, holiday pay and commission, later aggregated with Nordic employment income (r595, r616).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37717\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37862\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/loneinkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst"
+fields = { "sets" = ["loneinkomst"] }
+evidence = "The supplied definition identifies wage income measured in hundreds of kronor, within the fixed wage-income concept (r596, r616).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37718\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37863\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/loneinkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:offentligt-tillfalligt-arbete-ota"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r330 explicitly defines monetary compensation for OTA and distinguishes its payment channels. | r330 explicitly defines monetary compensation for OTA and distinguishes its payment channels. | r330 explicitly defines monetary compensation for OTA and distinguishes its payment channels.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37812\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37955"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-andelarblosink"
+fields = { "sets" = ["inkomst-vid-arbetsloshet"] }
+evidence = "The definition measures the annual income share attributable to unemployment compensation, expressly included in the group (r597, r614).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37995\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/inkomst-vid-arbetsloshet"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-andelutbbidrink"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r331 measures the annual income share attributable to labour-market measures, expressly covered by the fixed definition. | r331 measures the annual income share attributable to labour-market measures, expressly covered by the fixed definition. | r331 measures the annual income share attributable to labour-market measures, expressly covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37861\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38001\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/ersattning-vid-arbetsmarknadsatgard"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-utbbidrink"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r332 defines annual summed income attributable to labour-market measures, measured in hundreds of kronor. | r332 defines annual summed income attributable to labour-market measures, measured in hundreds of kronor. | r332 defines annual summed income attributable to labour-market measures, measured in hundreds of kronor.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38008"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-08-bdag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition counts gross sickness-benefit days, capped at 364; this is within the fixed scope (r599, r617). | The operational definition counts gross sickness-benefit days, capped at 364; this is within the fixed scope (r599, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38067\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-08-belopp"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition sums sickness-benefit payments capped at 364 days, within the fixed scope (r600, r617). | The operational definition sums sickness-benefit payments capped at 364 days, within the fixed scope (r600, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37930\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38068\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-08-ndag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition counts net sickness-benefit days, capped at 364, within the fixed scope (r601, r617). | The operational definition counts net sickness-benefit days, capped at 364, within the fixed scope (r601, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38069\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-forlangd-bdag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "This measures gross days of extended sickness benefit, explicitly included in the group (r602, r617). | This measures gross days of extended sickness benefit, explicitly included in the group (r602, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38070\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-forlangd-belopp"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition sums extended sickness-benefit payments, explicitly included in the group (r603, r617). | The operational definition sums extended sickness-benefit payments, explicitly included in the group (r603, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37933\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38071\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-forlangd-ndag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition counts net days of extended sickness benefit, explicitly included in the group (r604, r617). | The operational definition counts net days of extended sickness benefit, explicitly included in the group (r604, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37934\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38072\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-fortsatt-bdag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition counts gross days of continued sickness benefit, explicitly included in the group (r605, r617). | The operational definition counts gross days of continued sickness benefit, explicitly included in the group (r605, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37935\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38073\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-fortsatt-belopp"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition sums continued sickness-benefit payments, explicitly included in the group (r606, r617). | The operational definition sums continued sickness-benefit payments, explicitly included in the group (r606, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37936\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38074\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukp-fortsatt-ndag"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational definition counts net days of continued sickness benefit, explicitly included in the group (r607, r617). | The operational definition counts net days of continued sickness benefit, explicitly included in the group (r607, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37937\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38075\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-bruttodagar"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The histories consistently measure gross days for the sickness-benefit payment category (r608, r617). | The histories consistently measure gross days for the sickness-benefit payment category (r608, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37938\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38076\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-ersattningsbelopp"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The operational history sums payments specifically for the sickness-benefit category, within the fixed scope (r610, r617). | The operational history sums payments specifically for the sickness-benefit category, within the fixed scope (r610, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37940\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38078\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-nettodagar"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The histories consistently count net days for the sickness-benefit payment category (r611, r617). | The histories consistently count net days for the sickness-benefit payment category (r611, r617).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37941\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38079\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:utbbarb"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r333 defines a monetary daily allowance specifically for labour-market training. | r333 defines a monetary daily allowance specifically for labour-market training. | r333 defines a monetary daily allowance specifically for labour-market training.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38033\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38176"

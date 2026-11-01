@@ -680,12 +680,6 @@ evidence = "Lev är en källförkortning som inte uttrycker nettoomsättning.\nc
 [[statement]]
 kind = "set"
 subject = "var:lillan"
-fields = { "sets" = [] }
-evidence = "LillaN anger antal utvalda företag i ett stratum.\ncatalog:variable_text:34815:16436:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:lillan"
 fields = { "tags" = ["methods"] }
 evidence = "LillaN anger antal utvalda företag i ett stratum.\ncatalog:variable_text:34815:16436:18993"
 
@@ -992,20 +986,8 @@ evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.
 [[statement]]
 kind = "set"
 subject = "var:urvalsstorlek-al2undu"
-fields = { "sets" = [] }
-evidence = "Katalogen anger överlappande mappningar och värdemängden avviker från definitionen.\ncatalog:occurrence:316060\ncatalog:occurrence:316061\ncatalog:valueset:10750\ncatalog:variable_text:34853:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-al2undu"
 fields = { "tags" = ["methods"] }
 evidence = "Katalogen anger överlappande mappningar och värdemängden avviker från definitionen.\ncatalog:occurrence:316060\ncatalog:occurrence:316061\ncatalog:valueset:10750\ncatalog:variable_text:34853:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-samustkl"
-fields = { "sets" = [] }
-evidence = "Etiketten anger urvalsstorlek, men värdemängden beskriver anställdaklasser.\ncatalog:valueset:10750\ncatalog:variable_text:34854:10227:14245\ncatalog:variable_text:34854:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -1040,3 +1022,21 @@ relation = "continues"
 object = "scb/konjunkturstatistik-industri/leveranser-hemmamarknad-levh"
 at = "2014-01-01.."
 evidence = "Industry KS LevH: domestic deliveries -> domestic net turnover (2014); measure redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "r50 defines LillaN as the number of selected companies in the current company's stratum, supporting the fixed sample-size concept and partnership with r51 and r52.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34812\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34853\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34854"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-al2undu"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "r51 defines the number of sampled objects; r45 specifies SCB's coordinated sample size. These support the fixed inclusion, despite the conflicting employee-class codes in r49.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34726\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:316061\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34853"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-samustkl"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "r52 defines the number of sampled objects; r4 specifies SCB's coordinated sample size. These support the fixed inclusion, despite the conflicting employee-class codes in r49.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34727\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:315146\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34854"

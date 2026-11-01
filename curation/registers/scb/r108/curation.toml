@@ -146,12 +146,6 @@ evidence = "Kolumnidentiteten delas med andra begrepp i andra perioder; variabel
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-fungerat"
-fields = { "sets" = [] }
-evidence = "F28 används för olika begrepp i olika perioder.\ncatalog:occurrence:218370\ncatalog:occurrence:218467"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-fungerat"
 fields = { "tags" = ["education"] }
 evidence = "F28 används för olika begrepp i olika perioder.\ncatalog:occurrence:218370\ncatalog:occurrence:218467"
 
@@ -530,20 +524,8 @@ evidence = "F27 är en ogenomskinlig frågekod.\ncatalog:variable_text:23399:180
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-schema"
-fields = { "sets" = [] }
-evidence = "F29_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23400:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-schema"
 fields = { "tags" = ["education"] }
 evidence = "F29_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23400:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-lararhjalp"
-fields = { "sets" = [] }
-evidence = "F29_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23401:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -554,20 +536,8 @@ evidence = "F29_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23401:
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-delaktighet-under-lektioner"
-fields = { "sets" = [] }
-evidence = "F29_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23402:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-delaktighet-under-lektioner"
 fields = { "tags" = ["education"] }
 evidence = "F29_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23402:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-aktivit-deltagande"
-fields = { "sets" = [] }
-evidence = "F29_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23403:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -578,20 +548,8 @@ evidence = "F29_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23403:
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-tekniska-problem"
-fields = { "sets" = [] }
-evidence = "F29_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23404:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-tekniska-problem"
 fields = { "tags" = ["education"] }
 evidence = "F29_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23404:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-omgivningen-stor"
-fields = { "sets" = [] }
-evidence = "F29_06 är en ogenomskinlig frågekod.\ncatalog:variable_text:23405:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -602,20 +560,8 @@ evidence = "F29_06 är en ogenomskinlig frågekod.\ncatalog:variable_text:23405:
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-individens-maende"
-fields = { "sets" = [] }
-evidence = "F29_07 är en ogenomskinlig frågekod.\ncatalog:variable_text:23406:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-individens-maende"
 fields = { "tags" = ["education"] }
 evidence = "F29_07 är en ogenomskinlig frågekod.\ncatalog:variable_text:23406:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-aktiviteter-for-maende"
-fields = { "sets" = [] }
-evidence = "F29_08 är en ogenomskinlig frågekod.\ncatalog:variable_text:23407:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -626,20 +572,8 @@ evidence = "F29_08 är en ogenomskinlig frågekod.\ncatalog:variable_text:23407:
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-starka-gemenskapen"
-fields = { "sets" = [] }
-evidence = "F29_09 är en ogenomskinlig frågekod.\ncatalog:variable_text:23408:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-starka-gemenskapen"
 fields = { "tags" = ["education"] }
 evidence = "F29_09 är en ogenomskinlig frågekod.\ncatalog:variable_text:23408:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-hjalp-hemifran"
-fields = { "sets" = [] }
-evidence = "F29_10 är en ogenomskinlig frågekod.\ncatalog:variable_text:23409:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -650,20 +584,8 @@ evidence = "F29_10 är en ogenomskinlig frågekod.\ncatalog:variable_text:23409:
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-sallskap-hemma"
-fields = { "sets" = [] }
-evidence = "F29_11 är en ogenomskinlig frågekod.\ncatalog:variable_text:23410:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-sallskap-hemma"
 fields = { "tags" = ["education"] }
 evidence = "F29_11 är en ogenomskinlig frågekod.\ncatalog:variable_text:23410:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-foralders-intresse"
-fields = { "sets" = [] }
-evidence = "F29_12 är en ogenomskinlig frågekod.\ncatalog:variable_text:23411:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -698,20 +620,8 @@ evidence = "F30_02 är en ogenomskinlig frågekod.\ncatalog:occurrence:218489\nc
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-lar-sig-pa-lektioner"
-fields = { "sets" = [] }
-evidence = "F31 är en opak frågekod. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:distansundervisning-lar-sig-pa-lektioner"
 fields = { "tags" = ["education"] }
 evidence = "F31 är en opak frågekod. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:f32"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika innehåll mellan perioderna. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218398\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
 
 [[statement]]
 kind = "set"
@@ -2548,3 +2458,93 @@ kind = "set"
 subject = "gymnasieungdomars-studieintresse: uenr @2011-07-01..2012-06-30 where key = 'v2179'"
 fields = { "variable" = "uenr" }
 evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktivit-deltagande"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_04 asks how far students could participate actively in lessons (r18), directly measuring a functional aspect of instruction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23287\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218471"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktiviteter-for-maende"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_08 measures school activities supporting students' wellbeing (r22), a reported support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218475"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-delaktighet-under-lektioner"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_03 measures teachers' efforts to involve students in lessons (r17), an explicit participation aspect of instruction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23297\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218470"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-foralders-intresse"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_12 measures parental interest in how students were managing distance education (r26), a reported home-support aspect.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218479"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-fungerat"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F28 directly asks how distance education functioned, with responses from very good to very bad (r14, r31).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23300\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218467\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3603"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-hjalp-hemifran"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_10 measures help with schoolwork received at home (r24), a reported support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23301\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218477"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-individens-maende"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_07 measures whether the school checked students' wellbeing (r21), an explicit student-support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23302\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218474"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F31 compares perceived learning in distance and on-site lessons (r27, r30), a functional outcome covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23304\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218490\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1460"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lararhjalp"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_02 measures whether teachers noticed when students needed help (r16), an explicit instructional-support aspect.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218469"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-omgivningen-stor"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_06 measures whether surrounding disturbances impeded following instruction (r20), directly assessing instructional functioning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23306\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218473"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-sallskap-hemma"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_11 measures company at home from family members also working or studying there (r25), a reported home-environment aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23307\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218478"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-schema"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_01 measures whether the usual timetable continued digitally (r15), an explicit organizational aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23308\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218468"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-starka-gemenskapen"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_09 measures the school's work to strengthen student community (r23), a reported social function of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23309\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218476"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-tekniska-problem"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_05 measures whether technical problems impeded following instruction (r19), directly assessing instructional functioning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23318\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218472"
+
+[[statement]]
+kind = "set"
+subject = "var:f32"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F32 rates motivation during distance study as better, unchanged or worse (r28, r29), a functional aspect covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12084"

@@ -675,12 +675,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2065
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-kod"
-fields = { "sets" = [] }
-evidence = "Perioduppdelningen mot regionvalkrets-kod följer namnbytet på valkretsen.\ncatalog:occurrence:21096\ncatalog:occurrence:21141"
-
-[[statement]]
-kind = "set"
-subject = "var:landstingsvalkrets-kod"
 fields = { "tags" = ["geography"] }
 evidence = "Perioduppdelningen mot regionvalkrets-kod följer namnbytet på valkretsen.\ncatalog:occurrence:21096\ncatalog:occurrence:21141"
 
@@ -1549,3 +1543,9 @@ relation = "continues"
 object = "scb/allmanna-val-valresultat/landstingets-namn"
 at = "2022-01-01.."
 evidence = "Election ltnamn: county council name (1973-2018) -> Region name (2022); landsting renamed to regions, char name column."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "r5 and r31 explicitly define a landstingsvalkrets code, qualified by county code. This matches the fixed group's inclusion of constituency codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2994\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20635\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20919"

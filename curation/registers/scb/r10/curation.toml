@@ -672,19 +672,7 @@ evidence = "Slåttervall är en del av vallareal.\ncatalog:variable_text:35735:1
 [[statement]]
 kind = "set"
 subject = "var:aktuell-areal-varkorn"
-fields = { "sets" = [] }
-evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:aktuell-areal-varkorn"
 fields = { "tags" = ["agriculture"] }
-evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:aktuell-areal-varkorn-varkorn"
-fields = { "sets" = [] }
 evidence = "Måttet avser vårkornsareal.\ncatalog:variable_text:35736:10592:10957\ncatalog:variable_text:35737:11688:20454"
 
 [[statement]]
@@ -1116,20 +1104,8 @@ evidence = "Måttet avser frövallsareal.\ncatalog:variable_text:35774:10592:109
 [[statement]]
 kind = "set"
 subject = "var:areal-hostraps"
-fields = { "sets" = [] }
-evidence = "Hektar för höstraps hör till höstrapsareal.\ncatalog:variable_text:35775:10592:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:areal-hostraps"
 fields = { "tags" = ["agriculture"] }
 evidence = "Hektar för höstraps hör till höstrapsareal.\ncatalog:variable_text:35775:10592:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:areal-oljelin"
-fields = { "sets" = [] }
-evidence = "Måttet avser oljelinsareal.\ncatalog:variable_text:35776:10592:10957\ncatalog:variable_text:35958:18993:20454"
 
 [[statement]]
 kind = "set"
@@ -1148,12 +1124,6 @@ kind = "set"
 subject = "var:areal-ovrig-mark"
 fields = { "tags" = ["property"] }
 evidence = "Samma källkolumner har även mappats till ovriga-vaxtslag, vars betydelse skiljer sig.\ncatalog:occurrence:332800\ncatalog:occurrence:332801\ncatalog:occurrence:333409\ncatalog:occurrence:333840"
-
-[[statement]]
-kind = "set"
-subject = "var:areal-rag"
-fields = { "sets" = [] }
-evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -1188,20 +1158,8 @@ evidence = "Total areal har ett motsvarande totalmått.\ncatalog:variable_text:3
 [[statement]]
 kind = "set"
 subject = "var:areal-varraps"
-fields = { "sets" = [] }
-evidence = "Hektar för vårraps hör till vårrapsareal.\ncatalog:variable_text:35781:10592:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:areal-varraps"
 fields = { "tags" = ["agriculture"] }
 evidence = "Hektar för vårraps hör till vårrapsareal.\ncatalog:variable_text:35781:10592:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:areal-varvete"
-fields = { "sets" = [] }
-evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -1496,12 +1454,6 @@ kind = "set"
 subject = "var:arrenderad-betesmark"
 fields = { "tags" = ["agriculture"] }
 evidence = "Arrenderad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35806:16801:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:arter-akerbonor"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika beskrivna mått i olika perioder.\ncatalog:occurrence:331992\ncatalog:occurrence:332101"
 
 [[statement]]
 kind = "set"
@@ -1940,12 +1892,6 @@ kind = "set"
 subject = "var:antal-fodersuggor"
 fields = { "tags" = ["agriculture"] }
 evidence = "Fd är en ogenomskinlig förkortning av foder.\ncatalog:variable_text:35846:9131:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:foderarter"
-fields = { "sets" = [] }
-evidence = "Foderärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957"
 
 [[statement]]
 kind = "set"
@@ -2556,20 +2502,8 @@ evidence = "Höstrågvete är en del av rågvetearealen.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:hostraps"
-fields = { "sets" = [] }
-evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:35898:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:hostraps"
 fields = { "tags" = ["agriculture"] }
 evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:35898:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:hostraps-hostraps"
-fields = { "sets" = [] }
-evidence = "Fältet anger höstrapsareal.\ncatalog:variable_text:35899:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -3060,12 +2994,6 @@ evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\n
 [[statement]]
 kind = "set"
 subject = "var:matarter"
-fields = { "sets" = [] }
-evidence = "Matärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35944:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:matarter"
 fields = { "tags" = ["agriculture"] }
 evidence = "Matärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35944:7305:7670"
 
@@ -3204,20 +3132,8 @@ evidence = "Variabeln avser odling på träda.\ncatalog:variable_text:35956:1935
 [[statement]]
 kind = "set"
 subject = "var:oljelin"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35957:8766:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:oljelin"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35957:8766:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:oljelin-oljelin"
-fields = { "sets" = [] }
-evidence = "Definitionen anger oljelinsareal genom perioderna.\ncatalog:variable_text:35958:11688:18993\ncatalog:variable_text:35958:18993:20454"
 
 [[statement]]
 kind = "set"
@@ -3360,20 +3276,8 @@ evidence = "Måttet avser stärkelsepotatisareal.\ncatalog:variable_text:35842:1
 [[statement]]
 kind = "set"
 subject = "var:rag"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35973:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:rag"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:35973:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:rag-rag"
-fields = { "sets" = [] }
-evidence = "Måttet avser rågareal.\ncatalog:variable_text:35778:10592:10957\ncatalog:variable_text:35974:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -3524,12 +3428,6 @@ kind = "set"
 subject = "var:skogsareal"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Samma skogsmarksareal är uppdelad mellan perioder med areal-skogsmark.\ncatalog:occurrence:330874\ncatalog:occurrence:330953\ncatalog:occurrence:332083\ncatalog:occurrence:332211"
-
-[[statement]]
-kind = "set"
-subject = "var:skord-arter-ej-konserv"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika beskrivna mått i olika perioder och källans enhet skiljer sig från definitionen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0377: Foderärter och matärter är namngivna delgrödor. Åkerböneposten behålls enligt den fasta hektarbaserade definitionen trots källans skördtext. membership-0378: Inget valt fält mäter ärt- eller åkerbönsareal i denna sektion. membership-0379: Inget valt fält mäter ärt- eller åkerbönareal. membership-0380: Ingen vald variabel mäter ärt- eller åkerbönsareal. membership-0381: Ingen vald variabel anger areal för ärter eller åkerbönor. membership-0382: Ingen vald variabel avser ärters eller åkerbönors areal. membership-0383: Grödidentiteterna mäter inte areal av ärter eller åkerbönor; imputering är en kvalitetsmarkör. membership-0384: Båda är hektarredovisade mått för de angivna grödorna enligt den fasta kandidaten. Skördebeskrivningen och tidigare bedömningen kräver granskning men upphäver inte kandidatens stödda inkludering.\ncatalog:occurrence:331992\ncatalog:occurrence:332101\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35847:10592:10957\ncatalog:variable_text:35886:14610:14975\ncatalog:variable_text:35887:16071:20454\ncatalog:variable_text:35907:17532:20454\ncatalog:variable_text:35944:7305:7670\ncatalog:variable_text:35987:10227:10957\ncatalog:variable_text:36021:10592:11323\ncatalog:variable_text:36031:8401:10227\ncatalog:variable_text:36044:15706:20454"
 
 [[statement]]
 kind = "set"
@@ -4044,12 +3942,6 @@ evidence = "Samma kolumner har överlappande ägare.\ncatalog:occurrence:332858\
 [[statement]]
 kind = "set"
 subject = "var:total-skord-akerbonor"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar hektarredovisade mått för åkerbönor; källans enhet och definition skiljer sig.\ncatalog:variable_text:36031:8401:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:total-skord-akerbonor"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kandidaten omfattar hektarredovisade mått för åkerbönor; källans enhet och definition skiljer sig.\ncatalog:variable_text:36031:8401:10227"
 
@@ -4296,12 +4188,6 @@ evidence = "Outnyttjad vall ingår i vallareal.\ncatalog:variable_text:36053:730
 [[statement]]
 kind = "set"
 subject = "var:varkorn"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36054:8401:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:varkorn"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36054:8401:10227"
 
@@ -4332,20 +4218,8 @@ evidence = "Vårrågvete är en del av rågvetearealen.\ncatalog:variable_text:3
 [[statement]]
 kind = "set"
 subject = "var:varraps"
-fields = { "sets" = [] }
-evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:36057:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:varraps"
 fields = { "tags" = ["agriculture"] }
 evidence = "Källan anger total skörd men enheten hektar; den fasta gruppen omfattar denna post.\ncatalog:variable_text:36057:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:varraps-varraps"
-fields = { "sets" = [] }
-evidence = "Fältet anger vårrapsareal.\ncatalog:variable_text:36058:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -4380,20 +4254,8 @@ evidence = "Fältet anger vårrybsareal.\ncatalog:variable_text:36060:10592:1095
 [[statement]]
 kind = "set"
 subject = "var:varvete"
-fields = { "sets" = [] }
-evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36061:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:varvete"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kandidaten omfattar även posten benämnd total skörd; källans enhet och definition skiljer sig.\ncatalog:variable_text:36061:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:varvete-varvete"
-fields = { "sets" = [] }
-evidence = "Måttet avser vårveteareal.\ncatalog:variable_text:35782:10592:10957\ncatalog:variable_text:36062:11688:20454"
 
 [[statement]]
 kind = "set"
@@ -4682,3 +4544,141 @@ kind = "set"
 subject = "uppdragsregistret: bete @2008-01-01..2008-12-31 where key = 'v41873'"
 fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
 evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn"
+fields = { "sets" = ["varkornsareal"] }
+evidence = "r287 defines current spring barley area on the farm in hectares; r288 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35606\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35736\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varkornsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-areal-varkorn-varkorn"
+fields = { "sets" = ["varkornsareal"] }
+evidence = "r288 defines current spring barley area on the farm in hectares; r287 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35607\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35736\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varkornsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-hostraps"
+fields = { "sets" = ["hostrapsareal"] }
+evidence = "r289 defines winter rapeseed area in hectares; r297 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35648\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35776\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35901\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/hostrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-oljelin"
+fields = { "sets" = ["oljelinsareal"] }
+evidence = "r290 defines oilseed flax area in hectares; r300 supplies a total-harvest partner expressly allowed by the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35649\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35777\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35960\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/oljelinsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-rag"
+fields = { "sets" = ["ragareal"] }
+evidence = "r291 defines rye area in hectares; r303 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35651\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35779\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35977\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/ragareal"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varraps"
+fields = { "sets" = ["varrapsareal"] }
+evidence = "r292 defines spring rapeseed area recorded in hectares; r308 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35654\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36058\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-varvete"
+fields = { "sets" = ["varveteareal"] }
+evidence = "r293 defines spring wheat area recorded in hectares; r310 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35655\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36062\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varveteareal"
+
+[[statement]]
+kind = "set"
+subject = "var:arter-akerbonor"
+fields = { "sets" = ["arter-och-akerbonor-areal"] }
+evidence = "r294 defines pea and field-bean area in hectares; r295 supplies a named pea-area partner covered by the fixed scope. | r294 defines pea and field-bean area in hectares; r295 supplies a named pea-area partner covered by the fixed scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35681\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35808\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35848\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/arter-och-akerbonor-areal"
+
+[[statement]]
+kind = "set"
+subject = "var:foderarter"
+fields = { "sets" = ["arter-och-akerbonor-areal"] }
+evidence = "r295 defines fodder-pea area in hectares, a named pea subcrop covered by the fixed scope; r299 supplies a partner. | r295 defines fodder-pea area in hectares, a named pea subcrop covered by the fixed scope; r299 supplies a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35848\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35947\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/arter-och-akerbonor-areal"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps"
+fields = { "sets" = ["hostrapsareal"] }
+evidence = "r296 describes total winter rapeseed harvest recorded in hectares, explicitly included by the fixed definition; r289 supplies an area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35772\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35776\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35900\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/hostrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:hostraps-hostraps"
+fields = { "sets" = ["hostrapsareal"] }
+evidence = "r297 defines winter rapeseed area in hectares; r289 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35773\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35776\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35901\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/hostrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:matarter"
+fields = { "sets" = ["arter-och-akerbonor-areal"] }
+evidence = "r299 defines food-pea area in hectares, a named pea subcrop covered by the fixed scope; r295 supplies a partner. | r299 defines food-pea area in hectares, a named pea subcrop covered by the fixed scope; r295 supplies a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35817\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35848\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35947\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/arter-och-akerbonor-areal"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin"
+fields = { "sets" = ["oljelinsareal"] }
+evidence = "r300 defines total oilseed flax harvest, explicitly included by the fixed definition; r290 supplies an oilseed flax area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35830\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35777\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35960\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/oljelinsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:oljelin-oljelin"
+fields = { "sets" = ["oljelinsareal"] }
+evidence = "r301 consistently defines oilseed flax area despite earlier conflicting Antal units; the fixed scope includes area measures, with r290 providing a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35831\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35777\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35961\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/oljelinsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:rag"
+fields = { "sets" = ["ragareal"] }
+evidence = "r302 describes total rye harvest recorded in hectares, explicitly included by the fixed definition; r291 supplies an area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35846\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35779\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35976\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/ragareal"
+
+[[statement]]
+kind = "set"
+subject = "var:rag-rag"
+fields = { "sets" = ["ragareal"] }
+evidence = "r303 defines rye area in hectares; r291 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35847\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35779\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35977\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/ragareal"
+
+[[statement]]
+kind = "set"
+subject = "var:skord-arter-ej-konserv"
+fields = { "sets" = ["arter-och-akerbonor-areal"] }
+evidence = "r304 records non-canning pea harvest in hectares, within the fixed scope; r295 supplies a pea-area partner. | r304 records non-canning pea harvest in hectares, within the fixed scope; r295 supplies a pea-area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35848\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35989\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/arter-och-akerbonor-areal"
+
+[[statement]]
+kind = "set"
+subject = "var:total-skord-akerbonor"
+fields = { "sets" = ["arter-och-akerbonor-areal"] }
+evidence = "r305 records field-bean harvest in hectares, within the fixed scope of hectare-reported measures; r295 supplies a partner. | r305 records field-bean harvest in hectares, within the fixed scope of hectare-reported measures; r295 supplies a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35848\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36032\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/arter-och-akerbonor-areal"
+
+[[statement]]
+kind = "set"
+subject = "var:varkorn"
+fields = { "sets" = ["varkornsareal"] }
+evidence = "r306 describes total spring barley harvest recorded in hectares, explicitly included by the fixed definition; r287 supplies an area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35735\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36054\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varkornsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps"
+fields = { "sets" = ["varrapsareal"] }
+evidence = "r307 describes total spring rapeseed harvest recorded in hectares, explicitly included by the fixed definition; r292 supplies an area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35926\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36057\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:varraps-varraps"
+fields = { "sets" = ["varrapsareal"] }
+evidence = "r308 defines spring rapeseed area in hectares; r292 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35927\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35782\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36058\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varrapsareal"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete"
+fields = { "sets" = ["varveteareal"] }
+evidence = "r309 describes total spring wheat harvest recorded in hectares, explicitly included by the fixed definition; r293 supplies an area partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35930\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36061\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varveteareal"
+
+[[statement]]
+kind = "set"
+subject = "var:varvete-varvete"
+fields = { "sets" = ["varveteareal"] }
+evidence = "r310 defines spring wheat area in hectares; r293 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36062\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varveteareal"

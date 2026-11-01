@@ -308,12 +308,6 @@ evidence = "Uppgiften gäller utsändning av betalningsmottagaren.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:bilersattning"
-fields = { "sets" = [] }
-evidence = "Bilersättning är en kostnadsersättning.\ncatalog:variable_text:1362:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:bilersattning"
 fields = { "tags" = ["income"] }
 evidence = "Bilersättning är en kostnadsersättning.\ncatalog:variable_text:1362:17897:18628"
 
@@ -644,12 +638,6 @@ evidence = "Uppgiften skiljer typer av sjöfart.\ncatalog:variable_text:1395:730
 [[statement]]
 kind = "set"
 subject = "var:ovriga-kostnadsersattningar"
-fields = { "sets" = [] }
-evidence = "Uppgiften gäller kostnadsersättningar.\ncatalog:variable_text:1396:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-kostnadsersattningar"
 fields = { "tags" = ["income"] }
 evidence = "Uppgiften gäller kostnadsersättningar.\ncatalog:variable_text:1396:17897:18628"
 
@@ -844,3 +832,15 @@ kind = "set"
 subject = "individuppgifter-agi: TRAKTAMENTE @2020-01-01..2020-12-31 where key = 'v41325'"
 fields = { "description" = "Antal arbetsgivardeklarationer med utbetalat traktamente under året." }
 evidence = "Definitionen beskriver ersättning medan uppgiften mäter antal deklarationer.\ncatalog:variable_text:1411:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "r14 identifies whether standard-rate mileage reimbursement was paid; r13 supplies complete occurrence codes. This is an included cost-reimbursement coding.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1362"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "r16 defines an amount of cost reimbursements other than mileage or subsistence allowance, within the fixed group's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1396"

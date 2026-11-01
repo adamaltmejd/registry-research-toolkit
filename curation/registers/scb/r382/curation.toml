@@ -548,12 +548,6 @@ evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occu
 [[statement]]
 kind = "set"
 subject = "var:total-nettoomsattning-totala-marknaden-blankett-pin"
-fields = { "sets" = [] }
-evidence = "ClassId01BL är en ogenomskinlig källkod.\ncatalog:variable_text:40442:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-totala-marknaden-blankett-pin"
 fields = { "tags" = ["business"] }
 evidence = "ClassId01BL är en ogenomskinlig källkod.\ncatalog:variable_text:40442:18993:20089"
 
@@ -568,12 +562,6 @@ kind = "set"
 subject = "var:classid01bl-imputed"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40443:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-totala-marknaden-moms-pin"
-fields = { "sets" = [] }
-evidence = "ClassId01MR är en ogenomskinlig källkod.\ncatalog:variable_text:40444:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -596,12 +584,6 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:total-nettoomsattning-hemmamarknaden-blankett-pin"
-fields = { "sets" = [] }
-evidence = "ClassId02BL är en ogenomskinlig källkod.\ncatalog:variable_text:40446:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-hemmamarknaden-blankett-pin"
 fields = { "tags" = ["business"] }
 evidence = "ClassId02BL är en ogenomskinlig källkod.\ncatalog:variable_text:40446:18993:20089"
 
@@ -616,12 +598,6 @@ kind = "set"
 subject = "var:classid02bl-imputed"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40447:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-hemmamarknaden-moms-pin"
-fields = { "sets" = [] }
-evidence = "ClassId02MR är en ogenomskinlig källkod.\ncatalog:variable_text:40448:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -644,12 +620,6 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:total-nettoomsattning-exportmarknaden-blankett-pin"
-fields = { "sets" = [] }
-evidence = "ClassId03BL är en ogenomskinlig källkod.\ncatalog:variable_text:40450:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-exportmarknaden-blankett-pin"
 fields = { "tags" = ["business", "trade"] }
 evidence = "ClassId03BL är en ogenomskinlig källkod.\ncatalog:variable_text:40450:18993:20089"
 
@@ -664,12 +634,6 @@ kind = "set"
 subject = "var:classid03bl-imputed"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40451:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning-exportmarknaden-moms-pin"
-fields = { "sets" = [] }
-evidence = "ClassId03MR är en ogenomskinlig källkod.\ncatalog:variable_text:40452:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -692,12 +656,6 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:industrinettoomsattning-totala-marknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId04BL är en ogenomskinlig källkod.\ncatalog:variable_text:40454:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:industrinettoomsattning-totala-marknaden-pin"
 fields = { "tags" = ["business"] }
 evidence = "ClassId04BL är en ogenomskinlig källkod.\ncatalog:variable_text:40454:18993:20089"
 
@@ -712,12 +670,6 @@ kind = "set"
 subject = "var:imputeringsflagga-industrinettoomsattning-totala-marknaden"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40455:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:industrinettoomsattning-hemmamarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId05BL är en ogenomskinlig källkod.\ncatalog:variable_text:40456:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -740,12 +692,6 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:industrinettoomsattning-exportmarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId06BL är en ogenomskinlig källkod.\ncatalog:variable_text:40458:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:industrinettoomsattning-exportmarknaden-pin"
 fields = { "tags" = ["business", "trade"] }
 evidence = "ClassId06BL är en ogenomskinlig källkod.\ncatalog:variable_text:40458:18993:20089"
 
@@ -760,12 +706,6 @@ kind = "set"
 subject = "var:imputeringsflagga-industrinettoomsattning-exportmarknaden"
 fields = { "tags" = ["methods"] }
 evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40459:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstenettoomsattning-totala-marknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId07BL är en ogenomskinlig källkod.\ncatalog:variable_text:40460:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -788,32 +728,14 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:tjanstenettoomsattning-hemmamarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId08BL är en ogenomskinlig källkod.\ncatalog:variable_text:40462:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstenettoomsattning-hemmamarknaden-pin"
 fields = { "tags" = ["business"] }
 evidence = "ClassId08BL är en ogenomskinlig källkod.\ncatalog:variable_text:40462:18993:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:tjanstenettoomsattning-exportmarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId09BL är en ogenomskinlig källkod.\ncatalog:variable_text:40463:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstenettoomsattning-exportmarknaden-pin"
 fields = { "tags" = ["business", "trade"] }
 evidence = "ClassId09BL är en ogenomskinlig källkod.\ncatalog:variable_text:40463:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:handelsnettoomsattning-totala-marknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId10BL är en ogenomskinlig källkod.\ncatalog:variable_text:40464:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -836,20 +758,8 @@ evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:handelsnettoomsattning-hemmamarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId11BL är en ogenomskinlig källkod.\ncatalog:variable_text:40466:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:handelsnettoomsattning-hemmamarknaden-pin"
 fields = { "tags" = ["business", "trade"] }
 evidence = "ClassId11BL är en ogenomskinlig källkod.\ncatalog:variable_text:40466:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:handelsnettoomsattning-exportmarknaden-pin"
-fields = { "sets" = [] }
-evidence = "ClassId12BL är en ogenomskinlig källkod.\ncatalog:variable_text:40467:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -964,12 +874,6 @@ kind = "set"
 subject = "var:collectionsurveyname"
 fields = { "tags" = ["methods"] }
 evidence = "Undersökningens namn är insamlingsmetadata.\ncatalog:variable_text:40477:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:cutofftotal"
-fields = { "sets" = [] }
-evidence = "Skattningen är ett omsättningsbidrag.\ncatalog:variable_text:40478:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -1604,32 +1508,14 @@ evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396
 [[statement]]
 kind = "set"
 subject = "var:nettoomsattning-exportmarknad"
-fields = { "sets" = [] }
-evidence = "LevE är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40539:16436:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning-exportmarknad"
 fields = { "tags" = ["business", "trade"] }
 evidence = "LevE är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40539:16436:18993"
 
 [[statement]]
 kind = "set"
 subject = "var:nettoomsattning-hemmamarknad"
-fields = { "sets" = [] }
-evidence = "LevH är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40540:16436:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning-hemmamarknad"
 fields = { "tags" = ["business"] }
 evidence = "LevH är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40540:16436:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:total-nettoomsattning"
-fields = { "sets" = [] }
-evidence = "LevTot är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40541:16436:18993"
 
 [[statement]]
 kind = "set"
@@ -1780,12 +1666,6 @@ kind = "set"
 subject = "var:naringsgren-sni2007"
 fields = { "tags" = ["business"] }
 evidence = "Samma SNI 2007-begrepp är perioduppdelat med scb/pin/bransch-sni2007.\ncatalog:occurrence:396452\ncatalog:occurrence:396539"
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning-modellskattad-pin"
-fields = { "sets" = [] }
-evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396361\ncatalog:occurrence:396362"
 
 [[statement]]
 kind = "set"
@@ -2300,12 +2180,6 @@ evidence = "Total orderingång ingår i kandidatgruppen.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:skattning-arsdeklaranter-pin"
-fields = { "sets" = [] }
-evidence = "VAT är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:40610:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:skattning-arsdeklaranter-pin"
 fields = { "tags" = ["business"] }
 evidence = "VAT är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:40610:18993:20089"
 
@@ -2642,3 +2516,171 @@ relation = "continues"
 object = "scb/pin/branschgrupp-sni2002"
 at = "2009-04-01.."
 evidence = "PIN branschgr: SNI2002-based groups -> SNI2007-based groups (2009); classification revision."
+
+[[statement]]
+kind = "set"
+subject = "var:cutofftotal"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r281 defines a modelled turnover contribution from businesses below the cutoff, fitting the included alternative turnover estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40311\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40452"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r282 explicitly defines trade net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40322\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40463"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r283 explicitly defines trade net turnover on the domestic market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40323\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40464"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r284 defines total-market trade net turnover. The export-market wording in r272 remains within the same fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40324\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:397288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40465"
+
+[[statement]]
+kind = "set"
+subject = "var:inclassid"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r285 despite the subset wording in r60 and r64.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40360\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395669\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40501"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r286 explicitly defines industrial net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40361\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40502"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r287 explicitly defines industrial net turnover on the domestic market, an included market component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40362\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40503"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r288 explicitly defines industrial net turnover for the total market, an included activity component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40363\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40504"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-mobilnr"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r290 defines a contact person's mobile telephone number; r292 supplies a qualifying partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40383\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40533"
+
+[[statement]]
+kind = "set"
+subject = "var:mobiluppg"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r292 defines a contact person's mobile telephone number; r290 supplies a qualifying partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40392\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40533"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-exportmarknad"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r293 defines the observation unit's net turnover on the export market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40543"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-hemmamarknad"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r294 defines the observation unit's net turnover on the domestic market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40403\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40544"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-modellskattad-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r295 and r221 explicitly describe a monetary net-turnover measure, fitting the included alternative estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40404\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396948\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40545"
+
+[[statement]]
+kind = "set"
+subject = "var:outclassid"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r298 despite the subset wording in r62 and r66.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40422\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395679\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40563"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-arsdeklaranter-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r299 defines a modelled turnover contribution for annual VAT declarants, fitting the included alternative turnover estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40444\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40585"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "Coordinator-approved audit correction: Opdef 'Telefonnummer till företaget' in a business survey (scb/pin), where the company is the uppgiftslämnare; the group covers the respondent's phone number and lists this variable.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:68\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40457\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396501\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396549\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396598"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonuppg"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r301 defines the respondent's telephone number, fitting the group alongside the contact mobile number in r290.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40458\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40599"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r302 explicitly defines service net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40460\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40601"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r303 explicitly defines service net turnover on the domestic market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40461\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40602"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r304 defines service net turnover for the total market, an included activity component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40462\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40603"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r305 defines the observation unit's total net turnover.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40463\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40604"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r306 explicitly defines directly collected total net turnover on the export market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40464\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40605"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r307 explicitly defines export-market total net turnover derived from VAT information.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40606"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r308 explicitly defines directly collected total net turnover on the domestic market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40466\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40607"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r309 explicitly defines domestic-market total net turnover derived from VAT information.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40467\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40608"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r310 explicitly defines directly collected total net turnover for the total market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40468\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40609"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r311 explicitly defines total net turnover derived from VAT information; VAT is the source.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40610"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelklass-kod-pin"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r313 despite the subset wording in r59 and r63.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40487\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395705\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40628"

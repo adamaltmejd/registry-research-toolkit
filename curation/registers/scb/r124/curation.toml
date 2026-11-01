@@ -2126,20 +2126,8 @@ evidence = "Arbetsmarknadsanknytning hör till sysselsättning.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:anma"
-fields = { "sets" = [] }
-evidence = "Frågan gäller tidpunkten för arbetsskadeanmälan.\ncatalog:variable_text:3945:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:anma"
 fields = { "tags" = ["employment"] }
 evidence = "Frågan gäller tidpunkten för arbetsskadeanmälan.\ncatalog:variable_text:3945:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:anmalan-forsakringskassan"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:27552\ncatalog:occurrence:27553"
 
 [[statement]]
 kind = "set"
@@ -2150,20 +2138,8 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2755
 [[statement]]
 kind = "set"
 subject = "var:anmalan-senaste-12-manader"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälningsförekomst eller kombinerad kodning av anmälan och skäl till utebliven anmälan. Tolvmånadersindikatorn hör enligt fast definition till anmälningstidpunkt. membership-0031: Variablerna anger förekomst av arbetsskadeanmälan, generellt eller för respektive arbetsolycka. Den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälan efter årsskiftet respektive under de senaste tolv månaderna och omfattas därmed av den fasta tidsdefinitionen. membership-0031: Variablerna anger anmälningstidpunkt, tidsavgränsade indikatorer eller svarskoder om när anmälan gjordes. Olyckans inträffandeår ingår inte.\ncatalog:occurrence:27552\ncatalog:occurrence:27553\ncatalog:variable_text:3945:16801:17167\ncatalog:variable_text:3946:16801:17167\ncatalog:variable_text:3947:16801:17167\ncatalog:variable_text:3948:12053:12418\ncatalog:variable_text:3950:11323:12053\ncatalog:variable_text:4034:18993:19358\ncatalog:variable_text:4043:18993:19358\ncatalog:variable_text:4044:18993:19358\ncatalog:variable_text:4046:18993:19358\ncatalog:variable_text:4052:18993:19358\ncatalog:variable_text:4060:18993:19358\ncatalog:variable_text:4064:18993:19358\ncatalog:variable_text:4126:18993:19358\ncatalog:variable_text:4127:18993:19358\ncatalog:variable_text:4128:18993:19358\ncatalog:variable_text:4129:18993:19358\ncatalog:variable_text:4130:18993:19358\ncatalog:variable_text:4131:18993:19358\ncatalog:variable_text:4132:18993:19358\ncatalog:variable_text:4133:18993:19358\ncatalog:variable_text:4134:18993:19358\ncatalog:variable_text:4145:18993:19358\ncatalog:variable_text:4146:18993:19358\ncatalog:variable_text:4147:18993:19358\ncatalog:variable_text:4148:18993:19358\ncatalog:variable_text:4149:18993:19358\ncatalog:variable_text:4150:18993:19358\ncatalog:variable_text:4151:18993:19358\ncatalog:variable_text:4152:18993:19358\ncatalog:variable_text:4153:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:anmalan-senaste-12-manader"
 fields = { "tags" = ["employment"] }
 evidence = "Samma kolumn har överlappande ägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälningsförekomst eller kombinerad kodning av anmälan och skäl till utebliven anmälan. Tolvmånadersindikatorn hör enligt fast definition till anmälningstidpunkt. membership-0031: Variablerna anger förekomst av arbetsskadeanmälan, generellt eller för respektive arbetsolycka. Den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälan efter årsskiftet respektive under de senaste tolv månaderna och omfattas därmed av den fasta tidsdefinitionen. membership-0031: Variablerna anger anmälningstidpunkt, tidsavgränsade indikatorer eller svarskoder om när anmälan gjordes. Olyckans inträffandeår ingår inte.\ncatalog:occurrence:27552\ncatalog:occurrence:27553\ncatalog:variable_text:3945:16801:17167\ncatalog:variable_text:3946:16801:17167\ncatalog:variable_text:3947:16801:17167\ncatalog:variable_text:3948:12053:12418\ncatalog:variable_text:3950:11323:12053\ncatalog:variable_text:4034:18993:19358\ncatalog:variable_text:4043:18993:19358\ncatalog:variable_text:4044:18993:19358\ncatalog:variable_text:4046:18993:19358\ncatalog:variable_text:4052:18993:19358\ncatalog:variable_text:4060:18993:19358\ncatalog:variable_text:4064:18993:19358\ncatalog:variable_text:4126:18993:19358\ncatalog:variable_text:4127:18993:19358\ncatalog:variable_text:4128:18993:19358\ncatalog:variable_text:4129:18993:19358\ncatalog:variable_text:4130:18993:19358\ncatalog:variable_text:4131:18993:19358\ncatalog:variable_text:4132:18993:19358\ncatalog:variable_text:4133:18993:19358\ncatalog:variable_text:4134:18993:19358\ncatalog:variable_text:4145:18993:19358\ncatalog:variable_text:4146:18993:19358\ncatalog:variable_text:4147:18993:19358\ncatalog:variable_text:4148:18993:19358\ncatalog:variable_text:4149:18993:19358\ncatalog:variable_text:4150:18993:19358\ncatalog:variable_text:4151:18993:19358\ncatalog:variable_text:4152:18993:19358\ncatalog:variable_text:4153:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:anmalan1"
-fields = { "sets" = [] }
-evidence = "Avser arbetsskadeanmälan.\ncatalog:variable_text:3948:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -2182,12 +2158,6 @@ kind = "set"
 subject = "var:anmalan7"
 fields = { "tags" = ["employment"] }
 evidence = "Avser okänt skäl till utebliven anmälan.\ncatalog:variable_text:3949:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:anmalan-till-forsakringskassan-har-gjorts-eller-om-nej-orsak"
-fields = { "sets" = [] }
-evidence = "Den enskilda bokstaven i källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälningsförekomst eller kombinerad kodning av anmälan och skäl till utebliven anmälan. Tolvmånadersindikatorn hör enligt fast definition till anmälningstidpunkt. membership-0031: Variablerna anger förekomst av arbetsskadeanmälan, generellt eller för respektive arbetsolycka. Den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Etiketter och granskade beskrivningar stöder skäl, huvudskäl, kombinationer och svarskoder för utebliven anmälan. anmalana inkluderar uttryckligen sådana skäl i sin kombinerade kodning. membership-0031: Ingen vald variabel anger skäl till utebliven anmälan. De valda anmälningsvariablerna gäller gjord anmälan eller dess tidpunkt.\ncatalog:variable_text:3946:16801:17167\ncatalog:variable_text:3947:16801:17167\ncatalog:variable_text:3948:12053:12418\ncatalog:variable_text:3949:12053:12418\ncatalog:variable_text:3950:11323:12053\ncatalog:variable_text:3951:16801:17167\ncatalog:variable_text:3952:16801:17167\ncatalog:variable_text:3953:16801:17167\ncatalog:variable_text:3954:16801:17167\ncatalog:variable_text:3955:16801:17167\ncatalog:variable_text:3956:16801:17167\ncatalog:variable_text:4034:18993:19358\ncatalog:variable_text:4043:18993:19358\ncatalog:variable_text:4064:18993:19358\ncatalog:variable_text:4070:12053:12784\ncatalog:variable_text:4071:16801:17167\ncatalog:variable_text:4072:12418:12784\ncatalog:variable_text:4073:12053:12784\ncatalog:variable_text:4074:12053:12784\ncatalog:variable_text:4075:12053:12784\ncatalog:variable_text:4076:12053:12784\ncatalog:variable_text:4126:18993:19358\ncatalog:variable_text:4127:18993:19358\ncatalog:variable_text:4128:18993:19358\ncatalog:variable_text:4129:18993:19358\ncatalog:variable_text:4130:18993:19358\ncatalog:variable_text:4131:18993:19358\ncatalog:variable_text:4132:18993:19358\ncatalog:variable_text:4133:18993:19358\ncatalog:variable_text:4134:18993:19358\ncatalog:variable_text:4145:18993:19358\ncatalog:variable_text:4192:16801:17167\ncatalog:variable_text:4193:16801:17167\ncatalog:variable_text:4194:16801:17167\ncatalog:variable_text:4195:16801:17167\ncatalog:variable_text:4196:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -3182,12 +3152,6 @@ evidence = "The variable records an explanation of another cause of work-related
 [[statement]]
 kind = "set"
 subject = "var:bsvanm"
-fields = { "sets" = [] }
-evidence = "The variable records whether an occupational injury report was made.\ncatalog:occurrence:28326\ncatalog:variable_text:4034:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:bsvanm"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records whether an occupational injury report was made.\ncatalog:occurrence:28326\ncatalog:variable_text:4034:18993:19358"
 
@@ -3290,20 +3254,8 @@ evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4042:18993
 [[statement]]
 kind = "set"
 subject = "var:bsvejsv"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4043:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:bsvejsv"
 fields = { "tags" = ["employment"] }
 evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4043:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-fore"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4044:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -3322,12 +3274,6 @@ kind = "set"
 subject = "var:hot-eller-vald-orsak-till-besvar"
 fields = { "tags" = ["employment", "health"] }
 evidence = "BSV är en opak källförkortning.\ncatalog:variable_text:4045:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsskada-anmald-till-forsakringskassan-under"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4046:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -3394,12 +3340,6 @@ kind = "set"
 subject = "var:bsvkund"
 fields = { "tags" = ["employment", "health"] }
 evidence = "Måttet avser krävande kunder och motsvarande som orsak till besvär.\ncatalog:variable_text:4051:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-efter"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4052:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -3494,12 +3434,6 @@ evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4059:18993
 [[statement]]
 kind = "set"
 subject = "var:bsvtidig"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4060:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:bsvtidig"
 fields = { "tags" = ["employment"] }
 evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4060:18993:19358"
 
@@ -3538,12 +3472,6 @@ kind = "set"
 subject = "var:vatten-och-vatarbete-orsak-till-besvar"
 fields = { "tags" = ["employment"] }
 evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar våtarbete som orsak.\ncatalog:variable_text:4063:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:vet-ej-nar-arbetsskadan-anmaldes-till-forsakringskassan"
-fields = { "sets" = [] }
-evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4064:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -4286,20 +4214,8 @@ evidence = "Variabeln gäller ögonbesvär.\ncatalog:variable_text:4125:16801:17
 [[statement]]
 kind = "set"
 subject = "var:olanm1"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the most recent accident.\ncatalog:occurrence:28400\ncatalog:variable_text:4126:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm1"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records an occupational injury report for the most recent accident.\ncatalog:occurrence:28400\ncatalog:variable_text:4126:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm2"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the second most recent accident.\ncatalog:occurrence:28401\ncatalog:variable_text:4127:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -4310,20 +4226,8 @@ evidence = "The variable records an occupational injury report for the second mo
 [[statement]]
 kind = "set"
 subject = "var:olanm3"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the third most recent accident.\ncatalog:occurrence:28402\ncatalog:variable_text:4128:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm3"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records an occupational injury report for the third most recent accident.\ncatalog:occurrence:28402\ncatalog:variable_text:4128:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm4"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the fourth accident.\ncatalog:occurrence:28403\ncatalog:variable_text:4129:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -4334,20 +4238,8 @@ evidence = "The variable records an occupational injury report for the fourth ac
 [[statement]]
 kind = "set"
 subject = "var:olanm5"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the fifth accident.\ncatalog:occurrence:28404\ncatalog:variable_text:4130:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm5"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records an occupational injury report for the fifth accident.\ncatalog:occurrence:28404\ncatalog:variable_text:4130:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm6"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the sixth accident.\ncatalog:occurrence:28405\ncatalog:variable_text:4131:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -4358,32 +4250,14 @@ evidence = "The variable records an occupational injury report for the sixth acc
 [[statement]]
 kind = "set"
 subject = "var:olanm7"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the seventh accident.\ncatalog:occurrence:28406\ncatalog:variable_text:4132:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm7"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records an occupational injury report for the seventh accident.\ncatalog:occurrence:28406\ncatalog:variable_text:4132:18993:19358"
 
 [[statement]]
 kind = "set"
 subject = "var:olanm8"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the eighth accident.\ncatalog:occurrence:28407\ncatalog:variable_text:4133:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm8"
 fields = { "tags" = ["employment"] }
 evidence = "The variable records an occupational injury report for the eighth accident.\ncatalog:occurrence:28407\ncatalog:variable_text:4133:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:olanm9"
-fields = { "sets" = [] }
-evidence = "The variable records an occupational injury report for the ninth accident.\ncatalog:occurrence:28408\ncatalog:variable_text:4134:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -5610,3 +5484,183 @@ relation = "continues"
 object = "scb/arbetsorsakade-besvar/besvar-minskat-uppg-eller-tid"
 at = "2004-01-01.."
 evidence = "BESVARMI: complaints reduced after changed duties or reduced hours (2001-2003) -> after changed duties (2004-2010), same value set vs8772; narrowed question."
+
+[[statement]]
+kind = "set"
+subject = "var:anma"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Asks whether an existing report was made after the latest year-end; later instructions explicitly restrict respondents to recent reporters (r136, r55).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3937\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:27640\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3944"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-forsakringskassan"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Asks whether a work-injury report was submitted to Försäkringskassan; its code lists support reporting occurrence without a time restriction (r137, r127, r133, r125).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3938\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11035\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3945"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-senaste-12-manader"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Explicitly measures reporting within the last 12 months, which the fixed definition includes as a time-bounded indicator (r138).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3939\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3946"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-till-forsakringskassan-har-gjorts-eller-om-nej-orsak"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Combines a report-made response with reasons for non-reporting, exactly matching the group's combined-coding inclusion (r139, r132).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3940\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8132\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3947"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan1"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Asks whether a work-injury report was submitted to Försäkringskassan and uses a complete yes/no code list (r140, r124).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3941\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3948"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-efter"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made in the year after the survey year, directly measuring reporting time (r141, r103).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3983"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-fore"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made in the year before the survey year, directly measuring reporting time (r142, r101).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28336\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3984"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-under"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made during the survey year, directly measuring reporting time (r143, r102).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3985"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvanm"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for complaints from work conditions other than accidents, with yes/no responses (r144, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4033\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4042"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvejsv"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates refusal to disclose when the report was made, an associated reporting-time response explicitly included by the group (r145, r100).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4049"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvtidig"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates reporting earlier than the year before the survey year, directly measuring reporting time (r146, r104).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4050\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28352\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4059"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm1"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the most recent accident, with yes/no responses (r147, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4123\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4130"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm2"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the second most recent accident, with yes/no responses (r148, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4131"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm3"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the third most recent accident, with yes/no responses (r149, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4132"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm4"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the fourth accident, with yes/no responses (r150, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4133"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm5"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the fifth accident, with yes/no responses (r151, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4134"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm6"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the sixth accident, with yes/no responses (r152, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4135"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm7"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the seventh accident, with yes/no responses (r153, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4136"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm8"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the eighth accident, with yes/no responses (r154, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4137"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm9"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the ninth accident, with yes/no responses (r155, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4138"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm1"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the most recent accident; both code sets describe reporting time (r156, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4142\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4149"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm2"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the second most recent accident; both code sets describe reporting time (r157, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4150"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm3"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the third most recent accident; both code sets describe reporting time (r158, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4144\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4151"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm4"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the fourth accident; both code sets describe reporting time (r159, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4145\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4152"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm5"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the fifth accident; both code sets describe reporting time (r160, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4146\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4153"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm6"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the sixth accident; both code sets describe reporting time (r161, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4154"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm7"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the seventh accident; both code sets describe reporting time (r162, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4155"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm8"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the eighth accident; both code sets describe reporting time (r163, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4149\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4156"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm9"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the ninth accident; both code sets describe reporting time (r164, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4150\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4157"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-nar-arbetsskadan-anmaldes-till-forsakringskassan"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates that the respondent does not know when the report was made, an associated reporting-time response explicitly included by the group (r165, r105).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4231"

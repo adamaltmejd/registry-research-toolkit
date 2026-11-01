@@ -724,20 +724,8 @@ evidence = "Mäter tid för ärenden.\ncatalog:variable_text:45165:14791:15156"
 [[statement]]
 kind = "set"
 subject = "var:andra-promenader"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare och benämning i en tidigare period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-promenader"
 fields = { "tags" = ["culture"] }
 evidence = "Källkolumnen har en annan ägare och benämning i en tidigare period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-sociala-sammankomster"
-fields = { "sets" = [] }
-evidence = "Sociala sammankomster är en komponent av social samvaro.\ncatalog:variable_text:45167:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -785,12 +773,6 @@ evidence = "Annan omsorg om barn är en komponent av omsorg om egna barn och mä
 kind = "set"
 subject = "var:annan-personlig-omvardnad"
 fields = { "sets" = ["tid-for-personlig-omvardnad"] }
-evidence = "Aktiviteten är en komponent av personlig omvårdnad.\ncatalog:variable_text:45171:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:annan-personlig-omvardnad"
-fields = { "tags" = [] }
 evidence = "Aktiviteten är en komponent av personlig omvårdnad.\ncatalog:variable_text:45171:14791:15156"
 
 [[statement]]
@@ -849,27 +831,9 @@ evidence = "Källan anger annat hemarbete i minuter. Coordinator group membershi
 
 [[statement]]
 kind = "set"
-subject = "var:annat-hemarbete"
-fields = { "tags" = [] }
-evidence = "Källan anger annat hemarbete i minuter. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Båda mäter minuter för annat hemarbete och omfattas direkt av den fasta definitionen. membership-0472: Hemarbete och hushållsarbete totalt är överordnade totaler, inte annat eller ospecificerat hushållsarbete. membership-0473: Variabeln mäter ospecificerat hushållsarbete. membership-0474: Underhållsresor och total underhållstid är inte annat eller ospecificerat hushållsarbete. membership-0475: Valda hushållstider avser namngivna uppgifter, även ekonomi och planering, inte annat eller ospecificerat hushållsarbete.\ncatalog:variable_text:45176:14791:15156\ncatalog:variable_text:45177:14791:15156\ncatalog:variable_text:45296:18628:18993\ncatalog:variable_text:45297:18628:18993\ncatalog:variable_text:45406:14791:15156\ncatalog:variable_text:45416:14791:15156\ncatalog:variable_text:45575:14791:15156\ncatalog:variable_text:45638:14791:15156\ncatalog:variable_text:45740:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:annat-hemarbete-2611"
 fields = { "sets" = ["tid-for-annat-hushallsarbete"] }
 evidence = "Suffixet är hämtat från källkolumnen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Båda mäter minuter för annat hemarbete och omfattas direkt av den fasta definitionen. membership-0472: Hemarbete och hushållsarbete totalt är överordnade totaler, inte annat eller ospecificerat hushållsarbete. membership-0473: Variabeln mäter ospecificerat hushållsarbete. membership-0474: Underhållsresor och total underhållstid är inte annat eller ospecificerat hushållsarbete. membership-0475: Valda hushållstider avser namngivna uppgifter, även ekonomi och planering, inte annat eller ospecificerat hushållsarbete.\ncatalog:variable_text:45176:14791:15156\ncatalog:variable_text:45177:14791:15156\ncatalog:variable_text:45296:18628:18993\ncatalog:variable_text:45297:18628:18993\ncatalog:variable_text:45406:14791:15156\ncatalog:variable_text:45416:14791:15156\ncatalog:variable_text:45575:14791:15156\ncatalog:variable_text:45638:14791:15156\ncatalog:variable_text:45740:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:annat-hemarbete-2611"
-fields = { "tags" = [] }
-evidence = "Suffixet är hämtat från källkolumnen. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Båda mäter minuter för annat hemarbete och omfattas direkt av den fasta definitionen. membership-0472: Hemarbete och hushållsarbete totalt är överordnade totaler, inte annat eller ospecificerat hushållsarbete. membership-0473: Variabeln mäter ospecificerat hushållsarbete. membership-0474: Underhållsresor och total underhållstid är inte annat eller ospecificerat hushållsarbete. membership-0475: Valda hushållstider avser namngivna uppgifter, även ekonomi och planering, inte annat eller ospecificerat hushållsarbete.\ncatalog:variable_text:45176:14791:15156\ncatalog:variable_text:45177:14791:15156\ncatalog:variable_text:45296:18628:18993\ncatalog:variable_text:45297:18628:18993\ncatalog:variable_text:45406:14791:15156\ncatalog:variable_text:45416:14791:15156\ncatalog:variable_text:45575:14791:15156\ncatalog:variable_text:45638:14791:15156\ncatalog:variable_text:45740:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:annat-idrotts-eller-friluftsliv"
-fields = { "sets" = [] }
-evidence = "Aktiviteten är en komponent av idrott och friluftsliv.\ncatalog:variable_text:45178:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -1293,12 +1257,6 @@ evidence = "Betalning är ett mått inom hjälp med ärenden.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:arendhelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom hjälp med ärenden.\ncatalog:variable_text:45213:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:arendhelpofta"
 fields = { "sets" = ["hjalp-med-arenden"] }
 evidence = "Frekvens är ett mått på hjälp med ärenden.\ncatalog:variable_text:45214:14791:15156"
@@ -1425,12 +1383,6 @@ evidence = "Aktiviteten är en komponent av personlig omvårdnad.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:bastu-solarium"
-fields = { "tags" = [] }
-evidence = "Aktiviteten är en komponent av personlig omvårdnad.\ncatalog:variable_text:45224:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:biaktivitet-utford-via-dator"
 fields = { "sets" = ["datoranvandning"] }
 evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45225:14791:15156"
@@ -1444,20 +1396,8 @@ evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:45225:
 [[statement]]
 kind = "set"
 subject = "var:besok-av-slakt-och-vanner"
-fields = { "sets" = [] }
-evidence = "Besök av släkt och vänner är social samvaro.\ncatalog:variable_text:45226:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:besok-av-slakt-och-vanner"
 fields = { "tags" = ["culture"] }
 evidence = "Besök av släkt och vänner är social samvaro.\ncatalog:variable_text:45226:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:besok-hos-slakt-och-vanner"
-fields = { "sets" = [] }
-evidence = "Besök hos släkt och vänner är social samvaro.\ncatalog:variable_text:45228:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -1605,20 +1545,8 @@ evidence = "Källan beskriver tillfällig barnomsorg.\ncatalog:variable_text:452
 
 [[statement]]
 kind = "set"
-subject = "var:bomshelp"
-fields = { "tags" = [] }
-evidence = "Källan beskriver tillfällig barnomsorg.\ncatalog:variable_text:45240:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:bomshelpant"
 fields = { "sets" = ["hjalp-med-barnpassning"] }
-evidence = "Antal tillfällen mäter omfattningen av barnpassningshjälp.\ncatalog:variable_text:45241:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:bomshelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av barnpassningshjälp.\ncatalog:variable_text:45241:14791:15156"
 
 [[statement]]
@@ -1629,20 +1557,8 @@ evidence = "Betalning är ett mått inom barnpassningshjälp.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:bomshelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom barnpassningshjälp.\ncatalog:variable_text:45242:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:bomshelpofta"
 fields = { "sets" = ["hjalp-med-barnpassning"] }
-evidence = "Frekvens är ett mått inom barnpassningshjälp.\ncatalog:variable_text:45243:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:bomshelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens är ett mått inom barnpassningshjälp.\ncatalog:variable_text:45243:14791:15156"
 
 [[statement]]
@@ -2092,12 +2008,6 @@ evidence = "F2_5 är en frågekod.\ncatalog:variable_text:45288:18628:18993"
 [[statement]]
 kind = "set"
 subject = "var:f20"
-fields = { "sets" = [] }
-evidence = "F20 är en ogenomskinlig källkod.\ncatalog:variable_text:45289:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:f20"
 fields = { "tags" = ["culture"] }
 evidence = "F20 är en ogenomskinlig källkod.\ncatalog:variable_text:45289:18628:18993"
 
@@ -2440,12 +2350,6 @@ evidence = "Id:t är en frågekod.\ncatalog:variable_text:45319:18628:18993"
 [[statement]]
 kind = "set"
 subject = "var:kontakt-med-slakt-och-vanner"
-fields = { "sets" = [] }
-evidence = "F46 är en frågekod.\ncatalog:variable_text:45320:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kontakt-med-slakt-och-vanner"
 fields = { "tags" = ["culture"] }
 evidence = "F46 är en frågekod.\ncatalog:variable_text:45320:18628:18993"
 
@@ -2704,20 +2608,8 @@ evidence = "Fast och tidsbegränsad anställning är former av anställning.\nca
 [[statement]]
 kind = "set"
 subject = "var:fest-kalas"
-fields = { "sets" = [] }
-evidence = "Social samvaro.\ncatalog:variable_text:45342:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:fest-kalas"
 fields = { "tags" = ["culture"] }
 evidence = "Social samvaro.\ncatalog:variable_text:45342:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:fiske"
-fields = { "sets" = [] }
-evidence = "Fiske redovisas som en friluftsaktivitet i tidsanvändningen.\ncatalog:variable_text:45343:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -3009,32 +2901,14 @@ evidence = "Antal tillfällen mäter omfattningen av hjälp med ärenden.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:garendhelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av hjälp med ärenden.\ncatalog:variable_text:45369:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:garendhelpofta"
 fields = { "sets" = ["hjalp-med-arenden"] }
 evidence = "Frekvens mäter omfattningen av hjälp med ärenden.\ncatalog:variable_text:45370:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:garendhelpofta"
-fields = { "tags" = [] }
-evidence = "Frekvens mäter omfattningen av hjälp med ärenden.\ncatalog:variable_text:45370:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gbomshelp"
 fields = { "sets" = ["hjalp-med-barnpassning"] }
-evidence = "Källan anger given hjälp med barnomsorg.\ncatalog:occurrence:466279"
-
-[[statement]]
-kind = "set"
-subject = "var:gbomshelp"
-fields = { "tags" = [] }
 evidence = "Källan anger given hjälp med barnomsorg.\ncatalog:occurrence:466279"
 
 [[statement]]
@@ -3045,32 +2919,14 @@ evidence = "Antal tillfällen mäter omfattningen av barnpassningshjälp.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:gbomshelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av barnpassningshjälp.\ncatalog:variable_text:45372:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gbomshelpofta"
 fields = { "sets" = ["hjalp-med-barnpassning"] }
 evidence = "Frekvens mäter omfattningen av barnpassningshjälp.\ncatalog:variable_text:45373:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gbomshelpofta"
-fields = { "tags" = [] }
-evidence = "Frekvens mäter omfattningen av barnpassningshjälp.\ncatalog:variable_text:45373:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gkophelp"
 fields = { "sets" = ["hjalp-med-inkop"] }
-evidence = "Källan anger given hjälp med inköp.\ncatalog:occurrence:466281"
-
-[[statement]]
-kind = "set"
-subject = "var:gkophelp"
-fields = { "tags" = [] }
 evidence = "Källan anger given hjälp med inköp.\ncatalog:occurrence:466281"
 
 [[statement]]
@@ -3081,32 +2937,14 @@ evidence = "Antal tillfällen mäter omfattningen av inköpshjälp.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:gkophelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45375:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gkophelpofta"
 fields = { "sets" = ["hjalp-med-inkop"] }
 evidence = "Frekvens mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45376:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gkophelpofta"
-fields = { "tags" = [] }
-evidence = "Frekvens mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45376:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gmathelp"
 fields = { "sets" = ["hjalp-med-matlagning"] }
-evidence = "Källan anger given hjälp med matlagning.\ncatalog:occurrence:466283"
-
-[[statement]]
-kind = "set"
-subject = "var:gmathelp"
-fields = { "tags" = [] }
 evidence = "Källan anger given hjälp med matlagning.\ncatalog:occurrence:466283"
 
 [[statement]]
@@ -3117,20 +2955,8 @@ evidence = "Antal tillfällen mäter omfattningen av matlagningshjälp.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:gmathelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45378:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gmathelpofta"
 fields = { "sets" = ["hjalp-med-matlagning"] }
-evidence = "Frekvens mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45379:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:gmathelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45379:14791:15156"
 
 [[statement]]
@@ -3177,20 +3003,8 @@ evidence = "Källan anger given hjälp med reparationer.\ncatalog:occurrence:466
 
 [[statement]]
 kind = "set"
-subject = "var:grephelp"
-fields = { "tags" = [] }
-evidence = "Källan anger given hjälp med reparationer.\ncatalog:occurrence:466287"
-
-[[statement]]
-kind = "set"
 subject = "var:grephelpant"
 fields = { "sets" = ["hjalp-med-reparationer"] }
-evidence = "Antal tillfällen mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45384:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:grephelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45384:14791:15156"
 
 [[statement]]
@@ -3201,20 +3015,8 @@ evidence = "Frekvens mäter omfattningen av reparationshjälp.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:grephelpofta"
-fields = { "tags" = [] }
-evidence = "Frekvens mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45385:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gstadhelp"
 fields = { "sets" = ["hjalp-med-stadning"] }
-evidence = "Källan anger given hjälp med städning.\ncatalog:occurrence:466289"
-
-[[statement]]
-kind = "set"
-subject = "var:gstadhelp"
-fields = { "tags" = [] }
 evidence = "Källan anger given hjälp med städning.\ncatalog:occurrence:466289"
 
 [[statement]]
@@ -3225,32 +3027,14 @@ evidence = "Antal tillfällen mäter omfattningen av städhjälp.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:gstadhelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av städhjälp.\ncatalog:variable_text:45387:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gstadhelpofta"
 fields = { "sets" = ["hjalp-med-stadning"] }
 evidence = "Frekvens mäter omfattningen av städhjälp.\ncatalog:variable_text:45388:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gstadhelpofta"
-fields = { "tags" = [] }
-evidence = "Frekvens mäter omfattningen av städhjälp.\ncatalog:variable_text:45388:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gtradghelp"
 fields = { "sets" = ["hjalp-med-tradgardsarbete"] }
-evidence = "Källan anger given hjälp med trädgårdsarbete.\ncatalog:occurrence:466291"
-
-[[statement]]
-kind = "set"
-subject = "var:gtradghelp"
-fields = { "tags" = [] }
 evidence = "Källan anger given hjälp med trädgårdsarbete.\ncatalog:occurrence:466291"
 
 [[statement]]
@@ -3261,20 +3045,8 @@ evidence = "Antal tillfällen mäter omfattningen av trädgårdshjälp.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:gtradghelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45390:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gtradghelpofta"
 fields = { "sets" = ["hjalp-med-tradgardsarbete"] }
-evidence = "Frekvens mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45391:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:gtradghelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45391:14791:15156"
 
 [[statement]]
@@ -3321,32 +3093,14 @@ evidence = "Källan anger given hjälp med tvätt.\ncatalog:occurrence:466295"
 
 [[statement]]
 kind = "set"
-subject = "var:gtvatthelp"
-fields = { "tags" = [] }
-evidence = "Källan anger given hjälp med tvätt.\ncatalog:occurrence:466295"
-
-[[statement]]
-kind = "set"
 subject = "var:gtvatthelpant"
 fields = { "sets" = ["hjalp-med-tvatt"] }
 evidence = "Antal tillfällen mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45396:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:gtvatthelpant"
-fields = { "tags" = [] }
-evidence = "Antal tillfällen mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45396:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:gtvatthelpofta"
 fields = { "sets" = ["hjalp-med-tvatt"] }
-evidence = "Frekvens mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45397:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:gtvatthelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45397:14791:15156"
 
 [[statement]]
@@ -3904,32 +3658,14 @@ evidence = "Antal tillfällen mäter omfattningen av religiöst deltagande.\ncat
 [[statement]]
 kind = "set"
 subject = "var:idrott-motion-inomhus"
-fields = { "sets" = [] }
-evidence = "Motion inomhus är en komponent av idrott och motion.\ncatalog:variable_text:45446:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:idrott-motion-inomhus"
 fields = { "tags" = ["culture"] }
 evidence = "Motion inomhus är en komponent av idrott och motion.\ncatalog:variable_text:45446:14791:15156"
 
 [[statement]]
 kind = "set"
 subject = "var:idrott-motion-utomhus"
-fields = { "sets" = [] }
-evidence = "Motion utomhus är en komponent av idrott och motion.\ncatalog:variable_text:45447:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:idrott-motion-utomhus"
 fields = { "tags" = ["culture"] }
 evidence = "Motion utomhus är en komponent av idrott och motion.\ncatalog:variable_text:45447:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:idrott-och-friluftsliv-totalt"
-fields = { "sets" = [] }
-evidence = "Total tid för idrott och friluftsliv hör ihop med dess komponenter.\ncatalog:variable_text:45448:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -4036,12 +3772,6 @@ evidence = "Mäter internetanvändning. Coordinator group membership: Union of c
 [[statement]]
 kind = "set"
 subject = "var:jakt"
-fields = { "sets" = [] }
-evidence = "Jakt redovisas som en friluftsaktivitet i tidsanvändningen.\ncatalog:variable_text:45457:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:jakt"
 fields = { "tags" = ["culture"] }
 evidence = "Jakt redovisas som en friluftsaktivitet i tidsanvändningen.\ncatalog:variable_text:45457:14791:15156"
 
@@ -4061,12 +3791,6 @@ evidence = "Avser arbete eller studier. Coordinator group membership: Union of c
 kind = "set"
 subject = "var:kaffe-forfriskningar"
 fields = { "sets" = ["tid-for-maltider"] }
-evidence = "Förfriskningar omfattas av måltidsgruppen.\ncatalog:variable_text:45459:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:kaffe-forfriskningar"
-fields = { "tags" = [] }
 evidence = "Förfriskningar omfattas av måltidsgruppen.\ncatalog:variable_text:45459:14791:15156"
 
 [[statement]]
@@ -4221,20 +3945,8 @@ evidence = "Källan anger mottagen hjälp med inköp.\ncatalog:variable_text:454
 
 [[statement]]
 kind = "set"
-subject = "var:kophelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen hjälp med inköp.\ncatalog:variable_text:45472:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:kophelpant"
 fields = { "sets" = ["hjalp-med-inkop"] }
-evidence = "Antal tillfällen mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45473:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:kophelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45473:14791:15156"
 
 [[statement]]
@@ -4245,20 +3957,8 @@ evidence = "Betalning är ett mått inom inköpshjälp.\ncatalog:variable_text:4
 
 [[statement]]
 kind = "set"
-subject = "var:kophelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom inköpshjälp.\ncatalog:variable_text:45474:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:kophelpofta"
 fields = { "sets" = ["hjalp-med-inkop"] }
-evidence = "Frekvens mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45475:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:kophelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av inköpshjälp.\ncatalog:variable_text:45475:14791:15156"
 
 [[statement]]
@@ -4617,32 +4317,14 @@ evidence = "Måltider är en komponent av total måltidstid.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:maltider"
-fields = { "tags" = [] }
-evidence = "Måltider är en komponent av total måltidstid.\ncatalog:variable_text:45506:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:maltider-i-samband-med-arbete"
 fields = { "sets" = ["tid-for-maltider"] }
 evidence = "Måltider vid arbete omfattas av måltidsgruppen.\ncatalog:variable_text:45507:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:maltider-i-samband-med-arbete"
-fields = { "tags" = [] }
-evidence = "Måltider vid arbete omfattas av måltidsgruppen.\ncatalog:variable_text:45507:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:maltider-totalt"
 fields = { "sets" = ["tid-for-maltider"] }
-evidence = "Total måltidstid hör ihop med dess komponenter.\ncatalog:variable_text:45508:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:maltider-totalt"
-fields = { "tags" = [] }
 evidence = "Total måltidstid hör ihop med dess komponenter.\ncatalog:variable_text:45508:14791:15156"
 
 [[statement]]
@@ -4665,20 +4347,8 @@ evidence = "Källan anger mottagen hjälp med matlagning.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:mathelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen hjälp med matlagning.\ncatalog:variable_text:45510:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:mathelpant"
 fields = { "sets" = ["hjalp-med-matlagning"] }
-evidence = "Antal tillfällen mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45511:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:mathelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45511:14791:15156"
 
 [[statement]]
@@ -4689,20 +4359,8 @@ evidence = "Betalning är ett mått inom matlagningshjälp.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:mathelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom matlagningshjälp.\ncatalog:variable_text:45512:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:mathelpofta"
 fields = { "sets" = ["hjalp-med-matlagning"] }
-evidence = "Frekvens mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45513:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:mathelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av matlagningshjälp.\ncatalog:variable_text:45513:14791:15156"
 
 [[statement]]
@@ -4740,12 +4398,6 @@ kind = "set"
 subject = "var:medicinsk-behandling-utom-hemmet"
 fields = { "tags" = ["healthcare"] }
 evidence = "Medicinsk behandling.\ncatalog:variable_text:45516:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:mermindre"
-fields = { "sets" = [] }
-evidence = "Önskad förändring av arbetstiden avser arbetsmarknad. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel anger önskemål om ändrad tidsanvändning. membership-0472: Preferensen mellan högre lön och kortare arbetstid avser önskad förändring av tidsanvändningen; definitionen exkluderar enbart önskemål om arbetstidsschema. membership-0473: Båda variablerna mäter önskemål om att ändra tidsanvändningen genom ändrad arbetstidslängd, vilket den fasta definitionen omfattar. membership-0474: Båda anger önskade aktiviteter vid mer tillgänglig tid; olika representationer hindrar inte gruppmedlemskap. membership-0475: Anger vilken aktivitet personen vill ägna mer tid åt.\ncatalog:valueset:11775\ncatalog:variable_text:45289:18628:18993\ncatalog:variable_text:45362:11139:11504\ncatalog:variable_text:45517:14791:15156\ncatalog:variable_text:45591:14791:15156\ncatalog:variable_text:45713:11139:11504\ncatalog:variable_text:45763:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -4792,20 +4444,8 @@ evidence = "Tillgång till moped eller motorcykel är fordonstillgång.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:motionakt"
-fields = { "sets" = [] }
-evidence = "Förekomst av motion hör till gruppen för idrott och motion.\ncatalog:variable_text:45522:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:motionakt"
 fields = { "tags" = ["culture", "health"] }
 evidence = "Förekomst av motion hör till gruppen för idrott och motion.\ncatalog:variable_text:45522:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:motionfrekv"
-fields = { "sets" = [] }
-evidence = "Motionsfrekvens hör till gruppen för idrott och motion.\ncatalog:variable_text:45523:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -5397,12 +5037,6 @@ evidence = "Ospecificerade måltider är en komponent av måltidstid.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "var:ospecificerade-maltider"
-fields = { "tags" = [] }
-evidence = "Ospecificerade måltider är en komponent av måltidstid.\ncatalog:variable_text:45572:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:ospecificerade-resor"
 fields = { "sets" = [] }
 evidence = "Restid.\ncatalog:variable_text:45573:14791:15156"
@@ -5429,12 +5063,6 @@ evidence = "Ospecificerat arbete är en komponent av förvärvsarbetstid.\ncatal
 kind = "set"
 subject = "var:ospecificerat-hushallsarbete"
 fields = { "sets" = ["tid-for-annat-hushallsarbete"] }
-evidence = "Källan anger ospecificerat hushållsarbete.\ncatalog:variable_text:45575:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:ospecificerat-hushallsarbete"
-fields = { "tags" = [] }
 evidence = "Källan anger ospecificerat hushållsarbete.\ncatalog:variable_text:45575:14791:15156"
 
 [[statement]]
@@ -5620,12 +5248,6 @@ evidence = "Mäter arbetstidspreferens.\ncatalog:variable_text:45590:14791:15156
 [[statement]]
 kind = "set"
 subject = "var:passararbtim"
-fields = { "sets" = [] }
-evidence = "Mäter önskemål om arbetstidens längd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel anger önskemål om ändrad tidsanvändning. membership-0472: Preferensen mellan högre lön och kortare arbetstid avser önskad förändring av tidsanvändningen; definitionen exkluderar enbart önskemål om arbetstidsschema. membership-0473: Båda variablerna mäter önskemål om att ändra tidsanvändningen genom ändrad arbetstidslängd, vilket den fasta definitionen omfattar. membership-0474: Båda anger önskade aktiviteter vid mer tillgänglig tid; olika representationer hindrar inte gruppmedlemskap. membership-0475: Anger vilken aktivitet personen vill ägna mer tid åt.\ncatalog:valueset:11775\ncatalog:variable_text:45289:18628:18993\ncatalog:variable_text:45362:11139:11504\ncatalog:variable_text:45517:14791:15156\ncatalog:variable_text:45591:14791:15156\ncatalog:variable_text:45713:11139:11504\ncatalog:variable_text:45763:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:passararbtim"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter önskemål om arbetstidens längd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel anger önskemål om ändrad tidsanvändning. membership-0472: Preferensen mellan högre lön och kortare arbetstid avser önskad förändring av tidsanvändningen; definitionen exkluderar enbart önskemål om arbetstidsschema. membership-0473: Båda variablerna mäter önskemål om att ändra tidsanvändningen genom ändrad arbetstidslängd, vilket den fasta definitionen omfattar. membership-0474: Båda anger önskade aktiviteter vid mer tillgänglig tid; olika representationer hindrar inte gruppmedlemskap. membership-0475: Anger vilken aktivitet personen vill ägna mer tid åt.\ncatalog:valueset:11775\ncatalog:variable_text:45289:18628:18993\ncatalog:variable_text:45362:11139:11504\ncatalog:variable_text:45517:14791:15156\ncatalog:variable_text:45591:14791:15156\ncatalog:variable_text:45713:11139:11504\ncatalog:variable_text:45763:14791:15156"
 
@@ -5709,20 +5331,8 @@ evidence = "Personlig hygien och påklädning är komponenter av personlig omvå
 
 [[statement]]
 kind = "set"
-subject = "var:personlig-hygien-av-pakladning"
-fields = { "tags" = [] }
-evidence = "Personlig hygien och påklädning är komponenter av personlig omvårdnad.\ncatalog:variable_text:45598:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:personlig-omvardnad-totalt"
 fields = { "sets" = ["tid-for-personlig-omvardnad"] }
-evidence = "Total tid för personlig omvårdnad hör ihop med dess komponenter.\ncatalog:variable_text:45599:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:personlig-omvardnad-totalt"
-fields = { "tags" = [] }
 evidence = "Total tid för personlig omvårdnad hör ihop med dess komponenter.\ncatalog:variable_text:45599:14791:15156"
 
 [[statement]]
@@ -5764,32 +5374,14 @@ evidence = "Procent av heltid anger arbetstidens omfattning.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:promenader-i-skog-och-mark"
-fields = { "sets" = [] }
-evidence = "Promenader i skog och mark är ett promenadmått. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:promenader-i-skog-och-mark"
 fields = { "tags" = ["culture"] }
 evidence = "Promenader i skog och mark är ett promenadmått. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
 
 [[statement]]
 kind = "set"
 subject = "var:promenader-i-skog-och-mark-ta"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare och benämning i en senare period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:promenader-i-skog-och-mark-ta"
 fields = { "tags" = ["culture"] }
 evidence = "Källkolumnen har en annan ägare och benämning i en senare period. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
-
-[[statement]]
-kind = "set"
-subject = "var:promenader-ovriga"
-fields = { "sets" = [] }
-evidence = "Övriga promenader är ett promenadmått. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Promenader, annat idrotts- eller friluftsliv och fritidsfiske omfattas. Bilutflykter saknar stöd som idrott, motion eller friluftsliv; åskådande är undantaget. membership-0472: Total tid och namngivna motions- och friluftskomponenter omfattas; föreningsdeltagande är ett annat mått. membership-0473: Motionskodning, motionsfrekvens och promenadtider omfattas av den fasta definitionen. Promenadvariabelns id-osäkerhet ändrar inte dess dokumenterade koncept. membership-0474: Ingen vald variabel mäter motion, idrott eller friluftsliv. membership-0475: Ingen vald variabel mäter motion, idrott eller friluftsliv. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Den aktuella etiketten och beskrivningen anger promenadtid; historikens identitetsfråga ändrar inte detta begreppsstöd. membership-0472: Motion inomhus eller utomhus och jakt anger inte särskild promenadtid. membership-0473: Samtliga tre variabler mäter promenadtid. Dokumenterad id-osäkerhet för TA-variabeln ändrar inte konceptstödet. membership-0474: Ingen vald variabel mäter promenadtid. membership-0475: Ingen vald variabel mäter promenadtid.\ncatalog:occurrence:465944\ncatalog:occurrence:466515\ncatalog:variable_text:45166:14791:15156\ncatalog:variable_text:45178:14791:15156\ncatalog:variable_text:45215:14791:15156\ncatalog:variable_text:45234:14791:15156\ncatalog:variable_text:45343:14791:15156\ncatalog:variable_text:45446:14791:15156\ncatalog:variable_text:45447:14791:15156\ncatalog:variable_text:45448:14791:15156\ncatalog:variable_text:45457:14791:15156\ncatalog:variable_text:45522:11139:11504\ncatalog:variable_text:45523:14791:15156\ncatalog:variable_text:45604:14791:15156\ncatalog:variable_text:45605:11139:11504\ncatalog:variable_text:45606:11139:11504"
 
 [[statement]]
 kind = "set"
@@ -5848,20 +5440,8 @@ evidence = "Mäter tid för skötsel av sällskapsdjur.\ncatalog:variable_text:4
 [[statement]]
 kind = "set"
 subject = "var:relation-till-urvalsperson-pers2-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45612:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers2-reltyp"
 fields = { "tags" = ["family-household"] }
 evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45612:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers3-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45613:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -5872,20 +5452,8 @@ evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45613:147
 [[statement]]
 kind = "set"
 subject = "var:relation-till-urvalsperson-pers4-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45614:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers4-reltyp"
 fields = { "tags" = ["family-household"] }
 evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45614:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers5-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45615:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -5896,20 +5464,8 @@ evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45615:147
 [[statement]]
 kind = "set"
 subject = "var:relation-till-urvalsperson-pers6-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45616:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers6-reltyp"
 fields = { "tags" = ["family-household"] }
 evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45616:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:relation-till-urvalsperson-pers7-reltyp"
-fields = { "sets" = [] }
-evidence = "Kodar relation till urvalspersonen.\ncatalog:variable_text:45617:14791:15156"
 
 [[statement]]
 kind = "set"
@@ -5973,20 +5529,8 @@ evidence = "Källan anger mottagen hjälp med reparationer.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:rephelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen hjälp med reparationer.\ncatalog:variable_text:45622:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:rephelpant"
 fields = { "sets" = ["hjalp-med-reparationer"] }
-evidence = "Antal tillfällen mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45623:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:rephelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45623:14791:15156"
 
 [[statement]]
@@ -5997,20 +5541,8 @@ evidence = "Betalning är ett mått inom reparationshjälp.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:rephelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom reparationshjälp.\ncatalog:variable_text:45624:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:rephelpofta"
 fields = { "sets" = ["hjalp-med-reparationer"] }
-evidence = "Frekvens mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45625:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:rephelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av reparationshjälp.\ncatalog:variable_text:45625:14791:15156"
 
 [[statement]]
@@ -6472,12 +6004,6 @@ evidence = "Mäter sammanräknad förvärvsinkomst.\ncatalog:variable_text:45663
 [[statement]]
 kind = "set"
 subject = "var:samtal"
-fields = { "sets" = [] }
-evidence = "Samtal som social samvaro.\ncatalog:variable_text:45664:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:samtal"
 fields = { "tags" = ["culture"] }
 evidence = "Samtal som social samvaro.\ncatalog:variable_text:45664:14791:15156"
 
@@ -6604,12 +6130,6 @@ evidence = "Måttet avser tid för trädgårdsskötsel.\ncatalog:variable_text:4
 [[statement]]
 kind = "set"
 subject = "var:social-samvaro-totalt"
-fields = { "sets" = [] }
-evidence = "Social samvaro.\ncatalog:variable_text:45675:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:social-samvaro-totalt"
 fields = { "tags" = ["culture"] }
 evidence = "Social samvaro.\ncatalog:variable_text:45675:14791:15156"
 
@@ -6729,20 +6249,8 @@ evidence = "Källan anger mottagen städhjälp.\ncatalog:variable_text:45685:111
 
 [[statement]]
 kind = "set"
-subject = "var:stadhelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen städhjälp.\ncatalog:variable_text:45685:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:stadhelpant"
 fields = { "sets" = ["hjalp-med-stadning"] }
-evidence = "Antal tillfällen mäter omfattningen av städhjälp.\ncatalog:variable_text:45686:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:stadhelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av städhjälp.\ncatalog:variable_text:45686:14791:15156"
 
 [[statement]]
@@ -6753,20 +6261,8 @@ evidence = "Betalning är ett mått inom städhjälp.\ncatalog:variable_text:456
 
 [[statement]]
 kind = "set"
-subject = "var:stadhelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom städhjälp.\ncatalog:variable_text:45687:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:stadhelpofta"
 fields = { "sets" = ["hjalp-med-stadning"] }
-evidence = "Frekvens mäter omfattningen av städhjälp.\ncatalog:variable_text:45688:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:stadhelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av städhjälp.\ncatalog:variable_text:45688:14791:15156"
 
 [[statement]]
@@ -7036,12 +6532,6 @@ evidence = "Mäter tid för hobbies.\ncatalog:variable_text:45710:14791:15156"
 [[statement]]
 kind = "set"
 subject = "var:telefonsamtal"
-fields = { "sets" = [] }
-evidence = "Telefonsamtal som social samvaro.\ncatalog:variable_text:45711:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:telefonsamtal"
 fields = { "tags" = ["culture"] }
 evidence = "Telefonsamtal som social samvaro.\ncatalog:variable_text:45711:14791:15156"
 
@@ -7056,12 +6546,6 @@ kind = "set"
 subject = "var:tid"
 fields = { "tags" = ["culture"] }
 evidence = "Episodens varaktighet.\ncatalog:variable_text:45712:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:tidbrist-istallet"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en perioduppdelad motsvarighet med annan representation och möjlig annan omfattning.\ncatalog:occurrence:466303\ncatalog:occurrence:466675"
 
 [[statement]]
 kind = "set"
@@ -7137,20 +6621,8 @@ evidence = "Källan anger mottagen trädgårdshjälp.\ncatalog:variable_text:457
 
 [[statement]]
 kind = "set"
-subject = "var:tradghelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen trädgårdshjälp.\ncatalog:variable_text:45719:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:tradghelpant"
 fields = { "sets" = ["hjalp-med-tradgardsarbete"] }
-evidence = "Antal tillfällen mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45720:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:tradghelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45720:14791:15156"
 
 [[statement]]
@@ -7161,20 +6633,8 @@ evidence = "Betalning är ett mått inom trädgårdshjälp.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:tradghelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom trädgårdshjälp.\ncatalog:variable_text:45721:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:tradghelpofta"
 fields = { "sets" = ["hjalp-med-tradgardsarbete"] }
-evidence = "Frekvens mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45722:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:tradghelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av trädgårdshjälp.\ncatalog:variable_text:45722:14791:15156"
 
 [[statement]]
@@ -7281,20 +6741,8 @@ evidence = "Källan anger mottagen tvätthjälp.\ncatalog:variable_text:45731:11
 
 [[statement]]
 kind = "set"
-subject = "var:tvatthelp"
-fields = { "tags" = [] }
-evidence = "Källan anger mottagen tvätthjälp.\ncatalog:variable_text:45731:11139:11504"
-
-[[statement]]
-kind = "set"
 subject = "var:tvatthelpant"
 fields = { "sets" = ["hjalp-med-tvatt"] }
-evidence = "Antal tillfällen mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45732:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:tvatthelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45732:14791:15156"
 
 [[statement]]
@@ -7305,20 +6753,8 @@ evidence = "Betalning är ett mått inom tvätthjälp.\ncatalog:variable_text:45
 
 [[statement]]
 kind = "set"
-subject = "var:tvatthelpbet"
-fields = { "tags" = [] }
-evidence = "Betalning är ett mått inom tvätthjälp.\ncatalog:variable_text:45733:14791:15156"
-
-[[statement]]
-kind = "set"
 subject = "var:tvatthelpofta"
 fields = { "sets" = ["hjalp-med-tvatt"] }
-evidence = "Frekvens mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45734:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:tvatthelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens mäter omfattningen av tvätthjälp.\ncatalog:variable_text:45734:14791:15156"
 
 [[statement]]
@@ -7332,12 +6768,6 @@ kind = "set"
 subject = "var:typ-av-dagboksdag"
 fields = { "tags" = ["culture"] }
 evidence = "Dagboksdagens typ.\ncatalog:variable_text:45736:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:umgas-med-vanner-och-bekanta"
-fields = { "sets" = [] }
-evidence = "Frekvens för social samvaro.\ncatalog:variable_text:45738:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -7624,12 +7054,6 @@ evidence = "Vila ingår i övrig fri tid.\ncatalog:variable_text:45762:14791:151
 [[statement]]
 kind = "set"
 subject = "var:vilja-mer-vardagar"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en perioduppdelad motsvarighet med annan representation och möjlig annan omfattning.\ncatalog:occurrence:466303\ncatalog:occurrence:466675"
-
-[[statement]]
-kind = "set"
-subject = "var:vilja-mer-vardagar"
 fields = { "tags" = ["culture"] }
 evidence = "Källkolumnen har en perioduppdelad motsvarighet med annan representation och möjlig annan omfattning.\ncatalog:occurrence:466303\ncatalog:occurrence:466675"
 
@@ -7662,3 +7086,639 @@ kind = "set"
 subject = "tidsanvandningsundersokningen: F5 @2010-07-01..2011-06-30 where key = 'v36381'"
 fields = { "description" = "Har den svarande antecknat att denna sov när dagboksdagen slutade (04.00)?" }
 evidence = "Definitionen innehåller ett uppenbart skrivfel; etiketten anger dygnets slut.\ncatalog:variable_text:45326:14791:15156"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-promenader"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrence measures minutes spent on other walks, supporting exercise and outdoor-activity time under the fixed definition (r110, r171, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45017\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466515\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45167\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-sociala-sammankomster"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure minutes at other social gatherings, directly supporting social interaction time (r59, r82, r122, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45018\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466160\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466540\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-personlig-omvardnad"
+fields = { "tags" = ["culture"] }
+evidence = "The occurrences measure minutes of personal care, supporting culture's explicit coverage of time use outside employment (r44, r67, r107, r173).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465926\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466113\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466494\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45172"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-hemarbete"
+fields = { "tags" = ["culture"] }
+evidence = "This records minutes of domestic work that cannot be classified elsewhere, within culture's coverage of time use outside employment (r41, r64, r104, r174).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45028\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465915\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466103\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45178"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-hemarbete-2611"
+fields = { "tags" = ["culture"] }
+evidence = "This records minutes of unclassified domestic work, within culture's coverage of time use outside employment (r42, r175).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45029\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465916\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45179"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-idrotts-eller-friluftsliv"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure minutes of other sport or outdoor recreation, directly within the fixed definition (r52, r75, r115, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45030\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465950\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466141\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466521\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:arendhelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "The question records whether the household paid for errand assistance, supporting consumption of household services (r86, r125, r179).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45070\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466197\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466577\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45215"
+
+[[statement]]
+kind = "set"
+subject = "var:bastu-solarium"
+fields = { "tags" = ["culture"] }
+evidence = "The occurrences measure minutes spent in a sauna or solarium, supporting culture's explicit non-employment time-use theme (r43, r66, r106, r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45082\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465925\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466493\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45230"
+
+[[statement]]
+kind = "set"
+subject = "var:besok-av-slakt-och-vanner"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure minutes receiving visits from relatives and friends, directly within social contact time (r56, r79, r119, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45083\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466154\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466534\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:besok-hos-patient-pa-sjukhus"
+fields = { "tags" = ["culture"] }
+evidence = "The measure records minutes spent visiting a hospital patient, supporting non-employment time use; it does not measure the visitor receiving treatment (r40, r63, r103, r183).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45084\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465907\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466095\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466476\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45232"
+
+[[statement]]
+kind = "set"
+subject = "var:besok-hos-slakt-och-vanner"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure minutes visiting relatives and friends, directly within social contact time (r55, r78, r118, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45085\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466153\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466533\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:bomshelp"
+fields = { "tags" = ["social-care"] }
+evidence = "The definition specifies temporary childcare assistance, supporting social-care's theme of care and support for children and families (r87, r186).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466209\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45245"
+
+[[statement]]
+kind = "set"
+subject = "var:bomshelpant"
+fields = { "tags" = ["social-care"] }
+evidence = "The operational definition counts occasions of babysitting assistance received during the previous month, supporting care and support for children and families (r88, r127, r187).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45101\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466210\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466591\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45246"
+
+[[statement]]
+kind = "set"
+subject = "var:bomshelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "The question records whether the household paid for babysitting, supporting consumption of household services (r89, r128, r188).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45102\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466211\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466592\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45247"
+
+[[statement]]
+kind = "set"
+subject = "var:bomshelpofta"
+fields = { "tags" = ["social-care"] }
+evidence = "The operational definition measures how often the household received babysitting assistance, supporting care and support for children and families (r129, r164, r189).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45103\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466593\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2711\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45248"
+
+[[statement]]
+kind = "set"
+subject = "var:cd-spelare"
+fields = { "tags" = ["culture"] }
+evidence = "The question measures household access to a CD player, supporting culture's media theme (r90, r190).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45116\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45260"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-inkommet-svar"
+fields = { "sets" = ["svarsdatum"] }
+evidence = "The operational definition identifies when survey responses arrived at SCB, expressly included as a response receipt date (r148, r192, r235).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466880\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45272\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/svarsdatum"
+
+[[statement]]
+kind = "set"
+subject = "var:egenproduktion-av-matvaror"
+fields = { "tags" = ["culture"] }
+evidence = "The occurrences measure household minutes spent producing food for itself, supporting culture's non-employment time-use theme (r38, r61, r101, r194).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45139\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465877\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466066\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466447\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45284"
+
+[[statement]]
+kind = "set"
+subject = "var:eldning-vedhuggning"
+fields = { "tags" = ["culture"] }
+evidence = "The measure records minutes spent on heating and wood chopping, supporting culture's explicit coverage of time use outside employment (r39, r195).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45141\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465882\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45286"
+
+[[statement]]
+kind = "set"
+subject = "var:f20"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "The definition asks which activity the respondent wants more time for; the complete codes also allow satisfaction with current days (r144, r152, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466817\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11262\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:fest-kalas"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure minutes spent at parties and celebrations, supporting social interaction time (r54, r77, r117, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45155\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465961\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466152\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466532\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:fiske"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure minutes spent fishing, supporting outdoor recreation time under the fixed definition (r49, r70, r112, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45156\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465946\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466135\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466517\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:forde-tidsdagbok"
+fields = { "tags" = ["culture"] }
+evidence = "This measures minutes spent keeping a time diary, an activity-time measure covered by culture rather than a survey quality marker (r60, r83, r123, r200).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45165\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465994\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466185\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466566\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45318"
+
+[[statement]]
+kind = "set"
+subject = "var:garendhelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r20 counts occasions of giving errand help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45180\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466278"
+
+[[statement]]
+kind = "set"
+subject = "var:garendhelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r65 measures frequency of giving errand help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45181\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466648"
+
+[[statement]]
+kind = "set"
+subject = "var:gbomshelp"
+fields = { "tags" = ["culture"] }
+evidence = "r21 records giving unpaid childcare help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45182\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466279"
+
+[[statement]]
+kind = "set"
+subject = "var:gbomshelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r22 and r66 count occasions of giving babysitting help during the past month, within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45183\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466280\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466649"
+
+[[statement]]
+kind = "set"
+subject = "var:gbomshelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r67 measures frequency of giving babysitting help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45184\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466650"
+
+[[statement]]
+kind = "set"
+subject = "var:gkophelp"
+fields = { "tags" = ["culture"] }
+evidence = "r23 records giving unpaid shopping help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45188\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466281"
+
+[[statement]]
+kind = "set"
+subject = "var:gkophelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r24 and r68 count occasions of giving grocery-shopping help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45189\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466282\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466651"
+
+[[statement]]
+kind = "set"
+subject = "var:gkophelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r69 measures frequency of giving grocery-shopping help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45190\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466652"
+
+[[statement]]
+kind = "set"
+subject = "var:gmathelp"
+fields = { "tags" = ["culture"] }
+evidence = "r25 records giving unpaid cooking help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45191\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466283"
+
+[[statement]]
+kind = "set"
+subject = "var:gmathelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r26 and r70 count occasions of giving cooking help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45192\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466284\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466653"
+
+[[statement]]
+kind = "set"
+subject = "var:gmathelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r71 measures frequency of giving cooking help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45193\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466654"
+
+[[statement]]
+kind = "set"
+subject = "var:grephelp"
+fields = { "tags" = ["culture"] }
+evidence = "r27 records giving unpaid repair help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45195\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466287"
+
+[[statement]]
+kind = "set"
+subject = "var:grephelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r28 and r72 count occasions of giving repair help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45196\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466657"
+
+[[statement]]
+kind = "set"
+subject = "var:grephelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r73 measures frequency of giving repair help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45197\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466658"
+
+[[statement]]
+kind = "set"
+subject = "var:gstadhelp"
+fields = { "tags" = ["culture"] }
+evidence = "r29 records giving unpaid cleaning help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45198\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466289"
+
+[[statement]]
+kind = "set"
+subject = "var:gstadhelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r30 and r74 count occasions of giving cleaning help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45199\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466290\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466659"
+
+[[statement]]
+kind = "set"
+subject = "var:gstadhelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r75 measures frequency of giving cleaning help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45200\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466660"
+
+[[statement]]
+kind = "set"
+subject = "var:gtradghelp"
+fields = { "tags" = ["culture"] }
+evidence = "r31 records giving unpaid gardening help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45201\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466291"
+
+[[statement]]
+kind = "set"
+subject = "var:gtradghelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r32 and r76 count occasions of giving gardening help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45202\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466292\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466661"
+
+[[statement]]
+kind = "set"
+subject = "var:gtradghelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r77 measures frequency of giving gardening help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466662"
+
+[[statement]]
+kind = "set"
+subject = "var:gtvatthelp"
+fields = { "tags" = ["culture"] }
+evidence = "r33 records giving unpaid laundry help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45207\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466295"
+
+[[statement]]
+kind = "set"
+subject = "var:gtvatthelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r34 and r78 count occasions of giving laundry help during the past month, within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45208\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466296\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466665"
+
+[[statement]]
+kind = "set"
+subject = "var:gtvatthelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r79 measures frequency of giving laundry help, within culture's broad non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45209\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466666"
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-totalt"
+fields = { "tags" = ["culture"] }
+evidence = "r2, r11 and r56 measure total domestic-work time in minutes, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465866\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466055\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466436"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsarbete-totalt"
+fields = { "tags" = ["culture"] }
+evidence = "r3, r12 and r57 measure total household-work time in minutes, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45235\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466063\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466444"
+
+[[statement]]
+kind = "set"
+subject = "var:idrott-motion-inomhus"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure minutes of indoor sport and exercise, directly included by the fixed definition (r51, r74, r114, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45269\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465948\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466139\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466519\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:idrott-motion-utomhus"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure minutes of outdoor sport and exercise, directly included by the fixed definition (r50, r73, r113, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45270\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465947\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466138\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466518\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:idrott-och-friluftsliv-totalt"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure total minutes of sport and outdoor recreation, directly within the fixed definition (r45, r68, r108, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45271\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465942\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466133\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466513\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:jakt"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrences measure minutes spent hunting, supporting outdoor recreation time under the fixed definition (r48, r69, r111, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45280\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465945\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466134\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466516\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:kaffe-forfriskningar"
+fields = { "tags" = ["culture"] }
+evidence = "r9, r18 and r63 measure minutes spent on coffee and refreshments, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45283\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465929\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466116\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466497"
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-med-slakt-och-vanner"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The definition explicitly measures minutes of contact with relatives, friends and acquaintances, directly included by the group (r147, r208, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466851\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45450\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:kophelp"
+fields = { "tags" = ["culture"] }
+evidence = "r35 records receipt of shopping help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45300\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466336"
+
+[[statement]]
+kind = "set"
+subject = "var:kophelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r36 and r80 count receipt of grocery-shopping help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45301\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466337\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466684"
+
+[[statement]]
+kind = "set"
+subject = "var:kophelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r37 and r81 record whether the household paid for grocery-shopping help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45302\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466685"
+
+[[statement]]
+kind = "set"
+subject = "var:kophelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r82 measures frequency of receiving grocery-shopping help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45303\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466686"
+
+[[statement]]
+kind = "set"
+subject = "var:maltider"
+fields = { "tags" = ["culture"] }
+evidence = "r8, r17 and r62 measure minutes spent on meals, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45337\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465928\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466115\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466496"
+
+[[statement]]
+kind = "set"
+subject = "var:maltider-i-samband-med-arbete"
+fields = { "tags" = ["culture"] }
+evidence = "r1, r10 and r55 measure meal time associated with work; the measured activity is eating rather than working hours.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465863\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466052\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466434"
+
+[[statement]]
+kind = "set"
+subject = "var:maltider-totalt"
+fields = { "tags" = ["culture"] }
+evidence = "r7, r16 and r61 measure total meal time in minutes, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465927\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466114\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466495"
+
+[[statement]]
+kind = "set"
+subject = "var:mathelp"
+fields = { "tags" = ["culture"] }
+evidence = "r38 records receipt of cooking help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45341\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466348"
+
+[[statement]]
+kind = "set"
+subject = "var:mathelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r39 and r83 count receipt of cooking help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45342\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466694"
+
+[[statement]]
+kind = "set"
+subject = "var:mathelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r40 and r84 record whether the household paid for cooking help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45343\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466350\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466695"
+
+[[statement]]
+kind = "set"
+subject = "var:mathelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r85 measures frequency of receiving cooking help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466696"
+
+[[statement]]
+kind = "set"
+subject = "var:mermindre"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "The question asks whether the respondent wants to increase or decrease working hours, a desired change in time allocation rather than a schedule preference (r132, r158, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466698\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12949\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:motionakt"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The operational question asks about regular exercise, and the complete codes are yes/no responses; exercise coding is expressly included (r96, r154, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45354\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11757\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:motionfrekv"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The definition and complete codes measure exercise frequency, expressly included by the fixed group (r97, r133, r156, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11876\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:ospecificerade-maltider"
+fields = { "tags" = ["culture"] }
+evidence = "r19 measures minutes spent on unspecified meals, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45410\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466117"
+
+[[statement]]
+kind = "set"
+subject = "var:ospecificerat-hushallsarbete"
+fields = { "tags" = ["culture"] }
+evidence = "r4, r13 and r58 measure minutes of unspecified household work, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45413\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465883\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466072\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466453"
+
+[[statement]]
+kind = "set"
+subject = "var:passararbtim"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "The definition concerns changing working-hour quantity with proportional pay changes; the codes distinguish shorter and longer hours, rather than schedule preferences (r98, r134, r157, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45430\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466713\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12661\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:personlig-hygien-av-pakladning"
+fields = { "tags" = ["culture"] }
+evidence = "r60 measures minutes spent on personal hygiene and dressing, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45437\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466492"
+
+[[statement]]
+kind = "set"
+subject = "var:personlig-omvardnad-totalt"
+fields = { "tags" = ["culture"] }
+evidence = "r5, r14 and r59 measure total personal-care time in minutes, within culture's non-employment time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45438\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465920\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466107\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466488"
+
+[[statement]]
+kind = "set"
+subject = "var:promenader-i-skog-och-mark"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "The occurrence measures minutes spent walking in woodland and countryside, within outdoor recreation time (r109, r213, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45444\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45595\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:promenader-i-skog-och-mark-ta"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "Both occurrences measure minutes spent walking in woodland and countryside, within outdoor recreation time (r47, r72, r214, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45445\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465944\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466137\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45596\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:promenader-ovriga"
+fields = { "sets" = ["idrott-motion-och-friluftsliv"] }
+evidence = "Both occurrences measure minutes spent on other walks, supporting exercise and outdoor-activity time (r46, r71, r215, r231).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45446\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465943\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466136\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45597\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/idrott-motion-och-friluftsliv"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers2-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, confirmed by the complete relationship codes (r135, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45449\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466718\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers3-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, confirmed by the complete relationship codes (r136, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45450\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466722\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers4-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, confirmed by the complete relationship codes (r137, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45451\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466726\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers5-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, confirmed by the complete relationship codes (r138, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45452\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466730\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers6-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, confirmed by the complete relationship codes (r139, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45453\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466734\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson-pers7-reltyp"
+fields = { "sets" = ["relation-till-urvalsperson"] }
+evidence = "The definition specifies this household person's relationship to the sampled person, and the complete codes identify relationship types (r140, r170, r233).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8824\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/relation-till-urvalsperson"
+
+[[statement]]
+kind = "set"
+subject = "var:rephelp"
+fields = { "tags" = ["culture"] }
+evidence = "r42 records receipt of repair help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45459\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466371"
+
+[[statement]]
+kind = "set"
+subject = "var:rephelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r43 and r86 count receipt of repair help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45460\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466372\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466747"
+
+[[statement]]
+kind = "set"
+subject = "var:rephelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r44 and r87 record whether the household paid for repair help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45461\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466373\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466748"
+
+[[statement]]
+kind = "set"
+subject = "var:rephelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r88 measures frequency of receiving repair help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45462\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466749"
+
+[[statement]]
+kind = "set"
+subject = "var:samtal"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences record conversation time in minutes, supporting social contact time under the fixed definition (r57, r80, r120, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45504\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465964\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466155\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466535\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:social-samvaro-totalt"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure total minutes of social interaction, directly within the fixed definition (r53, r76, r116, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45517\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465960\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466151\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466531\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:stadhelp"
+fields = { "tags" = ["culture"] }
+evidence = "r45 records receipt of cleaning help during the preceding four weeks, within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45530\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466388"
+
+[[statement]]
+kind = "set"
+subject = "var:stadhelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r46 and r89 count receipt of cleaning help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45531\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466389\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466760"
+
+[[statement]]
+kind = "set"
+subject = "var:stadhelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r47 and r90 record whether the household paid for cleaning help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45532\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466390\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466761"
+
+[[statement]]
+kind = "set"
+subject = "var:stadhelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r91 measures frequency of receiving cleaning help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45533\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466762"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsdatum"
+fields = { "sets" = ["svarsdatum"] }
+evidence = "The definition identifies the date on which the respondent answers the survey, matching the fixed response-date concept (r146, r197, r235).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45547\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466820\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45296\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/svarsdatum"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonsamtal"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The occurrences measure minutes spent on telephone conversations, supporting social contact time under the fixed definition (r58, r81, r121, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45557\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:465965\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466156\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466536\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:tidbrist-istallet"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "The operational definition asks in free text what the respondent would like to do if more time were available, directly matching desired time use (r95, r227, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45559\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466303\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45710\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:tradghelp"
+fields = { "tags" = ["culture"] }
+evidence = "r48 records gardening help during the preceding four weeks, within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45567\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466410"
+
+[[statement]]
+kind = "set"
+subject = "var:tradghelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r49 and r92 count receipt of gardening help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45568\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466411\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466782"
+
+[[statement]]
+kind = "set"
+subject = "var:tradghelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r50 and r93 record whether the household paid for gardening help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45569\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466783"
+
+[[statement]]
+kind = "set"
+subject = "var:tradghelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r94 measures frequency of receiving gardening help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45570\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466784"
+
+[[statement]]
+kind = "set"
+subject = "var:tvatthelp"
+fields = { "tags" = ["culture"] }
+evidence = "r51 records receipt of help washing clothes or other textiles during the preceding four weeks, within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45579\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466417"
+
+[[statement]]
+kind = "set"
+subject = "var:tvatthelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r52 and r95 count receipt of laundry help during the past month, an activity pattern within culture's time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45580\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466788"
+
+[[statement]]
+kind = "set"
+subject = "var:tvatthelpbet"
+fields = { "tags" = ["consumption"] }
+evidence = "r53 and r96 record whether the household paid for laundry help, supporting consumption of services.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45581\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466789"
+
+[[statement]]
+kind = "set"
+subject = "var:tvatthelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r97 measures frequency of receiving laundry help, an activity pattern within culture's broad time-use scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45582\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466790"
+
+[[statement]]
+kind = "set"
+subject = "var:tvattmaskin"
+fields = { "tags" = ["housing"] }
+evidence = "r54 and r98 measure washing-machine access in the dwelling or its associated laundry room, a housing amenity.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45583\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466420\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466791"
+
+[[statement]]
+kind = "set"
+subject = "var:umgas-med-vanner-och-bekanta"
+fields = { "sets" = ["social-samvaro"] }
+evidence = "The definition and response categories measure frequency of meeting friends and acquaintances, expressly included by the group (r228, r159, r163, r234).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45586\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1466\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2480\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:45736\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/social-samvaro"
+
+[[statement]]
+kind = "set"
+subject = "var:vilja-mer-vardagar"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "The definition and complete activity codes identify activities the respondent wants more time for on weekdays, directly matching desired time use (r131, r162, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45613\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466675\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2428\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"

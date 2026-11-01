@@ -5461,20 +5461,8 @@ evidence = "Variabeln mäter företagets aktivitet och övertäckning.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-q7b"
-fields = { "sets" = [] }
-evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:27852:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-q7b"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:27852:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-turnin"
-fields = { "sets" = [] }
-evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:27853:13879:15706\ncatalog:variable_text:27853:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -5485,20 +5473,8 @@ evidence = "Källan anger omsättningsandel för produkter nya endast för före
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-foretagets-q7a"
-fields = { "sets" = [] }
-evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27854:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-foretagets-q7a"
 fields = { "tags" = ["business", "research"] }
 evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27854:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-tur-prd-new-mkt"
-fields = { "sets" = [] }
-evidence = "Källan anger en omsättningsandel från marknadsnya produkter, men samma källkolumn är överlappande mappad till en variabel med belopp i KSEK.\ncatalog:occurrence:248447\ncatalog:occurrence:248652\ncatalog:variable_text:27855:16801:19358"
 
 [[statement]]
 kind = "set"
@@ -5509,20 +5485,8 @@ evidence = "Källan anger en omsättningsandel från marknadsnya produkter, men 
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-turnmar"
-fields = { "sets" = [] }
-evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27856:13879:15706\ncatalog:variable_text:27856:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-turnmar"
 fields = { "tags" = ["business", "research"] }
 evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27856:13879:15706\ncatalog:variable_text:27856:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-tur-prd-new-ent"
-fields = { "sets" = [] }
-evidence = "Den överlappande kopplingen till samma källkolumn behöver utredas. Variabeln avser omsättningsandel från företagsnya produkter.\ncatalog:occurrence:248446\ncatalog:occurrence:248651\ncatalog:variable_text:27857:16801:19358"
 
 [[statement]]
 kind = "set"
@@ -5533,32 +5497,14 @@ evidence = "Den överlappande kopplingen till samma källkolumn behöver utredas
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-varor-tjanster-som-var-oforandrade-q7c"
-fields = { "sets" = [] }
-evidence = "Andel av omsättning från oförändrade produkter.\ncatalog:variable_text:27858:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-oforandrade-q7c"
 fields = { "tags" = ["business", "research"] }
 evidence = "Andel av omsättning från oförändrade produkter.\ncatalog:variable_text:27858:11688:13514"
 
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-varor-tjanster-som-var-tur-prd-ninn"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn är knuten till två variabler med överlappande perioder. Gruppen avser omsättningsandel för oförändrade produkter.\ncatalog:occurrence:248448\ncatalog:occurrence:248653\ncatalog:variable_text:27859:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-tur-prd-ninn"
 fields = { "tags" = ["business", "research"] }
 evidence = "Samma källkolumn är knuten till två variabler med överlappande perioder. Gruppen avser omsättningsandel för oförändrade produkter.\ncatalog:occurrence:248448\ncatalog:occurrence:248653\ncatalog:variable_text:27859:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-turntot"
-fields = { "sets" = [] }
-evidence = "The share belongs with its documented counterparts.\ncatalog:variable_text:27860:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -8161,12 +8107,6 @@ evidence = "The id is an opaque source mnemonic.\ncatalog:variable_text:28416:16
 [[statement]]
 kind = "set"
 subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
-fields = { "sets" = [] }
-evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver andelen.\ncatalog:variable_text:28417:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten beskriver andelen.\ncatalog:variable_text:28417:16071:17167"
 
@@ -8565,12 +8505,6 @@ kind = "set"
 subject = "var:innovationshinder-brist-kredit-eller-eget-kapital"
 fields = { "tags" = ["research"] }
 evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28496:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:hinder-for-innovationsverksamhet-brist-intern-finansiering"
-fields = { "sets" = [] }
-evidence = "Id är en ogenomskinlig källkod och etiketten anger hindret.\ncatalog:variable_text:28497:16801:18628"
 
 [[statement]]
 kind = "set"
@@ -9937,32 +9871,14 @@ evidence = "The variable measures outsourced research and development.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:produktinnovation-ny-for-sverige"
-fields = { "sets" = [] }
-evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28655:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-sverige"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28655:16071:17167"
 
 [[statement]]
 kind = "set"
 subject = "var:produktinnovation-ny-for-europa"
-fields = { "sets" = [] }
-evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28656:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-europa"
 fields = { "tags" = ["research"] }
 evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28656:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-varlden"
-fields = { "sets" = [] }
-evidence = "Källkoden är opak; etiketten anger nyhetsgraden.\ncatalog:variable_text:28657:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -11485,20 +11401,8 @@ evidence = "Källan anger endast NUTS.\ncatalog:variable_text:28836:11688:18628"
 [[statement]]
 kind = "set"
 subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-ent"
-fields = { "sets" = [] }
-evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovationer nya för företaget.\ncatalog:variable_text:28837:16801:18262\ncatalog:variable_text:28837:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-ent"
 fields = { "tags" = ["research"] }
 evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovationer nya för företaget.\ncatalog:variable_text:28837:16801:18262\ncatalog:variable_text:28837:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-mkt"
-fields = { "sets" = [] }
-evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovationer nya för marknaden.\ncatalog:variable_text:28838:16801:18262\ncatalog:variable_text:28838:18262:20089"
 
 [[statement]]
 kind = "set"
@@ -11509,20 +11413,8 @@ evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovati
 [[statement]]
 kind = "set"
 subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-newfrm"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28839:13879:15706\ncatalog:variable_text:28839:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-newfrm"
 fields = { "tags" = ["research"] }
 evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28839:13879:15706\ncatalog:variable_text:28839:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-q6b"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28840:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -11533,20 +11425,8 @@ evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-newmkt"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28841:13879:15706\ncatalog:variable_text:28841:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-newmkt"
 fields = { "tags" = ["research"] }
 evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28841:13879:15706\ncatalog:variable_text:28841:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-q6a"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28842:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -11581,32 +11461,14 @@ evidence = "Variabeln mäter svarandes omsättningssumma per stratum.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:omsattningsandel-inno-ny-for-foretaget"
-fields = { "sets" = [] }
-evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:28873:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-inno-ny-for-foretaget"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:28873:13149:14245"
 
 [[statement]]
 kind = "set"
 subject = "var:omsattningsandel-inno-ny-for-marknad"
-fields = { "sets" = [] }
-evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:28874:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-inno-ny-for-marknad"
 fields = { "tags" = ["business", "research"] }
 evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:28874:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-oforandrade-varor"
-fields = { "sets" = [] }
-evidence = "The variable measures the turnover share from unchanged products.\ncatalog:variable_text:28875:13149:14245"
 
 [[statement]]
 kind = "set"
@@ -11881,20 +11743,8 @@ evidence = "Källan gäller utvecklare av processinnovation.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:produktinnovation-ny-for-foretaget"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28924:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-foretaget"
 fields = { "tags" = ["research"] }
 evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28924:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-marknad"
-fields = { "sets" = [] }
-evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28925:13149:14245"
 
 [[statement]]
 kind = "set"
@@ -12081,12 +11931,6 @@ kind = "set"
 subject = "var:q16c"
 fields = { "tags" = ["research"] }
 evidence = "Etiketten och definitionen anger olika orsakssamband.\ncatalog:variable_text:28940:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:hinder-brist-pa-finansiering-inom-foretaget"
-fields = { "sets" = [] }
-evidence = "Frågenumret är en ogenomskinlig källkod; etiketten anger hindret.\ncatalog:variable_text:28941:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -13945,32 +13789,14 @@ evidence = "Källan gäller utvecklare av varuinnovation.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:weight"
-fields = { "sets" = [] }
-evidence = "Den tidigare WEIGHT-kolumnens innebörd är inte fastställd.\ncatalog:occurrence:246567\ncatalog:occurrence:247343"
-
-[[statement]]
-kind = "set"
-subject = "var:weight"
 fields = { "tags" = ["methods"] }
 evidence = "Den tidigare WEIGHT-kolumnens innebörd är inte fastställd.\ncatalog:occurrence:246567\ncatalog:occurrence:247343"
 
 [[statement]]
 kind = "set"
 subject = "var:vikt-antal-anstallda-population-per-antal-anstallda-svarande"
-fields = { "sets" = [] }
-evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger vikten.\ncatalog:variable_text:29189:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:vikt-antal-anstallda-population-per-antal-anstallda-svarande"
 fields = { "tags" = ["methods"] }
 evidence = "Källkolumnens kod är ogenomskinlig och etiketten anger vikten.\ncatalog:variable_text:29189:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:weight-tur"
-fields = { "sets" = [] }
-evidence = "Id:t innehåller den opaka källkoden TUR; etiketten anger en omsättningskalibrerad vikt.\ncatalog:occurrence:248658\ncatalog:variable_text:29191:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -13989,3 +13815,189 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: E11c @2006-01-01..2008-12-31 where key = 'v15612'"
 fields = { "description" = "Utgifter för förvärv av maskiner, utrustning och programvara." }
 evidence = "Beskrivningen anger förvärvet i stället för utgifterna som mäts.\ncatalog:variable_text:29177:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-produktinnovationer-som-var-forst"
+fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
+evidence = "r137 defines turnover share from world-first product innovations; r184 explicitly includes world novelty.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27762\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27852\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-q7b"
+fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
+evidence = "r138 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27853\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-turnin"
+fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
+evidence = "r139 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27854\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-foretagets-q7a"
+fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
+evidence = "r140 defines turnover share from products new to the firm and its market, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27855\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-tur-prd-new-mkt"
+fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
+evidence = "r141 defines a percentage turnover share from market-new products, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27766\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27856\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-turnmar"
+fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
+evidence = "r142 defines turnover share from products introduced before market competitors, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27767\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27857\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-nya-tur-prd-new-ent"
+fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
+evidence = "r143 defines turnover share from products new only to the firm and explicitly not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27858\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-som-var-oforandrade-q7c"
+fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
+evidence = "r144 defines turnover share from unchanged or marginally changed products, including resale, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27859\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-som-var-tur-prd-ninn"
+fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
+evidence = "r145 defines a percentage turnover share from unchanged or marginally changed products, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27770\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27860\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-omsattning-fran-varor-tjanster-som-var-turntot"
+fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
+evidence = "r146 defines turnover share from unchanged or marginally changed products, including resale, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27771\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27861\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:hinder-brist-pa-finansiering-inom-foretaget"
+fields = { "sets" = ["intern-finansieringsbrist-som-innovationshinder"] }
+evidence = "r147 explicitly measures financing shortages within the firm or group as an innovation obstacle, matching r183.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28347\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28447\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/intern-finansieringsbrist-som-innovationshinder"
+
+[[statement]]
+kind = "set"
+subject = "var:hinder-for-innovationsverksamhet-brist-intern-finansiering"
+fields = { "sets" = ["intern-finansieringsbrist-som-innovationshinder"] }
+evidence = "r103 and r148 identify the surveyed innovation obstacle as lack of internal financing, matching r183.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28351\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248016\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28451\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/intern-finansieringsbrist-som-innovationshinder"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-ent"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r152 defines product innovations new only to the firm and already available through competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28707\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28802\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-mkt"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r153 defines market-new product innovations and explicitly describes introduction before competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28803\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-newfrm"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r154 defines product innovations new only to the firm, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28804\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-q6b"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r155 defines product innovations new only to the firm and already offered by competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28805\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-newmkt"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r156 defines product innovations introduced before market competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28711\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28806\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-q6a"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r157 defines product innovations introduced before market competitors, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28712\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28807\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-inno-ny-for-foretaget"
+fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
+evidence = "r158 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28755\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28846\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-inno-ny-for-marknad"
+fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
+evidence = "r159 defines the turnover share from products new to the firm's market, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28756\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28847\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-oforandrade-varor"
+fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
+evidence = "r160 defines turnover share from unchanged or marginally changed products, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28757\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28848\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-europa"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r161 asks whether product innovations were new in Europe, within r187's geographic novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28806\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28899\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-foretaget"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r162 measures product innovations new only to the firm, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28807\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28900\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-marknad"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r163 measures whether product innovations were new to the firm's market, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28808\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28901\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-sverige"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r164 asks whether product innovations were new in Sweden, within the geographic novelty scope of r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28809\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28902\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-varlden"
+fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
+evidence = "r165 asks whether product innovations were new worldwide, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28810\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28903\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
+
+[[statement]]
+kind = "set"
+subject = "var:risk-naturfenomen"
+fields = { "tags" = ["environment"] }
+evidence = "r126 and r166 measure the relevance of risks from natural phenomena to company activities, supporting the broad environment theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248629\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28920"
+
+[[statement]]
+kind = "set"
+subject = "var:riskminimering-naturfenomen"
+fields = { "tags" = ["environment"] }
+evidence = "r127 and r167 measure actions to reduce risks from natural phenomena, supporting the broad environment theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28834\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248630\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28926"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-antal-anstallda-population-per-antal-anstallda-svarande"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "r178 defines an employment-calibrated statistical weight, explicitly included by r188.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29097\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29189\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/upprakningsvikter"
+
+[[statement]]
+kind = "set"
+subject = "var:weight"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "r177 defines a weight compensating for nonresponding enterprise units, explicitly included by r188.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29098\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29188\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/upprakningsvikter"
+
+[[statement]]
+kind = "set"
+subject = "var:weight-tur"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "r180 defines a turnover-calibrated statistical weight, explicitly included by r188.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29191\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/upprakningsvikter"

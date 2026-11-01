@@ -1826,32 +1826,14 @@ evidence = "Variabeln anger adoptivmoderns utbildningsinriktning.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva"
-fields = { "sets" = [] }
-evidence = "Id:t anger SUN 2000 och utbildningsnivå; källan beskriver nivå även under den tidigare perioden.\ncatalog:variable_text:41564:10227:17897\ncatalog:variable_text:41564:9131:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
 fields = { "tags" = ["education"] }
 evidence = "Id:t anger SUN 2000 och utbildningsnivå; källan beskriver nivå även under den tidigare perioden.\ncatalog:variable_text:41564:10227:17897\ncatalog:variable_text:41564:9131:9496"
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
-fields = { "sets" = [] }
-evidence = "Suffixet 66 finns inte i källkolumnen.\ncatalog:variable_text:41565:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 66 finns inte i källkolumnen.\ncatalog:variable_text:41565:15706:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
-fields = { "sets" = [] }
-evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41566:11323:11688"
 
 [[statement]]
 kind = "set"
@@ -1994,12 +1976,6 @@ evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncat
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva"
-fields = { "sets" = [] }
-evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41578:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41578:17897:20089"
 
@@ -2014,12 +1990,6 @@ kind = "set"
 subject = "var:sun2020niva-far"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger faderns utbildningsnivå.\ncatalog:variable_text:41579:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "sets" = [] }
-evidence = "Id:t anger SUN 2020 och utbildningsnivå aggregerad till gamla nivåer.\ncatalog:variable_text:41580:17897:20089"
 
 [[statement]]
 kind = "set"
@@ -2146,12 +2116,6 @@ kind = "set"
 subject = "var:tkulon"
 fields = { "tags" = ["income"] }
 evidence = "TKU är en ogenomskinlig källkod.\ncatalog:variable_text:41591:11688:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:univa"
-fields = { "sets" = [] }
-evidence = "Variabeln anger utbildningsnivå.\ncatalog:variable_text:41592:9496:10227"
 
 [[statement]]
 kind = "set"
@@ -2470,3 +2434,39 @@ kind = "set"
 subject = "befolkningens-studiedeltagande: REKBHT @2006-01-01..2006-12-31 where key = 'v1598'"
 fields = { "description" = "Markering för utbetalt rekryteringsbidrag till vuxenstuderande från CSN." }
 evidence = "Värdena och operationaliseringen anger mottagande av rekryteringsbidrag, inte ett studiebidragsbelopp.\ncatalog:valueset:5312\ncatalog:variable_text:41601:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The operational definition measures highest completed education aggregated to older SUN levels, an allowed classification variant (r12, r78).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41421\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41563"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The operational definition explicitly measures highest completed education under SUN 2020, matching the group's concept (r53, r81).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41432\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:422874\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41577"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The operational definition measures highest completed education aggregated to older SUN levels, matching the group's permitted classification variants (r54, r82).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41434\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:422875\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41579"
+
+[[statement]]
+kind = "set"
+subject = "var:univa"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The person's completed education is classified at one-digit SUN level, matching the group's concept and allowed granularity (r85, r10).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41445\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421714\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41592"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-hogsta-fullfoljda-sun-2000"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The operational definition explicitly measures highest completed education under SUN 2000, matching the group's concept (r14, r79).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41456\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421864\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41564"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "The measure aggregates the individual's highest education through the spring term into seven SUN 2000 levels, matching the group's concept (r17, r80).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41457\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41565"

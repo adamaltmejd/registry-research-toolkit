@@ -482,20 +482,8 @@ evidence = "Variabeln anger årskurs i gymnasieskolan.\ncatalog:variable_text:34
 [[statement]]
 kind = "set"
 subject = "var:hkom"
-fields = { "sets" = [] }
-evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34391:16436:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:hkom"
 fields = { "tags" = ["geography"] }
 evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34391:16436:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:hkom30jun"
-fields = { "sets" = [] }
-evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34392:20089:20270"
 
 [[statement]]
 kind = "set"
@@ -506,32 +494,14 @@ evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särsk
 [[statement]]
 kind = "set"
 subject = "var:hkom30sep"
-fields = { "sets" = [] }
-evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34393:19905:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:hkom30sep"
 fields = { "tags" = ["geography"] }
 evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34393:19905:20089"
 
 [[statement]]
 kind = "set"
 subject = "var:hkom31dec"
-fields = { "sets" = [] }
-evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34394:20089:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:hkom31dec"
 fields = { "tags" = ["geography"] }
 evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34394:20089:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:hkom31mars"
-fields = { "sets" = [] }
-evidence = "H är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34395:20089:20270"
 
 [[statement]]
 kind = "set"
@@ -586,12 +556,6 @@ kind = "set"
 subject = "var:kallkann"
 fields = { "tags" = ["methods"] }
 evidence = "Uppgiften anger källa för kännedom.\ncatalog:variable_text:34399:20089:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunreg"
-fields = { "sets" = [] }
-evidence = "Variabeln anger registrerande kommun.\ncatalog:variable_text:34400:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -722,12 +686,6 @@ evidence = "Variabeln anger orsak till upphört aktivitetsansvar.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:registrerande-kommun-aktivitetsansvar"
-fields = { "sets" = [] }
-evidence = "R är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34412:16801:20270"
-
-[[statement]]
-kind = "set"
-subject = "var:registrerande-kommun-aktivitetsansvar"
 fields = { "tags" = ["geography"] }
 evidence = "R är en opak bokstavskod; den delade kommunetiketten kräver särskiljning.\ncatalog:variable_text:34412:16801:20270"
 
@@ -782,20 +740,8 @@ evidence = "Variabeln anger årskurs i grundskolan.\ncatalog:variable_text:34416
 [[statement]]
 kind = "set"
 subject = "var:skom-sen"
-fields = { "sets" = [] }
-evidence = "Skolkommun vid senaste utbildningens slut.\ncatalog:variable_text:34417:16801:16983"
-
-[[statement]]
-kind = "set"
-subject = "var:skom-sen"
 fields = { "tags" = ["geography"] }
 evidence = "Skolkommun vid senaste utbildningens slut.\ncatalog:variable_text:34417:16801:16983"
-
-[[statement]]
-kind = "set"
-subject = "var:stvkod-sen"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar gymnasieskolans studieväg.\ncatalog:variable_text:34419:16801:16983"
 
 [[statement]]
 kind = "set"
@@ -926,12 +872,6 @@ evidence = "Den operativa beskrivningen avser programbyte, medan definitionen av
 [[statement]]
 kind = "set"
 subject = "var:utbild-sen"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar den senaste gymnasieutbildningen.\ncatalog:variable_text:34430:16801:16983"
-
-[[statement]]
-kind = "set"
-subject = "var:utbild-sen"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar den senaste gymnasieutbildningen.\ncatalog:variable_text:34430:16801:16983"
 
@@ -982,3 +922,63 @@ kind = "set"
 subject = "var:yrkesbaserad-seg-mor"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger moderns yrkesbaserade socioekonomiska gruppering.\ncatalog:variable_text:34434:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "sets" = ["kommun"] }
+evidence = "Explicitly records the person's population-registration municipality (r13), an included municipal role.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:301965"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom30jun"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the person's population-registration municipality, including descriptions specifying a reference time (r25, r29), within kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302090\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302123"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom30sep"
+fields = { "sets" = ["kommun"] }
+evidence = "Explicitly records the person's population-registration municipality at a specified time (r30), matching kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34267\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302124"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom31dec"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the person's population-registration municipality, including descriptions specifying a reference time (r26, r31), within kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34268\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302091\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302125"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom31mars"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the person's population-registration municipality (r27), within the fixed kommun definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34269\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302092"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunreg"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the municipality registering the person for activity responsibility (r14), an included municipal role.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34273\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:301966"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-kommun-aktivitetsansvar"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the municipality registering the person for activity responsibility throughout the supplied history (r123), matching kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34285\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34412"
+
+[[statement]]
+kind = "set"
+subject = "var:skom-sen"
+fields = { "sets" = ["kommun"] }
+evidence = "Records the school municipality at the end of the latest education (r19), an explicitly included municipal role.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34290\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302031"
+
+[[statement]]
+kind = "set"
+subject = "var:stvkod-sen"
+fields = { "sets" = ["gymnasieutbildning"] }
+evidence = "Records the latest education attended in upper-secondary school (r20), explicitly defined as the student's upper-secondary study path (r125).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34292\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302032\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34419"
+
+[[statement]]
+kind = "set"
+subject = "var:utbild-sen"
+fields = { "sets" = ["gymnasieutbildning"] }
+evidence = "Records the upper-secondary programme or education in which the person was most recently registered (r22), matching gymnasieutbildning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34303\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:302041"

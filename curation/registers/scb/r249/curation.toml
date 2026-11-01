@@ -4339,3 +4339,21 @@ kind = "set"
 subject = "var:yrkespaketkod"
 fields = { "tags" = ["education"] }
 evidence = "Kodning av yrkespaket med en motsvarande klartextvariabel.\ncatalog:variable_text:34766:19905:20089\ncatalog:variable_text:34767:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r62 identifies the current term of Komvux studies; r164 identifies the test-result term using spring/autumn and year. Both fit the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34618\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:314006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:314842"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r239 defines the course's term and explicitly links it to the specified Komvux course, supporting the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34619\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34746"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen-utl"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r240 defines the course's term and explicitly links it to the specified Komvux course, supporting the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34620\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34747"

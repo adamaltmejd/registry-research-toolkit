@@ -476,20 +476,8 @@ evidence = "Anger ekologisk odling av grödan.\ncatalog:occurrence:515700"
 [[statement]]
 kind = "set"
 subject = "var:fruktodlingsgroda"
-fields = { "sets" = [] }
-evidence = "Kod för fruktodlingsgröda.\ncatalog:occurrence:515703\ncatalog:valueset:11583"
-
-[[statement]]
-kind = "set"
-subject = "var:fruktodlingsgroda"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kod för fruktodlingsgröda.\ncatalog:occurrence:515703\ncatalog:valueset:11583"
-
-[[statement]]
-kind = "set"
-subject = "var:fruktodlingsgrodatext"
-fields = { "sets" = [] }
-evidence = "Namn på fruktodlingsgröda.\ncatalog:occurrence:515704"
 
 [[statement]]
 kind = "set"
@@ -740,20 +728,8 @@ evidence = "Glyfosatanvändning i gröda.\ncatalog:occurrence:515705"
 [[statement]]
 kind = "set"
 subject = "var:grodid"
-fields = { "sets" = [] }
-evidence = "Grödkod.\ncatalog:occurrence:515706"
-
-[[statement]]
-kind = "set"
-subject = "var:grodid"
 fields = { "tags" = ["agriculture"] }
 evidence = "Grödkod.\ncatalog:occurrence:515706"
-
-[[statement]]
-kind = "set"
-subject = "var:grodid-2006"
-fields = { "sets" = [] }
-evidence = "Överlappande mappning av Gid.\ncatalog:occurrence:515514\ncatalog:occurrence:515515"
 
 [[statement]]
 kind = "set"
@@ -776,32 +752,14 @@ evidence = "Överlappande mappning av Gid. Coordinator group membership: Variabl
 [[statement]]
 kind = "set"
 subject = "var:grodnamn"
-fields = { "sets" = [] }
-evidence = "Grödnamn i klartext.\ncatalog:occurrence:515707"
-
-[[statement]]
-kind = "set"
-subject = "var:grodnamn"
 fields = { "tags" = ["agriculture"] }
 evidence = "Grödnamn i klartext.\ncatalog:occurrence:515707"
 
 [[statement]]
 kind = "set"
 subject = "var:gronsaksodlingsgroda"
-fields = { "sets" = [] }
-evidence = "Kod för grönsaksgröda.\ncatalog:occurrence:515708"
-
-[[statement]]
-kind = "set"
-subject = "var:gronsaksodlingsgroda"
 fields = { "tags" = ["agriculture"] }
 evidence = "Kod för grönsaksgröda.\ncatalog:occurrence:515708"
-
-[[statement]]
-kind = "set"
-subject = "var:gronsaksodlingsgrodatext"
-fields = { "sets" = [] }
-evidence = "Namn på grönsaksgröda.\ncatalog:occurrence:515709"
 
 [[statement]]
 kind = "set"
@@ -1048,12 +1006,6 @@ kind = "set"
 subject = "var:konvareal"
 fields = { "tags" = ["agriculture"] }
 evidence = "Konventionell odlingsareal.\ncatalog:occurrence:515638"
-
-[[statement]]
-kind = "set"
-subject = "var:konvgroda"
-fields = { "sets" = [] }
-evidence = "Grödgrupper som odlas konventionellt.\ncatalog:occurrence:515639"
 
 [[statement]]
 kind = "set"
@@ -2068,3 +2020,51 @@ kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: vaxtskyddsmedelnamn @2010-01-01..2010-12-31 where key = 'v48830'"
 fields = { "variable" = "vaxtskyddsmedelsnamn" }
 evidence = "Both describe glyphosate product names: one explicitly defines glyphosate names, and the other specifies glyphosate products operationally. Both are character fields in VaxtskyddsmedelNamn, observed in nonoverlapping periods [13149,13514] and [14610,14975]."
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r18/r25 define fruit crops represented by codes; r32 lists cherries, plums, pears and apples. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55099\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515741\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11583"
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgrodatext"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r19/r26 explicitly define fruit-crop names in plain text. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515704\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515742"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r14/r20/r27 explicitly define crops represented by codes, including crop categories merged or split for the agricultural system.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515623\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515743"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-2006"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r12/r41 define crop identity from farmers' SAM applications. The operational text describes which crop IDs the survey covers, rather than a selection-status marker.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55122\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:55304"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r15/r21/r28 explicitly define crop names in plain text, meeting the fixed group's inclusion of cultivated-crop names.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515624\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515707\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515744"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r22/r29 define vegetable crops represented by codes; r36 supplies vegetable categories. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9384"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgrodatext"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r23/r30 explicitly define vegetable crop names in plain text. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515746"
+
+[[statement]]
+kind = "set"
+subject = "var:konvgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r16/r46 define selectable crop groups within the question about conventionally cultivated area. The variable represents crop groups, which the definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515639\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:55329"

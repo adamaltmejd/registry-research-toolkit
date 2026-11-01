@@ -476,12 +476,6 @@ evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exac
 [[statement]]
 kind = "set"
 subject = "var:ae-statistisk-status"
-fields = { "sets" = [] }
-evidence = "Statistisk verksamhetsstatus hör till gruppen; begreppet avser företagsstruktur.\ncatalog:variable_text:10445:17897:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:ae-statistisk-status"
 fields = { "tags" = ["business"] }
 evidence = "Statistisk verksamhetsstatus hör till gruppen; begreppet avser företagsstruktur.\ncatalog:variable_text:10445:17897:20454"
 
@@ -728,20 +722,8 @@ evidence = "Kodningen beskriver arbetsgivartyp.\ncatalog:variable_text:10468:178
 [[statement]]
 kind = "set"
 subject = "var:arbstalle-status"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar arbetsställets verksamhetsstatus.\ncatalog:variable_text:10469:10592:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:arbstalle-status"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln kodar arbetsställets verksamhetsstatus.\ncatalog:variable_text:10469:10592:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:aststat"
-fields = { "sets" = [] }
-evidence = "AST-enhetens verksamhetsstatus hör till företagsstruktur. Coordinator group membership: Verksamhetsstatus och statistisk verksamhetsstatus omfattas för samtliga belagda enhetstyper, inklusive AST och firma. AST stöds av den tidigare sakbedömningen och firma av den uttryckliga definitionen. Bolagsrättslig status och skatteregistreringsstatus utesluts.\ncatalog:valueset:6143\ncatalog:variable_text:10445:17897:20454\ncatalog:variable_text:10469:10592:20454\ncatalog:variable_text:10471:10592:20454\ncatalog:variable_text:10481:10592:20454\ncatalog:variable_text:10490:10592:20454\ncatalog:variable_text:10495:17897:20454\ncatalog:variable_text:10506:10592:20454\ncatalog:variable_text:10507:17897:20454\ncatalog:variable_text:10508:10592:20454\ncatalog:variable_text:10517:10592:20454\ncatalog:variable_text:10551:10592:17897\ncatalog:variable_text:10559:10592:20454"
 
 [[statement]]
 kind = "set"
@@ -868,12 +850,6 @@ kind = "set"
 subject = "var:fasttaxvarde"
 fields = { "tags" = ["property"] }
 evidence = "Både belopp och storleksklass ingår i gruppen; källorna motsäger varandra om representationen.\ncatalog:variable_text:10487:17897:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:verksamhetsstatus-fe"
-fields = { "sets" = [] }
-evidence = "FEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10490:10592:20454"
 
 [[statement]]
 kind = "set"
@@ -1016,20 +992,8 @@ evidence = "Kodningen hör till hjälpverksamhet.\ncatalog:variable_text:10505:1
 [[statement]]
 kind = "set"
 subject = "var:je-foretagsstatus"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar den juridiska enhetens verksamhetsstatus.\ncatalog:variable_text:10506:10592:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:je-foretagsstatus"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln kodar den juridiska enhetens verksamhetsstatus.\ncatalog:variable_text:10506:10592:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:je-statistisk-foretagsstatus"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar statistisk verksamhetsstatus.\ncatalog:variable_text:10507:17897:20454"
 
 [[statement]]
 kind = "set"
@@ -1120,12 +1084,6 @@ kind = "set"
 subject = "var:lon-enligt-kontrolluppgifterna"
 fields = { "tags" = ["business"] }
 evidence = "Lönesumman är en företagskostnad.\ncatalog:variable_text:10515:16801:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:verksamhetsstatus-lve"
-fields = { "sets" = [] }
-evidence = "LVEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10517:10592:20454"
 
 [[statement]]
 kind = "set"
@@ -1504,12 +1462,6 @@ kind = "set"
 subject = "var:ve-antal-allman"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_text:10556:18993:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:verksamhetsstatus-ve"
-fields = { "sets" = [] }
-evidence = "VEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10559:10592:20454"
 
 [[statement]]
 kind = "set"
@@ -1756,3 +1708,51 @@ kind = "set"
 subject = "juridiska-enheter: Fax @2018-01-01..2018-12-31 where key = 'v814'"
 fields = { "description" = "Faxnummer" }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-statistisk-status"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "AE statistical status follows administrative activity status, with codes for never active, active and inactive (r254, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10428\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10445"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstalle-status"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition explicitly measures workplace activity status, with active and inactive codes (r256, r245, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10452\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10469"
+
+[[statement]]
+kind = "set"
+subject = "var:aststat"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition explicitly records whether the AST unit is active, and the complete codes are active/inactive (r257, r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10471"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "This classifies legal-unit activity status and is derived from workplace activity status (r259, r123).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10487\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:86357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10504"
+
+[[statement]]
+kind = "set"
+subject = "var:je-statistisk-foretagsstatus"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "This classifies legal-unit statistical activity status, derived from workplace statistical activity status (r260, r166).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:87516\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10505"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-fe"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the enterprise unit operates, supported by activity-status codes throughout (r261, r249, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10538\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10555"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-lve"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the local activity unit operates; both code lists encode activity status (r262, r250, r253).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10539\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3310\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7235\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10556"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-ve"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the activity unit operates; historical and later codes encode activity status (r263, r246, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12629\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10557"

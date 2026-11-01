@@ -458,12 +458,6 @@ evidence = "Kodningen beskriver barnets familjetyp.\ncatalog:variable_text:5226:
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-fodelseland"
-fields = { "sets" = [] }
-evidence = "Barnets födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:5227:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-fodelseland"
 fields = { "tags" = ["demographics"] }
 evidence = "Barnets födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:5227:13879:18262"
 
@@ -530,32 +524,14 @@ evidence = "Socioekonomisk indelning.\ncatalog:variable_text:5232:13879:18262"
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-sysselsattning"
-fields = { "sets" = [] }
-evidence = "Koderna avser barnets skolform och skolgång. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Grundskola och gymnasieskola är uttryckliga skolformskodningar. Bakgrund-sysselsattning och barnsyss omfattar även skolgång utan angiven skolform och hålls till den fasta sysselsättningskandidaten. membership-0041: Variabeln skiljer grundskola från gymnasieskola; annan utbildning, program och avslutad skolgång faller utanför. membership-0042: Ingen vald variabel i sektionen kodar skolform. membership-0043: Ingen vald variabel kodar skolform; årskurs är uttryckligen undantagen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Den fasta kandidaten omfattar barnets och föräldrapersoners sysselsättningskodningar. Beskrivningarna stöder dessa medlemskap, trots avvikande tidigare gruppbedömningar för barnets kodningar. membership-0041: Ingen vald variabel kodar allmän sysselsättningsstatus; sommarjobb är uttryckligen undantaget. membership-0042: Arbete för att tjäna pengar och socioekonomisk indelning är uteslutna. Den ensamma motstridiga beskrivningen för kon-ip räcker inte för ett ytterligare medlemskap. membership-0043: Kodningarna avser föräldrars arbetsmarknadsstatus och motsvarande kalibrering.\ncatalog:valueset:2899\ncatalog:variable_text:5230:16436:18262\ncatalog:variable_text:5231:16436:18262\ncatalog:variable_text:5233:16801:18262\ncatalog:variable_text:5234:14245:18262\ncatalog:variable_text:5235:14245:18262\ncatalog:variable_text:5251:15340:18262\ncatalog:variable_text:5252:19358:19723\ncatalog:variable_text:5253:19358:19723\ncatalog:variable_text:5364:15340:16436\ncatalog:variable_text:5365:15340:16436\ncatalog:variable_text:5438:16801:18262\ncatalog:variable_text:5556:16801:18262\ncatalog:variable_text:5575:19358:19723\ncatalog:variable_text:5581:15340:16436\ncatalog:variable_text:5607:13879:18262\ncatalog:variable_text:5647:13879:16436\ncatalog:variable_text:5649:13879:15706\ncatalog:variable_text:5660:16436:16801\ncatalog:variable_text:5663:16801:18262\ncatalog:variable_text:5669:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-sysselsattning"
 fields = { "tags" = ["education"] }
 evidence = "Koderna avser barnets skolform och skolgång. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Grundskola och gymnasieskola är uttryckliga skolformskodningar. Bakgrund-sysselsattning och barnsyss omfattar även skolgång utan angiven skolform och hålls till den fasta sysselsättningskandidaten. membership-0041: Variabeln skiljer grundskola från gymnasieskola; annan utbildning, program och avslutad skolgång faller utanför. membership-0042: Ingen vald variabel i sektionen kodar skolform. membership-0043: Ingen vald variabel kodar skolform; årskurs är uttryckligen undantagen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Den fasta kandidaten omfattar barnets och föräldrapersoners sysselsättningskodningar. Beskrivningarna stöder dessa medlemskap, trots avvikande tidigare gruppbedömningar för barnets kodningar. membership-0041: Ingen vald variabel kodar allmän sysselsättningsstatus; sommarjobb är uttryckligen undantaget. membership-0042: Arbete för att tjäna pengar och socioekonomisk indelning är uteslutna. Den ensamma motstridiga beskrivningen för kon-ip räcker inte för ett ytterligare medlemskap. membership-0043: Kodningarna avser föräldrars arbetsmarknadsstatus och motsvarande kalibrering.\ncatalog:valueset:2899\ncatalog:variable_text:5230:16436:18262\ncatalog:variable_text:5231:16436:18262\ncatalog:variable_text:5233:16801:18262\ncatalog:variable_text:5234:14245:18262\ncatalog:variable_text:5235:14245:18262\ncatalog:variable_text:5251:15340:18262\ncatalog:variable_text:5252:19358:19723\ncatalog:variable_text:5253:19358:19723\ncatalog:variable_text:5364:15340:16436\ncatalog:variable_text:5365:15340:16436\ncatalog:variable_text:5438:16801:18262\ncatalog:variable_text:5556:16801:18262\ncatalog:variable_text:5575:19358:19723\ncatalog:variable_text:5581:15340:16436\ncatalog:variable_text:5607:13879:18262\ncatalog:variable_text:5647:13879:16436\ncatalog:variable_text:5649:13879:15706\ncatalog:variable_text:5660:16436:16801\ncatalog:variable_text:5663:16801:18262\ncatalog:variable_text:5669:19358:19723"
 
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-sysselsattning-foralder-ulf"
-fields = { "sets" = [] }
-evidence = "Måttet avser förälderns arbetsmarknadsstatus.\ncatalog:variable_text:5234:14245:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-sysselsattning-foralder-ulf"
 fields = { "tags" = ["employment"] }
 evidence = "Måttet avser förälderns arbetsmarknadsstatus.\ncatalog:variable_text:5234:14245:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-sysselsattning-foralderns-make"
-fields = { "sets" = [] }
-evidence = "Måttet avser förälderns makes eller sambos sysselsättning.\ncatalog:variable_text:5235:14245:18262"
 
 [[statement]]
 kind = "set"
@@ -586,24 +562,12 @@ kind = "set"
 subject = "var:bakgrund-utbildningsniva-foralderns-make"
 fields = { "tags" = ["education"] }
 evidence = "Utbildningsnivån ingår i gruppen för föräldrars utbildning.\ncatalog:variable_text:5237:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-utlandsk-svensk"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar svensk eller utländsk bakgrund.\ncatalog:variable_text:5238:19358:19723"
 
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-utlandsk-svensk"
 fields = { "tags" = ["demographics"] }
 evidence = "Variabeln kodar svensk eller utländsk bakgrund.\ncatalog:variable_text:5238:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-utlandsk-svensk-foralder-ulf"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar svensk eller utländsk bakgrund.\ncatalog:variable_text:5239:16436:18262"
 
 [[statement]]
 kind = "set"
@@ -722,20 +686,8 @@ evidence = "Måttet avser barnets ålder.\ncatalog:variable_text:5248:16801:1826
 [[statement]]
 kind = "set"
 subject = "var:barnkon"
-fields = { "sets" = [] }
-evidence = "Barnets kön hör till könskodningarna.\ncatalog:variable_text:5250:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:barnkon"
 fields = { "tags" = ["demographics"] }
 evidence = "Barnets kön hör till könskodningarna.\ncatalog:variable_text:5250:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:barnsyss"
-fields = { "sets" = [] }
-evidence = "Svarskoderna ändrar innehåll mellan perioder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0040: Den fasta kandidaten omfattar barnets och föräldrapersoners sysselsättningskodningar. Beskrivningarna stöder dessa medlemskap, trots avvikande tidigare gruppbedömningar för barnets kodningar. membership-0041: Ingen vald variabel kodar allmän sysselsättningsstatus; sommarjobb är uttryckligen undantaget. membership-0042: Arbete för att tjäna pengar och socioekonomisk indelning är uteslutna. Den ensamma motstridiga beskrivningen för kon-ip räcker inte för ett ytterligare medlemskap. membership-0043: Kodningarna avser föräldrars arbetsmarknadsstatus och motsvarande kalibrering.\ncatalog:valueset:2899\ncatalog:variable_text:5230:16436:18262\ncatalog:variable_text:5231:16436:18262\ncatalog:variable_text:5233:16801:18262\ncatalog:variable_text:5234:14245:18262\ncatalog:variable_text:5235:14245:18262\ncatalog:variable_text:5251:15340:18262\ncatalog:variable_text:5252:19358:19723\ncatalog:variable_text:5253:19358:19723\ncatalog:variable_text:5438:16801:18262\ncatalog:variable_text:5607:13879:18262\ncatalog:variable_text:5660:16436:16801\ncatalog:variable_text:5663:16801:18262\ncatalog:variable_text:5669:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -746,20 +698,8 @@ evidence = "Svarskoderna ändrar innehåll mellan perioder. Coordinator group me
 [[statement]]
 kind = "set"
 subject = "var:basbofar"
-fields = { "sets" = [] }
-evidence = "Måttet avser bofaderns arbetsmarknadsstatus.\ncatalog:variable_text:5252:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:basbofar"
 fields = { "tags" = ["employment"] }
 evidence = "Måttet avser bofaderns arbetsmarknadsstatus.\ncatalog:variable_text:5252:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:basbomor"
-fields = { "sets" = [] }
-evidence = "Måttet avser bomoderns arbetsmarknadsstatus.\ncatalog:variable_text:5253:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -1039,12 +979,6 @@ evidence = "Suffixet 19198 finns inte i källkolumnen.\ncatalog:variable_text:52
 
 [[statement]]
 kind = "set"
-subject = "var:cash4a-19198"
-fields = { "tags" = [] }
-evidence = "Suffixet 19198 finns inte i källkolumnen.\ncatalog:variable_text:5276:16801:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:cash4b"
 fields = { "sets" = ["kontantmarginal"] }
 evidence = "Måttet gäller möjlighet att ordna kontanter.\ncatalog:variable_text:5277:16436:18262"
@@ -1135,32 +1069,14 @@ evidence = "Måttet avser städning av eget rum.\ncatalog:variable_text:5285:138
 
 [[statement]]
 kind = "set"
-subject = "var:cleanown"
-fields = { "tags" = [] }
-evidence = "Måttet avser städning av eget rum.\ncatalog:variable_text:5285:13879:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:cleanown-alt"
 fields = { "sets" = ["stadning-av-eget-rum"] }
 evidence = "Måttet kompletterar städning av eget rum.\ncatalog:variable_text:5286:16801:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:cleanown-alt"
-fields = { "tags" = [] }
-evidence = "Måttet kompletterar städning av eget rum.\ncatalog:variable_text:5286:16801:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:cleanown-h"
 fields = { "sets" = ["stadning-av-eget-rum"] }
-evidence = "Måttet kombinerar städning av eget rum och sovrum.\ncatalog:variable_text:5287:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:cleanown-h"
-fields = { "tags" = [] }
 evidence = "Måttet kombinerar städning av eget rum och sovrum.\ncatalog:variable_text:5287:16801:18262"
 
 [[statement]]
@@ -1375,12 +1291,6 @@ evidence = "Slutbokstaven A är en källkolumnskod, och familjen ekko* behandlas
 
 [[statement]]
 kind = "set"
-subject = "var:ekkontanta"
-fields = { "tags" = [] }
-evidence = "Slutbokstaven A är en källkolumnskod, och familjen ekko* behandlas enhetligt som kodbaserad. Variabeln ingår i kontantmarginal tillsammans med frågan om hjälp från föräldrar.\ncatalog:occurrence:36622\ncatalog:occurrence:36623\ncatalog:variable_text:5305:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:ekkontantb"
 fields = { "sets" = ["kontantmarginal"] }
 evidence = "Slutbokstaven B är en källkolumnskod, och familjen ekko* behandlas enhetligt som kodbaserad. Variabeln ingår i kontantmarginal tillsammans med frågan om att själv ha råd.\ncatalog:occurrence:36622\ncatalog:occurrence:36623\ncatalog:variable_text:5306:19358:19723"
@@ -1538,20 +1448,8 @@ evidence = "Födelseår har en äldre motsvarande kodning.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:fodelselandnamn"
-fields = { "sets" = [] }
-evidence = "Variabeln anger barnets födelseland.\ncatalog:variable_text:5319:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamn"
 fields = { "tags" = ["demographics"] }
 evidence = "Variabeln anger barnets födelseland.\ncatalog:variable_text:5319:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamngrupp-nationell"
-fields = { "sets" = [] }
-evidence = "Variabeln grupperar förälderns födelseland.\ncatalog:variable_text:5320:13879:18262"
 
 [[statement]]
 kind = "set"
@@ -1562,20 +1460,8 @@ evidence = "Variabeln grupperar förälderns födelseland.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:barnets-fodelselandsgrupp"
-fields = { "sets" = [] }
-evidence = "Det ensamma B är en bokstavskod i källkolumnen.\ncatalog:variable_text:5321:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:barnets-fodelselandsgrupp"
 fields = { "tags" = ["demographics"] }
 evidence = "Det ensamma B är en bokstavskod i källkolumnen.\ncatalog:variable_text:5321:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandsgrupp-andra-foraldern"
-fields = { "sets" = [] }
-evidence = "Det ensamma P är en bokstavskod i källkolumnen.\ncatalog:variable_text:5322:13879:18262"
 
 [[statement]]
 kind = "set"
@@ -2066,20 +1952,8 @@ evidence = "Variabeln avser en parrelation.\ncatalog:variable_text:5363:13879:16
 [[statement]]
 kind = "set"
 subject = "var:grskol"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar grundskola.\ncatalog:variable_text:5364:15340:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:grskol"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar grundskola.\ncatalog:variable_text:5364:15340:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:gymn"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar gymnasieskola.\ncatalog:variable_text:5365:15340:16436"
 
 [[statement]]
 kind = "set"
@@ -2527,32 +2401,14 @@ evidence = "Måttet avser städning av eget rum.\ncatalog:variable_text:5403:193
 
 [[statement]]
 kind = "set"
-subject = "var:hsstada"
-fields = { "tags" = [] }
-evidence = "Måttet avser städning av eget rum.\ncatalog:variable_text:5403:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:hstim"
 fields = { "sets" = ["tid-for-hushallssysslor"] }
 evidence = "Måttet avser tid för hushållssysslor.\ncatalog:variable_text:5404:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:hstim"
-fields = { "tags" = [] }
-evidence = "Måttet avser tid för hushållssysslor.\ncatalog:variable_text:5404:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:hstvatta"
 fields = { "sets" = ["kladtvatt"] }
-evidence = "Måttet avser klädtvätt.\ncatalog:variable_text:5405:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:hstvatta"
-fields = { "tags" = [] }
 evidence = "Måttet avser klädtvätt.\ncatalog:variable_text:5405:19358:19723"
 
 [[statement]]
@@ -2635,20 +2491,8 @@ evidence = "Måttet avser tid för hushållssysslor.\ncatalog:variable_text:5412
 
 [[statement]]
 kind = "set"
-subject = "var:hushallssysslor-timmar-per-vecka"
-fields = { "tags" = [] }
-evidence = "Måttet avser tid för hushållssysslor.\ncatalog:variable_text:5412:16801:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:hushallssysslor-tvatta-klader"
 fields = { "sets" = ["kladtvatt"] }
-evidence = "Måttet avser klädtvätt.\ncatalog:variable_text:5413:13879:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallssysslor-tvatta-klader"
-fields = { "tags" = [] }
 evidence = "Måttet avser klädtvätt.\ncatalog:variable_text:5413:13879:18262"
 
 [[statement]]
@@ -2878,12 +2722,6 @@ kind = "set"
 subject = "var:kollfam"
 fields = { "tags" = ["family-household"] }
 evidence = "Kontrollfrågan gäller familjetyp.\ncatalog:variable_text:5436:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kon"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar kön.\ncatalog:variable_text:5437:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -4250,12 +4088,6 @@ evidence = "Variabeln mäter upplevd provmängd.\ncatalog:variable_text:5555:138
 [[statement]]
 kind = "set"
 subject = "var:skola-grundskola-gymnasieskola"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar barnets skolform.\ncatalog:variable_text:5556:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:skola-grundskola-gymnasieskola"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar barnets skolform.\ncatalog:variable_text:5556:16801:18262"
 
@@ -5330,12 +5162,6 @@ evidence = "Utbtyp-familjen behålls som läsbar. Variabeln avser gymnasieprogra
 [[statement]]
 kind = "set"
 subject = "var:utlandsk-svensk-bakgrund-andra-foraldern"
-fields = { "sets" = [] }
-evidence = "Den ensamma bokstaven p är en ogenomskinlig källkod.\ncatalog:variable_text:5650:16436:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:utlandsk-svensk-bakgrund-andra-foraldern"
 fields = { "tags" = ["demographics"] }
 evidence = "Den ensamma bokstaven p är en ogenomskinlig källkod.\ncatalog:variable_text:5650:16436:18262"
 
@@ -5554,12 +5380,6 @@ kind = "set"
 subject = "var:kalibrering-boform"
 fields = { "tags" = ["housing"] }
 evidence = "X är en ensam bokstavskod.\ncatalog:variable_text:5668:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:x-boforsyss"
-fields = { "sets" = [] }
-evidence = "Kalibrering efter boföräldrars sysselsättning.\ncatalog:variable_text:5669:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -5872,3 +5692,213 @@ kind = "set"
 subject = "barn-ulf-12-18-ar: avoid_a2 @2019-01-01..2019-12-31 where key = 'v19210'"
 fields = { "description" = "Variabeln anger om intervjuat barn vill undvika vuxna i det område han eller hon bor." }
 evidence = "Beskrivningen nämner fel persongrupp genomgående; frågan gäller vuxna.\ncatalog:variable_text:5642:13879:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "r324 explicitly defines the child's country of birth; r348 supplies a grouped partner. Omitted individual country codes do not decide the concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5212\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5305"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-sysselsattning"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r326 derives the child's activity status from school participation and school form; r287 and r322 include not attending school. | r326 derives the child's activity status from school participation and school form; r287 and r322 include not attending school. | r326 derives the child's activity status from school participation and school form; r287 and r322 include not attending school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5220\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10558\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9916\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5227"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-sysselsattning-foralder-ulf"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r327 defines the responding parent's main activity; r303 and r308 explicitly enumerate employment statuses. | r327 defines the responding parent's main activity; r303 and r308 explicitly enumerate employment statuses. | r327 defines the responding parent's main activity; r303 and r308 explicitly enumerate employment statuses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5221\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:312\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4283\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-sysselsattning-foralderns-make"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r328 defines the other parent's main activity; r303 and r308 explicitly enumerate employment statuses. | r328 defines the other parent's main activity; r303 and r308 explicitly enumerate employment statuses. | r328 defines the other parent's main activity; r303 and r308 explicitly enumerate employment statuses.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5222\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:312\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4283\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5229"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-utlandsk-svensk"
+fields = { "sets" = ["svensk-eller-utlandsk-bakgrund"] }
+evidence = "r329 explicitly defines the child's Swedish/foreign background; r320 supplies composite categories and r330 a parent partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5232\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5233"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-utlandsk-svensk-foralder-ulf"
+fields = { "sets" = ["svensk-eller-utlandsk-bakgrund"] }
+evidence = "r330 defines the responding parent's Swedish/foreign background, with composite categories in r320 and a partner in r368.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5226\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5659"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelselandsgrupp"
+fields = { "sets" = ["fodelseland"] }
+evidence = "r348 defines the child's birth-country grouping, with geographic categories in r318 and a parent partner in r347.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8114\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5304\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5305"
+
+[[statement]]
+kind = "set"
+subject = "var:barnkon"
+fields = { "sets" = ["kon"] }
+evidence = "r331 explicitly measures the child's sex, confirmed by r292; r358 supplies another sex variable.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5231\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11242\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5420"
+
+[[statement]]
+kind = "set"
+subject = "var:barnsyss"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r332 measures school participation, with later activity-status categories in r300; the fixed group includes children's activity status. | r332 measures school participation, with later activity-status categories in r300; the fixed group includes children's activity status. | r332 measures school participation, with later activity-status categories in r300; the fixed group includes children's activity status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5232\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2899\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5238"
+
+[[statement]]
+kind = "set"
+subject = "var:basbofar"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r333 classifies the resident father's labour-market status, using the employment categories in r299. | r333 classifies the resident father's labour-market status, using the employment categories in r299. | r333 classifies the resident father's labour-market status, using the employment categories in r299.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2845\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5239"
+
+[[statement]]
+kind = "set"
+subject = "var:basbomor"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r334 classifies the resident mother's labour-market status, using r299; r333 provides the corresponding father measure. | r334 classifies the resident mother's labour-market status, using r299; r333 provides the corresponding father measure. | r334 classifies the resident mother's labour-market status, using r299; r333 provides the corresponding father measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2845\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5239\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5240"
+
+[[statement]]
+kind = "set"
+subject = "var:cash4a-19198"
+fields = { "tags" = ["wealth"] }
+evidence = "r336 identifies the first question as access to the child's own money, supporting the personal-assets theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5256\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5262"
+
+[[statement]]
+kind = "set"
+subject = "var:cleanoth"
+fields = { "tags" = ["culture"] }
+evidence = "r338 measures regular cleaning elsewhere at home, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5268"
+
+[[statement]]
+kind = "set"
+subject = "var:cleanown"
+fields = { "tags" = ["culture"] }
+evidence = "r339 measures weekly cleaning of the child's room, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5263\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5269"
+
+[[statement]]
+kind = "set"
+subject = "var:cleanown-alt"
+fields = { "tags" = ["culture"] }
+evidence = "r340 measures weekly bedroom cleaning among children without their own room, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5264\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5270"
+
+[[statement]]
+kind = "set"
+subject = "var:cleanown-h"
+fields = { "tags" = ["culture"] }
+evidence = "r341 combines weekly room and bedroom cleaning questions, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5271"
+
+[[statement]]
+kind = "set"
+subject = "var:ekkontanta"
+fields = { "tags" = ["wealth"] }
+evidence = "r342 explicitly requires the child to possess the money personally, supporting the personal-assets theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5284\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5290"
+
+[[statement]]
+kind = "set"
+subject = "var:far-pengar-vid-behov"
+fields = { "tags" = ["income"] }
+evidence = "r345 describes receipt of allowances or money when needed, supporting the personal income theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5294\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5300"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "r346 explicitly defines the child's country of birth; r324 supplies another birth-country variable. Omitted country labels do not decide this membership.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5297\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:470\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5219\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5303"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamngrupp-nationell"
+fields = { "sets" = ["fodelseland"] }
+evidence = "r347 defines the parent's birth-country grouping; r348 supplies a child birth-country partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5298\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5304\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5305"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandsgrupp-andra-foraldern"
+fields = { "sets" = ["fodelseland"] }
+evidence = "r349 defines the other parent's birth-country grouping; r347 supplies the responding-parent partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5304\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5306"
+
+[[statement]]
+kind = "set"
+subject = "var:grskol"
+fields = { "sets" = ["skolform"] }
+evidence = "r350 measures compulsory-school attendance; r351 provides the upper-secondary partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5348\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5356"
+
+[[statement]]
+kind = "set"
+subject = "var:gymn"
+fields = { "sets" = ["skolform"] }
+evidence = "r351 measures upper-secondary attendance; r350 provides the compulsory-school partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5356"
+
+[[statement]]
+kind = "set"
+subject = "var:hsstada"
+fields = { "tags" = ["culture"] }
+evidence = "r352 measures weekly room cleaning, including the sleeping room when necessary, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5385\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5392"
+
+[[statement]]
+kind = "set"
+subject = "var:hstim"
+fields = { "tags" = ["culture"] }
+evidence = "r353 measures weekly time spent helping at home, directly supporting the time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5393"
+
+[[statement]]
+kind = "set"
+subject = "var:hstvatta"
+fields = { "tags" = ["culture"] }
+evidence = "r354 measures weekly participation in washing, folding or sorting laundry, supporting the time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5387\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5394"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallssysslor-timmar-per-vecka"
+fields = { "tags" = ["culture"] }
+evidence = "r355 measures weekly hours helping at home, directly supporting the time-use theme despite changes in eligibility.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5395\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5402"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallssysslor-tvatta-klader"
+fields = { "tags" = ["culture"] }
+evidence = "r356 measures weekly participation in laundry tasks, supporting the household time-use theme across its wording changes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5403"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon"] }
+evidence = "r358 explicitly measures sex, confirmed by r294; r331 provides a second sex variable.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12122\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5420"
+
+[[statement]]
+kind = "set"
+subject = "var:no-cash"
+fields = { "tags" = ["income"] }
+evidence = "r360 measures absence of money received from home, supporting the personal income theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5463\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5470"
+
+[[statement]]
+kind = "set"
+subject = "var:skola-grundskola-gymnasieskola"
+fields = { "sets" = ["skolform"] }
+evidence = "r363 distinguishes compulsory and upper-secondary school; r350 measures the corresponding compulsory-school status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5547\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5355\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5554"
+
+[[statement]]
+kind = "set"
+subject = "var:table"
+fields = { "tags" = ["culture"] }
+evidence = "r364 measures participation in setting or clearing the table, supporting the household time-use theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5607\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5614"
+
+[[statement]]
+kind = "set"
+subject = "var:tv"
+fields = { "tags" = ["culture"] }
+evidence = "r367 measures access to a personal television, directly supporting the vocabulary's media theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5640\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5647"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-svensk-bakgrund-andra-foraldern"
+fields = { "sets" = ["svensk-eller-utlandsk-bakgrund"] }
+evidence = "r368 defines the other parent's Swedish/foreign background, with composite categories in r320 and a partner in r330.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5652\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5659"
+
+[[statement]]
+kind = "set"
+subject = "var:x-boforsyss"
+fields = { "sets" = ["sysselsattningsstatus"] }
+evidence = "r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration. | r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration. | r369 and r288 classify whether resident parents work or study; the fixed group explicitly includes corresponding calibration.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5663\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10684\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5670"
