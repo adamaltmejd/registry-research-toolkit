@@ -5948,12 +5948,6 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-vaxter-blommor-och-sallskapsdjur"
-fields = { "sets" = ["utgift-sallskapsdjur", "utgift-vaxter-och-blommor"] }
-evidence = "Id:t är en opak källkod; samredovisningen omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27015:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-vaxter-blommor-och-sallskapsdjur"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en opak källkod; samredovisningen omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27015:18628:18993"
 
@@ -6722,12 +6716,6 @@ evidence = "Källkolumnen är en kod; etiketten delas av flera variabler och beh
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-barnartiklar-och-vaskor"
-fields = { "sets" = ["utgift-barnartiklar", "utgift-vaskor"] }
-evidence = "Id:t är en opak källkod; samredovisningen omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27081:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-barnartiklar-och-vaskor"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en opak källkod; samredovisningen omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27081:18628:18993"
 
@@ -7490,12 +7478,6 @@ evidence = "Båt och båtmotor är en namngiven komponent i gruppen.\ncatalog:va
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-blommor"
-fields = { "sets" = ["utgift-vaxter-och-blommor"] }
-evidence = "Beloppet gäller blommor och andra växter; den senare operativa definitionen ändrar inte den gemensamma beskrivningen.\ncatalog:variable_text:27148:10592:11688\ncatalog:variable_text:27148:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-blommor"
 fields = { "tags" = ["consumption"] }
 evidence = "Beloppet gäller blommor och andra växter; den senare operativa definitionen ändrar inte den gemensamma beskrivningen.\ncatalog:variable_text:27148:10592:11688\ncatalog:variable_text:27148:18628:18993"
 
@@ -7714,12 +7696,6 @@ kind = "set"
 subject = "var:utgift-for-utemobler"
 fields = { "tags" = ["consumption"] }
 evidence = "Variabeln anger möbelutgift.\ncatalog:variable_text:27166:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-vaskor"
-fields = { "sets" = ["utgift-vaskor"] }
-evidence = "Beloppet gäller väskor.\ncatalog:variable_text:27167:10592:11688\ncatalog:variable_text:27167:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -10300,12 +10276,6 @@ kind = "set"
 subject = "var:kvartilgrupp-disponibel-inkomst-per-hushallstyp"
 fields = { "sets" = ["inkomstgrupper"] }
 evidence = "r208 defines disposable income quartiles within household type; r190 confirms four quartile codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26680\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1082\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26542"
-
-[[statement]]
-kind = "set"
-subject = "var:kvd"
-fields = { "sets" = ["hushallstyp", "inkomstgrupper"] }
-evidence = "r220 explicitly defines household type crossed with disposable income quartile, an included combination; detailed coding remains unclear. | r220 explicitly defines household type crossed with income quartile, an included combination; detailed coding remains unclear.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26681\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26622"
 
 [[statement]]
 kind = "set"

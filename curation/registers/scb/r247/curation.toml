@@ -272,8 +272,8 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25901:
 [[statement]]
 kind = "set"
 subject = "var:bostadssituation-negativ-inverkan-pa-studier"
-fields = { "sets" = ["livsvillkorens-paverkan-pa-studierna", "upplevd-bostadssituation"] }
-evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25902:13514:13695"
+fields = { "sets" = ["livsvillkorens-paverkan-pa-studierna"] }
+evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25902:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to livsvillkorens-paverkan-pa-studierna; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -314,8 +314,8 @@ evidence = "Opak frågekod med en entydig etikett; annan källa är ospecificera
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-tillaggslan"
-fields = { "sets" = ["forsorjningskallor", "statligt-studiestod"] }
-evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25906:13514:13695"
+fields = { "sets" = ["statligt-studiestod"] }
+evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25906:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to statligt-studiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -722,8 +722,8 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25941:
 [[statement]]
 kind = "set"
 subject = "var:under-terminen-kant-sig-stressad"
-fields = { "sets" = ["halsobesvar-under-terminen", "upplevd-stress-och-studiepress"] }
-evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25942:13514:13695"
+fields = { "sets" = ["upplevd-stress-och-studiepress"] }
+evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25942:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to upplevd-stress-och-studiepress; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1172,8 +1172,8 @@ evidence = "Barnbidrag anges som försörjningskälla.\ncatalog:variable_text:25
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-bostadsbidrag"
-fields = { "sets" = ["bostadsbidrag", "forsorjningskallor"] }
-evidence = "Bostadsbidrag anges som försörjningskälla.\ncatalog:variable_text:25981:13514:13695"
+fields = { "sets" = ["bostadsbidrag"] }
+evidence = "Bostadsbidrag anges som försörjningskälla.\ncatalog:variable_text:25981:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to bostadsbidrag; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1232,8 +1232,8 @@ evidence = "Stöd från partner anges som försörjningskälla.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-bidrag"
-fields = { "sets" = ["forsorjningskallor", "statligt-studiestod"] }
-evidence = "Studiemedelsbidrag anges som försörjningskälla.\ncatalog:variable_text:25986:13514:13695"
+fields = { "sets" = ["statligt-studiestod"] }
+evidence = "Studiemedelsbidrag anges som försörjningskälla.\ncatalog:variable_text:25986:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to statligt-studiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1244,8 +1244,8 @@ evidence = "Studiemedelsbidrag anges som försörjningskälla.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag"
-fields = { "sets" = ["forsorjningskallor", "statligt-studiestod"] }
-evidence = "Studiemedel anges som försörjningskälla.\ncatalog:variable_text:25987:13514:13695"
+fields = { "sets" = ["statligt-studiestod"] }
+evidence = "Studiemedel anges som försörjningskälla.\ncatalog:variable_text:25987:13514:13695\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to statligt-studiestod; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

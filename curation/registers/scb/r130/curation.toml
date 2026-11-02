@@ -1034,12 +1034,6 @@ evidence = "Faktorn gäller anställning med uppehållslön.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:utbildningens-niva-och-inriktning"
-fields = { "sets" = ["utbildningsinriktning", "utbildningsniva"] }
-evidence = "Koden omfattar både nivå och inriktning.\ncatalog:variable_text:42880:9496:11323"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningens-niva-och-inriktning"
 fields = { "tags" = ["education"] }
 evidence = "Koden omfattar både nivå och inriktning.\ncatalog:variable_text:42880:9496:11323"
 

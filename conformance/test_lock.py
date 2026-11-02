@@ -88,7 +88,9 @@ def test_inherited_identity_uses_remaining_ledger_anchors(tmp_path):
         ] == expected
 
 
-@pytest.mark.parametrize("change", ["singleton", "unknown-tag", "retired-set"])
+@pytest.mark.parametrize(
+    "change", ["singleton", "unknown-tag", "retired-set", "multi-group"]
+)
 def test_membership_refusals(tmp_path, membership_case, change):
     # Regression: source occurrences are counted as set members instead of final
     # variables, an unknown tag is accepted, or a retired var_set pid is accepted.
@@ -96,6 +98,9 @@ def test_membership_refusals(tmp_path, membership_case, change):
     # nonconcurrent source occurrences resolving to the same final variable.
     # The allowed twin has two distinct variables in different same-register tables;
     # fixture TOML and expected.json supply the located refusal and public name.
+    # Multi-group regression: a variable selector and an occurrence selector put
+    # the same final variable in different groups; generic override conflicts or
+    # last-writer membership replacement must not hide either group's origin.
     fixture, overlay, curation, expected = membership_case
 
     def run(command):
@@ -131,6 +136,9 @@ def test_membership_refusals(tmp_path, membership_case, change):
     assert refused.returncode == 1, refused.stderr
     assert f"{refusal['location']}: {refusal['code']}:" in refused.stderr
     assert refusal["pid"] in refused.stderr
+    if change == "multi-group":
+        for group, origin in refusal["groups"].items():
+            assert f"{group} at {curation / origin}" in refused.stderr
 
 
 def test_vocabulary_wording_needs_no_relock(tmp_path, membership_case):

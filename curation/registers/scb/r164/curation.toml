@@ -674,20 +674,8 @@ evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy 
 [[statement]]
 kind = "set"
 subject = "var:ald-kon"
-fields = { "sets" = ["alder", "kon"] }
-evidence = "Indelningen kombinerar ålder och kön.\ncatalog:valueset:2777\ncatalog:variable_text:40947:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:ald-kon"
 fields = { "tags" = ["demographics"] }
 evidence = "Indelningen kombinerar ålder och kön.\ncatalog:valueset:2777\ncatalog:variable_text:40947:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:aldg"
-fields = { "sets" = ["alder"] }
-evidence = "Variabeln grupperar ålder vid årets slut.\ncatalog:valueset:8199\ncatalog:variable_text:40948:20209:20240"
 
 [[statement]]
 kind = "set"
@@ -710,20 +698,8 @@ evidence = "Antal anställda är en storleksklass för företaget. Coordinator g
 [[statement]]
 kind = "set"
 subject = "var:antal-barn-under-18-ar"
-fields = { "sets" = ["antal-barn-under-18-ar"] }
-evidence = "Antalet har en motsvarande kombinationsindelning.\ncatalog:variable_text:40950:20209:20240\ncatalog:variable_text:40951:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-under-18-ar"
 fields = { "tags" = ["family-household"] }
 evidence = "Antalet har en motsvarande kombinationsindelning.\ncatalog:variable_text:40950:20209:20240\ncatalog:variable_text:40951:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:barn-ald"
-fields = { "sets" = ["alder", "antal-barn-under-18-ar"] }
-evidence = "Indelningen kombinerar ålder och antal barn under 18 år.\ncatalog:valueset:10737\ncatalog:variable_text:40951:20209:20240"
 
 [[statement]]
 kind = "set"
@@ -742,12 +718,6 @@ kind = "set"
 subject = "var:bostadstyp"
 fields = { "tags" = ["housing"] }
 evidence = "Kodningen avser bostadstyp.\ncatalog:occurrence:405916\ncatalog:valueset:10399"
-
-[[statement]]
-kind = "set"
-subject = "var:civ-ald"
-fields = { "sets" = ["alder", "civilstand"] }
-evidence = "Indelningen kombinerar ålder och civilstånd.\ncatalog:valueset:4008\ncatalog:variable_text:40953:20209:20240"
 
 [[statement]]
 kind = "set"
@@ -1196,8 +1166,8 @@ evidence = "Fr13 är en ogenomskinlig frågekod för sysselsättning bland ej f�
 [[statement]]
 kind = "set"
 subject = "var:tidigare-yrkesverksamhet-bland-pensionerade"
-fields = { "sets" = ["forvarvsarbete", "sysselsattning"] }
-evidence = "Fr14 är en ogenomskinlig frågekod för tidigare yrkesverksamhet bland pensionerade. Coordinator group membership: Variablerna anger arbete eller yrkesverksamhet. Fr14 omfattas också genom sin uttryckliga uppgift om tidigare yrkesverksamhet bland pensionerade. Variablerna anger individens eller partnerns sysselsättning. Fr14 anger uttryckligen tidigare sysselsättning för pensionerade och omfattas också av definitionen.\ncatalog:occurrence:405935\ncatalog:valueset:2595\ncatalog:variable_text:40967:20209:20240\ncatalog:variable_text:40968:14914:14944\ncatalog:variable_text:40992:20209:20240\ncatalog:variable_text:40993:20209:20240\ncatalog:variable_text:40995:20209:20240\ncatalog:variable_text:40998:20209:20240\ncatalog:variable_text:41089:20209:20240"
+fields = { "sets" = ["sysselsattning"] }
+evidence = "Fr14 är en ogenomskinlig frågekod för tidigare yrkesverksamhet bland pensionerade. Coordinator group membership: Variablerna anger arbete eller yrkesverksamhet. Fr14 omfattas också genom sin uttryckliga uppgift om tidigare yrkesverksamhet bland pensionerade. Variablerna anger individens eller partnerns sysselsättning. Fr14 anger uttryckligen tidigare sysselsättning för pensionerade och omfattas också av definitionen.\ncatalog:occurrence:405935\ncatalog:valueset:2595\ncatalog:variable_text:40967:20209:20240\ncatalog:variable_text:40968:14914:14944\ncatalog:variable_text:40992:20209:20240\ncatalog:variable_text:40993:20209:20240\ncatalog:variable_text:40995:20209:20240\ncatalog:variable_text:40998:20209:20240\ncatalog:variable_text:41089:20209:20240\n\nSingle-group ruling 2026-11-02: Previous employment of pensioners is a labour-force status item, not current paid work."
 
 [[statement]]
 kind = "set"
@@ -1232,8 +1202,8 @@ evidence = "Fr16 är en ogenomskinlig frågekod för sysselsättning.\ncatalog:o
 [[statement]]
 kind = "set"
 subject = "var:yrke-for-anstallda"
-fields = { "sets" = ["socioekonomisk-grupp", "yrke"] }
-evidence = "Fr17sei är en opak frågekod; källan anger yrke för anställda och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr17sei är en opak frågekod; källan anger yrke för anställda och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1280,8 +1250,8 @@ evidence = "Fr2 är en ogenomskinlig frågekod för partiet som står närmast.\
 [[statement]]
 kind = "set"
 subject = "var:yrke-for-anstallda-partner"
-fields = { "sets" = ["socioekonomisk-grupp", "yrke"] }
-evidence = "Fr20sei är en opak frågekod; källan anger partners yrke och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:41004:20209:20240"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr20sei är en opak frågekod; källan anger partners yrke och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:41004:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1328,8 +1298,8 @@ evidence = "Fr22 är en ogenomskinlig frågekod för om företaget har löneanst
 [[statement]]
 kind = "set"
 subject = "var:yrkeserfarenhet-och-utbildning"
-fields = { "sets" = ["socioekonomisk-grupp", "yrke"] }
-evidence = "Fr24sei är en opak frågekod; etiketten beskriver frågans yrkeserfarenhet och utbildning. Coordinator group membership: Medlemmarna omfattar SEI-klassificeringen och de yrkes- eller utbildningsbaserade kodningar som den tidigare källgranskningen knyter till denna. Fr17sei och fr20sei anger individens respektive partnerns yrke. Fr24sei anger uttryckligen ett självklassificerat yrke utifrån erfarenhet och utbildning, inte enbart utbildningsnivå. Ssyk2012 kodar yrke i huvudsysslan.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\ncatalog:variable_text:41000:20209:20240\ncatalog:variable_text:41004:20209:20240\ncatalog:variable_text:41025:20209:20240\ncatalog:variable_text:41073:20209:20240\ncatalog:variable_text:41075:20209:20240"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr24sei är en opak frågekod; etiketten beskriver frågans yrkeserfarenhet och utbildning. Coordinator group membership: Medlemmarna omfattar SEI-klassificeringen och de yrkes- eller utbildningsbaserade kodningar som den tidigare källgranskningen knyter till denna. Fr17sei och fr20sei anger individens respektive partnerns yrke. Fr24sei anger uttryckligen ett självklassificerat yrke utifrån erfarenhet och utbildning, inte enbart utbildningsnivå. Ssyk2012 kodar yrke i huvudsysslan.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\ncatalog:variable_text:41000:20209:20240\ncatalog:variable_text:41004:20209:20240\ncatalog:variable_text:41025:20209:20240\ncatalog:variable_text:41073:20209:20240\ncatalog:variable_text:41075:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1714,12 +1684,6 @@ kind = "set"
 subject = "var:kommungrupp"
 fields = { "tags" = ["geography"] }
 evidence = "Indelningen omfattar geografiska regioner av kommuner och län.\ncatalog:occurrence-locators:variable:41036\ncatalog:valueset:11807"
-
-[[statement]]
-kind = "set"
-subject = "var:kon"
-fields = { "sets" = ["kon"] }
-evidence = "Kön ingår även i en kombinerad ålders- och könsindelning.\ncatalog:valueset:12820\ncatalog:variable_text:41037:20209:20240"
 
 [[statement]]
 kind = "set"
@@ -2122,12 +2086,6 @@ kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst"
 fields = { "tags" = ["income"] }
 evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402796\ncatalog:occurrence:402885"
-
-[[statement]]
-kind = "set"
-subject = "var:sei-i-huvudsysslan"
-fields = { "sets" = ["socioekonomisk-grupp"] }
-evidence = "Variabeln är en socioekonomisk klassificering härledd från yrkesfrågor.\ncatalog:occurrence-locators:variable:41073\ncatalog:variable_text:41071:20209:20240"
 
 [[statement]]
 kind = "set"

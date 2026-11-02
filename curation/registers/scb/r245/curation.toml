@@ -193,20 +193,8 @@ evidence = "Variabeln grupperar ålder.\ncatalog:variable_text:7720:16071:16436"
 [[statement]]
 kind = "set"
 subject = "var:aldgkon"
-fields = { "sets" = ["alder", "kon"] }
-evidence = "Indelningen kombinerar ålder och kön.\ncatalog:valueset:9427\ncatalog:variable_text:7721:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:aldgkon"
 fields = { "tags" = ["demographics"] }
 evidence = "Indelningen kombinerar ålder och kön.\ncatalog:valueset:9427\ncatalog:variable_text:7721:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:aldgkon1"
-fields = { "sets" = ["alder", "kon"] }
-evidence = "Indelningen omfattar ålder och kön samt medborgarskap och bosättning.\ncatalog:valueset:12847\ncatalog:variable_text:7722:16071:16436"
 
 [[statement]]
 kind = "set"
@@ -657,12 +645,6 @@ kind = "set"
 subject = "var:kommunnamn"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger kommunnamn.\ncatalog:variable_text:7759:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kon"
-fields = { "sets" = ["kon"] }
-evidence = "Variabeln anger kön.\ncatalog:variable_text:7760:19723:20089"
 
 [[statement]]
 kind = "set"

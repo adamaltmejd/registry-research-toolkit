@@ -512,8 +512,8 @@ evidence = "Avtalsområde hör till kandidatgruppen.\ncatalog:variable_text:4295
 [[statement]]
 kind = "set"
 subject = "var:beredskapstillagg"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -584,8 +584,8 @@ evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:429
 [[statement]]
 kind = "set"
 subject = "var:formaner"
-fields = { "sets" = ["lon", "loneformaner"] }
-evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+fields = { "sets" = ["loneformaner"] }
+evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to loneformaner; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -596,8 +596,8 @@ evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group members
 [[statement]]
 kind = "set"
 subject = "var:fskarbtid"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -644,8 +644,8 @@ evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:jourtillagg"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -752,8 +752,8 @@ evidence = "Månadslöneintervall är ett löneintervall.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:naturaformaner"
-fields = { "sets" = ["lon", "loneformaner"] }
-evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+fields = { "sets" = ["loneformaner"] }
+evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to loneformaner; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -776,8 +776,8 @@ evidence = "NUTS-region är regional tillhörighet.\ncatalog:variable_text:42980
 [[statement]]
 kind = "set"
 subject = "var:obekvamtidstillagg"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -812,8 +812,8 @@ evidence = "Senare beräkning anger faktisk sysselsättningsgrad medan tidigare 
 [[statement]]
 kind = "set"
 subject = "var:ovr"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -836,8 +836,8 @@ evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\nca
 [[statement]]
 kind = "set"
 subject = "var:rorliga-lonetillagg"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -848,8 +848,8 @@ evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:
 [[statement]]
 kind = "set"
 subject = "var:rortup"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1052,8 +1052,8 @@ evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sy
 [[statement]]
 kind = "set"
 subject = "var:tant"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1064,8 +1064,8 @@ evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:tillagg-for-overtid"
-fields = { "sets" = ["lon", "rorliga-lonetillagg"] }
-evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

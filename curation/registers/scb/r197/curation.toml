@@ -482,8 +482,8 @@ evidence = "Fastighetsbeteckningen är en geografisk nyckel.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:fastighetslan"
-fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
-evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:variable_text:27414:16436:16801\ncatalog:variable_text:27529:16436:16801"
+fields = { "sets" = ["fastighetslan"] }
+evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:variable_text:27414:16436:16801\ncatalog:variable_text:27529:16436:16801\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fastighetslan; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -494,8 +494,8 @@ evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:fastighetslan-v6010"
-fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
-evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801"
+fields = { "sets" = ["fastighetslan"] }
+evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fastighetslan; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -530,8 +530,8 @@ evidence = "Källan anger fastighetsskatt.\ncatalog:variable_text:27417:16436:16
 [[statement]]
 kind = "set"
 subject = "var:flansv"
-fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
-evidence = "Källan anger fastighetslån i svensk valuta.\ncatalog:variable_text:27418:15340:16071"
+fields = { "sets" = ["fastighetslan"] }
+evidence = "Källan anger fastighetslån i svensk valuta.\ncatalog:variable_text:27418:15340:16071\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fastighetslan; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -542,8 +542,8 @@ evidence = "Källan anger fastighetslån i svensk valuta.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:flanutl"
-fields = { "sets" = ["fastighetslan", "langfristiga-lan"] }
-evidence = "Källan anger fastighetslån i utländsk valuta.\ncatalog:variable_text:27419:14245:15340"
+fields = { "sets" = ["fastighetslan"] }
+evidence = "Källan anger fastighetslån i utländsk valuta.\ncatalog:variable_text:27419:14245:15340\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fastighetslan; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

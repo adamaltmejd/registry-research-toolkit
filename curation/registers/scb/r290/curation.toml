@@ -1670,8 +1670,8 @@ evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr.
 [[statement]]
 kind = "set"
 subject = "var:tjanster-inkl-kop-lokalhyror"
-fields = { "sets" = ["kostnader-for-material-och-tjanster", "lokal-och-bostadshyreskostnader"] }
-evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokal- och bostadshyror är en angiven del av tjänsteutgifterna.\ncatalog:occurrence:322553\ncatalog:variable_text:35223:18993:20454"
+fields = { "sets" = ["lokal-och-bostadshyreskostnader"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokal- och bostadshyror är en angiven del av tjänsteutgifterna.\ncatalog:occurrence:322553\ncatalog:variable_text:35223:18993:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to lokal-och-bostadshyreskostnader; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1706,8 +1706,8 @@ evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln 
 [[statement]]
 kind = "set"
 subject = "var:verksamhetsanknutna-tjanster"
-fields = { "sets" = ["kostnader-for-material-och-tjanster", "verksamhetsanknutna-tjanster"] }
-evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster.\ncatalog:occurrence:323098\ncatalog:variable_text:35226:17897:20454"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster.\ncatalog:occurrence:323098\ncatalog:variable_text:35226:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1718,8 +1718,8 @@ evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr.
 [[statement]]
 kind = "set"
 subject = "var:verksamhetsanknutna-tjanster-inhyrd"
-fields = { "sets" = ["kostnader-for-material-och-tjanster", "verksamhetsanknutna-tjanster"] }
-evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Inhyrd personal är en angiven del av verksamhetsanknutna tjänster.\ncatalog:occurrence:323099\ncatalog:variable_text:35227:17897:20454"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Inhyrd personal är en angiven del av verksamhetsanknutna tjänster.\ncatalog:occurrence:323099\ncatalog:variable_text:35227:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1730,8 +1730,8 @@ evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr.
 [[statement]]
 kind = "set"
 subject = "var:verksamhetsanknutna-tjanster-kommuner"
-fields = { "sets" = ["kostnader-for-material-och-tjanster", "verksamhetsanknutna-tjanster"] }
-evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från kommuner och regioner.\ncatalog:occurrence:323100\ncatalog:variable_text:35228:17897:20454"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från kommuner och regioner.\ncatalog:occurrence:323100\ncatalog:variable_text:35228:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1742,8 +1742,8 @@ evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr.
 [[statement]]
 kind = "set"
 subject = "var:verksamhetsanknutna-tjanster-regionsagda"
-fields = { "sets" = ["kostnader-for-material-och-tjanster", "verksamhetsanknutna-tjanster"] }
-evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från företag.\ncatalog:occurrence:323101\ncatalog:variable_text:35229:17897:20454"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från företag.\ncatalog:occurrence:323101\ncatalog:variable_text:35229:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

@@ -16705,8 +16705,8 @@ evidence = "The operational definition aggregates sickness/activity compensation
 [[statement]]
 kind = "set"
 subject = "var:folkald"
-fields = { "sets" = ["folkpension", "lisa-pension"] }
-evidence = "r326 derives the own-benefit old-age component from paid folkpension and pension-type codes, expressly within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37627\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/folkpension"
+fields = { "sets" = ["folkpension"] }
+evidence = "r326 derives the own-benefit old-age component from paid folkpension and pension-type codes, expressly within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:37488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37627\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/folkpension\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to folkpension; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -17899,8 +17899,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-sarskilt-familj"
-fields = { "description" = "Bostadstillägg, särskilt bostadstillägg och kompletterande belopp till bostadstillägg för pensionärer, familj." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A728\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nreg_meta_build/curation/registers/scb/lisa.toml:619\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/bostadstillagg-sarskilt-familj"
+fields = { "description" = "Familjens sammanlagda bostadstillägg, i hundratals kronor. Omfattar kommunalt bostadstillägg (1990–1994), särskilt kommunalt bostadstillägg (1991–1994), bostadstillägg och särskilt bostadstillägg (från 1995), kommunalt kompletteringsbelopp (1995–2002) samt bostadstillägg och särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning (från 2009). Familjebegreppet skiljer sig från det faktiska hushållet, främst för sammanboende utan gemensamma barn." }
+evidence = "Audit correction 2026-11-02: LISA doc 385, section 640, BostTillFam dates each component within the same family-level variable. v22246 spans 1990-2023; the change of delivery table in 2010 is not a separate meaning. Source: https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-bakgrundsfakta-1990-2017.pdf; catalog doc hash bf1d206a65d19c4262d0c5ac117c646d757ee6eab2056e80e0cff47e0314e239."
 
 [[statement]]
 kind = "set"
