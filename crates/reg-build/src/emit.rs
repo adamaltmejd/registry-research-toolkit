@@ -604,6 +604,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(pid_of_variable(r, v)),
                     Cell::Text(variable.label.clone()),
                     opt_text(variable.definition.as_ref()),
+                    opt_text(variable.description.as_ref()),
                     Cell::Int(start(&variable.hull.0)),
                     Cell::Int(end(&variable.hull.1)),
                 ],

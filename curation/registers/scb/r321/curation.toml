@@ -6667,210 +6667,6 @@ evidence = "Mäter protokoll på webbplats.\ncatalog:occurrence:382409\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "regioner: AVTLAKVARDERSANT @2012-01-01..2012-12-31 where key = 'v28610'"
-fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget eller kommunen har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal avtal.\ncatalog:occurrence:383033"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: FOLKOMROSTANT @2003-01-01..2003-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: FOLKOMROSTANT @2008-01-01..2008-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: FOLKOMROSTANT @2012-01-01..2012-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "regioner: FOLKOMROSTANT @2003-01-01..2003-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "regioner: FOLKOMROSTANT @2008-01-01..2008-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "regioner: FOLKOMROSTANT @2012-01-01..2012-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Definitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr11_text @2024-01-01..2024-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen under mandatperioden." }
-evidence = "Enhet och operationell definition anger antal, inte enbart förekomst.\ncatalog:occurrence:382789"
-
-[[statement]]
-kind = "set"
-subject = "regioner: fr5_text @2016-01-01..2016-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383186"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr7_text @2016-01-01..2016-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen under mandatperioden." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382682"
-
-[[statement]]
-kind = "set"
-subject = "regioner: Fr8_text @2020-01-01..2020-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller regionen under mandatperioden." }
-evidence = "Enheten och den operationella definitionen anger antal snarare än förekomst.\ncatalog:occurrence:383277"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr9_text @2020-01-01..2020-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller regionen under mandatperioden." }
-evidence = "Enheten och de operationella definitionerna anger antal snarare än förekomst.\ncatalog:occurrence:382784\ncatalog:occurrence:383377"
-
-[[statement]]
-kind = "set"
-subject = "regioner: Fr9_text @2024-01-01..2024-12-31 where key = 'v28629'"
-fields = { "description" = "Anger antal folkomröstningar i kommunen eller regionen under mandatperioden." }
-evidence = "Enheten och de operationella definitionerna anger antal snarare än förekomst.\ncatalog:occurrence:382784\ncatalog:occurrence:383377"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: KOMFORB @2003-01-01..2003-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: KOMFORB @2008-01-01..2008-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: KOMFORB @2012-01-01..2012-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "regioner: KOMFORB @2003-01-01..2003-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "regioner: KOMFORB @2008-01-01..2008-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "regioner: KOMFORB @2012-01-01..2012-12-31 where key = 'v28602'"
-fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
-evidence = "Definitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr25 @2016-01-01..2016-12-31 where key = 'v29349'"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Källtabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382635"
-
-[[statement]]
-kind = "set"
-subject = "regioner: POLSEKRANT @2012-01-01..2012-12-31 where key = 'v29348'"
-fields = { "description" = "Antal anställda politiska sekreterare." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383094"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVLAKANT @2003-01-01..2003-12-31 where key = 'v28610'"
-fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal avtal eller läkare med avtal.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVLAKANT @2008-01-01..2008-12-31 where key = 'v28610'"
-fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal avtal eller läkare med avtal.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVSJUKHANT @2003-01-01..2003-12-31 where key = 'v28608'"
-fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382949\ncatalog:occurrence:383012"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVSJUKHANT @2008-01-01..2008-12-31 where key = 'v28608'"
-fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382949\ncatalog:occurrence:383012"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVVARDCANT @2003-01-01..2003-12-31 where key = 'v28609'"
-fields = { "description" = "Antal vårdavtal med vårdcentraler i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014"
-
-[[statement]]
-kind = "set"
-subject = "regioner: PRIVVARDCANT @2008-01-01..2008-12-31 where key = 'v28609'"
-fields = { "description" = "Antal vårdavtal med vårdcentraler i privat regi som landstinget har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr38 @2020-01-01..2020-12-31 where key = 'v29349'"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Källtabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382736"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: Fr40 @2024-01-01..2024-12-31 where key = 'v29349'"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Källtabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382860"
-
-[[statement]]
-kind = "set"
-subject = "kommuner: SAMLBOLAG @2012-01-01..2012-12-31 where key = 'v29349'"
-fields = { "description" = "Samlat kommunens eller landstingets bolag under ett moderbolag." }
-evidence = "Variabeln omfattar både kommuner och regioner.\ncatalog:occurrence:382582\ncatalog:variable_text:38842:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "regioner: SAMLBOLAG @2012-01-01..2012-12-31 where key = 'v29349'"
-fields = { "description" = "Samlat kommunens eller landstingets bolag under ett moderbolag." }
-evidence = "Variabeln omfattar både kommuner och regioner.\ncatalog:occurrence:382582\ncatalog:variable_text:38842:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "regioner: VARDAVTALPRIVANT @2012-01-01..2012-12-31 where key = 'v28608'"
-fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget eller kommunen har." }
-evidence = "Beskrivningen anger förekomst men variabeln mäter antal vårdavtal.\ncatalog:occurrence:383110"
-
-[[statement]]
-kind = "set"
-subject = "regioner: VARDVALPRIVBOLANT @2012-01-01..2012-12-31 where key = 'v28609'"
-fields = { "description" = "Antal bolagiserade leverantörer av vårdcentraler i privat regi som landstinget eller kommunen har vårdavtal med." }
-evidence = "Beskrivningen anger förekomst av avtal men variabeln mäter antal leverantörer.\ncatalog:occurrence:383112"
-
-[[statement]]
-kind = "set"
-subject = "regioner: VARDVALPRIVIDELANT @2012-01-01..2012-12-31 where key = 'v28609'"
-fields = { "description" = "Antal ideella leverantörer av vårdcentraler i privat regi som landstinget eller kommunen har vårdavtal med." }
-evidence = "Beskrivningen anger förekomst av avtal men variabeln mäter antal leverantörer.\ncatalog:occurrence:383114"
-
-[[statement]]
-kind = "set"
 subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
 fields = { "sets" = ["andra-organ-under-fullmaktige"] }
 evidence = "r114, r99 and r104 explicitly measure other bodies directly under the council, excluding committees and boards.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383233\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38345"
@@ -7264,3 +7060,135 @@ kind = "set"
 subject = "var:samveumedel"
 fields = { "tags" = ["public-finance"] }
 evidence = "The definition explicitly measures cross-border cooperation financed by EU funds, supporting the public financing theme (r133).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38851"
+
+[[statement]]
+kind = "set"
+subject = "var:avtlakvardersant"
+fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget eller kommunen har." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal avtal.\ncatalog:occurrence:383033"
+
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostant"
+fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger förekomst men de operativa definitionerna och enheten anger antal under samtliga perioder.\ncatalog:variable_text:38430:12053:12418\ncatalog:variable_text:38430:13879:14245\ncatalog:variable_text:38430:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:folkomrostning-forekomst-text"
+fields = { "description" = "Anger antal folkomröstningar i kommunen under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEnhet och operationell definition anger antal, inte enbart förekomst.\ncatalog:occurrence:382789"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr5-text"
+fields = { "description" = "Anger antal folkomröstningar i kommunen eller landstinget under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383186"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr7-text"
+fields = { "description" = "Anger antal folkomröstningar i kommunen under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382682"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr8-text"
+fields = { "description" = "Anger antal folkomröstningar i kommunen eller regionen under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEnheten och den operationella definitionen anger antal snarare än förekomst.\ncatalog:occurrence:383277"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr9-text"
+fields = { "description" = "Anger antal folkomröstningar i kommunen eller regionen under mandatperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEnheten och de operationella definitionerna anger antal snarare än förekomst.\ncatalog:occurrence:382784\ncatalog:occurrence:383377"
+
+
+[[statement]]
+kind = "set"
+subject = "var:komforb"
+fields = { "description" = "Antal kommunalförbund som kommunen eller landstinget ingår i." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver förekomst, men källans operativa definitioner och enhet anger antal under samtliga perioder.\ncatalog:occurrence:382374\ncatalog:occurrence:382430\ncatalog:occurrence:382522\ncatalog:occurrence:382921\ncatalog:occurrence:382983"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kommunala-bolag-under-moderbolag"
+fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382635"
+
+
+[[statement]]
+kind = "set"
+subject = "var:polsekrant"
+fields = { "description" = "Antal anställda politiska sekreterare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383094"
+
+
+[[statement]]
+kind = "set"
+subject = "var:privlakant"
+fields = { "description" = "Antal vårdavtal med läkare i privat regi som landstinget har." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal avtal eller läkare med avtal.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
+
+
+[[statement]]
+kind = "set"
+subject = "var:privsjukhant"
+fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget har." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382949\ncatalog:occurrence:383012"
+
+
+[[statement]]
+kind = "set"
+subject = "var:privvardcant"
+fields = { "description" = "Antal vårdavtal med vårdcentraler i privat regi som landstinget har." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr38"
+fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382736"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr40"
+fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382860"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-samlbolag"
+fields = { "description" = "Samlat kommunens eller landstingets bolag under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln omfattar både kommuner och regioner.\ncatalog:occurrence:382582\ncatalog:variable_text:38842:15340:15706"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vardavtalprivant"
+fields = { "description" = "Antal vårdavtal med sjukhus i privat regi som landstinget eller kommunen har." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal vårdavtal.\ncatalog:occurrence:383110"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprivbolant"
+fields = { "description" = "Antal bolagiserade leverantörer av vårdcentraler i privat regi som landstinget eller kommunen har vårdavtal med." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst av avtal men variabeln mäter antal leverantörer.\ncatalog:occurrence:383112"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vardvalprividelant"
+fields = { "description" = "Antal ideella leverantörer av vårdcentraler i privat regi som landstinget eller kommunen har vårdavtal med." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst av avtal men variabeln mäter antal leverantörer.\ncatalog:occurrence:383114"

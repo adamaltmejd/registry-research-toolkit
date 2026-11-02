@@ -10327,66 +10327,6 @@ evidence = "Yrkgen är en källmnemonik utan igenkännbara delar av etiketten.\n
 
 [[statement]]
 kind = "set"
-subject = "hogskolestuderande: F10_07 @2021-01-01..2021-06-30 where key = 'v29906'"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Källans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F15_09 @2017-01-01..2017-06-30 where key = 'v29906'"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Källans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "intradet-gymnasieavgangna-hogskoleexaminerade: öt @2002-03-01..2002-03-31 where key = 'v4655'"
-fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
-evidence = "Definitionen anger ett antal, inte en kod.\ncatalog:occurrence:249933"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F6_2 @2013-04-01..2013-04-30 where key = 'v29901'"
-fields = { "description" = "Månad då individen anser sig ha avslutat sina universitets- och högskolestudier." }
-evidence = "Definitionen anger år men variabeln mäter avslutsmånad.\ncatalog:occurrence:248968\ncatalog:variable_text:29632:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F19_07 @2021-01-01..2021-06-30 where key = 'v29907'"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Etiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F19_09 @2017-01-01..2017-06-30 where key = 'v29907'"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Etiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr98f @2000-03-01..2000-03-31 where key = 'v41838'"
-fields = { "description" = "Huvudsaklig sysselsättning juni 1998" }
-evidence = "Mellanslaget saknas i källans datum.\ncatalog:variable_text:29761:11017:11048"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F3_rev @2021-01-01..2021-06-30 where key = 'v38945'"
-fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning." }
-evidence = "Källan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F20 @2017-01-01..2017-06-30 where key = 'v5242'"
-fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
-evidence = "Frågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderande: F20 @2021-01-01..2021-06-30 where key = 'v5242'"
-fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
-evidence = "Frågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
-
-[[statement]]
-kind = "set"
 subject = "intradet-gymnasieavgangna: f13 @2014-04-01..2014-04-30 where key = 'v5120'"
 fields = { "variable" = "viljan-att-arbeta-mer-f15" }
 evidence = "Both measure desired working hours under selector v5120 in nonoverlapping periods. Every complete historical list agrees on substantive codes: 1 more hours, 2 current hours appropriate, 3 fewer hours. List differences concern additional nonresponse categories."
@@ -11278,3 +11218,65 @@ kind = "set"
 subject = "var:utbnojd"
 fields = { "sets" = ["nojdhet-med-utbildningen"] }
 evidence = "The operational definition asks satisfaction with the completed upper-secondary education, supported by satisfaction categories (r138, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30095\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f10-07"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f15-09"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348"
+
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod-ot"
+fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger ett antal, inte en kod.\ncatalog:occurrence:249933"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-anvanda-kritiskt-tankande-f19-07"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-juni-1998"
+fields = { "description" = "Huvudsaklig sysselsättning juni 1998" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslaget saknas i källans datum.\ncatalog:variable_text:29761:11017:11048"
+
+
+[[statement]]
+kind = "set"
+subject = "var:latt-svart-fa-arbete-amnesomradet"
+fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809"
+
+
+[[statement]]
+kind = "set"
+subject = "var:manad-for-avslutande-av-universitets-eller-hogskolestudier"
+fields = { "description" = "Månad då individen anser sig ha avslutat sina universitets- och högskolestudier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger år men variabeln mäter avslutsmånad.\ncatalog:occurrence:248968\ncatalog:variable_text:29632:15796:15826"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning"
+fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildningens-fardighetstraning-f19-09"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"

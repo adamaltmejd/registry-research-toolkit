@@ -10207,270 +10207,6 @@ evidence = "W är en källkod och 01-familjen bedöms enhetligt; etiketten anger
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: cc045 @2000-01-01..2000-12-31 where key = 'v41641'"
-fields = { "description" = "Utgift för hushållsel." }
-evidence = "Definitionen saknar att variabeln mäter en utgift.\ncatalog:variable_text:26570:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: cc045 @2001-01-01..2001-12-31 where key = 'v41641'"
-fields = { "description" = "Utgift för hushållsel." }
-evidence = "Definitionen saknar att variabeln mäter en utgift.\ncatalog:variable_text:26570:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: imphhel @2000-01-01..2000-12-31 where key = 'v41676'"
-fields = { "description" = "Markör för om utgift för hushållsel har imputerats." }
-evidence = "Värdena visar en markör för imputering, inte ett utgiftsbelopp.\ncatalog:valueset:6894\ncatalog:variable_text:26611:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: imphhel @2001-01-01..2001-12-31 where key = 'v41676'"
-fields = { "description" = "Markör för om utgift för hushållsel har imputerats." }
-evidence = "Värdena visar en markör för imputering, inte ett utgiftsbelopp.\ncatalog:valueset:6894\ncatalog:variable_text:26611:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: SINKMISS @1999-01-01..1999-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer som saknar inkomstuppgift." }
-evidence = "Definitionen anger familjens personantal men variabeln räknar personer som saknar inkomstuppgift.\ncatalog:variable_text:26728:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: sinkmiss @2000-01-01..2000-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer som saknar inkomstuppgift." }
-evidence = "Definitionen anger familjens personantal men variabeln räknar personer som saknar inkomstuppgift.\ncatalog:variable_text:26728:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: sinkmiss @2001-01-01..2001-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer som saknar inkomstuppgift." }
-evidence = "Definitionen anger familjens personantal men variabeln räknar personer som saknar inkomstuppgift.\ncatalog:variable_text:26728:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-2021: U0113 @2021-01-01..2021-12-31 where key = 'v45395'"
-fields = { "description" = "Utgift för fiskprodukter." }
-evidence = "Etiketten visar att definitionens stavning saknar ett k.\ncatalog:variable_text:26759:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "hushall-2021: U04_x @2021-01-01..2021-12-31 where key = 'v46137'"
-fields = { "description" = "Utgift för boende, andrabostad." }
-evidence = "Rättar ett skrivfel med stöd av etiketten.\ncatalog:variable_text:26797:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "hushall-2021: U05313 @2021-01-01..2021-12-31 where key = 'v45330'"
-fields = { "description" = "Utgift för värmeelement, fläkt eller luftkonditionering." }
-evidence = "Rättar stavfel utan att ändra innebörden.\ncatalog:variable_text:26878:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "hushall-2021: U12 @2021-01-01..2021-12-31 where key = 'v46195'"
-fields = { "description" = "Utgift för försäkring och finansiella tjänster" }
-evidence = "Rättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:27051:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2029 @1999-01-01..1999-12-31 where key = 'v40516'"
-fields = { "description" = "Utgift för tvål och schampo." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27201:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2029 @2000-01-01..2000-12-31 where key = 'v40516'"
-fields = { "description" = "Utgift för tvål och schampo." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27201:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2029 @2001-01-01..2001-12-31 where key = 'v40516'"
-fields = { "description" = "Utgift för tvål och schampo." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27201:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2250 @2000-01-01..2000-12-31 where key = 'v40879'"
-fields = { "description" = "Utgift för tillfällig hyra, till exempel för barn på studieort." }
-evidence = "Kompletterar en avhuggen parentes utan att lägga till betydelse.\ncatalog:variable_text:27246:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2250 @2001-01-01..2001-12-31 where key = 'v40879'"
-fields = { "description" = "Utgift för tillfällig hyra, till exempel för barn på studieort." }
-evidence = "Kompletterar en avhuggen parentes utan att lägga till betydelse.\ncatalog:variable_text:27246:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: vk2250 @1999-01-01..1999-12-31 where key = 'v40879'"
-fields = { "description" = "Utgift för tillfällig hyra, till exempel för barn på studieort." }
-evidence = "Kompletterar en avhuggen parentes utan att lägga till betydelse.\ncatalog:variable_text:27246:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2261 @1999-01-01..1999-12-31 where key = 'v40880'"
-fields = { "description" = "Utgift för fritidsbostad: räntor (brutto)." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27247:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2261 @2000-01-01..2000-12-31 where key = 'v40880'"
-fields = { "description" = "Utgift för fritidsbostad: räntor (brutto)." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27247:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2261 @2001-01-01..2001-12-31 where key = 'v40880'"
-fields = { "description" = "Utgift för fritidsbostad: räntor (brutto)." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27247:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2316 @1999-01-01..1999-12-31 where key = 'v40898'"
-fields = { "description" = "Utgift för mattor" }
-evidence = "Rättar ett uppenbart skrivfel.\ncatalog:variable_text:27261:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2316 @2000-01-01..2000-12-31 where key = 'v40898'"
-fields = { "description" = "Utgift för mattor" }
-evidence = "Rättar ett uppenbart skrivfel.\ncatalog:variable_text:27261:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2316 @2001-01-01..2001-12-31 where key = 'v40898'"
-fields = { "description" = "Utgift för mattor" }
-evidence = "Rättar ett uppenbart skrivfel.\ncatalog:variable_text:27261:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2352 @1999-01-01..1999-12-31 where key = 'v40910'"
-fields = { "description" = "Utgift för mikrovågsugn." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27270:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2352 @2000-01-01..2000-12-31 where key = 'v40910'"
-fields = { "description" = "Utgift för mikrovågsugn." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27270:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2352 @2001-01-01..2001-12-31 where key = 'v40910'"
-fields = { "description" = "Utgift för mikrovågsugn." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27270:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2356 @1999-01-01..1999-12-31 where key = 'v40914'"
-fields = { "description" = "Utgift för dammsugare." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27272:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2356 @2000-01-01..2000-12-31 where key = 'v40914'"
-fields = { "description" = "Utgift för dammsugare." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27272:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2356 @2001-01-01..2001-12-31 where key = 'v40914'"
-fields = { "description" = "Utgift för dammsugare." }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27272:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2361 @1999-01-01..1999-12-31 where key = 'v40918'"
-fields = { "description" = "Utgift för motordrivet trädgårdsredskap." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27275:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2361 @2000-01-01..2000-12-31 where key = 'v40918'"
-fields = { "description" = "Utgift för motordrivet trädgårdsredskap." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27275:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2361 @2001-01-01..2001-12-31 where key = 'v40918'"
-fields = { "description" = "Utgift för motordrivet trädgårdsredskap." }
-evidence = "Rättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27275:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2640 @1999-01-01..1999-12-31 where key = 'v41036'"
-fields = { "description" = "Utgift för kassetter" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27342:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2640 @2000-01-01..2000-12-31 where key = 'v41036'"
-fields = { "description" = "Utgift för kassetter" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27342:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2640 @2001-01-01..2001-12-31 where key = 'v41036'"
-fields = { "description" = "Utgift för kassetter" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27342:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2681 @1999-01-01..1999-12-31 where key = 'v41037'"
-fields = { "description" = "Utgift för skolresa" }
-evidence = "Den upprepade frasen är en språklig dubblering i samma betydelse.\ncatalog:variable_text:27358:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2681 @2000-01-01..2000-12-31 where key = 'v41037'"
-fields = { "description" = "Utgift för skolresa" }
-evidence = "Den upprepade frasen är en språklig dubblering i samma betydelse.\ncatalog:variable_text:27358:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2681 @2001-01-01..2001-12-31 where key = 'v41037'"
-fields = { "description" = "Utgift för skolresa" }
-evidence = "Den upprepade frasen är en språklig dubblering i samma betydelse.\ncatalog:variable_text:27358:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2701 @1999-01-01..1999-12-31 where key = 'v41045'"
-fields = { "description" = "Utgift för smycken" }
-evidence = "Etiketten anger utgift för smycken; den extra formuleringen avgift saknar stöd.\ncatalog:variable_text:27366:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2701 @2000-01-01..2000-12-31 where key = 'v41045'"
-fields = { "description" = "Utgift för smycken" }
-evidence = "Etiketten anger utgift för smycken; den extra formuleringen avgift saknar stöd.\ncatalog:variable_text:27366:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2701 @2001-01-01..2001-12-31 where key = 'v41045'"
-fields = { "description" = "Utgift för smycken" }
-evidence = "Etiketten anger utgift för smycken; den extra formuleringen avgift saknar stöd.\ncatalog:variable_text:27366:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2731 @2000-01-01..2000-12-31 where key = 'v41071'"
-fields = { "description" = "Utgift för utemåltider." }
-evidence = "Rättar mellanrummet utan att ändra innebörden.\ncatalog:variable_text:27372:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: VK2731 @2001-01-01..2001-12-31 where key = 'v41071'"
-fields = { "description" = "Utgift för utemåltider." }
-evidence = "Rättar mellanrummet utan att ändra innebörden.\ncatalog:variable_text:27372:10957:11688"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: vk2731 @1999-01-01..1999-12-31 where key = 'v41071'"
-fields = { "description" = "Utgift för utemåltider." }
-evidence = "Rättar mellanrummet utan att ändra innebörden.\ncatalog:variable_text:27372:10957:11688"
-
-[[statement]]
-kind = "set"
 subject = "var:bcdz"
 fields = { "sets" = ["inkomstgrupper"] }
 evidence = "r202 defines deciles of household disposable income; r200 and r196 confirm ten income bands.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26455\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7698\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26534"
@@ -10870,3 +10606,128 @@ kind = "set"
 subject = "var:utgift-tv-apparat"
 fields = { "sets" = ["utgift-tv-och-ljudutrustning"] }
 evidence = "r136 explicitly specifies expenditure on a TV set, establishing equipment within r196.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:241984\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-tv-och-ljudutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-saknar-inkomstuppgift"
+fields = { "description" = "Antal personer som saknar inkomstuppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger familjens personantal men variabeln räknar personer som saknar inkomstuppgift.\ncatalog:variable_text:26728:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsel-utgift"
+fields = { "description" = "Utgift för hushållsel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen saknar att variabeln mäter en utgift.\ncatalog:variable_text:26570:10957:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-boende-andrabostad"
+fields = { "description" = "Utgift för boende, andrabostad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel med stöd av etiketten.\ncatalog:variable_text:26797:18628:18993"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-damsugare"
+fields = { "description" = "Utgift för dammsugare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27272:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-element-flakt-luftkonditionering"
+fields = { "description" = "Utgift för värmeelement, fläkt eller luftkonditionering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra innebörden.\ncatalog:variable_text:26878:18628:18993"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-fiskprodukter"
+fields = { "description" = "Utgift för fiskprodukter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten visar att definitionens stavning saknar ett k.\ncatalog:variable_text:26759:18628:18993"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-forsakring-och-finansiella-tjanster"
+fields = { "description" = "Utgift för försäkring och finansiella tjänster" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:27051:18628:18993"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-hushallsel-imputerad"
+fields = { "description" = "Markör för om utgift för hushållsel har imputerats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena visar en markör för imputering, inte ett utgiftsbelopp.\ncatalog:valueset:6894\ncatalog:variable_text:26611:10957:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-kasetter"
+fields = { "description" = "Utgift för kassetter" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:27342:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-mattor"
+fields = { "description" = "Utgift för mattor" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel.\ncatalog:variable_text:27261:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-microvagsugn"
+fields = { "description" = "Utgift för mikrovågsugn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27270:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-smycken"
+fields = { "description" = "Utgift för smycken" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger utgift för smycken; den extra formuleringen avgift saknar stöd.\ncatalog:variable_text:27366:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tillfallig-hyra-t-ex-barn-pa-studieort"
+fields = { "description" = "Utgift för tillfällig hyra, till exempel för barn på studieort." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKompletterar en avhuggen parentes utan att lägga till betydelse.\ncatalog:variable_text:27246:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-tval-shampo"
+fields = { "description" = "Utgift för tvål och schampo." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:27201:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-utgift-for-skolresa"
+fields = { "description" = "Utgift för skolresa" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen upprepade frasen är en språklig dubblering i samma betydelse.\ncatalog:variable_text:27358:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-forfritidsbostad-rantor-brutto"
+fields = { "description" = "Utgift för fritidsbostad: räntor (brutto)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27247:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-formotordrivet-tradgardsredskap"
+fields = { "description" = "Utgift för motordrivet trädgårdsredskap." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar mellanrum i källtexten utan att ändra betydelsen.\ncatalog:variable_text:27275:10592:11688"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vk2731"
+fields = { "description" = "Utgift för utemåltider." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar mellanrummet utan att ändra innebörden.\ncatalog:variable_text:27372:10957:11688"

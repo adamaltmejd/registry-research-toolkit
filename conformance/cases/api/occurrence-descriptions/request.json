@@ -1,5 +1,5 @@
 {
-  "note": "Fails if occurrence descriptions replace definitions, lose concurrent table-specific texts or period gaps, fail to merge adjacent equal texts, or are omitted from compiled variable search and its facets. The Concurrent query must still match in the 2021 gap through the variable hull. Expected texts and periods come from the descriptions source fixture and curation. Also fails if indexing descriptions reverses the two equal-label primary hits (Weighted is shorter than Comparator before descriptions), duplicates a primary hit in the fallback, or loses an AND across source definition and supplementary description.",
+  "note": "Fails if a variable loses its single curated description, overwrites its per-occurrence source definition history, or loses description discovery in search/facets. The 2021 query still matches through the variable hull. Also fails if supplementary indexing reverses equal-label primary hits (Weighted is shorter than Comparator), duplicates a primary hit, or loses an AND across source and description text. Expected values come from the source fixture and its var: setters.",
   "fixture": "descriptions",
   "requests": [
     {
@@ -10,7 +10,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Historical",
+        "q": "Longitudinal",
         "type": "variable"
       }
     },
@@ -18,7 +18,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Concurrent",
+        "q": "Longitudinal",
         "type": "variable",
         "period": "2021"
       }
@@ -34,7 +34,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Source Historical",
+        "q": "Source Longitudinal",
         "type": "variable"
       }
     },

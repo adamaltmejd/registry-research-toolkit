@@ -1153,162 +1153,6 @@ evidence = "Samma yrkeskod är uppdelad i angränsande perioder med scb/slk/ssyk
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @1996-01-01..1996-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @1997-01-01..1997-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @1998-01-01..1998-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @1999-01-01..1999-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @2000-01-01..2000-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @2001-01-01..2001-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: PKat @2002-01-01..2002-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: pkat @2003-01-01..2003-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: pkat @2004-01-01..2004-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: pkat @2005-01-01..2005-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: pkat @2006-01-01..2006-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: pkat @2007-01-01..2007-12-31 where key = 'v3117'"
-fields = { "description" = "Visar individens personalkategori." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: sjuk1 @2016-01-01..2016-12-31 where key = 'v36036'"
-fields = { "description" = "Sjuklön för första perioden." }
-evidence = "Rättar stavningen av perioden.\ncatalog:variable_text:42865:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: sjuk1 @2017-01-01..2017-12-31 where key = 'v36036'"
-fields = { "description" = "Sjuklön för första perioden." }
-evidence = "Rättar stavningen av perioden.\ncatalog:variable_text:42865:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @1996-01-01..1996-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @1997-01-01..1997-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @1998-01-01..1998-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @1999-01-01..1999-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @2000-01-01..2000-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @2001-01-01..2001-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: ISys @2002-01-01..2002-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: isys @2003-01-01..2003-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: isys @2004-01-01..2004-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: isys @2005-01-01..2005-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: isys @2006-01-01..2006-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-kommuner: isys @2007-01-01..2007-12-31 where key = 'v3108'"
-fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
-evidence = "Rättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"
-
-[[statement]]
-kind = "set"
 subject = "var:anstallningsform-hel-del-ovrig"
 fields = { "sets" = ["tjanstgoringsomfattning"] }
 evidence = "r222 defines a full-time, part-time or other classification, confirmed by the complete codes in r220.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42671\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3662\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42814"
@@ -1360,3 +1204,23 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning"
 fields = { "sets" = ["tjanstgoringsomfattning"] }
 evidence = "r231 explicitly defines actual service time relative to full-time and derives it from actual service extent. The earlier expansion-factor unit does not negate that definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42732\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42875"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "description" = "Visar individens personalkategori." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42858:9496:13879"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "description" = "Sjuklön för första perioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen av perioden.\ncatalog:variable_text:42865:16801:17532"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-faktisk"
+fields = { "description" = "Faktisk sysselsättningsgrad under mätmånaden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar grammatiken utan att ändra betydelsen.\ncatalog:variable_text:42870:9496:13879"

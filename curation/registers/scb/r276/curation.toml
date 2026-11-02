@@ -2546,138 +2546,6 @@ evidence = "YL är en opak koordinatkod.\ncatalog:variable_text:10444:20453:2045
 
 [[statement]]
 kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2015-12-31..2015-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2016-12-31..2016-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2017-12-31..2017-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2018-12-31..2018-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2019-12-31..2019-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2020-12-31..2020-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2021-12-31..2021-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2022-12-31..2022-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2023-12-31..2023-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2024-12-31..2024-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "byggnadsinformation: ENTRETYP @2025-12-31..2025-12-31 where key = 'v24163'"
-fields = { "description" = "Beskriver egenskaper för objektet entré." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2015-12-31..2015-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2016-12-31..2016-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2017-12-31..2017-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2018-12-31..2018-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2019-12-31..2019-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2020-12-31..2020-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2021-12-31..2021-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2022-12-31..2022-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2023-12-31..2023-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2024-12-31..2024-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
-subject = "fastighetsinformation: TOTAR @2025-12-31..2025-12-31 where key = 'v2888'"
-fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
-evidence = "Definitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"
-
-[[statement]]
-kind = "set"
 subject = "var:adrplatsursp"
 fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
 evidence = "r32 explicitly defines quality-marking origin for the address location.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10135\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:80892"
@@ -2831,3 +2699,16 @@ kind = "set"
 subject = "var:vardearursp"
 fields = { "sets" = ["kvalitetsmarkningens-ursprung"] }
 evidence = "r138 explicitly measures quality-marking origin for the valuation year. NULL-only delivery does not change that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10424\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:81543"
+
+[[statement]]
+kind = "set"
+subject = "var:entretyp"
+fields = { "description" = "Beskriver egenskaper för objektet entré." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:occurrence-locators:variable:10222"
+
+
+[[statement]]
+kind = "set"
+subject = "var:totalareal"
+fields = { "description" = "Fastighetens totalareal, som inte nödvändigtvis är summan av landarealen och vattenarealen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen säger att totalarealen är summan, medan den operativa definitionen uttryckligen säger att detta inte nödvändigtvis gäller.\ncatalog:occurrence-locators:variable:10393"

@@ -61,18 +61,6 @@ evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5411\
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: distansvt21_intervall"
-fields = { "description" = "Perioder av undervisning på distans under VT 2021 - intervall" }
-evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:12\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "distansundervisning-grundskola: distansla2021_intervall"
-fields = { "description" = "Perioder av undervisning på distans under läsåret 2020/21 - intervall" }
-evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:6\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "doktorsexaminerades-villkor: f40_1"
 fields = { "label" = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — andra arbete — F40_1" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5131\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
@@ -1168,18 +1156,6 @@ kind = "assert"
 subject = "distansundervisning-gymnasieskolan: PersonNr @2020..2022"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för eleven", "definition" = "Elevens personnummer, levererat som löpnummer.", "sensitive" = false, "identifier" = true } }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5305\n\nSWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_gymn_VT20, Distansutb_gymn_HT20_VT21 and Distansutb_gymn_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-gymnasieskolan. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
-
-[[statement]]
-kind = "set"
-subject = "doktorsexaminerades-villkor: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "distansundervisning-grundskola: vt_veckor_termin"
-fields = { "description" = "Terminens längd" }
-evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -15217,126 +15193,6 @@ evidence = "Svaret anger ett annat skäl till att lämna yrket.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: F11_txt @2018-01-01..2018-12-31 where key = 'v38920'"
-fields = { "description" = "Främsta anledningen till att inte ha berättat om negativ särbehandling under utbildningen" }
-evidence = "Definitionen beskriver förekomsten av särbehandling, medan frågan gäller orsaken till att den inte berättats för institutionen.\ncatalog:occurrence:510384\ncatalog:variable_text:53552:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "doktorsexaminerades-villkor: F15_txt @2018-01-01..2018-12-31 where key = 'v38927'"
-fields = { "description" = "Främsta anledningen till att inte ha berättat om den sexuellt kränkande handlingen under utbildningen" }
-evidence = "Definitionen beskriver sexuellt kränkande handlingar, medan frågan gäller orsaken till att handlingen inte berättats för institutionen.\ncatalog:occurrence:510400\ncatalog:variable_text:53554:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "distansundervisning-grundskola: F10VT20 @2020-01-01..2020-06-30 where key = 'v44871'"
-fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning VT20" }
-evidence = "Svarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723"
-
-[[statement]]
-kind = "set"
-subject = "distansundervisning-gymnasieskolan: F10VT20 @2020-01-01..2020-06-30 where key = 'v44871'"
-fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning VT20" }
-evidence = "Svarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723"
-
-[[statement]]
-kind = "set"
-subject = "doktorsexaminerades-villkor: F36_txt @2018-01-01..2018-12-31 where key = 'v38975'"
-fields = { "description" = "Orsaker till att arbetet inte överensstämmer med området för den avslutade forskarutbildningen" }
-evidence = "Definitionen anger bristande överensstämmelse, medan frågan avser orsakerna till den.\ncatalog:occurrence:510455\ncatalog:variable_text:53880:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: NyttaErf @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Nytta av erfarenhet som förskollärare i nuvarande arbete." }
-evidence = "Den befintliga beskrivningen anger en jämförelse, men frågan gäller nyttan av erfarenhet.\ncatalog:occurrence:510683\ncatalog:valueset:3905"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosAnn @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Annat som upplevdes positivt i yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510689"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosBarn @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Att arbeta med barn som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510690"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosForal @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Samverkan med föräldrar som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510691"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosKarr @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Karriärmöjligheter som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510692"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosKomp @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Kompetensutveckling som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510693"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosLed @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Arbetsledningen som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510694"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosLon @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Lönen som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510695"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosOrg @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Arbetets organisation som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510696"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosPav @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Möjlighet att påverka arbetets innehåll som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510697"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosPed @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Att arbeta som pedagog som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510698"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosPsyk @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Psykosocial arbetsmiljö som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510699"
-
-[[statement]]
-kind = "set"
-subject = "forskollararforsorjningen: PosVux @2005-01-01..2005-12-31 where key = 'v40826'"
-fields = { "description" = "Samarbete med andra vuxna som positiv aspekt av yrket som förskollärare." }
-evidence = "Frågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510700"
-
-[[statement]]
-kind = "set"
-subject = "folkhogskoleuppfoljningen: StudSit8 @2006-01-01..2006-12-31 where key = 'v6155'"
-fields = { "description" = "Bedömning av gemenskapen med studiekamraterna" }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:510643\ncatalog:variable_text:54561:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "lararforsorjningen-icke-aktiva: F1 @2004-01-01..2004-12-31 where key = 'v37237'"
-fields = { "description" = "Aktuell eller tidigare anställning som lärare eller skolledare inom skolväsendet." }
-evidence = "Värdena omfattar även tidigare och aldrig anställda, inte bara aktiva tjänster.\ncatalog:valueset:6403\ncatalog:variable_text:54591:12418:12784"
-
-[[statement]]
-kind = "set"
 subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: lillan @2007-01-01..2007-06-30 where key = 'v15678'"
 fields = { "variable" = "lilla-n-per-stratum" }
 evidence = "Both define the number of sampled members per stratum, use count units and decimal type, and occupy column Lillan in the same youth education table during disjoint periods [13514,13695) and [16617,16801). The survivor has four occurrences."
@@ -16534,3 +16390,163 @@ kind = "set"
 subject = "var:verksamhet-matveckan"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "The source defines main activity during the measurement week; complete codes cover work, unemployment, studies, leave and sickness (r87, r95). | F18 measures main activity during the observation week; its complete codes include work, unemployment, studies and parental leave (r155, r160).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:54473\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:511273\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8243"
+
+[[statement]]
+kind = "set"
+subject = "var:distansla2021-intervall"
+fields = { "description" = "Perioder av undervisning på distans under läsåret 2020/21 - intervall" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:6\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansvt21-intervall"
+fields = { "description" = "Perioder av undervisning på distans under VT 2021 - intervall" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ej-uppmarksammat-sarbehandling-txt"
+fields = { "description" = "Främsta anledningen till att inte ha berättat om negativ särbehandling under utbildningen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver förekomsten av särbehandling, medan frågan gäller orsaken till att den inte berättats för institutionen.\ncatalog:occurrence:510384\ncatalog:variable_text:53552:17532:17897"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ej-uppmarksammat-sexuellt-krankande-txt"
+fields = { "description" = "Främsta anledningen till att inte ha berättat om den sexuellt kränkande handlingen under utbildningen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver sexuellt kränkande handlingar, medan frågan gäller orsaken till att handlingen inte berättats för institutionen.\ncatalog:occurrence:510400\ncatalog:variable_text:53554:17532:17897"
+
+
+[[statement]]
+kind = "set"
+subject = "var:f10vt20"
+fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning VT20" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723"
+
+
+[[statement]]
+kind = "set"
+subject = "var:f36-txt"
+fields = { "description" = "Orsaker till att arbetet inte överensstämmer med området för den avslutade forskarutbildningen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger bristande överensstämmelse, medan frågan avser orsakerna till den.\ncatalog:occurrence:510455\ncatalog:variable_text:53880:17532:17897"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nyttaerf"
+fields = { "description" = "Nytta av erfarenhet som förskollärare i nuvarande arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger en jämförelse, men frågan gäller nyttan av erfarenhet.\ncatalog:occurrence:510683\ncatalog:valueset:3905"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posann"
+fields = { "description" = "Annat som upplevdes positivt i yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510689"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posbarn"
+fields = { "description" = "Att arbeta med barn som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510690"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posforal"
+fields = { "description" = "Samverkan med föräldrar som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510691"
+
+
+[[statement]]
+kind = "set"
+subject = "var:poskarr"
+fields = { "description" = "Karriärmöjligheter som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510692"
+
+
+[[statement]]
+kind = "set"
+subject = "var:poskomp"
+fields = { "description" = "Kompetensutveckling som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510693"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posled"
+fields = { "description" = "Arbetsledningen som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510694"
+
+
+[[statement]]
+kind = "set"
+subject = "var:poslon"
+fields = { "description" = "Lönen som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510695"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posorg"
+fields = { "description" = "Arbetets organisation som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510696"
+
+
+[[statement]]
+kind = "set"
+subject = "var:pospav"
+fields = { "description" = "Möjlighet att påverka arbetets innehåll som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510697"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posped"
+fields = { "description" = "Att arbeta som pedagog som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510698"
+
+
+[[statement]]
+kind = "set"
+subject = "var:pospsyk"
+fields = { "description" = "Psykosocial arbetsmiljö som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510699"
+
+
+[[statement]]
+kind = "set"
+subject = "var:posvux"
+fields = { "description" = "Samarbete med andra vuxna som positiv aspekt av yrket som förskollärare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510700"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studsit8"
+fields = { "description" = "Bedömning av gemenskapen med studiekamraterna" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:510643\ncatalog:variable_text:54561:13149:13514"
+
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgorande-larare"
+fields = { "description" = "Aktuell eller tidigare anställning som lärare eller skolledare inom skolväsendet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena omfattar även tidigare och aldrig anställda, inte bara aktiva tjänster.\ncatalog:valueset:6403\ncatalog:variable_text:54591:12418:12784"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vt-veckor-termin"
+fields = { "description" = "Terminens längd" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

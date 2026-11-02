@@ -1975,42 +1975,6 @@ evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515
 
 [[statement]]
 kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: BandsprutaBredd @2017-01-01..2017-12-31 where key = 'v42781'"
-fields = { "description" = "Bredd i centimeter på banden när bandspruta har använts." }
-evidence = "Beskrivningen anger användning men variabeln mäter bandbredd.\ncatalog:occurrence:515693"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: BandsprutaBredd @2021-01-01..2021-12-31 where key = 'v42781'"
-fields = { "description" = "Bredd i centimeter på banden när bandspruta har använts." }
-evidence = "Beskrivningen anger användning men variabeln mäter bandbredd.\ncatalog:occurrence:515693"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: VaxtskyddsmedelNamn @2010-01-01..2010-12-31 where key = 'v48830'"
-fields = { "description" = "Glyfosatmedlens namn." }
-evidence = "Rättar förkortning och stavning utan att ändra betydelsen.\ncatalog:occurrence:515681"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: TotalMangd @2010-01-01..2010-12-31 where key = 'v42779'"
-fields = { "description" = "Total mängd glyfosatmedel." }
-evidence = "Rättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: TotalMangd @2017-01-01..2017-12-31 where key = 'v42779'"
-fields = { "description" = "Total mängd glyfosatmedel." }
-evidence = "Rättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: TotalMangd @2021-01-01..2021-12-31 where key = 'v42779'"
-fields = { "description" = "Total mängd glyfosatmedel." }
-evidence = "Rättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
-
-[[statement]]
-kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: behandladareal @2010-01-01..2010-12-31 where key = 'v48824'"
 fields = { "variable" = "glyfosat-behandlad-areal-2" }
 evidence = "Both explicitly define area treated with glyphosate products, measured in hectares in BehandladAreal. Their observations occupy nonoverlapping periods [13149,13514] and [14610,14975]; coverage across the gap is not asserted."
@@ -2068,3 +2032,23 @@ kind = "set"
 subject = "var:konvgroda"
 fields = { "sets" = ["odlad-groda"] }
 evidence = "r16/r46 define selectable crop groups within the question about conventionally cultivated area. The variable represents crop groups, which the definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515639\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:55329"
+
+[[statement]]
+kind = "set"
+subject = "var:bandsprutabredd"
+fields = { "description" = "Bredd i centimeter på banden när bandspruta har använts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger användning men variabeln mäter bandbredd.\ncatalog:occurrence:515693"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mangd-glyfosatmedel"
+fields = { "description" = "Total mängd glyfosatmedel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsnamn"
+fields = { "description" = "Glyfosatmedlens namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar förkortning och stavning utan att ändra betydelsen.\ncatalog:occurrence:515681"

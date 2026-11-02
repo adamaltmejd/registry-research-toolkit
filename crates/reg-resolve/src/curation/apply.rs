@@ -124,6 +124,7 @@ pub enum MetadataValue {
     Sets(BTreeSet<String>),
     Tags(BTreeSet<String>),
     Synonyms(BTreeSet<String>),
+    Description { text: String, at: Locator },
     Notice(String),
 }
 
@@ -484,6 +485,10 @@ pub fn apply(
     at: &Locator,
     premise: &Premise,
 ) -> Result<Applied, String> {
+    if matches!(statement, Statement::Set { subject: Address::Occurrence { .. }, fields, .. } if fields.description.is_some())
+    {
+        return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
+    }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
         records: records.to_vec(),
@@ -614,7 +619,7 @@ pub fn apply(
             }
         }
         Statement::Set { fields, .. } => {
-            apply_fields(records, fields, premise, &context, &mut out)?;
+            apply_fields(records, fields, at, premise, &context, &mut out)?;
         }
         Statement::Assert { subject, fact, .. } => {
             let register = records
@@ -995,6 +1000,7 @@ fn target_field(field: &str) -> &str {
 fn apply_fields(
     records: &[Record],
     fields: &reg_frame::statement::SetFields,
+    at: &Locator,
     premise: &Premise,
     context: &crate::OccurrenceContext<'_>,
     out: &mut Applied,
@@ -1255,6 +1261,15 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Synonyms(synonyms.iter().cloned().collect()),
+                });
+            }
+            if let Some(description) = &metadata_fields.description {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Description {
+                        text: description.clone(),
+                        at: at.clone(),
+                    },
                 });
             }
             if let Some(notice) = &metadata_fields.notice {

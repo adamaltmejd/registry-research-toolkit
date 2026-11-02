@@ -905,8 +905,9 @@ subject = "var:yprogben"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln avser yrkesutbildningsprogram.\ncatalog:variable_text:44746:14061:14426"
 
+
 [[statement]]
 kind = "set"
-subject = "tiden-mellan-gymnasieskolan-och-universitetet-hogskolan: F16_ver2 @2008-07-01..2009-06-30 where key = 'v28696'"
+subject = "var:utlandsvistelse-antal-manader-totalt"
 fields = { "description" = "Antal månader utomlands totalt mellan gymnasieskolan och universitets- eller högskolestarten hösten 2009, grupperat." }
-evidence = "Beskrivningen anger förekomst medan variabeln mäter grupperad vistelselängd.\ncatalog:occurrence:461687\ncatalog:valueset:10432"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst medan variabeln mäter grupperad vistelselängd.\ncatalog:occurrence:461687\ncatalog:valueset:10432"

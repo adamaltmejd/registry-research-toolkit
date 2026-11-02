@@ -199,56 +199,9 @@ subject = "var:tatortskod-old"
 fields = { "tags" = ["geography"] }
 evidence = "Den äldre tätortskoden är en geografisk indelning och hör ihop med tätort och nyare kod.\ncatalog:variable_text:44895:17532:17897\ncatalog:variable_text:44896:17532:17897\ncatalog:variable_text:44897:17532:17897"
 
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @1990-01-01..1990-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "tatorter: LANNAMN @1995-01-01..1995-12-31 where key = 'v49'"
+subject = "var:lannamn"
 fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2000-01-01..2000-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2005-01-01..2005-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2010-01-01..2010-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2015-01-01..2015-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2018-01-01..2018-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2020-01-01..2020-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "tatorter: LANNAMN @2023-01-01..2023-12-31 where key = 'v49'"
-fields = { "description" = "Namn för regional indelning i län." }
-evidence = "Källkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger länsnamn, medan den befintliga beskrivningen anger en kod.\ncatalog:occurrence-locators:variable:44891\ncatalog:variable_text:44891:19358:19723"

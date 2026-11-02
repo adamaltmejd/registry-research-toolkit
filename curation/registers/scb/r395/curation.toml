@@ -666,18 +666,6 @@ fields = { "tags" = ["income"] }
 evidence = "TNETTO är en källkod för kapitalvinst netto.\ncatalog:variable_text:33956:17897:18262"
 
 [[statement]]
-kind = "set"
-subject = "individ: KFFB @2005-01-01..2005-12-31 where key = 'v41163'"
-fields = { "description" = "Kapitalförlust finansiellt, bruttobelopp. Härledd uppgift." }
-evidence = "Beskrivningen anger kapitalvinst men etiketten och källkolumnen anger kapitalförlust.\ncatalog:variable_text:33895:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "individ: KFFB @2006-01-01..2006-12-31 where key = 'v41163'"
-fields = { "description" = "Kapitalförlust finansiellt, bruttobelopp. Härledd uppgift." }
-evidence = "Beskrivningen anger kapitalvinst men etiketten och källkolumnen anger kapitalförlust.\ncatalog:variable_text:33895:12784:13514"
-
-[[statement]]
 kind = "link"
 subject = "var:kapitalforlust-bostadsratt"
 relation = "continues"
@@ -992,3 +980,9 @@ kind = "set"
 subject = "var:vinst-fondandelar"
 fields = { "sets" = ["kapitalvinst"] }
 evidence = "r544 defines assessed capital gains from disposals of funds, shares and closely held company interests.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33828\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33955"
+
+[[statement]]
+kind = "set"
+subject = "var:kapitalforlust-finansiellt-brutto"
+fields = { "description" = "Kapitalförlust finansiellt, bruttobelopp. Härledd uppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kapitalvinst men etiketten och källkolumnen anger kapitalförlust.\ncatalog:variable_text:33895:12784:13514"

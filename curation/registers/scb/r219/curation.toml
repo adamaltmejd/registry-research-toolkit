@@ -330,80 +330,30 @@ subject = "var:antal-tatorter"
 fields = { "tags" = ["geography"] }
 evidence = "To är en källmnemonik som inte är en igenkännbar stam av tätorter.\ncatalog:variable_text:35063:18627:18628"
 
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: BefAdr @2010-12-31..2010-12-31 where key = 'v392'"
-fields = { "description" = "Antal folkbokförda personer" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
 
 [[statement]]
 kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: BefAdr @2015-12-31..2015-12-31 where key = 'v392'"
+subject = "var:befadr"
 fields = { "description" = "Antal folkbokförda personer" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
+
 
 [[statement]]
 kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: BefAdr @2018-12-31..2018-12-31 where key = 'v392'"
-fields = { "description" = "Antal folkbokförda personer" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: BefAdr @2020-12-31..2020-12-31 where key = 'v392'"
-fields = { "description" = "Antal folkbokförda personer" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "strandnara-befolkning: <none> @2013-01-01..2013-12-31 where key = 'v392'"
-fields = { "description" = "Antal folkbokförda personer" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: BefFast @2013-12-31..2013-12-31 where key = 'v392'"
+subject = "var:beffast"
 fields = { "description" = "Antal folkbokförda personer vid fastighetskoordinater" }
-evidence = "Definitionen om familjen beskriver en annan population än de folkbokförda vid fastighetskoordinater.\ncatalog:variable_text:35043:16070:16071"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen om familjen beskriver en annan population än de folkbokförda vid fastighetskoordinater.\ncatalog:variable_text:35043:16070:16071"
+
 
 [[statement]]
 kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: Havso @2010-12-31..2010-12-31 where key = 'v16345'"
+subject = "var:havsvatten"
 fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
-evidence = "Koderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKoderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
+
 
 [[statement]]
 kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: Havso @2013-12-31..2013-12-31 where key = 'v16345'"
-fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
-evidence = "Koderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: Havso @2015-12-31..2015-12-31 where key = 'v16345'"
-fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
-evidence = "Koderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: Havso @2018-12-31..2018-12-31 where key = 'v16345'"
-fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
-evidence = "Koderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "befolkade-oar-utan-fastlandsforbindelse: Havso @2020-12-31..2020-12-31 where key = 'v16345'"
-fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
-evidence = "Koderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
-
-[[statement]]
-kind = "set"
-subject = "basinformation-kust-strander-oar: LangdM @2019-01-01..2019-12-31 where key = 'v25833'"
+subject = "var:langdm"
 fields = { "description" = "Kust- och strandlängd i meter." }
-evidence = "Definitionen beskriver en vattenmask, medan variabeln mäter kust- och strandlängd i meter.\ncatalog:variable_text:35053:17897:18262\ncatalog:variable_text:35053:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "basinformation-kust-strander-oar: LangdM @2024-01-01..2024-12-31 where key = 'v25833'"
-fields = { "description" = "Kust- och strandlängd i meter." }
-evidence = "Definitionen beskriver en vattenmask, medan variabeln mäter kust- och strandlängd i meter.\ncatalog:variable_text:35053:17897:18262\ncatalog:variable_text:35053:19723:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en vattenmask, medan variabeln mäter kust- och strandlängd i meter.\ncatalog:variable_text:35053:17897:18262\ncatalog:variable_text:35053:19723:20089"

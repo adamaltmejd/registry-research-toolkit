@@ -1900,7 +1900,13 @@ pub fn resolve(
 
 /// Resolve typed curation facts after occurrence identities and variable membership.
 /// Provenance records the evidence for these facts; it is never an input to them.
-pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadata]) {
+///
+/// # Errors
+/// Different descriptions reaching one final variable, naming both authoring locations.
+pub fn apply_metadata(
+    resolved: &mut crate::Resolved,
+    metadata: &[apply::Metadata],
+) -> Result<(), String> {
     let mut by_occurrence = BTreeMap::<_, Vec<_>>::new();
     for decision in metadata.iter().filter(|m| {
         m.key.identity.provider == resolved.register.provider
@@ -1912,8 +1918,9 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
             .push(&decision.value);
     }
     if by_occurrence.is_empty() {
-        return;
+        return Ok(());
     }
+    let mut descriptions = BTreeMap::<usize, (&str, &Locator)>::new();
     for (index, occurrence) in resolved.occurrences.iter().enumerate() {
         let row = &occurrence.occurrence;
         let identity = crate::OccurrenceIdentity::new(
@@ -1943,6 +1950,24 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
                             resolved.variables[variable].synonyms.clone_from(synonyms);
                         }
                     }
+                    apply::MetadataValue::Description { text, at } => {
+                        if let Some(variable) = occurrence.variable {
+                            if let Some((previous, first_at)) =
+                                descriptions.insert(variable, (text, at))
+                                && previous != text.as_str()
+                            {
+                                return Err(format!(
+                                    "{}:{}: variable-description-conflict: variable {:?} has different descriptions; first at {}:{}; different meanings require separate variables",
+                                    at.input,
+                                    at.at,
+                                    resolved.variables[variable].slug,
+                                    first_at.input,
+                                    first_at.at
+                                ));
+                            }
+                            resolved.variables[variable].description = Some(text.clone());
+                        }
+                    }
                     apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),
                 }
             }
@@ -1957,4 +1982,5 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
             });
         }
     }
+    Ok(())
 }

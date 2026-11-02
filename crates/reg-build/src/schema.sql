@@ -163,6 +163,7 @@ CREATE TABLE variable (
   pid             TEXT NOT NULL UNIQUE,   -- 'demo/hush/alder'
   label_text      INTEGER NOT NULL REFERENCES text(id),
   definition_text INTEGER REFERENCES text(id),
+  description_text INTEGER REFERENCES text(id),       -- one curated variable description
   start           INTEGER NOT NULL,       -- hull of its segments
   end             INTEGER NOT NULL,
   CHECK (start < end)
@@ -378,7 +379,8 @@ CREATE TABLE override (
   source_value TEXT,                      -- losing source value; NULL = source silent
   PRIMARY KEY (subject_kind, subject_id, field),
   CHECK ((prov = 'curated') = (statement_id IS NOT NULL)),
-  CHECK ((prov = 'rule') = (rule_code IS NOT NULL))
+  CHECK ((prov = 'rule') = (rule_code IS NOT NULL)),
+  CHECK (subject_kind <> 'occurrence' OR field <> 'description')
 ) STRICT, WITHOUT ROWID;
 
 -- Gaps inside a coverage hull, with a reason (design T5).

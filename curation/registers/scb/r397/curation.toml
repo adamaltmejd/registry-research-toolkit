@@ -479,14 +479,9 @@ subject = "var:verksamhetsform-folkbildning"
 fields = { "tags" = ["education"] }
 evidence = "V är en enbokstavskod för verksamhet.\ncatalog:variable_text:44791:15340:20089"
 
-[[statement]]
-kind = "set"
-subject = "deltagare: GenomfLedarUtb @2012-01-01..2024-12-31 where key = 'v49437'"
-fields = { "description" = "Anger hur ledarens ledarutbildning genomförts." }
-evidence = "Värdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
 
 [[statement]]
 kind = "set"
-subject = "studieforbund-stuv-2020: GenomfLedarUtb @2024-01-01..2024-12-31 where key = 'v49437'"
+subject = "var:genomfledarutb"
 fields = { "description" = "Anger hur ledarens ledarutbildning genomförts." }
-evidence = "Värdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger hur ledarutbildningen genomförts, inte enbart om den genomförts.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"

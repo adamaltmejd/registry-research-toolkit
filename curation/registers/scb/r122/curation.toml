@@ -127,372 +127,6 @@ caveat = "Question wording and delivered floating-point storage are documented; 
 
 [[statement]]
 kind = "set"
-subject = "aku-april-2005-dec-2020: hufrandelvtimfo"
-fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande del av veckan, företagare/medhjälpare. Variabeln beräknas som skillnaden mellan faktisk och genomsnittlig arbetstid referensveckan." }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:219\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufranhelvtimanst"
-fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, anställda" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:225\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufranhelvtimfo"
-fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, företagare/medhjälpare" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:231\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: storan"
-fields = { "description" = "Antal personer i populationen i ett visst stratum vid ett visst urvalstillfälle" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:69\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: kfam4"
-fields = { "description" = "Antalet barn som bor hemma är alltså ...?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:297\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu31"
-fields = { "description" = "Arbetar du fortfarande ... timmar i genomsnitt per vecka?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:333\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu16b"
-fields = { "description" = "Arbetar du fortfarande deltid?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:315\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu16a"
-fields = { "description" = "Arbetar du fortfarande heltid?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:309\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hreg"
-fields = { "description" = "Arbetar du heltid eller deltid (i huvudsysslan)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:111\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huarbhemmaant @2008"
-fields = { "description" = "Arbetar du hemifrån bostaden minst hälften av dina arbetsdagar? (Huvudsysslan.)" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:141\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huarbhemma @2008"
-fields = { "description" = "Arbetar du någonting hemifrån den egna bostaden? (Huvudsysslan.)" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:75\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: arverks3 @2008..2012"
-fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:81\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: uarbtarb5 @2011..2020"
-fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:417\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: bi6 @2005-04-01..2008-12-31"
-fields = { "description" = "Drivs det företaget av någon i ditt hushåll?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:93\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hu4b"
-fields = { "description" = "Drivs det företaget/jordbruket av någon i ditt hushåll?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:129\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: kfam2"
-fields = { "description" = "Du hade förra gången ... antal barn som bodde hemma. Är det fortfarande så?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:291\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: omb10b"
-fields = { "description" = "Du sa att du vill och kan öka din arbetstid. Hur många veckor i rad har det varit så?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:357\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: syssokt3"
-fields = { "description" = "Ej sökt annat arbete" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:405\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: ampp5b"
-fields = { "description" = "Ersättning från försäkringskassan" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:63\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: bi2 @2005-04-01..2008-12-31"
-fields = { "description" = "Hade du mer än ett arbete som du var frånvarande från?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:351\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huoters"
-fields = { "description" = "Hade du någon övertid (i huvudsysslan) som du får ersättning för i tid eller pengar?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:363\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huottot"
-fields = { "description" = "Hade du någon övertid/mertid med eller utan ersättning?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:369\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufastbott"
-fields = { "description" = "Har du en fast anställning i botten i huvudsysslan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:183\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huhelbott"
-fields = { "description" = "Har du en heltidsanställning i botten (i huvudsysslan)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:243\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu8"
-fields = { "description" = "Har du fortfarande samma typ av tidsbegränsad anställning som vid förra intervjun?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:339\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huanst"
-fields = { "description" = "Har du någon anställd? (Huvudsysslan.)" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:135\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufranlon @2005-04-01..2008-12-31"
-fields = { "description" = "Har du under frånvarotiden fått minst 50% av lönen från din arbetsgivare, eller annan ersättning som uppgår till minst 50% av lönen?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:237\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huat13a"
-fields = { "description" = "Hur många timmar arbetade du just den veckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:153\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufat3a"
-fields = { "description" = "Hur många timmar arbetade du just den veckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:189\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: bisnitttim"
-fields = { "description" = "Hur många timmar arbetar du i genomsnitt per vecka i bisysslan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:99\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: husnitttim"
-fields = { "description" = "Hur många timmar arbetar du i genomsnitt per vecka?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:255\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: sysonsktim"
-fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:393\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: uarbonsktim @2005-04-01..2010-12-31"
-fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:411\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufrandelvtimanst"
-fields = { "description" = "Hur många timmar var du frånvarande (i huvudsysslan)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:213\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufat7"
-fields = { "description" = "Hur många veckor har du varit frånvarande från arbetet?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:201\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huat4b"
-fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:177\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufat7b"
-fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:207\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huat4"
-fields = { "description" = "Hur många veckor i rad har du varit helt frånvarande från arbetet?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:171\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huotejerstim"
-fields = { "description" = "Hur många övertid-/mertidstimmar (i huvudsysslan) som du ej får ersättning för?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:249\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huarbled @2011..2020"
-fields = { "description" = "Ingår det i dina arbetsuppgifter (i huvudsysslan) att leda och ha tillsyn över andra anställdas arbete?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:147\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: ampp1"
-fields = { "description" = "Inskriven på arbetsförmedlingen, de senaste 4 veckorna" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:57\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: ak1"
-fields = { "description" = "Jobbade du någonting den veckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:51\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: iveck @2005-04-01..2019-12-31"
-fields = { "description" = "Kalendervecka" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:279\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: uarbvillarb @2005-04-01..2010-12-31"
-fields = { "description" = "Skulle du velat ha arbete referensveckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:423\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: sysokaminska"
-fields = { "description" = "Skulle du vilja öka eller minska din arbetstid (totalt i både huvud- och bisyssla)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:387\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huyrke"
-fields = { "description" = "Till vilket yrke vill du räkna ditt arbete?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:273\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: verks1"
-fields = { "description" = "Vad betraktar du dig huvudsakligen som?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:429\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huat1a"
-fields = { "description" = "Var du frånvarande något under referensveckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:159\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: huat2b"
-fields = { "description" = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga At2a)" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:165\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hufat6b"
-fields = { "description" = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga FAt6a)" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:195\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: gradk"
-fields = { "description" = "Vilken typ av anställning har du nu?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:105\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: sysejarbmerskal"
-fields = { "description" = "Vilken var den främsta anledningen till att du inte kunde arbeta fler timmar under referensveckan?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:381\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: syssokskal"
-fields = { "description" = "Vilken är den främsta anledningen till att du söker annat arbete?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:399\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hutafaonsk @2005-04-01..2008-12-31"
-fields = { "description" = "Vilket föredrar du: fast eller tidsbegränsad anställning?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:267\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: kbihu14a"
-fields = { "description" = "Är ... fortfarande ditt yrke?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:285\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu14a"
-fields = { "description" = "Är ... fortfarande ditt yrke?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:303\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hutafa"
-fields = { "description" = "Är det en tidsbegränsad eller en fast anställning?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:261\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu17"
-fields = { "description" = "Är din deltid fortfarande ... procent?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:321\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: khu30"
-fields = { "description" = "Är din överenskomna arbetstid fortfarande ... timmar per vecka?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:327\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: bi5 @2005-04-01..2008-12-31"
-fields = { "description" = "Är du anställd, egen företagare eller oavlönad medhjälpare (i bisysslan)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:87\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "aku-april-2005-dec-2020: hu4a"
-fields = { "description" = "Är du anställd, egen företagare eller oavlönad medhjälpare (i huvudsysslan)?" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:123\n\nP1105_Variabellista 2022.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "aku-april-2005-dec-2020: arsektor @2007..2008,2010..2012"
 fields = { "coded" = false }
 evidence = "reg_meta_build/curation/registers/scb/aku.toml:811\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
@@ -568,12 +202,6 @@ kind = "assert"
 subject = "aku-april-2005-dec-2020: IVECK @2020-01-01..2020-12-31 where key = 'v6631' and release = 'r13795'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Veckonummer för intervju under året", "definition" = "Kalendervecka", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
 evidence = "reg_meta_build/curation/registers/scb/aku.toml:6\n\nSWECOV_variables_full_2026-06-15.csv row208 AKU_2020 contains exact IVECK; raw SCB VarId6631 documents Veckonummer för intervju under året / Kalendervecka through2019."
-
-[[statement]]
-kind = "set"
-subject = "aku-januari-2021: hsarbhemma @2021,2024"
-fields = { "description" = "Arbete hemifrån egna bostaden i huvudsysslan, senaste månaden" }
-evidence = "reg_meta_build/curation/registers/scb/aku.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -16966,3 +16594,436 @@ kind = "set"
 subject = "var:viktvfat-ord"
 fields = { "sets" = ["upprakningstal"] }
 evidence = "The definition identifies an ordinary-sample weight used to calculate total actual hours worked during a calendar month (r702).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2724\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2728"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-som-bor-hemma-vid-intervjun"
+fields = { "description" = "Antalet barn som bor hemma är alltså ...?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:297\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-stratum-urval"
+fields = { "description" = "Antal personer i populationen i ett visst stratum vid ett visst urvalstillfälle" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:69\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-hemifran-bostaden-huvud"
+fields = { "description" = "Arbetar du någonting hemifrån den egna bostaden? (Huvudsysslan.)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:75\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:arverks3"
+fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:81\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:bi-anstalld-foretagare"
+fields = { "description" = "Är du anställd, egen företagare eller oavlönad medhjälpare (i bisysslan)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:87\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:bisnitttim"
+fields = { "description" = "Hur många timmar arbetar du i genomsnitt per vecka i bisysslan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:99\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:drevs-det-foretaget-av-nagon-i-ditt-hushall-personer"
+fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:417\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:drivs-det-foretaget-bisysslan-av-nagon-i-ditt-hushall"
+fields = { "description" = "Drivs det företaget av någon i ditt hushåll?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:93\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsform-af-inskrivna-eller-programdeltagare"
+fields = { "description" = "Ersättning från försäkringskassan" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:63\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:foredrar-fast-eller-tidsbegransad-anstallning"
+fields = { "description" = "Vilket föredrar du: fast eller tidsbegränsad anställning?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:267\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:foretag-jordbruk-huvudsyssla-drivs-hushallsmedlem"
+fields = { "description" = "Drivs det företaget/jordbruket av någon i ditt hushåll?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:129\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hel-deltid-huvud-aku2008"
+fields = { "description" = "Arbetar du heltid eller deltid (i huvudsysslan)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:111\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemmaboende-barn-sedan-forra-intervjun"
+fields = { "description" = "Du hade förra gången ... antal barn som bodde hemma. Är det fortfarande så?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:291\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hsarbhemma"
+fields = { "description" = "Arbete hemifrån egna bostaden i huvudsysslan, senaste månaden" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hu4a"
+fields = { "description" = "Är du anställd, egen företagare eller oavlönad medhjälpare (i huvudsysslan)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:123\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huanst"
+fields = { "description" = "Har du någon anställd? (Huvudsysslan.)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:135\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huarbhemmaant"
+fields = { "description" = "Arbetar du hemifrån bostaden minst hälften av dina arbetsdagar? (Huvudsysslan.)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:141\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huarbled"
+fields = { "description" = "Ingår det i dina arbetsuppgifter (i huvudsysslan) att leda och ha tillsyn över andra anställdas arbete?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:147\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huat13a"
+fields = { "description" = "Hur många timmar arbetade du just den veckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:153\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huat1a"
+fields = { "description" = "Var du frånvarande något under referensveckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:159\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huat2b"
+fields = { "description" = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga At2a)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:165\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huat4"
+fields = { "description" = "Hur många veckor i rad har du varit helt frånvarande från arbetet?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:171\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufastbott"
+fields = { "description" = "Har du en fast anställning i botten i huvudsysslan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:183\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufat3a"
+fields = { "description" = "Hur många timmar arbetade du just den veckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:189\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufat6b"
+fields = { "description" = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga FAt6a)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:195\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufat7"
+fields = { "description" = "Hur många veckor har du varit frånvarande från arbetet?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:201\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufat7b"
+fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:207\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufrandelvtimanst"
+fields = { "description" = "Hur många timmar var du frånvarande (i huvudsysslan)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:213\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufrandelvtimfo"
+fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande del av veckan, företagare/medhjälpare. Variabeln beräknas som skillnaden mellan faktisk och genomsnittlig arbetstid referensveckan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:219\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufranhelvtimanst"
+fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, anställda" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:225\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufranhelvtimfo"
+fields = { "description" = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, företagare/medhjälpare" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:231\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hufranlon"
+fields = { "description" = "Har du under frånvarotiden fått minst 50% av lönen från din arbetsgivare, eller annan ersättning som uppgår till minst 50% av lönen?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:237\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huhelbott"
+fields = { "description" = "Har du en heltidsanställning i botten (i huvudsysslan)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:243\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huotejerstim"
+fields = { "description" = "Hur många övertid-/mertidstimmar (i huvudsysslan) som du ej får ersättning för?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:249\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:husnitttim"
+fields = { "description" = "Hur många timmar arbetar du i genomsnitt per vecka?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:255\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:huyrke"
+fields = { "description" = "Till vilket yrke vill du räkna ditt arbete?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:273\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:inskriven-pa-arbetsformedlingen-de-senaste-4-veckorna"
+fields = { "description" = "Inskriven på arbetsförmedlingen, de senaste 4 veckorna" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:57\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:iveck"
+fields = { "description" = "Kalendervecka" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:279\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:jobbade-du-nagonting-den-veckan"
+fields = { "description" = "Jobbade du någonting den veckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:51\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:khu16a"
+fields = { "description" = "Arbetar du fortfarande heltid?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:309\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:khu16b"
+fields = { "description" = "Arbetar du fortfarande deltid?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:315\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:khu31"
+fields = { "description" = "Arbetar du fortfarande ... timmar i genomsnitt per vecka?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:333\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mer-an-ett-arbete-franvaro"
+fields = { "description" = "Hade du mer än ett arbete som du var frånvarande från?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:351\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:omb10b"
+fields = { "description" = "Du sa att du vill och kan öka din arbetstid. Hur många veckor i rad har det varit så?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:357\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-med-ersattning"
+fields = { "description" = "Hade du någon övertid (i huvudsysslan) som du får ersättning för i tid eller pengar?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:363\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-totalt"
+fields = { "description" = "Hade du någon övertid/mertid med eller utan ersättning?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:369\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samma-deltidsprocent-som-vid-forra-intervjun"
+fields = { "description" = "Är din deltid fortfarande ... procent?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:321\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samma-overenskomna-arbetstid-som-vid-forra-intervjun"
+fields = { "description" = "Är din överenskomna arbetstid fortfarande ... timmar per vecka?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:327\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samma-tidsbegransade-anstallning-som-vid-forra-intervjun"
+fields = { "description" = "Har du fortfarande samma typ av tidsbegränsad anställning som vid förra intervjun?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:339\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samma-yrke-i-huvudsysslan-som-vid-forra-intervjun"
+fields = { "description" = "Är ... fortfarande ditt yrke?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:303\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:samma-yrke-som-vid-forra-intervjun"
+fields = { "description" = "Är ... fortfarande ditt yrke?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:285\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sysejarbmerskal"
+fields = { "description" = "Vilken var den främsta anledningen till att du inte kunde arbeta fler timmar under referensveckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:381\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sysokaminska"
+fields = { "description" = "Skulle du vilja öka eller minska din arbetstid (totalt i både huvud- och bisyssla)?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:387\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sysonsktim"
+fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:393\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:syssokskal"
+fields = { "description" = "Vilken är den främsta anledningen till att du söker annat arbete?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:399\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:syssokt3"
+fields = { "description" = "Ej sökt annat arbete" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:405\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:tidsbegransad-eller-fast-anstallning-i-huvudsysslan"
+fields = { "description" = "Är det en tidsbegränsad eller en fast anställning?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:261\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:uarbonsktim"
+fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:411\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:uarbvillarb"
+fields = { "description" = "Skulle du velat ha arbete referensveckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:423\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:veckor-deltidsfranvaro-huvudsyssla-sjukdom-anstallda"
+fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:177\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:verks1"
+fields = { "description" = "Vad betraktar du dig huvudsakligen som?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:429\n\nP1105_Variabellista 2022.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-typ-av-anstallning-har-du-nu"
+fields = { "description" = "Vilken typ av anställning har du nu?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/aku.toml:105\n\nP1105_Variabellista 2022.xlsx"

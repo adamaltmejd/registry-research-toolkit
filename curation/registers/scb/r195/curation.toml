@@ -22,36 +22,6 @@ caveat = "Undocumented column: SCB documents no BAS variable for KSju, so its me
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: ersk"
-fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: ersm"
-fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: ersdagar"
-fields = { "description" = "Antal ersättningsdagar, viktade" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: kdagk"
-fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: kdagm"
-fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: delantdagar @2015"
 fields = { "sensitive" = true, "identifier" = false }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1379\n\nSCB states neither flag for scb/ksju/delantdagar-2015 and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
@@ -259,24 +229,6 @@ kind = "assert"
 subject = "sjukfranvaro-sjukloneperioden: Felaktig @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Är alltid 0 (eller NULL)", "definition" = "Är alltid 0 (eller NULL)" } }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:119\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: glappantdag"
-fields = { "description" = "Dagar mellan sjukdagar" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: stratam"
-fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: peorgnrram @2011-04-01..2012-12-31,2014..2015"
-fields = { "description" = "Organisationsnummer" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -1574,212 +1526,79 @@ subject = "var:upprakningsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Den ensamma bokstaven A är en källkod i id:t.\ncatalog:variable_text:35035:19358:19723"
 
+
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2011-04-01..2011-12-31 where key = 'v8152'"
+subject = "var:antal-sjukdagar-delantdagar"
 fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2012-01-01..2012-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2013-01-01..2013-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2014-01-01..2014-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DELANTDAGAR @2015-01-01..2015-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: DelAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
-fields = { "description" = "Antal deldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser deldagar.\ncatalog:variable_text:34948:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2011-04-01..2011-12-31 where key = 'v8152'"
+subject = "var:antal-sjukdagar-helantdagar"
 fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2012-01-01..2012-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:antal-sjukdagar-kvinna"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2013-01-01..2013-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:antal-sjukdagar-man"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2014-01-01..2014-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:ersdagar"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HELANTDAGAR @2015-01-01..2015-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:ersk"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:ersm"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
+subject = "var:glappantdag"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: HelAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
-fields = { "description" = "Antal heldagar i ett sjukfall." }
-evidence = "Definitionen anger alla dagar men måttet avser heldagar.\ncatalog:variable_text:34949:15065:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2015-01-01..2015-12-31 where key = 'v8152'"
+subject = "var:glappantdagar"
 fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAlla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2016-01-01..2016-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2017-01-01..2017-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2018-01-01..2018-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2019-01-01..2019-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2020-01-01..2020-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2021-01-01..2021-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2022-01-01..2022-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: GlappAntDagar @2023-01-01..2023-12-31 where key = 'v8152'"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Alla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+subject = "var:stratam"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

@@ -229,12 +229,6 @@ evidence = "Variabeln beskriver bakgrund utifrån födelseland.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "deltagare-i-esf-projekt: Funk @2021-01-01..2027-12-31 where key = 'v47926'"
-fields = { "description" = "Anger om deltagaren har en funktionsvariation." }
-evidence = "Korrigerar dubblerad punkt utan att ändra betydelsen.\ncatalog:variable_text:7916:18628:21184"
-
-[[statement]]
-kind = "set"
 subject = "var:avslorsak"
 fields = { "tags" = ["employment"] }
 evidence = "Exit reasons explicitly include employment, self-employment and seeking work (r13), as well as leaving for work in the earlier coding (r16), supporting employment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7897\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7144\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7910"
@@ -250,3 +244,9 @@ kind = "set"
 subject = "var:specmal"
 fields = { "tags" = ["employment"] }
 evidence = "The objectives include skills development for workers and unemployed people, and increased opportunities for work (r14), supporting employment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7919\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4741\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7932"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "description" = "Anger om deltagaren har en funktionsvariation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar dubblerad punkt utan att ändra betydelsen.\ncatalog:variable_text:7916:18628:21184"

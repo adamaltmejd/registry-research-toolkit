@@ -742,11 +742,9 @@
                     "null"
                   ]
                 },
-                "descriptions": {
-                  "items": {
-                    "$ref": "#/$defs/ShowDescription"
-                  },
-                  "type": "array"
+                "description": {
+                  "description": "The one curated description, separate from source text runs.",
+                  "type": "string"
                 },
                 "fqid": {
                   "type": "string"
@@ -801,7 +799,6 @@
                 "period",
                 "unit_types",
                 "texts",
-                "descriptions",
                 "spellings",
                 "tables",
                 "kind"
@@ -809,29 +806,6 @@
               "type": "object"
             }
           ]
-        },
-        "ShowDescription": {
-          "description": "An occurrence description, separate from definitions; equal texts in one table\nshare merged periods. Different tables or texts remain separate.",
-          "properties": {
-            "description": {
-              "type": "string"
-            },
-            "periods": {
-              "items": {
-                "$ref": "#/$defs/Period"
-              },
-              "type": "array"
-            },
-            "table": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "table",
-            "description",
-            "periods"
-          ],
-          "type": "object"
         },
         "ShowProviderRef": {
           "properties": {

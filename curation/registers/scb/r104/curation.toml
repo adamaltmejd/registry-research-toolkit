@@ -1001,110 +1001,58 @@ subject = "var:urvalsstratum"
 fields = { "tags" = ["methods"] }
 evidence = "Urvalsstratum hör till undersökningsmetodik.\ncatalog:variable_text:7424:18262:18444"
 
+
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: ML_betyg @2013-01-01..2013-06-30 where key = 'v25188'"
+subject = "var:ml-betyg"
 fields = { "description" = "Betyg i ämnet modersmål." }
-evidence = "Beskrivningen anger ämnet men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: ML_spr @2013-01-01..2013-06-30 where key = 'v25188'"
+subject = "var:ml-sprak"
 fields = { "description" = "Språk i ämnet modersmål." }
-evidence = "Beskrivningen anger ämnet men variabeln mäter vilket språk som läses.\ncatalog:valueset:2344\ncatalog:variable_text:7383:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men variabeln mäter vilket språk som läses.\ncatalog:valueset:2344\ncatalog:variable_text:7383:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: M1_betyg @2013-01-01..2013-06-30 where key = 'v25186'"
+subject = "var:moderna-sprak-elevens-val-betyg"
 fields = { "description" = "Betyg i moderna språk inom ramen för elevens val." }
-evidence = "Beskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7384:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7384:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: M1_spr @2013-01-01..2013-06-30 where key = 'v25186'"
+subject = "var:moderna-sprak-elevens-val-sprak"
 fields = { "description" = "Språk i moderna språk inom ramen för elevens val." }
-evidence = "Beskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7385:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7385:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: M2_spr @2013-01-01..2013-06-30 where key = 'v34103'"
+subject = "var:moderna-sprak-sprakval"
 fields = { "description" = "Språk i moderna språk inom ramen för språkval." }
-evidence = "Beskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7386:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7386:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: M2_betyg @2013-01-01..2013-06-30 where key = 'v34103'"
+subject = "var:moderna-sprak-sprakval-betyg"
 fields = { "description" = "Betyg i moderna språk inom ramen för språkval." }
-evidence = "Beskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7387:15706:15887"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7387:15706:15887"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-6: Sprakval @2005-01-01..2005-06-30 where key = 'v34103'"
+subject = "var:sprakval"
 fields = { "description" = "Deltagande i moderna språk inom ramen för språkval." }
-evidence = "Beskrivningen anger undervisningen men variabeln mäter deltagande.\ncatalog:valueset:6405\ncatalog:variable_text:7404:12784:12965"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter deltagande.\ncatalog:valueset:6405\ncatalog:variable_text:7404:12784:12965"
+
 
 [[statement]]
 kind = "set"
-subject = "elevpanel-7: SvarandeSkola @2011-01-01..2011-06-30 where key = 'v25831'"
+subject = "var:svarandeskola"
 fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-7: SvarandeSkola @2012-01-01..2012-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-7: SvarandeSkola @2013-01-01..2013-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-7: SvarandeSkola @2014-01-01..2014-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2014-01-01..2014-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2015-01-01..2015-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2016-01-01..2016-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2017-01-01..2017-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2018-01-01..2018-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2019-01-01..2019-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "elevpanel-8: SvarandeSkola @2020-01-01..2020-06-30 where key = 'v25831'"
-fields = { "description" = "Anger om den gamla eller nya skolan har svarat när eleven bytt skola." }
-evidence = "Värdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger om den gamla eller nya skolan svarat, inte skolans identitet.\ncatalog:valueset:2789\ncatalog:variable_text:7408:18262:18444"

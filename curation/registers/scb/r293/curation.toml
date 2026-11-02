@@ -975,18 +975,6 @@ evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44625:
 
 [[statement]]
 kind = "set"
-subject = "statliga-anslag-till-forskning-och-utveckling: NABS12X @2021-01-01..2021-12-31 where key = 'v42913'"
-fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av statliga anslag till universitet och högskolor." }
-evidence = "Etiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44583:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "statliga-anslag-till-forskning-och-utveckling: NABS13X @2021-01-01..2021-12-31 where key = 'v42922'"
-fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor." }
-evidence = "Etiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
 fields = { "tags" = ["research"] }
 evidence = "r63 defines forecast R&D funding for public administration, economic planning and other community planning, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44609"
@@ -1020,3 +1008,16 @@ kind = "set"
 subject = "var:s13"
 fields = { "tags" = ["research"] }
 evidence = "r64 defines forecast R&D funding for exploring and exploiting Earth and the atmosphere, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44464\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44610"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12x"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av statliga anslag till universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44583:18628:18993"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13x"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993"

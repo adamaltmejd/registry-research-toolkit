@@ -107660,228 +107660,6 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:53312:13149:135
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: AM0310A @2010-01-01..2010-12-31 where key = 'v49079'"
-fields = { "description" = "Om urvalsperson blir smutsig på sitt arbete." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:46045:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: AM0310A @2011-01-01..2011-12-31 where key = 'v49079'"
-fields = { "description" = "Om urvalsperson blir smutsig på sitt arbete." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:46045:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060G @2021-01-01..2021-12-31 where key = 'v6258'"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "The source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060G @2022-01-01..2022-12-31 where key = 'v6258'"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "The source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060G @2023-01-01..2023-12-31 where key = 'v6258'"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "The source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060G @2024-01-01..2024-12-31 where key = 'v6258'"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "The source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060G @2025-01-01..2025-12-31 where key = 'v6258'"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "The source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: FU0281 @1984-01-01..1984-12-31 where key = 'v42987'"
-fields = { "description" = "Familj och umgänge födelseår barn 2." }
-evidence = "Beskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: FU0281 @1985-01-01..1985-12-31 where key = 'v42987'"
-fields = { "description" = "Familj och umgänge födelseår barn 2." }
-evidence = "Beskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: FU0322 @1984-01-01..1984-12-31 where key = 'v14257'"
-fields = { "description" = "Om vuxet barn nr 2 i hushållet, 19 år eller äldre, har bott tillsammans med urvalspersonen hela tiden sedan födelsen." }
-evidence = "The source definition identifies the child but omits the measured co-residence history.\ncatalog:variable_text:47687:5113:5844"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: FU0322 @1985-01-01..1985-12-31 where key = 'v14257'"
-fields = { "description" = "Om vuxet barn nr 2 i hushållet, 19 år eller äldre, har bott tillsammans med urvalspersonen hela tiden sedan födelsen." }
-evidence = "The source definition identifies the child but omits the measured co-residence history.\ncatalog:variable_text:47687:5113:5844"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060N @2021-01-01..2021-12-31 where key = 'v6258'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060N @2022-01-01..2022-12-31 where key = 'v6258'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060N @2023-01-01..2023-12-31 where key = 'v6258'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060N @2024-01-01..2024-12-31 where key = 'v6258'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY060N @2025-01-01..2025-12-31 where key = 'v6258'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY063G @2021-01-01..2021-12-31 where key = 'v45682'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY063G @2022-01-01..2022-12-31 where key = 'v45682'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY063G @2023-01-01..2023-12-31 where key = 'v45682'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY063G @2024-01-01..2024-12-31 where key = 'v45682'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: HY063G @2025-01-01..2025-12-31 where key = 'v45682'"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Variabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PH152 @2022-01-01..2022-12-31 where key = 'v45985'"
-fields = { "description" = "Hur ofta urvalspersonen äter grönsaker eller sallad under en vanlig vecka." }
-evidence = "Beskrivningen avser frukt men variabeln mäter grönsaker eller sallad.\ncatalog:variable_text:50862:18993:19358\ncatalog:variable_text:50862:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PH152 @2025-01-01..2025-12-31 where key = 'v45985'"
-fields = { "description" = "Hur ofta urvalspersonen äter grönsaker eller sallad under en vanlig vecka." }
-evidence = "Beskrivningen avser frukt men variabeln mäter grönsaker eller sallad.\ncatalog:variable_text:50862:18993:19358\ncatalog:variable_text:50862:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PH171 @2022-01-01..2022-12-31 where key = 'v45986'"
-fields = { "description" = "Hur ofta urvalspersonen använder tobak." }
-evidence = "Variabeln anger frekvens, inte enbart om tobak används.\ncatalog:valueset:12518\ncatalog:variable_text:50863:18993:19358\ncatalog:variable_text:50863:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PH171 @2025-01-01..2025-12-31 where key = 'v45986'"
-fields = { "description" = "Hur ofta urvalspersonen använder tobak." }
-evidence = "Variabeln anger frekvens, inte enbart om tobak används.\ncatalog:valueset:12518\ncatalog:variable_text:50863:18993:19358\ncatalog:variable_text:50863:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PHD05 @2023-01-01..2023-12-31 where key = 'v46945'"
-fields = { "description" = "Hur urvalspersonens bostadsproblem upphörde, eller om problemen fortfarande kvarstår." }
-evidence = "Beskrivningen anger tidpunkt men värdena anger hur bostadsproblemen upphörde eller om de kvarstår.\ncatalog:valueset:7231\ncatalog:variable_text:50866:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PS010 @2022-01-01..2022-12-31 where key = 'v46002'"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på bio de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Värdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:8002\ncatalog:variable_text:50990:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PS020 @2022-01-01..2022-12-31 where key = 'v46004'"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på teater, konsert, dansföreställning eller liknande de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Värdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:7253\ncatalog:variable_text:50992:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PS030 @2022-01-01..2022-12-31 where key = 'v46005'"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på museum, konstutställning eller historisk plats de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Värdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:3535\ncatalog:variable_text:50994:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PS040 @2022-01-01..2022-12-31 where key = 'v46006'"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på sport- eller idrottsevenemang de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Värdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:4919\ncatalog:variable_text:50996:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: PS111 @2022-01-01..2022-12-31 where key = 'v46065'"
-fields = { "description" = "Urvalspersonen har under de senaste 12 månaderna deltagit i informellt volontärarbete." }
-evidence = "Beskrivningen anger formellt arbete men frågan gäller informellt volontärarbete.\ncatalog:variable_text:51007:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOUP_2 @2012-01-01..2012-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOUP_2 @2013-01-01..2013-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOup_2 @2014-01-01..2014-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOup_2 @2015-01-01..2015-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOup_2 @2018-01-01..2018-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ISCOup_2 @2019-01-01..2019-12-31 where key = 'v45243'"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Definitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
-
-[[statement]]
-kind = "set"
 subject = "individer-16-84-ar-ulf: ba0021 @1984-01-01..1984-12-31 where key = 'v42991'"
 fields = { "variable" = "civilstand-ba0021" }
 evidence = "Both define marital status identically and use the same complete nine-code list at BA0021. Ownership periods do not overlap, including adjacent [4748,5113) and [5113,5479) periods in the table for individuals aged 16–84. The RTB wording specifies the data source."
@@ -109591,3 +109369,107 @@ kind = "set"
 subject = "individer-16plus-ulf: HA0507 @2011-01-01..2011-12-31 where key = 'v14509' and release = 'r19811'"
 fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
 evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:bio-antal-ganger-12-manader"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på bio de senaste 12 månaderna, eller orsak till att personen inte varit där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:8002\ncatalog:variable_text:50990:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsproblem-uttrade-ur-bostadsproblem"
+fields = { "description" = "Hur urvalspersonens bostadsproblem upphörde, eller om problemen fortfarande kvarstår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tidpunkt men värdena anger hur bostadsproblemen upphörde eller om de kvarstår.\ncatalog:valueset:7231\ncatalog:variable_text:50866:19358:19723"
+
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-informellt-volontararbete"
+fields = { "description" = "Urvalspersonen har under de senaste 12 månaderna deltagit i informellt volontärarbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger formellt arbete men frågan gäller informellt volontärarbete.\ncatalog:variable_text:51007:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand"
+fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-ej-avgiftsfinansierat-behovsprovat"
+fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-netto"
+fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:fu0281"
+fields = { "description" = "Familj och umgänge födelseår barn 2." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-gronsaker-eller-sallad"
+fields = { "description" = "Hur ofta urvalspersonen äter grönsaker eller sallad under en vanlig vecka." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser frukt men variabeln mäter grönsaker eller sallad.\ncatalog:variable_text:50862:18993:19358\ncatalog:variable_text:50862:20089:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-tobak"
+fields = { "description" = "Hur ofta urvalspersonen använder tobak." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger frekvens, inte enbart om tobak används.\ncatalog:valueset:12518\ncatalog:variable_text:50863:18993:19358\ncatalog:variable_text:50863:20089:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:museum-konstutstallning-etc-antal-ganger"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på museum, konstutställning eller historisk plats de senaste 12 månaderna, eller orsak till att personen inte varit där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:3535\ncatalog:variable_text:50994:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:smutsig-pa-arbetsplats"
+fields = { "description" = "Om urvalsperson blir smutsig på sitt arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:46045:14610:15340"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sportevenemang-antal-ganger"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på sport- eller idrottsevenemang de senaste 12 månaderna, eller orsak till att personen inte varit där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:4919\ncatalog:variable_text:50996:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:teater-konsert-etc-antal-ganger"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på teater, konsert, dansföreställning eller liknande de senaste 12 månaderna, eller orsak till att personen inte varit där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:7253\ncatalog:variable_text:50992:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vuxet-barn-2-bott-tillsammans"
+fields = { "description" = "Om vuxet barn nr 2 i hushållet, 19 år eller äldre, har bott tillsammans med urvalspersonen hela tiden sedan födelsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe source definition identifies the child but omits the measured co-residence history.\ncatalog:variable_text:47687:5113:5844"
+
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-nuvarande-arbete-isco-4-siffrig-iscoup-2"
+fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"

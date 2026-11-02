@@ -4591,36 +4591,6 @@ evidence = "Yrkesutbildningens svenska eller utländska ursprung.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "lagenhet-och-hushall: AntSamRakInkHh @1985-01-01..1985-12-31 where key = 'v39944'"
-fields = { "description" = "Anger antal personer med sammanräknad inkomst i hushållet." }
-evidence = "Beskrivningen anger inkomstbelopp men variabeln räknar personer.\ncatalog:variable_text:11115:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "lagenhet-och-hushall: AntSamRakInkHh @1990-01-01..1990-12-31 where key = 'v39944'"
-fields = { "description" = "Anger antal personer med sammanräknad inkomst i hushållet." }
-evidence = "Beskrivningen anger inkomstbelopp men variabeln räknar personer.\ncatalog:variable_text:11115:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "familj: FamFKon @1990-01-01..1990-12-31 where key = 'v42372'"
-fields = { "description" = "Anger familjeföreståndarens kön." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:11219:7305:7670"
-
-[[statement]]
-kind = "set"
-subject = "individ: UppvEl @1985-01-01..1985-12-31 where key = 'v42514'"
-fields = { "description" = "Anger om el används för uppvärmning i huset." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:97342\ncatalog:variable_text:11438:5479:5844"
-
-[[statement]]
-kind = "set"
-subject = "lagenhet-och-hushall: UppvEl @1985-01-01..1985-12-31 where key = 'v42514'"
-fields = { "description" = "Anger om el används för uppvärmning i huset." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:97342\ncatalog:variable_text:11438:5479:5844"
-
-[[statement]]
-kind = "set"
 subject = "individ: husnr @1980-01-01..1980-12-31 where key = 'v42532'"
 fields = { "variable" = "husnr" }
 evidence = "Both definitions specify sequential numbering of buildings or houses within a property. Both use character column HusNr in the individual and dwelling-and-household tables. Building number occurs in [3652,4018), between nonoverlapping house-number observations in [1826,2191) and [5479,5844)."
@@ -5194,3 +5164,23 @@ kind = "set"
 subject = "var:samrakinkhh"
 fields = { "sets" = ["sammanraknad-inkomst"] }
 evidence = "r198 and r231 define household total income, including maritime income, within r307's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:11357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:97993\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:98114\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fob/sammanraknad-inkomst"
+
+[[statement]]
+kind = "set"
+subject = "var:antsamrakinkhh"
+fields = { "description" = "Anger antal personer med sammanräknad inkomst i hushållet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inkomstbelopp men variabeln räknar personer.\ncatalog:variable_text:11115:7305:7670"
+
+
+[[statement]]
+kind = "set"
+subject = "var:famfkon"
+fields = { "description" = "Anger familjeföreståndarens kön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:11219:7305:7670"
+
+
+[[statement]]
+kind = "set"
+subject = "var:uppvel"
+fields = { "description" = "Anger om el används för uppvärmning i huset." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:occurrence:97342\ncatalog:variable_text:11438:5479:5844"

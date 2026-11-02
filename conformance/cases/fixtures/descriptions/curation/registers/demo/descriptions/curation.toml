@@ -1,29 +1,11 @@
 [[statement]]
 kind = "set"
-subject = "main: Measure @2018..2019"
-fields.description = "Historical supplement"
-evidence = "Synthetic adjacent occurrences share supplementary text."
+subject = "var:measure"
+fields.description = "Longitudinal supplement; from 2020 includes revised coverage."
+evidence = "One variable description covers the source wording change across periods and tables."
 
 [[statement]]
 kind = "set"
-subject = "main: Measure @2020"
-fields.description = "Revised supplement"
-evidence = "Synthetic description changes without replacing source definitions."
-
-[[statement]]
-kind = "set"
-subject = "main: Measure @2022"
-fields.description = "Historical supplement"
-evidence = "Synthetic repeated text after a gap."
-
-[[statement]]
-kind = "set"
-subject = "other: Measure @2019"
-fields.description = "Concurrent supplement"
-evidence = "Synthetic concurrent tables disagree."
-
-[[statement]]
-kind = "set"
-subject = "main: Weighted @2019"
+subject = "var:weighted"
 fields.description = "Supplementary weighting evidence"
 evidence = "Equal labels: Weighted has the shorter primary row, but appending its description would make it longer than Comparator."

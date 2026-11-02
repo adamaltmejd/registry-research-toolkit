@@ -525,114 +525,6 @@ evidence = "reg_meta_build/curation/registers/scb/hreg.toml:143\n\nSWECOV's deli
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-poang: niva"
-fields = { "description" = "Förkunskapsnivå, högskolekurs" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:331\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sokande-grund-avancerad: linr @2005-07-01..2005-12-31,2006-07-01..2006-12-31,2007-07-01..2007-12-31,2008-07-01..2008-12-31"
-fields = { "description" = "Högskolans interna programinriktning" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:379\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: kurskodben"
-fields = { "description" = "Kursenbs benämning" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:355\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: kurskod"
-fields = { "description" = "Kurskod" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:349\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1993: kurslan"
-fields = { "description" = "Kurslän" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:361\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "doktorander-anknytande-hogskolor: hsnamn"
-fields = { "description" = "Lärosäte, klartext" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "antagna-forskarniva: hskod"
-fields = { "description" = "Lärosäte, kod (klartext i hjälptabell)" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sokande-grund-avancerad: lprog @2005-07-01..2005-12-31,2006-07-01..2006-12-31,2007-07-01..2007-12-31,2008-07-01..2008-12-31"
-fields = { "description" = "Lärosätets kod på programmet" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:385\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: lprogben"
-fields = { "description" = "Programmets benämning" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:391\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: linrben"
-fields = { "description" = "Programmets inriktning i klartext. Alla program har inte inriiktning. (Endast för ansökningar till program)" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:403\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1993: kursort"
-fields = { "description" = "Studieort, kurs" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:367\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sokande-grund-avancerad: progort"
-fields = { "description" = "Studieort, program" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:397\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1993: takt"
-fields = { "description" = "Studietakt" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:373\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1993: termnr"
-fields = { "description" = "Terminsnummer för programstudier" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:409\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: utbomr"
-fields = { "description" = "Utbildningsområde (klartext i hjälptabell)" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:421\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1993: uprog"
-fields = { "description" = "Utbytesprogram" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:415\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-poang: amnegrupp"
-fields = { "description" = "Ämnesgrupp för kursansökningar (ämnesgrupp på kursen)" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:319\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundutbildning-1977: ar"
-fields = { "description" = "År" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:325\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "sokande-grund-avancerad: {kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -1041,18 +933,6 @@ evidence = "reg_meta_build/curation/registers/scb/hreg.toml:50\n\nSWECOV holds K
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: kurskod @2005-07-01..2005-12-31,2006-07-01..2006-12-31,2007-07-01..2007-12-31,2008-07-01..2008-12-31"
-fields = { "description" = "Kurskod" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:349\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sokande-grund-avancerad: kursort"
-fields = { "description" = "Studieort, kurs" }
-evidence = "reg_meta_build/curation/registers/scb/hreg.toml:367\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "var:adjungerad"
 fields = { "sets" = [] }
 evidence = "Adjungering beskriver anställningsförhållandet.\ncatalog:variable_text:26236:18628:19723"
@@ -3606,12 +3486,6 @@ kind = "set"
 subject = "var:yrkesexamensprogrammets-utbildningsomrade"
 fields = { "tags" = ["education"] }
 evidence = "Programmets utbildningsområde är en utbildningsklassificering.\ncatalog:variable_text:26470:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "doktorander-examina: LEx @1970-01-01..2024-12-31 where key = 'v1767'"
-fields = { "description" = "Högskolans kod för forskarexamen." }
-evidence = "Källan anger en lärosätesspecifik kod, inte benämningen.\ncatalog:variable_text:26362:0:20089"
 
 [[statement]]
 kind = "set"
@@ -3624,3 +3498,58 @@ kind = "set"
 subject = "var:verksamhetsomrade"
 fields = { "tags" = ["education"] }
 evidence = "Organizational affiliation mainly follows university faculties (r17) and includes university libraries and central administration (r14), supporting education as a broad institutional-resource theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:26378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11111\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:26468"
+
+[[statement]]
+kind = "set"
+subject = "var:forskarexamen-kod"
+fields = { "description" = "Högskolans kod för forskarexamen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en lärosätesspecifik kod, inte benämningen.\ncatalog:variable_text:26362:0:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolans-interna-programkod"
+fields = { "description" = "Lärosätets kod på programmet" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:385\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolekod"
+fields = { "description" = "Lärosäte, kod (klartext i hjälptabell)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolenamn"
+fields = { "description" = "Lärosäte, klartext" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:inriktningskod-for-utbildningsprogram"
+fields = { "description" = "Högskolans interna programinriktning" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:379\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod"
+fields = { "description" = "Kurskod" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:349\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kursort"
+fields = { "description" = "Studieort, kurs" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:367\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:progort"
+fields = { "description" = "Studieort, program" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/hreg.toml:397\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

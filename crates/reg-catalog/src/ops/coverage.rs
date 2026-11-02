@@ -64,6 +64,18 @@ pub struct CoverageColumn {
 /// `[start, end)` day numbers.
 type Span = (i64, i64);
 
+/// `spans` (in start order) with those that touch or overlap merged.
+fn merge(spans: impl IntoIterator<Item = Span>) -> Vec<Span> {
+    let mut out: Vec<Span> = Vec::new();
+    for (start, end) in spans {
+        match out.last_mut() {
+            Some(last) if start <= last.1 => last.1 = last.1.max(end),
+            _ => out.push((start, end)),
+        }
+    }
+    out
+}
+
 fn periods(server: &Server, spans: &[Span]) -> Vec<Period> {
     spans.iter().map(|&(s, e)| server.period(s, e)).collect()
 }
@@ -132,7 +144,7 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     for (id, fqid, name) in rows {
         let (table_spans, table_gaps, releases) = if variable {
             (
-                shape::merge_spans(spans(
+                merge(spans(
                     &conn,
                     "SELECT start, end FROM segment
                      WHERE variable_id = ? AND table_id = ? ORDER BY start",
@@ -208,7 +220,7 @@ fn columns(
     }
     let mut columns: Vec<(Vec<Span>, String)> = by_spelling
         .into_iter()
-        .map(|(spelling, spans)| (shape::merge_spans(spans), spelling))
+        .map(|(spelling, spans)| (merge(spans), spelling))
         .collect();
     columns.sort_by(|a, b| (a.0[0].0, &a.1).cmp(&(b.0[0].0, &b.1)));
     Ok(columns

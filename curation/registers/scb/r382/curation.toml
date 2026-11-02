@@ -2400,108 +2400,6 @@ fields = { "tags" = ["methods"] }
 evidence = "XGrupp är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40635:14335:16526"
 
 [[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2006-04-01..2007-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2007-04-01..2008-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2008-04-01..2009-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2009-04-01..2010-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2010-04-01..2011-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2011-04-01..2012-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2012-04-01..2013-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2013-04-01..2014-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-tom2014: fax @2014-04-01..2015-03-31 where key = 'v814'"
-fields = { "description" = "Faxnummer" }
-evidence = "Rättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2022-01-01..2022-12-31 where key = 'v33064'"
-fields = { "description" = "Handelsmarginalen uttryckt i procent." }
-evidence = "Procenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2023-01-01..2023-12-31 where key = 'v33064'"
-fields = { "description" = "Handelsmarginalen uttryckt i procent." }
-evidence = "Procenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2024-01-01..2024-12-31 where key = 'v33064'"
-fields = { "description" = "Handelsmarginalen uttryckt i procent." }
-evidence = "Procenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "omsattning-tjanstesektorn-2015: MeasureValue @2022-01-01..2022-12-31 where key = 'v50056'"
-fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
-evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2022-01-01..2022-12-31 where key = 'v50056'"
-fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
-evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2023-01-01..2023-12-31 where key = 'v50056'"
-fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
-evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "produktionsvardeindex-pvi: MeasureValue @2024-01-01..2024-12-31 where key = 'v50056'"
-fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
-evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "tjansteproduktionsindex: MeasureValue @2022-01-01..2022-12-31 where key = 'v50056'"
-fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
-evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
-
-[[statement]]
 kind = "link"
 subject = "var:bgrupp"
 relation = "continues"
@@ -2684,3 +2582,23 @@ kind = "set"
 subject = "var:variabelklass-kod-pin"
 fields = { "sets" = ["variabelklass"] }
 evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r313 despite the subset wording in r59 and r63.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40487\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395705\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40628"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "description" = "Faxnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
+
+
+[[statement]]
+kind = "set"
+subject = "var:handelsmarginal"
+fields = { "description" = "Handelsmarginalen uttryckt i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nProcenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-modellskattad-pin"
+fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"

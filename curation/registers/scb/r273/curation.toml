@@ -1,24 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "stativ: afsokyrkerf @2022..2023"
-fields = { "description" = "Erfarenhet i sökt yrke" }
-evidence = "reg_meta_build/curation/registers/scb/stativ.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "stativ: afkassgrp @2022..2023"
-fields = { "description" = "Kassagrupp" }
-evidence = "reg_meta_build/curation/registers/scb/stativ.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "stativ: afsokyrkutb @2022..2023"
-fields = { "description" = "Utbildning i sökt yrke" }
-evidence = "reg_meta_build/curation/registers/scb/stativ.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "stativ: {astkommun,motkommun} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -4429,246 +4411,6 @@ evidence = "Variabeln är en metodvariant för yrkesställning.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "stativ: EtablTill @2011-01-01..2011-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2012-01-01..2012-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2013-01-01..2013-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2014-01-01..2014-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2015-01-01..2015-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2016-01-01..2016-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2017-01-01..2017-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2018-01-01..2018-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2019-01-01..2019-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2020-01-01..2020-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2021-01-01..2021-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2022-01-01..2022-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: EtablTill @2023-01-01..2023-12-31 where key = 'v28160'"
-fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
-evidence = "Definitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @1997-01-01..1997-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @1998-01-01..1998-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @1999-01-01..1999-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2000-01-01..2000-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2001-01-01..2001-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2002-01-01..2002-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2003-01-01..2003-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2004-01-01..2004-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2005-01-01..2005-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2006-01-01..2006-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2007-01-01..2007-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2008-01-01..2008-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2009-01-01..2009-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2010-01-01..2010-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2011-01-01..2011-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2012-01-01..2012-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2013-01-01..2013-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2014-01-01..2014-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2015-01-01..2015-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2016-01-01..2016-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2017-01-01..2017-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2018-01-01..2018-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2019-01-01..2019-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2020-01-01..2020-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2021-01-01..2021-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2022-01-01..2022-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
-subject = "stativ: RehabErs @2023-01-01..2023-12-31 where key = 'v1613'"
-fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
-evidence = "Definitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"
-
-[[statement]]
-kind = "set"
 subject = "stativ: sun2000niva_old @2016-01-01..2016-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
 evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
@@ -4830,3 +4572,37 @@ kind = "set"
 subject = "var:utbildningsniva-3-positioner"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The definition explicitly measures the full three-position SUN 2000 education-level code; later operational text specifies the person's highest education (r364).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44386\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44530"
+
+[[statement]]
+kind = "set"
+subject = "var:afsokyrkerf"
+fields = { "description" = "Erfarenhet i sökt yrke" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/stativ.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:afsokyrkutb"
+fields = { "description" = "Utbildning i sökt yrke" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/stativ.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:etableringstillagg"
+fields = { "description" = "Utbetalt belopp av etableringstillägg under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:44329:14975:18993\ncatalog:variable_text:44329:18993:19723"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kassagrupp-inom-arbetsloshetskassan"
+fields = { "description" = "Kassagrupp" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/stativ.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning"
+fields = { "description" = "Rehabiliteringsersättning under inkomståret, angiven i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:44432:18993:19723\ncatalog:variable_text:44432:9862:18993"

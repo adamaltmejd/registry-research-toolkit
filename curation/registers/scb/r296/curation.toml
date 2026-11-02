@@ -1273,72 +1273,6 @@ fields = { "tags" = ["methods"] }
 evidence = "Variabeln mäter reviderad produktgruppsvikt.\ncatalog:variable_text:40936:18262:20819"
 
 [[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2015-01-01..2015-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2016-01-01..2016-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2017-01-01..2017-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2018-01-01..2018-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2019-01-01..2019-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2020-01-01..2020-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2021-01-01..2021-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2022-01-01..2022-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2023-01-01..2023-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2024-01-01..2024-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "ppi: UrvStatus @2025-01-01..2025-12-31 where key = 'v6415'"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Värdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
-
-[[statement]]
 kind = "link"
 subject = "var:period-ppi-period"
 relation = "continues"
@@ -1383,3 +1317,9 @@ kind = "set"
 subject = "var:produktgruppsnamn-namnsv"
 fields = { "sets" = ["produktgrupp"] }
 evidence = "r124 describes product groups below COICOP classes; its complete code list contains general SPIN sections A–U (r127).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40775\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:401488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10413"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalssannolikhet"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"

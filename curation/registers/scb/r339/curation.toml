@@ -377,80 +377,9 @@ subject = "var:typkod"
 fields = { "tags" = ["property"] }
 evidence = "Typkoden anger typ av taxeringsenhet.\ncatalog:variable_text:35260:20088:20089"
 
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2012-12-31..2012-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
 
 [[statement]]
 kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2013-12-31..2013-12-31 where key = 'v392'"
+subject = "var:antfolkb"
 fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2014-12-31..2014-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2015-12-31..2015-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2016-12-31..2016-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2017-12-31..2017-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2018-12-31..2018-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2019-12-31..2019-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2020-12-31..2020-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2021-12-31..2021-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2022-12-31..2022-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2023-12-31..2023-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
-
-[[statement]]
-kind = "set"
-subject = "lagenhetsregistret: Antfolkb @2024-12-31..2024-12-31 where key = 'v392'"
-fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
-evidence = "Definitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger familj, men den operativa definitionen avser alla folkbokförda på bostaden.\ncatalog:variable_text:35233:20088:20089"

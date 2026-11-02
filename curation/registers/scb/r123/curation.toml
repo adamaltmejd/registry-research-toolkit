@@ -13801,132 +13801,6 @@ evidence = "Källkolumnen har olika ägare med olika frågeformuleringar.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: ArbetatUnderAret @2024-01-01..2024-12-31 where key = 'v48336'"
-fields = { "description" = "Har du arbetat något under år 2024?" }
-evidence = "Rättar källtextens stavfel.\ncatalog:variable_text:3418:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: nattant @2021-01-01..2021-12-31 where key = 'v45872'"
-fields = { "description" = "Nattarbete i huvudsysslan, inklusive om det förekommer minst hälften av arbetsdagarna." }
-evidence = "Definitionen anger kväll trots att kodningen gäller nattarbete.\ncatalog:occurrence:26754\ncatalog:valueset:9952"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: nattant @2005-01-01..2005-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: nattant @2007-01-01..2007-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: nattant @2009-01-01..2009-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: nattant @2011-01-01..2011-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: nattant @2013-01-01..2013-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: nattant @2015-01-01..2015-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: nattant @2017-01-01..2017-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: nattant @2019-01-01..2019-12-31 where key = 'v24932'"
-fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
-evidence = "Definitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2001-01-01..2001-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2003-01-01..2003-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2005-01-01..2005-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2007-01-01..2007-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2009-01-01..2009-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2011-01-01..2011-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: HUSSYK4 @2013-01-01..2013-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: HUSSYK4 @2015-01-01..2015-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hsssyk4 @2021-01-01..2021-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk4 @2017-01-01..2017-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk4 @2019-01-01..2019-12-31 where key = 'v511'"
-fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
-evidence = "Beskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "arbetsmiljoundersokningen: understl @2005-01-01..2005-12-31 where key = 'v3835'"
 fields = { "variable" = "understallda-chef-intervall" }
 evidence = "Both derive intervals of direct and indirect subordinates, assigning zero to respondents without a supervisory role. Their observed periods [12053,12418) and [12784,13149) do not overlap in the same table."
@@ -14292,3 +14166,30 @@ kind = "set"
 subject = "var:verktygs"
 fields = { "sets" = ["datorutrustning-i-arbetet"] }
 evidence = "The question measures use of a programmable machine tool at work, an included equipment type (r301). | The question measures use of a programmable machine tool at work, an included equipment type (r301).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3913\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3925"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetatunderaret"
+fields = { "description" = "Har du arbetat något under år 2024?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar källtextens stavfel.\ncatalog:variable_text:3418:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-halvdag-hs"
+fields = { "description" = "Nattarbete i huvudsysslan, inklusive om det förekommer minst hälften av arbetsdagarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kväll trots att kodningen gäller nattarbete.\ncatalog:occurrence:26754\ncatalog:valueset:9952"
+
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-minst-halften"
+fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"

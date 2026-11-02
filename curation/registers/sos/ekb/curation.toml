@@ -6199,18 +6199,6 @@ evidence = "Vägledningen avser studier och yrke.\ncatalog:variable_text:56599:1
 
 [[statement]]
 kind = "set"
-subject = "ekb-ar: SOKALDSTAINVANDRA @1999-01-01..2009-12-31 where key = 'n:sokaldstainvandra'"
-fields = { "description" = "Invandringsår för den äldsta sökanden (om minst två sökande, annars tom)." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56523:10592:14610"
-
-[[statement]]
-kind = "set"
-subject = "ekb-ar: SOKYNGSTINVANDRA @1999-01-01..2009-12-31 where key = 'n:sokyngstinvandra'"
-fields = { "description" = "Invandringsår för den yngsta sökanden (om minst två sökande, annars tom)." }
-evidence = "Rättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56531:10592:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-juni"
 fields = { "tags" = ["transfers"] }
 evidence = "Coordinator-approved audit correction: Def 'Den äldstes försörjningshinder, juni' in sos/ekb (economic assistance register), member of set forsorjningshinder; the obstacle to self-support of an assistance recipient is plainly the transfers/social-care theme.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:22\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55893\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56077"
@@ -6448,3 +6436,16 @@ kind = "set"
 subject = "var:utrikesfodd"
 fields = { "sets" = ["utrikes-fodelse"] }
 evidence = "r117 explicitly indicates whether an applicant or co-applicant is foreign-born, matching the fixed birth-status concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56580"
+
+[[statement]]
+kind = "set"
+subject = "var:sokaldstainvandra"
+fields = { "description" = "Invandringsår för den äldsta sökanden (om minst två sökande, annars tom)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56523:10592:14610"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sokyngstinvandra"
+fields = { "description" = "Invandringsår för den yngsta sökanden (om minst två sökande, annars tom)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56531:10592:14610"

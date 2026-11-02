@@ -631,70 +631,15 @@ evidence = "reg_meta_build/curation/registers/sos/lova.toml:519\n\nLOVA SSYKSTAT
 
 [[statement]]
 kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: utbland"
-fields = { "description" = "Ubildningsland för underliggande examen för legitamationen/beviset" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:531\n\nLOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "lova-hosp: leg_spec_ar"
-fields = { "description" = "År för utfärdande av aktuell legitimation eller specialitetsbevis" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:447\n\nLOVA original row:103 and row:102 supply the same LEG_SPEC_AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: leg_specdatum"
-fields = { "description" = "Datum för utfärdande av legitimation eller specialitetsbevis" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:459\n\nLOVA original row:112 and row:113 supply the same LEG_SPECDATUM construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
 subject = "lova-ekonomi-arbetsmarknad: ssyk3 where label = 'Yrke enligt SSYK, 3-siffernivå, för förvärvsarbetande'"
 fields = { "label" = "Yrke enligt SSYK, klassad enligt SSYK96, 3-siffernivå, för förvärvsarbetande" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:471\n\nLOVA original row:140 and row:139 supply the same SSYK3 construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: ssyk4_j16"
-fields = { "description" = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare för aktuellt år" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:483\n\nLOVA original row:152 and row:151 supply the same SSYK4_J16 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: astsni2007"
-fields = { "description" = "Arbetsställets branch enligt  Standard för svensk näringsgrensindelning, SNI2007" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:423\n\nLOVA original row:16 and row:15 supply the same ASTSNI2007 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: agarkat"
-fields = { "description" = "Kod för om arbetsstället är privat eller offentlig ägt" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:387\n\nLOVA original row:3 and row:2 supply the same AGARKAT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-examen: hskoleort"
-fields = { "description" = "Högskoleort för aktuell examen" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:435\n\nLOVA original row:50 and row:49 supply the same HSKOLEORT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
 subject = "lova-person: alder"
 fields = { "label" = "Ålder vid årets slut" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:399\n\nLOVA original row:6 and row:5 supply the same ALDER construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: ar"
-fields = { "description" = "År som gäller för raden" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:411\n\nLOVA original row:8 and row:7 supply the same AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
-
-[[statement]]
-kind = "set"
-subject = "lova-ekonomi-arbetsmarknad: syssstat"
-fields = { "description" = "Vilken typ av sysselsättning individen har aktuellt år i november" }
-evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!166-167. Both rows label the field Sysselsättningsstatus (november månad), refer to the same source lookup and state 1995-2022. After their table tokens are curated onto the same declared table, use row 166's general wording for the occurrence description. Drop the converted LISA-only description override, which cannot remain separately selected after co-location. Preserve row 167's more specific source definition (utan hänsyn taget till leg), raw coding and linkage descriptions as evidence; do not infer equivalent classification domains."
-
 
 [[statement]]
 kind = "set"
@@ -2475,3 +2420,65 @@ kind = "set"
 subject = "var:yrkstalln"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesställning.\ncatalog:variable_text:56924:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "description" = "Kod för om arbetsstället är privat eller offentlig ägt" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:387\n\nLOVA original row:3 and row:2 supply the same AGARKAT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "År som gäller för raden" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:411\n\nLOVA original row:8 and row:7 supply the same AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstellets-naringsgren-sni2007"
+fields = { "description" = "Arbetsställets branch enligt  Standard för svensk näringsgrensindelning, SNI2007" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:423\n\nLOVA original row:16 and row:15 supply the same ASTSNI2007 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:hskoleort"
+fields = { "description" = "Högskoleort för aktuell examen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:435\n\nLOVA original row:50 and row:49 supply the same HSKOLEORT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:leg-spec-ar"
+fields = { "description" = "År för utfärdande av aktuell legitimation eller specialitetsbevis" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:447\n\nLOVA original row:103 and row:102 supply the same LEG_SPEC_AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:leg-specdatum"
+fields = { "description" = "Datum för utfärdande av legitimation eller specialitetsbevis" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:459\n\nLOVA original row:112 and row:113 supply the same LEG_SPECDATUM construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk96-4-foretagare"
+fields = { "description" = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare för aktuellt år" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:483\n\nLOVA original row:152 and row:151 supply the same SSYK4_J16 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+
+
+[[statement]]
+kind = "set"
+subject = "var:syssstat"
+fields = { "description" = "Vilken typ av sysselsättning individen har aktuellt år i november" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!166-167. Both rows label the field Sysselsättningsstatus (november månad), refer to the same source lookup and state 1995-2022. After their table tokens are curated onto the same declared table, use row 166's general wording for the occurrence description. Drop the converted LISA-only description override, which cannot remain separately selected after co-location. Preserve row 167's more specific source definition (utan hänsyn taget till leg), raw coding and linkage descriptions as evidence; do not infer equivalent classification domains."
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbland"
+fields = { "description" = "Ubildningsland för underliggande examen för legitamationen/beviset" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lova.toml:531\n\nLOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."

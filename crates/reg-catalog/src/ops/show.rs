@@ -1,7 +1,5 @@
 //! `show`: the summary of any ref; no ref is the catalog root.
 
-use std::collections::BTreeMap;
-
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
@@ -76,7 +74,10 @@ pub enum Show {
         period: Period,
         unit_types: Vec<String>,
         texts: Vec<ShowText>,
-        descriptions: Vec<ShowDescription>,
+        /// The one curated description, separate from source text runs.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        description: Option<String>,
         spellings: Vec<ShowSpelling>,
         /// The fqids of the tables the variable has segments in.
         tables: Vec<String>,
@@ -137,15 +138,6 @@ pub struct ShowText {
     operational_definition: Option<String>,
     #[schema(required = true)]
     unit: Option<String>,
-}
-
-/// An occurrence description, separate from definitions; equal texts in one table
-/// share merged periods. Different tables or texts remain separate.
-#[derive(Serialize, ToSchema)]
-pub struct ShowDescription {
-    table: String,
-    description: String,
-    periods: Vec<Period>,
 }
 
 /// A folded name the variable is known by.
@@ -359,24 +351,26 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
 }
 
 fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
-    let (name, definition, register, start, end): (String, Option<String>, String, i64, i64) = conn
-        .query_row(
-            "SELECT l.body, d.body, r.pid, v.start, v.end
+    type Head = (String, Option<String>, Option<String>, String, i64, i64);
+    let (name, definition, description, register, start, end): Head = conn.query_row(
+        "SELECT l.body, d.body, c.body, r.pid, v.start, v.end
              FROM variable v JOIN text l ON l.id = v.label_text
                LEFT JOIN text d ON d.id = v.definition_text
+               LEFT JOIN text c ON c.id = v.description_text
                JOIN register r ON r.id = v.register_id
              WHERE v.id = ?",
-            [entity.id],
-            |row| {
-                Ok((
-                    row.get(0)?,
-                    row.get(1)?,
-                    row.get(2)?,
-                    row.get(3)?,
-                    row.get(4)?,
-                ))
-            },
-        )?;
+        [entity.id],
+        |row| {
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                row.get(3)?,
+                row.get(4)?,
+                row.get(5)?,
+            ))
+        },
+    )?;
     let unit_types = conn
         .prepare(
             "SELECT u.slug FROM variable_unit_type vu JOIN unit_type u ON u.id = vu.unit_type_id
@@ -430,43 +424,8 @@ fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         period: server.period(start, end),
         unit_types,
         texts,
-        descriptions: descriptions(server, conn, entity.id)?,
+        description,
         spellings,
         tables,
     })
-}
-
-fn descriptions(
-    server: &Server,
-    conn: &Connection,
-    variable: i64,
-) -> Result<Vec<ShowDescription>, Error> {
-    let mut grouped = BTreeMap::<(String, String), Vec<(i64, i64)>>::new();
-    let mut statement = conn.prepare(
-        "SELECT t.pid, x.value, o.start, o.end
-         FROM occurrence o
-           JOIN override x ON x.subject_kind = 'occurrence' AND x.subject_id = o.id
-             AND x.field = 'description'
-           JOIN tbl t ON t.id = o.table_id
-         WHERE o.variable_id = ? AND o.status = 'used' AND x.value IS NOT NULL AND x.value != ''
-         ORDER BY o.start, o.end",
-    )?;
-    let rows = statement.query_map([variable], |row| {
-        Ok(((row.get(0)?, row.get(1)?), (row.get(2)?, row.get(3)?)))
-    })?;
-    for row in rows {
-        let (key, span) = row?;
-        grouped.entry(key).or_default().push(span);
-    }
-    Ok(grouped
-        .into_iter()
-        .map(|((table, description), spans)| ShowDescription {
-            table,
-            description,
-            periods: shape::merge_spans(spans)
-                .into_iter()
-                .map(|(s, e)| server.period(s, e))
-                .collect(),
-        })
-        .collect())
 }

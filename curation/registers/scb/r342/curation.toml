@@ -26,36 +26,6 @@ evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:153\n\
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: kurs"
-fields = { "description" = "Kurskod för vilken kurs det gäller" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolenhetskod"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: stvkod"
-fields = { "description" = "Studieväg" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: utbild"
-fields = { "description" = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "gymnasieskola-nationella-prov: skolkommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -973,3 +943,37 @@ relation = "continues"
 object = "scb/gymnasieskola-prov/skolans-namn"
 at = "2013-07-01.."
 evidence = "Gymnasieskola tests SKOLA: school name -> school-unit name (2013+); unit redefined."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "description" = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kurs"
+fields = { "description" = "Kurskod för vilken kurs det gäller" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan"
+fields = { "description" = "Studieväg" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

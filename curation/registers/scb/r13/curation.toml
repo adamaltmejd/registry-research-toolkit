@@ -31,48 +31,6 @@ evidence = "reg_meta_build/curation/registers/scb/moms.toml:178\n\nSWECOV holds 
 
 [[statement]]
 kind = "set"
-subject = "momsdeklarationsregistret: imputerad"
-fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: anst"
-fields = { "description" = "Antal anställda på företaget enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: jform"
-fields = { "description" = "Juridisk form enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: period"
-fields = { "description" = "Redovisningsgrupp för moms" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: sektor"
-fields = { "description" = "Sektorkod enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: stkl"
-fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: agkat"
-fields = { "description" = "Ägarkategori enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "momsdeklarationsregistret: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -1057,186 +1015,6 @@ evidence = "Variabeln mäter utgående moms med sex procents skattesats.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @1999-01-01..1999-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2000-01-01..2000-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2001-01-01..2001-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2002-01-01..2002-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2003-01-01..2003-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2004-01-01..2004-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2005-01-01..2005-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2006-01-01..2006-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2007-01-01..2007-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2008-01-01..2008-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2009-01-01..2009-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2010-01-01..2010-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2011-01-01..2011-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2012-01-01..2012-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2013-01-01..2013-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2014-01-01..2014-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2015-01-01..2015-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2016-01-01..2016-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2017-01-01..2017-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2018-01-01..2018-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2019-01-01..2019-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2020-01-01..2020-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2021-01-01..2021-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Ng1 @2022-01-01..2022-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Den kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2001-01-01..2001-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2002-01-01..2002-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2003-01-01..2003-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2004-01-01..2004-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2005-01-01..2005-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: Sni92 @2006-01-01..2006-12-31 where key = 'v4027'"
-fields = { "description" = "Bransch i FDB enligt SNI92." }
-evidence = "Den kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:export-oms"
 fields = { "sets" = ["export"] }
 evidence = "r137 defines total foreign turnover in goods and services; r47 explicitly sums M35, M36, M39 and M40.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39140\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388499\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39281"
@@ -1294,3 +1072,65 @@ kind = "set"
 subject = "var:m40-forstjauteg"
 fields = { "sets" = ["export"] }
 evidence = "r46 explicitly measures service-export turnover outside the EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39177\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388483"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "description" = "Bransch i FDB enligt SNI92." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
+
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
+fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
+
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:stkl"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

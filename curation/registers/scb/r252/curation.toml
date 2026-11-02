@@ -1159,246 +1159,6 @@ evidence = "Familjens prefix sta är en källkod; etiketten anger total stärkel
 
 [[statement]]
 kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2016-01-01..2016-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2017-01-01..2017-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2018-01-01..2018-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2019-01-01..2019-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2020-01-01..2020-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2021-01-01..2021-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2022-01-01..2022-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_HektarskordKg @2024-01-01..2024-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2016-01-01..2016-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2017-01-01..2017-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2018-01-01..2018-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2019-01-01..2019-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2020-01-01..2020-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2021-01-01..2021-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2022-01-01..2022-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: eptf_TotalskordTon @2024-01-01..2024-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2016-01-01..2016-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2017-01-01..2017-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2018-01-01..2018-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2019-01-01..2019-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2020-01-01..2020-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2021-01-01..2021-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2022-01-01..2022-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_HektarskordKg @2024-01-01..2024-12-31 where key = 'v20658'"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2016-01-01..2016-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2017-01-01..2017-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2018-01-01..2018-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2019-01-01..2019-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2020-01-01..2020-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2021-01-01..2021-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2022-01-01..2022-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: ovrf_TotalskordTon @2024-01-01..2024-12-31 where key = 'v20651'"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2016-01-01..2016-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2017-01-01..2017-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2018-01-01..2018-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2019-01-01..2019-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2020-01-01..2020-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2021-01-01..2021-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2022-01-01..2022-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-potatis: sta_TotalskordTon @2024-01-01..2024-12-31 where key = 'v43101'"
-fields = { "description" = "Total stärkelsepotatisskörd." }
-evidence = "Rättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:darf-hektarskordkg"
 fields = { "sets" = ["hektarskord-av-potatis"] }
 evidence = "r163 defines fresh-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41916\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42058\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
@@ -1486,3 +1246,37 @@ kind = "set"
 subject = "var:starkelsepotatisskord-per-skordad-hektar"
 fields = { "sets" = ["hektarskord-av-potatis"] }
 evidence = "r180 defines starch-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42010\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42154\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-hektarskordkg"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-totalskordton"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-hektarskordkg"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-totalskordton"
+fields = { "description" = "Total ekologisk färskpotatisskörd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:total-starkelsepotatisskord"
+fields = { "description" = "Total stärkelsepotatisskörd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen i beskrivningen enligt etiketten.\ncatalog:variable_text:42156:16801:19358\ncatalog:variable_text:42156:19723:20089"

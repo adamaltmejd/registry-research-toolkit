@@ -158,15 +158,3 @@ pub fn release(server: &Server, conn: &Connection, release_id: i64) -> Result<Re
     )?;
     Ok(with_populations(conn, vec![row])?.remove(0))
 }
-
-/// `spans` (in start order) with those that touch or overlap merged.
-pub(super) fn merge_spans(spans: impl IntoIterator<Item = (i64, i64)>) -> Vec<(i64, i64)> {
-    let mut out: Vec<(i64, i64)> = Vec::new();
-    for (start, end) in spans {
-        match out.last_mut() {
-            Some(last) if start <= last.1 => last.1 = last.1.max(end),
-            _ => out.push((start, end)),
-        }
-    }
-    out
-}

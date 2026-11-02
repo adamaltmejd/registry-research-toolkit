@@ -249,6 +249,8 @@ pub struct Variable {
     pub sets: BTreeSet<String>,
     pub tags: BTreeSet<String>,
     pub synonyms: BTreeSet<String>,
+    /// One curated account of the variable's meaning, independent of source wording.
+    pub description: Option<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -1261,6 +1263,7 @@ pub(crate) fn resolve_located(
             sets: BTreeSet::new(),
             tags: BTreeSet::new(),
             synonyms: BTreeSet::new(),
+            description: None,
             slug: if *assigned {
                 key.clone()
             } else {

@@ -653,6 +653,10 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
         "SELECT v.pid, t.body FROM variable v JOIN text t ON t.id = v.label_text",
         |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
     )?;
+    let (old_descriptions, new_descriptions) = p.maps(
+        "SELECT v.pid, d.body FROM variable v LEFT JOIN text d ON d.id = v.description_text",
+        |r| Ok((r.get::<_, String>(0)?, r.get::<_, Option<String>>(1)?)),
+    )?;
     let (no_segs, no_runs) = (BTreeSet::new(), BTreeSet::new());
     let (mut items, mut changes) = (Vec::new(), Vec::new());
     for pid in old_pids.intersection(&new_pids) {
@@ -688,6 +692,21 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
                 "  label: {} → {}",
                 show(label_old),
                 show(label_new)
+            ));
+        }
+        let (description_old, description_new) = (
+            old_descriptions.get(pid).and_then(Option::as_ref),
+            new_descriptions.get(pid).and_then(Option::as_ref),
+        );
+        if description_old != description_new {
+            facets.insert(
+                "description".into(),
+                json!({"old": description_old, "new": description_new}),
+            );
+            lines.push(format!(
+                "  description: {} → {}",
+                show(description_old),
+                show(description_new)
             ));
         }
         if !run_old.is_empty() || !run_new.is_empty() {

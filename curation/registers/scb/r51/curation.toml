@@ -1219,18 +1219,6 @@ evidence = "ISCO klassificerar yrke.\ncatalog:variable_text:43021:9496:10592"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-regioner: sjukl @2016-01-01..2016-12-31 where key = 'v36036'"
-fields = { "description" = "Sjuklön för första perioden." }
-evidence = "Rättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-regioner: sjukl @2017-01-01..2017-12-31 where key = 'v36036'"
-fields = { "description" = "Sjuklön för första perioden." }
-evidence = "Rättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"
-
-[[statement]]
-kind = "set"
 subject = "lonestrukturstatistik-regioner: anform @2012-01-01..2012-12-31 where key = 'v5717'"
 fields = { "variable" = "anstallningsform-hel-del-ovrig" }
 evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
@@ -1372,3 +1360,9 @@ kind = "set"
 subject = "var:sysselsattningsgrad-osysly"
 fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
 evidence = "The operational definitions measure agreed employment extent without accounting for leave extent (r103, r128).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447190\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447437"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "description" = "Sjuklön för första perioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"

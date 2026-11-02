@@ -3877,744 +3877,6 @@ evidence = "Antal sysselsatta efter utbildning är en personalgrupp.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "vattenbruk: MAlR_salt @2018-01-01..2018-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2019-01-01..2019-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2020-01-01..2020-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2021-01-01..2021-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2022-01-01..2022-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2023-01-01..2023-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MAlR_salt @2024-01-01..2024-12-31 where key = 'v39976'"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2018-01-01..2018-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2019-01-01..2019-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2020-01-01..2020-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2021-01-01..2021-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2022-01-01..2022-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2023-01-01..2023-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MFlodR_salt @2024-01-01..2024-12-31 where key = 'v39978'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2018-01-01..2018-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2019-01-01..2019-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2020-01-01..2020-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2021-01-01..2021-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2022-01-01..2022-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2023-01-01..2023-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MLaxR_salt @2024-01-01..2024-12-31 where key = 'v39970'"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2018-01-01..2018-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2019-01-01..2019-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2020-01-01..2020-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2021-01-01..2021-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2022-01-01..2022-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2023-01-01..2023-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOringR_salt @2024-01-01..2024-12-31 where key = 'v39972'"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2018-01-01..2018-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2019-01-01..2019-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2020-01-01..2020-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2021-01-01..2021-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2022-01-01..2022-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2023-01-01..2023-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MOvrR_salt @2024-01-01..2024-12-31 where key = 'v40003'"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2018-01-01..2018-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2019-01-01..2019-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2020-01-01..2020-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2021-01-01..2021-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2022-01-01..2022-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2023-01-01..2023-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRblR_salt @2024-01-01..2024-12-31 where key = 'v39968'"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2018-01-01..2018-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2019-01-01..2019-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2020-01-01..2020-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2021-01-01..2021-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2022-01-01..2022-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2023-01-01..2023-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: MRodR_salt @2024-01-01..2024-12-31 where key = 'v39974'"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2018-01-01..2018-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2019-01-01..2019-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2020-01-01..2020-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2021-01-01..2021-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2022-01-01..2022-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2023-01-01..2023-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SAlR_salt @2024-01-01..2024-12-31 where key = 'v39989'"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2018-01-01..2018-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2019-01-01..2019-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2020-01-01..2020-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2021-01-01..2021-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2022-01-01..2022-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2023-01-01..2023-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SFlodR_salt @2024-01-01..2024-12-31 where key = 'v39991'"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2015-01-01..2015-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2016-01-01..2016-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2017-01-01..2017-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2018-01-01..2018-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2019-01-01..2019-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2020-01-01..2020-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2021-01-01..2021-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2022-01-01..2022-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2023-01-01..2023-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy @2024-01-01..2024-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2018-01-01..2018-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2019-01-01..2019-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2020-01-01..2020-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2021-01-01..2021-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2022-01-01..2022-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2023-01-01..2023-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SJordy_salt @2024-01-01..2024-12-31 where key = 'v39904'"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Etiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2018-01-01..2018-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2019-01-01..2019-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2020-01-01..2020-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2021-01-01..2021-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2022-01-01..2022-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2023-01-01..2023-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SLaxR_salt @2024-01-01..2024-12-31 where key = 'v39983'"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2018-01-01..2018-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2019-01-01..2019-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2020-01-01..2020-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2021-01-01..2021-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2022-01-01..2022-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2023-01-01..2023-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOringR_salt @2024-01-01..2024-12-31 where key = 'v39985'"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2018-01-01..2018-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2019-01-01..2019-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2020-01-01..2020-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2021-01-01..2021-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2022-01-01..2022-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2023-01-01..2023-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SOvrR_salt @2024-01-01..2024-12-31 where key = 'v40011'"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2018-01-01..2018-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2019-01-01..2019-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2020-01-01..2020-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2021-01-01..2021-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2022-01-01..2022-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2023-01-01..2023-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRblR_salt @2024-01-01..2024-12-31 where key = 'v39981'"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2018-01-01..2018-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2019-01-01..2019-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2020-01-01..2020-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2021-01-01..2021-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2022-01-01..2022-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2023-01-01..2023-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "vattenbruk: SRodR_salt @2024-01-01..2024-12-31 where key = 'v39987'"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Källan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: TK_for @2016-01-01..2016-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2018-01-01..2018-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2019-01-01..2019-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2020-01-01..2020-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2021-01-01..2021-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2022-01-01..2022-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2023-01-01..2023-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "kostnadsenkaten: Tk_for @2024-01-01..2024-12-31 where key = 'v16988'"
-fields = { "description" = "Arbetskostnad för företagare." }
-evidence = "Den operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"
-
-[[statement]]
-kind = "set"
 subject = "kostnadsenkaten: Av_arb_K @2021-01-01..2021-12-31 where key = 'v37409' and release = 'r18159'"
 fields = { "variable" = "antal-arbetade-timmar" }
 evidence = "Rename audit #208/#209: Avlon_K is persons and Av_arb_K hours through 2020; only the women's labels, definitions, operational definitions and units swap in 2021-2024. Avlon_M stays persons and Av_arb_M stays hours in every covered release. SCB JO1201 quality declaration 2024, pp. 4-5, separately specifies employment counts and hours by sex. Follow column continuity and restore the pre-2021 text/unit; no conceptual succession remains between the emptied erroneous owners and the surviving series. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
@@ -4720,3 +3982,121 @@ kind = "set"
 subject = "vattenbruk: SRodp_salt @2018-01-01..2018-12-31 where key = 'v39824' and release = 'r13664'"
 fields = { "label" = "Produktion av röding för utsättning", "definition" = "Företagets totala produktion av röding för utsättning, i kg." }
 evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt independently carries öring in 2018-2024 with the same sea-production scope and kg unit. The 2018 SRodp_salt label and definition copied öring. SCB JO1201 quality declaration 2024, pp. 4-5, distinguishes the species and stocking-fish production. Assign the complete 2018 occurrence to röding, correct its text and remove the obsolete continues edge; the emptied ledger ID is retained. https://www.scb.se/contentassets/1053bf51c1744233b29e7b17172a5c30/jo1201_kd_2024.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:malr-salt"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mflodr-salt"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mlaxr-salt"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:moringr-salt"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:movrr-salt"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mrblr-salt"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mrodr-salt"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:salr-salt"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sflodr-salt"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sjordy-salt"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:slaxr-salt"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:soringr-salt"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sovrr-salt"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:srblr-salt"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:srodr-salt"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:tk-for"
+fields = { "description" = "Arbetskostnad för företagare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger företagare i samtliga perioder, medan beskrivningen anger avlönad arbetskraft.\ncatalog:variable_text:55238:16801:17167\ncatalog:variable_text:55238:17532:20089"

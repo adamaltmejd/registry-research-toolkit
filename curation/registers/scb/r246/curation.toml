@@ -347,14 +347,9 @@ subject = "var:yrkesuppgift"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:41942:13149:13514"
 
-[[statement]]
-kind = "set"
-subject = "individer: B43 @2006-01-01..2006-12-31 where key = 'v17357'"
-fields = { "description" = "Timlön under referensmånaden." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"
 
 [[statement]]
 kind = "set"
-subject = "individer-i-privat-sektor: B30 @2002-01-01..2002-12-31 where key = 'v17357'"
+subject = "var:timlon"
 fields = { "description" = "Timlön under referensmånaden." }
-evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"

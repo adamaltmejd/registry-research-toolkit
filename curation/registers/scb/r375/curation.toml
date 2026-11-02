@@ -5395,78 +5395,6 @@ evidence = "Posten avser realiserat resultat vid avyttring av aktier.\ncatalog:v
 
 [[statement]]
 kind = "set"
-subject = "fs-slutdata: gem0841 @1997-01-01..1997-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata: gem0841 @1998-01-01..1998-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata: gem0841 @1999-01-01..1999-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata: gem0841 @2000-01-01..2000-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata: gem0841 @2001-01-01..2001-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata: gem0841 @2002-01-01..2002-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @1997-01-01..1997-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @1998-01-01..1998-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @1999-01-01..1999-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @2000-01-01..2000-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @2001-01-01..2001-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-foretagsenhet: gem0841 @2002-01-01..2002-12-31 where key = 'v38009'"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Beskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-anskaffningar-av-flygplan"
 fields = { "sets" = ["anskaffningar-maskiner-inventarier"] }
 evidence = "r111 records annual aircraft acquisitions in SEK, explicitly included by the fixed definition, with the machinery/equipment partner in r116.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:12138\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12156\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12331"
@@ -5500,3 +5428,9 @@ kind = "set"
 subject = "var:rantebarande-skulder-till-intresseforetag"
 fields = { "sets" = ["skulder-intresseforetag"] }
 evidence = "r120 records interest-bearing debts to associated enterprises, an included component, with other such debts in r113 as a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:12469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12492"
+
+[[statement]]
+kind = "set"
+subject = "var:gem0841"
+fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"

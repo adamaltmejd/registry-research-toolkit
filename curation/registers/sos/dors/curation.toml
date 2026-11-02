@@ -1,12 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "dors: pnr"
-fields = { "description" = "Den avlidnes personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/dors.toml:503\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
-
-[[statement]]
-kind = "set"
 subject = "dors-avi: dodsdat"
 fields = { "label" = "Dödsdatum" }
 evidence = "reg_meta_build/curation/registers/sos/dors.toml:539\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
@@ -2231,3 +2225,9 @@ kind = "set"
 subject = "var:yttre-undersokning-efter-doden"
 fields = { "tags" = ["healthcare"] }
 evidence = "Undersökning efter döden. Coordinator group membership: Utöver generell uppgiftsgrund och annan källa anger källan uttryckligen obduktion och undersökningar före eller efter döden som grund för dödsorsaksuppgifterna.\ncatalog:variable_text:55840:6209:2932897\ncatalog:variable_text:55848:18262:2932897\ncatalog:variable_text:55978:-6575:2932897\ncatalog:variable_text:56048:6209:2932897\ncatalog:variable_text:56049:6209:12784\ncatalog:variable_text:56053:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Den avlidnes personnummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/dors.toml:503\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."

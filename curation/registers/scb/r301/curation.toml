@@ -7122,60 +7122,6 @@ fields = { "tags" = ["employment"] }
 evidence = "ISCO kodar yrke.\ncatalog:variable_text:1332:18993:19358"
 
 [[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: LANGUSED @2011-07-01..2012-06-30 where key = 'v24959'"
-fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda." }
-evidence = "Variabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: LANGUSED @2016-01-01..2016-12-31 where key = 'v24959'"
-fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda." }
-evidence = "Variabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: LANGUSED @2022-01-01..2022-12-31 where key = 'v24959'"
-fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda." }
-evidence = "Variabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: HATFATHER @2016-01-01..2016-12-31 where key = 'v32454'"
-fields = { "description" = "Faderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser fadern i alla perioder.\ncatalog:valueset:10790\ncatalog:variable_text:1327:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: HATFATHER @2022-01-01..2022-12-31 where key = 'v32454'"
-fields = { "description" = "Faderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser fadern i alla perioder.\ncatalog:valueset:10790\ncatalog:variable_text:1327:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatfather @2011-07-01..2012-06-30 where key = 'v32454'"
-fields = { "description" = "Faderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser fadern i alla perioder.\ncatalog:valueset:10790\ncatalog:variable_text:1327:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: HATMOTHER @2016-01-01..2016-12-31 where key = 'v32454'"
-fields = { "description" = "Moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser modern i alla perioder.\ncatalog:valueset:1455\ncatalog:variable_text:1328:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: HATMOTHER @2022-01-01..2022-12-31 where key = 'v32454'"
-fields = { "description" = "Moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser modern i alla perioder.\ncatalog:valueset:1455\ncatalog:variable_text:1328:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatmother @2011-07-01..2012-06-30 where key = 'v32454'"
-fields = { "description" = "Moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
-evidence = "Beskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser modern i alla perioder.\ncatalog:valueset:1455\ncatalog:variable_text:1328:18993:19358"
-
-[[statement]]
 kind = "link"
 subject = "var:nfepaidby1"
 relation = "continues"
@@ -7354,3 +7300,23 @@ kind = "set"
 subject = "var:sprakkunskaper-forutom-modersmal-tredje-spraket"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1272\ncatalog:variable_text:1272:15156:15522\ncatalog:variable_text:1272:16801:17167\ncatalog:variable_text:1272:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:langused"
+fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-far"
+fields = { "description" = "Faderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser fadern i alla perioder.\ncatalog:valueset:10790\ncatalog:variable_text:1327:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-mor"
+fields = { "description" = "Moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser högsta nivån bland båda föräldrarna, men variabeln avser modern i alla perioder.\ncatalog:valueset:1455\ncatalog:variable_text:1328:18993:19358"

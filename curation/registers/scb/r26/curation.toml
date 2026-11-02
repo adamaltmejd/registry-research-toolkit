@@ -7,54 +7,6 @@ evidence = "reg_meta_build/curation/registers/scb/rams.toml:371\n\nFull source-n
 caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 
 [[statement]]
-kind = "set"
-subject = "jobbregistret: manfran"
-fields = { "description" = "Anställd från och med månad" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:6\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "jobbregistret: mantill"
-fields = { "description" = "Anställd till och med månad" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:12\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstallen: astbelgata"
-fields = { "description" = "Arbetsställets belägenhetsgata" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:18\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstallen: astbelgatnr"
-fields = { "description" = "Arbetsställets belägenhetsgatunummer" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:30\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstallen: astbelort @1985..1998,2003..2021"
-fields = { "description" = "Arbetsställets belägenhetsort" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:24\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "arbetsstallen: peorgnr @1985..1998,2003..2021"
-fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individer: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:48\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "foretag: sektor"
-fields = { "description" = "Sektor" }
-evidence = "reg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx"
-
-[[statement]]
 kind = "assert"
 subject = "arbetsstallen: AntalSysC @2019-01-01..2019-12-31 where key = 'v44696' and release = 'r15438'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sysselsatta på arbetsstället enligt arbetsställeregistret", "definition" = "Antal sysselsatta på arbetsstället enligt arbetsställeregistret.", "type" = "int", "sensitive" = false, "identifier" = false, "unit" = "Antal" } }
@@ -3944,12 +3896,6 @@ evidence = "Yrkesställning för kombinatörer.\ncatalog:variable_text:41379:124
 
 [[statement]]
 kind = "set"
-subject = "individer: AntalKU @1985-01-01..1985-12-31 where key = 'v37412'"
-fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret." }
-evidence = "Rättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844"
-
-[[statement]]
-kind = "set"
 subject = "arbetsstallen: ftgsni02 @2002-01-01..2002-12-31 where key = 'v19053'"
 fields = { "variable" = "ftgsni02" }
 evidence = "Both describe principal industry under the Swedish industry classification, using FtgSni02 in the establishments table and the identical 778-code list. The enterprise-industry operational definition clarifies the unit, and the observed periods meet at day 12053 without overlap."
@@ -4299,3 +4245,65 @@ kind = "set"
 subject = "var:yrkstallnkomb"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "The measure classifies combinations of employee, self-employed and own-company positions during the year, explicitly covered by the group (r350, r321).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41236\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9049\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41379"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-fran-manad"
+fields = { "description" = "Anställd från och med månad" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:6\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld-till-manad"
+fields = { "description" = "Anställd till och med månad" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ku-individen"
+fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844"
+
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "description" = "Arbetsställets belägenhetsgata" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:18\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "description" = "Arbetsställets belägenhetsort" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:24\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:bgatunr"
+fields = { "description" = "Arbetsställets belägenhetsgatunummer" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:30\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "description" = "Sektor" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:48\n\nBilaga 2 - Variabellista.xlsx"

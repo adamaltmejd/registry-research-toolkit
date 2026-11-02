@@ -1223,14 +1223,16 @@ subject = "var:upprakningsvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Uppräkningsvikten är ett undersökningsmått.\ncatalog:occurrence:248792"
 
-[[statement]]
-kind = "set"
-subject = "innovation-arbetsstalleenheter: OBS_VALUE @2021-01-01..2022-12-31 where key = 'v46536'"
-fields = { "description" = "Objektet designade, tog fram prototyper av eller testade nya eller väsentligt förbättrade produkter eller processer." }
-evidence = "Rättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248692\ncatalog:variable_text:29237:18628:19358"
 
 [[statement]]
 kind = "set"
-subject = "innovation-arbetsstalleenheter: OBS_VALUE @2021-01-01..2022-12-31 where key = 'v46551'"
+subject = "var:innovationsaktiviteter-prototyper"
+fields = { "description" = "Objektet designade, tog fram prototyper av eller testade nya eller väsentligt förbättrade produkter eller processer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248692\ncatalog:variable_text:29237:18628:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete-priv-inst-utlandet"
 fields = { "description" = "Objektet samarbetade med privata forskningsinstitut i utlandet i innovationsarbetet." }
-evidence = "Rättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358"
