@@ -116,6 +116,9 @@ jobs:
       - uses: dorny/paths-filter@v4.0.3
         id: filter
         with:
+          # Diff with git, not the GitHub API: the API refuses a PR diff as
+          # large as a full relock ("this diff is taking too long to generate").
+          token: ""
           filters: |
             webapp:
               - 'reg_webapp/frontend/**'
