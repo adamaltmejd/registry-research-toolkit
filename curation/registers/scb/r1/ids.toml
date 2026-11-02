@@ -125,3 +125,4 @@ public = "fdb"
 "avregistreringsar" = ["Arbetsställeenheter: avregdatktid"]
 "juridisk-form-jurform" = ["Arbetsställeenheter: jurform"]
 "regdatktid" = ["Arbetsställeenheter: regdatktid"]
+"faxnummer-juridisk-enhet" = ["Juridiska enheter: fax @ 1999-01-01"]
