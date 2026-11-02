@@ -224,7 +224,12 @@ impl Statement {
                 AssertFact::Release { .. } => {}
             },
             Self::Link { object, .. } => {
-                if matches!(object.parse::<Address>(), Ok(Address::Set(_))) {
+                if matches!(object.parse::<Address>(), Ok(Address::Set(_)))
+                    || matches!(
+                        object.parse::<reg_core::Fqid>(),
+                        Ok(reg_core::Fqid::Set { .. })
+                    )
+                {
                     return Err(
                         "set-subject: sets are presentation only and cannot be relation endpoints"
                             .into(),

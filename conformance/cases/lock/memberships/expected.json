@@ -3,7 +3,7 @@
     "command": "build",
     "location": "registers/demo/r/curation.toml:1",
     "code": "set-too-small",
-    "pid": "demo/r/concept"
+    "pid": "set/demo/r/concept"
   },
   "unknown-tag": {
     "command": "lock",
@@ -15,7 +15,7 @@
     "command": "build",
     "location": "retired.toml:1",
     "code": "retired-id-live",
-    "pid": "demo/r/concept"
+    "pid": "set/demo/r/concept"
   },
   "multi-group": {
     "command": "lock",
@@ -23,8 +23,8 @@
     "code": "variable-multiple-groups",
     "pid": "demo/r/published",
     "groups": {
-      "demo/r/first": "registers/demo/r/curation.toml:1",
-      "demo/r/second": "registers/demo/r/curation.toml:7"
+      "set/demo/r/first": "registers/demo/r/curation.toml:1",
+      "set/demo/r/second": "registers/demo/r/curation.toml:7"
     }
   },
   "variable_premise": {

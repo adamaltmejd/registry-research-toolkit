@@ -34,8 +34,10 @@
 #
 # Public ids (design v4 §7): providers `scb`; registers `<provider>/<register>`; tables
 # and variables `<provider>/<register>/<name>`, one namespace per register;
-# classifications `class/<family>[/<version>]`. Result fields that carry a public id
-# keep the name `fqid`, or `ref` where the field names an entity of another kind. A
+# classifications `class/<family>[/<version>]`.
+# Sets use `set/<provider>/<register>/<slug>`; a leading literal `set/` decides the
+# kind, like `class/`. Plain three-part ids never address sets.
+# Result fields carrying public ids keep the name `fqid`, or `ref` for another kind. A
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
@@ -99,8 +101,8 @@ tool = "show"
 params = { ref = "ref?", evidence = "boolean?" }
 result = "Show"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
-note = """The summary for any ref; no ref is the catalog root. `class` is the one \
-reserved first segment. Heavy parts are other operations: a variable's segments \
+note = """The summary for any ref; no ref is the catalog root. Sets require \
+set/<provider>/<register>/<slug>; malformed set refs are invalid_ref. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
 (`coverage`). Variable summaries show curated description, coverage, tables, sets and \
 tags. Without a curated description, source_definition returns the latest available \

@@ -420,7 +420,7 @@ CREATE INDEX relation_object  ON relation(object_kind, object_id, kind);
 CREATE TABLE var_set (
   id               INTEGER PRIMARY KEY,
   kind             TEXT NOT NULL CHECK (kind IN ('set','tag')),
-  pid              TEXT NOT NULL UNIQUE,  -- 'demo/hush/<set>' or 'tag/<slug>'
+  pid              TEXT NOT NULL UNIQUE,  -- 'set/<provider>/<register>/<slug>' or 'tag/<slug>'
   register_id      INTEGER REFERENCES register(id),
   name_text        INTEGER NOT NULL REFERENCES text(id),
   description_text INTEGER REFERENCES text(id),

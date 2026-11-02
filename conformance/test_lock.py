@@ -43,7 +43,7 @@ def test_set_facets_refuse_invalid_membership(scenario, tmp_path):
         )
     else:
         changed = original.replace(
-            'fields.sets = ["income-measures"]',
+            'fields.sets = ["inkomst"]',
             'fields.label = "Inkomst före skatt"',
             1,
         )

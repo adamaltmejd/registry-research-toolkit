@@ -862,7 +862,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 let reg_pid = pid_of_register(&catalog.registers[ri]);
                 (
                     "set",
-                    format!("{reg_pid}/{name}"),
+                    format!("set/{reg_pid}/{name}"),
                     Cell::Int(register_id[&reg_pid]),
                 )
             },

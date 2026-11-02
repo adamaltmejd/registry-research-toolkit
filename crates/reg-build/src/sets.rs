@@ -119,7 +119,10 @@ pub fn final_members(
                     s.provider == register.register.provider && s.register == register.register.register
                         && matches!(&s.statement, Statement::Set { fields, .. } if fields.sets.as_ref().is_some_and(|sets| sets.iter().any(|s| s == name)))
                 }).ok_or_else(|| format!("{}: set {name:?} has no curation location", MembershipCode::TooSmall.as_str()))?;
-                let pid = format!("{}/{}/{name}", register.register.provider, register.public);
+                let pid = format!(
+                    "set/{}/{}/{name}",
+                    register.register.provider, register.public
+                );
                 return Err(format!(
                     "{}:{}: {}: set {pid:?} needs at least 2 distinct final members",
                     statement.path.display(),
@@ -175,7 +178,7 @@ pub fn memberships<'a>(
                 .into_iter()
                 .map(|(group, locations)| {
                     format!(
-                        "{provider}/{register}/{group} at {}",
+                        "set/{provider}/{register}/{group} at {}",
                         locations.into_iter().collect::<Vec<_>>().join(", ")
                     )
                 })

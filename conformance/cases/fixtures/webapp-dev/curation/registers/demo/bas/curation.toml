@@ -1,6 +1,6 @@
 [[statement]]
 kind = "set"
-subject = "set:income-measures"
+subject = "set:inkomst"
 fields.label = "Inkomstmått"
 fields.description = "Inkomst före och efter skatt för personer och hushåll."
 fields.axes = [{ id = "unit", label = "Enhet" }, { id = "measure", label = "Mått" }]
@@ -9,7 +9,7 @@ evidence = "Synthetic income variants exercise presentation axes in authored ord
 [[statement]]
 kind = "set"
 subject = "var:inkomst"
-fields.sets = ["income-measures"]
+fields.sets = ["inkomst"]
 evidence = "Synthetic income variants form one picking unit."
 
 [[statement]]
@@ -21,7 +21,7 @@ evidence = "Synthetic income variants differ by measure and unit."
 [[statement]]
 kind = "set"
 subject = "var:gross-household"
-fields.sets = ["income-measures"]
+fields.sets = ["inkomst"]
 evidence = "Synthetic income variants form one picking unit."
 
 [[statement]]
@@ -33,7 +33,7 @@ evidence = "Synthetic income variants differ by measure and unit."
 [[statement]]
 kind = "set"
 subject = "var:gross-person"
-fields.sets = ["income-measures"]
+fields.sets = ["inkomst"]
 evidence = "Synthetic income variants form one picking unit."
 
 [[statement]]
@@ -45,7 +45,7 @@ evidence = "Synthetic income variants differ by measure and unit."
 [[statement]]
 kind = "set"
 subject = "var:net-household"
-fields.sets = ["income-measures"]
+fields.sets = ["inkomst"]
 evidence = "Synthetic income variants form one picking unit."
 
 [[statement]]

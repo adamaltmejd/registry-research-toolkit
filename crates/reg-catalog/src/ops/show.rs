@@ -15,8 +15,9 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
-    description: "The summary of a provider, register, table, set or variable by public id or bare \
-                  name; without a ref, the catalog's providers. Variables show curated \
+    description: "The summary of a provider, register, table or variable by public id or bare \
+                  name; a set only by set/<provider>/<register>/<slug>. Without a ref, \
+                  the catalog's providers. Variables show curated \
                   metadata by default, with marked provider text only as a fallback. \
                   Use evidence=true for provider text history, source keys/spellings, \
                   curation statement locators and linked documents.",

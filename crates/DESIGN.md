@@ -1029,16 +1029,30 @@ provider oddities into the universal shape.
 ## FQID grammar
 
 Every entity has a fully qualified identifier: a `/`-separated string whose kind follows
-from its segment count and the `class/` prefix alone. `reg-core` owns the grammar
-(`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
+from its segment count and the leading `class/` or `set/` namespace. `reg-core` owns the
+grammar (`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
 (ledgers under `curation/`) and resolves a ref to an entity
 ([REBUILD.md](../REBUILD.md)).
 
-- 1 segment is a provider, 2 a register, 3 a table or a variable (a register's implicit
-  table has the register's 2-part id).
-- A leading `class/` marks a classification (`class/<slug>`) or a version
-  (`class/<family>/<version>`). `class` is reserved as a slug everywhere, and so is
-  `group`, the first segment of the group refs the grammar still reserves.
+  | Kind                   | Public id                                                                         |
+  | ---------------------- | --------------------------------------------------------------------------------- |
+  | provider               | `<provider>`                                                                      |
+  | register               | `<provider>/<register>`                                                           |
+  | table or variable      | `<provider>/<register>/<slug>`; an implicit table uses its register's two-part id |
+  | classification family  | `class/<family>`                                                                  |
+  | classification version | `class/<family>/<version>`                                                        |
+  | set                    | `set/<provider>/<register>/<slug>`                                                |
+
+- `class` is reserved as a slug everywhere. `set` and `group` are reserved only as
+  leading provider segments; they remain valid register and final slugs. The set
+  namespace's provider obeys the same provider restrictions. A plain three-part ref
+  never addresses a set, even when its final slug matches a set's slug. Set refs are
+  presentation addresses, never project bindings, source tables or relation endpoints.
+- A slash-separated ref is checked against this grammar before exact lookup. The leading
+  `set/` namespace resolves only a set. Malformed set refs are `invalid_ref`; a
+  well-formed absent set is `not_found`. Exact lookup cannot reinterpret the kind. Sets
+  resolve only by their namespaced id: bare-name lookup excludes sets, so a same-slug
+  set never makes an ordinary variable's bare name ambiguous.
 - A slug is lowercase ASCII kebab-case, `^[a-z](?:-?[a-z0-9])*$`; a class version may
   start with a digit.
 - Time is context, not identity: no id has a period slot. The period grammar is `YYYY`,
@@ -2429,10 +2443,10 @@ in its one set, in `var_set_member_facet`; omitted labels default to the value. 
 undeclared axis or a variable outside the set refuses at its statement location. These
 tables are part of catalog schema 6.
 
-`show` at a set's public id returns `kind: "set"`, its `fqid`, `name`, optional
-`description`, register public id, ordered `axes`, and `members`. Each member supplies
-`fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members sort by
-facet value in axis order (missing coordinates first), then by name and public id.
+`show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
+optional `description`, register public id, ordered `axes`, and `members`. Each member
+supplies `fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members
+sort by facet value in axis order (missing coordinates first), then by name and public id.
 `tags` is the union of the members' tags in public-id order. The summary contains
 curated presentation data; source evidence remains on the individual variables.
 
@@ -2535,6 +2549,7 @@ terms describe its cross-provider meanings.
   | Term           | Meaning                                                                                                |
   | -------------- | ------------------------------------------------------------------------------------------------------ |
   | variable       | The addressable variable and FQID target: identity `(provider, register, slug)`, one or more segments. |
+  | set            | A register-local presentation group at `set/<provider>/<register>/<slug>`; not an order binding.       |
   | binding        | A project's use of a variable, named by its FQID.                                                      |
   | segment        | A maximal run of one form of a variable in one table.                                                  |
   | equivalent     | A curated symmetric relation between variables in different registers or providers.                    |

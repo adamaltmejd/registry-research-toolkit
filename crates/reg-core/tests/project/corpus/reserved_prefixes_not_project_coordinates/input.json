@@ -21,6 +21,32 @@
           "classification": "class/sun/2020"
         }
       ]
+    },
+    {
+      "name": "set_table",
+      "table": "set/demo/bas",
+      "period": 2022,
+      "bindings": [
+        {
+          "variable": "demo/bas/inkomst",
+          "type": "numeric"
+        }
+      ]
+    },
+    {
+      "name": "set_bindings",
+      "table": "demo/bas",
+      "period": 2022,
+      "bindings": [
+        {
+          "variable": "set/demo/bas",
+          "type": "numeric"
+        },
+        {
+          "variable": "set/demo/bas/inkomst",
+          "type": "numeric"
+        }
+      ]
     }
   ]
 }

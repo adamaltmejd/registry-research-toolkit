@@ -4,7 +4,7 @@
     "json": {
       "/data": {
         "kind": "set",
-        "fqid": "demo/bas/income-measures",
+        "fqid": "set/demo/bas/inkomst",
         "name": "Inkomstmått",
         "description": "Inkomst före och efter skatt för personer och hushåll.",
         "register": "demo/bas",
@@ -90,6 +90,38 @@
             "name": "Inkomst"
           }
         ]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "variable",
+      "/data/fqid": "demo/bas/inkomst"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "variable",
+      "/data/fqid": "demo/bas/inkomst"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields": {
+        "ref": "set/demo/bas"
+      }
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields": {
+        "ref": "set/demo/bas/absent"
       }
     }
   }

@@ -39,6 +39,13 @@ fn fqid_json(f: &Fqid) -> Value {
         } => json!({
             "kind": "variable", "provider": provider, "register": register, "variable": variable,
         }),
+        Fqid::Set {
+            provider,
+            register,
+            set,
+        } => json!({
+            "kind": "set", "provider": provider, "register": register, "set": set,
+        }),
         Fqid::Classification { classification } => {
             json!({"kind": "classification", "classification": classification})
         }
@@ -111,7 +118,7 @@ fn assert_corpus<T: std::str::FromStr<Err = GrammarError> + ToString>(
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 
-// Fails if a slug rule, the segment counts or the `class/` discriminator changes, or if
+// Fails if a slug rule, segment count or class/set discriminator changes, or if
 // any accepted FQID has a second spelling.
 #[test]
 fn fqid_matches_corpus() {
@@ -157,8 +164,8 @@ impl Rng {
                 }
                 s.push(char::from(*self.pick(ALNUM)));
             }
-            // Reserved: `class` everywhere, `group` as a first segment.
-            if s != "class" && s != "group" {
+            // Reserved: `class` everywhere, `group` and `set` as first segments.
+            if s != "class" && s != "group" && s != "set" {
                 return s;
             }
         }
@@ -216,7 +223,7 @@ const ROUND_TRIPS: usize = 20_000;
 fn fqid_round_trips() {
     let mut rng = Rng(0x5EED_F01D);
     for _ in 0..ROUND_TRIPS {
-        let fqid = match rng.range(0, 3) {
+        let fqid = match rng.range(0, 4) {
             0 => Fqid::Provider {
                 provider: rng.slug(),
             },
@@ -228,6 +235,11 @@ fn fqid_round_trips() {
                 provider: rng.slug(),
                 register: rng.slug(),
                 variable: rng.slug(),
+            },
+            3 => Fqid::Set {
+                provider: rng.slug(),
+                register: rng.slug(),
+                set: rng.slug(),
             },
             _ => Fqid::Classification {
                 classification: rng.slug(),
