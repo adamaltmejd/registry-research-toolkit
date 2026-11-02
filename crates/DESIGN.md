@@ -1318,6 +1318,10 @@ then a holdings asset paired with the base catalog. The same compiler and
 second steward's webapp and steward-specific MCP is later, not E; E establishes the
 data/config contract, not a second deployment.
 
+`reg-build holdings --report FILE` forwards the ordinary supplemental build report,
+including located release refusals; it does not admit a refused artifact. Reports and
+holdings outputs cannot overwrite the reference catalog.
+
 The compiler has explicit paths and pins; it reads no neighbouring files implicitly. The
 inspected private inputs worktree is clean at commit
 `9186fcbceeb2283a50c7f684764869e4dda5765e` (also the current `curation/inputs.toml`

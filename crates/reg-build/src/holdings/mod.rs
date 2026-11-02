@@ -26,6 +26,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
             "--steward-repo",
             "--out",
             "--registry",
+            "--report",
         ]
         .contains(&k.as_str())
     }) {
@@ -35,6 +36,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
     let root = PathBuf::from(need("--steward-repo")?);
     let out = PathBuf::from(need("--out")?);
     let owner = need("--steward")?;
+    let report = flags.get("--report").map(PathBuf::from);
     let registry = PathBuf::from(
         flags
             .get("--registry")
@@ -45,7 +47,10 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
     let pin = pins.get(&owner).ok_or("holdings_steward_unknown")?;
     let config = input::admit(&root, pin, &owner)?;
     crate::verify::catalog(&base, None)?;
-    if out == base || out.canonicalize().ok() == base.canonicalize().ok() {
+    if std::iter::once(&out)
+        .chain(report.iter())
+        .any(|path| path == &base || path.canonicalize().ok() == base.canonicalize().ok())
+    {
         return Err("holdings_output_invalid: output must differ from base".into());
     }
     // The scratch is only supplemental metadata, never a reference-catalog copy.
@@ -58,24 +63,33 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
     if scratch.exists() || staged.exists() {
         return Err("holdings_output_invalid: scratch output already exists".into());
     }
-    let result = write(&base, &root, &scratch, &staged, &owner, pin, &config)
-        .and_then(|()| verify::pair(&staged, &base, &root))
-        .and_then(|()| {
-            let summary = {
-                let db = open(&staged)?;
-                format!(
-                    "holdings: tables={} columns={} mapped={} unmatched={} storage_extras={}",
-                    meta(&db, "census_tables")?,
-                    meta(&db, "census_columns")?,
-                    meta(&db, "mapped_columns")?,
-                    meta(&db, "unmatched_columns")?,
-                    meta(&db, "storage_extra_columns")?
-                )
-            };
-            std::fs::rename(&staged, &out).map_err(|e| e.to_string())?;
-            eprintln!("{summary}");
-            Ok(())
-        });
+    let result = write(
+        &base,
+        &root,
+        &scratch,
+        &staged,
+        &owner,
+        pin,
+        &config,
+        report.as_deref(),
+    )
+    .and_then(|()| verify::pair(&staged, &base, &root))
+    .and_then(|()| {
+        let summary = {
+            let db = open(&staged)?;
+            format!(
+                "holdings: tables={} columns={} mapped={} unmatched={} storage_extras={}",
+                meta(&db, "census_tables")?,
+                meta(&db, "census_columns")?,
+                meta(&db, "mapped_columns")?,
+                meta(&db, "unmatched_columns")?,
+                meta(&db, "storage_extra_columns")?
+            )
+        };
+        std::fs::rename(&staged, &out).map_err(|e| e.to_string())?;
+        eprintln!("{summary}");
+        Ok(())
+    });
     for file in [&scratch, &staged] {
         if file.exists() {
             let _ = std::fs::remove_file(file);
@@ -135,6 +149,7 @@ fn write(
     owner: &str,
     pin: &input::Pin,
     config: &input::Config,
+    report: Option<&Path>,
 ) -> Result<(), String> {
     let curation = input::path(root, &config.curation_root)?
         .parent()
@@ -148,7 +163,7 @@ fn write(
             curation,
             out: scratch.to_path_buf(),
             assets: None,
-            report: None,
+            report: report.map(Path::to_path_buf),
             catalog_version: "supplemental".into(),
             release: true,
             registers: vec![],

@@ -346,6 +346,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
       FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id ORDER BY m.id")
       .map_err(|e|e.to_string())?;
     let mut rows = query.query([]).map_err(|e| e.to_string())?;
+    let mut missing_keys = BTreeSet::new();
     while let Some(row) = rows.next().map_err(|e| e.to_string())? {
         let table: String = row.get(0).map_err(|e| e.to_string())?;
         let variable: String = row.get(1).map_err(|e| e.to_string())?;
@@ -400,12 +401,15 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             }
             let held = held_keys.get(&(holding, table.clone(), key.variable.clone()));
             if held.is_none_or(|held| !compile::covered(&[required], held)) {
-                return Err(
-                    "holdings_key_missing: orderable placement lacks its required held row key"
-                        .into(),
-                );
+                missing_keys.insert(format!(
+                    "holdings:table={holding}: key={}: period={}..{}: holdings_key_missing",
+                    key.variable, required.0, required.1
+                ));
             }
         }
+    }
+    if !missing_keys.is_empty() {
+        return Err(missing_keys.into_iter().collect::<Vec<_>>().join("\n"));
     }
     // Same logical cell in two columns needs an explicit partition, a projection,
     // or a carried key. Shared spelling and labels alone never authorize possession.
