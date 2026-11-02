@@ -14,6 +14,7 @@ import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
+import { useProjectValidation } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { NoRegisterList, VariableList } from "./lib/VariableList";
 
@@ -22,6 +23,7 @@ const useHref = (href: string) => href;
 export function App() {
   const context = useAsyncResource("context", getContext);
   const route = useRoute();
+  const validation = useProjectValidation();
   const searching = useBrowseFiltering();
   const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
     searching && isBackCrumb(crumb)
@@ -38,7 +40,7 @@ export function App() {
     <RouterProvider navigate={router.navigate} useHref={useHref}>
       <I18nProvider locale="en-US">
         <div className={styles.app}>
-          <TopBar context={context.data} />
+          <TopBar context={context.data} validation={validation} />
           {context.error && (
             <StatusRow
               tone="error"
@@ -71,7 +73,10 @@ export function App() {
               <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
               <div className={styles.routed}>
                 {route.name === "project" ? (
-                  <ProjectEditor context={context.data} />
+                  <ProjectEditor
+                    context={context.data}
+                    validation={validation}
+                  />
                 ) : (
                   <RoutedView route={route} />
                 )}

@@ -297,7 +297,8 @@ async function browsePagesCase(page, shoot) {
 
 // The project + artifact → logical order boundary, through the loaded-project UI.
 // Fails if opening a file does not reach catalog validation, ordering loses a
-// binding, reload loses the draft, or a structurally invalid file is accepted.
+// binding, the banner loses save/verdict state, reload loses the draft, a blocked
+// order loses its named findings, or a structurally invalid file is accepted.
 // Names and spellings are from webapp-dev's readable JSONL; the invalid type and
 // located refusal code come from reg-core's binding_type_null corpus case. No
 // existing browser case exercises project files or the order page.
@@ -310,9 +311,28 @@ async function projectPagesCase(page, shoot) {
   const invalidProject = JSON.parse(readFileSync(projectFile, "utf8"));
   invalidProject.sources[0].bindings[0].type = null;
   const invalidRaw = JSON.stringify(invalidProject);
-  await main.getByLabel("Open project file", { exact: true }).setInputFiles(projectFile.pathname);
+  const banner = page.getByRole("region", { name: "Project", exact: true });
+  async function openProjectFile(file, replacing = false) {
+    const chooser = page.waitForEvent("filechooser");
+    await main.getByRole("button", { name: "Open project file", exact: true }).click();
+    await (await chooser).setFiles(file);
+    if (replacing) {
+      const replacement = page.getByRole("alertdialog", { name: "Replace the working project?", exact: true });
+      await replacement.getByRole("button", { name: "Replace project", exact: true }).click();
+    }
+  }
+  await openProjectFile(projectFile.pathname);
   await main.getByRole("button", { name: "Check catalog", exact: true }).click();
   await main.getByText("Project is valid against this catalog.", { exact: true }).waitFor();
+  check(/1 source,\s*2 columns/.test(await banner.innerText()), "the banner lost the loaded project's source/column summary");
+  await main.getByRole("textbox", { name: "Project name", exact: true }).fill("Baseline study revised");
+  await banner.getByText("unsaved", { exact: true }).waitFor();
+  const savedProject = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  check(JSON.parse(readFileSync(await (await savedProject).path(), "utf8")).name === "Baseline study revised",
+    "the project download lost the edited project name");
+  check((await banner.getByText("unsaved", { exact: true }).count()) === 0, "downloading did not clear the banner's unsaved state");
+  await settled(page);
   await shoot("project-valid");
 
   // The draft is restored from local storage across a complete document load,
@@ -342,18 +362,41 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-order");
 
   await main.getByRole("navigation", { name: "Project pages" }).getByRole("link", { name: "Project", exact: true }).click();
-  await main.getByLabel("Open project file", { exact: true }).setInputFiles({ name: "invalid-project.json", mimeType: "application/json", buffer: Buffer.from(invalidRaw) });
-  const replacement = page.getByRole("alertdialog", { name: "Replace the working project?", exact: true });
-  await replacement.getByRole("button", { name: "Replace project", exact: true }).click();
+  // Bransch occurs only in Hushållsregistret's Individer table in webapp-dev.
+  // Keeping the same register passes WASM, then pins the catalog's located
+  // variable_not_in_table refusal (order/window.rs), including table:null refs.
+  const blockedProject = JSON.parse(readFileSync(projectFile, "utf8"));
+  blockedProject.sources[0] = { ...blockedProject.sources[0], table: "demo/hush/fam", period: 2021,
+    bindings: [{ variable: "demo/hush/bransch", type: "categorical", display_name: "industry" }] };
+  await openProjectFile({ name: "blocked-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(blockedProject)) }, true);
+  await main.getByRole("link", { name: "Order", exact: true }).click();
+  await main.getByText("The order is blocked. Review the findings and update the project.", { exact: true }).waitFor();
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const group = findings.getByRole("button", { name: /Needs review: catalog finding/ }).first();
+  await group.hover();
+  await page.getByRole("tooltip").getByText("variable_not_in_table", { exact: true }).waitFor();
+  await group.click();
+  await findings.getByRole("link", { name: "Bransch", exact: true }).first().waitFor();
+  await findings.getByRole("link", { name: "Familjer", exact: true }).first().waitFor();
+  check((await findings.innerText()).includes("baseline"), "the blocked order lost its source location");
+  check(!/demo\//.test(await findings.innerText()), "the blocked order exposed an internal catalog ref");
+  await banner.getByRole("link", { name: "Order blocked", exact: true }).waitFor();
+
+  await main.getByRole("navigation", { name: "Project pages" }).getByRole("link", { name: "Project", exact: true }).click();
+  await openProjectFile({ name: "invalid-project.json", mimeType: "application/json", buffer: Buffer.from(invalidRaw) }, true);
   const issues = main.locator("section").filter({
     has: page.getByRole("heading", { name: "Draft check", exact: true }),
   });
-  await issues.getByText("/sources/0/bindings/0/type", { exact: true }).waitFor();
+  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  await issues.getByText("Variable: Kön", { exact: true }).waitFor();
+  await issues.getByText("Period: 2020", { exact: true }).waitFor();
   // Rejected documents survive reload and download byte-for-byte; accepting or
   // normalizing one during persistence would lose the original invalid input.
   await page.reload();
   await settled(page);
-  await issues.getByText("/sources/0/bindings/0/type", { exact: true }).waitFor();
+  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  await issues.getByText("Variable: Kön", { exact: true }).waitFor();
+  await issues.getByText("Period: 2020", { exact: true }).waitFor();
   const issueTitle = issues.getByRole("button").first();
   await issueTitle.focus();
   await issueTitle.press("Tab");
@@ -365,6 +408,7 @@ async function projectPagesCase(page, shoot) {
   await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
   check(readFileSync(await (await downloaded).path(), "utf8") === invalidRaw,
     "the rejected project changed during persistence or download");
+  check((await banner.getByText("unsaved", { exact: true }).count()) === 0, "downloading the rejected file did not clear its unsaved state");
   await shoot("project-invalid");
 }
 

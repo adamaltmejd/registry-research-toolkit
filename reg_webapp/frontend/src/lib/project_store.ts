@@ -17,6 +17,8 @@ export interface ProjectSnapshot {
   raw: string | null;
   issues: Issue[];
   storageError: string | null;
+  dirty: boolean;
+  orderBlocked: boolean;
 }
 
 const listeners = new Set<() => void>();
@@ -25,7 +27,11 @@ let snapshot: ProjectSnapshot = {
   raw: null,
   issues: [],
   storageError: null,
+  dirty: false,
+  orderBlocked: false,
 };
+
+let lastDownloaded: string | null = null;
 
 function publish(next: ProjectSnapshot): void {
   snapshot = next;
@@ -49,6 +55,8 @@ function replace(raw: string | null, persist: boolean): void {
     draft: raw !== null && check?.ok ? (JSON.parse(raw) as ProjectData) : null,
     issues: check?.issues ?? [],
     storageError,
+    dirty: raw !== null && raw !== lastDownloaded,
+    orderBlocked: false,
   });
 }
 
@@ -66,16 +74,16 @@ export const projectStore = {
   get raw(): string | null {
     return snapshot.raw;
   },
-  open(raw: string): void {
-    replace(raw, true);
-  },
-  updateRaw(raw: string): void {
+  open(raw: string, fromFile = false): void {
+    lastDownloaded = fromFile ? raw : null;
     replace(raw, true);
   },
   newProject(seed: ProjectSeed): void {
+    lastDownloaded = null;
     replace(`${JSON.stringify(newProjectData(seed), null, 2)}\n`, true);
   },
   discard(): void {
+    lastDownloaded = null;
     replace(null, true);
   },
   updateField<K extends keyof ProjectData>(
@@ -88,12 +96,18 @@ export const projectStore = {
       true,
     );
   },
+  setOrderBlocked(draft: ProjectData, blocked: boolean): void {
+    if (snapshot.draft === draft && snapshot.orderBlocked !== blocked)
+      publish({ ...snapshot, orderBlocked: blocked });
+  },
   download(): void {
     if (snapshot.raw === null) return;
     triggerDownload(
       new Blob([snapshot.raw], { type: "application/json" }),
       "project_data.json",
     );
+    lastDownloaded = snapshot.raw;
+    publish({ ...snapshot, dirty: false });
   },
 };
 

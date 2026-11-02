@@ -179,17 +179,21 @@ export function registerRead(ref: string): Read<RegisterShow> {
   });
 }
 
+const subjectNames = new WeakMap<RegisterShow, ReadonlyMap<string, string>>();
+const NO_NAMES: ReadonlyMap<string, string> = new Map();
+
 /** Display names shared by register descendants and their located findings. */
 export function registerSubjectNames(
   register?: RegisterShow | null,
 ): ReadonlyMap<string, string> {
-  const names = new Map<string, string>();
-  if (register) {
-    names.set(register.fqid, register.name);
-    for (const subject of [...register.tables, ...register.variables]) {
-      names.set(subject.fqid, subject.name);
-    }
+  if (!register) return NO_NAMES;
+  const cached = subjectNames.get(register);
+  if (cached) return cached;
+  const names = new Map<string, string>([[register.fqid, register.name]]);
+  for (const subject of [...register.tables, ...register.variables]) {
+    names.set(subject.fqid, subject.name);
   }
+  subjectNames.set(register, names);
   return names;
 }
 
@@ -220,4 +224,21 @@ export function catalogNames(
     }
   }
   return names;
+}
+
+/** A single name and its read state, so pending names never look like failures. */
+export function catalogNameRead(ref: string | null): Read<string> {
+  if (ref === null) return UNASKED;
+  if (ref.startsWith("class/")) {
+    const node = showRead(ref);
+    return {
+      value: node.value && "name" in node.value ? node.value.name : null,
+      loading: node.loading,
+    };
+  }
+  const state = registerRead(ref.split("/").slice(0, 2).join("/"));
+  return {
+    value: registerSubjectNames(state.value).get(ref) ?? null,
+    loading: state.loading,
+  };
 }

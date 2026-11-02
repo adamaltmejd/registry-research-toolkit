@@ -12,6 +12,7 @@ import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
 import { Button } from "./ui/Button";
+import type { ProjectValidation } from "./use_project";
 
 const mac = isMacPlatform();
 
@@ -43,7 +44,13 @@ function isOtherTextEntry(
  * are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
-export function TopBar({ context }: { context: Context | null }) {
+export function TopBar({
+  context,
+  validation,
+}: {
+  context: Context | null;
+  validation: ProjectValidation;
+}) {
   const brand = "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -266,7 +273,7 @@ export function TopBar({ context }: { context: Context | null }) {
             Search
           </Button>
         </span>
-        <ProjectBanner context={context} />
+        <ProjectBanner context={context} validation={validation} />
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
-import { catalogNames } from "./catalog_names";
+import { catalogNameRead, catalogNames, type Read } from "./catalog_names";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 
 const readNames = (refs: readonly string[]) =>
@@ -8,4 +8,8 @@ export function useCatalogNames(
   refs: readonly string[],
 ): ReadonlyMap<string, string> {
   return new Map(Object.entries(useCatalogRead(readNames, useDistinct(refs))));
+}
+
+export function useCatalogName(ref: string | null): Read<string> {
+  return useCatalogRead(catalogNameRead, ref);
 }

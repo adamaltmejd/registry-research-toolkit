@@ -1,22 +1,20 @@
+import { Dialog, DialogTrigger, Heading, Popover } from "react-aria-components";
 import {
-  Button,
-  Dialog,
-  DialogTrigger,
-  Heading,
-  Popover,
-} from "react-aria-components";
-import {
+  ApiError,
   type CatalogFinding,
   type CatalogPeriod,
   getProjectOrder,
   getValueSet,
   type LogicalOrder,
 } from "./api";
-import { catalogHref } from "./catalog";
+import { catalogHref, humanizeClassificationSlug } from "./catalog";
+import { catalogWords } from "./catalog_labels";
 import { catalogPeriodLabel } from "./catalog_period";
 import { DataWarnings } from "./DataWarnings";
 import styles from "./OrderView.module.css";
 import type { ProjectData } from "./project_data";
+import { projectStore } from "./project_store";
+import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
@@ -25,7 +23,14 @@ import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
-import { useCatalogNames } from "./use_catalog_names";
+import { useCatalogName, useCatalogNames } from "./use_catalog_names";
+import { ValueSetLabel } from "./VariableView";
+import {
+  issuePlace,
+  issueRefs,
+  plainIssueText,
+  type ValidationIssue,
+} from "./validation";
 
 type Entry = LogicalOrder["entries"][number];
 
@@ -38,17 +43,70 @@ function Period({ period }: { period: CatalogPeriod }) {
   );
 }
 
+type OrderResult =
+  | { kind: "ready"; order: LogicalOrder }
+  | { kind: "blocked"; findings: ValidationIssue[] };
+
+function blockedFindings(error: unknown): ValidationIssue[] | null {
+  if (
+    !(error instanceof ApiError) ||
+    !error.body ||
+    typeof error.body !== "object"
+  )
+    return null;
+  const body = error.body as {
+    error?: { code?: unknown; fields?: { findings?: unknown } };
+  };
+  const findings = body.error?.fields?.findings;
+  if (body.error?.code !== "order_blocked" || !Array.isArray(findings))
+    return null;
+  if (
+    !findings.every((issue: unknown) => {
+      if (!issue || typeof issue !== "object") return false;
+      const value = issue as Record<string, unknown>;
+      return (
+        ["code", "message", "path"].every(
+          (field) => typeof value[field] === "string",
+        ) &&
+        ["error", "warning", "info"].includes(String(value.level)) &&
+        ["source", "variable", "table", "successor_fqid"].every(
+          (field) => value[field] === null || typeof value[field] === "string",
+        ) &&
+        (value.period === null ||
+          (typeof value.period === "object" &&
+            value.period !== null &&
+            ["start", "end"].every((field) => {
+              const endpoint = (value.period as Record<string, unknown>)[field];
+              return endpoint === null || typeof endpoint === "string";
+            })))
+      );
+    })
+  )
+    return null;
+  return findings as ValidationIssue[];
+}
+
 /** The materialized logical order; no extraction manifest is produced here. */
 export function OrderView({ draft }: { draft: ProjectData }) {
-  const resource = useAsyncResource(JSON.stringify(draft), (signal) =>
-    getProjectOrder(draft, { signal }),
+  const resource = useAsyncResource<OrderResult>(
+    JSON.stringify(draft),
+    async (signal) => {
+      try {
+        const order = await getProjectOrder(draft, { signal });
+        if (!signal.aborted) projectStore.setOrderBlocked(draft, false);
+        return { kind: "ready", order };
+      } catch (error) {
+        const findings = blockedFindings(error);
+        if (!findings) throw error;
+        if (!signal.aborted) projectStore.setOrderBlocked(draft, true);
+        return { kind: "blocked", findings };
+      }
+    },
   );
   return (
     <article className={styles.page}>
       <p className={styles.prose}>
         Review the columns and periods supplied by the catalog for this project.
-        <br />
-        <a href="/project">Back to the project</a>
       </p>
       {resource.loading ? (
         <section aria-label="Order" aria-busy="true">
@@ -56,17 +114,29 @@ export function OrderView({ draft }: { draft: ProjectData }) {
         </section>
       ) : resource.error || !resource.data ? (
         <StatusRow tone="error" live="alert">
-          The order could not be prepared ({resource.error}). Check the project
-          findings and try again.
+          The order could not be prepared. Check the project and try again.
         </StatusRow>
+      ) : resource.data.kind === "blocked" ? (
+        <>
+          <StatusRow tone="error" live="alert">
+            The order is blocked. Review the findings and update the project.
+          </StatusRow>
+          <OrderFindings findings={resource.data.findings} draft={draft} />
+        </>
       ) : (
-        <OrderContent order={resource.data} />
+        <OrderContent order={resource.data.order} draft={draft} />
       )}
     </article>
   );
 }
 
-function OrderContent({ order }: { order: LogicalOrder }) {
+function OrderContent({
+  order,
+  draft,
+}: {
+  order: LogicalOrder;
+  draft: ProjectData;
+}) {
   const refs = [
     ...order.entries.flatMap((entry) => [entry.table, entry.variable]),
     ...order.row_keys.flatMap((key) => [
@@ -116,37 +186,6 @@ function OrderContent({ order }: { order: LogicalOrder }) {
         entries: [entry],
       });
   }
-  const findings: CatalogFinding[] = order.findings.map((issue) => {
-    let message = issue.message;
-    for (const ref of [issue.variable, issue.table, issue.successor_fqid]) {
-      if (ref)
-        message = message.replaceAll(ref, nameOf(ref, "this catalog item"));
-    }
-    return {
-      caveat: null,
-      code: issue.code,
-      message: issue.source ? `${issue.source}: ${message}` : message,
-      period: issue.period,
-      severity: issue.level === "warning" ? "review" : "notice",
-      subject: {
-        kind: issue.variable ? "variable" : "table",
-        fqid: issue.variable ?? issue.table,
-        table: issue.table,
-        period: issue.period,
-        release: null,
-        spelling: null,
-        value_set: null,
-      },
-    };
-  });
-  // DataWarnings' fallback is an identifier; name every subject, including failed
-  // catalog lookups, so an order never exposes FQIDs as display text.
-  const findingNames = new Map(names);
-  for (const finding of findings) {
-    for (const ref of [finding.subject.fqid, finding.subject.table]) {
-      if (ref && !findingNames.has(ref)) findingNames.set(ref, "Catalog item");
-    }
-  }
   return (
     <>
       <section className={styles.entries} aria-label="Entries">
@@ -161,16 +200,20 @@ function OrderContent({ order }: { order: LogicalOrder }) {
               key={key}
               title={
                 <>
-                  {group.source}: {nameOf(group.table, "Table")}
+                  {group.source}:{" "}
+                  <CatalogName
+                    fqid={group.table}
+                    fallback="Table name unavailable"
+                  />
                 </>
               }
               flush
             >
               <DataTable
                 columns={[
-                  { key: "variable", label: "Variable", width: "48%" },
-                  { key: "spelling", label: "Column and period", width: "37%" },
-                  { key: "binding", label: "Details", width: "15%" },
+                  { key: "variable", label: "Variable", width: "42%" },
+                  { key: "spelling", label: "Column and period", width: "36%" },
+                  { key: "binding", label: "Column details", width: "22%" },
                 ]}
                 rows={group.entries}
                 getRowId={(entry) => JSON.stringify(entry)}
@@ -184,7 +227,10 @@ function OrderContent({ order }: { order: LogicalOrder }) {
                           href={catalogHref(entry.variable)}
                           title={name}
                         >
-                          {name}
+                          <CatalogName
+                            fqid={entry.variable}
+                            fallback="Variable name unavailable"
+                          />
                         </a>
                       );
                     }
@@ -198,15 +244,6 @@ function OrderContent({ order }: { order: LogicalOrder }) {
                           <Period period={entry.period} />
                         </span>
                       );
-                    case "period":
-                      return (
-                        <span
-                          className={styles.period}
-                          title={catalogPeriodLabel(entry.period)}
-                        >
-                          <Period period={entry.period} />
-                        </span>
-                      );
                     default: {
                       const valueNames = entry.value_set
                         ? valueSets.data?.get(entry.value_set.hash)
@@ -215,15 +252,8 @@ function OrderContent({ order }: { order: LogicalOrder }) {
                         <EntryDetails
                           entry={entry}
                           variableName={nameOf(entry.variable, "Variable")}
-                          valueSetName={
-                            !entry.value_set
-                              ? "Not stated"
-                              : valueSets.error
-                                ? "Names unavailable"
-                                : valueNames
-                                  ? valueNames.join(", ") || "Unnamed value set"
-                                  : "Reading value set names"
-                          }
+                          valueSetNames={entry.value_set ? valueNames : null}
+                          valueSetError={valueSets.error !== null}
                         />
                       );
                     }
@@ -236,8 +266,7 @@ function OrderContent({ order }: { order: LogicalOrder }) {
       </section>
       {valueSets.error && (
         <StatusRow tone="error">
-          Value-set names did not load ({valueSets.error}). Reload the page to
-          try again.
+          Value-set names did not load. Reload the page to try again.
         </StatusRow>
       )}
       <Panel title="Row keys">
@@ -284,7 +313,7 @@ function OrderContent({ order }: { order: LogicalOrder }) {
           </ul>
         </Panel>
       )}
-      <DataWarnings findings={findings} names={findingNames} />
+      <OrderFindings findings={order.findings} draft={draft} />
     </>
   );
 }
@@ -292,16 +321,19 @@ function OrderContent({ order }: { order: LogicalOrder }) {
 function EntryDetails({
   entry,
   variableName,
-  valueSetName,
+  valueSetNames,
+  valueSetError,
 }: {
   entry: Entry;
   variableName: string;
-  valueSetName: string;
+  valueSetNames: readonly string[] | null | undefined;
+  valueSetError: boolean;
 }) {
   return (
     <DialogTrigger>
       <Button
-        className={styles.details}
+        variant="ghost"
+        onPress={() => {}}
         aria-label={`Details for ${variableName}, ${catalogPeriodLabel(entry.period)}`}
       >
         Details
@@ -335,13 +367,25 @@ function EntryDetails({
               },
               {
                 label: "Type and length",
-                value: `${entry.type ?? "Not stated"}${entry.length === null ? "" : ` (${entry.length})`}`,
+                value: storageLabel(entry),
               },
-              { label: "Value set", value: valueSetName },
+              {
+                label: "Value set",
+                value: valueSetError ? (
+                  "Names unavailable"
+                ) : valueSetNames === undefined ? (
+                  <Skeleton />
+                ) : (
+                  <ValueSetLabel
+                    valueSet={
+                      valueSetNames === null ? null : { names: valueSetNames }
+                    }
+                  />
+                ),
+              },
               {
                 label: "Classification",
-                value: entry.classification ?? "Not stated",
-                mono: entry.classification !== null,
+                value: <ClassificationName fqid={entry.classification} />,
               },
             ]}
           />
@@ -349,4 +393,73 @@ function EntryDetails({
       </Popover>
     </DialogTrigger>
   );
+}
+
+function CatalogName({ fqid, fallback }: { fqid: string; fallback: string }) {
+  const read = useCatalogName(fqid);
+  return read.loading ? <Skeleton /> : (read.value ?? fallback);
+}
+
+function ClassificationName({ fqid }: { fqid: string | null }) {
+  const read = useCatalogName(fqid);
+  if (!fqid) return <>Not stated</>;
+  const fallback = humanizeClassificationSlug(fqid.split("/").at(-1) ?? "");
+  return (
+    <a className="link" href={catalogHref(fqid)}>
+      {read.value ?? fallback}
+    </a>
+  );
+}
+
+function storageLabel(entry: Entry): string {
+  const type = entry.type?.toLowerCase();
+  if (!type) return "Not stated";
+  if (["char", "varchar", "nvarchar", "text", "string"].includes(type)) {
+    return entry.length !== null && entry.length > 0
+      ? `Text, ${entry.length} ${entry.length === 1 ? "character" : "characters"}`
+      : "Text";
+  }
+  if (["int", "integer", "bigint", "smallint", "tinyint"].includes(type))
+    return "Integer";
+  if (["decimal", "double", "float", "numeric", "number"].includes(type))
+    return "Number";
+  if (type === "datetime") return "Date and time";
+  if (type === "date") return "Date";
+  return catalogWords(type);
+}
+
+function OrderFindings({
+  findings,
+  draft,
+}: {
+  findings: ValidationIssue[];
+  draft: ProjectData;
+}) {
+  const raw = JSON.stringify(draft);
+  const refs = findings.flatMap((issue) => issueRefs(issue, raw));
+  const names = useCatalogNames(refs);
+  const located: CatalogFinding[] = findings.map((issue) => {
+    const place = issuePlace(issue, raw);
+    const message = plainIssueText(issue.message, issueRefs(issue, raw), names);
+    return {
+      caveat: null,
+      code: issue.code,
+      message: place.source ? `${place.source}: ${message}` : message,
+      period: issue.period,
+      severity: issue.level === "info" ? "notice" : "review",
+      subject: {
+        kind: place.variable ? "variable" : "table",
+        fqid: place.variable ?? place.table,
+        table: place.table,
+        period: issue.period,
+        release: null,
+        spelling: null,
+        value_set: null,
+      },
+    };
+  });
+  const findingNames = new Map(names);
+  for (const ref of refs)
+    if (!findingNames.has(ref)) findingNames.set(ref, "Catalog item");
+  return <DataWarnings findings={located} names={findingNames} />;
 }

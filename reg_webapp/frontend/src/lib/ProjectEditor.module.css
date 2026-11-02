@@ -75,3 +75,24 @@
     font-size: 1rem;
   }
 }
+.pages a {
+  padding: var(--space-1) var(--space-2);
+}
+.pages a[aria-current="page"] {
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+  font-weight: var(--heading-weight);
+}
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.checks:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.openActions {
+  margin-bottom: var(--space-3);
+}

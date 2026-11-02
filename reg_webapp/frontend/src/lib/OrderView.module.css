@@ -12,7 +12,7 @@
 }
 
 .variable {
-  display: block;
+  display: inline-block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -36,31 +36,8 @@
   overflow: hidden;
 }
 
-.period {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.details {
-  padding: 0;
-  border: 0;
-  border-bottom: 2px solid var(--accent);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-}
-.details[data-hovered] {
-  background: var(--surface-hover);
-}
-.details[data-focus-visible] {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
 .popover {
+  box-sizing: border-box;
   max-width: min(32rem, calc(100vw - 2 * var(--space-4)));
   padding: var(--space-3);
   border: 1px solid var(--border);

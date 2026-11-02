@@ -22,6 +22,11 @@ the shared abortable resource hook, with issues under their source or binding an
 summary links that focus them. Opening a replacement or discarding the working copy asks
 first. Download remains available if browser persistence fails.
 
+The banner and project page share one catalog check. The banner retains the project
+name, source and column counts, verdict and download save state across routes. A
+restored local draft is recovery, so it remains unsaved until downloaded. The study
+window is a readout here; its window-band picker returns in W5b1.
+
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
 pane. Register-name reads are shared with catalog browsing; value-set names are read by

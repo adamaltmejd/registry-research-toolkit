@@ -62,10 +62,10 @@ function Storage({ row }: { row: CatalogSegment }) {
   return <>Not stated</>;
 }
 
-function ValueSetLabel({
+export function ValueSetLabel({
   valueSet,
 }: {
-  valueSet: CatalogSegment["value_set"];
+  valueSet: { names: readonly string[] } | null;
 }) {
   if (!valueSet)
     return <span className={variableStyles.singleLine}>Not stated</span>;
@@ -75,9 +75,12 @@ function ValueSetLabel({
       <Button className={variableStyles.valueSet}>
         <span className={variableStyles.firstName}>{names[0]}</span>
         {names.length > 1 && (
-          <span className={variableStyles.more}>
-            and {names.length - 1} more
-          </span>
+          <>
+            {" "}
+            <span className={variableStyles.more}>
+              and {names.length - 1} more
+            </span>
+          </>
         )}
       </Button>
       <Tooltip

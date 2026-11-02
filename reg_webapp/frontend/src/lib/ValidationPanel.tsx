@@ -1,21 +1,17 @@
-import {
-  Button as AriaButton,
-  Link,
-  Tooltip,
-  TooltipTrigger,
-} from "react-aria-components";
+import { Link } from "react-aria-components";
 import type { ValidationResultModel } from "./api";
 import { catalogHref } from "./catalog";
-import { catalogPeriodLabel } from "./catalog_period";
+import { catalogPeriodLabel, sourcePeriodLabel } from "./catalog_period";
+import { FindingTitle } from "./Finding";
 import styles from "./Finding.module.css";
-import { sourcePeriodToWire } from "./reg_core";
 import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
-import { useCatalogNames } from "./use_catalog_names";
+import { useCatalogName, useCatalogNames } from "./use_catalog_names";
 import {
   issueId,
   issuePlace,
+  issueRefs,
   issueTitle,
   plainIssueText,
   type ValidationIssue,
@@ -23,6 +19,7 @@ import {
 
 export function ValidationPanel({
   title,
+  validMessage,
   result,
   raw,
   loading = false,
@@ -30,6 +27,7 @@ export function ValidationPanel({
   summarizeLocated = false,
 }: {
   title: string;
+  validMessage: string;
   result: ValidationResultModel | null;
   raw: string | null;
   loading?: boolean;
@@ -44,7 +42,7 @@ export function ValidationPanel({
         </div>
       ) : error ? (
         <StatusRow tone="error" live="alert">
-          The catalog check failed: {error}. Check catalog to try again.
+          The catalog check failed. Check catalog to try again.
         </StatusRow>
       ) : (
         result && (
@@ -60,9 +58,9 @@ export function ValidationPanel({
               live="status"
             >
               {result.ok
-                ? title === "Draft check"
-                  ? "Project structure is valid."
-                  : "Project is valid against this catalog."
+                ? result.issues.some((issue) => issue.level === "warning")
+                  ? "Project is valid, with warnings to review."
+                  : validMessage
                 : "Project needs changes. Review the issues below."}
             </StatusRow>
             <ul className={styles.list} aria-label={`${title} issues`}>
@@ -89,10 +87,9 @@ function IssueLink({
   raw: string | null;
 }) {
   const place = issuePlace(issue, raw);
-  const refs = [place.variable, issue.table, issue.successor_fqid];
-  const names = useCatalogNames(
-    refs.filter((ref): ref is string => Boolean(ref)),
-  );
+  const refs = issueRefs(issue, raw);
+  const names = useCatalogNames(refs);
+  const variable = useCatalogName(place.variable);
   return (
     <li>
       <Link
@@ -101,7 +98,7 @@ function IssueLink({
         onPress={() => document.getElementById(issueId(issue))?.focus()}
       >
         {place.source}
-        {place.variable ? `: ${names.get(place.variable) ?? "Variable"}` : ""} —{" "}
+        {place.variable && variable.value ? `: ${variable.value}` : ""}:{" "}
         {plainIssueText(issueTitle(issue), refs, names)}
       </Link>
     </li>
@@ -116,61 +113,55 @@ export function LocatedIssue({
   raw: string | null;
 }) {
   const place = issuePlace(issue, raw);
-  const names = useCatalogNames(
-    [place.variable, issue.table, issue.successor_fqid].filter(
-      (ref): ref is string => Boolean(ref),
-    ),
-  );
-  const plain = (text: string) =>
-    plainIssueText(
-      text,
-      [place.variable, issue.variable, issue.table, issue.successor_fqid],
-      names,
-    );
-  const title = plain(issueTitle(issue));
+  const refs = issueRefs(issue, raw);
+  const names = useCatalogNames(refs);
+  const variable = useCatalogName(place.variable);
+  const table = useCatalogName(place.table);
+  const successor = useCatalogName(issue.successor_fqid);
   const period = issue.period
     ? catalogPeriodLabel(issue.period)
     : place.period === undefined
       ? null
-      : sourcePeriodToWire(place.period);
+      : sourcePeriodLabel(place.period);
   return (
     <li id={issueId(issue)} className={styles.item} tabIndex={-1}>
       <StatusRow tone={issue.level === "warning" ? "warn" : issue.level}>
-        <span className={styles.body}>
-          <TooltipTrigger delay={600}>
-            <AriaButton
-              className={styles.titleButton}
-              onPress={() => {
-                void navigator.clipboard?.writeText(issue.code).catch(() => {});
-              }}
-            >
-              {title}
-            </AriaButton>
-            <Tooltip className={styles.tooltip} offset={6}>
-              <code>{issue.code}</code>
-            </Tooltip>
-          </TooltipTrigger>
+        <div className={styles.body}>
+          <FindingTitle
+            title={plainIssueText(issueTitle(issue), refs, names)}
+            code={issue.code}
+          />
           {place.source && <span>Source: {place.source}</span>}
-          {place.variable && (
+          {place.variable && !variable.loading && (
+            <span>Variable: {variable.value ?? "Name unavailable"}</span>
+          )}
+          {place.table && !table.loading && (
+            <span>Table: {table.value ?? "Name unavailable"}</span>
+          )}
+          {(variable.loading || table.loading) && (
+            <div aria-label="Catalog names" aria-busy="true">
+              <Skeleton />
+            </div>
+          )}
+          {period && (
             <span>
-              Variable: {names.get(place.variable) ?? "Unknown variable"}
+              Period: {period === "Unbounded" ? period : <code>{period}</code>}
             </span>
           )}
-          {period && <span>Period: {period}</span>}
-          {issue.path && (
-            <span>
-              Field: <code>{issue.path}</code>
-            </span>
-          )}
-          {title !== plain(issue.message) && (
-            <span>{plain(issue.message)}</span>
-          )}
-          {issue.successor_fqid && (
-            <a className="link" href={catalogHref(issue.successor_fqid)}>
-              Successor: {names.get(issue.successor_fqid) ?? "View successor"}
-            </a>
-          )}
-        </span>
+          <span className={styles.message}>
+            {plainIssueText(issue.message, refs, names)}
+          </span>
+          {issue.successor_fqid &&
+            (successor.loading ? (
+              <div aria-label="Successor name" aria-busy="true">
+                <Skeleton />
+              </div>
+            ) : (
+              <a className="link" href={catalogHref(issue.successor_fqid)}>
+                Successor: {successor.value ?? "Name unavailable"}
+              </a>
+            ))}
+        </div>
       </StatusRow>
     </li>
   );
