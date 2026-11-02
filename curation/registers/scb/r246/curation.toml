@@ -351,5 +351,5 @@ evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:timlon"
-fields = { "description" = "Timlön under referensmånaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514"
+fields = { "description" = "Timlön under referensmånaden. Timlönen beräknas som lön under referensmånaden dividerad med antal timmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:41935:11688:12053\ncatalog:variable_text:41935:13149:13514\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437081:opdef_text. One variable, one description."

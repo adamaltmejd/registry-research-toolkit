@@ -2318,29 +2318,29 @@ evidence = "The questions explicitly ask whether the respondent participated in 
 [[statement]]
 kind = "set"
 subject = "var:fr-euro-folkrost"
-fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron. Uppgiften avser folkomröstningen 2003 med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402345:opdef_text; rel070-base/reg_meta.db:occurrence:402434:opdef_text; rel070-base/reg_meta.db:occurrence:402527:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:fr30"
-fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron. Uppgiften avser folkomröstningen 2003 med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402150:opdef_text; rel070-base/reg_meta.db:occurrence:402241:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:fr31-eufolk"
-fields = { "description" = "Anger röstalternativ eller uteblivet deltagande i folkomröstningen om EU-medlemskap." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ och deltagande, inte enbart om personen röstade.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387"
+fields = { "description" = "Anger röstalternativ eller uteblivet deltagande i folkomröstningen om EU-medlemskap. Uppgiften avser folkomröstningen i november 1994." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ och deltagande, inte enbart om personen röstade.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402153:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:medlemskap-i-fackforening"
-fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602"
+fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör. Frågan ställs endast till dem som svarat att de är anställda i fråga 16, kod 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401567:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2353,8 +2353,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvar
 [[statement]]
 kind = "set"
 subject = "var:pbsvar"
-fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249"
+fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från. Härledningen prioriterar giltiga svar 1–8 i pbval_nu, därefter pbsymp och sedan pbvrv_sen, med resultatkoderna 1, 2 respektive 3; annars sätts 9 om reskont<8 och 0 i övriga fall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401589:opdef_text; rel070-base/reg_meta.db:occurrence:401671:opdef_text; rel070-base/reg_meta.db:occurrence:404389:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2367,5 +2367,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:valdplan"
-fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240"
+fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Variabeln utgår från fr8, sätts till 100 vid reskont=6 och till 101 vid reskont=4 eller 5; kvarvarande saknade värden sätts till 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description."

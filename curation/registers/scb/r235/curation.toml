@@ -2043,8 +2043,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:mangd-glyfosatmedel"
-fields = { "description" = "Total mängd glyfosatmedel." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721"
+fields = { "description" = "Total mängd glyfosatmedel. Mängden avser användning under 2017." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:515721:opdef_text. One variable, one description."
 
 
 [[statement]]

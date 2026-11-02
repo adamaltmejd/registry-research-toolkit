@@ -5414,8 +5414,8 @@ evidence = "r120 records interest-bearing debts to associated enterprises, an in
 [[statement]]
 kind = "set"
 subject = "var:gem0841"
-fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053"
+fields = { "description" = "Erhållna bidrag redovisade som kostnadsreduktion. Uppgiften kan vara beräknad genom imputering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kostnader medan etiketten anger mottagna bidrag som kostnadsreduktion.\ncatalog:variable_text:12422:9862:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125477:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

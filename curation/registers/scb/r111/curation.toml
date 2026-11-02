@@ -11120,15 +11120,15 @@ evidence = "The operational definition asks satisfaction with the completed uppe
 [[statement]]
 kind = "set"
 subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f10-07"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper. Uppgiften är den svarandes bedömning av kraven i de ordinarie arbetsuppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249087:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f15-09"
-fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348"
+fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper. Uppgiften är den svarandes bedömning av kraven i de ordinarie arbetsuppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249010:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -11141,8 +11141,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:fardighetstraning-anvanda-kritiskt-tankande-f19-07"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper. Uppgiften avser den svarandes universitets- eller högskoleutbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249112:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -11155,8 +11155,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMell
 [[statement]]
 kind = "set"
 subject = "var:latt-svart-fa-arbete-amnesomradet"
-fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809"
+fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning. Bedömningen gäller ett arbete som till största delen stämde överens med utbildningens inriktning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249133:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -11176,8 +11176,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrå
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-utbildningens-fardighetstraning-f19-09"
-fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348"
+fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper. Uppgiften avser den svarandes universitets- eller högskoleutbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249029\ncatalog:variable_text:29655:17167:17348\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249029:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

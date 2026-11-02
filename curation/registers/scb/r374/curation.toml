@@ -1994,29 +1994,29 @@ evidence = "r35 and r57 identify schools and universities as external-course pro
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-kursdeltagare"
-fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal deltagare.\ncatalog:variable_text:6974:16436:16801"
+fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal deltagare.\ncatalog:variable_text:6974:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53974:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-kvinnor-kursdeltagare"
-fields = { "description" = "Antal anställda kvinnor i företaget som deltog i minst en kurs under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal kvinnliga deltagare.\ncatalog:variable_text:6975:16436:16801"
+fields = { "description" = "Antal anställda kvinnor i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal kvinnliga deltagare.\ncatalog:variable_text:6975:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53975:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-man-kursdeltagare"
-fields = { "description" = "Antal anställda män i företaget som deltog i minst en kurs under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal manliga deltagare.\ncatalog:variable_text:6976:16436:16801"
+fields = { "description" = "Antal anställda män i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal manliga deltagare.\ncatalog:variable_text:6976:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53976:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskostnader-interna-larare-ovrig-personal-kronor"
-fields = { "description" = "Företagets arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7008:14610:14975\ncatalog:variable_text:7008:16436:16801"
+fields = { "description" = "Företagets arbetskostnader för interna lärare och övrig personal som helt eller delvis arbetar med företagsutbildning. Koden 9999999998 betyder inga sådana kostnader under referensåret, och källans mer utförliga kodbeskrivning anger 9999999999 för saknat svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7008:14610:14975\ncatalog:variable_text:7008:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54008:opdef_text; rel070-base/reg_meta.db:occurrence:54158:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2029,15 +2029,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:externa-kurser-externa-larare-interna-kurser-kronor"
-fields = { "description" = "Företagets kostnader för externa kurser och externa lärare på interna kurser under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7004:14610:14975\ncatalog:variable_text:7004:16436:16801"
+fields = { "description" = "Företagets kostnader för externa kurser och externa lärare på interna kurser under referensåret. Koden 9999999998 betyder inga sådana kostnader under referensåret, och källans mer utförliga kodbeskrivning anger 9999999999 för saknat svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7004:14610:14975\ncatalog:variable_text:7004:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54004:opdef_text; rel070-base/reg_meta.db:occurrence:54154:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:foretagsstorlek"
-fields = { "description" = "Företagets storleksklass baserad på antal anställda." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ett antal, men variabeln mäter storleksklass baserad på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801"
+fields = { "description" = "Företagets storleksklass baserad på antal anställda. Tre storleksgrupper används som underlag för stratifiering efter näringsgren och företagsstorlek." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ett antal, men variabeln mäter storleksklass baserad på antal anställda.\ncatalog:valueset:1677\ncatalog:variable_text:7050:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54063:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2071,19 +2071,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:kostnader-utbildningsmaterial-utrustning-lokaler-kronor"
-fields = { "description" = "Företagets kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7010:14610:14975\ncatalog:variable_text:7010:16436:16801"
+fields = { "description" = "Företagets kostnader för utbildningsmaterial, utbildningsutrustning och utbildningslokaler. Koden 9999999998 betyder inga sådana kostnader under referensåret, och källans mer utförliga kodbeskrivning anger 9999999999 för saknat svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7010:14610:14975\ncatalog:variable_text:7010:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54010:opdef_text; rel070-base/reg_meta.db:occurrence:54160:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:resekostnader-traktamenten-kursdeltagare-kronor"
-fields = { "description" = "Företagets resekostnader och traktamenten för kursdeltagare under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7006:14610:14975\ncatalog:variable_text:7006:16436:16801"
+fields = { "description" = "Företagets resekostnader och traktamenten för kursdeltagare under referensåret. Koden 9999999998 betyder inga sådana kostnader under referensåret, och källans mer utförliga kodbeskrivning anger 9999999999 för saknat svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total utbildningskostnad medan variabeln mäter en kostnadskomponent.\ncatalog:variable_text:7006:14610:14975\ncatalog:variable_text:7006:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54006:opdef_text; rel070-base/reg_meta.db:occurrence:54156:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:total-kurskostnad-kategorityp-svar-saknas-kronor"
-fields = { "description" = "Företagets totala kostnad för anställdas kurser under referensåret när fördelning på kostnadskategorier saknas helt eller delvis." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total personalutbildningskostnad medan variabeln mäter företagets totala kurskostnad när kategorifördelning saknas helt eller delvis.\ncatalog:variable_text:7013:16436:16801"
+fields = { "description" = "Företagets totala kostnad för anställdas kurser under referensåret när fördelning på kostnadskategorier saknas helt eller delvis. Koden 9999999998 betyder att företaget inte hade några sådana kostnader under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger total personalutbildningskostnad medan variabeln mäter företagets totala kurskostnad när kategorifördelning saknas helt eller delvis.\ncatalog:variable_text:7013:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54013:opdef_text. One variable, one description."

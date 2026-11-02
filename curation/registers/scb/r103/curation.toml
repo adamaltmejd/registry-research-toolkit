@@ -2282,8 +2282,8 @@ evidence = "The measure aggregates the individual's highest education through th
 [[statement]]
 kind = "set"
 subject = "var:fodd-sverige-utomlands-mor"
-fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089"
+fields = { "description" = "Gruppering av moderns födelseland till född i Sverige eller född utomlands. Grupperingen bygger på födelseland för biologisk mor eller adoptivmor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen utelämnar att klassificeringen avser modern.\ncatalog:variable_text:41467:10592:13149\ncatalog:variable_text:41467:14610:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:421790:opdef_text; rel070-base/reg_meta.db:occurrence:422185:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -2294,8 +2294,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:studnivaisced"
-fields = { "description" = "Nivå på personens studier enligt ISCED." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688"
+fields = { "description" = "Nivå på personens studier enligt ISCED. Uppgiften avser högsta fullföljda utbildning och är grupperad för internationell redovisning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver nivån på pågående studier, inklusive uteblivet studiedeltagande.\ncatalog:valueset:7130\ncatalog:variable_text:41553:11323:11688\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:421925:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

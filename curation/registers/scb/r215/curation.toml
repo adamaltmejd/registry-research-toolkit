@@ -3986,64 +3986,64 @@ evidence = "Rename audit #210: SRodp_salt is röding in 2019-2024; SOringp_salt 
 [[statement]]
 kind = "set"
 subject = "var:malr-salt"
-fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089"
+fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513828:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:mflodr-salt"
-fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089"
+fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513842:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:mlaxr-salt"
-fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089"
+fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513860:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:moringr-salt"
-fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089"
+fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513868:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:movrr-salt"
-fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089"
+fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent. Uppgiften avser produktion i salt eller bräckt havsvatten; arten specificeras i ”Övrig art, matfisk (1)”." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513887:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:mrblr-salt"
-fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089"
+fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513899:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:mrodr-salt"
-fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089"
+fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513911:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:salr-salt"
-fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089"
+fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513958:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:sflodr-salt"
-fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089"
+fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513970:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -4056,43 +4056,43 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtik
 [[statement]]
 kind = "set"
 subject = "var:sjordy-salt"
-fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089"
+fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513976:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:slaxr-salt"
-fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089"
+fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513988:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:soringr-salt"
-fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089"
+fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513996:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:sovrr-salt"
-fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089"
+fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent. Uppgiften avser produktion i salt eller bräckt havsvatten; arten specificeras i ”Övrig art, sättfisk (1)”." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514012:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:srblr-salt"
-fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089"
+fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514024:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:srodr-salt"
-fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089"
+fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514036:opdef_text. One variable, one description."
 
 
 [[statement]]

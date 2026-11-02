@@ -17754,20 +17754,20 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-familj-linda"
-fields = { "description" = "Summan av den disponibla inkomsten för alla i hushållet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver individuell disponibel inkomst, medan variabeln mäter summan för familjen.\ncatalog:variable_text:36465:16801:17897"
+fields = { "description" = "Summan av den disponibla inkomsten för alla i hushållet. Summan bygger på hushållsmedlemmarnas CDISPL." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver individuell disponibel inkomst, medan variabeln mäter summan för familjen.\ncatalog:variable_text:36465:16801:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:334735:opdef_text; rel070-base/reg_meta.db:occurrence:337859:opdef_text; rel070-base/reg_meta.db:occurrence:354178:opdef_text; rel070-base/reg_meta.db:occurrence:354586:opdef_text; rel070-base/reg_meta.db:occurrence:339124:opdef_text; rel070-base/reg_meta.db:occurrence:355524:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand"
-fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36520:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt försörjningsstöd.\ncatalog:variable_text:36601:11323:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand"
+fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt. Beloppet läggs på den person som fått biståndet utbetalt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36520:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter utbetalt försörjningsstöd.\ncatalog:variable_text:36601:11323:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:337906:opdef_text; rel070-base/reg_meta.db:occurrence:339656:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-uppdelat"
-fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt, uppdelat mellan sökande och medsökande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36521:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36602:12418:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand-uppdelat"
+fields = { "description" = "Utbetalt ekonomiskt bistånd för försörjning och livsföring i övrigt, uppdelat mellan sökande och medsökande. När det finns medsökande delas beloppet lika mellan de två personerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36521:12784:17897\n\nBeskrivningen anger rätt till bistånd medan variabeln mäter ett uppdelat utbetalt belopp.\ncatalog:variable_text:36602:12418:12784\n\nMaintainer description review 2026-11-02: scb/linda/ekonomiskt-bistand-uppdelat\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:339176:opdef_text; rel070-base/reg_meta.db:occurrence:339658:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17784,20 +17784,20 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:etableringstillagg-utbetalt-belopp-rtb-familj"
-fields = { "description" = "Utbetalt etableringstillägg till personer som är nya i Sverige och kan få tillägget utöver etableringsersättning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet att få tillägget, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36643:16071:17897"
+fields = { "description" = "Utbetalt etableringstillägg till personer som är nya i Sverige och kan få tillägget utöver etableringsersättning. Familjen avgränsas enligt RTB den 31 december och samma belopp anges för alla familjemedlemmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet att få tillägget, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36643:16071:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:344705:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:expansionsmedelsskatt-tillgodoraknad"
-fields = { "description" = "Tillgodoräknad expansionsmedelsskatt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition anger tillgodoräknad skatt, inte den allmänna skatten.\ncatalog:occurrence:336525\ncatalog:variable_text:36539:9131:10227"
+fields = { "description" = "Tillgodoräknad expansionsmedelsskatt. Skatten återfås när avsättningen till expansionsmedel återförs till beskattning, samtidigt som beloppet beskattas som inkomst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition anger tillgodoräknad skatt, inte den allmänna skatten.\ncatalog:occurrence:336525\ncatalog:variable_text:36539:9131:10227\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335934:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:givet-underhallsbidrag"
-fields = { "description" = "Modellberäknat givet underhållsbidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger enbart modellberäknade belopp, inte observerat givet underhåll.\ncatalog:variable_text:36626:15706:17897"
+fields = { "description" = "Modellberäknat givet underhållsbidrag. Beräkningen följer Försäkringskassans riktlinjer: barnets behov multipliceras med den bidragsskyldige förälderns andel av båda föräldrarnas sammanlagda överskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger enbart modellberäknade belopp, inte observerat givet underhåll.\ncatalog:variable_text:36626:15706:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:344464:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17808,20 +17808,20 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen 
 [[statement]]
 kind = "set"
 subject = "var:kontrolluppgiftsersattning-enligt-punkt-2-inte"
-fields = { "description" = "Kontrolluppgiftsersättning enligt punkt 2 som inte är pensionsgrundande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen generiska beskrivningen av kontant bruttolön anger en annan mängd än den specificerade kontrolluppgiftsersättningen.\ncatalog:variable_text:36765:6209:7670"
+fields = { "description" = "Kontrolluppgiftsersättning enligt punkt 2 som inte är pensionsgrundande. Summan omfattar ersättningar från samma arbetsgivare som understiger 1 000 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen generiska beskrivningen av kontant bruttolön anger en annan mängd än den specificerade kontrolluppgiftsersättningen.\ncatalog:variable_text:36765:6209:7670\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349707:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:kontrolluppgiftsersattning-enligt-punkt-3-traktamenten"
-fields = { "description" = "Kontrolluppgiftsersättning enligt punkt 3: traktamenten och kostnadsersättningar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKontant bruttolön beskriver inte de angivna traktamentena och kostnadsersättningarna.\ncatalog:variable_text:36766:6209:7670"
+fields = { "description" = "Kontrolluppgiftsersättning enligt punkt 3: traktamenten och kostnadsersättningar. Summan omfattar traktamenten, resekostnadsersättningar och representationsersättning som deklareras som inkomst av tjänst i punkt 3." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKontant bruttolön beskriver inte de angivna traktamentena och kostnadsersättningarna.\ncatalog:variable_text:36766:6209:7670\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349708:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:markering-traff-rtb"
-fields = { "description" = "Markering för träff mot Registret över totalbefolkningen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053"
+fields = { "description" = "Markering för träff mot Registret över totalbefolkningen. Matchningen avser Skatteverkets taxeringsmaterial mot RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger folkbokföring medan källan anger en träffmarkering mot RTB.\ncatalog:variable_text:36810:12418:12784\ncatalog:variable_text:36810:6209:8401\ncatalog:variable_text:36810:8401:12053\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349732:opdef_text; rel070-base/reg_meta.db:occurrence:335272:opdef_text; rel070-base/reg_meta.db:occurrence:354154:opdef_text; rel070-base/reg_meta.db:occurrence:339098:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17832,14 +17832,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag"
-fields = { "description" = "Modellberäknat mottaget underhållsbidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade belopp, inte observerade mottagna belopp.\ncatalog:variable_text:36830:15706:17897"
+fields = { "description" = "Modellberäknat mottaget underhållsbidrag. Beräkningen följer Försäkringskassans riktlinjer: barnets behov multipliceras med den bidragsskyldige förälderns andel av båda föräldrarnas sammanlagda överskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade belopp, inte observerade mottagna belopp.\ncatalog:variable_text:36830:15706:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:344170:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:naturaformaner"
-fields = { "description" = "Övriga naturaförmåner än bil-, kost- och bostadsförmån enligt kontrolluppgift." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en total men den operativa definitionen avgränsar värdet till övriga naturaförmåner.\ncatalog:variable_text:36845:6574:7670"
+fields = { "description" = "Övriga naturaförmåner än bil-, kost- och bostadsförmån enligt kontrolluppgift. Nettovärdet redovisas, normalt värderat till marknadspris och annars till arbetsgivarens försäljningspris för egna produkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en total men den operativa definitionen avgränsar värdet till övriga naturaförmåner.\ncatalog:variable_text:36845:6574:7670\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:349908:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17862,8 +17862,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorr
 [[statement]]
 kind = "set"
 subject = "var:skattepliktig-formogenhet-familj"
-fields = { "description" = "Skattepliktig förmögenhet för familjen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver nettoförmögenhet, medan etiketten och operationaliseringen anger familjens skattepliktiga förmögenhet.\ncatalog:variable_text:37061:365:2922"
+fields = { "description" = "Skattepliktig förmögenhet för familjen. Källan anger gemensam beräkning över 150 099 kronor för fysiska personer och sambeskattade familjer samt över 5 099 kronor för föreningar och samfund." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver nettoförmögenhet, medan etiketten och operationaliseringen anger familjens skattepliktiga förmögenhet.\ncatalog:variable_text:37061:365:2922\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:347835:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17880,26 +17880,26 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:statlig-tjanstepension-2"
-fields = { "description" = "Övrig statlig tjänstepension, beräknad som en restpost." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln är en beräknad restpost för övrig statlig tjänstepension, medan definitionen beskriver hela statliga tjänstepensionen.\ncatalog:variable_text:37133:12418:13514\ncatalog:variable_text:37133:14610:15340\ncatalog:variable_text:37133:15340:17897"
+fields = { "description" = "Övrig statlig tjänstepension, beräknad som en restpost. Beräknas som max(PKUTJPS − PBTJP − PSTJP, 0)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln är en beräknad restpost för övrig statlig tjänstepension, medan definitionen beskriver hela statliga tjänstepensionen.\ncatalog:variable_text:37133:12418:13514\ncatalog:variable_text:37133:14610:15340\ncatalog:variable_text:37133:15340:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:339275:opdef_text; rel070-base/reg_meta.db:occurrence:358531:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:summa-forvarvs-och-kapitalinkomster"
-fields = { "description" = "Summa förvärvs- och kapitalinkomster." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:37160:8035:10227"
+fields = { "description" = "Summa förvärvs- och kapitalinkomster. Beräknas som sammanräknad förvärvsinkomst plus överskott av inkomst av kapital." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:37160:8035:10227\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335021:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:tvard"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37233:12784:17897"
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från Försäkringskassan eller deklaration, beroende på källperiod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37233:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335458:opdef_text; rel070-base/reg_meta.db:occurrence:339924:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:underlag-for-hyreshusskatt-med-0-85-procent"
-fields = { "description" = "Underlag för fastighetsskatt på hyreshus med 0,85 procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fastighetsavgift men källans korrigerade etikett och operationalisering avser fastighetsskatt.\ncatalog:variable_text:37268:9496:10592\nregisters/scb/r29/curation.toml:680"
+fields = { "description" = "Underlag för fastighetsskatt på hyreshus med 0,85 procent. Underlaget är taxeringsvärdet för hyreshusenheter med bostäder med värdeår 1985–1988." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fastighetsavgift men källans korrigerade etikett och operationalisering avser fastighetsskatt.\ncatalog:variable_text:37268:9496:10592\nregisters/scb/r29/curation.toml:680\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:336023:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17910,8 +17910,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nText
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag-kontrolluppgift"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37208:12784:17897"
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från kontrolluppgift, preciserat som pensions- och försäkringsutbetalare i en källperiod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37208:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335437:opdef_text; rel070-base/reg_meta.db:occurrence:354374:opdef_text; rel070-base/reg_meta.db:occurrence:339899:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -17928,8 +17928,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:vbbel"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401"
+fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas direkt från Försäkringskassan och avser ersättning längst till månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:350393:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

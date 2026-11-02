@@ -89217,8 +89217,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-polis-domstol"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51535:5113:5479\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -89241,8 +89241,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479
 [[statement]]
 kind = "set"
 subject = "var:polis-domstol-typ-av-atgard"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51537:5113:5479\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -89661,8 +89661,8 @@ evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-polismyndighet"
-fields = { "tags" = ["crime"] }
-evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:3287"
+fields = { "tags" = ["democracy"] }
+evidence = "Id är en ogenomskinlig källkod.\ncatalog:variable_text:51634:2922:3287\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -89733,8 +89733,8 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287
 [[statement]]
 kind = "set"
 subject = "var:domstol-typ-av-atgard"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:51645:2922:3287\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -90153,8 +90153,8 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766"
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-1"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:51717:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -90165,8 +90165,8 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-3"
-fields = { "tags" = ["crime"] }
-evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719:8401:8766"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:51719:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -90177,8 +90177,8 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polism
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-4"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polismyndighet eller domstol.\ncatalog:variable_text:51720:8401:8766"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger metod 4 för polismyndighet eller domstol.\ncatalog:variable_text:51720:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -90189,8 +90189,8 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polism
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-5"
-fields = { "tags" = ["crime"] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polismyndighet eller domstol.\ncatalog:variable_text:51721:8401:8766"
+fields = { "tags" = ["democracy"] }
+evidence = "Källkoden är ogenomskinlig och etiketten anger metod 5 för polismyndighet eller domstol.\ncatalog:variable_text:51721:8401:8766\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -108935,26 +108935,26 @@ evidence = "r195 defines isolation through living alone and rarely meeting close
 [[statement]]
 kind = "set"
 subject = "var:hjalp-att-overklaga-1"
-fields = { "tags" = ["crime"] }
-evidence = "r227 measures knowing someone who can help appeal an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49156"
+fields = { "tags" = ["democracy"] }
+evidence = "r227 measures knowing someone who can help appeal an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49156\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
 subject = "var:hjalp-att-overklaga-2"
-fields = { "tags" = ["crime"] }
-evidence = "r228 measures knowing where to obtain help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49157"
+fields = { "tags" = ["democracy"] }
+evidence = "r228 measures knowing where to obtain help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49157\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
 subject = "var:hjalp-av-arbetskamrat"
-fields = { "tags" = ["crime"] }
-evidence = "r230 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49163\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+fields = { "tags" = ["democracy"] }
+evidence = "r230 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49163\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
 subject = "var:hjalp-av-granne"
-fields = { "tags" = ["crime"] }
-evidence = "r234 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49168\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+fields = { "tags" = ["democracy"] }
+evidence = "r234 is a follow-up to MA0211; r245 establishes that the help concerns appealing an authority decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49168\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -108977,14 +108977,14 @@ evidence = "r244 explicitly measures access to assistance completing a tax retur
 [[statement]]
 kind = "set"
 subject = "var:hjalp-overklaga-1"
-fields = { "tags" = ["crime"] }
-evidence = "r245 measures access to help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215"
+fields = { "tags" = ["democracy"] }
+evidence = "r245 measures access to help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49022\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49215\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
 subject = "var:hjalp-overklaga-2"
-fields = { "tags" = ["crime"] }
-evidence = "r246 measures access to appeal assistance; r202 explicitly includes lawyers and legal aid.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49216"
+fields = { "tags" = ["democracy"] }
+evidence = "r246 measures access to appeal assistance; r202 explicitly includes lawyers and legal aid.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:49023\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3685\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49216\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -109097,14 +109097,14 @@ evidence = "r2 identifies the relationship to a second dependent person and refe
 [[statement]]
 kind = "set"
 subject = "var:polis-typ-av-atgard"
-fields = { "tags" = ["crime"] }
-evidence = "r154 and r132 describe recourse concerning police treatment, including written appeals, fitting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50929"
+fields = { "tags" = ["democracy"] }
+evidence = "r154 and r132 describe recourse concerning police treatment, including written appeals, fitting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50789\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12112\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50929\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
 subject = "var:polismyndighet-domstol-metod-2"
-fields = { "tags" = ["crime"] }
-evidence = "r155 concerns police or courts, and r150 includes written appeals and legal assistance, supporting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50967"
+fields = { "tags" = ["democracy"] }
+evidence = "r155 concerns police or courts, and r150 includes written appeals and legal assistance, supporting the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:50827\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9780\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:50967\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -109121,8 +109121,8 @@ evidence = "Coordinator-approved audit correction: Def: 'Om Up missnöjd enl FT6
 [[statement]]
 kind = "set"
 subject = "var:skriftlig-kontakt-domstol"
-fields = { "tags" = ["crime"] }
-evidence = "r176 explicitly records a written appeal concerning a court, fitting judicial proceedings within the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51702"
+fields = { "tags" = ["democracy"] }
+evidence = "r176 explicitly records a written appeal concerning a court, fitting judicial proceedings within the justice theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:51572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:51702\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -109373,80 +109373,80 @@ evidence = "Rename audit HA0507: all covered releases retain the eye-disease lab
 [[statement]]
 kind = "set"
 subject = "var:bio-antal-ganger-12-manader"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på bio de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:8002\ncatalog:variable_text:50990:18993:19358"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på bio de senaste 12 månaderna, eller orsak till att personen inte varit där. Intervallen härleds från frågor om något besök och om fler än tre besök; variabeln ingår vart sjätte år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:8002\ncatalog:variable_text:50990:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506841:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsproblem-uttrade-ur-bostadsproblem"
-fields = { "description" = "Hur urvalspersonens bostadsproblem upphörde, eller om problemen fortfarande kvarstår." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tidpunkt men värdena anger hur bostadsproblemen upphörde eller om de kvarstår.\ncatalog:valueset:7231\ncatalog:variable_text:50866:19358:19723"
+fields = { "description" = "Hur urvalspersonens bostadsproblem upphörde, eller om problemen fortfarande kvarstår. Frågan ställs endast vid svar 1–4 på PD01 om tidigare bostadsproblem och ingår i SILC:s sexårsmodul." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tidpunkt men värdena anger hur bostadsproblemen upphörde eller om de kvarstår.\ncatalog:valueset:7231\ncatalog:variable_text:50866:19358:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:507154:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:deltagit-i-informellt-volontararbete"
-fields = { "description" = "Urvalspersonen har under de senaste 12 månaderna deltagit i informellt volontärarbete." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger formellt arbete men frågan gäller informellt volontärarbete.\ncatalog:variable_text:51007:18993:19358"
+fields = { "description" = "Urvalspersonen har under de senaste 12 månaderna deltagit i informellt volontärarbete. Arbetet ska ha skett utanför organisation eller förening; frågan ingår i sexårsfördjupningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger formellt arbete men frågan gäller informellt volontärarbete.\ncatalog:variable_text:51007:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506857:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand"
-fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454"
+fields = { "description" = "Hushållets ekonomiska bistånd, bruttobelopp. Förmånerna avser personer som är socialt utestängda eller riskerar social utestängning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe source measures a gross benefit amount, while the existing description describes entitlement.\ncatalog:variable_text:47312:18628:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506307:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-ej-avgiftsfinansierat-behovsprovat"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454"
+fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, bruttobelopp. Utbetalningen är inte avgiftsfinansierad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49910:18628:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506309:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-netto"
-fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454"
+fields = { "description" = "Utbetalt behovsprövat ekonomiskt bistånd till hushållet, nettobelopp. Förmånerna avser personer som är socialt utestängda eller riskerar social utestängning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter utbetalt bistånd, inte rätten till bistånd.\ncatalog:variable_text:49909:18628:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506308:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:fu0281"
-fields = { "description" = "Familj och umgänge födelseår barn 2." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844"
+fields = { "description" = "Familj och umgänge födelseår barn 2. Åren 1984–1985 avser variabeln gruppen där urvalspersonen inte är gift eller sammanboende." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger barn 1 men källan anger barn 2.\ncatalog:variable_text:47669:5113:5844\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:477853:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:hur-ofta-gronsaker-eller-sallad"
-fields = { "description" = "Hur ofta urvalspersonen äter grönsaker eller sallad under en vanlig vecka." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser frukt men variabeln mäter grönsaker eller sallad.\ncatalog:variable_text:50862:18993:19358\ncatalog:variable_text:50862:20089:20454"
+fields = { "description" = "Hur ofta urvalspersonen äter grönsaker eller sallad under en vanlig vecka. Bönor och linser ingår, men grönsaksjuice räknas inte med; variabeln ingår i treårsmodulen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser frukt men variabeln mäter grönsaker eller sallad.\ncatalog:variable_text:50862:18993:19358\ncatalog:variable_text:50862:20089:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506766:opdef_text; rel070-base/reg_meta.db:occurrence:507922:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:hur-ofta-tobak"
-fields = { "description" = "Hur ofta urvalspersonen använder tobak." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger frekvens, inte enbart om tobak används.\ncatalog:valueset:12518\ncatalog:variable_text:50863:18993:19358\ncatalog:variable_text:50863:20089:20454"
+fields = { "description" = "Hur ofta urvalspersonen använder tobak. Variabeln härleds från frågor om daglig rökning, snusning och annan tobak samt användning under de senaste tolv månaderna och ingår i treårsmodulen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger frekvens, inte enbart om tobak används.\ncatalog:valueset:12518\ncatalog:variable_text:50863:18993:19358\ncatalog:variable_text:50863:20089:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506767:opdef_text; rel070-base/reg_meta.db:occurrence:507923:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:museum-konstutstallning-etc-antal-ganger"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på museum, konstutställning eller historisk plats de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:3535\ncatalog:variable_text:50994:18993:19358"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på museum, konstutställning eller historisk plats de senaste 12 månaderna, eller orsak till att personen inte varit där. Intervallen härleds från frågor om något besök och om fler än tre besök; variabeln ingår vart sjätte år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:3535\ncatalog:variable_text:50994:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506845:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:smutsig-pa-arbetsplats"
-fields = { "description" = "Om urvalsperson blir smutsig på sitt arbete." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:46045:14610:15340"
+fields = { "description" = "Om urvalsperson blir smutsig på sitt arbete. Frågan ställs till personer med arbete som huvudsaklig sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:46045:14610:15340\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:500786:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:sportevenemang-antal-ganger"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på sport- eller idrottsevenemang de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:4919\ncatalog:variable_text:50996:18993:19358"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på sport- eller idrottsevenemang de senaste 12 månaderna, eller orsak till att personen inte varit där. Intervallen härleds från frågor om något besök och om fler än tre besök; variabeln ingår vart sjätte år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:4919\ncatalog:variable_text:50996:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506847:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:teater-konsert-etc-antal-ganger"
-fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på teater, konsert, dansföreställning eller liknande de senaste 12 månaderna, eller orsak till att personen inte varit där." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:7253\ncatalog:variable_text:50992:18993:19358"
+fields = { "description" = "Antal gånger i intervall som urvalspersonen varit på teater, konsert, dansföreställning eller liknande de senaste 12 månaderna, eller orsak till att personen inte varit där. Intervallen härleds från frågor om något besök och om fler än tre besök; variabeln ingår vart sjätte år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger intervall och orsaker till uteblivet besök, inte ett exakt antal.\ncatalog:valueset:7253\ncatalog:variable_text:50992:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:506843:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -109457,8 +109457,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe 
 [[statement]]
 kind = "set"
 subject = "var:yrke-nuvarande-arbete-isco-4-siffrig-iscoup-2"
-fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262"
+fields = { "description" = "Yrke enligt ISCO08 i ett ytterligare arbete vid sidan av det huvudsakliga arbetet. Koden är fyrsiffrig och okända positioner på finare nivå ersätts med x." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver huvudsakligt arbete, men operationaliseringen anger ytterligare arbete vid sidan av huvudarbetet.\ncatalog:variable_text:53302:17532:18262\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:502917:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -109739,8 +109739,8 @@ evidence = "The item measures treatment in department stores or shops within the
 [[statement]]
 kind = "set"
 subject = "var:forfatta-skrivelse"
-fields = { "tags" = ["crime"] }
-evidence = "Writing to an authority is the alternate MA0210 wording linked to the administrative-appeal and assistance battery (r156, r158, r187).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49029"
+fields = { "tags" = ["democracy"] }
+evidence = "Writing to an authority is the alternate MA0210 wording linked to the administrative-appeal and assistance battery (r156, r158, r187).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49029\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"
@@ -109757,8 +109757,8 @@ evidence = "Maintainer-approved Opus audit correction: Here the variable's own c
 [[statement]]
 kind = "set"
 subject = "var:formaga-forfatta-skrivelse"
-fields = { "tags" = ["crime"] }
-evidence = "The derived writing-and-assistance measure belongs to the authority-letter battery linked to administrative appeals and legal assistance (r159, r106, r156, r158).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4011\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48327"
+fields = { "tags" = ["democracy"] }
+evidence = "The derived writing-and-assistance measure belongs to the authority-letter battery linked to administrative appeals and legal assistance (r159, r106, r156, r158).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4011\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48327\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
 
 [[statement]]
 kind = "set"

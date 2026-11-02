@@ -6298,14 +6298,14 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 [[statement]]
 kind = "set"
 subject = "var:icketerrforsfg"
-fields = { "description" = "Tidigare icke territoriell församling." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger icke territoriell församling; den befintliga texten utelämnar negationen.\ncatalog:variable_text:41783:-731:10227"
+fields = { "description" = "Tidigare icke territoriell församling. Uppgiften avser församlingen som personen flyttar från." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger icke territoriell församling; den befintliga texten utelämnar negationen.\ncatalog:variable_text:41783:-731:10227\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:432970:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:kon-samhorighet"
-fields = { "description" = "Samhörighetspersonens kön." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser fel person; den operativa definitionen anger samhörighetspersonen.\ncatalog:variable_text:41798:10226:10227\ncatalog:variable_text:41798:9861:9862"
+fields = { "description" = "Samhörighetspersonens kön. Kön härleds från personnumrets elfte position: udda siffra ger 1 (man) och jämn siffra 2 (kvinna); samhörighetsperson är make eller maka för gifta och förälder eller annan folkbokföringsperson för barn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser fel person; den operativa definitionen anger samhörighetspersonen.\ncatalog:variable_text:41798:10226:10227\ncatalog:variable_text:41798:9861:9862\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:428860:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

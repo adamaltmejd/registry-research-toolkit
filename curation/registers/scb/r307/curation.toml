@@ -886,5 +886,5 @@ evidence = "Variabeln anger förskolans pedagogiska profil.\ncatalog:occurrence-
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "description" = "Indelning av kommuner i kommungrupper." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kommun snarare än kommungrupp i alla perioder.\ncatalog:occurrence-locators:variable:12903\ncatalog:valueset:12332\ncatalog:valueset:4872\ncatalog:valueset:5056"
+fields = { "description" = "Indelning av kommuner i kommungrupper. Indelningen avser verksamhetens kommun enligt SKL:s kommungrupper 2011, senare 2017 och SKR:s indelning 2023." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kommun snarare än kommungrupp i alla perioder.\ncatalog:occurrence-locators:variable:12903\ncatalog:valueset:12332\ncatalog:valueset:4872\ncatalog:valueset:5056\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:132228:opdef_text; rel070-base/reg_meta.db:occurrence:131907:opdef_text; rel070-base/reg_meta.db:occurrence:131988:opdef_text; rel070-base/reg_meta.db:occurrence:132169:opdef_text. One variable, one description."

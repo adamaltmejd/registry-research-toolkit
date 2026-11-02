@@ -1278,15 +1278,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
-fields = { "description" = "Skolkommun" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202210:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:skom"
-fields = { "description" = "Skolkommun" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:201937:opdef_text. One variable, one description."
 
 
 [[statement]]

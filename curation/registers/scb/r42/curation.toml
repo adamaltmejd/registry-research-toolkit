@@ -1010,110 +1010,110 @@ evidence = "F18 asks whether any work was performed during 7–13 April 2003 (r4
 [[statement]]
 kind = "set"
 subject = "var:civilstand"
-fields = { "description" = "Personens familjeförhållande vid studiestarten i komvux." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver familjeförhållande och omfattar sammanboende och ensamstående.\ncatalog:valueset:11941\ncatalog:variable_text:39385:12053:12418"
+fields = { "description" = "Personens familjeförhållande vid studiestarten i komvux. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena beskriver familjeförhållande och omfattar sammanboende och ensamstående.\ncatalog:valueset:11941\ncatalog:variable_text:39385:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390068:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-0-5-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 0–5 år vid studiestarten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 0–5 år vid studiestarten. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390074:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-13-16-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 13–16 år vid studiestarten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:675"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 13–16 år vid studiestarten. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:675\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390076:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-17-19-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 17–19 år vid studiestarten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:2045"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 17–19 år vid studiestarten. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:2045\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390077:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-6-12-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 6–12 år vid studiestarten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:6360"
+fields = { "description" = "Uppgift om hemmavarande barn i åldern 6–12 år vid studiestarten. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:6360\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390075:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:hemmavarande-barn-under-20-ar-nej-hosten-2000"
-fields = { "description" = "Uppgift om att personen inte hade hemmavarande barn under 20 år vid studiestarten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger att personen inte har hemmavarande barn, inte antalet barn.\ncatalog:valueset:4271"
+fields = { "description" = "Uppgift om att personen inte hade hemmavarande barn under 20 år vid studiestarten. Uppgiften avser studiestarten hösten 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger att personen inte har hemmavarande barn, inte antalet barn.\ncatalog:valueset:4271\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390073:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-annat-skal"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:12028\ncatalog:variable_text:39436:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser svarsalternativet ”Annat skäl” för avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:12028\ncatalog:variable_text:39436:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390111:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-borjade-annan-kurs-komvux"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:10270\ncatalog:variable_text:39432:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser avbrott i en eller flera komvuxkurser för att börja en annan kurs i komvux." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:10270\ncatalog:variable_text:39432:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390107:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-borjade-annan-utbildning"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6100\ncatalog:variable_text:39433:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser avbrott i en eller flera komvuxkurser för att börja en annan utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6100\ncatalog:variable_text:39433:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390108:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-for-hog-studietakt"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6648\ncatalog:variable_text:39427:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser för hög studietakt som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:6648\ncatalog:variable_text:39427:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390102:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-halsoskal"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5224\ncatalog:variable_text:39435:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser hälsoskäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5224\ncatalog:variable_text:39435:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390110:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-innehall-motsvarade-inte-forvantningar"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4999\ncatalog:variable_text:39430:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser att innehållet inte motsvarade förväntningarna som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4999\ncatalog:variable_text:39430:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390105:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-inte-fa-efterstravat-betyg"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:8640\ncatalog:variable_text:39431:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser att inte kunna få eftersträvat betyg som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:8640\ncatalog:variable_text:39431:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390106:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-studietrott"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4275\ncatalog:variable_text:39434:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser studietrötthet som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:4275\ncatalog:variable_text:39434:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390109:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-svart-kombinera-studier-arbete"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5528\ncatalog:variable_text:39428:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser svårigheter att kombinera studier och arbete som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:5528\ncatalog:variable_text:39428:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390103:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
-fields = { "description" = "Angivet skäl till studieavbrott." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:7434\ncatalog:variable_text:39429:12053:12418"
+fields = { "description" = "Angivet skäl till studieavbrott. Uppgiften avser svårigheter att kombinera studier och familjeliv som skäl till avbrott i en eller flera komvuxkurser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och kodningen avser ett angivet skäl, inte nödvändigtvis det huvudsakliga.\ncatalog:valueset:7434\ncatalog:variable_text:39429:12053:12418\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390104:opdef_text. One variable, one description."

@@ -802,8 +802,8 @@ evidence = "r170 defines compensation for wages lost on public holidays, and r15
 [[statement]]
 kind = "set"
 subject = "var:kollavt-proc"
-fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089"
+fields = { "description" = "Uppgiften visar andelen anställda på företaget som omfattas av kollektivavtal. Andelen avrundas till närmaste tiondel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar den avklippta formuleringen utan att ändra betydelsen.\ncatalog:variable_text:42902:18993:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:445986:opdef_text. One variable, one description."
 
 
 [[statement]]

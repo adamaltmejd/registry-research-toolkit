@@ -1321,8 +1321,8 @@ evidence = "r124 describes product groups below COICOP classes; its complete cod
 [[statement]]
 kind = "set"
 subject = "var:urvalssannolikhet"
-fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv. TA anger säkerhetsdragna företag och TU företag som dragits slumpmässigt ur urvalsramen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:400974:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

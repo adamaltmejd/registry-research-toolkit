@@ -1290,62 +1290,62 @@ evidence = "Business register: current employees (1999-2020) -> employees per le
 [[statement]]
 kind = "set"
 subject = "var:eilandomr1"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12055:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Norden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12055:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125379:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr2"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12056:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser EU-länder utanför Norden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12056:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125380:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr3"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12057:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser övriga Europa." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12057:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125381:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr4"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12058:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Asien." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12058:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125382:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr5"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12059:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Fjärran östern." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12059:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125383:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr6"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12060:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Nord- och Centralamerika." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12060:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125384:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr7"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12061:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Sydamerika." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12061:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125385:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr8"
-fields = { "description" = "Kod för handel med landområdet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12062:18993:19358"
+fields = { "description" = "Kod för handel med landområdet. Landområdet avser Afrika." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12062:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125386:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:faxnummer"
-fields = { "description" = "Faxnummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12066:18262:19358"
+fields = { "description" = "Faxnummer. Numret avser den juridiska enheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12066:18262:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:125161:opdef_text; rel070-base/reg_meta.db:occurrence:125234:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:haefax"
-fields = { "description" = "Faxnummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12073:10592:19358"
+fields = { "description" = "Faxnummer. Numret avser huvudarbetsstället." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12073:10592:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:123692:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

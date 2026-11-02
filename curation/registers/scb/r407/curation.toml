@@ -1227,12 +1227,12 @@ evidence = "Uppräkningsvikten är ett undersökningsmått.\ncatalog:occurrence:
 [[statement]]
 kind = "set"
 subject = "var:innovationsaktiviteter-prototyper"
-fields = { "description" = "Objektet designade, tog fram prototyper av eller testade nya eller väsentligt förbättrade produkter eller processer." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248692\ncatalog:variable_text:29237:18628:19358"
+fields = { "description" = "Objektet designade, tog fram prototyper av eller testade nya eller väsentligt förbättrade produkter eller processer. Aktiviteten avser att möjliggöra arbetsplatsens mest betydelsefulla innovation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248692\ncatalog:variable_text:29237:18628:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:248692:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:innovationssamarbete-priv-inst-utlandet"
-fields = { "description" = "Objektet samarbetade med privata forskningsinstitut i utlandet i innovationsarbetet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358"
+fields = { "description" = "Objektet samarbetade med privata forskningsinstitut i utlandet i innovationsarbetet. Objektet avser arbetsplatsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett uppenbart skrivfel utan att ändra innebörden.\ncatalog:occurrence:248707\ncatalog:variable_text:29254:18628:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:248707:opdef_text. One variable, one description."

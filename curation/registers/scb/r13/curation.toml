@@ -1118,8 +1118,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
-fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975"
+fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning. Näringsgrenen hämtas vid matchningen av den inkomna momsdeklarationen mot FDB; källan anger SNI2002 respektive SNI2007 under olika perioder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:388216:opdef_text; rel070-base/reg_meta.db:occurrence:388248:opdef_text; rel070-base/reg_meta.db:occurrence:388281:opdef_text; rel070-base/reg_meta.db:occurrence:388489:opdef_text. One variable, one description."
 
 
 [[statement]]

@@ -1746,5 +1746,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 [[statement]]
 kind = "set"
 subject = "var:lss-insatser-standardkostnad-pk-ix"
-fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor. Standardkostnaden beräknas som grundläggande standardkostnad multiplicerad med kommunens framräknade personalkostnadsindex." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:301120:opdef_text; rel070-base/reg_meta.db:occurrence:301217:opdef_text. One variable, one description."
