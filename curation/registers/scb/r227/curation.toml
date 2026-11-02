@@ -296,8 +296,8 @@ evidence = "Källkoden är opak; dataprogram är en angiven komponent.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:ovriga-externa-kostnader-forbrukningsemballage"
-fields = { "sets" = ["emballagekostnader", "ovriga-externa-kostnader"] }
-evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784"
+fields = { "sets" = ["emballagekostnader"] }
+evidence = "Källkoden är opak; den sammansatta posten omfattas av båda kandidatgrupperna.\ncatalog:variable_text:27744:10592:12784\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to emballagekostnader; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

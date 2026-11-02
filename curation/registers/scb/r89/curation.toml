@@ -633,8 +633,8 @@ evidence = "Kandidatgruppen omfattar separat redovisade utbetalda engångsbelopp
 [[statement]]
 kind = "set"
 subject = "var:utbretro"
-fields = { "sets" = ["retroaktiv-lonesumma", "utbetald-lonesumma"] }
-evidence = "Beloppet är både utbetald och retroaktiv lönesumma.\ncatalog:variable_text:34037:10592:14610\ncatalog:variable_text:34047:10592:20454\ncatalog:variable_text:34048:10592:20454"
+fields = { "sets" = ["retroaktiv-lonesumma"] }
+evidence = "Beloppet är både utbetald och retroaktiv lönesumma.\ncatalog:variable_text:34037:10592:14610\ncatalog:variable_text:34047:10592:20454\ncatalog:variable_text:34048:10592:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to retroaktiv-lonesumma; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

@@ -782,12 +782,6 @@ evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\nc
 [[statement]]
 kind = "set"
 subject = "var:storleksgrupp-tomter-stugor"
-fields = { "sets" = ["stugkapacitet", "tomtkapacitet"] }
-evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:storleksgrupp-tomter-stugor"
 fields = { "tags" = ["business"] }
 evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
 

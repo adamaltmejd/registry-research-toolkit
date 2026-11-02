@@ -290,12 +290,6 @@ evidence = "Funktionen avser deltagande eller ledarskap inom folkbildning.\ncata
 [[statement]]
 kind = "set"
 subject = "var:genomfledarutb"
-fields = { "sets" = ["ledarutbildning"] }
-evidence = "Genomförandet avser ledarutbildning inom folkbildning.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:genomfledarutb"
 fields = { "tags" = ["education"] }
 evidence = "Genomförandet avser ledarutbildning inom folkbildning.\ncatalog:valueset:1203\ncatalog:variable_text:44768:15340:20089"
 
@@ -386,8 +380,8 @@ evidence = "Variabeln kodar ledarkvalifikation inom folkbildning.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:ledarutb"
-fields = { "sets" = ["distansstudier", "ledarutbildning"] }
-evidence = "Variabeln beskriver formen för ledarutbildning. Coordinator group membership: Variablerna anger distansundervisning, studier på distans respektive om ledarutbildning sker på distans. Ledarutbildningens distansstatus omfattas också av den fasta definitionen. Variablerna beskriver hur ledarutbildningen genomförts respektive dess distansform. Ledargodkännande och andra kvalifikationer omfattas inte.\ncatalog:valueset:1203\ncatalog:variable_text:44756:17532:17897\ncatalog:variable_text:44768:15340:20089\ncatalog:variable_text:44779:15340:20089\ncatalog:variable_text:44787:18262:20089"
+fields = { "sets" = ["distansstudier"] }
+evidence = "Variabeln beskriver formen för ledarutbildning. Coordinator group membership: Variablerna anger distansundervisning, studier på distans respektive om ledarutbildning sker på distans. Ledarutbildningens distansstatus omfattas också av den fasta definitionen. Variablerna beskriver hur ledarutbildningen genomförts respektive dess distansform. Ledargodkännande och andra kvalifikationer omfattas inte.\ncatalog:valueset:1203\ncatalog:variable_text:44756:17532:17897\ncatalog:variable_text:44768:15340:20089\ncatalog:variable_text:44779:15340:20089\ncatalog:variable_text:44787:18262:20089\n\nSingle-group ruling 2026-11-02: The definition asks whether leadership training is distance education; keep distansstudier."
 
 [[statement]]
 kind = "set"

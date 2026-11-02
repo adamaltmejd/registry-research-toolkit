@@ -1094,18 +1094,6 @@ fn run_selected(
                         continue;
                     }
                 };
-                if !resolved.conflicts.is_empty() {
-                    for other in &resolved.conflicts {
-                        refusals.push(Refusal::scoped(
-                            statement,
-                            format!(
-                                "{at}: curation-overlap: overlapping overrides with {}",
-                                location(group[*other])
-                            ),
-                        ));
-                    }
-                    continue;
-                }
                 if fields_stage
                     && matches!(
                         statement.statement,
@@ -1128,6 +1116,18 @@ fn run_selected(
                             continue;
                         }
                     }
+                }
+                if !resolved.conflicts.is_empty() {
+                    for other in &resolved.conflicts {
+                        refusals.push(Refusal::scoped(
+                            statement,
+                            format!(
+                                "{at}: curation-overlap: overlapping overrides with {}",
+                                location(group[*other])
+                            ),
+                        ));
+                    }
+                    continue;
                 }
                 if let Some(view) = &finding_view
                     && matches!(
@@ -1158,6 +1158,24 @@ fn run_selected(
                     findings.push(format!("{at}: redundant-set: set equals the source"));
                 }
                 accepted.push((*statement, resolved.premise, provider, register));
+            }
+            if stage == Phase::Fields {
+                crate::sets::memberships(
+                    provider,
+                    ledger.public.as_deref().unwrap_or(register),
+                    &result.variables,
+                    group.iter().flat_map(|statement| {
+                        field_applications
+                            .get(&publication_identity(statement))
+                            .into_iter()
+                            .flat_map(|(_, _, applied)| {
+                                applied
+                                    .metadata
+                                    .iter()
+                                    .map(|metadata| (*statement, metadata))
+                            })
+                    }),
+                )?;
             }
         }
         accepted.sort_by_key(|(s, ..)| {

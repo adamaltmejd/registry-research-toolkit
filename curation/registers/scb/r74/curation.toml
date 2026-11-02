@@ -140,8 +140,8 @@ evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar 
 [[statement]]
 kind = "set"
 subject = "var:biobransleanvandning"
-fields = { "sets" = ["biobransleanvandning", "energianvandning"] }
-evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -284,8 +284,8 @@ evidence = "Snålspolande dusch är en vattenbesparande installation.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:elanvandning"
-fields = { "sets" = ["elanvandning", "energianvandning"] }
-evidence = "Husets totala elanvändning.\ncatalog:variable_text:7573:10957:14245"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Husets totala elanvändning.\ncatalog:variable_text:7573:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -296,8 +296,8 @@ evidence = "Husets totala elanvändning.\ncatalog:variable_text:7573:10957:14245
 [[statement]]
 kind = "set"
 subject = "var:elklass"
-fields = { "sets" = ["elanvandning", "energianvandning"] }
-evidence = "Klassificerad elanvändning.\ncatalog:valueset:3619\ncatalog:variable_text:7574:10957:11323"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Klassificerad elanvändning.\ncatalog:valueset:3619\ncatalog:variable_text:7574:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -308,8 +308,8 @@ evidence = "Klassificerad elanvändning.\ncatalog:valueset:3619\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:elkvm"
-fields = { "sets" = ["elanvandning", "energianvandning"] }
-evidence = "Elanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7575:10957:11323"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Elanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7575:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -320,8 +320,8 @@ evidence = "Elanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:757
 [[statement]]
 kind = "set"
 subject = "var:elkvmklass"
-fields = { "sets" = ["elanvandning", "energianvandning"] }
-evidence = "Klassificerad elanvändning per kvadratmeter.\ncatalog:valueset:7982\ncatalog:variable_text:7576:10957:11323"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Klassificerad elanvändning per kvadratmeter.\ncatalog:valueset:7982\ncatalog:variable_text:7576:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -368,8 +368,8 @@ evidence = "Fjärrvärmeanvändning är ett energislag.\ncatalog:variable_text:7
 [[statement]]
 kind = "set"
 subject = "var:flis-spananvandning"
-fields = { "sets" = ["biobransleanvandning", "energianvandning"] }
-evidence = "Klassificerad användning av flis och spån.\ncatalog:valueset:7052\ncatalog:variable_text:7580:10957:14245"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad användning av flis och spån.\ncatalog:valueset:7052\ncatalog:variable_text:7580:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -548,8 +548,8 @@ evidence = "NUTS anger geografisk indelning.\ncatalog:variable_text:7595:10957:1
 [[statement]]
 kind = "set"
 subject = "var:oljeanvandning"
-fields = { "sets" = ["energianvandning", "oljeanvandning"] }
-evidence = "Husets oljeanvändning.\ncatalog:variable_text:7596:10957:14245"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Husets oljeanvändning.\ncatalog:variable_text:7596:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -560,8 +560,8 @@ evidence = "Husets oljeanvändning.\ncatalog:variable_text:7596:10957:14245"
 [[statement]]
 kind = "set"
 subject = "var:oljeklass"
-fields = { "sets" = ["energianvandning", "oljeanvandning"] }
-evidence = "Klassificerad oljeanvändning.\ncatalog:valueset:9937\ncatalog:variable_text:7597:10957:11323"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Klassificerad oljeanvändning.\ncatalog:valueset:9937\ncatalog:variable_text:7597:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -572,8 +572,8 @@ evidence = "Klassificerad oljeanvändning.\ncatalog:valueset:9937\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:oljkvm"
-fields = { "sets" = ["energianvandning", "oljeanvandning"] }
-evidence = "Oljeanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7598:10957:11323"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Oljeanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7598:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -584,8 +584,8 @@ evidence = "Oljeanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7
 [[statement]]
 kind = "set"
 subject = "var:oljkvmklass"
-fields = { "sets" = ["energianvandning", "oljeanvandning"] }
-evidence = "Klassificerad oljeanvändning per kvadratmeter.\ncatalog:variable_text:7599:10957:11323"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Klassificerad oljeanvändning per kvadratmeter.\ncatalog:variable_text:7599:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -596,8 +596,8 @@ evidence = "Klassificerad oljeanvändning per kvadratmeter.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:pelletsanvandning"
-fields = { "sets" = ["biobransleanvandning", "energianvandning"] }
-evidence = "Klassificerad pelletsanvändning.\ncatalog:valueset:10819\ncatalog:variable_text:7600:10957:14245"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad pelletsanvändning.\ncatalog:valueset:10819\ncatalog:variable_text:7600:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -1016,8 +1016,8 @@ evidence = "Vattenförbrukning är ett vattenflöde.\ncatalog:variable_text:7635
 [[statement]]
 kind = "set"
 subject = "var:vedanvandning"
-fields = { "sets" = ["biobransleanvandning", "energianvandning"] }
-evidence = "Klassificerad vedanvändning.\ncatalog:valueset:8689\ncatalog:variable_text:7636:10957:14245"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad vedanvändning.\ncatalog:valueset:8689\ncatalog:variable_text:7636:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

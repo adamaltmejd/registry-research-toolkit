@@ -7,6 +7,21 @@ use reg_frame::statement::Statement;
 use reg_readers::curation::LocatedStatement;
 use serde::Deserialize;
 
+/// Stable build-side membership refusal codes (the runtime API has its own registry).
+enum MembershipCode {
+    MultipleGroups,
+    TooSmall,
+}
+
+impl MembershipCode {
+    const fn as_str(&self) -> &'static str {
+        match self {
+            Self::MultipleGroups => "variable-multiple-groups",
+            Self::TooSmall => "set-too-small",
+        }
+    }
+}
+
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Tag {
@@ -103,15 +118,78 @@ pub fn final_members(
                 let statement = statements.iter().find(|s| {
                     s.provider == register.register.provider && s.register == register.register.register
                         && matches!(&s.statement, Statement::Set { fields, .. } if fields.sets.as_ref().is_some_and(|sets| sets.iter().any(|s| s == name)))
-                }).ok_or_else(|| format!("set-too-small: set {name:?} has no curation location"))?;
+                }).ok_or_else(|| format!("{}: set {name:?} has no curation location", MembershipCode::TooSmall.as_str()))?;
                 let pid = format!("{}/{}/{name}", register.register.provider, register.public);
                 return Err(format!(
-                    "{}:{}: set-too-small: set {pid:?} needs at least 2 distinct final members",
+                    "{}:{}: {}: set {pid:?} needs at least 2 distinct final members",
                     statement.path.display(),
-                    statement.line
+                    statement.line,
+                    MembershipCode::TooSmall.as_str()
                 ));
             }
         }
     }
     Ok(())
+}
+
+/// Check resolved targets before setters can overwrite each other's memberships.
+pub fn memberships<'a>(
+    provider: &str,
+    register: &str,
+    variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
+    metadata: impl Iterator<
+        Item = (
+            &'a LocatedStatement,
+            &'a reg_resolve::curation::apply::Metadata,
+        ),
+    >,
+) -> Result<(), String> {
+    let mut memberships = BTreeMap::<&str, BTreeMap<&str, BTreeSet<String>>>::new();
+    for (statement, metadata) in metadata {
+        let reg_resolve::curation::apply::MetadataValue::Sets(sets) = &metadata.value else {
+            continue;
+        };
+        let location = format!("{}:{}", statement.path.display(), statement.line);
+        let variable = variables
+            .get(&metadata.key)
+            .ok_or_else(|| format!("{location}: set membership has no resolved variable"))?;
+        for set in sets {
+            memberships
+                .entry(variable)
+                .or_default()
+                .entry(set)
+                .or_default()
+                .insert(location.clone());
+        }
+    }
+    let mut refusals = Vec::new();
+    for (variable, groups) in memberships {
+        if groups.len() > 1 {
+            let location = groups
+                .values()
+                .flatten()
+                .min()
+                .cloned()
+                .expect("group origin");
+            let groups = groups
+                .into_iter()
+                .map(|(group, locations)| {
+                    format!(
+                        "{provider}/{register}/{group} at {}",
+                        locations.into_iter().collect::<Vec<_>>().join(", ")
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("; ");
+            refusals.push(format!(
+                "{location}: {}: variable {provider}/{register}/{variable} belongs to multiple groups: {groups}",
+                MembershipCode::MultipleGroups.as_str()
+            ));
+        }
+    }
+    if refusals.is_empty() {
+        Ok(())
+    } else {
+        Err(refusals.join("\n"))
+    }
 }

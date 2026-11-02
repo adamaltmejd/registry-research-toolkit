@@ -1502,8 +1502,8 @@ evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:60
 [[statement]]
 kind = "set"
 subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-omvarderingar"
-fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
-evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6012:14610:15340\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to aterkop-av-egna-aktier; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2150,8 +2150,8 @@ evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:60
 [[statement]]
 kind = "set"
 subject = "var:aktiekapital-darav-aterkop-av-egna-aktier-stallning-aktuellt"
-fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
-evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6071:14610:15340\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to aterkop-av-egna-aktier; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -2798,8 +2798,8 @@ evidence = "Källans radkod anger inte aktiekapitalet.\ncatalog:variable_text:61
 [[statement]]
 kind = "set"
 subject = "var:aktiekaptial-darav-aterkop-av-egna-aktier-transaktioner"
-fields = { "sets" = ["aktiekapital", "aterkop-av-egna-aktier"] }
-evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340"
+fields = { "sets" = ["aterkop-av-egna-aktier"] }
+evidence = "Källans radkod anger inte aktiekapitalets återköpsdel.\ncatalog:variable_text:6127:14610:15340\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to aterkop-av-egna-aktier; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"

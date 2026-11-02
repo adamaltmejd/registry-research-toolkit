@@ -3638,8 +3638,8 @@ evidence = "Antal personer i familjen hör ihop med hushållsstorlek.\ncatalog:v
 [[statement]]
 kind = "set"
 subject = "var:antalutanvardnadsh"
-fields = { "sets" = ["antal-skyddssokande", "ensamkommande-barn"] }
-evidence = "Antalet avser ensamkommande asylsökande barn.\ncatalog:variable_text:41652:14245:16436"
+fields = { "sets" = ["ensamkommande-barn"] }
+evidence = "Antalet avser ensamkommande asylsökande barn.\ncatalog:variable_text:41652:14245:16436\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ensamkommande-barn; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -3650,8 +3650,8 @@ evidence = "Antalet avser ensamkommande asylsökande barn.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:antalutanvardnadsh-massflyktsdir"
-fields = { "sets" = ["antal-skyddssokande", "ensamkommande-barn"] }
-evidence = "Antalet avser ensamkommande barn enligt massflyktsdirektivet.\ncatalog:variable_text:41653:18993:20454"
+fields = { "sets" = ["ensamkommande-barn"] }
+evidence = "Antalet avser ensamkommande barn enligt massflyktsdirektivet.\ncatalog:variable_text:41653:18993:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ensamkommande-barn; the other candidates are broader context or a different dimension."
 
 [[statement]]
 kind = "set"
@@ -4526,20 +4526,8 @@ evidence = "Födelselän ingår i gruppen för födelselän.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:fodelseland-eller-lan"
-fields = { "sets" = ["fodelselan", "fodelseland"] }
-evidence = "Kodningen omfattar födelseland eller födelselän.\ncatalog:variable_text:41738:9861:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelseland-eller-lan"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodningen omfattar födelseland eller födelselän.\ncatalog:variable_text:41738:9861:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelseland-eller-lan-mor"
-fields = { "sets" = ["fodelselan", "fodelseland"] }
-evidence = "Kodningen omfattar moderns födelseland eller födelselän.\ncatalog:variable_text:41739:-3287:10227"
 
 [[statement]]
 kind = "set"
