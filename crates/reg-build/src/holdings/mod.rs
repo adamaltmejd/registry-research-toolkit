@@ -2,6 +2,7 @@
 //! pipeline emits the supplemental part; this stage adds possession facts only.
 mod compile;
 mod input;
+mod references;
 mod verify;
 
 use std::collections::BTreeMap;
@@ -160,6 +161,10 @@ fn write(
     let base_db = open(base)?;
     let semantic_generation = meta(&semantic, "generation_id")?;
     let semantic_sha256 = crate::sha256_file(scratch)?.0;
+    let declarations = references::read(root, config)?;
+    drop(semantic);
+    let semantic = Connection::open(scratch).map_err(|e| e.to_string())?;
+    references::write(&semantic, &declarations)?;
     verify::distinct(&semantic, &base_db)?;
     let base_generation = meta(&base_db, "generation_id")?;
     let (base_sha, _) = crate::sha256_file(base)?;
@@ -275,6 +280,7 @@ fn compiler_digest() -> String {
     let sources = [
         include_str!("mod.rs"),
         include_str!("input.rs"),
+        include_str!("references.rs"),
         include_str!("compile.rs"),
         include_str!("verify.rs"),
         include_str!("schema.sql"),

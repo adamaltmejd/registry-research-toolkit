@@ -51,6 +51,8 @@ def pin_steward(root: Path, registry: Path) -> None:
         "holdings.toml",
         "curation/readers/holdings.toml",
     ]
+    if (root / "reference-occurrences.toml").exists():
+        roles.extend(["reference-occurrences.toml", "inputs/reference"])
     hashes = {}
     for role in roles:
         path = root / role
@@ -83,6 +85,10 @@ census_reader = "curation/readers/holdings.toml"
 
 [pins]
 """
+    if (root / "reference-occurrences.toml").exists():
+        config = config.replace(
+            "[inputs]", '[inputs]\nreference_occurrences = "reference-occurrences.toml"'
+        )
     config += "".join(f"{json.dumps(k)} = {json.dumps(v)}\n" for k, v in hashes.items())
     (root / "steward.toml").write_text(config)
     for command in (

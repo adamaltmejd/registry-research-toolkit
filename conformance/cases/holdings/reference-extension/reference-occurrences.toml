@@ -1,0 +1,5 @@
+[[occurrence]]
+table_pid = "demo/held"
+variable_pid = "demo/held/value"
+locator = "synthetic-delivery:row=2"
+evidence = "Same named uncoded measure, with earlier years explicitly stated in the delivery document."

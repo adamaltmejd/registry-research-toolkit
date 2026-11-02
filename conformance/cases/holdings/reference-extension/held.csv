@@ -1,0 +1,2 @@
+table,column,label,definition,data_type,unit,codes,code_system,sensitive,identifier,from,to
+,Old,Value,Same canonical variable attested in earlier years,integer,,,,false,false,2015-01-01,2016-12-31

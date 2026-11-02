@@ -165,6 +165,91 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
         assert case["location"] in refused.stderr
 
 
+def test_unrouted_table_keeps_holds_and_valid_earlier_bindings(tmp_path):
+    # Fails if an unrouted census table needs a guessed route to retain explicit
+    # holds, suppresses valid earlier coding beside a held later meaning, or gives
+    # an unreviewed column possession. The routed fixture
+    # cannot exercise absence of a route. The TOML/JSON corpus authors the oracle.
+    base, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    text = path.read_text()
+    start = text.index('[[table]]\nphysical_name = "Pool"')
+    end = text.index('[[table]]\nphysical_name = "Part A"', start)
+    path.write_text(
+        text[:start] + (HOLDINGS_CASE / "unrouted-pool.toml").read_text() + text[end:]
+    )
+    pin_steward(root, tmp_path / "stewards.toml")
+    output = tmp_path / "held.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    checked = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert checked.returncode == 0, checked.stderr
+    # Now retain a valid earlier coding beside an explicitly held later meaning.
+    # Both forms are authored inputs; no owner or year is inferred by this test.
+    text = path.read_text()
+    code_start = text.index('[[table.column]]\nname = "Code"')
+    code_end = text.index("[[table.column]]", code_start + 1)
+    text = (
+        text[:code_start]
+        + (HOLDINGS_CASE / "mixed-code.toml").read_text()
+        + text[code_end:]
+    )
+    old_start = text.index('[[table.column]]\nname = "Old"')
+    old_end = text.index("[[table.column]]", old_start + 1)
+    text = (
+        text[:old_start]
+        + (HOLDINGS_CASE / "held-old-binding.toml").read_text()
+        + text[old_end:]
+    )
+    # A matching default must not acquire the held-only Old binding by fallback.
+    path.write_text(text.replace("table_pids = []", 'table_pids = ["demo/held"]', 1))
+    pin_steward(root, tmp_path / "stewards.toml")
+    mixed = run([*command, "--out", output])
+    assert mixed.returncode == 0, mixed.stderr
+    checked = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert checked.returncode == 0, checked.stderr
+    expected = json.loads((HOLDINGS_CASE / "unrouted-pool.json").read_text())
+    with closing(sqlite3.connect(output)) as db:
+        assert [
+            r[0]
+            for r in db.execute("""SELECT c.name FROM holding_column c JOIN holding_table h ON h.id=c.holding_id
+            WHERE h.physical_name='Pool' AND c.disposition='hold' ORDER BY c.name""")
+        ] == expected["held_columns"]
+        mappings = db.execute("""SELECT c.name,m.table_pid,m.variable_pid,
+            date(m.start*86400,'unixepoch'),date(m.end*86400,'unixepoch')
+            FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+            JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool'""").fetchall()
+        assert [list(r) for r in mappings] == expected["mappings"]
+        held = db.execute(
+            """SELECT n.message FROM holding_notice n JOIN holding_column c ON c.id=n.column_id
+            JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Code' AND n.code=?""",
+            [expected["held_mapping_notice"]],
+        ).fetchone()
+        assert held and expected["hold_follow_up"] in held[0]
+        assert db.execute(
+            """SELECT n.code FROM holding_notice n JOIN holding_column c ON c.id=n.column_id
+            JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name=? AND n.code=?""",
+            [expected["unmatched_column"], expected["notice"]],
+        ).fetchone()
+
+    # A held binding is a trust boundary, not permission to omit its reason/follow-up.
+    path.write_text(
+        path.read_text().replace(
+            'follow_up = "https://example.invalid/issues/held-meaning"',
+            'follow_up = " "',
+        )
+    )
+    pin_steward(root, tmp_path / "stewards.toml")
+    refused = run([*command, "--out", output])
+    assert refused.returncode == 1
+    assert expected["invalid_hold_code"] in refused.stderr
+    assert expected["invalid_hold_column"] in refused.stderr
+
+
 def test_census_replacement_preserves_routes_and_refuses_vanished_columns(tmp_path):
     # Fails if a new input pin silently drops a stale reviewed route, loses surviving
     # windows, or offers an undocumented new column. The old fixture alone has no
@@ -412,3 +497,102 @@ def test_holdings_base_change_invalidates_lineage_lock(tmp_path):
     assert result.returncode == 1
     assert "premise-changed" in result.stderr
     assert not output.exists()
+
+
+def test_same_variable_attestation_extends_holdings_without_global_validity(
+    tmp_path, server_cmd
+):
+    # Fails if an evidenced canonical occurrence is rejected as an identity collision,
+    # replaces global coverage, loses its local provenance, or bypasses overlap admission.
+    # The earlier 2015..2016 window comes from the readable delivery fixture; the
+    # base source attests 2017..2021. Existing cases only define new supplemental ids.
+    base, root, command = prepare_holdings(tmp_path)
+    case = HOLDINGS_CASE / "reference-extension"
+    source = root / "inputs/reference"
+    source.mkdir()
+    for name in ["registers.csv", "held.csv"]:
+        shutil.copyfile(case / name, source / name)
+    ledger = root / "curation/registers/demo/held/ids.toml"
+    ledger.parent.mkdir(parents=True)
+    shutil.copyfile(case / "ids.toml", ledger)
+    shutil.copyfile(
+        case / "reference-occurrences.toml", root / "reference-occurrences.toml"
+    )
+    with (root / "curation/inputs.toml").open("a") as f:
+        f.write(
+            '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n'
+        )
+    with (root / "census.csv").open("a") as f:
+        f.write("Synthetic,Attested,Attested,Old,,,,,,,,\n")
+    with (root / "storage.csv").open("a") as f:
+        f.write("dbo,Attested,BASE TABLE,Old,int,,10,0,1\n")
+    with (root / "holdings.toml").open("a") as f:
+        f.write((case / "topology.toml").read_text())
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    verified = run(
+        [REG_BUILD, "verify", output, "--catalog", base, "--steward-repo", root]
+    )
+    assert verified.returncode == 0, verified.stderr
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
+    try:
+        answer = pool.client(artifact_env(output)).get("/api/coverage/demo/held/value")
+        assert answer.status_code == 200, answer.text
+        data = answer.json()["data"]
+        assert data["period"] == {"start": "2017-01-01", "end": "2022-01-01"}
+        (occurrence,) = data["steward_occurrences"]
+        assert occurrence["table"] == "demo/held"
+        assert occurrence["variable"] == "demo/held/value"
+        assert occurrence["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
+        assert occurrence["sources"] == [
+            {
+                "input": "reference-extension",
+                "locator": "inputs/reference/held.csv:row=2",
+            }
+        ]
+        assert any(
+            x["physical_table"] == "Attested"
+            and x["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
+            for x in data["held"]
+        )
+    finally:
+        pool.close()
+    # The same declaration may add occurrence years, never overwrite a base year.
+    source_file = source / "held.csv"
+    source_file.write_text(source_file.read_text().replace("2016-12-31", "2017-12-31"))
+    locked = run(
+        [
+            REG_BUILD,
+            "lock",
+            "--base",
+            base,
+            "--inputs",
+            root,
+            "--curation",
+            root / "curation",
+        ]
+    )
+    assert locked.returncode == 0, locked.stderr
+    pin_steward(root, tmp_path / "stewards.toml")
+    refused = run([*command, "--out", tmp_path / "overlap.db"])
+    assert refused.returncode != 0
+    assert (
+        "synthetic-delivery:row=2: holdings_reference_occurrence_overlap"
+        in refused.stderr
+    )

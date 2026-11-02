@@ -40,6 +40,33 @@ pub struct Coverage {
     /// Accepted physical placements, absent in reference-only mode.
     #[serde(skip_serializing_if = "Option::is_none")]
     held: Option<Vec<HeldPlacement>>,
+    /// Same canonical variable, documented in additional steward-attested periods.
+    /// Reference spans above retain the global catalog's meaning.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    steward_occurrences: Option<Vec<StewardOccurrence>>,
+}
+
+/// A source occurrence in the steward's supplemental semantics. Its identity
+/// declaration and ordinary transcription locators both remain available.
+#[derive(Serialize, ToSchema)]
+pub struct StewardOccurrence {
+    table: String,
+    variable: String,
+    period: Period,
+    spelling: String,
+    #[schema(required = true)]
+    label: Option<String>,
+    #[schema(required = true)]
+    definition: Option<String>,
+    #[serde(rename = "type")]
+    #[schema(required = true)]
+    dtype: Option<String>,
+    coded: String,
+    #[schema(required = true)]
+    value_set: Option<shape::ValueSetRef>,
+    locator: String,
+    evidence: String,
+    sources: Vec<super::segments::Locator>,
 }
 
 /// A physical placement's public semantic coordinates and held interval.
@@ -205,11 +232,14 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     let columns = variable
         .then(|| columns(server, &conn, hit.id))
         .transpose()?;
-    let held = server
-        .catalog
-        .connect_holdings()?
-        .map(|extra| held(server, &extra, &hit.pid, &hit.kind, &tables))
-        .transpose()?;
+    let (held, steward_occurrences) = if let Some(extra) = server.catalog.connect_holdings()? {
+        (
+            Some(held(server, &extra, &hit.pid, &hit.kind, &tables)?),
+            Some(reference_occurrences(server, &extra, &hit.pid, &hit.kind)?),
+        )
+    } else {
+        (None, None)
+    };
     Ok(serde_json::to_value(Coverage {
         fqid: hit.pid,
         kind: hit.kind,
@@ -217,6 +247,7 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
         tables,
         columns,
         held,
+        steward_occurrences: steward_occurrences.filter(|rows| !rows.is_empty()),
     })
     .expect("Coverage serializes"))
 }
@@ -288,6 +319,69 @@ fn held(
             })
         })?;
         out.extend(rows.collect::<rusqlite::Result<Vec<_>>>()?);
+    }
+    Ok(out)
+}
+
+/// Only qualified public ids select this origin; supplemental row ids stay local.
+fn reference_occurrences(
+    server: &Server,
+    conn: &Connection,
+    pid: &str,
+    kind: &str,
+) -> Result<Vec<StewardOccurrence>, Error> {
+    let mut query = conn.prepare(
+        "SELECT t.pid,v.pid,o.start,o.end,sp.exact,l.body,d.body,
+       o.dtype,o.coded,o.valueset_id,x.locator,x.evidence,o.id
+       FROM holding_reference_occurrence x JOIN tbl t ON t.pid=x.table_pid
+       JOIN variable v ON v.pid=x.variable_pid JOIN register r ON r.id=v.register_id
+       JOIN occurrence o ON o.variable_id=v.id AND o.table_id=t.id
+       JOIN spelling sp ON sp.id=o.spelling_id
+       LEFT JOIN text l ON l.id=o.label_text LEFT JOIN text d ON d.id=o.definition_text
+       WHERE o.status='used' AND ((?2='variable' AND v.pid=?1)
+         OR (?2='table' AND t.pid=?1) OR (?2='register' AND r.pid=?1))
+       ORDER BY t.pid,v.pid,o.start,o.end,o.source_key",
+    )?;
+    let rows = query
+        .query_map([pid, kind], |r| {
+            Ok((
+                StewardOccurrence {
+                    table: r.get(0)?,
+                    variable: r.get(1)?,
+                    period: server.period(r.get(2)?, r.get(3)?),
+                    spelling: r.get(4)?,
+                    label: r.get(5)?,
+                    definition: r.get(6)?,
+                    dtype: r.get(7)?,
+                    coded: r.get(8)?,
+                    value_set: None,
+                    locator: r.get(10)?,
+                    evidence: r.get(11)?,
+                    sources: vec![],
+                },
+                r.get::<_, Option<i64>>(9)?,
+                r.get::<_, i64>(12)?,
+            ))
+        })?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let mut sources = conn.prepare(
+        "SELECT i.name,l.locator FROM occurrence_locator l
+      JOIN input i ON i.id=l.input_id WHERE l.occurrence_id=? ORDER BY i.name,l.locator",
+    )?;
+    let mut out = Vec::new();
+    for (mut occurrence, valueset, id) in rows {
+        occurrence.value_set = valueset
+            .map(|id| shape::value_set_ref(conn, id))
+            .transpose()?;
+        occurrence.sources = sources
+            .query_map([id], |r| {
+                Ok(super::segments::Locator {
+                    input: r.get(0)?,
+                    locator: r.get(1)?,
+                })
+            })?
+            .collect::<rusqlite::Result<_>>()?;
+        out.push(occurrence);
     }
     Ok(out)
 }

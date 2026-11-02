@@ -1512,6 +1512,23 @@ its route locators; it is not silently retired. A new column passes through ordi
 interval-local matching and is retained with `mapping_missing` when undocumented. There
 is no migration or carry-forward of old physical rows.
 
+Steward attestation can support years absent from the reference catalog (maintainer,
+2026-11-02), but a shared spelling alone does not establish the same variable or value
+domain. Documentary definitions enter through ordinary supplemental transcription and
+ledgers, with their steward-attested periods and located evidence. Unproved identity,
+grain or temporal claims become explicit holds with a reason and follow-up. Potential
+provider-wide facts are retained in the private global-curation worklist for separate
+review; compiling steward evidence never changes global validity.
+
+A census table need not have a logical route when no route is proved. Its held columns
+remain held, and other columns without an accepted owner remain `mapping_missing`.
+Absence of a route grants no possession; a declared route for an offered binding must
+resolve. This lets a fully held table survive a census refresh without a guessed route.
+An authored mapping may itself have `hold` and `follow_up`, with a reason and locator.
+It produces a `mapping_held` notice with its requested window and follow-up, never a
+placement or automatic fallback. This preserves a proved earlier-coding binding beside
+an unproved later meaning without pretending that either widens global validity.
+
 The compiler's closed steward config adds `inputs.holdings` (authored replacement
 topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
 SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
@@ -1549,13 +1566,32 @@ and cursor. Reference-only response fields remain unchanged.
 
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
-overwritten. Their public ids must be distinct; the reader resolves a public id to one
-database origin before using its local row id. Shared code lists are addressed by
-content hash. The same catalog-check implementation can read this composed semantic view
-without changing base entities. Ordinary SWECOV-only provider definitions and steward
-slots both use this home (maintainer 2026-10-29); pre-2018 current coding also uses
-ordinary supplemental coding-table definitions; there is no new addressable "form"
-entity and no base-copy/append pipeline.
+overwritten. Their public ids must be distinct except for the explicit same-variable
+occurrence bindings below; the reader resolves an ordinary public id to one database
+origin before using its local row id. Shared code lists are addressed by content hash.
+The same catalog-check implementation can read this composed semantic view without
+changing base entities. Ordinary SWECOV-only provider definitions and steward slots both
+use this home (maintainer 2026-10-29); pre-2018 current coding also uses ordinary
+supplemental coding-table definitions; there is no new addressable "form" entity and no
+base-copy/append pipeline.
+
+Steward-attested occurrences of a canonical variable use the same ordinary CSV reader
+and ledger with the canonical variable/table ids. The pinned optional
+`inputs.reference_occurrences` TOML declares each `(table_pid, variable_pid)` with a
+locator and documentary identity/domain evidence. The compiler and pair verifier require
+both endpoints in both origins, the same register/provider, dated tables, nonempty
+source periods, and no overlap with existing reference segments. Only the explicit
+variables, tables and their parent registers may share public identities; other
+collisions still refuse. These declarations are occurrence bindings, not aliases,
+derivations or copied reference rows. The verifier compares them with the pinned input.
+Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+
+Reference `coverage` spans retain their original meaning. In selected steward mode,
+`coverage.steward_occurrences` exposes these canonical variables' attested supplemental
+periods, documentary label/definition, logical type/coding/value set and local source
+locators, beside accepted physical `held` intervals. This keeps the provenance and scope
+explicit without widening or copying global semantics. Logical order consumption of
+these occurrences remains e-order work.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog

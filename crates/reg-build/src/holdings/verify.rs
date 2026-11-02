@@ -4,7 +4,7 @@ use std::path::Path;
 
 use rusqlite::Connection;
 
-use super::{compile, input, meta, open};
+use super::{compile, input, meta, open, references};
 
 struct StoredColumn {
     ordinal: i64,
@@ -25,6 +25,9 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
         config: meta(db, "steward_config")?,
     };
     let config = input::admit(root, &pin, &meta(db, "owner_id")?)?;
+    if references::read(root, &config)? != references::stored(db)? {
+        return Err("holdings_reference_occurrence_source_mismatch".into());
+    }
     let recorded: BTreeMap<String, String> = serde_json::from_str(&meta(db, "input_pins")?)
         .map_err(|_| "holdings_meta_invalid: input_pins")?;
     if recorded != config.pins {
@@ -134,6 +137,7 @@ fn sources(db: &Connection, root: &Path) -> Result<(), String> {
 }
 
 pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), String> {
+    let allowed = references::admitted(holdings, base)?;
     {
         let sql = "SELECT pid FROM ident WHERE kind!='provider' UNION SELECT pid FROM var_set UNION SELECT pid FROM ident_retired";
         let mut query = base.prepare(sql).map_err(|e| e.to_string())?;
@@ -147,7 +151,8 @@ pub(super) fn distinct(holdings: &Connection, base: &Connection) -> Result<(), S
             .query_map([], |r| r.get::<_, String>(0))
             .map_err(|e| e.to_string())?
         {
-            if ids.contains(&id.map_err(|e| e.to_string())?) {
+            let id = id.map_err(|e| e.to_string())?;
+            if ids.contains(&id) && !allowed.contains(&id) {
                 return Err("holdings_semantic_collision: supplemental public id overwrites reference entity".into());
             }
         }

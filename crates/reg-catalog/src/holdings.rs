@@ -129,22 +129,36 @@ impl Catalog {
         pair.update(generation.as_bytes());
         catalog.generation = hex(&pair.finalize());
         catalog.holdings = Some(Holdings { path, meta });
-        let conn = catalog.connect()?;
-        catalog.attach_holdings(&conn)?;
+        catalog.admit_identities()?;
+        Ok(catalog)
+    }
+
+    fn admit_identities(&self) -> Result<(), Error> {
+        let conn = self.connect()?;
+        self.attach_holdings(&conn)?;
         let collision: bool = conn
             .query_row(
                 "SELECT EXISTS(SELECT 1 FROM main.ident b JOIN held.ident s ON s.pid = b.pid
-             WHERE b.kind != 'provider' OR s.kind != 'provider')
+             WHERE (b.kind != 'provider' OR s.kind != 'provider') AND NOT (
+               b.kind=s.kind AND (
+               (b.kind='variable' AND EXISTS(SELECT 1 FROM held.holding_reference_occurrence x WHERE x.variable_pid=b.pid))
+               OR (b.kind='table' AND EXISTS(SELECT 1 FROM held.holding_reference_occurrence x WHERE x.table_pid=b.pid))
+               OR (b.kind='register' AND EXISTS(SELECT 1 FROM held.holding_reference_occurrence x
+                 JOIN held.variable v ON v.pid=x.variable_pid JOIN held.register r ON r.id=v.register_id WHERE r.pid=b.pid)))))
              OR EXISTS(SELECT 1 FROM main.ident_retired b JOIN held.ident s ON s.pid = b.pid)
              OR EXISTS(SELECT 1 FROM main.ident b JOIN held.ident_retired s ON s.pid = b.pid)",
                 [],
                 |r| r.get(0),
             )
-            .map_err(|_| refuse("supplemental identity index is unreadable"))?;
+            .map_err(|_| Error::new(Code::SchemaIncompatible, "Supplemental identity index is unreadable.", vec![]))?;
         if collision {
-            return Err(refuse("supplemental public id collides with the catalog"));
+            return Err(Error::new(
+                Code::SchemaIncompatible,
+                "Supplemental public id collides with the catalog.",
+                vec![],
+            ));
         }
-        Ok(catalog)
+        Ok(())
     }
 
     /// The admitted steward's identity; absent in reference-only mode.

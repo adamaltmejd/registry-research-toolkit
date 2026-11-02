@@ -95,8 +95,8 @@ pub struct Occurrence {
 
 #[derive(Serialize, ToSchema)]
 pub struct Locator {
-    input: String,
-    locator: String,
+    pub(super) input: String,
+    pub(super) locator: String,
 }
 
 /// A non-source winner over one field of an occurrence.

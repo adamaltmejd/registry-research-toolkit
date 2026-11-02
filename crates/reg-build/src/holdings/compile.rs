@@ -72,7 +72,7 @@ pub(super) fn covered(wanted: &[Span], by: &[Span]) -> bool {
         .all(|(a, b)| by.iter().any(|(c, d)| c <= a && b <= d))
 }
 
-fn overlap(left: &[Span], right: &[Span]) -> Vec<Span> {
+pub(super) fn overlap(left: &[Span], right: &[Span]) -> Vec<Span> {
     merge(
         left.iter()
             .flat_map(|(a, b)| {
@@ -212,6 +212,9 @@ fn candidates(
         && !decision.mapping.is_empty()
     {
         for mapping in &decision.mapping {
+            if mapping.hold.is_some() {
+                continue;
+            }
             if mapping.locator.trim().is_empty() {
                 return Err("stale_declared_mapping_target: evidence locator required".into());
             }
@@ -616,14 +619,6 @@ pub(super) fn write(
                 tx.execute("INSERT INTO holding_route VALUES(?,?)", params![id, route])
                     .map_err(|_| "holdings_table_route_unresolved: duplicate route".to_owned())?;
             }
-            if !spans.is_empty()
-                && authored.routes.is_empty()
-                && authored.column.iter().all(|c| c.mapping.is_empty())
-            {
-                return Err(
-                    "holdings_table_route_unresolved: available table has no routes".into(),
-                );
-            }
             let mut decisions = BTreeMap::new();
             for (position, c) in authored.column.iter().enumerate() {
                 if c.locator.trim().is_empty()
@@ -712,6 +707,42 @@ pub(super) fn write(
                         period_column = Some(cid);
                     }
                     let owed = column_periods(decision, &spans)?;
+                    for mapping in decision.into_iter().flat_map(|c| &c.mapping) {
+                        if let Some(reason) = &mapping.hold {
+                            if reason.trim().is_empty()
+                                || mapping
+                                    .follow_up
+                                    .as_deref()
+                                    .is_none_or(|s| s.trim().is_empty())
+                                || mapping.locator.trim().is_empty()
+                            {
+                                return Err("holdings_mapping_hold_invalid: reason, follow-up and locator required".into());
+                            }
+                            let requested = mapping
+                                .delivery
+                                .as_deref()
+                                .map(periods)
+                                .transpose()?
+                                .unwrap_or_else(|| owed.clone());
+                            notice(
+                                &tx,
+                                id,
+                                Some(cid),
+                                "mapping_held",
+                                None,
+                                (&requested, &[], &[]),
+                                &format!(
+                                    "{reason} Follow-up: {}",
+                                    mapping.follow_up.as_deref().expect("validated follow-up")
+                                ),
+                                &mapping.locator,
+                            )?;
+                        } else if mapping.follow_up.is_some() {
+                            return Err(
+                                "holdings_mapping_hold_invalid: follow-up without hold".into()
+                            );
+                        }
+                    }
                     if hold.is_some() || unmap.is_some() || spans.is_empty() {
                         return Ok(());
                     }

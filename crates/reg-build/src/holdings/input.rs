@@ -35,6 +35,7 @@ pub(super) struct Presentation {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Inputs {
+    pub reference_occurrences: Option<String>,
     pub census: String,
     pub storage_export: String,
     pub holdings: String,
@@ -112,6 +113,8 @@ pub(super) struct Mapping {
     pub delivery: Option<String>,
     pub caveat: Option<String>,
     pub locator: String,
+    pub hold: Option<String>,
+    pub follow_up: Option<String>,
     #[serde(default)]
     pub carried: bool,
 }
@@ -201,6 +204,7 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, Strin
             "holdings_input_invalid: supplemental inputs must be inside the pinned checkout".into(),
         );
     }
+    consumed.extend(config.inputs.reference_occurrences.iter());
     consumed.extend(manifest.input.iter().map(|input| &input.path));
     for rel in consumed {
         let full = path(root, rel)?;
