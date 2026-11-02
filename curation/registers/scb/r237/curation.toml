@@ -109877,8 +109877,8 @@ evidence = "Writing to an authority is the alternate MA0210 wording linked to th
 [[statement]]
 kind = "set"
 subject = "var:formaga-att-overklaga"
-fields = { "tags" = ["crime"] }
-evidence = "The response categories measure capacity to appeal an authority's decision and obtain assistance, matching the legal-redress help siblings (r101, r185, r186).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11827\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48969\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48970"
+fields = { "tags" = ["democracy"] }
+evidence = "Same measure as formaga-att-overklaga-harledd (MA0214), which the maintainer-approved audit assigned to democracy: capacity to appeal an authority's decision is a civic resource, not criminal-justice procedure.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11827\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48969\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48970"
 
 [[statement]]
 kind = "set"
@@ -110213,8 +110213,8 @@ evidence = "r265 records complaints to the tax-assessment board, matching the ta
 [[statement]]
 kind = "set"
 subject = "var:nagon-gang-skriftligt-overklagande"
-fields = { "tags" = ["crime"] }
-evidence = "r269 and r155 explicitly measure written appeals after unfair treatment, supporting crime through its coverage of legal proceedings.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:794\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50379"
+fields = { "tags" = ["democracy"] }
+evidence = "r269 and r155 explicitly measure written appeals after unfair treatment, an appeal of an authority decision; per the audited formaga-att-overklaga-harledd correction this is civic redress (democracy), not criminal-justice procedure.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:794\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50379"
 
 [[statement]]
 kind = "set"
