@@ -2585,13 +2585,11 @@ subject = "var:aldreforsorjningsstod"
 fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:aldreforsorjningsstod-ialdfp"
 fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2599,13 +2597,11 @@ subject = "var:boendetillagg"
 fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:boendetillagg-iboentp"
 fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2613,13 +2609,11 @@ subject = "var:bostadsersattning"
 fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bostadsersattning-iebostp"
 fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2627,13 +2621,11 @@ subject = "var:bstudovr"
 fields = { "description" = "Personen är inskriven i utbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand"
 fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2641,13 +2633,11 @@ subject = "var:ekonomiskt-bistand-isocbu"
 fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5741:19723:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:etableringsersattning"
 fields = { "description" = "Utbetald etableringsersättning i kronor från Försäkringskassan till personer som är nya i Sverige." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjliga stöd medan variabeln mäter utbetald etableringsersättning.\ncatalog:variable_text:5762:18262:20454"
-
 
 [[statement]]
 kind = "set"
@@ -2655,13 +2645,11 @@ subject = "var:foraldrapenning-tillfallig-vard-av-barn-tforptp"
 fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5767:18262:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-vab"
 fields = { "description" = "Belopp i tillfällig föräldrapenning för vård av barn under 12 år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver möjligheten att få ersättning.\ncatalog:variable_text:5768:18262:20454"
-
 
 [[statement]]
 kind = "set"
@@ -2669,13 +2657,11 @@ subject = "var:narstaendepenning"
 fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:narstaendepenning-tnarp"
 fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2683,13 +2669,11 @@ subject = "var:omstallningsstudiestod-tomstbid"
 fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5818:20089:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:omstallningsstudiestod-tomstbidp"
 fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5819:19723:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2697,13 +2681,11 @@ subject = "var:omvardnadsbidrag"
 fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:omvardnadsbidrag-tomvardp"
 fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2711,13 +2693,11 @@ subject = "var:premiepension"
 fields = { "description" = "Belopp i premiepension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:premiepension-pprepegp"
 fields = { "description" = "Belopp i premiepension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2725,13 +2705,11 @@ subject = "var:rehabiliteringsersattning"
 fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:rehabiliteringsersattning-trehabp"
 fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2739,9 +2717,14 @@ subject = "var:vardbidrag"
 fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag-tvardp"
 fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktat-inkomstbasbelopp"
+fields = { "tags" = ["income"] }
+evidence = "The weighted IBB determines monthly income thresholds (r13), supporting the income theme also present in the register context (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5865\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

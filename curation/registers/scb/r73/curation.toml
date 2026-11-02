@@ -1721,16 +1721,26 @@ subject = "var:energikomplement"
 fields = { "description" = "Förekomst av kompletterande energislag till värmeanläggningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande energislag, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40708:13514:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningkomplement"
 fields = { "description" = "Förekomst av kompletterande uppvärmningsanläggning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger förekomst av kompletterande uppvärmning, inte dess typ.\ncatalog:valueset:10571\ncatalog:variable_text:40775:13514:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ytterligare-uppvarmningssystem"
 fields = { "description" = "Förekomst av ytterligare uppvärmningssystem." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar"
+fields = { "tags" = ["housing"] }
+evidence = "The builder's remarks come from the form's house-information section (r59), supporting housing consistently with the sibling remarks field (r60) and register theme context (r68, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar-blankett"
+fields = { "tags" = ["housing"] }
+evidence = "These are builder-to-SCB form remarks (r60). The sibling remarks field's house-information section (r59) and register theme context (r68, r1) support housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

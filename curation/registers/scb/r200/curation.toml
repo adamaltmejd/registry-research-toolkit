@@ -9853,13 +9853,11 @@ subject = "var:agarnamn"
 fields = { "description" = "Förra eller nya ägarens namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar bort en upprepning utan att ändra betydelsen.\ncatalog:variable_text:4246:14610:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:br-prod"
 fields = { "description" = "Producerad värme" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger effekt, medan källans etikett och enhet anger producerad värmeenergi under samtliga perioder.\ncatalog:variable_text:4258:14245:17532\ncatalog:variable_text:4258:17532:17897\ncatalog:variable_text:4258:17897:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9867,13 +9865,11 @@ subject = "var:bransle-lokaluppvarmning-transport-radnr"
 fields = { "description" = "Radnummer för bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen anger bränsleslagets radnummer, inte en förbrukad mängd.\ncatalog:valueset:2723\ncatalog:variable_text:4266:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bransle-lokaluppvarmning-transport-tkr"
 fields = { "description" = "Inköpskostnad för bränsle, fjärrvärme och drivmedel för lokaluppvärmning och transporter, tusentals kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger inköpskostnad, inte förbrukad mängd.\ncatalog:variable_text:4267:14245:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9881,13 +9877,11 @@ subject = "var:bransleforbrukning-transporter-brkod"
 fields = { "description" = "Bränsleslag för egna transporter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden visar bränsleslag, inte förbrukad mängd.\ncatalog:valueset:3241\ncatalog:variable_text:4269:14245:17532\ncatalog:variable_text:4269:17897:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bransleforbrukning-transporter-tkr"
 fields = { "description" = "Bränsleförbrukning för egna transporter, tusentals kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger belopp i tusentals kronor, inte en bränslemängd.\ncatalog:variable_text:4271:14245:17532\ncatalog:variable_text:4271:17532:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9895,13 +9889,11 @@ subject = "var:egen-slutlig-forbrukning-av-el-radnr"
 fields = { "description" = "Radnummer för egen slutlig förbrukning av el." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan och värdemängden anger radnummer, inte förbrukad mängd.\ncatalog:valueset:1585\ncatalog:variable_text:4274:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:egen-slutlig-forbrukning-av-el-tkr"
 fields = { "description" = "Egen slutlig förbrukning av el, tusentals kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger belopp i tusentals kronor, inte en elkvantitet.\ncatalog:variable_text:4275:14245:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9909,13 +9901,11 @@ subject = "var:el-inkvarde"
 fields = { "description" = "Inköpsvärde totalt för bränsle till el- och kraftvärmeproduktion, tusentals kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger inköpsvärde, inte en förbrukad bränslekvantitet.\ncatalog:variable_text:4279:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:el-prod"
 fields = { "description" = "Producerad värme, MWh." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger producerad värmemängd i MWh, inte värmeeffekt.\ncatalog:variable_text:4281:14245:17532\ncatalog:variable_text:4281:17532:17897\ncatalog:variable_text:4281:17897:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9923,13 +9913,11 @@ subject = "var:el-vvarde"
 fields = { "description" = "Värmevärde för bränsle till produktion av el, MWh per måttenhet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger värmevärde per måttenhet, inte förbrukad bränslekvantitet.\ncatalog:variable_text:4283:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:elproduktion-egenforbrukning-bransleforbrukning-samt-teknisk"
 fields = { "description" = "Typ av aggregat för elproduktion." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängden anger typ av aggregat, inte elproduktion, egenförbrukning eller bränslemängd.\ncatalog:valueset:8164\ncatalog:variable_text:4291:14245:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9937,13 +9925,11 @@ subject = "var:forbrukning-bransle-el"
 fields = { "description" = "Bränsleslag för produktion av el." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen är ett textfält för bränsleslag, inte en förbrukad mängd.\ncatalog:variable_text:4299:17532:19358\ncatalog:variable_text:4299:19358:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:forlust-mwh"
 fields = { "description" = "Värmeförlust fram till leveranspunkten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger mottagen värmemängd, men den specificerade variabeln avser värmeförlust fram till leveranspunkten.\ncatalog:occurrence:30524\ncatalog:variable_text:4306:17897:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9951,13 +9937,11 @@ subject = "var:leveranser-av-fardig-varme"
 fields = { "description" = "Antal abonnemang för leveranser av färdig värme, annan än fjärrvärme eller fjärrkyla, den 31 december." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger leveranser men källkolumnen mäter antal abonnemang.\ncatalog:occurrence:30503\ncatalog:variable_text:4334:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:leveranser-av-fjarrkyla"
 fields = { "description" = "Antal abonnemang för leveranser av fjärrkyla." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger leveranser men källkolumnen mäter antal abonnemang.\ncatalog:occurrence:30504\ncatalog:variable_text:4337:14245:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9965,13 +9949,11 @@ subject = "var:leveranser-av-fjarrvarme"
 fields = { "description" = "Antal abonnemang för leveranser av fjärrvärme den 31 december." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger leveranser men källkolumnen mäter antal abonnemang.\ncatalog:occurrence:30502\ncatalog:variable_text:4340:14245:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:leveranser-av-fjarrvarme-antlgh"
 fields = { "description" = "Antal bostadslägenheter med leveranser av fjärrvärme den 31 december." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger leveranser men källkolumnen mäter antal bostadslägenheter.\ncatalog:variable_text:4341:14245:17532\ncatalog:variable_text:4341:17532:20089"
-
 
 [[statement]]
 kind = "set"
@@ -9979,13 +9961,11 @@ subject = "var:ngast3-distribution-sni-35"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger naturgas; beskrivningen anger fel gasslag.\ncatalog:variable_text:4496:15706:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ngast3-distribution-sni-55"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger naturgas; beskrivningen anger fel gasslag.\ncatalog:variable_text:4505:15706:16436"
-
 
 [[statement]]
 kind = "set"
@@ -9993,13 +9973,11 @@ subject = "var:ngast3-distribution-sni-68"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger naturgas; beskrivningen anger fel gasslag.\ncatalog:variable_text:4507:15706:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ngast3-distribution-sni-69"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger naturgas; beskrivningen anger fel gasslag.\ncatalog:variable_text:4508:15706:16436"
-
 
 [[statement]]
 kind = "set"
@@ -10007,13 +9985,11 @@ subject = "var:ngast3-distribution-sni-72"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger naturgas; beskrivningen anger fel gasslag.\ncatalog:variable_text:4509:15706:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ngast3-distribution-sni-84"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger naturgas; beskrivningen anger stadsgas.\ncatalog:variable_text:4511:15706:16436"
-
 
 [[statement]]
 kind = "set"
@@ -10021,13 +9997,11 @@ subject = "var:ngast3-distribution-sni-90"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger naturgas; beskrivningen anger stadsgas.\ncatalog:variable_text:4512:15706:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ngast3-distribution-sni-94"
 fields = { "description" = "Mängd naturgas (MWh) överförd till slutliga förbrukare, företag med angiven SNI2007-kod i variabelns namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger naturgas; beskrivningen anger stadsgas.\ncatalog:variable_text:4513:15706:16436"
-
 
 [[statement]]
 kind = "set"
@@ -10035,13 +10009,11 @@ subject = "var:ngast3-naturgas-nat-uttagspunkter-sni-69-71-73-74-77-tabell"
 fields = { "description" = "Antal uttagspunkter för naturgas som distribuerats till företag med SNI2007-kod 69–71, 73–74, 77–82 eller 97–98." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabelnamnet återger inte alla SNI-koder som anges i källans etikett.\ncatalog:occurrence:33202\ncatalog:variable_text:4623:15706:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:panna-prod"
 fields = { "description" = "Producerad värme" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4898:14245:17532\ncatalog:variable_text:4898:17897:20089"
-
 
 [[statement]]
 kind = "set"
@@ -10049,9 +10021,14 @@ subject = "var:pump-prod"
 fields = { "description" = "Producerad värme" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMWh och etiketten anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4907:14245:17532\ncatalog:variable_text:4907:17897:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:rok-prod"
 fields = { "description" = "Producerad värme" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger producerad värmemängd, inte värmeeffekt.\ncatalog:variable_text:4912:14245:17532\ncatalog:variable_text:4912:17532:17897\ncatalog:variable_text:4912:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstyp"
+fields = { "tags" = ["energy"] }
+evidence = "Facility type belongs to the electricity-network-company table (r2, r16), supporting the register's dominant energy theme (r1, r18) without inferring particular type codes.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:28538\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:29677\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

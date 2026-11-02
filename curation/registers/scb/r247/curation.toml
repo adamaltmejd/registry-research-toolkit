@@ -313,12 +313,6 @@ evidence = "Opak frågekod med en entydig etikett; annan källa är ospecificera
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-annat"
-fields = { "tags" = [] }
-evidence = "Opak frågekod med en entydig etikett; annan källa är ospecificerad.\ncatalog:variable_text:25905:13514:13695"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-studiemedel-tillaggslan"
 fields = { "sets" = ["forsorjningskallor", "statligt-studiestod"] }
 evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25906:13514:13695"
@@ -361,20 +355,8 @@ evidence = "Opak frågekod med en entydig etikett; pengarnas källor är inte sp
 
 [[statement]]
 kind = "set"
-subject = "var:pengar-innan-fasta-kostnader"
-fields = { "tags" = [] }
-evidence = "Opak frågekod med en entydig etikett; pengarnas källor är inte specificerade.\ncatalog:variable_text:25909:13514:13695"
-
-[[statement]]
-kind = "set"
 subject = "var:pengar-efter-fasta-kostnader"
 fields = { "sets" = ["tillgangliga-pengar"] }
-evidence = "Opak frågekod med en entydig etikett; pengarnas källor är inte specificerade.\ncatalog:variable_text:25910:13514:13695"
-
-[[statement]]
-kind = "set"
-subject = "var:pengar-efter-fasta-kostnader"
-fields = { "tags" = [] }
 evidence = "Opak frågekod med en entydig etikett; pengarnas källor är inte specificerade.\ncatalog:variable_text:25910:13514:13695"
 
 [[statement]]
@@ -765,12 +747,6 @@ evidence = "Opak frågekod med en entydig etikett.\ncatalog:variable_text:25943:
 kind = "set"
 subject = "var:negativt-sarbehandling-funktionshinder"
 fields = { "sets" = ["negativ-sarbehandling"] }
-evidence = "Opak frågekod; särbehandling är inte i sig ett funktionsmått.\ncatalog:variable_text:25944:13514:13695"
-
-[[statement]]
-kind = "set"
-subject = "var:negativt-sarbehandling-funktionshinder"
-fields = { "tags" = [] }
 evidence = "Opak frågekod; särbehandling är inte i sig ett funktionsmått.\ncatalog:variable_text:25944:13514:13695"
 
 [[statement]]
@@ -1492,3 +1468,33 @@ kind = "set"
 subject = "var:yrkemor"
 fields = { "tags" = ["employment"] }
 evidence = "Moderns och faderns yrkeskoder hör ihop.\ncatalog:variable_text:26005:13514:13695\ncatalog:variable_text:26006:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-annat"
+fields = { "tags" = ["income"] }
+evidence = "Other means of support (r40) belongs to the funding-source battery alongside wages and private support (r44,r48,r49). Income is the supported broad theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25839\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25843\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25847\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25848"
+
+[[statement]]
+kind = "set"
+subject = "var:negativt-sarbehandling-funktionshinder"
+fields = { "tags" = ["disability"] }
+evidence = "The item explicitly concerns negative treatment due to disability (r56,r6), with yes/no/not-applicable responses (r16). Disability is a supported search theme without implying a measured disability status.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:235112\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10409\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25872"
+
+[[statement]]
+kind = "set"
+subject = "var:oforutsedd-situation"
+fields = { "tags" = ["wealth"] }
+evidence = "The responses explicitly distinguish handling an unexpected situation through own savings, private loans or both (r15,r58). These household asset and borrowing resources support wealth.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10198\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25874"
+
+[[statement]]
+kind = "set"
+subject = "var:pengar-efter-fasta-kostnader"
+fields = { "tags" = ["income"] }
+evidence = "Available money after fixed expenses is reported in kronor bands (r59,r19). Together with the before-expenses sibling (r60), it supports income as a broad theme for personal disposable resources.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:8339\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25875\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25876"
+
+[[statement]]
+kind = "set"
+subject = "var:pengar-innan-fasta-kostnader"
+fields = { "tags" = ["income"] }
+evidence = "Available money before fixed expenses is reported in kronor bands (r60,r20). The paired after-expenses item (r59) supports income as the broad theme, without identifying any particular funding source.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:9985\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25875\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:25876"

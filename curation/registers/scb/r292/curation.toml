@@ -22,3 +22,9 @@ kind = "set"
 subject = "var:kontopost"
 fields = { "tags" = ["finance"] }
 evidence = "Kontoposten specificerar finansinstitutens balans- och resultatposter.\ncatalog:register:94\ncatalog:variable_text:10910:14245:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["public-finance"] }
+evidence = "The definition consistently identifies county-council operating expenditure (r2, r3, r4), supporting public-finance. The register's finance theme (r5, r1) does not override this explicit meaning.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:96716\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:96720\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10891\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

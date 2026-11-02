@@ -705,12 +705,6 @@ evidence = "Källan anger län med kod.\ncatalog:occurrence:21692"
 [[statement]]
 kind = "set"
 subject = "var:lt-valkretsnamn"
-fields = { "sets" = ["landstingsvalkretsnamn", "regionvalkretsnamn"] }
-evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot regionvalkrets-valkretsnamn följer namnbytet.\ncatalog:occurrence:21118\ncatalog:occurrence:21163\ncatalog:variable_text:2988:17532:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:lt-valkretsnamn"
 fields = { "tags" = ["geography"] }
 evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot regionvalkrets-valkretsnamn följer namnbytet.\ncatalog:occurrence:21118\ncatalog:occurrence:21163\ncatalog:variable_text:2988:17532:17897"
 
@@ -1375,3 +1369,15 @@ kind = "set"
 subject = "var:lan"
 fields = { "description" = "Regional indelning i län, angiven som namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-ovr-antmand"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "Despite the Ovr_antmand column name, both occurrences explicitly define a landsting constituency code requiring a county-code prefix (r15, r17). This meets the fixed inclusion.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20927\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20971"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-valkretsnamn"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "Historical occurrences explicitly measure landsting constituency names for mandates (r6, r21), satisfying inclusion. The later explicitly regional occurrence (r22) is excluded from that support. Single-group shipping guard: retain the approved group and remove the other membership: regionvalkretsnamn\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20642\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21118\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21163"

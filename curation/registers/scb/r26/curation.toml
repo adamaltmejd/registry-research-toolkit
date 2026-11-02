@@ -1485,12 +1485,6 @@ evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
-fields = { "sets" = [] }
-evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
 fields = { "tags" = ["employment"] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
@@ -1505,12 +1499,6 @@ kind = "set"
 subject = "var:antal-foretagskombinationer-fran-ar-2-till-ar-1"
 fields = { "tags" = ["business"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41142:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
-fields = { "sets" = [] }
-evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -4252,13 +4240,11 @@ subject = "var:anstalld-fran-manad"
 fields = { "description" = "Anställd från och med månad" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:6\n\nBilaga 2 - Variabellista.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:anstalld-till-manad"
 fields = { "description" = "Anställd till och med månad" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:12\n\nBilaga 2 - Variabellista.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -4266,13 +4252,11 @@ subject = "var:antal-ku-individen"
 fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844"
 
-
 [[statement]]
 kind = "set"
 subject = "var:belagenhetsadress-gata"
 fields = { "description" = "Arbetsställets belägenhetsgata" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:18\n\nBilaga 2 - Variabellista.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -4280,13 +4264,11 @@ subject = "var:besokspostort"
 fields = { "description" = "Arbetsställets belägenhetsort" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:24\n\nBilaga 2 - Variabellista.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bgatunr"
 fields = { "description" = "Arbetsställets belägenhetsgatunummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:30\n\nBilaga 2 - Variabellista.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -4294,16 +4276,32 @@ subject = "var:institutionell-sektor"
 fields = { "description" = "Sektor" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:person-orgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:48\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Counts year-1 workplaces of individuals present at the workplace in year 2 (r11, r13, r15). The fixed definition includes personnel-delimited workplace counts (r79).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415705\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415734\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415765\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rams/antal-arbetsstallen"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Counts year-2 workplaces of individuals present at the workplace in year 1 (r10, r12, r14). The fixed definition includes personnel-delimited workplace counts (r79).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415704\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415733\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415764\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rams/antal-arbetsstallen"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "tags" = ["business"] }
+evidence = "FtgTelNr records the company's telephone in the company table (r16, r52, r70). This company administrative attribute fits business, supported by the register's thematic context (r80).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:416511\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:417186\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41214\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

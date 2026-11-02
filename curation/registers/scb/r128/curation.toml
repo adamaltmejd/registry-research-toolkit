@@ -913,12 +913,6 @@ evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:antal-agi-ku"
-fields = { "tags" = [] }
-evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39013:17897:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-dagar-sjoinkomst"
 fields = { "sets" = [] }
 evidence = "Antalet dagar med sjöinkomst beskriver arbete.\ncatalog:variable_text:39014:18262:20089"
@@ -945,12 +939,6 @@ evidence = "Körsträckan hör till bilersättning.\ncatalog:variable_text:39015
 kind = "set"
 subject = "var:antal-kontrolluppgifter-per-foretag"
 fields = { "sets" = ["antal-agi-och-kontrolluppgifter"] }
-evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kontrolluppgifter-per-foretag"
-fields = { "tags" = [] }
 evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
 
 [[statement]]
@@ -2339,13 +2327,11 @@ subject = "var:antal-dagar-sjoinkomst"
 fields = { "description" = "Antal dagar under referensåret med sjöinkomst i närfart eller fjärrfart." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver inkomsten medan variabeln mäter antal dagar.\ncatalog:variable_text:39014:17897:18262\ncatalog:variable_text:39014:18262:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:antambassadanstsv"
 fields = { "description" = "Antal AGI eller kontrolluppgifter per företag eller organisation med markering för skatt i beskickningslandet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en person medan variabeln mäter ett antal per företag.\ncatalog:variable_text:39019:17897:18262\ncatalog:variable_text:39019:18628:20089"
-
 
 [[statement]]
 kind = "set"
@@ -2353,16 +2339,26 @@ subject = "var:antperslon"
 fields = { "description" = "Anger hur många personer som erhållit kontant bruttolön från företaget." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavfelet i den gemensamma definitionen.\ncatalog:variable_text:39035:14610:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:antsocavtal"
 fields = { "description" = "Antal personer med en överenskommelse med arbetsgivaren att själva betala sina sociala avgifter, summerat per företag eller organisation." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver förekomst medan variabeln mäter ett antal summerat per företag.\ncatalog:variable_text:39039:15706:17897"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ej-skatteavdrag-antejskattejbeskatt"
 fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året, summerat per organisationsnummer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ett beslut medan variabeln mäter antal uppgifter per organisationsnummer.\ncatalog:variable_text:39067:17897:18262\ncatalog:variable_text:39067:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agi-ku"
+fields = { "tags" = ["income"] }
+evidence = "The workplace AGI/KU total (r60) parallels the company reporting total (r63). Income-benefit siblings (r66, r69) and the register theme context (r83, r1) support income for both administrative counts.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38873\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38876\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38879\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38882\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter-per-foretag"
+fields = { "tags" = ["income"] }
+evidence = "The company control-statement total (r63) belongs to the reporting context of income-benefit counts (r66, r69), supported by the register's dominant income theme (r83, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38876\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38879\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38882\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

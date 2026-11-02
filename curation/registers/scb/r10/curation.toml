@@ -4491,9 +4491,14 @@ subject = "var:hektar-aker-och-betesareal"
 fields = { "description" = "Storleksgrupp för åker- och betesareal i hektar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger storleksgrupper, inte hektar som kontinuerlig areal.\ncatalog:valueset:11020\ncatalog:variable_text:35997:14610:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:tradgard-odlingstyp"
 fields = { "description" = "Kod för typ av trädgårdsodling." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger odlingstyp och inte areal i hektar.\ncatalog:valueset:3780\ncatalog:variable_text:36028:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-adressforsaljning"
+fields = { "tags" = ["agriculture"] }
+evidence = "The flag records farmers’ requests to block name/address disclosure (r16). This administrative field follows the register’s dominant agriculture theme (r34, r1), consistent with its crop-related siblings (r27, r30).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:334082\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35792\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35845\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

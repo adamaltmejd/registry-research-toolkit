@@ -16897,3 +16897,9 @@ kind = "set"
 subject = "var:vetomr"
 fields = { "sets" = ["forskningsamnesindelning"] }
 evidence = "r625 explicitly defines these as subject areas established for resource allocation, which the fixed definition does not exclude.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:14632\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2138\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:14652"
+
+[[statement]]
+kind = "set"
+subject = "var:orghem"
+fields = { "tags" = ["research"] }
+evidence = "r314/r545 place organisational affiliation in FoU university personnel data. This administrative field fits the register's research theme, supported by r937.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:136612\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:13698\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

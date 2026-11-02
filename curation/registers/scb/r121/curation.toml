@@ -76388,13 +76388,11 @@ subject = "var:aktivitetsersattning-inkomst"
 fields = { "description" = "Andel/grad av aktivitetsersättning (inkomstrelaterad)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger garantiersättning men etiketten anger inkomstrelaterad ersättning.\ncatalog:variable_text:14763:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:antal-manader-bstper01"
 fields = { "description" = "Antal studiemånader i SVUX01." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14969:11688:12053"
-
 
 [[statement]]
 kind = "set"
@@ -76402,13 +76400,11 @@ subject = "var:antal-manader-bstper99"
 fields = { "description" = "Antal studiemånader i SVUX99." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser bokslutsmånader men källan anger studiemånader.\ncatalog:variable_text:14970:11688:12053"
 
-
 [[statement]]
 kind = "set"
 subject = "var:antal-manader-omstallningspension-atp"
 fields = { "description" = "Antal månader med omställningspension ATP." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension ATP.\ncatalog:variable_text:16165:10957:12053"
-
 
 [[statement]]
 kind = "set"
@@ -76416,13 +76412,11 @@ subject = "var:aterbetalningsberattigad-mangd-bransle-bentotm2"
 fields = { "description" = "Totalt förbrukad mängd bränsle." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger totalt förbrukad mängd, inte en återbetalningsberättigad mängd, i båda perioderna.\ncatalog:variable_text:15135:18993:19358\ncatalog:variable_text:15135:19358:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:aterstaende-avdragsutrymme-for-skogsavdrag-arets-ingang"
 fields = { "description" = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets ingång" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans korrigerade etikett och operativa definition anger årets ingång, medan befintlig text anger utgång.\ncatalog:variable_text:15211:10957:13514\nregisters/scb/r121/curation.toml:506"
-
 
 [[statement]]
 kind = "set"
@@ -76430,13 +76424,11 @@ subject = "var:avdr-for-skatt-pa-kraft-som-forbr-sparbundet-v701-11"
 fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning i tåg eller annat spårbundet transportmedel, i kilowattimmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16569:13514:16071"
 
-
 [[statement]]
 kind = "set"
 subject = "var:avdrag-blankett-n9-avdrag-for-kvarstaende-negativt-rantenetto-fran-tidigare-ar"
 fields = { "description" = "Avdrag för kvarstående negativt räntenetto från tidigare år" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger kvarstående negativt räntenetto från tidigare år, inte årets räntenetto.\ncatalog:variable_text:15597:17897:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76444,13 +76436,11 @@ subject = "var:avdrag-insatsutdelning"
 fields = { "description" = "Avdrag för insatsutdelning" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar versaliseringen.\ncatalog:variable_text:20491:17897:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:avtalstyp-alternativ-exempelmetod-har-tillampats"
 fields = { "description" = "Avtalstyp, alternativ exemptmetod har tillämpats." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nThe historical operational definition and value set identify exemptmetoden, correcting the source wording exempelmetod.\ncatalog:valueset:9594\ncatalog:variable_text:15758:10957:13514"
-
 
 [[statement]]
 kind = "set"
@@ -76458,13 +76448,11 @@ subject = "var:bandfpt"
 fields = { "description" = "Andel av full folkpension plus pensionstillskott." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger pensionen i stället för den andel som mäts.\ncatalog:variable_text:15764:10957:12053"
 
-
 [[statement]]
 kind = "set"
 subject = "var:baskap"
 fields = { "description" = "Nedsättning av statlig inkomstskatt på kapitalinkomster p.g.a. avtal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förvärvsinkomst, men etiketten och värdekoderna anger kapitalinkomst.\ncatalog:valueset:3232\ncatalog:variable_text:15799:10957:13514\ncatalog:variable_text:15799:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76472,13 +76460,11 @@ subject = "var:bfpman"
 fields = { "description" = "Antal månader med folkpension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med folkpension.\ncatalog:variable_text:16002:10957:12053"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bfpmanb"
 fields = { "description" = "Antal månader med vanlig folkpension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med vanlig folkpension.\ncatalog:variable_text:16003:10957:12053"
-
 
 [[statement]]
 kind = "set"
@@ -76486,13 +76472,11 @@ subject = "var:bfpmanbt"
 fields = { "description" = "Antal månader med folkpension enligt FPgrupp 0112." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser bokslut men variabeln mäter månader med folkpension enligt FPgrupp 0112.\ncatalog:variable_text:16004:10957:12053"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bopmanb"
 fields = { "description" = "Antal månader med omställningspension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition gäller företagets bokslut men den operativa definitionen anger månader med omställningspension.\ncatalog:variable_text:16160:10957:12053"
-
 
 [[statement]]
 kind = "set"
@@ -76500,13 +76484,11 @@ subject = "var:boptpfr"
 fields = { "description" = "Datum från och med vilket tjänstepension avses." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen avser tjänstepension och inte sjukfall.\ncatalog:variable_text:16167:10957:12053"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand"
 fields = { "description" = "Individens ekonomiska bistånd." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd medan variabeln mäter belopp.\ncatalog:variable_text:16506:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76514,13 +76496,11 @@ subject = "var:ekonomiskt-bistand-uppdelat"
 fields = { "description" = "Ekonomiskt bistånd, med beloppet fördelat mellan sökande och medsökande när medsökande finns." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd medan variabeln mäter ett fördelat belopp.\ncatalog:variable_text:16508:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:elaterhalv1mng"
 fields = { "description" = "Återbetalningsberättigad mängd, el" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16515:17167:17532"
-
 
 [[statement]]
 kind = "set"
@@ -76528,13 +76508,11 @@ subject = "var:elatermng"
 fields = { "description" = "Återbetalningsberättigad mängd, el" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan avser el och anger kilowattimmar, inte bränsle.\ncatalog:variable_text:16522:17532:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:elkraftavdrag-energieffektivisering-vol"
 fields = { "description" = "Volym för kraft som förbrukats inom ramen för program för energieffektivisering, i kilowattimmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte skatteavdragets belopp.\ncatalog:variable_text:16561:13514:16071"
-
 
 [[statement]]
 kind = "set"
@@ -76542,13 +76520,11 @@ subject = "var:elkraftavdrag-framstallning-volymer"
 fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid framställning av mineraloljeprodukter, kolbränslen och petroleumkoks eller andra produkter för vilka skatteplikt har inträtt för tillverkaren, i kilowattimmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16563:13514:16071"
 
-
 [[statement]]
 kind = "set"
 subject = "var:elkraftavdrag-kemisk-reduktion-volymer"
 fields = { "description" = "Volym för kraft som förbrukats eller sålts för kemisk reduktion, elektrolytiska eller metallurgiska processer eller viss tillverkning av mineraliska produkter, i kilowattimmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16565:13514:16071"
-
 
 [[statement]]
 kind = "set"
@@ -76556,13 +76532,11 @@ subject = "var:elkraftavdrag-overforing-elnatet-volymer"
 fields = { "description" = "Volym för kraft som förbrukats eller sålts för förbrukning vid överföring på elnätet av nätförvaltaren för att upprätthålla nätets funktion, i kilowattimmar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans enhet och etikett anger volym, inte avdragsbelopp.\ncatalog:variable_text:16567:13514:16071"
 
-
 [[statement]]
 kind = "set"
 subject = "var:etableringsersattning"
 fields = { "description" = "Utbetalt belopp i etableringsersättning till personer som är nya i Sverige." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjlighet till flera ersättningar.\ncatalog:variable_text:16653:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76570,13 +76544,11 @@ subject = "var:etableringstillagg"
 fields = { "description" = "Utbetalt belopp i etableringstillägg till personer som är nya i Sverige." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett anger utbetalt belopp, medan den befintliga texten beskriver möjligheten att få tillägget.\ncatalog:variable_text:16654:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:forbrukad-mangd-bransle-punktskatter"
 fields = { "description" = "Totalt förbrukad mängd el för punktskatter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76584,13 +76556,11 @@ subject = "var:forutbetalda-kostn-och-andra-upplupna-int-rh"
 fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:garantipension"
 fields = { "description" = "Garantipension för födda 1937 och tidigare samt för födda 1998 och senare, i kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett pensionsbelopp, medan den tidigare beskrivningen enbart förklarar rättigheten.\ncatalog:variable_text:17026:12053:13514\ncatalog:variable_text:17026:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76598,13 +76568,11 @@ subject = "var:ivard"
 fields = { "description" = "Vårdbidragets merkostnadsdel." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver möjlig rätt till vårdbidrag, medan variabeln mäter merkostnadsdelen.\ncatalog:variable_text:17436:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:lff"
 fields = { "description" = "Avsättningar för andra risker och kostnader (LFF)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17865:17167:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76612,13 +76580,11 @@ subject = "var:lh"
 fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra måttets innebörd.\ncatalog:variable_text:17871:16801:17167\ncatalog:variable_text:17872:12784:16801\ncatalog:variable_text:17874:12784:16801"
 
-
 [[statement]]
 kind = "set"
 subject = "var:lh3"
 fields = { "description" = "Övriga förutbetalda kostnader och upplupna intäkter (LH3)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nUtvecklar källans förkortningar utan att ändra innebörden.\ncatalog:variable_text:17874:12784:16801"
-
 
 [[statement]]
 kind = "set"
@@ -76626,13 +76592,11 @@ subject = "var:lii"
 fields = { "description" = "Upplupna kostnader och förutbetalda intäkter (LII)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans ord är trunkerade men betydelsen är densamma.\ncatalog:variable_text:17876:17167:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag"
 fields = { "description" = "Modellberäknat underhållsbidrag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden, inte observerade mottagna belopp.\ncatalog:variable_text:18038:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76640,13 +76604,11 @@ subject = "var:narstaendepenning"
 fields = { "description" = "Mottagen närståendepenning vid vård av en svårt sjuk närstående." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeloppsvariabeln mäter ersättning, medan beskrivningen endast anger rätt till ersättning.\ncatalog:variable_text:18073:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:negativt-kapitalunderlag-860"
 fields = { "description" = "Negativt kapitalunderlag enligt punkt 39 multiplicerat med 5,71 procent, det negativa fördelningsbeloppet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan definierar en multiplicerad fördelningspost, inte enbart kapitalunderlaget.\ncatalog:variable_text:18088:10957:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76654,13 +76616,11 @@ subject = "var:oljkvfgco2sksats"
 fields = { "description" = "Skattesats för koldioxidskatt, återbetalningar och punktskatter" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger skattesatsen, medan den befintliga beskrivningen anger själva skatten.\ncatalog:variable_text:18322:18628:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:orgnr-tredje-dotterbolaget"
 fields = { "description" = "Organisationsnummer för tredje dotterbolaget" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fel dotterbolag; etiketten och den operationella definitionen anger det tredje.\ncatalog:variable_text:18438:14245:14610\ncatalog:variable_text:18438:14975:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76668,13 +76628,11 @@ subject = "var:ovrig-avsattningar"
 fields = { "description" = "Övriga avsättningar" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar grammatiken utan att ändra innebörden.\ncatalog:variable_text:20878:13514:16436\ncatalog:variable_text:20878:19358:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:pgarfop"
 fields = { "description" = "Garantipension till förlängd omställningspension, i kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18697:12053:13514\ncatalog:variable_text:18697:16801:17167"
-
 
 [[statement]]
 kind = "set"
@@ -76682,13 +76640,11 @@ subject = "var:pgarop"
 fields = { "description" = "Garantipension till omställningspension, i kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten beskriver rätt till pension medan variabeln mäter ett belopp.\ncatalog:variable_text:18698:12053:13514\ncatalog:variable_text:18698:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:studiehjalp-extra-tillagg"
 fields = { "description" = "Studiehjälp, antal månader med extra tillägg." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal månader, inte ett ospecificerat bidragsbelopp.\ncatalog:variable_text:19268:13149:13514"
-
 
 [[statement]]
 kind = "set"
@@ -76696,13 +76652,11 @@ subject = "var:summa-co2-skatt-fargad-eldningsolja-jord-skogsbruk"
 fields = { "description" = "Summa koldioxidskatt för färgad eldningsolja i jord- och skogsbrukets återbetalningsansökan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen anger koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19294:17167:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:summa-co2-skatt-kraftvarme-industri-utslappsratter"
 fields = { "description" = "Summa koldioxidskatt, punktskatt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operativa definitionen avser koldioxidskatt, inte energiskatt.\ncatalog:variable_text:19295:18628:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76710,13 +76664,11 @@ subject = "var:summa-koldioxidskatt-aterbetalning-bat-skepp"
 fields = { "description" = "Summa koldioxidskatt, punktskatt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger energiskatt men samtliga operativa definitioner avser koldioxidskatt.\ncatalog:variable_text:19288:13879:14245\ncatalog:variable_text:19288:14245:14610\ncatalog:variable_text:19288:14610:14975\ncatalog:variable_text:19288:14975:15340\ncatalog:variable_text:19288:15340:16071"
 
-
 [[statement]]
 kind = "set"
 subject = "var:summa-skatt-svavel"
 fields = { "description" = "Summa svavelskatt för diverse industriella processer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition anger svavelskatt i samtliga perioder.\ncatalog:variable_text:19325:18628:19358"
-
 
 [[statement]]
 kind = "set"
@@ -76724,13 +76676,11 @@ subject = "var:sumpcco2sk"
 fields = { "description" = "Summa punktskatt, koldioxidskatt för vissa industriella processer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen operationella definitionen anger koldioxidskatt, medan beskrivningen anger energiskatt.\ncatalog:variable_text:19340:17167:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:underskott-nasta-ar-punkt-8"
 fields = { "description" = "Underskott att dras av nästa år vid punkt 8." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslag saknas före punktnumret.\ncatalog:variable_text:19576:15706:19723"
-
 
 [[statement]]
 kind = "set"
@@ -76738,13 +76688,11 @@ subject = "var:utdelning-kapital-huvudreg-p2-15"
 fields = { "description" = "Utdelning i kapital huvudregeln punkt 2.15" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett visar korrekt stavning.\ncatalog:variable_text:19628:13149:19723"
 
-
 [[statement]]
 kind = "set"
 subject = "var:utgaende-eget-kapital-hb-kb-enskilda-naringsidkare"
 fields = { "description" = "Utgående eget kapital hb/kb, enskilda näringsidkare" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen innehåller en upprepad felskrivning; etiketten anger samma kapitalpost korrekt.\ncatalog:variable_text:19749:10957:14975"
-
 
 [[statement]]
 kind = "set"
@@ -76752,16 +76700,80 @@ subject = "var:v712-59"
 fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för annat ändamål än motordrift eller för dubbel användning, lågbeskattad olja omärkt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen är trunkerad till ett tecken; etiketten anger måttet.\ncatalog:variable_text:20112:13514:16071"
 
-
 [[statement]]
 kind = "set"
 subject = "var:vardbidrag-deklarationsuppgift"
 fields = { "description" = "Vårdbidrag enligt deklarationsuppgift för vård av ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till bidrag medan variabeln avser ett belopp enligt deklarationsuppgift.\ncatalog:occurrence:176069\ncatalog:variable_text:19446:16801:17167"
 
-
 [[statement]]
 kind = "set"
 subject = "var:varulagrets-samlade-anskaffningsvarde"
 fields = { "description" = "Varulagrets samlade anskaffningsvärde." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRemove a line break and stray punctuation from the same meaning.\ncatalog:variable_text:19912:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bredtp"
+fields = { "tags" = ["transfers"] }
+evidence = "BREDTP is a reduction factor (r185); its consistently transfer-tagged reduction-factor siblings include an explicit guarantee-pension factor (r181, r264).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16233\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16237\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19118"
+
+[[statement]]
+kind = "set"
+subject = "var:ndelbet"
+fields = { "tags" = ["finance"] }
+evidence = "The corporate-register paid-amount field is supported by subscribed-amount and new-share-issue peers, establishing a broad finance context (r25, r186, r234).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:150116\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16276\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18361"
+
+[[statement]]
+kind = "set"
+subject = "var:nfullbet"
+fields = { "tags" = ["finance"] }
+evidence = "The corporate-register full-payment field shares the finance context of the partial-payment, subscribed-amount and new-share-issue fields (r34, r228, r186, r234).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:150923\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16276\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18236\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18361"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-block-a"
+fields = { "tags" = ["business"] }
+evidence = "The monetary residual is in financial-company accounts (r55, r248), with explicit Block A asset-value and provision peers supporting business accounting (r254, r356).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:157027\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18766\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18773\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20740"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-block-g"
+fields = { "tags" = ["business"] }
+evidence = "This monetary residual belongs to financial-company accounts (r117, r249); the supplied accounting residuals support the broad business theme (r253, r254).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:161594\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18767\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18771\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18773"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-punkterna-12-26-28-positiv"
+fields = { "tags" = ["taxation"] }
+evidence = "The positive sum is recorded in tax annex N3A (r2, r288). That tax-calculation role supports taxation without reconstructing the referenced points.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:145071\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19657"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt"
+fields = { "tags" = ["business"] }
+evidence = "This is a monetary total in financial-company accounts (r58, r312), supporting general business accounting; the Block G total supplies no narrower theme (r316).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:157323\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19849\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19853"
+
+[[statement]]
+kind = "set"
+subject = "var:vc12"
+fields = { "tags" = ["finance"] }
+evidence = "This monetary Riksgäldskontoret counterparty field has borrowing and leasing peers that support finance without resolving the exact quantity (r360, r210, r219).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20796"
+
+[[statement]]
+kind = "set"
+subject = "var:vc86"
+fields = { "tags" = ["finance"] }
+evidence = "The monetary counterparty field concerns Riksgäldskontoret; borrowing and leasing peers support finance without identifying the exact quantity (r365, r210, r219).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20811"
+
+[[statement]]
+kind = "set"
+subject = "var:vg6"
+fields = { "tags" = ["business"] }
+evidence = "The observations are monetary company-account entries (r53, r366); the matching company-sector and current-asset peers support business (r306, r206).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:156985\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17333\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19728\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20842"
+
+[[statement]]
+kind = "set"
+subject = "var:vg7"
+fields = { "tags" = ["business"] }
+evidence = "The latest observation explicitly concerns fixed assets (r123); the earlier monetary accounting entries and matching business-tagged peer support business broadly (r54, r241).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:156986\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:162019\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18735"

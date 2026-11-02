@@ -442,3 +442,15 @@ kind = "set"
 subject = "var:verkligtarb"
 fields = { "tags" = ["business"] }
 evidence = "Definitionen och den senare operativa definitionen beskriver olika kodningar.\ncatalog:variable_text:54723:16071:17897\ncatalog:variable_text:54723:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komlanstkod"
+fields = { "tags" = ["public-finance"] }
+evidence = "The field classifies the service purchaser as municipality or region (r2, r28), supporting public-finance. The geography sibling instead records workplace location (r33).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:511512\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11193\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54530"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomraden-i-rakenskapssammandraget"
+fields = { "tags" = ["public-finance"] }
+evidence = "The codes classify municipal and regional accounting service areas (r34), spanning healthcare, education and social care (r29). This supports the broad public-finance theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2622\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54543"

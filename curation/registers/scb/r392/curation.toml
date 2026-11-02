@@ -320,12 +320,6 @@ evidence = "Antalet avser deklarationer utan skatteavdrag.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
-fields = { "sets" = [] }
-evidence = "Ersättningen omfattar resor till och från Sverige.\ncatalog:variable_text:1373:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "tags" = ["income"] }
 evidence = "Ersättningen omfattar resor till och från Sverige.\ncatalog:variable_text:1373:17897:18628"
 
@@ -701,13 +695,11 @@ subject = "var:andra-formaner-underlag-arbetsgivaravgift"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:andra-formaner-underlag-egenavgift"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -715,13 +707,11 @@ subject = "var:avdr-skatt-sink"
 fields = { "description" = "Avdragen skatt, SINK" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
 fields = { "description" = "Avdragen preliminär skatt" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -729,13 +719,11 @@ subject = "var:avrakning-avgiftsfri-ers"
 fields = { "description" = "Avräkning från avgiftsfri ersättning" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bilersattning"
 fields = { "description" = "Bilersättning" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -743,13 +731,11 @@ subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
 fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
 fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -757,13 +743,11 @@ subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
 fields = { "description" = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -771,13 +755,11 @@ subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
 fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
 fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -785,13 +767,11 @@ subject = "var:drivmedel-bilforman-underlag-egenavgift"
 fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ej-skatteavdrag"
 fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ett beslut medan uppgiften mäter antal deklarationer.\ncatalog:variable_text:1372:17897:18628"
-
 
 [[statement]]
 kind = "set"
@@ -799,13 +779,11 @@ subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
 fields = { "description" = "Kontant ersättning som är underlag för egenavgifter" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "description" = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -813,13 +791,11 @@ subject = "var:forman-har-justerats"
 fields = { "description" = "Markering för att en förmån har justerats." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en rättad post medan uppgiften avser justering av en förmån.\ncatalog:variable_text:1378:17897:18628"
 
-
 [[statement]]
 kind = "set"
 subject = "var:forman-som-pension"
 fields = { "description" = "Förmån som pension som inte är underlag för socialavgifter" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -827,13 +803,11 @@ subject = "var:hyresersattning"
 fields = { "description" = "Hyresersättning" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:skattepliktiga-ersattningar-ej-sociala"
 fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -841,9 +815,14 @@ subject = "var:traktamente"
 fields = { "description" = "Antal arbetsgivardeklarationer med utbetalat traktamente under året." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ersättning medan uppgiften mäter antal deklarationer.\ncatalog:variable_text:1411:17897:18628"
 
-
 [[statement]]
 kind = "set"
 subject = "var:underlag-skattereduktion-rot-forman"
 fields = { "description" = "Underlag för skattereduktion för rotarbete" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'ersättning för resor till och från Sverige' and the variable is on the 4-item candidate list; the 'förmån' wording does not make it a förmånsvärde.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:30\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1380"

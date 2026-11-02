@@ -2818,12 +2818,6 @@ evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade pensions
 [[statement]]
 kind = "set"
 subject = "var:imp-527"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade övriga personalkostnader. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler anger inte sociala avgifter eller sociala och andra personalkostnader. membership-0118: Övriga sociala avgifter och det sammanslagna måttet omfattas. Enbart övriga personalkostnader är inte ett belagt socialt eller sammanslaget mått enligt definitionen. membership-0119: Den historiska kolumnen anger övriga sociala avgifter tillsammans med pensionskostnader, vilket definitionen omfattar. membership-0120: Det valda pensionskostnadsvärdet mäter enbart pensioner, inte sociala avgifter eller ett sammanslaget socialt personalkostnadsmått. membership-0121: Övriga sociala avgifter ingår uttryckligen. Separat pensionskostnad och totala personalkostnader motsvarar inte gruppens sammanslagna mått. membership-0122: Etiketten och beskrivningen anger övriga sociala avgifter, som uttryckligen ingår i kandidaten. membership-0123: Övriga sociala avgifter och det imputerade värdet för övriga personalkostnader stöds av kandidatens fasta omfattning; imputering ändrar inte sakbegreppet.\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10749:12053:13514\ncatalog:variable_text:10756:12053:13514\ncatalog:variable_text:10757:9862:12053\ncatalog:variable_text:10765:12784:13514\ncatalog:variable_text:10827:12053:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10859:18993:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:imp-527"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig och etiketten anger imputerade övriga personalkostnader. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0117: Sektionens valda variabler anger inte sociala avgifter eller sociala och andra personalkostnader. membership-0118: Övriga sociala avgifter och det sammanslagna måttet omfattas. Enbart övriga personalkostnader är inte ett belagt socialt eller sammanslaget mått enligt definitionen. membership-0119: Den historiska kolumnen anger övriga sociala avgifter tillsammans med pensionskostnader, vilket definitionen omfattar. membership-0120: Det valda pensionskostnadsvärdet mäter enbart pensioner, inte sociala avgifter eller ett sammanslaget socialt personalkostnadsmått. membership-0121: Övriga sociala avgifter ingår uttryckligen. Separat pensionskostnad och totala personalkostnader motsvarar inte gruppens sammanslagna mått. membership-0122: Etiketten och beskrivningen anger övriga sociala avgifter, som uttryckligen ingår i kandidaten. membership-0123: Övriga sociala avgifter och det imputerade värdet för övriga personalkostnader stöds av kandidatens fasta omfattning; imputering ändrar inte sakbegreppet.\ncatalog:variable_text:10697:12053:18628\ncatalog:variable_text:10698:13514:13879\ncatalog:variable_text:10699:12053:13514\ncatalog:variable_text:10700:12053:18628\ncatalog:variable_text:10739:18262:18628\ncatalog:variable_text:10748:12053:13514\ncatalog:variable_text:10749:12053:13514\ncatalog:variable_text:10756:12053:13514\ncatalog:variable_text:10757:9862:12053\ncatalog:variable_text:10765:12784:13514\ncatalog:variable_text:10827:12053:13514\ncatalog:variable_text:10833:12053:13514\ncatalog:variable_text:10836:12053:19723\ncatalog:variable_text:10859:18993:19723\ncatalog:variable_text:10860:12053:18628\ncatalog:variable_text:10890:12053:18628\ncatalog:variable_text:10900:14610:18628\ncatalog:variable_text:10902:12053:18628"
 
@@ -5269,13 +5263,11 @@ subject = "var:agarkontroll"
 fields = { "description" = "Ägarkontroll" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:antal-manader-bokslut"
 fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -5283,13 +5275,11 @@ subject = "var:bokslutsman"
 fields = { "description" = "Bokslutsmånad" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:fenr"
 fields = { "description" = "Företagsenhetens löpnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -5297,13 +5287,11 @@ subject = "var:forbrukningsvarde"
 fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
 
-
 [[statement]]
 kind = "set"
 subject = "var:juridisk-form"
 fields = { "description" = "Juridisk form" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 
 [[statement]]
 kind = "set"
@@ -5311,9 +5299,14 @@ subject = "var:person-orgnr"
 fields = { "description" = "Företagets löpnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:sektortillhorighet"
 fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-527"
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "r51 and r62 document an imputed SEK amount for other personnel costs, within the social and other personnel cost scope of r106.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:95381\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10664\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fek/sociala-och-andra-personalkostnader"

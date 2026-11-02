@@ -157,20 +157,8 @@ evidence = "Definitionen anger försörjningshinder; hindertyp saknas.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-april"
-fields = { "tags" = [] }
-evidence = "Definitionen anger försörjningshinder; hindertyp saknas.\ncatalog:variable_text:56065:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-april-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56066:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-april-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56066:14610:2932897"
 
 [[statement]]
@@ -181,20 +169,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56067:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-augusti"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56067:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-augusti-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56068:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-augusti-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56068:14610:2932897"
 
 [[statement]]
@@ -205,20 +181,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56069:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-december"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56069:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-december-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56070:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-december-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56070:14610:2932897"
 
 [[statement]]
@@ -229,20 +193,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56071:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-februari"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56071:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-februari-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56072:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-februari-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56072:14610:2932897"
 
 [[statement]]
@@ -253,20 +205,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56073:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-januari"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56073:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-januari-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56074:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-januari-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56074:14610:2932897"
 
 [[statement]]
@@ -277,20 +217,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56075:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-juli"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56075:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-juli-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56076:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-juli-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56076:14610:2932897"
 
 [[statement]]
@@ -307,20 +235,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56078:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-juni-sok1"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56078:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-maj"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56079:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-maj"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56079:14610:2932897"
 
 [[statement]]
@@ -331,20 +247,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56080:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-maj-sok1"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56080:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-mars"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56081:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-mars"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56081:14610:2932897"
 
 [[statement]]
@@ -355,20 +259,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56082:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-mars-sok1"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56082:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-november"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56083:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-november"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56083:14610:2932897"
 
 [[statement]]
@@ -379,20 +271,8 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56084:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-november-sok1"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56084:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-oktober"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56085:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-oktober"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56085:14610:2932897"
 
 [[statement]]
@@ -403,32 +283,14 @@ evidence = "Hindertyp saknas.\ncatalog:variable_text:56086:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-oktober-sok1"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56086:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-september"
 fields = { "sets" = ["forsorjningshinder"] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56087:14610:2932897"
 
 [[statement]]
 kind = "set"
-subject = "var:aldstes-hinder-september"
-fields = { "tags" = [] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56087:14610:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:aldstes-hinder-september-sok1"
 fields = { "sets" = ["forsorjningshinder"] }
-evidence = "Hindertyp saknas.\ncatalog:variable_text:56088:14610:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:aldstes-hinder-september-sok1"
-fields = { "tags" = [] }
 evidence = "Hindertyp saknas.\ncatalog:variable_text:56088:14610:2932897"
 
 [[statement]]
@@ -6443,9 +6305,146 @@ subject = "var:sokaldstainvandra"
 fields = { "description" = "Invandringsår för den äldsta sökanden (om minst två sökande, annars tom)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56523:10592:14610"
 
-
 [[statement]]
 kind = "set"
 subject = "var:sokyngstinvandra"
 fields = { "description" = "Invandringsår för den yngsta sökanden (om minst två sökande, annars tom)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfel utan att ändra betydelsen.\ncatalog:variable_text:56531:10592:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-april"
+fields = { "tags" = ["transfers"] }
+evidence = "The field measures the eldest applicant's support barrier (r72). Its June peer uses transfers (r84), consistent with the register's dominant theme (r195).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55881\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-april-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The April siblings establish a support-barrier battery (r72, r73). Its June peer uses transfers (r84), consistent with the register's dominant theme (r195).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55881\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55882\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-augusti"
+fields = { "tags" = ["transfers"] }
+evidence = "August's subsistence-obstacle field (r25) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55883\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-augusti-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The August obstacle field belongs to the subsistence-obstacle battery (r26, r25), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55883\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55884\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-december"
+fields = { "tags" = ["transfers"] }
+evidence = "December's subsistence-obstacle field (r27) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-december-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The December obstacle field belongs to the subsistence-obstacle battery (r28, r27), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55886\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-februari"
+fields = { "tags" = ["transfers"] }
+evidence = "February's subsistence-obstacle field (r29) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55887\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-februari-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The oldest applicant's February subsistence-obstacle field (r30) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55888\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-januari"
+fields = { "tags" = ["transfers"] }
+evidence = "January's subsistence-obstacle field (r31) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55889\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-januari-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The oldest applicant's January subsistence-obstacle field (r32) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55890\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juli"
+fields = { "tags" = ["transfers"] }
+evidence = "July's subsistence-obstacle field (r33) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55891\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juli-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The July obstacle field belongs to the subsistence-obstacle battery (r34, r33), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55891\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55892\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-juni-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The June obstacle field (r36) shares the subsistence-obstacle battery with June's transfers-tagged peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55894\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-maj"
+fields = { "tags" = ["transfers"] }
+evidence = "May's subsistence-obstacle field (r37) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55895\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-maj-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The May obstacle field belongs to the subsistence-obstacle battery (r38, r37), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55895\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55896\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-mars"
+fields = { "tags" = ["transfers"] }
+evidence = "March's subsistence-obstacle field (r39) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55897\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-mars-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The March obstacle field belongs to the subsistence-obstacle battery (r40, r39), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55897\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55898\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-november"
+fields = { "tags" = ["transfers"] }
+evidence = "November's subsistence-obstacle field (r41) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55899\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-november-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The November obstacle field belongs to the subsistence-obstacle battery (r42, r41), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55899\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55900\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-oktober"
+fields = { "tags" = ["transfers"] }
+evidence = "October's subsistence-obstacle field (r43) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55901\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-oktober-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The October obstacle field belongs to the subsistence-obstacle battery (r44, r43), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55901\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55902\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-september"
+fields = { "tags" = ["transfers"] }
+evidence = "September's subsistence-obstacle field (r45) shares the battery of the transfers-tagged June peer (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55903\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:aldstes-hinder-september-sok1"
+fields = { "tags" = ["transfers"] }
+evidence = "The September obstacle field belongs to the subsistence-obstacle battery (r46, r45), whose June peer has the transfers tag (r35), consistent with register context (r47, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55893\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:55904\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -8084,12 +8084,6 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27201:105
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-kosmetika"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27202:10592:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:utgift-for-kosmetika"
 fields = { "tags" = ["consumption"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:27202:10592:11688"
 
@@ -10839,3 +10833,15 @@ kind = "set"
 subject = "hushall-1999-2001: VK2361 @2001-01-01..2001-12-31 where key = 'v40918'"
 fields = { "label" = "Utgift för Motordrivet trädgårdsredskap" }
 evidence = "Part of #2040. scb/hut/utgift-formotordrivet-tradgardsredskap: Restore missing word separator after för only; retain capitalization. Three annual occurrences. Reviewed occurrence label: Utgift förMotordrivet trädgårdsredskap"
+
+[[statement]]
+kind = "set"
+subject = "var:beraknat-nyttjandevarde"
+fields = { "tags" = ["consumption"] }
+evidence = "The monetary use-value measure in r110 fits HUT's consumption context in r271 and r1. Being calculated does not itself imply statistical methodology.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:26457\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-kosmetika"
+fields = { "sets" = ["utgift-personlig-hygien"] }
+evidence = "r148 and its occurrences consistently define cosmetic expenditure in kronor, supporting the named personal-hygiene component covered by r269.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:240525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:240943\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:241358\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:27011\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/hut/utgift-personlig-hygien"

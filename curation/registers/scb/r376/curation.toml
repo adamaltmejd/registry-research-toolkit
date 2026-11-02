@@ -250,3 +250,21 @@ kind = "set"
 subject = "var:funk"
 fields = { "description" = "Anger om deltagaren har en funktionsvariation." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar dubblerad punkt utan att ändra betydelsen.\ncatalog:variable_text:7916:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:anvfran"
+fields = { "tags" = ["employment"] }
+evidence = "This records referral into an ESF project, including referrals from the Public Employment Service (r10, r7, r8), supporting the register's employment theme (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11777\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:3016\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:deltpo"
+fields = { "tags" = ["employment"] }
+evidence = "This records ESF programme participation (r11, r9). The register's employment context supports that broad theme for this administrative participation field (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6071\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7899\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:inrmin"
+fields = { "tags" = ["demographics"] }
+evidence = "The flag concerns projects targeting Sweden's official minorities (r13, r6), fitting population composition under demographics. Its sibling similarly carries its target group's theme, disability (r12).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10571\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7904\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7907"

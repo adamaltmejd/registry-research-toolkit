@@ -8300,12 +8300,6 @@ evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3451:1
 [[statement]]
 kind = "set"
 subject = "var:arbutrmobilamaskiner"
-fields = { "sets" = [] }
-evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3452:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbutrmobilamaskiner"
 fields = { "tags" = ["employment"] }
 evidence = "Anger användning av arbetsutrustning.\ncatalog:variable_text:3452:19723:20089"
 
@@ -9736,12 +9730,6 @@ kind = "set"
 subject = "var:hemvaxla"
 fields = { "tags" = ["employment"] }
 evidence = "Gäller möjlighet att växla arbetsställning i hemmet.\ncatalog:variable_text:3577:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:hinner-inte-prata-om-arbetet"
-fields = { "sets" = [] }
-evidence = "Mäter en konsekvens av stressig arbetsbelastning.\ncatalog:variable_text:3578:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -11330,12 +11318,6 @@ evidence = "Mäter övertidens frekvens.\ncatalog:variable_text:3719:12053:12418
 [[statement]]
 kind = "set"
 subject = "var:overtid-med-ersattning"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare och operationaliseringen skiljer enbart ersatt övertid från ersatt övertid.\ncatalog:occurrence:26187\ncatalog:occurrence:26419\ncatalog:variable_text:3720:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-med-ersattning"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har olika ägare och operationaliseringen skiljer enbart ersatt övertid från ersatt övertid.\ncatalog:occurrence:26187\ncatalog:occurrence:26419\ncatalog:variable_text:3720:17167:17532"
 
@@ -11674,12 +11656,6 @@ kind = "set"
 subject = "var:rorelser"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter upplevelse av arbetsrörelser.\ncatalog:variable_text:3753:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:rormask"
-fields = { "sets" = [] }
-evidence = "Mäter användning av rörliga maskiner.\ncatalog:variable_text:3754:18628:18993"
 
 [[statement]]
 kind = "set"
@@ -14173,13 +14149,11 @@ subject = "var:arbetatunderaret"
 fields = { "description" = "Har du arbetat något under år 2024?" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar källtextens stavfel.\ncatalog:variable_text:3418:19723:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:nattarbete-halvdag-hs"
 fields = { "description" = "Nattarbete i huvudsysslan, inklusive om det förekommer minst hälften av arbetsdagarna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kväll trots att kodningen gäller nattarbete.\ncatalog:occurrence:26754\ncatalog:valueset:9952"
-
 
 [[statement]]
 kind = "set"
@@ -14187,9 +14161,32 @@ subject = "var:nattarbete-minst-halften"
 fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kväll men etiketter och värden anger nattarbete.\ncatalog:valueset:9952\ncatalog:variable_text:3700:17897:18262"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ssyk4-huvud"
 fields = { "description" = "Bakgrundsvariabel från AKU. Yrke enligt SSYK på 4-siffernivå i huvudsysslan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger tvåsiffrig nivå medan etiketten genomgående anger fyrsiffrig nivå.\ncatalog:occurrence:24560\ncatalog:variable_text:3824:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arbutrmobilamaskiner"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. This is one option of the same 8-option 'arbetsutrustning minst 1/4 av tiden' battery whose other options are all members. The vehicle exclusion was not meant to split the battery.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:49\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:26875\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3451\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
+
+[[statement]]
+kind = "set"
+subject = "var:hinner-inte-prata-om-arbetet"
+fields = { "sets" = ["arbetsbelastning"] }
+evidence = "r108 measures work time pressure leaving no time to discuss or think about anything else. This supports perceived workload under r194.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3577\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/arbetsbelastning"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-med-ersattning"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "r131 asks whether compensated overtime occurred; r67 specifies exclusively compensated overtime. Both measure overtime occurrence, including compensated parts as allowed by r196.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:26187\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3718\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/overtidsarbete"
+
+[[statement]]
+kind = "set"
+subject = "var:rormask"
+fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
+evidence = "r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193. | r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3749\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"

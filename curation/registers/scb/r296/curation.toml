@@ -1323,3 +1323,15 @@ kind = "set"
 subject = "var:urvalssannolikhet"
 fields = { "description" = "Anger om företaget är draget med säkerhet, slumpmässigt eller som reserv." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdemängderna visar urvalsstatus, inte en numerisk sannolikhet.\ncatalog:valueset:8746\ncatalog:variable_text:40930:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-kommentar"
+fields = { "tags" = ["prices"] }
+evidence = "Staff enter these comments through the PPI application (r30, r102). With no narrower subject specified, the administrative field takes the register's supported prices theme (r139).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:400489\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40668\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:fv-pam"
+fields = { "tags" = ["methods"] }
+evidence = "The flag controls reminders to data providers to submit information (r103), recorded by staff (r31). This response-collection role supports methods within the register's mixed themes (r139).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:400491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40670\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -1293,13 +1293,11 @@ subject = "var:eilandomr1"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12055:18993:19358"
 
-
 [[statement]]
 kind = "set"
 subject = "var:eilandomr2"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12056:18993:19358"
-
 
 [[statement]]
 kind = "set"
@@ -1307,13 +1305,11 @@ subject = "var:eilandomr3"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12057:18993:19358"
 
-
 [[statement]]
 kind = "set"
 subject = "var:eilandomr4"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12058:18993:19358"
-
 
 [[statement]]
 kind = "set"
@@ -1321,13 +1317,11 @@ subject = "var:eilandomr5"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12059:18993:19358"
 
-
 [[statement]]
 kind = "set"
 subject = "var:eilandomr6"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12060:18993:19358"
-
 
 [[statement]]
 kind = "set"
@@ -1335,13 +1329,11 @@ subject = "var:eilandomr7"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12061:18993:19358"
 
-
 [[statement]]
 kind = "set"
 subject = "var:eilandomr8"
 fields = { "description" = "Kod för handel med landområdet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12062:18993:19358"
-
 
 [[statement]]
 kind = "set"
@@ -1349,9 +1341,20 @@ subject = "var:faxnummer"
 fields = { "description" = "Faxnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12066:18262:19358"
 
-
 [[statement]]
 kind = "set"
 subject = "var:haefax"
 fields = { "description" = "Faxnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:12073:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:reklam"
+fields = { "tags" = ["business"] }
+evidence = "Advertising consent and telephone blocks concern business-register contact administration (r102, r98), fitting the register's business theme (r104, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:12160\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:12096\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:utskick"
+fields = { "tags" = ["business"] }
+evidence = "The legal entity's postal-address status includes returned mail and missing addresses (r103, r99). This business-register administration fits the business theme (r104, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2151\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:12106\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

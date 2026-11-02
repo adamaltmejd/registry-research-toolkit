@@ -3710,20 +3710,8 @@ evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A
 [[statement]]
 kind = "set"
 subject = "var:avsandlan"
-fields = { "sets" = [] }
-evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41661:-731:2922"
-
-[[statement]]
-kind = "set"
-subject = "var:avsandlan"
 fields = { "tags" = ["geography"] }
 evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41661:-731:2922"
-
-[[statement]]
-kind = "set"
-subject = "var:avslan"
-fields = { "sets" = [] }
-evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41662:-731:2922"
 
 [[statement]]
 kind = "set"
@@ -6313,13 +6301,11 @@ subject = "var:icketerrforsfg"
 fields = { "description" = "Tidigare icke territoriell församling." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger icke territoriell församling; den befintliga texten utelämnar negationen.\ncatalog:variable_text:41783:-731:10227"
 
-
 [[statement]]
 kind = "set"
 subject = "var:kon-samhorighet"
 fields = { "description" = "Samhörighetspersonens kön." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser fel person; den operativa definitionen anger samhörighetspersonen.\ncatalog:variable_text:41798:10226:10227\ncatalog:variable_text:41798:9861:9862"
-
 
 [[statement]]
 kind = "set"
@@ -6327,13 +6313,11 @@ subject = "var:lan"
 fields = { "description" = "Bostadslän" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rtb.toml:110\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medblandgruppmor-eu"
 fields = { "description" = "Grupperat medborgarskapsland för modern enligt EU:s regler." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser en gruppering av moderns medborgarskapsland.\ncatalog:occurrence:428780\ncatalog:valueset:10739"
-
 
 [[statement]]
 kind = "set"
@@ -6341,13 +6325,11 @@ subject = "var:medblandgrupprel-eu"
 fields = { "description" = "Grupperat medborgarskapsland för relationspersonen enligt EU:s regler." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser en gruppering av relationspersonens medborgarskapsland.\ncatalog:occurrence:424727\ncatalog:valueset:10739"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medblandnamnfar"
 fields = { "description" = "Faderns prioriterade medborgarskapsland vid barnets födelse." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men källan avser faderns medborgarskapsland vid barnets födelse.\ncatalog:variable_text:41828:10227:20454"
-
 
 [[statement]]
 kind = "set"
@@ -6355,13 +6337,11 @@ subject = "var:medblandnamnmor"
 fields = { "description" = "Moderns prioriterade medborgarskapsland vid barnets födelse." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men källan avser moderns medborgarskapsland vid barnets födelse.\ncatalog:variable_text:41831:10227:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medblandnamnmor-eu"
 fields = { "description" = "Moderns prioriterade medborgarskapsland vid födelsen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser moderns medborgarskapsland vid födelsen.\ncatalog:variable_text:41832:20089:20454"
-
 
 [[statement]]
 kind = "set"
@@ -6369,16 +6349,32 @@ subject = "var:medblandnamnrel"
 fields = { "description" = "Relationspersonens prioriterade medborgarskapsland vid civilståndsändringen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser relationspersonens medborgarskapsland vid civilståndsändringen.\ncatalog:variable_text:41833:10227:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medblandnamnrel-eu"
 fields = { "description" = "Relationspersonens prioriterade medborgarskapsland vid civilståndsändringen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser relationspersonens medborgarskapsland vid civilståndsändringen.\ncatalog:variable_text:41834:20089:20454"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medborgarskapsland-gg-eu"
 fields = { "description" = "Grupperat tidigare medborgarskapsland." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser aktuellt medborgarskap, men variabeln grupperar tidigare medborgarskapsland.\ncatalog:occurrence:436286"
+
+[[statement]]
+kind = "set"
+subject = "var:avsandlan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical citizenship-change events (r99, r108), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435212\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435378\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:avslan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical death-event records (r11, r20), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424766\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424950\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretesshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "This household-table field flags whether any household member has a secrecy marker (r66, r141, r115). Its household-level administrative role supports family-household.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:431885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5417\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41733"

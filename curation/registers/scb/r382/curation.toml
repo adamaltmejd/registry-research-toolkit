@@ -1316,12 +1316,6 @@ evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:405
 [[statement]]
 kind = "set"
 subject = "var:inrikes-omsattning"
-fields = { "sets" = [] }
-evidence = "Inrikes omsättning enligt moms är en omsättningskomponent.\ncatalog:variable_text:40519:13239:16526"
-
-[[statement]]
-kind = "set"
-subject = "var:inrikes-omsattning"
 fields = { "tags" = ["business"] }
 evidence = "Inrikes omsättning enligt moms är en omsättningskomponent.\ncatalog:variable_text:40519:13239:16526"
 
@@ -1684,12 +1678,6 @@ kind = "set"
 subject = "var:observationsenhetsstatus-kvartal"
 fields = { "tags" = ["methods"] }
 evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395403\ncatalog:occurrence:395406"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattning-enligt-moms"
-fields = { "sets" = [] }
-evidence = "Årsomsättning enligt moms ingår i omsättningsgruppen.\ncatalog:variable_text:40561:17897:18628"
 
 [[statement]]
 kind = "set"
@@ -2589,16 +2577,26 @@ subject = "var:faxnummer"
 fields = { "description" = "Faxnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526"
 
-
 [[statement]]
 kind = "set"
 subject = "var:handelsmarginal"
 fields = { "description" = "Handelsmarginalen uttryckt i procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nProcenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:nettoomsattning-modellskattad-pin"
 fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-omsattning"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "The domestic annual turnover definition and derivation (r91, r65) support a market component covered by r136. Neither states that the amount includes VAT.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:396405\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40366\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/pin/nettoomsattning"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Annual turnover sourced from VAT declarations (r96), operationally the preceding year's turnover (r49), fits the turnover alternatives allowed by r136. VAT sourcing does not establish VAT-inclusive turnover.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395626\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40407\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/pin/nettoomsattning"

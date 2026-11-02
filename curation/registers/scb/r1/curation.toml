@@ -1517,9 +1517,14 @@ subject = "var:aststat"
 fields = { "description" = "AST-status" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-
 [[statement]]
 kind = "set"
 subject = "var:faxnummer"
 fields = { "description" = "Faxnummer" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter"
+fields = { "tags" = ["business"] }
+evidence = "Statements counted for legal entities (r36) and AST units (r9) form a business-register administrative measure, consistent with the dominant business theme (r104, r1) and firm/entity-count siblings (r81, r82).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:84490\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:86365\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10441\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10442\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
