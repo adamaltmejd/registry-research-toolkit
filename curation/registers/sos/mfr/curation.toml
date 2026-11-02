@@ -2860,3 +2860,57 @@ kind = "set"
 subject = "var:unikt-lopnummer"
 fields = { "description" = "Unikt löpnummer (FID) för varje fött barn; samma FID förekommer i MFR och i FOK-underlaget och används för koppling. Om femte positionen är 3 finns födseln inte i MFR." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/unikt-lopnummer"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet"
+fields = { "description" = "Barnets åtgärdskoder 1–12 i en sträng, enligt Socialstyrelsens klassifikation av vårdåtgärder (KVÅ)." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 29, column BFLOP; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:6174-6393\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Drops the coding system the source names (KVÅ); no classification is attached to the occurrences, so the description is the only place for it.\nrel070-base/reg_meta.db:occurrence:522396"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta"
+fields = { "description" = "Den förlöstas åtgärdskoder 1–12 i en sträng, under och efter förlossningen, enligt Socialstyrelsens klassifikation av vårdåtgärder (KVÅ)." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 160, column MFLOP; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:39206-39475\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Drops KVÅ (source names it; no classification attached).\nrel070-base/reg_meta.db:occurrence:522455"
+
+[[statement]]
+kind = "set"
+subject = "var:bdiagnos"
+fields = { "description" = "Barnets diagnoskoder 1–12 i en sträng, enligt den svenska versionen av ICD." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 27, column BDIAGNOS; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:5810-6011\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Drops the source coding system (svenska versionen av ICD); no classification attached.\nrel070-base/reg_meta.db:occurrence:522395"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriabef"
+fields = { "description" = "Assisterad befruktning som åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 182, column OFRIABEF; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:47888-48089"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriann"
+fields = { "description" = "Annan åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 184, column OFRIANN; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:48349-48517"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriiatg"
+fields = { "description" = "Ingen åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 188, column OFRIIATG; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:49188-49359"
+
+[[statement]]
+kind = "set"
+subject = "var:ofriicsi"
+fields = { "description" = "Intracytoplasmatisk spermieinjektion (ICSI) som åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 190, column OFRIICSI; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:49619-49854"
+
+[[statement]]
+kind = "set"
+subject = "var:ofrikiru"
+fields = { "description" = "Kirurgi som åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 192, column OFRIKIRU; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:50114-50284"
+
+[[statement]]
+kind = "set"
+subject = "var:ofristim"
+fields = { "description" = "Ovulationsstimulering som åtgärd vid ofrivillig barnlöshet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The provider historical variable list names this exact code and matching label, and records the catalog start year. Cleaned Swedish only. For OFRI fields, the definition cell says ofrivillig graviditet while both its label and category explicitly say ofrivillig barnlöshet; the description follows that documented category and treatment, not a new clinical inference. An open-ended source occurrence is addressed by its unique key without cutting it at 2099.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-medicinskafodelseregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 194, column OFRISTIM; staged:57d66f36601120d701f8ec543f26e6330f09530910da6df7b8cc5846fa9f7027:page:12:chars:50544-50742"

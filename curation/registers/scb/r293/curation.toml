@@ -1012,12 +1012,12 @@ evidence = "r64 defines forecast R&D funding for exploring and exploiting Earth 
 [[statement]]
 kind = "set"
 subject = "var:nabs12x"
-fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av statliga anslag till universitet och högskolor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44583:18628:18993"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av statliga anslag till universitet och högskolor. Skattningen använder en fördelningsnyckel från den senaste mätningen av FoU inom statliga myndigheter samt universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44583:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:461468:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:nabs13x"
-fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor. Skattningen använder en fördelningsnyckel från den senaste mätningen av FoU inom statliga myndigheter samt universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:461476:opdef_text. One variable, one description."

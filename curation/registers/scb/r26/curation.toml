@@ -4249,8 +4249,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:antal-ku-individen"
-fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844"
+fields = { "description" = "Antal kontrolluppgifter på individen som finns i jobbregistret. Antalet avser kontrolluppgifter under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra betydelsen.\ncatalog:variable_text:41109:5479:5844\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:417196:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -4273,14 +4273,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektor"
-fields = { "description" = "Sektor" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Sektor. I individtabellen avser sektorn företaget för personens huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:415096:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The PID also occurs in enterprise, workplace and job tables; the principal-job selection is an individual-table scope, not a variable-wide restriction. Evidence: rel070-base/reg_meta.db occurrences 416747, 415096."
 
 [[statement]]
 kind = "set"
 subject = "var:person-orgnr"
-fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans). I individtabellen avser numret företaget för personens huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:419771:opdef_text; rel070-base/reg_meta.db:occurrence:416515:opdef_text; rel070-base/reg_meta.db:occurrence:414113:opdef_text; rel070-base/reg_meta.db:occurrence:417223:opdef_text; rel070-base/reg_meta.db:occurrence:416763:opdef_text; rel070-base/reg_meta.db:occurrence:414692:opdef_text; rel070-base/reg_meta.db:occurrence:416833:opdef_text; rel070-base/reg_meta.db:occurrence:416915:opdef_text; rel070-base/reg_meta.db:occurrence:420342:opdef_text; rel070-base/reg_meta.db:occurrence:420577:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The PID also covers all enterprises, workplaces and jobs, so the individual principal-job scope must be explicit. Drop the lengthy period-dependent provenance list. Evidence: rel070-base/reg_meta.db occurrences 419771, 416515, 414113, 417223, 419898, 414565, 416763, 414692, 416833, 416915, 420342, 420577, 419524."
 
 [[statement]]
 kind = "set"

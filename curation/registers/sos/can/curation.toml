@@ -406,3 +406,9 @@ kind = "set"
 subject = "var:tumorutbredning-t-kategori"
 fields = { "tags" = ["health"] }
 evidence = "T-kategorin beskriver tumörens storlek.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktionsfynd"
+fields = { "description" = "Anger om tumören identifierades vid obduktion. 1 anger att tumören inte var känd före dödsfallet och 2 att tumören var känd före dödsfallet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The Cancer Register metadata names OBD1, the matching Obduktionsfynd label, the definition and both codes, with a start year of 1958. No diagnosis or clinical inference is added.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/register-variabelforteckning-cancerregistret.xlsx; sheet Metadata - Variabelnivå, extracted row 59, column OBD1; staged:01356f83728cf8916904040a34231ecc6c86c8523001832fcff9dbfce5c8c6ba:page:4:chars:10450-10713"

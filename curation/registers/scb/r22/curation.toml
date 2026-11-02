@@ -981,8 +981,8 @@ evidence = "Hh är en bokstavskod för hushåll; etiketten anger utrikesfött hu
 [[statement]]
 kind = "set"
 subject = "var:antpers"
-fields = { "description" = "Antal personer i biståndshushållet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar bort en upprepad felskrivning.\ncatalog:variable_text:7268:13149:13514"
+fields = { "description" = "Antal personer i biståndshushållet. Beräknas från antalet angivna personer över 15 år och antalet barn under 16 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar bort en upprepad felskrivning.\ncatalog:variable_text:7268:13149:13514\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54416:opdef_text. One variable, one description."
 
 
 [[statement]]

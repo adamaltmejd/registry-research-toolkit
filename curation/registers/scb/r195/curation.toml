@@ -1544,50 +1544,50 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:antal-sjukdagar-kvinna"
-fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade. Uppgiften räknas upp till kvartal och avser kalenderdagarna från sjuklöneperiodens första till sista dag, även sedan karensavdrag ersatt karensdag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317592:opdef_text; rel070-base/reg_meta.db:occurrence:317914:opdef_text; rel070-base/reg_meta.db:occurrence:318354:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sjukdagar-man"
-fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade. Uppgiften räknas upp till kvartal och avser kalenderdagarna från sjuklöneperiodens första till sista dag, även sedan karensavdrag ersatt karensdag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317593:opdef_text; rel070-base/reg_meta.db:occurrence:317915:opdef_text; rel070-base/reg_meta.db:occurrence:318355:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:ersdagar"
-fields = { "description" = "Antal ersättningsdagar, viktade" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Antal ersättningsdagar, viktade. Beräknas som summan av Helantdag och Delantdag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317902:opdef_text; rel070-base/reg_meta.db:occurrence:318379:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:ersk"
-fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man). Beräknas som summan av Helantdag och Delantdag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317903:opdef_text; rel070-base/reg_meta.db:occurrence:318341:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:ersm"
-fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna). Beräknas som summan av Helantdag och Delantdag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317904:opdef_text; rel070-base/reg_meta.db:occurrence:318342:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:glappantdag"
-fields = { "description" = "Dagar mellan sjukdagar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Dagar mellan sjukdagar. Återgång i arbete följd av samma sjukdomssymptom inom fem arbetsdagar räknas till samma sjukfall, och de mellanliggande arbetsdagarna är glappdagar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317909:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:glappantdagar"
-fields = { "description" = "Antal glappdagar i ett sjukfall." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAlla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723"
+fields = { "description" = "Antal glappdagar i ett sjukfall. Återgång i arbete följd av samma sjukdomssymptom inom fem arbetsdagar räknas till samma sjukfall, och de mellanliggande arbetsdagarna är glappdagar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAlla kalenderdagar är ett annat mått än glappdagar.\ncatalog:variable_text:34969:16436:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:318063:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -1600,5 +1600,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:stratam"
-fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra. Totalundersökta objekt har fyra siffror i stratumbeteckningen, medan urvalsdelen har en femte siffra som anger månad inom kvartalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:317933:opdef_text. One variable, one description."

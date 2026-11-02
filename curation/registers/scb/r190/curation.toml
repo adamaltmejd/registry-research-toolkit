@@ -1665,8 +1665,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:har-betyg-i-sva-ak9-elevregistret"
-fields = { "description" = "Anger om eleven har fått betyg i ämnet svenska som andraspråk." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och den operationella definitionen avser förekomst av betyg, inte själva betyget.\ncatalog:occurrence:205583\ncatalog:valueset:10571\ncatalog:valueset:7837"
+fields = { "description" = "Anger om eleven har fått betyg i ämnet svenska som andraspråk. Uppgiften hämtas från registret över betyg i årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och den operationella definitionen avser förekomst av betyg, inte själva betyget.\ncatalog:occurrence:205583\ncatalog:valueset:10571\ncatalog:valueset:7837\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:204389:opdef_text. One variable, one description."
 
 
 [[statement]]

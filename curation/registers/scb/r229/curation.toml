@@ -3777,8 +3777,8 @@ evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\
 [[statement]]
 kind = "set"
 subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
-fields = { "description" = "Antal timmar för lärarledda kurser och konferenser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791"
+fields = { "description" = "Antal timmar för lärarledda kurser och konferenser. Timmarna härleds från rapporterad omfattning per dag och kurs och summeras över personens samtliga rapporterade utbildningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394477:opdef_text; rel070-base/reg_meta.db:occurrence:394714:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

@@ -961,5 +961,5 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 [[statement]]
 kind = "set"
 subject = "var:fodelsetidmor"
-fields = { "description" = "Datum för födelse för mor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454"
+fields = { "description" = "Datum för födelse för mor. Uppgiften avser biologisk mor och kan finnas även när ett fullständigt personnummer saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:96773:opdef_text. One variable, one description."

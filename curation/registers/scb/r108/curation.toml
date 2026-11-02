@@ -2474,8 +2474,8 @@ evidence = "F32 rates motivation during distance study as better, unchanged or w
 [[statement]]
 kind = "set"
 subject = "var:distansundervisning-aktivit-deltagande"
-fields = { "description" = "Aktivt deltagande under lektionerna." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:23403:18809:19174"
+fields = { "description" = "Aktivt deltagande under lektionerna. Uppgiften är elevens bedömning av i vilken grad hen kunde delta aktivt under distanslektionerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:23403:18809:19174\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218471:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2516,8 +2516,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen 
 [[statement]]
 kind = "set"
 subject = "var:f22-06"
-fields = { "description" = "Hur individen har tänkt att försörja sig på annat sätt under sina studier." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger studiemedel men frågan gäller annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444"
+fields = { "description" = "Hur individen har tänkt att försörja sig på annat sätt under sina studier. Uppgiften avser planerad försörjning under universitets- eller högskolestudier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger studiemedel men frågan gäller annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218358:opdef_text. One variable, one description."
 
 
 [[statement]]

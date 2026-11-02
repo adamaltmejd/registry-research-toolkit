@@ -16292,14 +16292,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:f10vt20"
-fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning VT20" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723"
+fields = { "description" = "Andel lektioner som eleverna följt live via mötesverktyg under distansundervisning vårterminen 2020, från mitten av mars." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarsalternativen mäter andelen lektioner som eleverna följt live via mötesverktyg.\ncatalog:occurrence:509578\ncatalog:valueset:5723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509578:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove occurrence-specific questionnaire dates; retain the measured live-distance-teaching share. Evidence: rel070-base/reg_meta.db occurrences 509578."
 
 [[statement]]
 kind = "set"
 subject = "var:f36-txt"
-fields = { "description" = "Orsaker till att arbetet inte överensstämmer med området för den avslutade forskarutbildningen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger bristande överensstämmelse, medan frågan avser orsakerna till den.\ncatalog:occurrence:510455\ncatalog:variable_text:53880:17532:17897"
+fields = { "description" = "Orsaker till att arbetet inte överensstämmer med området för den avslutade forskarutbildningen. Uppgiften avser svarsalternativet ”Annan anledning”." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger bristande överensstämmelse, medan frågan avser orsakerna till den.\ncatalog:occurrence:510455\ncatalog:variable_text:53880:17532:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510455:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -16316,74 +16316,74 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:posann"
-fields = { "description" = "Annat som upplevdes positivt i yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510689"
+fields = { "description" = "Annat som upplevdes positivt i yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510689\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510689:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posbarn"
-fields = { "description" = "Att arbeta med barn som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510690"
+fields = { "description" = "Att arbeta med barn som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510690\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510690:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posforal"
-fields = { "description" = "Samverkan med föräldrar som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510691"
+fields = { "description" = "Samverkan med föräldrar som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510691\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510691:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:poskarr"
-fields = { "description" = "Karriärmöjligheter som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510692"
+fields = { "description" = "Karriärmöjligheter som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510692\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510692:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:poskomp"
-fields = { "description" = "Kompetensutveckling som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510693"
+fields = { "description" = "Kompetensutveckling som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510693\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510693:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posled"
-fields = { "description" = "Arbetsledningen som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510694"
+fields = { "description" = "Arbetsledningen som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510694\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510694:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:poslon"
-fields = { "description" = "Lönen som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510695"
+fields = { "description" = "Lönen som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510695\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510695:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posorg"
-fields = { "description" = "Arbetets organisation som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510696"
+fields = { "description" = "Arbetets organisation som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510696\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510696:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:pospav"
-fields = { "description" = "Möjlighet att påverka arbetets innehåll som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510697"
+fields = { "description" = "Möjlighet att påverka arbetets innehåll som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510697\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510697:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posped"
-fields = { "description" = "Att arbeta som pedagog som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510698"
+fields = { "description" = "Att arbeta som pedagog som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510698\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510698:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:pospsyk"
-fields = { "description" = "Psykosocial arbetsmiljö som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510699"
+fields = { "description" = "Psykosocial arbetsmiljö som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510699\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510699:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:posvux"
-fields = { "description" = "Samarbete med andra vuxna som positiv aspekt av yrket som förskollärare." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510700"
+fields = { "description" = "Samarbete med andra vuxna som positiv aspekt av yrket som förskollärare. Frågan gäller vad personen upplevde som mest positivt i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan gäller positiva aspekter av förskolläraryrket, inte jämförelse mellan arbeten.\ncatalog:occurrence:510700\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:510700:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -16400,8 +16400,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:vt-veckor-termin"
-fields = { "description" = "Terminens längd" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Antal veckor under vårterminens januari–mars, exklusive lov." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509978:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire year; retain the within-year reference period and exclusion of school holidays. Evidence: rel070-base/reg_meta.db occurrences 509978."
 
 [[statement]]
 kind = "set"

@@ -1250,29 +1250,29 @@ evidence = "r180 defines starch-potato yield per harvested hectare in kg/hectare
 [[statement]]
 kind = "set"
 subject = "var:eptf-hektarskordkg"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar. Uppgiften avser certifierad ekologisk odling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437387:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-totalskordton"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089"
+fields = { "description" = "Total ekologisk färskpotatisskörd. Uppgiften avser certifierad ekologisk odling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437392:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-hektarskordkg"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089"
+fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar. Uppgiften avser odling under omställning till ekologisk odling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437421:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-totalskordton"
-fields = { "description" = "Total ekologisk färskpotatisskörd." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089"
+fields = { "description" = "Total ekologisk färskpotatisskörd. Uppgiften avser odling under omställning till ekologisk odling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42127:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437426:opdef_text. One variable, one description."
 
 
 [[statement]]

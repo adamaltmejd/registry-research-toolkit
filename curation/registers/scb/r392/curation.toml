@@ -692,20 +692,20 @@ evidence = "r16 defines an amount of cost reimbursements other than mileage or s
 [[statement]]
 kind = "set"
 subject = "var:andra-formaner-underlag-arbetsgivaravgift"
-fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF. Bil- och drivmedelsförmån ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2183:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:andra-formaner-underlag-egenavgift"
-fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter. Bilförmån och fritt drivmedel vid bilförmån ingår inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2184:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:avdr-skatt-sink"
-fields = { "description" = "Avdragen skatt, SINK" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2145:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -728,14 +728,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2180:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2181:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -758,14 +758,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
-fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF. Förmånsvärdet är marknadsvärdet gånger 1,2 minus nettolöneavdrag, medan arbetsgivaravgiften beräknas på marknadsvärdet utan uppräkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2156:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:drivmedel-bilforman-underlag-egenavgift"
-fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter. Förmånen värderas till marknadsvärdet gånger 1,2 och minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2157:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -776,8 +776,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
-fields = { "description" = "Kontant ersättning som är underlag för egenavgifter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Kontant ersättning som är underlag för egenavgifter. Uppgiften omfattar uppenbart anställda med F-skatt och andra mottagare som själva ska betala egenavgifter eller särskild löneskatt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2171:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

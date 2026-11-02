@@ -10616,15 +10616,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtik
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-forsakring-och-finansiella-tjanster"
-fields = { "description" = "Utgift för försäkring och finansiella tjänster" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:27051:18628:18993"
+fields = { "description" = "Utgift för försäkring och finansiella tjänster. Summan omfattar sjuk-, olycksfalls-, tandvårds-, bostads-, fordons- och övriga försäkringar samt finansiella tjänster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:27051:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:242077:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utgift-for-hushallsel-imputerad"
-fields = { "description" = "Markör för om utgift för hushållsel har imputerats." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena visar en markör för imputering, inte ett utgiftsbelopp.\ncatalog:valueset:6894\ncatalog:variable_text:26611:10957:11688"
+fields = { "description" = "Markör för om utgift för hushållsel har imputerats. Imputeringen görs vid beräkning av bostadens nyttjandevärde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena visar en markör för imputering, inte ett utgiftsbelopp.\ncatalog:valueset:6894\ncatalog:variable_text:26611:10957:11688\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:240795:opdef_text. One variable, one description."
 
 
 [[statement]]

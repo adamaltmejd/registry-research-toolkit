@@ -322,3 +322,9 @@ kind = "set"
 subject = "var:vard-av-barn"
 fields = { "tags" = ["transfers"] }
 evidence = "Indikatorn avser ersättning för vård av barn.\ncatalog:occurrence:880\ncatalog:variable_text:532:13149:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagare"
+fields = { "description" = "Löpnummer för samtliga mottagare under fallet. Om det finns flera mottagare separeras de med komma." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The public MiDAS workbook explicitly defines MOTTAGARE on both matching sheets, Delfall2_1_8 and Fall_2, for episodes since 2006. Its spelling and episode scope agree with both catalog occurrences; this is metadata about identifiers, not row-level identifier data.\nhttps://www.forsakringskassan.se/download/18.4b51e19c19ac9dd9b2f1f3/1769159575895/variabelforteckning-midas-tillfallig-foraldrapenning.xlsx; sheet Delfall2_1_8, row MOTTAGARE; staged:d44d54cf92f849c7dec5a573412a2ae2e98af5949ebaffb38e65ccaf528646d3:page:2:chars:656-790\nhttps://www.forsakringskassan.se/download/18.4b51e19c19ac9dd9b2f1f3/1769159575895/variabelforteckning-midas-tillfallig-foraldrapenning.xlsx; sheet Fall_2, row MOTTAGARE; staged:d44d54cf92f849c7dec5a573412a2ae2e98af5949ebaffb38e65ccaf528646d3:page:14:chars:2096-2229"

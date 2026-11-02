@@ -7304,8 +7304,8 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 [[statement]]
 kind = "set"
 subject = "var:langused"
-fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358"
+fields = { "description" = "Antal språk, förutom modersmål, som personen kan använda. Antalet härleds från de språk som intervjupersonen uppger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter antal språk under samtliga perioder, medan den befintliga beskrivningen anger språk utan att ange antal.\ncatalog:variable_text:1078:15156:15522\ncatalog:variable_text:1078:16801:17167\ncatalog:variable_text:1078:18993:19358\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:1456:opdef_text; rel070-base/reg_meta.db:occurrence:1725:opdef_text. One variable, one description."
 
 
 [[statement]]

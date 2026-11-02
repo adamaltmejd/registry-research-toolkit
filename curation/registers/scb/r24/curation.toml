@@ -1906,12 +1906,12 @@ evidence = "YTutim är en opak källmnemonik; etiketten kolliderar och målet be
 [[statement]]
 kind = "set"
 subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
-fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53385:6756:19905"
+fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser. Uppgiften bygger på den nuvarande beräkningen av Komvuxpoäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53385:6756:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:508171:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:huvudsaklig-kursinriktning-komvux-tidigare-berakning"
-fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53384:6756:19905"
+fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser. Uppgiften bygger på den tidigare beräkningen av Komvuxpoäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53384:6756:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:508170:opdef_text. One variable, one description."

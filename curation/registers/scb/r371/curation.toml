@@ -28972,8 +28972,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKron
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-uppdelat"
-fields = { "description" = "Ekonomiskt bistånd för försörjning och livsföring i övrigt, uppdelat mellan sökande och medsökande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter uppdelat biståndsbelopp, medan den gamla texten beskriver rätt till bistånd.\ncatalog:variable_text:8934:13149:19723"
+fields = { "description" = "Ekonomiskt bistånd för försörjning och livsföring i övrigt, uppdelat mellan sökande och medsökande. När det finns medsökande delas beloppet lika mellan de två personerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter uppdelat biståndsbelopp, medan den gamla texten beskriver rätt till bistånd.\ncatalog:variable_text:8934:13149:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:61135:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -29056,8 +29056,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag"
-fields = { "description" = "Modellberäknat mottaget underhållsbidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden under båda perioderna.\ncatalog:variable_text:9414:15706:16801\ncatalog:variable_text:9414:16801:19723"
+fields = { "description" = "Modellberäknat mottaget underhållsbidrag. Beräkningen följer Försäkringskassans riktlinjer: barnets behov multipliceras med den bidragsskyldige förälderns andel av båda föräldrarnas sammanlagda överskott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden under båda perioderna.\ncatalog:variable_text:9414:15706:16801\ncatalog:variable_text:9414:16801:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:67172:opdef_text; rel070-base/reg_meta.db:occurrence:69654:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -29068,8 +29068,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:nundera"
-fields = { "description" = "Aktivt underskott i näringsverksamhet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger underskottet; den befintliga texten beskriver endast skapandet.\ncatalog:variable_text:9448:13149:19723"
+fields = { "description" = "Aktivt underskott i näringsverksamhet. Uppgiften skapas från SRU-uppgifter om underskott för enskilda näringsidkare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger underskottet; den befintliga texten beskriver endast skapandet.\ncatalog:variable_text:9448:13149:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:61229:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -29128,8 +29128,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 [[statement]]
 kind = "set"
 subject = "var:tomtratt"
-fields = { "description" = "Markering för om fastigheten har tomträtt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition och värden anger förekomst av tomträtt, inte själva rättigheten.\ncatalog:valueset:10571\ncatalog:variable_text:9811:17897:19723"
+fields = { "description" = "Markering för om fastigheten har tomträtt. Uppgiften skapas genom att sammanföra information från IoT och Fastighetstaxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition och värden anger förekomst av tomträtt, inte själva rättigheten.\ncatalog:valueset:10571\ncatalog:variable_text:9811:17897:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:60012:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"

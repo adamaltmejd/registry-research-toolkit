@@ -1087,15 +1087,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_
 [[statement]]
 kind = "set"
 subject = "var:resultat-delprov-matematik-huvudrakning"
-fields = { "description" = "Elevens delprovsresultat i matematik, delprov G2" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov G2. Delprov G2 avser huvudräkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202966:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:resultat-delprov-matematik-skriftliga-raknemetoder"
-fields = { "description" = "Elevens delprovsresultat i matematik, delprov F2" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov F2. Delprov F2 avser skriftliga räknemetoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:12\n\nBilaga 2 - Variabellista.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202962:opdef_text; rel070-base/reg_meta.db:occurrence:203148:opdef_text. One variable, one description."
 
 
 [[statement]]

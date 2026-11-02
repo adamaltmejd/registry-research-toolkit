@@ -4485,8 +4485,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 [[statement]]
 kind = "set"
 subject = "var:andel-barnb"
-fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av barnbidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte barnbidrag som belopp.\ncatalog:occurrence-locators:variable:6403"
+fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av barnbidrag. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte barnbidrag som belopp.\ncatalog:occurrence-locators:variable:6403\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47131:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -4499,15 +4499,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "var:andel-tot-famstod"
-fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av familjestöd." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte stödsumman.\ncatalog:occurrence-locators:variable:6407"
+fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av familjestöd. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte stödsumman.\ncatalog:occurrence-locators:variable:6407\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47135:opdef_text. One variable, one description."
 
 
 [[statement]]
 kind = "set"
 subject = "var:andel-underhall"
-fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av mottaget underhållsbidrag och underhållsstöd." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte underhållsbeloppet.\ncatalog:occurrence-locators:variable:6408"
+fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av mottaget underhållsbidrag och underhållsstöd. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte underhållsbeloppet.\ncatalog:occurrence-locators:variable:6408\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47136:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -4548,5 +4548,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag"
-fields = { "description" = "Modellberäknat mottaget underhållsbidrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden, inte observerat mottagande.\ncatalog:occurrence-locators:variable:6567"
+fields = { "description" = "Modellberäknat mottaget underhållsbidrag. Barnets behov multipliceras med den bidragsskyldiges andel av föräldrarnas sammanlagda överskott, justerat för andelen icke växelvis boende barn och månader med rätt till bidrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger modellberäknade värden, inte observerat mottagande.\ncatalog:occurrence-locators:variable:6567\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47269:opdef_text. One variable, one description."

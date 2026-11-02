@@ -6278,26 +6278,26 @@ evidence = "r352 explicitly defines unharvested spring turnip rape area as an or
 [[statement]]
 kind = "set"
 subject = "var:gronfoderobargadareal-12"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089"
+fields = { "description" = "Obärgad areal blandsäd strå. Arealen avser blandsäd till grönfoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42329:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:438637:opdef_text; rel070-base/reg_meta.db:occurrence:440156:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:gronfoderobargadareal-dar-12"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089"
+fields = { "description" = "Obärgad areal blandsäd strå. Uppgiften är den ekologiska delmängden av den obärgade arealen till grönfoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42350:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:438657:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-12"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089"
+fields = { "description" = "Obärgad areal blandsäd strå. Arealen avser blandsäd för tröskning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etikett och operationell definition.\ncatalog:variable_text:42525:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:438832:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:karnfroobargadareal-dar-12"
-fields = { "description" = "Obärgad areal blandsäd strå" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089"
+fields = { "description" = "Obärgad areal blandsäd strå. Uppgiften är den ekologiska delmängden av den obärgade arealen för tröskning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen enligt etiketten.\ncatalog:variable_text:42543:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:438850:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
