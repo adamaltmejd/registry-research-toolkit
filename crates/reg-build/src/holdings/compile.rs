@@ -527,15 +527,13 @@ fn storage_findings(
     Ok(())
 }
 
-#[allow(clippy::too_many_lines)]
-pub(super) fn write(
-    db: &mut Connection,
+/// Declared routes exist even when their semantic tables have no segments.
+pub(super) fn segment_index(
     base: &Connection,
-    topology: input::Topology,
-    mut census: Vec<census::Table>,
-) -> Result<(usize, usize, usize, usize), String> {
+    db: &Connection,
+) -> Result<BTreeMap<String, Vec<Segment>>, String> {
     let mut index = BTreeMap::<String, Vec<Segment>>::new();
-    for semantic in [base, &*db] {
+    for semantic in [base, db] {
         let mut tables = semantic
             .prepare("SELECT pid FROM tbl")
             .map_err(|e| e.to_string())?;
@@ -552,6 +550,17 @@ pub(super) fn write(
             .or_default()
             .push(segment);
     }
+    Ok(index)
+}
+
+#[allow(clippy::too_many_lines)]
+pub(super) fn write(
+    db: &mut Connection,
+    base: &Connection,
+    topology: input::Topology,
+    mut census: Vec<census::Table>,
+) -> Result<(usize, usize, usize, usize), String> {
+    let index = segment_index(base, db)?;
     let mut authored = BTreeMap::new();
     for table in topology.table {
         if table.locator.trim().is_empty()

@@ -295,16 +295,7 @@ fn associations(
     topology: &input::Topology,
     census: &reg_readers::holdings::ReadOutput,
 ) -> Result<(), String> {
-    let mut index = BTreeMap::<String, Vec<compile::Segment>>::new();
-    for segment in compile::segments(base)?
-        .into_iter()
-        .chain(compile::segments(db)?)
-    {
-        index
-            .entry(segment.table.clone())
-            .or_default()
-            .push(segment);
-    }
+    let index = compile::segment_index(base, db)?;
     let tables: BTreeMap<_, _> = topology
         .table
         .iter()

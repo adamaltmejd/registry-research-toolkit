@@ -15,3 +15,4 @@
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"ChildId","source_key":"child-id","label":"Child entity component","dtype":"int","identifier":true,"from":"2018-01-01","to":"2018-12-31"}
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Amount","source_key":"amount","label":"Amount","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Status","source_key":"status","label":"Status","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"table","provider":"demo","register":"owners","table":"empty","name":"Segmentless routed table"}

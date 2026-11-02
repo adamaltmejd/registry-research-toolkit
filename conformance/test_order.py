@@ -110,6 +110,8 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
     # that child-only key as a projected parent cell would wrongly refuse it.
     # Owners.Unmatched is beside offered columns without a period-column binding;
     # SQL NULL propagation in the independent storage predicate must not refuse it.
+    # Pool also routes to a declared table with no segments: treating it as absent
+    # would reject the build instead of preserving the documented placements.
     # Expected placements are authored from census, dates and ledgers in the corpus.
     base, root, command = prepare_holdings(tmp_path)
     expected = json.loads((HOLDINGS_CASE / "expected.json").read_text())
