@@ -2038,3 +2038,15 @@ kind = "set"
 subject = "var:redovisningskvartal-justerad"
 fields = { "sets" = ["redovisningsperiod"] }
 evidence = "This is the statistics' reference quarter, adjusted by assigning certain prior-year commencements to the first reporting quarter. The group explicitly includes adjusted reporting quarters (r97, r99).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40601\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40746\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/priser-nyproducerade-bostader/redovisningsperiod"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar"
+fields = { "tags" = ["housing"] }
+evidence = "The builder's remarks come from the form's house-information section (r59), supporting housing consistently with the sibling remarks field (r60) and register theme context (r68, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar-blankett"
+fields = { "tags" = ["housing"] }
+evidence = "These are builder-to-SCB form remarks (r60). The sibling remarks field's house-information section (r59) and register theme context (r68, r1) support housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

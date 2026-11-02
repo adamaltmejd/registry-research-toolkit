@@ -584,12 +584,6 @@ evidence = "Källkoden är opak.\ncatalog:variable_text:12161:9862:12053"
 [[statement]]
 kind = "set"
 subject = "var:handel-med-el-gas-anga-hetvatten-och-kyla"
-fields = { "sets" = [] }
-evidence = "Källkoden är opak; posten avser energiverksamhet.\ncatalog:variable_text:12162:10592:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:handel-med-el-gas-anga-hetvatten-och-kyla"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Källkoden är opak; posten avser energiverksamhet.\ncatalog:variable_text:12162:10592:12053"
 
@@ -616,12 +610,6 @@ kind = "set"
 subject = "var:intakter-av-vattenforsorjning"
 fields = { "tags" = ["business", "environment"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:12164:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:natverksamhet"
-fields = { "sets" = [] }
-evidence = "Källkoden är opak; nätverksamhetens slag är inte angivet. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0133: Ingen vald variabel i sektionen avser uttryckligen energiverksamhetens intäkter. membership-0134: Handel samt produktion och distribution av angivna energislag omfattas. Nätverksamhet behålls enligt fast inkludering och skyddat medlemskap. membership-0135: Ingen vald variabel i sektionen mäter intäkter från energiverksamhet. membership-0136: Ingen vald variabel i sektionen mäter energiverksamhetens intäkter. membership-0137: Energikostnader är inte energiverksamhetens intäkter; ingen vald variabel mäter sådana intäkter. membership-0138: Ingen vald variabel anger intäkter från energiverksamhet.\ncatalog:variable_text:12162:10592:12053\ncatalog:variable_text:12165:10592:12053\ncatalog:variable_text:12387:9862:12053\ncatalog:variable_text:12533:9862:12053"
 
 [[statement]]
 kind = "set"
@@ -4964,12 +4952,6 @@ evidence = "Bolagsform.\ncatalog:variable_text:12532:9862:12053"
 [[statement]]
 kind = "set"
 subject = "var:produktion-el-gas-anga"
-fields = { "sets" = [] }
-evidence = "Posten avser energiverksamhetens intäkter.\ncatalog:variable_text:12533:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-el-gas-anga"
 fields = { "tags" = ["business", "energy"] }
 evidence = "Posten avser energiverksamhetens intäkter.\ncatalog:variable_text:12533:9862:12053"
 
@@ -5500,3 +5482,21 @@ kind = "set"
 subject = "var:rantebarande-skulder-till-intresseforetag"
 fields = { "sets" = ["skulder-intresseforetag"] }
 evidence = "r120 records interest-bearing debts to associated enterprises, an included component, with other such debts in r113 as a partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:12469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12205\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:12492"
+
+[[statement]]
+kind = "set"
+subject = "var:handel-med-el-gas-anga-hetvatten-och-kyla"
+fields = { "sets" = ["energiverksamhetens-intakter"] }
+evidence = "The fixed energy-revenue definition includes this trading candidate; bl0204 accompanies the production and network components in matching releases across both monetary series (r84, r10, r11, r12, r30, r31, r32).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126219\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126222\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126230\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129133\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129136\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129143\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/foretagsstatistik/energiverksamhetens-intakter"
+
+[[statement]]
+kind = "set"
+subject = "var:natverksamhet"
+fields = { "sets" = ["energiverksamhetens-intakter"] }
+evidence = "The fixed definition explicitly includes this network candidate, supported by bl0208 accompanying energy trading and production in matching releases across both monetary series (r84, r10, r11, r12, r30, r31, r32).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126219\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126222\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126230\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129133\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129136\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129143\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/foretagsstatistik/energiverksamhetens-intakter"
+
+[[statement]]
+kind = "set"
+subject = "var:produktion-el-gas-anga"
+fields = { "sets" = ["energiverksamhetens-intakter"] }
+evidence = "The binding definition includes this energy-production candidate; its production/distribution/sales role persists through bl0206 and bl0217 in both supplied SEK series (r84, r71, r8, r12, r28, r32).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:125904\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:126230\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:128833\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:129143\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:12463\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/foretagsstatistik/energiverksamhetens-intakter"

@@ -434,12 +434,6 @@ evidence = "Antalet avser deklarationer utan skatteavdrag.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
-fields = { "sets" = [] }
-evidence = "Ersättningen omfattar resor till och från Sverige.\ncatalog:variable_text:1373:17897:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "tags" = ["income"] }
 evidence = "Ersättningen omfattar resor till och från Sverige.\ncatalog:variable_text:1373:17897:18628"
 
@@ -844,3 +838,9 @@ kind = "set"
 subject = "var:ovriga-kostnadsersattningar"
 fields = { "sets" = ["kostnadsersattningar"] }
 evidence = "r16 defines an amount of cost reimbursements other than mileage or subsistence allowance, within the fixed group's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1396"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'ersättning för resor till och från Sverige' and the variable is on the 4-item candidate list; the 'förmån' wording does not make it a förmånsvärde.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:30\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1380"

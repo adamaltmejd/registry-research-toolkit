@@ -12480,3 +12480,9 @@ kind = "set"
 subject = "var:forandring"
 fields = { "tags" = ["business"] }
 evidence = "The definition and complete codes identify facilities as newly started, purchased, unusable/scrapped or sold, supporting the business theme of production assets and investment (r33, r31).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4289\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4295"
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningstyp"
+fields = { "tags" = ["energy"] }
+evidence = "Facility type belongs to the electricity-network-company table (r2, r16), supporting the register's dominant energy theme (r1, r18) without inferring particular type codes.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:28538\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:29677\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

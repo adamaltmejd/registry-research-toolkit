@@ -4815,20 +4815,8 @@ evidence = "Beloppet ingår i förlustavdrag; den daterade operationsdefinitione
 [[statement]]
 kind = "set"
 subject = "var:avtalspension-hushall"
-fields = { "sets" = [] }
-evidence = "Avtalspensionen omfattar tjänstepensionsbelopp.\ncatalog:variable_text:30607:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:avtalspension-hushall"
 fields = { "tags" = ["transfers"] }
 evidence = "Avtalspensionen omfattar tjänstepensionsbelopp.\ncatalog:variable_text:30607:18628:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:avtalspension-individ"
-fields = { "sets" = [] }
-evidence = "Avtalspensionen omfattar tjänstepensionsbelopp.\ncatalog:variable_text:30608:12053:17167\ncatalog:variable_text:30608:17167:20089"
 
 [[statement]]
 kind = "set"
@@ -5205,12 +5193,6 @@ evidence = "Källkoden är en ogenomskinlig förkortning. Coordinator group memb
 [[statement]]
 kind = "set"
 subject = "var:atp-kod-egen-forman"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:8401:9862\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:atp-kod-egen-forman"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är ogenomskinlig och den delade etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel kodar ATP-förmåner. membership-0308: Ingen vald variabel kodar ATP-förmåner. membership-0309: Ingen vald variabel mäter ATP-förmånskod. membership-0310: De tre numrerade koderna avser ATP:s efterlevandeförmåner. membership-0311: Båda anges som ATP-koder och omfattas av den fasta definitionen. membership-0312: Ingen vald variabel anger ATP-förmånskod. membership-0313: Den valda tilläggspensionsvariabeln mäter grad, inte ATP-förmånskod. membership-0314: De valda förmånskoderna avser folkpension, inte ATP. membership-0315: Valda förmånskoder gäller folkpension, inte ATP. membership-0316: Ingen vald variabel kodar ATP-förmåner. membership-0317: Inga valda variabler kodar ATP-förmåner. membership-0318: Ingen vald variabel kodar ATP-förmåner. membership-0319: Vald ATP-variabel mäter belopp, inte förmånskod. membership-0320: Ingen vald variabel avser ATP-förmånskod. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Inget valt id kodar ATP-förmåner. membership-0323: Båda variablerna är källbeskrivna som kod för ATP och stöds som ATP-förmånskoder av granskningen. membership-0324: Inga valda variabler kodar ATP-förmåner. membership-0325: Inget valt mått avser ATP-förmånskoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar tilläggspension eller ATP; allmänna pensionssummor undantas. membership-0308: Etikett och beskrivning anger tilläggspension; tidigare förslag stöder samma medlemskap. membership-0309: Valda ATP-anknutna variabler är allmänna pensionssummor, vilka uttryckligen utesluts. membership-0310: Den fasta definitionen omfattar ATP-belopp och namngivna komponenter; dessa fyra valda variabler redovisar uttryckligen ATP-belopp. ATP-förmånskoderna behandlas i den särskilda kodgruppen. membership-0311: Den fasta definitionen omfattar ATP-kodningar och källorna anger kod för ATP; medlemskap följer därför den breda fasta texten. membership-0312: Variabeln anger tilläggspensionens grad för födda 1937 eller tidigare. membership-0313: Variabeln mäter uttryckligen andel eller grad av tilläggspension för födda 1938 eller senare. membership-0314: Folkpensionsbelopp är undantagna och tilläggspensionsavgift i egenavgiftssumman är inte ATP-förmån. membership-0315: Valda folkpensionsbelopp och generiska pensionsmarkeringar är inte uttryckligen ATP eller tilläggspension. membership-0316: ATP nämns endast som en ingående del av SGA-underlaget, inte som separat tilläggspensionsmått. membership-0317: Kommunal tjänstepension är uttryckligen undantagen från tilläggspension. membership-0318: PATP mäter tilläggspension. Övriga tjänste- och tilläggspensioner är blandade summor som inte avgränsas till denna förmån. membership-0319: Källorna anger enbart ATP respektive tilläggspension totalt och efter födelsekohort, vilket definitionen omfattar. membership-0320: Särskilt pensionstillägg är inte dokumenterat som ATP eller tilläggspension. membership-0321: Särskilt pensionstillägg är inte belagt som ATP eller tilläggspension. membership-0322: ITP- och STP-beloppen avser tjänstepensionssystem och inte separat ATP eller allmän tilläggspension. membership-0323: Tilläggspensionsbeloppet och ATP-koderna omfattas uttryckligen. Den fasta inkluderingen av tpmark behålls med konflikt om dess STP/ITP-innebörd. membership-0324: Inga valda variabler mäter tilläggspension eller ATP. membership-0325: Inget valt mått avser tilläggspension eller ATP.\ncatalog:valueset:5747\ncatalog:variable_text:30452:18628:20089\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30460:18628:20089\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30569:9862:12053\ncatalog:variable_text:30570:9862:12053\ncatalog:variable_text:30571:9862:12053\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30642:8401:9862\ncatalog:variable_text:30642:9862:12053\ncatalog:variable_text:30643:8401:9862\ncatalog:variable_text:30819:12053:20089\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30933:2922:20089\ncatalog:variable_text:31011:4018:7305\ncatalog:variable_text:31012:4018:7305\ncatalog:variable_text:31017:7670:12053\ncatalog:variable_text:31018:7305:9862\ncatalog:variable_text:31019:8401:12053\ncatalog:variable_text:31020:4018:7305\ncatalog:variable_text:31067:7305:8035\ncatalog:variable_text:31068:4018:7305\ncatalog:variable_text:31069:4018:7305\ncatalog:variable_text:31071:7305:8401\ncatalog:variable_text:31072:6209:7305\ncatalog:variable_text:31073:7305:8401\ncatalog:variable_text:31162:10592:12053\ncatalog:variable_text:31162:7670:8035\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31450:8401:12053\ncatalog:variable_text:31454:10227:12418\ncatalog:variable_text:31541:17167:20089\ncatalog:variable_text:31542:18628:20089\ncatalog:variable_text:31543:12053:20089\ncatalog:variable_text:31544:12053:20089\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31904:7305:8401\ncatalog:variable_text:31906:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32083:17532:20089"
 
@@ -5447,12 +5429,6 @@ kind = "set"
 subject = "var:avtalstyp-kreditmetoden-pa-inkomst-har-tillampats"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkoden är en ogenomskinlig förkortning.\ncatalog:variable_text:30664:9862:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-debiterad-forekomst"
-fields = { "sets" = [] }
-evidence = "Källkoden är en ogenomskinlig förkortning; värdemängden anger deklarationsförekomst.\ncatalog:valueset:2532\ncatalog:variable_text:30666:11688:20089"
 
 [[statement]]
 kind = "set"
@@ -10155,12 +10131,6 @@ evidence = "Markeringen anger statistisk populationsavgränsning.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:hushallsforestandare"
-fields = { "sets" = [] }
-evidence = "BHFHB anger hushållsföreståndare i båda perioderna; uppdelningen mot hushallsforestandaren är periodisk.\ncatalog:occurrence:271303\ncatalog:occurrence:279833"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsforestandare"
 fields = { "tags" = ["family-household"] }
 evidence = "BHFHB anger hushållsföreståndare i båda perioderna; uppdelningen mot hushallsforestandaren är periodisk.\ncatalog:occurrence:271303\ncatalog:occurrence:279833"
 
@@ -13107,12 +13077,6 @@ evidence = "NATRTB är en ogenomskinlig källkod.\ncatalog:variable_text:31371:4
 [[statement]]
 kind = "set"
 subject = "var:naturaformaner"
-fields = { "sets" = [] }
-evidence = "Naturaförmåner är förmåner i tjänst.\ncatalog:variable_text:31372:6574:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:naturaformaner"
 fields = { "tags" = ["income"] }
 evidence = "Naturaförmåner är förmåner i tjänst.\ncatalog:variable_text:31372:6574:7670"
 
@@ -13817,12 +13781,6 @@ kind = "set"
 subject = "var:ovriga-skattepliktiga-ers-tjanst-agi-ku"
 fields = { "tags" = ["income"] }
 evidence = "Källkolumnen har en annan tidigare ägare.\ncatalog:occurrence:263176\ncatalog:occurrence:279575\ncatalog:occurrence:279576\ncatalog:variable_text:31438:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-tillaggspensioner"
-fields = { "sets" = [] }
-evidence = "Beloppet avser övriga tjänste- och tilläggspensioner. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Vald avtalspension är inte uttryckligen en övrig pensionsrestpost eller definierad summering. membership-0308: Ingen vald variabel identifierar övriga tjänste- och tilläggspensioner enligt definitionen. membership-0309: Valda pensionssummor innehåller allmän pension och är inte avgränsade till övriga tjänste- och tilläggspensioner. membership-0310: Det valda ATP-beloppet avser tilläggspension, inte den särskilda övriga tjänste- och tilläggspensionsposten. membership-0311: Avtalspension är inte belagd som den särskilda restposten övriga tjänste- och tilläggspensioner. membership-0312: Norsk pensionsinkomst är inte dokumenterad som övrig tjänste- eller tilläggspension. membership-0313: Den valda tilläggspensionsgraden är inte övrig tjänste- eller tilläggspension. membership-0314: Inga valda variabler mäter övriga tjänste- och tilläggspensioner. membership-0315: Valda frivilliga pensioner och pensionsmarkeringar är inte denna tjänste- och tilläggspensionssumma. membership-0316: Ingen vald pensionsvariabel identifieras som övrig tjänste- eller tilläggspension. membership-0317: De valda tjänstepensionerna är kommunala och uttryckligen undantagna. membership-0318: Båda beloppen avser övriga tjänste- och tilläggspensioner; definitionen tillåter uttrycklig summering med privata pensioner. membership-0319: Källan anger övriga tjänstepensioner från SPV, vilket definitionen uttryckligen omfattar. membership-0320: Särskilt pensionstillägg saknar dokumenterad koppling till kandidatens övriga tjänste- och tilläggspensioner. membership-0321: Vald frivillig pension saknar uttrycklig anknytning till dessa pensionsslag. membership-0322: Valda tjänstepensioner avser totaler eller namngivna system, inte den angivna övriga pensionsposten. membership-0323: Ingen vald variabel redovisar övriga tjänste- och tilläggspensionsbelopp eller den angivna privata summeringen. membership-0324: Inga valda variabler mäter övriga tjänste- och tilläggspensioner. membership-0325: Valt pensionssparbelopp är inbetalt sparande, inte pensionsutbetalning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Avtalspensionen stöds som tjänstepensionsbelopp. membership-0308: Den valda pensionssumman innehåller även allmän pension och är uttryckligen utesluten. membership-0309: Vald tjänstepensionsanknuten pensionssumma innehåller också allmän pension och omfattas inte. membership-0310: De valda ATP- och efterlevandepensionsbeloppen är inte tjänstepension. membership-0311: Den granskade källbedömningen anger att avtalspensionen omfattar tjänstepensionsbelopp. membership-0312: Norsk pensionsinkomst saknar uttrycklig tjänstepensionsanknytning och ger därför inget stöd för medlemskap. membership-0313: Delpension och efterlevandepension till barn stöds inte som tjänstepensionsbelopp. membership-0314: Inga valda variabler anges som tjänstepensionsbelopp. membership-0315: Markeringen för pensionsförmån efter anställning mäter inte tjänstepensionsbelopp. membership-0316: Valda deklarerade pensionsbelopp identifieras inte som tjänstepension. membership-0317: Kommunala tjänstepensionsbelopp är namngivna systembelopp inom tjänstepension. membership-0318: Beloppet avser övriga tjänste- och tilläggspensioner efter att namngivna tjänstepensionssystem undantagits. Den äldre summan med privata pensioner undantas uttryckligen. membership-0319: Beskrivningen för pension-enligt-ku anger arbetsgivarutbetald tjänstepension; övriga två avser namngivna kommunala och övriga SPV-tjänstepensioner. Blandade pensionssummor utesluts. membership-0320: Ingen vald variabel avser tjänstepensionsbelopp. membership-0321: Ingen vald variabel anger tjänstepension enligt avgränsningen. membership-0322: Total tjänstepension och namngivna arbetsgivar- och avtalssystem omfattas, inklusive KPA, ITP och STP. Summor med allmän eller privat pension utesluts. membership-0323: Den enda valda direkt tjänstepensionsanknutna variabeln är en förekomstmarkering, vilket inte omfattas av den fasta beloppsdefinitionen. membership-0324: Pensionskostnadsunderlagen mäter inte tjänstepensionsutbetalningar. membership-0325: Valt inbetalt pensionssparande är inte tjänstepensionsutbetalning.\ncatalog:valueset:10571\ncatalog:variable_text:30446:16436:17532\ncatalog:variable_text:30459:10227:17897\ncatalog:variable_text:30462:7670:20089\ncatalog:variable_text:30489:12053:20089\ncatalog:variable_text:30572:4018:7305\ncatalog:variable_text:30573:6209:7305\ncatalog:variable_text:30574:4018:7305\ncatalog:variable_text:30575:4018:7305\ncatalog:variable_text:30607:18628:20089\ncatalog:variable_text:30608:12053:17167\ncatalog:variable_text:30608:17167:20089\ncatalog:variable_text:30808:13149:14245\ncatalog:variable_text:30820:12053:20089\ncatalog:variable_text:30891:3652:8401\ncatalog:variable_text:30928:12053:20089\ncatalog:variable_text:31038:13514:20089\ncatalog:variable_text:31075:4383:20089\ncatalog:variable_text:31076:4383:20089\ncatalog:variable_text:31078:17167:20089\ncatalog:variable_text:31170:7305:7670\ncatalog:variable_text:31171:7305:7670\ncatalog:variable_text:31267:6209:12784\ncatalog:variable_text:31289:4018:6209\ncatalog:variable_text:31439:10227:17897\ncatalog:variable_text:31440:7305:10227\ncatalog:variable_text:31461:4018:7305\ncatalog:variable_text:31462:17167:20089\ncatalog:variable_text:31475:7305:9131\ncatalog:variable_text:31503:12418:12784\ncatalog:variable_text:31519:12418:12784\ncatalog:variable_text:31601:7670:20089\ncatalog:variable_text:31676:18262:20089\ncatalog:variable_text:31784:12418:17897\ncatalog:variable_text:31785:10227:17897\ncatalog:variable_text:31827:18628:20089\ncatalog:variable_text:31876:10227:20089\ncatalog:variable_text:31877:6574:17897\ncatalog:variable_text:31878:12053:17897\ncatalog:variable_text:31879:8766:17897\ncatalog:variable_text:31880:7305:17897\ncatalog:variable_text:31881:7305:17897\ncatalog:variable_text:31882:17897:20089\ncatalog:variable_text:31885:4383:6574\ncatalog:variable_text:31903:7305:8401\ncatalog:variable_text:31907:6209:6574\ncatalog:variable_text:31908:17897:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32008:9862:10227\ncatalog:variable_text:32009:10227:20089\ncatalog:variable_text:32010:9862:10227\ncatalog:variable_text:32011:10227:20089\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
@@ -15879,12 +15837,6 @@ evidence = "Variabeln är en uttrycklig sjukpenningmedräknande summa.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:sjuk-havandeskaps-smittbararpenning"
-fields = { "sets" = [] }
-evidence = "Variabeln är en uttrycklig sjukpenningmedräknande summa.\ncatalog:variable_text:31639:4018:7305\ncatalog:variable_text:31639:7305:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:sjuk-havandeskaps-smittbararpenning"
 fields = { "tags" = ["transfers"] }
 evidence = "Variabeln är en uttrycklig sjukpenningmedräknande summa.\ncatalog:variable_text:31639:4018:7305\ncatalog:variable_text:31639:7305:8035"
 
@@ -16913,12 +16865,6 @@ kind = "set"
 subject = "var:slutlig-skatt-familj-sktotf-3"
 fields = { "tags" = ["taxation"] }
 evidence = "Samma familjeskatt är korrekt perioddelad med scb/iot/slutlig-skatt-familj-sktotf-2; enheten skiljer sig mellan perioderna.\ncatalog:occurrence:259209\ncatalog:occurrence:259433\ncatalog:variable_text:31729:6940:7305\ncatalog:variable_text:31730:7305:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:smittbararpenning"
-fields = { "sets" = [] }
-evidence = "Smittbärarpenning ingår uttryckligen i gruppens avgränsning.\ncatalog:variable_text:31731:15340:20089"
 
 [[statement]]
 kind = "set"
@@ -18695,12 +18641,6 @@ kind = "set"
 subject = "var:tkuvard"
 fields = { "tags" = ["transfers"] }
 evidence = "TKUVARD är en källmnemonik med bokstavskoder.\ncatalog:variable_text:31891:13514:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:individbaserad-ekvivalerad-loneinkomst"
-fields = { "sets" = [] }
-evidence = "Källkoden är ogenomskinlig. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar kontant bruttolön; arbetsinkomst är en bredare summa. membership-0308: Den aktuella etiketten anger kontant bruttolön och medlemskapet är skyddat. membership-0309: Vald tjänsteinkomst är inte kontant bruttolön. membership-0310: Arbetsinkomstkomponenten beräknas från bruttolön men är ett annat mått. Kontrolluppgiftsavdragen är inte lönebelopp trots att de också ingår i bruttolönen. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Valda bruttoinkomster är bredare inkomsttotaler, inte kontant bruttolön. membership-0313: Lön nämns som ingående del i andra inkomstmått; inget separat kontant bruttolönebelopp finns här. membership-0314: Ersättning för förlorad arbetsförtjänst och försäkringsersättning är inte kontant bruttolön. membership-0315: Tjänsteinkomst och separata förmåner är inte kontant bruttolön. membership-0316: Valda tjänsteinkomster och kontrolluppgiftsinkomster är inte uttryckligen kontant bruttolön. membership-0317: De fem beloppen benämns kontant bruttolön, inklusive semesterersättning och provision. Den bredare lönemarkeringen hålls utanför i avvaktan på definitionsgranskning. membership-0318: Ingen vald variabel mäter kontant bruttolön. membership-0319: Inga valda variabler mäter kontant bruttolön. membership-0320: Ingen vald variabel avser kontant bruttolön. membership-0321: Valda förmånsbelopp utesluter kontant lön. membership-0322: TJLON mäter uttryckligen kontant bruttolön; skyddat medlemskap behålls. membership-0323: De två bruttolönevariablerna omfattas uttryckligen och är skyddade. Den fasta inkluderingen av den ekvivalerade varianten behålls trots motstridig källklassificering. membership-0324: Inga valda variabler mäter kontant bruttolön. membership-0325: Vald annan inkomst är inte uttryckligen kontant bruttolön. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0307: Ingen vald variabel särredovisar löneinkomst; arbetsinkomst omfattar fler inkomstslag. membership-0308: Etikett och beskrivning anger löneinkomst; medlemskapet är skyddat. membership-0309: Vald generell tjänsteinkomst är inte särskilt benämnd löneinkomst. membership-0310: De valda arbetsinkomstmåtten är bredare arbetsinkomst och omfattas inte av löneinkomstkandidaten. membership-0311: Inget valt mått motsvarar definitionen i denna sektion. membership-0312: Ingen vald variabel mäter särskilt beräknad löneinkomst eller dess namngivna delkomponent. membership-0313: Lön nämns endast som ingående komponent; arbetsinkomst och disponibel inkomst är andra begrepp. membership-0314: Löneinkomst nämns endast som input till faktorinkomst; ingen vald variabel mäter den separat. membership-0315: Allmän tjänsteinkomst är inte det särskilt definierade löneinkomstmåttet. membership-0316: Ingen vald variabel mäter uttryckligen löneinkomst eller dess namngivna beräkningsdelkomponent. membership-0317: Familjebelopp, löneinkomst och uttrycklig beräkningsdelkomponent omfattas. membership-0318: Ingen vald variabel mäter löneinkomst eller dess uttryckliga beräkningsdelkomponent. membership-0319: Inga valda variabler mäter löneinkomst. membership-0320: Ingen vald variabel mäter separat löneinkomst eller dess namngivna beräkningsdel. membership-0321: Ingen vald variabel i sektionen mäter detta begrepp. membership-0322: Kontant bruttolön och KU-summor av lön och förmåner är uttryckligen uteslutna. membership-0323: Beskrivningen anger individbaserad ekvivalerad löneinkomst med hänsyn till växelvis boende barn; den granskade tillhörigheten stöder samma begrepp. membership-0324: Yrkesställning efter arbetsinkomsttröskel är inte löneinkomst. membership-0325: Inget valt mått avser löneinkomst eller uttrycklig beräkningsdelkomponent.\ncatalog:valueset:5817\ncatalog:variable_text:30430:365:2922\ncatalog:variable_text:30493:13879:16436\ncatalog:variable_text:30494:13879:16436\ncatalog:variable_text:30516:13879:14245\ncatalog:variable_text:30517:18628:20089\ncatalog:variable_text:30518:14975:20089\ncatalog:variable_text:30519:17532:20089\ncatalog:variable_text:30578:12784:17897\ncatalog:variable_text:30579:17897:20089\ncatalog:variable_text:30807:7305:8401\ncatalog:variable_text:30810:18628:20089\ncatalog:variable_text:30811:18628:20089\ncatalog:variable_text:30840:18628:20089\ncatalog:variable_text:30841:18628:20089\ncatalog:variable_text:30885:5113:7670\ncatalog:variable_text:30890:16436:18262\ncatalog:variable_text:30916:16436:18262\ncatalog:variable_text:30943:6574:7670\ncatalog:variable_text:30949:7670:20089\ncatalog:variable_text:30977:17167:20089\ncatalog:variable_text:30979:17167:20089\ncatalog:variable_text:31039:12053:13514\ncatalog:variable_text:31074:12418:17897\ncatalog:variable_text:31136:2922:4748\ncatalog:variable_text:31140:3652:5479\ncatalog:variable_text:31153:2922:7670\ncatalog:variable_text:31154:2922:7670\ncatalog:variable_text:31157:8035:8766\ncatalog:variable_text:31181:7305:8401\ncatalog:variable_text:31245:13879:16436\ncatalog:variable_text:31246:16436:19358\ncatalog:variable_text:31279:6209:7670\ncatalog:variable_text:31280:6209:7305\ncatalog:variable_text:31281:4383:17897\ncatalog:variable_text:31282:17897:20089\ncatalog:variable_text:31293:6209:7670\ncatalog:variable_text:31323:18628:20089\ncatalog:variable_text:31324:18628:20089\ncatalog:variable_text:31325:18262:20089\ncatalog:variable_text:31326:7670:8401\ncatalog:variable_text:31327:4748:6209\ncatalog:variable_text:31687:12784:17897\ncatalog:variable_text:31688:17897:20089\ncatalog:variable_text:31831:17167:17897\ncatalog:variable_text:31832:17897:20089\ncatalog:variable_text:31884:7670:8401\ncatalog:variable_text:31892:18993:20089\ncatalog:variable_text:31926:17167:20089\ncatalog:variable_text:31927:18262:19358\ncatalog:variable_text:31927:19358:19723\ncatalog:variable_text:31927:19723:20089\ncatalog:variable_text:31928:18628:20089\ncatalog:variable_text:31985:11323:13514\ncatalog:variable_text:32082:4383:20089\ncatalog:variable_text:32083:17532:20089"
 
 [[statement]]
 kind = "set"
@@ -27055,3 +26995,69 @@ kind = "set"
 subject = "individer-och-dodsbon: KFKUFON3 @1999-01-01..1999-12-31 where key = 'v4892'"
 fields = { "label" = "Realisationsförlust, räntefonder" }
 evidence = "Part of #2040. scb/iot/kapitalforlust-rantefond: Correct Realistonsförlust → Realisationsförlust only in the affected annual occurrence; preserve later source labels and punctuation. Reviewed occurrence label: Realistonsförlust, räntefonder"
+
+[[statement]]
+kind = "set"
+subject = "var:atp-kod-egen-forman"
+fields = { "sets" = ["tillaggspension"] }
+evidence = "r103 explicitly identifies the recipient's ATP/supplementary-pension type. ATP codings are included by r638. | r103 defines an own-benefit ATP type code, with benefit types and fractions supplied in r384. This matches the ATP-coding scope of r638.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:260080\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2986\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/tillaggspension"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalspension-hushall"
+fields = { "sets" = ["tjanstepension"] }
+evidence = "r401 defines a contractual-pension total comprising employer and insurer occupational pensions plus AGS early retirement, fitting the contractual-system pension amounts in r639.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30495\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/tjanstepension"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalspension-individ"
+fields = { "sets" = ["tjanstepension"] }
+evidence = "r402 defines a contractual-pension total comprising employer and insurer occupational pensions plus AGS early retirement, fitting the contractual-system pension amounts in r639.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30496\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/tjanstepension"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandare"
+fields = { "sets" = ["hushallsstallning"] }
+evidence = "r457 describes household-head status, and r382 supplies its yes/no classification. This measures household position within r636.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10571\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30956\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/hushallsstallning"
+
+[[statement]]
+kind = "set"
+subject = "var:individbaserad-ekvivalerad-loneinkomst"
+fields = { "sets" = ["kontant-bruttolon"] }
+evidence = "r465 defines individual equivalized wage income adjusted for alternating-residence children. r637 explicitly includes the equivalized variant. | r465 identifies individual equivalized wage income and explains the alternating-residence adjustment. This is the equivalized variant expressly covered by r637.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:30980\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/kontant-bruttolon"
+
+[[statement]]
+kind = "set"
+subject = "var:mottaget-gavobelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "The received gift amount (r514) fits the broad transfer-receipt theme, consistent with received-support siblings (r511, r515) and register context (r678).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31179\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31182\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31183\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "sets" = ["skattepliktiga-formaner"] }
+evidence = "The operational definition measures the summed value of employer in-kind benefits excluding car, food and housing (r124), fitting the noncash-benefit amounts covered by r675.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:258882\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/skattepliktiga-formaner"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-tillaggspensioner"
+fields = { "sets" = ["tjanstepension"] }
+evidence = "The residual pension amount is defined against occupational systems—state, municipal, ITP and STP (r522)—and fits the occupational-pension amount concept in r677.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31259\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/tjanstepension"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuk-havandeskaps-smittbararpenning"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The definition specifies the work-injury component as sickness benefit and describes a sickness, pregnancy and carrier-benefit total (r544), fitting r674.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31454\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:smittbararpenning"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "The field measures received carrier benefit (r565), an expressly named component included in r674's fixed candidate battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31550\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-debiterad-forekomst"
+fields = { "sets" = ["deklarationstyp"] }
+evidence = "Despite the debiterad label (r588), the complete valueset explicitly describes income-declaration type, with Inkomstdeklaration and Nolltaxerad categories (r446), supporting r670's declaration-occurrence concept.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2532\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:31756\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/iot/deklarationstyp"

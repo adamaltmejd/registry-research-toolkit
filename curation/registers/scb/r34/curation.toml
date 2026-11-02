@@ -17007,12 +17007,6 @@ evidence = "Samlad inkomst vid långvarigt nedsatt arbetsförmåga.\ncatalog:var
 [[statement]]
 kind = "set"
 subject = "var:inkomst-foranledd-fortidspension-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:37738:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-foranledd-fortidspension-2"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "Suffixet 2 är en tilldelad räknare och finns inte i källkolumnen.\ncatalog:variable_text:37738:16801:17167"
 
@@ -19941,12 +19935,6 @@ evidence = "Andelen avser ekonomiskt bistånd.\ncatalog:variable_text:38005:1716
 [[statement]]
 kind = "set"
 subject = "var:raks-andelfortidink"
-fields = { "sets" = [] }
-evidence = "RAKS är en akronym som inte förekommer i etiketten.\ncatalog:variable_text:38006:17167:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:raks-andelfortidink"
 fields = { "tags" = ["income", "transfers"] }
 evidence = "RAKS är en akronym som inte förekommer i etiketten.\ncatalog:variable_text:38006:17167:18993"
 
@@ -20793,12 +20781,6 @@ evidence = "Måttet avser sjukpenningens bruttodagar.\ncatalog:variable_text:380
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning-ej-arbetsgivarintrade"
-fields = { "sets" = [] }
-evidence = "Källan benämner beloppet sjukpenning utan arbetsgivarinträde.\ncatalog:variable_text:38085:10957:19723\ncatalog:variable_text:38085:7305:9131\ncatalog:variable_text:38085:9131:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-ej-arbetsgivarintrade"
 fields = { "tags" = ["transfers"] }
 evidence = "Källan benämner beloppet sjukpenning utan arbetsgivarinträde.\ncatalog:variable_text:38085:10957:19723\ncatalog:variable_text:38085:7305:9131\ncatalog:variable_text:38085:9131:10957"
 
@@ -20813,12 +20795,6 @@ kind = "set"
 subject = "var:sjukpenning-nettodagar"
 fields = { "tags" = ["transfers"] }
 evidence = "Måttet avser sjukpenningens nettodagar.\ncatalog:variable_text:38087:17167:19723\ncatalog:variable_text:38087:8401:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sjukpenning-skattepliktig-arbetsgivarintrade"
-fields = { "sets" = [] }
-evidence = "Beloppet gäller sjukpenning vid arbetsgivarinträde.\ncatalog:variable_text:38088:7305:8766"
 
 [[statement]]
 kind = "set"
@@ -21899,12 +21875,6 @@ kind = "set"
 subject = "var:utbbarb"
 fields = { "tags" = ["transfers"] }
 evidence = "Familjens förkortningar är läsbara. Dagpenningen är en namngiven ersättning vid arbetsmarknadsutbildning.\ncatalog:occurrence-locators:variable:38178\ncatalog:variable_text:38178:8401:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:utbblan"
-fields = { "sets" = [] }
-evidence = "Familjens förkortningar är läsbara. Studielånet är en transferering och passar inte den avgränsade gruppen för vuxenstudiestöd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0400: Ingen vald variabel i denna sektion avser ersättning vid arbetsmarknadsåtgärd. membership-0401: Sektionen innehåller ingen ersättning vid arbetsmarknadspolitiska åtgärder. membership-0402: Variablerna mäter samlat belopp och förekomst av ersättning vid arbetsmarknadspolitisk åtgärd; deltagandedagar omfattas inte. membership-0403: Båda är uttryckligen programersättningar; deras namngivna förmånsinnehåll hindrar inte medlemskap i denna kandidat. membership-0404: Beloppet och inkomstandelen avser arbetsmarknadspolitiska åtgärder. membership-0405: Ingen vald variabel är belagd som samlad åtgärdsersättning eller uttryckligen namngiven programkomponent i kandidaten. membership-0406: Den fasta kandidatens namngivna komponenter behålls. OTA tillkommer genom uttryckligt stöd som ersättning vid arbetsmarknadsåtgärd. Motstridiga ersättningsklassningar lämnas för granskning.\ncatalog:occurrence-locators:variable:38179\ncatalog:variable_text:37435:8766:10227\ncatalog:variable_text:37436:10227:10592\ncatalog:variable_text:37436:8766:10227\ncatalog:variable_text:37437:17167:19723\ncatalog:variable_text:37438:18262:19723\ncatalog:variable_text:37505:16801:19723\ncatalog:variable_text:37507:8766:9862\ncatalog:variable_text:37510:8766:10227\ncatalog:variable_text:37529:16801:19723\ncatalog:variable_text:37530:16801:19723\ncatalog:variable_text:37587:13879:19723\ncatalog:variable_text:37588:9131:19723\ncatalog:variable_text:37589:8401:13514\ncatalog:variable_text:37593:8766:10227\ncatalog:variable_text:37770:7305:10592\ncatalog:variable_text:37966:9862:10227\ncatalog:variable_text:38010:17167:18993\ncatalog:variable_text:38018:17167:18993\ncatalog:variable_text:38032:15706:16071\ncatalog:variable_text:38178:8401:9496\ncatalog:variable_text:38179:8401:9496\ncatalog:variable_text:38180:7305:19723\ncatalog:variable_text:38181:17167:19723\ncatalog:variable_text:38182:17167:19723\ncatalog:variable_text:38183:17167:19723\ncatalog:variable_text:38184:17167:17532\ncatalog:variable_text:38185:17167:17532\nregisters/scb/r34/curation.toml:11865\nregisters/scb/r34/curation.toml:6327\nregisters/scb/r34/curation.toml:9819\nregisters/scb/r34/curation.toml:9825"
 
 [[statement]]
 kind = "set"
@@ -26307,3 +26277,33 @@ kind = "set"
 subject = "var:utbbarb"
 fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
 evidence = "r333 defines a monetary daily allowance specifically for labour-market training. | r333 defines a monetary daily allowance specifically for labour-market training. | r333 defines a monetary daily allowance specifically for labour-market training.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38033\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38176"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-fortidspension-2"
+fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
+evidence = "r149 defines annual combined benefit income, matching the aggregate defined in r148. r234 includes combined incapacity income rather than individual benefit amounts.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:37569\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:37570\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-andelfortidink"
+fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
+evidence = "r163 measures the total-income share of combined early-retirement and sickness-related benefit income. r234 explicitly includes shares of this aggregate.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:37857\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-ej-arbetsgivarintrade"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; this is LISA's main sickness-benefit amount (sjukpenning dominates; graviditets- and smittbärarpenning are minor components). The smittbärar exclusion targets standalone smittbärar variables. A researcher picking 'sjukpenning' picks this.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:27\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:37939\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-skattepliktig-arbetsgivarintrade"
+fields = { "sets" = ["sjukpenning"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'arbetsgivarinträdd ersättning', and this is the only arbetsgivarinträde variable. Arbetsskadesjukpenning is a component paid through the same mechanism.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:32\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:37942\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/sjukpenning"
+
+[[statement]]
+kind = "set"
+subject = "var:utbblan"
+fields = { "sets" = ["ersattning-vid-arbetsmarknadsatgard"] }
+evidence = "r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components. | r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components. | r188 defines a special loan amount for labour-market training. This named programme component fits r232's explicit inclusion of programme components.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38034\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lisa/ersattning-vid-arbetsmarknadsatgard"

@@ -1533,12 +1533,6 @@ evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
-fields = { "sets" = [] }
-evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
 fields = { "tags" = ["employment"] }
 evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
@@ -1553,12 +1547,6 @@ kind = "set"
 subject = "var:antal-foretagskombinationer-fran-ar-2-till-ar-1"
 fields = { "tags" = ["business"] }
 evidence = "K är en opak bokstavskod för kombinationer.\ncatalog:variable_text:41142:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
-fields = { "sets" = [] }
-evidence = "17484 är ett tillagt räknarsuffix; etiketten kolliderar med andra antal arbetsställen. Coordinator group membership: Variablerna räknar arbetsställen eller uttryckligen omfattade delmängder. De två skyddade antk-medlemskapen behålls.\ncatalog:variable_text:41107:5479:18993\ncatalog:variable_text:41137:5479:6209\ncatalog:variable_text:41138:18262:19358\ncatalog:variable_text:41139:18262:19358\ncatalog:variable_text:41141:18262:19358\ncatalog:variable_text:41143:18262:19358\ncatalog:variable_text:41188:17897:18993\ncatalog:variable_text:41332:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -4299,3 +4287,21 @@ kind = "set"
 subject = "var:yrkstallnkomb"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "The measure classifies combinations of employee, self-employed and own-company positions during the year, explicitly covered by the group (r350, r321).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41236\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9049\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41379"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-1-for-individer-ar-2"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Counts year-1 workplaces of individuals present at the workplace in year 2 (r11, r13, r15). The fixed definition includes personnel-delimited workplace counts (r79).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415705\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415734\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415765\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rams/antal-arbetsstallen"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-ar-2-for-individer-ar-1"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Counts year-2 workplaces of individuals present at the workplace in year 1 (r10, r12, r14). The fixed definition includes personnel-delimited workplace counts (r79).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415704\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415733\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:415764\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rams/antal-arbetsstallen"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "tags" = ["business"] }
+evidence = "FtgTelNr records the company's telephone in the company table (r16, r52, r70). This company administrative attribute fits business, supported by the register's thematic context (r80).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:416511\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:417186\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41214\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

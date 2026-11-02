@@ -9920,3 +9920,9 @@ kind = "set"
 subject = "var:sluttyp"
 fields = { "sets" = ["laroplan"] }
 evidence = "The operational definitions identify the curriculum followed (r69, r74), and the complete codes distinguish Lpf94 from Gy2011 (r85), satisfying r93.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:22803\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:211900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:212252\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:5557\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/laroplan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-examen"
+fields = { "sets" = ["avslutningsar"] }
+evidence = "The history records the calendar year the pupil received compulsory-school final grades (r5, r31, r42). The fixed definition includes leaving/graduation years without restricting those alternatives to upper-secondary school; it excludes issuance dates (r52).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:206173\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:213288\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:22415\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/gymnasieskola-betyg/avslutningsar"

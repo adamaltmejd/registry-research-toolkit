@@ -1298,3 +1298,9 @@ kind = "set"
 subject = "var:lakemedelsform"
 fields = { "sets" = ["beredningsform"] }
 evidence = "r6 and r10 explicitly define the variable as the form in which a medicine occurs, matching the fixed group's dosage-form concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:56510\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:522024\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:56694"
+
+[[statement]]
+kind = "set"
+subject = "var:hgrupp"
+fields = { "tags" = ["medicines"] }
+evidence = "HGRUPP classifies trade goods (r16). Related trade-goods descriptions carry medicines (r11, r23), supporting the register's dominant theme as a broad search tag (r36, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:56466\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:56501\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:56533\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

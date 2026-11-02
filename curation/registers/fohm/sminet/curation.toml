@@ -100,3 +100,15 @@ kind = "set"
 subject = "var:vaccinationsstatus"
 fields = { "tags" = ["medicines"] }
 evidence = "Fältet beskriver vaccinationsstatus.\ncatalog:occurrence:1008"
+
+[[statement]]
+kind = "set"
+subject = "var:smittskyddsenhet"
+fields = { "tags" = ["health"] }
+evidence = "The regional communicable-disease unit is responsible for the case (r4). This administrative field belongs to the register's health subject (r6, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:609\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:smittsparningsstatus"
+fields = { "tags" = ["health"] }
+evidence = "Contact-tracing status concerns disease control around the case (r5), fitting the register's established health theme (r6, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:610\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

@@ -1233,20 +1233,8 @@ evidence = "Den operativa definitionen anger mottagen hjälp med ärenden.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:arendhelp"
-fields = { "tags" = [] }
-evidence = "Den operativa definitionen anger mottagen hjälp med ärenden.\ncatalog:occurrence:466195"
-
-[[statement]]
-kind = "set"
 subject = "var:arendhelpant"
 fields = { "sets" = ["hjalp-med-arenden"] }
-evidence = "Antal tillfällen är ett mått på hjälp med ärenden.\ncatalog:variable_text:45212:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:arendhelpant"
-fields = { "tags" = [] }
 evidence = "Antal tillfällen är ett mått på hjälp med ärenden.\ncatalog:variable_text:45212:14791:15156"
 
 [[statement]]
@@ -1259,12 +1247,6 @@ evidence = "Betalning är ett mått inom hjälp med ärenden.\ncatalog:variable_
 kind = "set"
 subject = "var:arendhelpofta"
 fields = { "sets" = ["hjalp-med-arenden"] }
-evidence = "Frekvens är ett mått på hjälp med ärenden.\ncatalog:variable_text:45214:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:arendhelpofta"
-fields = { "tags" = [] }
 evidence = "Frekvens är ett mått på hjälp med ärenden.\ncatalog:variable_text:45214:14791:15156"
 
 [[statement]]
@@ -2824,12 +2806,6 @@ evidence = "Fr3 är en frågekod.\ncatalog:variable_text:45361:11139:11504"
 [[statement]]
 kind = "set"
 subject = "var:framtidvikt"
-fields = { "sets" = [] }
-evidence = "Frågan gäller preferens mellan högre lön och kortare arbetstid. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel anger önskemål om ändrad tidsanvändning. membership-0472: Preferensen mellan högre lön och kortare arbetstid avser önskad förändring av tidsanvändningen; definitionen exkluderar enbart önskemål om arbetstidsschema. membership-0473: Båda variablerna mäter önskemål om att ändra tidsanvändningen genom ändrad arbetstidslängd, vilket den fasta definitionen omfattar. membership-0474: Båda anger önskade aktiviteter vid mer tillgänglig tid; olika representationer hindrar inte gruppmedlemskap. membership-0475: Anger vilken aktivitet personen vill ägna mer tid åt.\ncatalog:valueset:11775\ncatalog:variable_text:45289:18628:18993\ncatalog:variable_text:45362:11139:11504\ncatalog:variable_text:45517:14791:15156\ncatalog:variable_text:45591:14791:15156\ncatalog:variable_text:45713:11139:11504\ncatalog:variable_text:45763:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidvikt"
 fields = { "tags" = ["employment", "income"] }
 evidence = "Frågan gäller preferens mellan högre lön och kortare arbetstid. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0471: Ingen vald variabel anger önskemål om ändrad tidsanvändning. membership-0472: Preferensen mellan högre lön och kortare arbetstid avser önskad förändring av tidsanvändningen; definitionen exkluderar enbart önskemål om arbetstidsschema. membership-0473: Båda variablerna mäter önskemål om att ändra tidsanvändningen genom ändrad arbetstidslängd, vilket den fasta definitionen omfattar. membership-0474: Båda anger önskade aktiviteter vid mer tillgänglig tid; olika representationer hindrar inte gruppmedlemskap. membership-0475: Anger vilken aktivitet personen vill ägna mer tid åt.\ncatalog:valueset:11775\ncatalog:variable_text:45289:18628:18993\ncatalog:variable_text:45362:11139:11504\ncatalog:variable_text:45517:14791:15156\ncatalog:variable_text:45591:14791:15156\ncatalog:variable_text:45713:11139:11504\ncatalog:variable_text:45763:14791:15156"
 
@@ -2885,12 +2861,6 @@ evidence = "Frekvens för annan hjälp.\ncatalog:variable_text:45367:14791:15156
 kind = "set"
 subject = "var:garendhelp"
 fields = { "sets" = ["hjalp-med-arenden"] }
-evidence = "Den operativa definitionen anger given hjälp med ärenden.\ncatalog:occurrence:466277"
-
-[[statement]]
-kind = "set"
-subject = "var:garendhelp"
-fields = { "tags" = [] }
 evidence = "Den operativa definitionen anger given hjälp med ärenden.\ncatalog:occurrence:466277"
 
 [[statement]]
@@ -7722,3 +7692,51 @@ kind = "set"
 subject = "var:vilja-mer-vardagar"
 fields = { "sets" = ["onskad-tidsanvandning"] }
 evidence = "The definition and complete activity codes identify activities the respondent wants more time for on weekdays, directly matching desired time use (r131, r162, r232).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:45613\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:466675\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2428\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:arendhelp"
+fields = { "tags" = ["culture"] }
+evidence = "r29 specifies received help with errands such as post, bank and pharmacy visits. The culture-tagged errand-help siblings in r49–r50 support the non-work time-use theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45068\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45180\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45181"
+
+[[statement]]
+kind = "set"
+subject = "var:arendhelpant"
+fields = { "tags" = ["culture"] }
+evidence = "r30 measures occasions of household help with errands. This belongs to the non-work time-use battery, consistent with the culture-tagged counterpart in r49.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45069\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45180"
+
+[[statement]]
+kind = "set"
+subject = "var:arendhelpofta"
+fields = { "tags" = ["culture"] }
+evidence = "r32 measures frequency of household help with errands. The corresponding culture-tagged frequency variable in r50 supports the same non-work time-use theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45071\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45181"
+
+[[statement]]
+kind = "set"
+subject = "var:diskmaskin"
+fields = { "tags" = ["housing"] }
+evidence = "r41 measures dishwasher availability in the dwelling. The comparable washing-machine amenity in r104 supports housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45129\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45583"
+
+[[statement]]
+kind = "set"
+subject = "var:framtidvikt"
+fields = { "sets" = ["onskad-tidsanvandning"] }
+evidence = "r45 and r25 measure preference for higher wages versus reduced working hours. Desired shorter hours fit r117; its exclusion concerns schedules only.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11775\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45173\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/tidsanvandning/onskad-tidsanvandning"
+
+[[statement]]
+kind = "set"
+subject = "var:frys"
+fields = { "tags" = ["housing"] }
+evidence = "r46 measures freezer availability in the dwelling. The comparable washing-machine amenity in r104 supports housing.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45175\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45583"
+
+[[statement]]
+kind = "set"
+subject = "var:garendhelp"
+fields = { "tags" = ["culture"] }
+evidence = "r48 specifies household help given with errands. This shares the non-work time-use theme of the culture-tagged errand-help measures in r49–r50.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45179\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45180\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45181"
+
+[[statement]]
+kind = "set"
+subject = "var:mikrougn"
+fields = { "tags" = ["housing"] }
+evidence = "r85 measures appliance access. Comparable dwelling equipment, the washing machine in r104, supports the housing theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45583"

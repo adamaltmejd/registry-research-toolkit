@@ -388,3 +388,9 @@ kind = "set"
 subject = "var:elementstatus"
 fields = { "tags" = ["healthcare"] }
 evidence = "The codes include Abonnemangstandvård and Förhandsprövning krävs alongside approval and rejection states, supporting the healthcare theme for dental-care administration (r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:57262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10297"
+
+[[statement]]
+kind = "set"
+subject = "var:header-status"
+fields = { "tags" = ["healthcare"] }
+evidence = "Submission, receipt and partial-rejection statuses (r6, r7) administer visit and dental-health records (r2, r4), consistent with the register’s healthcare theme (r1, r9).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:523048\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:523111\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2499\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2778\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
