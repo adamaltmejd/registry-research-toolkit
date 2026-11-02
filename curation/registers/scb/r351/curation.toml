@@ -5806,3 +5806,75 @@ kind = "set"
 subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: B_Q14a @2012-01-01..2012-12-31 where key = 'v32879'"
 fields = { "label" = "Utbildningsaktiviteter under det senaste året" }
 evidence = "Part of #2040. scb/piaac/utbildningsaktivitet-yrkesrelaterad-senaste-aret: Restore missing te in Utbildningsaktiviter; same activities during the past year. One survey release. Reviewed occurrence label: Utbildningsaktiviter under det senaste året"
+
+[[statement]]
+kind = "set"
+subject = "var:gillar-ga-till-botten-med-svara-uppgifter"
+fields = { "tags" = ["education"] }
+evidence = "Engagement with difficult tasks (r11) belongs to the same learning battery as enjoying learning (r9) and connecting new knowledge (r10), supporting education.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395002\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395003"
+
+[[statement]]
+kind = "set"
+subject = "var:relatera-nya-ideer-till-verkliga-situationer"
+fields = { "tags" = ["education"] }
+evidence = "Relating new ideas to practical situations (r8) is a learning strategy within the battery that explicitly asks about enjoying learning new things (r9), supporting education.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395000\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001"
+
+[[statement]]
+kind = "set"
+subject = "var:relatera-nytt-till-nagot-jag-redan-kanner-till"
+fields = { "tags" = ["education"] }
+evidence = "Connecting new information with existing knowledge (r10) is a learning strategy, consistent with the battery's enjoyment of learning (r9) and the register's education theme (r95).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395002\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:soker-mer-information-om-nagot-jag-inte-forstar"
+fields = { "tags" = ["education"] }
+evidence = "Seeking information to improve understanding (r13) belongs to the learning battery that includes enjoying new learning (r9), supporting the register's education theme (r95).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395005\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:tycker-om-att-lara-nya-saker"
+fields = { "tags" = ["education"] }
+evidence = "Enjoying learning new things (r9), alongside strategies for applying and connecting new knowledge (r8, r10), supports the register's education theme (r95).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395000\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395002\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-anvanda-miniraknare-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "Frequency of everyday calculator use includes ordinary calculators (r4, r19). This fits culture's non-work activity scope, consistent with culture-tagged daily form filling (r85).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394987\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4098\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40240"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-avancerad-matematik-statistik-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "Daily-life frequency of advanced mathematics or statistics (r7, r19) fits culture's non-work activity scope, consistent with culture-tagged daily form filling (r85).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394990\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4098\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40240"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-braktal-decimaler-procent-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "Everyday frequency of fraction, decimal and percentage calculations (r3, r19) fits culture's non-work activity scope, consistent with culture-tagged daily form filling (r85).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394986\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4098\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40240"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-enkel-algebra-enkla-formler-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "Frequency of using algebra or simple formulas in daily life (r6, r19) fits culture's non-work activity scope, consistent with culture-tagged daily form filling (r85).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394989\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4098\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40240"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-gora-diagram-grafer-tabeller-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "Frequency of making diagrams, graphs or tables in daily life (r5) fits culture's non-work activity scope, consistent with the culture-tagged diagram-reading sibling (r88).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394988\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40243"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-arbetet-rakna-priser-kostnader-budgetar-frekvens"
+fields = { "tags" = ["culture"] }
+evidence = "This measures frequency of calculating prices, costs or budgets as a daily numeracy activity (r2), fitting culture's non-work activity scope alongside culture-tagged form filling (r85).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:394985\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40240"
+
+[[statement]]
+kind = "set"
+subject = "var:vill-ta-reda-pa-hur-olika-ideer-hanger-ihop"
+fields = { "tags" = ["education"] }
+evidence = "Interest in connections between ideas (r12) belongs to the learning battery with applying new ideas (r8) and enjoying learning (r9), supporting education.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395000\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395001\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395004"

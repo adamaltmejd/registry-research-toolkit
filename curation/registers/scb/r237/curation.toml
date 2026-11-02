@@ -109591,3 +109591,885 @@ kind = "set"
 subject = "individer-16plus-ulf: HA0507 @2011-01-01..2011-12-31 where key = 'v14509' and release = 'r19811'"
 fields = { "operational_definition" = "Antal diagnoser avseende ögonsjukdomar, ICD-9 360.0-379.9. Baseras på sjukdomskoder." }
 evidence = "Rename audit HA0507: all covered releases retain the eye-disease label and WHO 360.0-379.9 definition; only the 2008-2011 operational text says diabetes. SCB ULF documentation 2005, pp. 160-161, assigns diabetes 250.0-250.9 to HA0503 and eye diseases 360.0-379.9 to HA0507, also confirmed in the 1994-1995 documentation p. 147. Correct only the four contaminated operational definitions; ownership is already correct. https://www.scb.se/contentassets/35da017ddbc3439a932bd8af95c58601/le0101_do_2005.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:adresstest"
+fields = { "tags" = ["health"] }
+evidence = "For respondents aged 75+, the item scores whether they can correctly provide the full address (r62, r59), making it a functional ability measure.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5237\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:45808"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-bank"
+fields = { "tags" = ["finance"] }
+evidence = "This is a follow-up within the battery about challenging mistreatment by a bank (r85, r158), which concerns financial institutions.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46150\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46822"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-domstol"
+fields = { "tags" = ["crime"] }
+evidence = "The item concerns redress against a court (r87), matching the crime-tagged court-action and police/court follow-ups (r160, r93).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46152\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46159\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46824"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-dorrforsaljare"
+fields = { "tags" = ["consumption"] }
+evidence = "This is a redress follow-up about door-to-door sales (r88), matching the consumption-tagged action and broader retail battery (r161, r86).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46151\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46153\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46825"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-forsakringsbolag"
+fields = { "tags" = ["finance"] }
+evidence = "This follow-up records redress after mistreatment by an insurance company (r90, r163), placing it within financial-institution services.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46155\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46828"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-forsakringskassa"
+fields = { "tags" = ["transfers"] }
+evidence = "This follow-up belongs to the battery about redress against Försäkringskassan (r91, r164), placing it within social insurance.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46156\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46829"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-skola"
+fields = { "tags" = ["education"] }
+evidence = "The follow-up belongs to the battery about mistreatment by a school or school authority (r96, r167), establishing its education theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46163\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46839"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-social-centralnamnd"
+fields = { "tags" = ["social-care"] }
+evidence = "The follow-up concerns social, child-welfare or temperance boards (r97), establishing the social-services subject of the complaint.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46164"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "The item records another way of seeking redress against the tax assessment board (r98), placing the follow-up within tax administration.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46165"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-satt-varuhus"
+fields = { "tags" = ["consumption"] }
+evidence = "The item records redress against department stores, supermarkets or larger shops (r99), matching the consumption-tagged action and retail follow-ups (r168, r86).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46151\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46166\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46844"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-kod-16-i-tablan"
+fields = { "tags" = ["family-household"] }
+evidence = "This counts the residual 'other' category in the relationship roster (r133), matching household-roster siblings including spouse and other household members (r117, r131).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46374\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46392\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46396"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ratt-ordfragor"
+fields = { "tags" = ["education"] }
+evidence = "This counts correct answers on ten word questions (r135), matching the education-tagged sibling that scores SÖ's five word questions (r184).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46436\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51675"
+
+[[statement]]
+kind = "set"
+subject = "var:argard-postorderfirma"
+fields = { "tags" = ["consumption"] }
+evidence = "The item asks whether action followed mistreatment by a mail-order company (r151), matching the consumption-tagged complaint-method siblings (r179, r180).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46702\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50876\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50877"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-bank"
+fields = { "tags" = ["finance"] }
+evidence = "r131 measures action following unfair treatment by a bank. The bank complaint battery concerns a financial institution (r159).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46822\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46975"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-butik-mm"
+fields = { "tags" = ["consumption"] }
+evidence = "r132 concerns redress against retailers and other sellers, matching the consumption theme of related retail-action items (r134, r144).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46823\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46825\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46844"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-forsakringsbolag"
+fields = { "tags" = ["finance"] }
+evidence = "r136 and r208 establish a complaint battery concerning an insurance company. Finance covers this relationship with a financial institution.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46828\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48351"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-forsakringskassa"
+fields = { "tags" = ["transfers"] }
+evidence = "r137 records action concerning Försäkringskassan, and r209 confirms its social-insurance complaint battery. Transfers fits this administrative follow-up.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46829\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48357"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-reparation"
+fields = { "tags" = ["consumption"] }
+evidence = "r141 concerns redress against a repair workshop, matching the consumption theme of its complaint-method sibling (r283).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46837\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-skola"
+fields = { "tags" = ["education"] }
+evidence = "r142 records redress concerning a school or school authority, matching the education theme of the corresponding unfair-treatment item (r206).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46839\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48148"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "r143 records action concerning the tax assessment board, matching the taxation theme of its complaint-method sibling (r312).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46843\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52016"
+
+[[statement]]
+kind = "set"
+subject = "var:atgard-varuhus-butik"
+fields = { "tags" = ["consumption"] }
+evidence = "r145 concerns redress against shops and department stores, matching the consumption subject of the related shop-action item (r144).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46844\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46845"
+
+[[statement]]
+kind = "set"
+subject = "var:attityd-till-socialbidragstagare-1"
+fields = { "tags" = ["transfers"] }
+evidence = "r150 asks about social-assistance recipients' financial need, matching the transfers theme of the same attitude battery (r152–r155).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46850\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46852\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46853\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46854\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46855"
+
+[[statement]]
+kind = "set"
+subject = "var:attityd-till-socialbidragstagare-2"
+fields = { "tags" = ["transfers"] }
+evidence = "r151 asks whether social-assistance recipients are genuinely needy, matching the transfers theme of the same attitude battery (r152–r155).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46851\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46852\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46853\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46854\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46855"
+
+[[statement]]
+kind = "set"
+subject = "var:ba0263"
+fields = { "tags" = ["employment"] }
+evidence = "Although r157 lacks a definition, r164 explicitly identifies NYK as occupational classification, and the corresponding father's NYK field is an occupation code (r190).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46951\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47304\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47908"
+
+[[statement]]
+kind = "set"
+subject = "var:bank-typ-av-atgard"
+fields = { "tags" = ["finance"] }
+evidence = "r159 derives complaint methods for the bank-action item SS0152 (r131). This response remains part of the finance battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:12112\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46822\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46975"
+
+[[statement]]
+kind = "set"
+subject = "var:beroende-person"
+fields = { "tags" = ["transfers"] }
+evidence = "r162 refers to EK0261, whose supplied wording concerns financial dependence or cash contributions (r272). Related support-dependence fields support transfers (r107, r163).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46575\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47278\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47279\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50743"
+
+[[statement]]
+kind = "set"
+subject = "var:butik-mm-typ-av-atgard"
+fields = { "tags" = ["consumption"] }
+evidence = "r174 derives complaint methods for the retailer-action item described in r132, matching the consumption theme of related retail redress (r144).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46823\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46844\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47523"
+
+[[statement]]
+kind = "set"
+subject = "var:dorrforsaljare-typ-av-atgard"
+fields = { "tags" = ["consumption"] }
+evidence = "r179 derives complaint methods for SS0222, which concerns redress against a door-to-door seller (r134). It retains that item's consumption theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46825\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47712"
+
+[[statement]]
+kind = "set"
+subject = "var:ek0022"
+fields = { "tags" = ["finance"] }
+evidence = "r181 records access to 3,000 kronor through a household member, parallel to the relative-source item in r182. Finance fits this access to financial help.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47776\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47777"
+
+[[statement]]
+kind = "set"
+subject = "var:ek0023"
+fields = { "tags" = ["finance"] }
+evidence = "r182 records access to 3,000 kronor through close relatives, parallel to household financial help in r181. Finance fits the financial-access subject.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47776\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47777"
+
+[[statement]]
+kind = "set"
+subject = "var:ekon-svar-uppvaxt"
+fields = { "tags" = ["income"] }
+evidence = "r185 measures the family's economic hardship during childhood. This supports income adequacy, consistent with the financial-adequacy subject in r310.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47787\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51902"
+
+[[statement]]
+kind = "set"
+subject = "var:ensam"
+fields = { "tags" = ["health"] }
+evidence = "r186 and r94 measure perceived loneliness and its persistence, supporting the broad health theme consistently with the related loneliness item in r187.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:610\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47852\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47853"
+
+[[statement]]
+kind = "set"
+subject = "var:ensam-och-overgiven"
+fields = { "tags" = ["health"] }
+evidence = "r187 asks about feelings of loneliness and abandonment during the preceding two weeks; r92 measures their persistence. This supports the broad health theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5379\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47853"
+
+[[statement]]
+kind = "set"
+subject = "var:fa-ekonomin-att-ga-ihop"
+fields = { "tags" = ["income"] }
+evidence = "r188 measures difficulty making household finances meet, matching the income-adequacy subject explicitly described in r310.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47871\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51902"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-bank"
+fields = { "tags" = ["finance"] }
+evidence = "The question measures treatment by a bank, placing the experience within the financial-institution subject (r138).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48132"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-butik-mm"
+fields = { "tags" = ["consumption"] }
+evidence = "The item covers treatment by retail and mail-order sellers, consistent with consumption-tagged shop and repair complaint actions (r139, r125, r194).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48133\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-dorrforsaljare"
+fields = { "tags" = ["consumption"] }
+evidence = "The question concerns treatment by a door-to-door seller within the retail-consumer battery, consistent with shop complaint actions (r141, r139, r125).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48133\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48135"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-forsakr-bolag"
+fields = { "tags" = ["finance"] }
+evidence = "Treatment by an insurance company belongs to the financial-institution subject, consistent with its finance-tagged complaint-method siblings (r143, r175, r176).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48137\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48346\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48347"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-forsakr-kassa"
+fields = { "tags" = ["transfers"] }
+evidence = "Treatment by the social-insurance agency belongs to its social-insurance subject, consistent with the complaint-method siblings (r144, r178, r179).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48138\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48352\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48353"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-mindre-affar"
+fields = { "tags" = ["consumption"] }
+evidence = "The question measures treatment in a small or local shop, matching the consumption-tagged action item for that same experience (r146, r125).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48140"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-polismyndighet"
+fields = { "tags" = ["crime"] }
+evidence = "Treatment by the police concerns the justice system, consistent with court-treatment and police-action siblings (r149, r140, r193).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48134\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48144\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50804"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-postorderfirma"
+fields = { "tags" = ["consumption"] }
+evidence = "The item measures treatment by a mail-order retailer; related shop and repair complaint items establish the consumer subject (r150, r125, r194).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48145\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-reparation"
+fields = { "tags" = ["consumption"] }
+evidence = "Treatment by a repair workshop belongs to the consumer-service subject, matching its consumption-tagged complaint-action sibling (r151, r194).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48146\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "Treatment by the tax assessment board belongs to tax administration, matching the taxation-tagged action measure for that institution (r153, r196).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48149\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52016"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-varuhus"
+fields = { "tags" = ["consumption"] }
+evidence = "Treatment by department stores, supermarkets or larger shops is a consumer experience, consistent with the shop complaint-action sibling (r154, r125).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48150"
+
+[[statement]]
+kind = "set"
+subject = "var:felaktigt-behandlad-varuhus-butik"
+fields = { "tags" = ["consumption"] }
+evidence = "The item measures treatment in department stores or shops within the retail-consumer battery, consistent with shop complaint actions (r155, r139, r125).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48133\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48151"
+
+[[statement]]
+kind = "set"
+subject = "var:forfatta-skrivelse"
+fields = { "tags" = ["crime"] }
+evidence = "Writing to an authority is the alternate MA0210 wording linked to the administrative-appeal and assistance battery (r156, r158, r187).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49029"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-att-overklaga"
+fields = { "tags" = ["crime"] }
+evidence = "The response categories measure capacity to appeal an authority's decision and obtain assistance, matching the legal-redress help siblings (r101, r185, r186).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11827\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48969\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48970"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-att-overklaga-harledd"
+fields = { "tags" = ["democracy"] }
+evidence = "Maintainer-approved Opus audit correction: Here the variable's own content is the ability to appeal an authority's decision (ULF civic/political resources). Old row 49 (correction: none) was a help-from-relatives item that only inherited the appeal frame, so this differs. Crime's 'rättsliga förfaranden' is criminal-justice procedure. Siblings hjalp-att-overklaga-1/2 carry the same crime tag.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:53\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48969\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48970"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-forfatta-skrivelse"
+fields = { "tags" = ["crime"] }
+evidence = "The derived writing-and-assistance measure belongs to the authority-letter battery linked to administrative appeals and legal assistance (r159, r106, r156, r158).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4011\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48327"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-lasa-svenska-2"
+fields = { "tags" = ["language-religion"] }
+evidence = "Reading Swedish film text without difficulty measures language proficiency, consistent with the Swedish-speaking siblings (r163, r172, r173).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48331\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48340\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48341"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-lasa-svenska-4"
+fields = { "tags" = ["language-religion"] }
+evidence = "Reading advertisements is a proficiency item in the Swedish-reading battery, alongside reading Swedish film text and newspapers (r165, r163, r164).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48331\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48332\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48333"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-tala-svenska-2"
+fields = { "tags" = ["language-religion"] }
+evidence = "The question explicitly measures sufficient Swedish to converse with Swedish friends, matching the other Swedish-speaking proficiency items (r173, r172, r174).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48340\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48341\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48342"
+
+[[statement]]
+kind = "set"
+subject = "var:formaga-tala-svenska-3"
+fields = { "tags" = ["language-religion"] }
+evidence = "The item explicitly assesses Swedish-speaking proficiency through handling shopping, alongside work and social speaking scenarios (r174, r172, r173).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48340\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48341\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48342"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsbolag-typ-av-atgard"
+fields = { "tags" = ["finance"] }
+evidence = "The constructed action measure concerns complaints against an insurance company, matching the finance theme of its complaint-method siblings (r177, r175, r176).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48346\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48347\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48351"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringskassa-metod4"
+fields = { "tags" = ["transfers"] }
+evidence = "This records a complaint method concerning the social-insurance agency, matching the transfers-tagged methods in the same battery (r181, r178, r179, r180).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48352\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48353\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48354\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48355"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringskassa-metod5"
+fields = { "tags" = ["transfers"] }
+evidence = "This records another complaint method concerning the social-insurance agency, matching the transfers-tagged methods in the same battery (r182, r178, r179, r180).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48352\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48353\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48354\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48356"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringskassan-typ-av-atgard"
+fields = { "tags" = ["transfers"] }
+evidence = "The constructed complaint-action measure concerns the social-insurance agency, consistent with its transfers-tagged complaint methods (r183, r178, r179).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48352\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48353\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48357"
+
+[[statement]]
+kind = "set"
+subject = "var:ft0060"
+fields = { "tags" = ["housing"] }
+evidence = "Explicitly records insurance for a holiday dwelling (r134), consistent with the housing-tagged home-insurance siblings (r157, r158).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48459\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48943\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48944"
+
+[[statement]]
+kind = "set"
+subject = "var:grannkontakt"
+fields = { "tags" = ["housing"] }
+evidence = "Measures neighbourhood interaction and exchanges of services (r138, r87), consistent with housing-tagged satisfaction with neighbour contacts (r276).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6662\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48663\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50482"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-foralder-mm-utanfor-hh"
+fields = { "tags" = ["social-care"] }
+evidence = "Records relatives outside the household providing specified help (r169), within the same assistance context as spouse help and assistance from outside the household (r175, r177).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48980\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48989\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48994"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-lakare"
+fields = { "tags" = ["healthcare"] }
+evidence = "Records access to a doctor among friends for help or advice (r174). Healthcare covers this personnel resource, consistent with usual-doctor access items (r123, r124).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48112\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48113\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48988"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-i-forsta-hand"
+fields = { "tags" = ["social-care"] }
+evidence = "Asks whom to approach for help when ill and bedridden for a week (r183), matching the social-care-tagged bedridden-help sibling (r189).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49015\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49021"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-kontakt-barndomsvan"
+fields = { "tags" = ["culture"] }
+evidence = "Measures frequency of childhood-friend contact (r207, r85), consistent with the culture-tagged childhood-friend meeting-frequency sibling (r203).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:483\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49154\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49189"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-ekonomiska-situation-nar-up-var-14"
+fields = { "tags" = ["income"] }
+evidence = "Rates childhood household economic circumstances from very bad to very good (r212, r80). Income is the fitting broad economic-resources theme, supported by the household-income sibling (r211).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2921\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49221\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49222"
+
+[[statement]]
+kind = "set"
+subject = "var:kanna-sig-ensam-99-kvartal-3-4"
+fields = { "tags" = ["health"] }
+evidence = "Records agreement with often feeling lonely (r214). This emotional well-being measure fits health, consistently with sadness and happiness siblings (r151, r224).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48887\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49495\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49510"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-diskriminerad-av-skolpersonal"
+fields = { "tags" = ["education"] }
+evidence = "Maintainer-approved Opus audit correction: Religion is one of seven discrimination grounds in the codes, so language-religion fits no better than disability. The variable's subject is contact with school staff; the parallel sibling 'diskriminerad vid bostadssökande' takes its context tag (housing). Add language-religion only if every multi-ground discrimination item also gets disability etc.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:61\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2225\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49504"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-diskriminerad-pa-offentlig-plats"
+fields = { "tags" = ["language-religion"] }
+evidence = "The public-place discrimination measure (r219) explicitly records religion or belief as a cause in its response codes (r75), supporting language-religion.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11840\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49505"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-diskriminerad-vid-kontakt-med-myndigheter-odyl"
+fields = { "tags" = ["language-religion"] }
+evidence = "The authority-contact discrimination measure (r221) explicitly records religion or belief as a cause in its response codes (r73), supporting language-religion.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:1058\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49507"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-ensam"
+fields = { "tags" = ["health"] }
+evidence = "Measures feelings of loneliness over four weeks (r222), supporting health consistently with the four-week happiness measure (r224).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49508\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49510"
+
+[[statement]]
+kind = "set"
+subject = "var:kant-sig-ensam-senaste-tva-veckorna"
+fields = { "tags" = ["health"] }
+evidence = "Records feeling lonely during the past two weeks (r223), supporting health consistently with the sadness measure using the same recall period (r151).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48887\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49509"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-sig-sjalv-efter-skolan-barn-6"
+fields = { "tags" = ["family-household"] }
+evidence = "Records whether household child 6 manages alone for an hour after school (r239), matching the family-household supervision items for other children (r234, r235).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49534\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49535\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49539"
+
+[[statement]]
+kind = "set"
+subject = "var:konflikter-mln-arbetslosa-och-andra-99-kvartal-3-4"
+fields = { "tags" = ["employment"] }
+evidence = "The substantive subject is perceived conflict between unemployed and employed people (r241), so employment covers this attitude to labour-market divisions.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49665"
+
+[[statement]]
+kind = "set"
+subject = "var:konflikter-mln-fattiga-o-rika-99-kvartal-3-4"
+fields = { "tags" = ["income"] }
+evidence = "Perceived conflict between rich and poor concerns economic inequality (r242), supporting income consistently with the attitude to smaller income differences (r266).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49666\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50213"
+
+[[statement]]
+kind = "set"
+subject = "var:konflikter-mln-foretagsledadre-o-arbetare-99-kvartal-3-4"
+fields = { "tags" = ["employment"] }
+evidence = "Perceived conflict between company managers and workers concerns labour relations (r243), supporting employment alongside the workplace-conflict sibling (r113).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47495\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49667"
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-barndomsvan"
+fields = { "tags" = ["culture"] }
+evidence = "Regular letter or telephone contact with childhood friends (r190) fits social leisure activity, consistent with the culture-tagged childhood-friend meeting item (r174).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49154\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49699"
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-med-nagot-van"
+fields = { "tags" = ["culture"] }
+evidence = "Private contact with friends across several communication modes (r199) fits social leisure activity, consistent with the culture-tagged childhood-friend item (r174).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49154\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49709"
+
+[[statement]]
+kind = "set"
+subject = "var:materiell-och-social-fattigdom"
+fields = { "tags" = ["consumption"] }
+evidence = "The index measures inability to afford at least five of thirteen items, including meals, clothing, holidays and leisure activities (r214), supporting consumption.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50065"
+
+[[statement]]
+kind = "set"
+subject = "var:materiell-och-social-fattigdom-allvarlig-niva"
+fields = { "tags" = ["consumption"] }
+evidence = "The histories derive deprivation from inability to afford meals, clothing, holidays and other household goods or activities (r215), supporting consumption consistently with the related index (r214).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50065\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50066"
+
+[[statement]]
+kind = "set"
+subject = "var:meningsfull-sysselsattning"
+fields = { "tags" = ["health"] }
+evidence = "The two-week question concerns difficulty finding anything meaningful to do (r216), supporting health as a broad theme for this reported wellbeing difficulty.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50177"
+
+[[statement]]
+kind = "set"
+subject = "var:mindre-affar-typ-av-atgard"
+fields = { "tags" = ["consumption"] }
+evidence = "This action summary combines complaint routes for a small shop (r217, r101), within the consumption-tagged shop-mistreatment battery (r138).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:12112\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50212"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-bank"
+fields = { "tags" = ["finance"] }
+evidence = "This records oral redress concerning a bank (r227), matching the finance-tagged contact item in the same bank battery (r246).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50319\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50340"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-butik-mm"
+fields = { "tags" = ["consumption"] }
+evidence = "The redress item concerns shops, department stores, door-to-door sellers or mail-order firms (r228), supporting the consumption theme illustrated by related retail complaints (r138, r260).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50320\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50356"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-dorrforsaljare"
+fields = { "tags" = ["consumption"] }
+evidence = "The complaint concerns a door-to-door seller (r230), fitting the consumer-redress theme also supported by the related shop complaint item (r138).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50322"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-fackforening"
+fields = { "tags" = ["employment"] }
+evidence = "This response concerns redress involving a trade union (r231). The employment-tagged action summary explicitly includes this variable, SS0094 (r151).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47891\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50323"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-forsakr-bolag"
+fields = { "tags" = ["finance"] }
+evidence = "The follow-up concerns perceived mistreatment involving an insurance company (r232, r30). Its financial-institution subject supports finance.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:478281\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50324"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-forsakr-kassa"
+fields = { "tags" = ["transfers"] }
+evidence = "This follow-up concerns perceived mistreatment by the social-insurance office (r233, r26), supporting transfers, whose scope includes social insurance.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:478246\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50325"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-hyresvard"
+fields = { "tags" = ["housing"] }
+evidence = "Oral redress concerns the landlord (r234), consistent with the housing-tagged contact and action items in the landlord battery (r253, r179).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49310\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50326\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50347"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-mindre-affar"
+fields = { "tags" = ["consumption"] }
+evidence = "Oral redress concerns a small shop (r235), matching the consumption theme of the corresponding shop-mistreatment action item (r138).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50327"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-polis-domstol"
+fields = { "tags" = ["crime"] }
+evidence = "The operational definition conditions this response on action concerning police or courts (r28), supporting crime consistently with the paired contact item (r255).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:478267\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50349"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-reparation"
+fields = { "tags" = ["consumption"] }
+evidence = "Oral redress concerns a repair workshop (r238). The consumption-tagged action summary explicitly includes this response, SS0104 (r267).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50330\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "The oral-redress item concerns the tax assessment board (r240). Its taxation-tagged action summary explicitly includes this response, SS0044 (r300).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50334\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52016"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kont-ang-varuhus"
+fields = { "tags" = ["consumption"] }
+evidence = "Oral redress concerns a department store, supermarket or larger shop (r241), matching the consumption-tagged contact item in that retail battery (r260).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50335\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50356"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-butik-mm"
+fields = { "tags" = ["consumption"] }
+evidence = "r253 records complaints involving retail sellers, matching the consumption theme of the retail-contact sibling r266.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50341\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50356"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-dorrforsaljare"
+fields = { "tags" = ["consumption"] }
+evidence = "r255 records complaints to a door-to-door seller, supporting consumption consistently with the retail-contact sibling r266.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50343\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50356"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-fackforening"
+fields = { "tags" = ["employment"] }
+evidence = "r256 records the oral-contact component of a trade-union complaint battery; its derived action sibling r189 carries employment.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47891\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50344"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-forsakr-bolag"
+fields = { "tags" = ["finance"] }
+evidence = "r257 records complaints to an insurance company. Finance covers financial institutions, consistent with the institution-specific contact theme in r252.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50340\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50345"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-forsakr-kassa"
+fields = { "tags" = ["transfers"] }
+evidence = "r258 records a complaint channel involving the social-insurance agency; the corresponding written-appeal sibling r356 carries transfers.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50346\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51592"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-mindre-affar"
+fields = { "tags" = ["consumption"] }
+evidence = "r260 records complaints to a small shop, matching the consumption theme of the same small-shop action battery in r169.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50348"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-polismyndighet"
+fields = { "tags" = ["crime"] }
+evidence = "r262 records complaints to the police, matching the crime theme of the same police-complaint battery in r244 and r344.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50329\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50350\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50804"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-reparation"
+fields = { "tags" = ["consumption"] }
+evidence = "r263 records complaints involving repair services, matching the consumption theme of the same repair-workshop action battery in r349.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51056"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-skola"
+fields = { "tags" = ["education"] }
+evidence = "r264 records complaints involving a school or school authority, matching the education theme of the same-battery sibling r246.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50332\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50353"
+
+[[statement]]
+kind = "set"
+subject = "var:muntlig-kontakt-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "r265 records complaints to the tax-assessment board, matching the taxation theme of the same-battery action summary r364.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50355\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52016"
+
+[[statement]]
+kind = "set"
+subject = "var:nagon-gang-skriftligt-overklagande"
+fields = { "tags" = ["crime"] }
+evidence = "r269 and r155 explicitly measure written appeals after unfair treatment, supporting crime through its coverage of legal proceedings.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:794\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50379"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-den-ekonomiska-situationen"
+fields = { "tags" = ["income"] }
+evidence = "r286 measures satisfaction with personal economic circumstances, fitting the income theme used for household economic circumstances in r314 and r324.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50481\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50599\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50610"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-anhorigs-halsa"
+fields = { "tags" = ["health"] }
+evidence = "r299 explicitly concerns a close relative's health, consistent with the health-themed worry siblings r313 and r321.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50584\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50598\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50607"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-barn-narkotika"
+fields = { "tags" = ["health"] }
+evidence = "r310 concerns children's exposure to narcotics, alcohol and sniffing. Substance-use risks fit health, consistent with the alcohol-use evidence in r182.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47537\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50595"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-for-hushallets-ekonomi-mycket-eller-lite"
+fields = { "tags" = ["income"] }
+evidence = "r317 measures intensity of household-finance worry, matching the income theme of the corresponding worry and derived siblings r324 and r325.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50603\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50610\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50611"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-hushallets-ekonomi-narmaste-aret"
+fields = { "tags" = ["income"] }
+evidence = "r326 concerns worry about household finances during the coming year, matching the income-themed economic-worry siblings r314 and r324.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50599\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50610\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50612"
+
+[[statement]]
+kind = "set"
+subject = "var:person-1-utanf-hh-beroende"
+fields = { "tags" = ["transfers"] }
+evidence = "The person receives cash support or depends financially on the respondent (r228), supporting transfers consistently with the reciprocal financial-support item (r178).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49454\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50746"
+
+[[statement]]
+kind = "set"
+subject = "var:person-2-utanf-hh-beroende"
+fields = { "tags" = ["transfers"] }
+evidence = "The relation identifies an outside-household recipient of financial support (r236), supporting transfers consistently with the reciprocal financial-support item (r178).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49454\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50754"
+
+[[statement]]
+kind = "set"
+subject = "var:relativ-ekonomisk-situation"
+fields = { "tags" = ["income"] }
+evidence = "The qualitative comparison of household economic circumstances (r245, r78) supports the broad income theme, consistent with household income adequacy (r152).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4325\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47873\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51047"
+
+[[statement]]
+kind = "set"
+subject = "var:relativ-ekonomisk-situation-99-kvartal-3-4"
+fields = { "tags" = ["income"] }
+evidence = "The qualitative comparison of household economic circumstances (r246, r78) supports the broad income theme, consistent with household income adequacy (r152).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4325\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47873\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51048"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bilen-annan"
+fields = { "tags" = ["transport"] }
+evidence = "The household item identifies another relative, friend or acquaintance as a source of car-repair help (r249, r72), supporting transport with r180.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11373\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51058"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bilen-arbetskamrat"
+fields = { "tags" = ["transport"] }
+evidence = "The household item identifies a coworker as a source of car-repair help (r250, r84), supporting transport alongside the car-repair context in r180.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7673\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51059"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bilen-granne"
+fields = { "tags" = ["transport"] }
+evidence = "The household item identifies a neighbour as a source of car-repair help (r251, r81), supporting transport alongside the car-repair context in r180.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6086\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51060"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bilen-nara-slakt"
+fields = { "tags" = ["transport"] }
+evidence = "Relatives are response-provider categories (r82) in the car-repair help item (r252); transport follows the battery's subject, supported by r180.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6687\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49491\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51061"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bostad-granne"
+fields = { "tags" = ["housing"] }
+evidence = "Neighbour is a response-provider category (r81) in the housing-repair help item (r255), consistent with housing-tagged battery siblings (r253, r254).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6086\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51062\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51063\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51064"
+
+[[statement]]
+kind = "set"
+subject = "var:reparera-bostad-nara-slakt"
+fields = { "tags" = ["housing"] }
+evidence = "Relatives are response-provider categories (r82) in the housing-repair help item (r256), consistent with housing-tagged battery siblings (r253, r254).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6687\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51062\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51063\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51065"
+
+[[statement]]
+kind = "set"
+subject = "var:risk-for-fattigdom-eller-social-utestangning"
+fields = { "tags" = ["income"] }
+evidence = "The composite measures household poverty or social exclusion using poverty and work-intensity information (r259), supporting income consistently with poverty siblings (r138, r263).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47774\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51103\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51121"
+
+[[statement]]
+kind = "set"
+subject = "var:samhorighet-kvinnororelsen"
+fields = { "tags" = ["culture"] }
+evidence = "Affinity with the women's movement is a civil-association measure (r272), consistent with culture-tagged peace and solidarity movement siblings (r267, r270).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51144\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51147\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51149"
+
+[[statement]]
+kind = "set"
+subject = "var:skaffa-fram-3000kr"
+fields = { "tags" = ["finance"] }
+evidence = "Access to emergency funds through another person (r277) fits finance, consistently with the finance-tagged provider items (r140, r141, r142).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47778\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47779\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:47780\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51407"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-ej-hemforsakring-2006-2007"
+fields = { "tags" = ["housing"] }
+evidence = "Affordability and other reasons explain lacking home insurance (r281, r77); the housing theme follows the insured dwelling and home-insurance siblings (r168, r169).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:3459\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48943\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48944\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51453"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-ej-hemforsakring-bostaden"
+fields = { "tags" = ["housing"] }
+evidence = "The item explains missing insurance for the dwelling (r282, r79), so it shares housing with the home-insurance items (r168, r169).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4816\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48943\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48944\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51454"
+
+[[statement]]
+kind = "set"
+subject = "var:skola-typ-av-atgard"
+fields = { "tags" = ["education"] }
+evidence = "This action-type field belongs to the school complaint battery (r295, r121), whose written-appeal sibling carries education (r311).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46839\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51573\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51599"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-butik-mm"
+fields = { "tags" = ["consumption"] }
+evidence = "The written complaint concerns retailers and other sellers (r300), consistent with consumption-tagged retail complaint siblings (r314, r120).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51587\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51602"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-dorrforsaljare"
+fields = { "tags" = ["consumption"] }
+evidence = "The written complaint concerns a door-to-door seller (r302); consumption is consistent with the retail complaint context (r314, r120).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51589\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51602"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-forsakr-bolag"
+fields = { "tags" = ["finance"] }
+evidence = "The written appeal and corresponding oral-contact item concern an insurance company (r304, r204), supporting finance as the institution's subject theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50345\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51591"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-mindre-affar"
+fields = { "tags" = ["consumption"] }
+evidence = "The written complaint concerns a small retailer (r307), matching the consumption theme of the same retailer's action item (r120).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46831\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51594"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-soc-centr-namnd"
+fields = { "tags" = ["social-care"] }
+evidence = "The appeal concerns social, child-welfare or sobriety boards (r312), consistently with social-care-tagged contact and action siblings (r201, r317).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50333\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51600\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51680"
+
+[[statement]]
+kind = "set"
+subject = "var:skriftlig-kontakt-taxeringsnamnd"
+fields = { "tags" = ["taxation"] }
+evidence = "The written appeal concerns the tax assessment board (r313), matching taxation in the same battery's action-type item (r320).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51601\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52016"
+
+[[statement]]
+kind = "set"
+subject = "var:socialt-isolerade"
+fields = { "tags" = ["family-household"] }
+evidence = "The categories combine living alone with contact with family and others (r318, r83); household status and family relationships support family-household.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6787\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51685"
+
+[[statement]]
+kind = "set"
+subject = "var:sy0364"
+fields = { "tags" = ["employment"] }
+evidence = "NYK peers explicitly describe occupation codes and occupations (r402, r404), supporting employment for the respondent's pensioner NYK field (r475).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50527\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:51923"
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-hjalp"
+fields = { "tags" = ["social-care"] }
+evidence = "Assesses whether received help is sufficient (r483), consistent with the social-care siblings on sufficient municipal help and regular assistance (r484, r435).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50960\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52155\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52156"
+
+[[statement]]
+kind = "set"
+subject = "var:tr0170"
+fields = { "tags" = ["healthcare"] }
+evidence = "The sixth doctor-event item shares its TR0120 reference with event 5 (r487, r341); the explicit event-1 question establishes injury-related clinical visits as the battery's subject (r338).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48799\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48844\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52263"
+
+[[statement]]
+kind = "set"
+subject = "var:traffa-grannar"
+fields = { "tags" = ["culture"] }
+evidence = "Measures meeting and spending time with neighbours (r488), consistent with the explicitly leisure-based neighbour-contact sibling (r328).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48437\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52379"
+
+[[statement]]
+kind = "set"
+subject = "var:traffade-andra-senast"
+fields = { "tags" = ["culture"] }
+evidence = "Measures private visits from other relatives, friends or acquaintances (r490), matching the culture-tagged social-contact counterpart in r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49210\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52381"
+
+[[statement]]
+kind = "set"
+subject = "var:traffade-arbetskamrater-senast"
+fields = { "tags" = ["culture"] }
+evidence = "Measures private visits from colleagues (r491); the sibling on socializing with colleagues during leisure time supports culture (r257).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46657\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52382"
+
+[[statement]]
+kind = "set"
+subject = "var:traffade-grannar-senast"
+fields = { "tags" = ["culture"] }
+evidence = "Measures recency of private neighbour visits (r494), consistent with the culture-tagged neighbour leisure-contact sibling (r328).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48437\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52385"
+
+[[statement]]
+kind = "set"
+subject = "var:traffar-nagon-van-hur-ofta"
+fields = { "tags" = ["culture"] }
+evidence = "Measures how often respondents meet and spend time with friends (r497), matching the culture-tagged social-contact measure in r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49210\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52388"
+
+[[statement]]
+kind = "set"
+subject = "var:umgange-invandrare"
+fields = { "tags" = ["demographics"] }
+evidence = "Responses classify the immigrant/Swedish composition of social contacts (r498, r202), consistent with the demographic theme for friends' backgrounds (r400).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11158\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:50404\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52493"
+
+[[statement]]
+kind = "set"
+subject = "var:umgange-med-andra-an-nara-anhorig"
+fields = { "tags" = ["culture"] }
+evidence = "Measures socializing frequency with people other than close relatives (r499, r214), consistent with the culture-tagged counterpart in r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:335\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49210\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52494"
+
+[[statement]]
+kind = "set"
+subject = "var:umgange-utom-hushallet"
+fields = { "tags" = ["culture"] }
+evidence = "Measures socializing frequency outside the household (r504, r219), consistent with the culture-tagged social-contact measure in r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6793\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:49210\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52499"
+
+[[statement]]
+kind = "set"
+subject = "var:vanl-att-grannar-pratar"
+fields = { "tags" = ["culture"] }
+evidence = "Measures informal conversation among neighbours (r517), consistent with the social-activity theme established by neighbour leisure-contact items (r328).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:48437\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52818"
+
+[[statement]]
+kind = "set"
+subject = "var:varuhus-typ-av-atgard"
+fields = { "tags" = ["consumption"] }
+evidence = "The codes describe complaint actions (r207); the paired item anchors them to incorrect treatment by a department store or supermarket, supporting consumption (r518, r264).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:12112\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:46844\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52865"
+
+[[statement]]
+kind = "set"
+subject = "var:veta-mera-tolka-forsakring"
+fields = { "tags" = ["finance"] }
+evidence = "The stated purpose is understanding an insurance policy (r527), supporting the financial-service theme without requiring a monetary amount.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:52923"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigt-lara-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "Rates the importance of children acquiring good Swedish before school (r528), directly concerning language proficiency.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:53033"

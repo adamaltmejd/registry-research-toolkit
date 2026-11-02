@@ -3847,32 +3847,14 @@ evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:klagomalshantering"
-fields = { "tags" = [] }
-evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncatalog:occurrence:382764"
-
-[[statement]]
-kind = "set"
 subject = "var:klagomalshantering-fr29"
 fields = { "sets" = ["klagomalshantering"] }
 evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:383166\ncatalog:occurrence:383232"
 
 [[statement]]
 kind = "set"
-subject = "var:klagomalshantering-fr29"
-fields = { "tags" = [] }
-evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:383166\ncatalog:occurrence:383232"
-
-[[statement]]
-kind = "set"
 subject = "var:klagomalshantering-fr31"
 fields = { "sets" = ["klagomalshantering"] }
-evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382662\ncatalog:occurrence:382729"
-
-[[statement]]
-kind = "set"
-subject = "var:klagomalshantering-fr31"
-fields = { "tags" = [] }
 evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382662\ncatalog:occurrence:382729"
 
 [[statement]]
@@ -3885,12 +3867,6 @@ evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncat
 kind = "set"
 subject = "var:klagomalshantering-klagom"
 fields = { "sets" = ["klagomalshantering"] }
-evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncatalog:variable_text:38684:12053:12418\ncatalog:variable_text:38684:13879:14245\ncatalog:variable_text:38684:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:klagomalshantering-klagom"
-fields = { "tags" = [] }
 evidence = "Variabeln beskriver fastställd rutin för klagomålshantering.\ncatalog:variable_text:38684:12053:12418\ncatalog:variable_text:38684:13879:14245\ncatalog:variable_text:38684:15340:15706"
 
 [[statement]]
@@ -4837,20 +4813,8 @@ evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:overenskommelse-civila-samhallet"
-fields = { "tags" = [] }
-evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38776:15340:15706"
-
-[[statement]]
-kind = "set"
 subject = "var:overenskommelse-med-det-civila-samhallet-fr22"
 fields = { "sets" = ["overenskommelse-med-civilsamhallet"] }
-evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38777:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:overenskommelse-med-det-civila-samhallet-fr22"
-fields = { "tags" = [] }
 evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38777:16801:17167"
 
 [[statement]]
@@ -4861,32 +4825,14 @@ evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:va
 
 [[statement]]
 kind = "set"
-subject = "var:overenskommelse-med-det-civila-samhallet-fr24"
-fields = { "tags" = [] }
-evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38778:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:overenskommelse-med-det-civila-samhallet-fr36"
 fields = { "sets" = ["overenskommelse-med-civilsamhallet"] }
 evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38779:18262:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:overenskommelse-med-det-civila-samhallet-fr36"
-fields = { "tags" = [] }
-evidence = "Variabeln gäller överenskommelser med civilsamhället.\ncatalog:variable_text:38779:18262:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:overenskommelse-med-det-civila-samhallet-fr37"
 fields = { "sets" = ["overenskommelse-med-civilsamhallet"] }
-evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382735\ncatalog:occurrence:382848"
-
-[[statement]]
-kind = "set"
-subject = "var:overenskommelse-med-det-civila-samhallet-fr37"
-fields = { "tags" = [] }
 evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382735\ncatalog:occurrence:382848"
 
 [[statement]]
@@ -5973,12 +5919,6 @@ evidence = "Mäter webbtillgänglighet för fullmäktigesammanträden.\ncatalog:
 kind = "set"
 subject = "var:tjanstegarantier-servicedeklarationer"
 fields = { "sets" = ["tjanstegarantier-och-servicedeklarationer"] }
-evidence = "Variabeln anger förekomst av tjänstegarantier eller servicedeklarationer.\ncatalog:occurrence:382763"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstegarantier-servicedeklarationer"
-fields = { "tags" = [] }
 evidence = "Variabeln anger förekomst av tjänstegarantier eller servicedeklarationer.\ncatalog:occurrence:382763"
 
 [[statement]]
@@ -7264,3 +7204,123 @@ kind = "set"
 subject = "var:samveumedel"
 fields = { "tags" = ["public-finance"] }
 evidence = "The definition explicitly measures cross-border cooperation financed by EU funds, supporting the public financing theme (r133).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38851"
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-service complaint routines provide citizen feedback (r164, r79), matching the democracy-tagged complaint sibling (r167) and register theme (r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382764\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38472\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38475\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr29"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-service complaint routines provide citizen feedback (r165, r97), matching the democracy-tagged complaint sibling (r167) and register theme (r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:383166\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38473\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38475\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr31"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-service complaint routines provide citizen feedback (r166, r76), matching the democracy-tagged complaint sibling (r167) and register theme (r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382662\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38474\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38475\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-klagom"
+fields = { "tags" = ["democracy"] }
+evidence = "Complaint routines collect feedback on public services throughout the history (r168, r54, r92), matching the democracy-tagged complaint sibling and register theme (r167, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382373\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:383056\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38475\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38476\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsys"
+fields = { "tags" = ["democracy"] }
+evidence = "Discretionary municipal user-choice systems (r171, r62) concern user influence, supporting democracy within the matching choice-system battery and register context (r172, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382523\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38501\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysald"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r172, r63), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382524\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38501\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysannat"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r173, r64), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38502\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfs"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r174, r65), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382526\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38503\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysfunk"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r175, r66), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382527\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38504\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgs"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r176, r67), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382528\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38505\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgy"
+fields = { "tags" = ["democracy"] }
+evidence = "The definition and operational text measure discretionary municipal user-choice systems (r177, r68), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382529\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38506\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysifo"
+fields = { "tags" = ["democracy"] }
+evidence = "The supplied definition concerns discretionary municipal user-choice systems (r178, r69), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382530\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38507\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvomr"
+fields = { "tags" = ["democracy"] }
+evidence = "This records the area or type of public-service user-choice systems (r179, r84, r88), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382923\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382985\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38508\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:kundvsys"
+fields = { "tags" = ["democracy"] }
+evidence = "This measures public-authority user-choice systems beyond statutory requirements (r180, r89), supporting the battery's democratic-influence theme in context (r171, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382986\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38500\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38509\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-civila-samhallet"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-authority agreements with civil society concern civic participation (r204, r60, r91), consistent with agreement siblings and the register's democracy theme (r205, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382499\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:383035\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38593\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38594\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr22"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-authority agreements with civil society concern civic participation (r205, r95), consistent with the agreement battery and register's democracy theme (r204, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:383153\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38593\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38594\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr24"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-authority agreements with civil society concern civic participation (r206, r74), consistent with the agreement battery and register's democracy theme (r204, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382634\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38593\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38595\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr36"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-authority agreements with civil society concern civic participation (r207, r99), consistent with the agreement battery and register's democracy theme (r204, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:383240\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38593\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:overenskommelse-med-det-civila-samhallet-fr37"
+fields = { "tags" = ["democracy"] }
+evidence = "Public-authority agreements with civil society concern civic participation (r208, r77), consistent with the agreement battery and register's democracy theme (r204, r297).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382735\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38593\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38597\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstegarantier-servicedeklarationer"
+fields = { "tags" = ["democracy"] }
+evidence = "Maintainer-approved Opus audit correction: Old pattern 1 persists, same register and same kind of item as the old wrong row 11 (lokal-demokrati klagomålshantering -> democracy). Row 65 in this run tagged the sibling valfrihetssystem item democracy. Service guarantees are part of the citizen-orientation battery of a democracy-dominant register (413/590).\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:85\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:382763\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38733\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38734\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

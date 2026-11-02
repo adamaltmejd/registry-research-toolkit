@@ -3716,20 +3716,8 @@ evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A
 [[statement]]
 kind = "set"
 subject = "var:avsandlan"
-fields = { "sets" = [] }
-evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41661:-731:2922"
-
-[[statement]]
-kind = "set"
-subject = "var:avsandlan"
 fields = { "tags" = ["geography"] }
 evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41661:-731:2922"
-
-[[statement]]
-kind = "set"
-subject = "var:avslan"
-fields = { "sets" = [] }
-evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41662:-731:2922"
 
 [[statement]]
 kind = "set"
@@ -7542,3 +7530,21 @@ kind = "set"
 subject = "var:infosprak"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41645\ncatalog:variable_text:41645:6209:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:avsandlan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical citizenship-change events (r99, r108), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435212\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435378\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:avslan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical death-event records (r11, r20), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424766\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424950\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretesshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "This household-table field flags whether any household member has a secrecy marker (r66, r141, r115). Its household-level administrative role supports family-household.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:431885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5417\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41733"

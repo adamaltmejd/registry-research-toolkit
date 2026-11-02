@@ -913,12 +913,6 @@ evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:antal-agi-ku"
-fields = { "tags" = [] }
-evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39013:17897:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-dagar-sjoinkomst"
 fields = { "sets" = [] }
 evidence = "Antalet dagar med sjöinkomst beskriver arbete.\ncatalog:variable_text:39014:18262:20089"
@@ -945,12 +939,6 @@ evidence = "Körsträckan hör till bilersättning.\ncatalog:variable_text:39015
 kind = "set"
 subject = "var:antal-kontrolluppgifter-per-foretag"
 fields = { "sets" = ["antal-agi-och-kontrolluppgifter"] }
-evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kontrolluppgifter-per-foretag"
-fields = { "tags" = [] }
 evidence = "Antalet hör till kandidatgruppen för AGI och kontrolluppgifter.\ncatalog:variable_text:39016:14610:20089"
 
 [[statement]]
@@ -2650,3 +2638,15 @@ kind = "set"
 subject = "var:utrikes"
 fields = { "sets" = ["tjansteresor"] }
 evidence = "The variable records whether a person made a foreign business trip exceeding three months (r272), within the fixed definition (r277). The domestic-trip indicator provides a supported partner (r267), independently of report-count ambiguities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39086\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39139\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lsum/tjansteresor"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-agi-ku"
+fields = { "tags" = ["income"] }
+evidence = "The workplace AGI/KU total (r60) parallels the company reporting total (r63). Income-benefit siblings (r66, r69) and the register theme context (r83, r1) support income for both administrative counts.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38873\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38876\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38879\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38882\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter-per-foretag"
+fields = { "tags" = ["income"] }
+evidence = "The company control-statement total (r63) belongs to the reporting context of income-benefit counts (r66, r69), supported by the register's dominant income theme (r83, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38876\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38879\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:38882\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

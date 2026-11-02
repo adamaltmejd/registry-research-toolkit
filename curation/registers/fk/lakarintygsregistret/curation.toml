@@ -346,3 +346,21 @@ kind = "set"
 subject = "var:konflikthantering"
 fields = { "tags" = ["employment"] }
 evidence = "Coordinator-approved audit correction: Def 'Fält 10 i intyget - kryssruta konflikthantering'. Sibling field-10 checkboxes (arbetstraning, besok-arbetsplats, omfordelning, ergonomisk, arbetsanpassning) all carry employment in the catalog; this is a return-to-work measure.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:24\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:229"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-medicinskt-underlag-mu"
+fields = { "tags" = ["health"] }
+evidence = "The alternative basis for medical evidence (r5) belongs to the medical-assessment context documented by its sibling (r6). Health is an established register theme (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:225\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-atgarder"
+fields = { "tags" = ["health"] }
+evidence = "The residual measures checkbox (r7) belongs to the certificate's medical-assessment context (r6). The register's established health theme supports tagging this residual consistently (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:235\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar"
+fields = { "tags" = ["health"] }
+evidence = "The certificate's residual information field (r8) shares the medical-assessment context documented in r6. Health is an established register theme (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:236\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

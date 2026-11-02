@@ -4682,3 +4682,9 @@ kind = "set"
 subject = "var:varvete-varvete"
 fields = { "sets" = ["varveteareal"] }
 evidence = "r310 defines spring wheat area in hectares; r293 supplies another variable measuring that concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35931\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35783\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36062\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/lbr/varveteareal"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-adressforsaljning"
+fields = { "tags" = ["agriculture"] }
+evidence = "The flag records farmers’ requests to block name/address disclosure (r16). This administrative field follows the register’s dominant agriculture theme (r34, r1), consistent with its crop-related siblings (r27, r30).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:334082\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35792\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:35845\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

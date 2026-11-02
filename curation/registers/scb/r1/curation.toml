@@ -1756,3 +1756,9 @@ kind = "set"
 subject = "var:verksamhetsstatus-ve"
 fields = { "sets" = ["verksamhetsstatus"] }
 evidence = "The definition records whether the activity unit operates; historical and later codes encode activity status (r263, r246, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12629\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10557"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter"
+fields = { "tags" = ["business"] }
+evidence = "Statements counted for legal entities (r36) and AST units (r9) form a business-register administrative measure, consistent with the dominant business theme (r104, r1) and firm/entity-count siblings (r81, r82).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:84490\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:86365\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10441\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10442\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

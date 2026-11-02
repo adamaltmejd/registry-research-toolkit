@@ -78943,3 +78943,69 @@ kind = "set"
 subject = "var:samfundskod-samfundskod-for-avgift-for-2-a-samfundet"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:19217\ncatalog:variable_text:19217:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bredtp"
+fields = { "tags" = ["transfers"] }
+evidence = "BREDTP is a reduction factor (r185); its consistently transfer-tagged reduction-factor siblings include an explicit guarantee-pension factor (r181, r264).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16233\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16237\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19118"
+
+[[statement]]
+kind = "set"
+subject = "var:ndelbet"
+fields = { "tags" = ["finance"] }
+evidence = "The corporate-register paid-amount field is supported by subscribed-amount and new-share-issue peers, establishing a broad finance context (r25, r186, r234).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:150116\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16276\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18361"
+
+[[statement]]
+kind = "set"
+subject = "var:nfullbet"
+fields = { "tags" = ["finance"] }
+evidence = "The corporate-register full-payment field shares the finance context of the partial-payment, subscribed-amount and new-share-issue fields (r34, r228, r186, r234).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:150923\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:16276\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18236\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18361"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-block-a"
+fields = { "tags" = ["business"] }
+evidence = "The monetary residual is in financial-company accounts (r55, r248), with explicit Block A asset-value and provision peers supporting business accounting (r254, r356).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:157027\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18766\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18773\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20740"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-block-g"
+fields = { "tags" = ["business"] }
+evidence = "This monetary residual belongs to financial-company accounts (r117, r249); the supplied accounting residuals support the broad business theme (r253, r254).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:161594\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18767\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18771\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18773"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-punkterna-12-26-28-positiv"
+fields = { "tags" = ["taxation"] }
+evidence = "The positive sum is recorded in tax annex N3A (r2, r288). That tax-calculation role supports taxation without reconstructing the referenced points.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:145071\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19657"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt"
+fields = { "tags" = ["business"] }
+evidence = "This is a monetary total in financial-company accounts (r58, r312), supporting general business accounting; the Block G total supplies no narrower theme (r316).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:157323\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19849\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19853"
+
+[[statement]]
+kind = "set"
+subject = "var:vc12"
+fields = { "tags" = ["finance"] }
+evidence = "This monetary Riksgäldskontoret counterparty field has borrowing and leasing peers that support finance without resolving the exact quantity (r360, r210, r219).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20796"
+
+[[statement]]
+kind = "set"
+subject = "var:vc86"
+fields = { "tags" = ["finance"] }
+evidence = "The monetary counterparty field concerns Riksgäldskontoret; borrowing and leasing peers support finance without identifying the exact quantity (r365, r210, r219).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17351\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17903\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20811"
+
+[[statement]]
+kind = "set"
+subject = "var:vg6"
+fields = { "tags" = ["business"] }
+evidence = "The observations are monetary company-account entries (r53, r366); the matching company-sector and current-asset peers support business (r306, r206).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:156985\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:17333\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:19728\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:20842"
+
+[[statement]]
+kind = "set"
+subject = "var:vg7"
+fields = { "tags" = ["business"] }
+evidence = "The latest observation explicitly concerns fixed assets (r123); the earlier monetary accounting entries and matching business-tagged peer support business broadly (r54, r241).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:156986\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:162019\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:18735"

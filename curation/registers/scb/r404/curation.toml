@@ -3316,3 +3316,9 @@ kind = "set"
 subject = "var:klassificerad-sysselsatt"
 fields = { "sets" = ["arbetsmarknadsstatus"] }
 evidence = "r156 defines classification as employed using alternative qualifying criteria, with yes/no codes in r145. The resulting classification is explicitly included.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:5785\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:5789"
+
+[[statement]]
+kind = "set"
+subject = "var:viktat-inkomstbasbelopp"
+fields = { "tags" = ["income"] }
+evidence = "The weighted IBB determines monthly income thresholds (r13), supporting the income theme also present in the register context (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:5865\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

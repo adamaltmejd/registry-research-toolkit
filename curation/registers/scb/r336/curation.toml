@@ -1447,20 +1447,8 @@ evidence = "Id:et anger doktorandanställning, medan variabeln avser egen finans
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjningssituation-doktorandanstallning-f10-09"
-fields = { "tags" = [] }
-evidence = "Id:et anger doktorandanställning, medan variabeln avser egen finansiering.\ncatalog:occurrence:512009\ncatalog:valueset:1679\ncatalog:variable_text:54789:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjningssituation-doktorandanstallning-f10-10"
 fields = { "sets" = ["forsorjningsformer-under-forskarstudier"] }
-evidence = "Id:et anger doktorandanställning, medan variabeln avser annan finansiering.\ncatalog:occurrence:512010\ncatalog:valueset:2877\ncatalog:variable_text:54790:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningssituation-doktorandanstallning-f10-10"
-fields = { "tags" = [] }
 evidence = "Id:et anger doktorandanställning, medan variabeln avser annan finansiering.\ncatalog:occurrence:512010\ncatalog:valueset:2877\ncatalog:variable_text:54790:15706:16071"
 
 [[statement]]
@@ -1567,20 +1555,8 @@ evidence = "Id:et anger doktorandanställning, medan variabeln avser egen finans
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjningssituation-doktorandanstallning-f7-09"
-fields = { "tags" = [] }
-evidence = "Id:et anger doktorandanställning, medan variabeln avser egen finansiering.\ncatalog:occurrence:512116\ncatalog:valueset:1679\ncatalog:variable_text:54799:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
 fields = { "sets" = ["forsorjningsformer-under-forskarstudier"] }
-evidence = "Id:et anger doktorandanställning, medan variabeln avser annan finansiering.\ncatalog:occurrence:512117\ncatalog:valueset:2877\ncatalog:variable_text:54800:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
-fields = { "tags" = [] }
 evidence = "Id:et anger doktorandanställning, medan variabeln avser annan finansiering.\ncatalog:occurrence:512117\ncatalog:valueset:2877\ncatalog:variable_text:54800:15706:16071"
 
 [[statement]]
@@ -2566,3 +2542,27 @@ kind = "set"
 subject = "var:diskriminerad-f26-03"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:54583\ncatalog:variable_text:54583:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-09"
+fields = { "tags" = ["income"] }
+evidence = "Self-financing answers how the respondent supports themselves (r2, r13). Employment and grant siblings (r22, r24) support income as the broad personal-support theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:512009\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:1679\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54594\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54596"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f10-10"
+fields = { "tags" = ["income"] }
+evidence = "Other financing is a residual personal-support source (r3, r14). Employment and grant siblings (r22, r24) support income without assuming the unspecified financing is either source.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:512010\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2877\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54594\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54596"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-09"
+fields = { "tags" = ["income"] }
+evidence = "Self-financing answers how the respondent supports themselves (r10, r13). Employment and grant siblings (r32, r34) support income as the broad personal-support theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:512116\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:1679\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54604\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54606"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
+fields = { "tags" = ["income"] }
+evidence = "Other financing is a residual personal-support source (r11, r14). Employment and grant siblings (r32, r34) support income without assuming the unspecified financing is either source.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:512117\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2877\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54604\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:54606"

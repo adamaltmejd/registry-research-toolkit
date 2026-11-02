@@ -2024,12 +2024,6 @@ evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncat
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
-fields = { "sets" = [] }
-evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41583:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:41583:19723:20089"
 
@@ -2044,12 +2038,6 @@ kind = "set"
 subject = "var:sunniva-far"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger faderns utbildningsnivå.\ncatalog:variable_text:41584:10592:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva-vt"
-fields = { "sets" = [] }
-evidence = "Id:t använder igenkännbara delar av SUN, nivå och vårtermin; variabeln mäter nivån på utbildning som personen deltagit i. Coordinator group membership: Variablerna anger nivån på studier eller studiemedelsanknuten utbildning. Den särskilda källbedömningen för sunniva-vt anger nivån på utbildning personen deltagit i. Variablerna klassificerar personens utbildningsnivå i olika detaljeringsgrader. Det skyddade medlemskapet för sunniva-vt behålls trots den motstridiga tidigare källbedömningen.\ncatalog:occurrence:423095\ncatalog:valueset:1159\ncatalog:valueset:7130\ncatalog:variable_text:41508:11323:20089\ncatalog:variable_text:41509:11323:11688\ncatalog:variable_text:41510:11323:11688\ncatalog:variable_text:41553:11323:11688\ncatalog:variable_text:41564:10227:17897\ncatalog:variable_text:41565:15706:17897\ncatalog:variable_text:41566:11323:11688\ncatalog:variable_text:41578:17897:20089\ncatalog:variable_text:41580:17897:20089\ncatalog:variable_text:41583:19723:20089\ncatalog:variable_text:41585:19723:20089\ncatalog:variable_text:41592:9496:10227"
 
 [[statement]]
 kind = "set"
@@ -2470,3 +2458,15 @@ kind = "set"
 subject = "var:utbildningsniva-sun-2000-sju-grupper-vartermin"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The measure aggregates the individual's highest education through the spring term into seven SUN 2000 levels, matching the group's concept (r17, r80).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41457\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:421932\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41565"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-vt"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "r18 defines the person's SUN education level; r11 specifies their highest-priority education attended in the first half-year. This fits the fixed inclusion, which does not require highest completed attainment. Neither exclusion applies.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:423095\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41436"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-hogst-prioriterad-andra-halvaret"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "r22 defines the person's SUN education level; r10 specifies their highest-priority education attended in the second half-year. This fits the fixed inclusion, which does not require highest completed attainment. Neither exclusion applies.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:423094\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41454"

@@ -4286,12 +4286,6 @@ evidence = "Antal bisysslor i kategorier.\ncatalog:variable_text:1689:18628:2081
 [[statement]]
 kind = "set"
 subject = "var:bivanltim"
-fields = { "sets" = [] }
-evidence = "Vanligen arbetad tid.\ncatalog:variable_text:1690:17167:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:bivanltim"
 fields = { "tags" = ["employment"] }
 evidence = "Vanligen arbetad tid.\ncatalog:variable_text:1690:17167:18628"
 
@@ -5846,12 +5840,6 @@ evidence = "Studiernas omfattning ingår i kandidatgruppen.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:fgtotvanltim"
-fields = { "sets" = [] }
-evidence = "Vanligen arbetad tid vid föregående tillfälle.\ncatalog:variable_text:1822:7305:12874"
-
-[[statement]]
-kind = "set"
-subject = "var:fgtotvanltim"
 fields = { "tags" = ["employment"] }
 evidence = "Vanligen arbetad tid vid föregående tillfälle.\ncatalog:variable_text:1822:7305:12874"
 
@@ -6472,12 +6460,6 @@ kind = "set"
 subject = "var:grad-aku-aldre"
 fields = { "tags" = ["employment"] }
 evidence = "Definitionen avser anknytningsgrad till arbetsmarknaden.\ncatalog:variable_text:1875:6209:12874"
-
-[[statement]]
-kind = "set"
-subject = "var:vilken-typ-av-anstallning-har-du-nu"
-fields = { "sets" = [] }
-evidence = "GradK är en opak källkod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Etiketten och frågan skiljer fast från tidsbegränsad anställning och stöder den fasta definitionen, trots tidigare avstådd gruppering. membership-0009: Båda frågorna skiljer fast från tidsbegränsad anställning och omfattas av den fasta definitionen. membership-0010: Inga valda variabler mäter allmän anställningstyp; yrkesställning och kontrollfrågan ampp2b är andra begrepp. membership-0011: Variablerna mäter anställningstyp, fast eller tidsbegränsad anställning samt fast anställning i botten. Önskad anställningsform ingår inte. membership-0012: Sektionens kontroll av samma tidsbegränsade anställning mäter kontinuitet, inte anställningstyp. membership-0013: Valda anställningsuppgifter avser särskild tidsbegränsad typ eller tidpunkter, inte allmän anställningstyp. membership-0014: Anledning till tidsbegränsad anställning mäter ett skäl, inte anställningstyp. membership-0015: Inga valda variabler mäter anställningstyp. membership-0016: Frågan kodar fast eller tidsbegränsad anställning vid bemanningsföretag. membership-0017: Valda kontrollfrågor anger kontinuitet, inte allmän anställningstyp.\ncatalog:valueset:12443\ncatalog:variable_text:1489:14610:18628\ncatalog:variable_text:1506:18993:20819\ncatalog:variable_text:1560:13514:15706\ncatalog:variable_text:1613:12874:18628\ncatalog:variable_text:1818:7305:8035\ncatalog:variable_text:1876:12874:18628\ncatalog:variable_text:1962:18628:20819\ncatalog:variable_text:2037:17167:18628\ncatalog:variable_text:2075:12874:20819\ncatalog:variable_text:2143:12874:18628\ncatalog:variable_text:2144:12874:20819\ncatalog:variable_text:2258:18628:20819\ncatalog:variable_text:2260:18628:20819\ncatalog:variable_text:2278:12874:18628\ncatalog:variable_text:2369:6209:12874\ncatalog:variable_text:2522:17167:18628\ncatalog:variable_text:2535:18628:20819\ncatalog:variable_text:2552:6209:12874"
 
 [[statement]]
 kind = "set"
@@ -7762,12 +7744,6 @@ kind = "set"
 subject = "var:huvudsyssla-arbetstid-overenskomna-arbetstiden-om-arbetat"
 fields = { "tags" = ["employment"] }
 evidence = "Källans frågekod är ogenomskinlig; frågan gäller överenskommen arbetstid.\ncatalog:variable_text:1985:18628:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsyssla-arbetstid-vanligen-arbetad-arbetstid"
-fields = { "sets" = [] }
-evidence = "Källans frågekod är ogenomskinlig.\ncatalog:variable_text:1986:18993:20819"
 
 [[statement]]
 kind = "set"
@@ -10172,20 +10148,8 @@ evidence = "K1UA är en ogenomskinlig frågekod.\ncatalog:variable_text:2201:128
 [[statement]]
 kind = "set"
 subject = "var:fortfarande-arbetssokande"
-fields = { "sets" = [] }
-evidence = "K2UA är en ogenomskinlig frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Frågan anger om personer utan arbete sökt arbete hela tiden och mäter därmed förekomst under perioden. membership-0009: Soktid kodar om och när arbete söktes. Soktidmv gäller däremot hypotetiskt sökande och uppfyller inte definitionens krav på förekomst av arbetssökande. membership-0010: Inga valda variabler mäter förekomst av arbetssökande för personer utan arbete som eget mått. membership-0011: Frågorna följer upp fortsatt arbetssökande och sökande sedan föregående intervju. membership-0012: Sektionens förekomstmått avser sysselsattas sökande efter annat arbete. membership-0013: Frågan mäter förekomst av arbetssökande bland personer utan arbete. membership-0014: De valda pandemifrågorna mäter skäl, inte förekomst av arbetssökande. membership-0015: Estimeringshjälpen med AMS-status mäter inte den definierade förekomsten av arbetssökande under angivna perioder. membership-0016: Den valda sökfrågan gäller sökaktiviteter, inte separat förekomst av arbetssökande. membership-0017: Frågan mäter fortsatt arbetssökande sedan föregående intervju. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Ingen vald variabel anger avvaktan på nytt arbete. membership-0009: Ingen vald variabel anger avvaktan på nytt arbete. membership-0010: Frågan gäller överenskommelse under referensveckan om att börja ett nytt arbete. membership-0011: Frågan omfattar uttryckligen fortsatt väntan på att börja ett arbete, jämte fortsatt arbetssökande. membership-0012: Ingen vald variabel mäter avvaktan på nytt arbete. membership-0013: Frågan mäter överenskommelse om nytt arbete; starttidpunkten utesluts enligt definitionen. membership-0014: Ingen vald variabel mäter överenskommelse om eller avvaktan på nytt arbete. membership-0015: Inga valda variabler mäter avvaktan på nytt arbete. membership-0016: Ingen vald fråga anger överenskommelse om eller avvaktan på nytt arbete. membership-0017: Frågorna om sökveckor före arbetsbesked mäter söktid, inte avvaktan på nytt arbete.\ncatalog:valueset:9352\ncatalog:variable_text:1473:9131:12874\ncatalog:variable_text:1546:12874:18628\ncatalog:variable_text:1696:18628:19358\ncatalog:variable_text:1698:18628:19358\ncatalog:variable_text:1937:18628:20819\ncatalog:variable_text:1957:18628:20819\ncatalog:variable_text:1958:18628:20819\ncatalog:variable_text:2168:18628:20819\ncatalog:variable_text:2197:18628:20819\ncatalog:variable_text:2202:12874:18628\ncatalog:variable_text:2203:17167:18628\ncatalog:variable_text:2284:18628:20819\ncatalog:variable_text:2286:18628:20819\ncatalog:variable_text:2339:18628:20819\ncatalog:variable_text:2400:14245:15706\ncatalog:variable_text:2403:18628:20819\ncatalog:variable_text:2405:6209:12874\ncatalog:variable_text:2406:6209:9496\ncatalog:variable_text:2561:18628:20819\ncatalog:variable_text:2588:12874:20819\ncatalog:variable_text:2589:12874:20819\ncatalog:variable_text:2620:12874:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:fortfarande-arbetssokande"
 fields = { "tags" = ["employment"] }
 evidence = "K2UA är en ogenomskinlig frågekod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Frågan anger om personer utan arbete sökt arbete hela tiden och mäter därmed förekomst under perioden. membership-0009: Soktid kodar om och när arbete söktes. Soktidmv gäller däremot hypotetiskt sökande och uppfyller inte definitionens krav på förekomst av arbetssökande. membership-0010: Inga valda variabler mäter förekomst av arbetssökande för personer utan arbete som eget mått. membership-0011: Frågorna följer upp fortsatt arbetssökande och sökande sedan föregående intervju. membership-0012: Sektionens förekomstmått avser sysselsattas sökande efter annat arbete. membership-0013: Frågan mäter förekomst av arbetssökande bland personer utan arbete. membership-0014: De valda pandemifrågorna mäter skäl, inte förekomst av arbetssökande. membership-0015: Estimeringshjälpen med AMS-status mäter inte den definierade förekomsten av arbetssökande under angivna perioder. membership-0016: Den valda sökfrågan gäller sökaktiviteter, inte separat förekomst av arbetssökande. membership-0017: Frågan mäter fortsatt arbetssökande sedan föregående intervju. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Ingen vald variabel anger avvaktan på nytt arbete. membership-0009: Ingen vald variabel anger avvaktan på nytt arbete. membership-0010: Frågan gäller överenskommelse under referensveckan om att börja ett nytt arbete. membership-0011: Frågan omfattar uttryckligen fortsatt väntan på att börja ett arbete, jämte fortsatt arbetssökande. membership-0012: Ingen vald variabel mäter avvaktan på nytt arbete. membership-0013: Frågan mäter överenskommelse om nytt arbete; starttidpunkten utesluts enligt definitionen. membership-0014: Ingen vald variabel mäter överenskommelse om eller avvaktan på nytt arbete. membership-0015: Inga valda variabler mäter avvaktan på nytt arbete. membership-0016: Ingen vald fråga anger överenskommelse om eller avvaktan på nytt arbete. membership-0017: Frågorna om sökveckor före arbetsbesked mäter söktid, inte avvaktan på nytt arbete.\ncatalog:valueset:9352\ncatalog:variable_text:1473:9131:12874\ncatalog:variable_text:1546:12874:18628\ncatalog:variable_text:1696:18628:19358\ncatalog:variable_text:1698:18628:19358\ncatalog:variable_text:1937:18628:20819\ncatalog:variable_text:1957:18628:20819\ncatalog:variable_text:1958:18628:20819\ncatalog:variable_text:2168:18628:20819\ncatalog:variable_text:2197:18628:20819\ncatalog:variable_text:2202:12874:18628\ncatalog:variable_text:2203:17167:18628\ncatalog:variable_text:2284:18628:20819\ncatalog:variable_text:2286:18628:20819\ncatalog:variable_text:2339:18628:20819\ncatalog:variable_text:2400:14245:15706\ncatalog:variable_text:2403:18628:20819\ncatalog:variable_text:2405:6209:12874\ncatalog:variable_text:2406:6209:9496\ncatalog:variable_text:2561:18628:20819\ncatalog:variable_text:2588:12874:20819\ncatalog:variable_text:2589:12874:20819\ncatalog:variable_text:2620:12874:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:sokt-arbete-sedan-forra-intervjun"
-fields = { "sets" = [] }
-evidence = "K3UA är en ogenomskinlig frågekod.\ncatalog:variable_text:2203:17167:18628"
 
 [[statement]]
 kind = "set"
@@ -11026,12 +10990,6 @@ kind = "set"
 subject = "var:arbetslivserfarenhet-kontrollfraga-om-fortsatt-utan-arbete"
 fields = { "tags" = ["employment"] }
 evidence = "Källans frågekod är opak.\ncatalog:variable_text:2283:18628:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetssokande-kontrollfraga-om-forsokt-hitta-ett-arbete"
-fields = { "sets" = [] }
-evidence = "KUA1 är en ogenomskinlig frågekod.\ncatalog:variable_text:2284:18628:20819"
 
 [[statement]]
 kind = "set"
@@ -12194,12 +12152,6 @@ evidence = "Frågan gäller omsorgsskäl som hinder för arbetssökande.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:soksatt-vet-ej-sysselsatta"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5850\ncatalog:occurrence:5851"
-
-[[statement]]
-kind = "set"
-subject = "var:soksatt-vet-ej-sysselsatta"
 fields = { "tags" = ["employment"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5850\ncatalog:occurrence:5851"
 
@@ -13100,12 +13052,6 @@ evidence = "Id:t innehåller läsbara ordstammar och källkolumnens kod.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:syssoksatt17"
-fields = { "sets" = [] }
-evidence = "Variabeln är en komponent i söksättskodningen.\ncatalog:valueset:10322\ncatalog:variable_text:2484:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:syssoksatt17"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln är en komponent i söksättskodningen.\ncatalog:valueset:10322\ncatalog:variable_text:2484:12874:18628"
 
@@ -13162,12 +13108,6 @@ kind = "set"
 subject = "var:syssoksatt98"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln är en kodning av övrigt söksätt för sysselsatta.\ncatalog:variable_text:2493:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:syssoksatt99"
-fields = { "sets" = [] }
-evidence = "Variabeln är en bortfallskodning för sysselsattas söksätt.\ncatalog:variable_text:2494:12874:18628"
 
 [[statement]]
 kind = "set"
@@ -13286,12 +13226,6 @@ evidence = "Variabeln anger om sysselsatta har sökt annat arbete.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:syssokt0"
-fields = { "sets" = [] }
-evidence = "Variabeln avser sysselsattas sökande efter annat arbete.\ncatalog:variable_text:2511:12874:17167\ncatalog:variable_text:2511:17167:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:syssokt0"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln avser sysselsattas sökande efter annat arbete.\ncatalog:variable_text:2511:12874:17167\ncatalog:variable_text:2511:17167:18628"
 
@@ -13330,12 +13264,6 @@ kind = "set"
 subject = "var:syssokt8"
 fields = { "tags" = ["employment"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5862\ncatalog:occurrence:5863\ncatalog:occurrence:6910\ncatalog:occurrence:6911\ncatalog:occurrence:7993\ncatalog:occurrence:7994\ncatalog:occurrence:8561\ncatalog:occurrence:8562"
-
-[[statement]]
-kind = "set"
-subject = "var:syssokt9"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar partiellt bortfall i frågan om sökt annat arbete.\ncatalog:variable_text:2517:12874:18628"
 
 [[statement]]
 kind = "set"
@@ -13894,12 +13822,6 @@ kind = "set"
 subject = "var:uarbarbforr"
 fields = { "tags" = ["employment"] }
 evidence = "Tidigare arbetsdeltagande är ett arbetsmarknadsmått.\ncatalog:variable_text:2568:12874:18628\ncatalog:variable_text:2568:18628:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:har-du-sokt-pa-nagra-fler-satt-personer-utan-arbete"
-fields = { "sets" = [] }
-evidence = "Frågekoden är ogenomskinlig.\ncatalog:variable_text:2569:12874:18628"
 
 [[statement]]
 kind = "set"
@@ -14492,12 +14414,6 @@ evidence = "Variabeln gäller arbetssökande utan arbete.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:uarbsoksatt0"
-fields = { "sets" = [] }
-evidence = "Kodningen gäller söksätt.\ncatalog:variable_text:2621:17167:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:uarbsoksatt0"
 fields = { "tags" = ["employment"] }
 evidence = "Kodningen gäller söksätt.\ncatalog:variable_text:2621:17167:18628"
 
@@ -14552,12 +14468,6 @@ evidence = "Id:t innehåller läsbara ordstammar och källkolumnens kod.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:uarbsoksatt17"
-fields = { "sets" = [] }
-evidence = "Kodningen gäller söksätt.\ncatalog:variable_text:2630:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:uarbsoksatt17"
 fields = { "tags" = ["employment"] }
 evidence = "Kodningen gäller söksätt.\ncatalog:variable_text:2630:12874:18628"
 
@@ -14606,12 +14516,6 @@ evidence = "Kodningen gäller söksätt.\ncatalog:variable_text:2637:12874:18628
 [[statement]]
 kind = "set"
 subject = "var:uarbsoksatt88"
-fields = { "sets" = [] }
-evidence = "Kodningen gäller svar på frågan om söksätt.\ncatalog:variable_text:2638:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:uarbsoksatt88"
 fields = { "tags" = ["employment"] }
 evidence = "Kodningen gäller svar på frågan om söksätt.\ncatalog:variable_text:2638:12874:18628"
 
@@ -14626,12 +14530,6 @@ kind = "set"
 subject = "var:uarbsoksatt98"
 fields = { "tags" = ["employment"] }
 evidence = "Övrigt söksätt för personer utan arbete.\ncatalog:variable_text:2640:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:uarbsoksatt99"
-fields = { "sets" = [] }
-evidence = "Partiellt bortfall i söksätt.\ncatalog:variable_text:2641:12874:18628"
 
 [[statement]]
 kind = "set"
@@ -15446,12 +15344,6 @@ evidence = "Andel svarande används som vikt. Coordinator group membership: Unio
 [[statement]]
 kind = "set"
 subject = "var:vanligen-arbetad-tid-huvudsysslan"
-fields = { "sets" = [] }
-evidence = "Vanligen arbetad tid.\ncatalog:variable_text:2730:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:vanligen-arbetad-tid-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "Vanligen arbetad tid.\ncatalog:variable_text:2730:12874:18628"
 
@@ -15466,12 +15358,6 @@ kind = "set"
 subject = "var:vanligen-tid-bisyssla-aldre"
 fields = { "tags" = ["employment"] }
 evidence = "Vanligen arbetad tid. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Det enda möjliga måttet har motstridiga begreppsangivelser och saknar avgörande stöd för medlemskap i denna kandidat. membership-0009: Beskrivningen frågar uttryckligen efter överenskomna timmar i bisysslan. Huvudsysslans motsvarighet är uttryckligen ett genomsnittsmått. membership-0010: Bioktim mäter uttryckligen överenskomna veckotimmar. Bivanltim är ett sammansatt mått på vanligen arbetad tid. membership-0011: Frågan mäter överenskomna veckoarbetstimmar i huvudsysslan. membership-0012: KHU30 kontrollerar endast oförändrad överenskommen arbetstid och utesluts uttryckligen. membership-0013: Det valda blandmåttet är uttryckligen vanligen arbetad tid och kombinerar överenskommen med genomsnittlig tid; det behandlas inte som ett separat mått på överenskomna timmar. membership-0014: BI-VANLTIM-2021 mäter vanlig, inte överenskommen, arbetstid. membership-0015: Inga valda variabler mäter överenskommen arbetstid. membership-0016: Båda frågorna mäter timmar enligt avtal, schema eller överenskommelse. membership-0017: KHS35 kontrollerar oförändrad arbetstid och TIM2-frågorna mäter arbete utöver den; båda ligger utanför definitionen. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Etiketten och den tidigare bedömningen anger vanligen arbetad tid föregående gång. Detta stöd behålls trots frågetextens överenskomna tid. membership-0009: Etiketter och granskade bedömningar stöder vanligen arbetad tid totalt, grupperat och per syssla. Bisysslans motstridiga frågetext kräver granskning. membership-0010: Variablerna mäter genomsnittlig eller vanligen arbetad tid i bisysslan; bivanltim omfattar olika underlag beroende på yrkesställning. membership-0011: Frågan mäter genomsnittliga veckoarbetstimmar i huvudsysslan. membership-0012: KHU31 kontrollerar samma genomsnittliga timantal och anger inte själva timantalet. membership-0013: Variablerna mäter vanligen arbetad tid totalt, grupperat och i huvudsysslan. Huvudsysslans mått använder överenskommen eller genomsnittlig tid för olika personkategorier. membership-0014: Frågan mäter vanligen arbetade timmar per vecka i bisysslan. membership-0015: Inga valda variabler mäter vanligen arbetad tid. membership-0016: Variablerna mäter eller bekräftar vanligen arbetad tid i huvudsysslan för olika yrkesställningar och anställningsförhållanden. membership-0017: TIM2-frågorna använder vanlig arbetstid som jämförelse men mäter förekomst av merarbete.\ncatalog:variable_text:1614:18628:20819\ncatalog:variable_text:1654:18993:19358\ncatalog:variable_text:1675:12874:18628\ncatalog:variable_text:1690:17167:18628\ncatalog:variable_text:1822:7305:12874\ncatalog:variable_text:1984:18628:20819\ncatalog:variable_text:1985:18628:20819\ncatalog:variable_text:1986:18993:20819\ncatalog:variable_text:1987:18628:20819\ncatalog:variable_text:1988:18628:20819\ncatalog:variable_text:2018:18628:20819\ncatalog:variable_text:2111:18628:20819\ncatalog:variable_text:2133:12874:18628\ncatalog:variable_text:2266:18628:20819\ncatalog:variable_text:2276:12874:18628\ncatalog:variable_text:2277:12874:18628\ncatalog:variable_text:2520:6209:12874\ncatalog:variable_text:2539:18628:20819\ncatalog:variable_text:2540:18628:20819\ncatalog:variable_text:2541:18628:20819\ncatalog:variable_text:2542:18628:20819\ncatalog:variable_text:2550:18628:20819\ncatalog:variable_text:2551:17167:18628\ncatalog:variable_text:2730:12874:18628\ncatalog:variable_text:2731:6209:12874\ncatalog:variable_text:2732:6209:12874\ncatalog:variable_text:2733:6209:12874\nregisters/scb/r122/curation.toml:158"
-
-[[statement]]
-kind = "set"
-subject = "var:vanligen-tid-huvud-aldre"
-fields = { "sets" = [] }
-evidence = "Vanligen arbetad tid.\ncatalog:variable_text:2733:6209:12874"
 
 [[statement]]
 kind = "set"
@@ -16966,3 +16852,129 @@ kind = "set"
 subject = "var:viktvfat-ord"
 fields = { "sets" = ["upprakningstal"] }
 evidence = "The definition identifies an ordinary-sample weight used to calculate total actual hours worked during a calendar month (r702).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2724\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2728"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssokande-kontrollfraga-om-forsokt-hitta-ett-arbete"
+fields = { "sets" = ["arbetssokande-utan-arbete"] }
+evidence = "r286 asks whether a previous job seeker continued trying to find work throughout the interval or interrupted the search. This matches search occurrence since the previous interview in r547.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1543\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokande-utan-arbete"
+
+[[statement]]
+kind = "set"
+subject = "var:bivanltim"
+fields = { "sets" = ["vanligen-arbetad-tid"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; BiVanlTim 2005-2020 is AKU's standard usual-hours variable. Catalog check: member totvanltim is defined as HuVanlTim + BiVanlTim, and member hsvanltim (2021+) takes the agreed hours (Hs35a) when usual equals agreed. So the members are built from these candidates. Pure agreed hours (huoktim, bioktim) are in overenskommen-arbetstid.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:33\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1680\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/vanligen-arbetad-tid"
+
+[[statement]]
+kind = "set"
+subject = "var:fgtotvanltim"
+fields = { "sets" = ["vanligen-arbetad-tid"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. The inclusion's 'föregående mättillfälle' exists only for fgtotvanltim; question wording on agreed hours is the AKU usual-hours operationalisation.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:45\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1809\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/vanligen-arbetad-tid"
+
+[[statement]]
+kind = "set"
+subject = "var:fortfarande-arbetssokande"
+fields = { "sets" = ["arbetssokande-utan-arbete"] }
+evidence = "r312 checks continuation of the previously reported job-seeking/waiting-to-start status. This fits the continuation checks for people without work covered by r547.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1834\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokande-utan-arbete"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-sokt-pa-nagra-fler-satt-personer-utan-arbete"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "r313 records use of additional search methods beyond those already reported. This is a method-battery component, supported by the equivalent sibling question in r362 and inclusion in r548. | r313 records use of additional search methods beyond those already reported. This is a method-battery component, supported by the equivalent sibling question in r362 and inclusion in r548.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1875\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2476\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsyssla-arbetstid-vanligen-arbetad-arbetstid"
+fields = { "sets" = ["vanligen-arbetad-tid"] }
+evidence = "r320 checks whether stated hours represent usual weekly work under normal conditions. Its yes/no responses (r268) form a usual-hours confirmation component consistent with r550. | r326 asks whether stated weekly hours reflect usual work under normal conditions; r289 provides confirmation codes. It concerns usual hours, fitting r575 despite referring to a previously stated amount.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:862\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2100\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/vanligen-arbetad-tid"
+
+[[statement]]
+kind = "set"
+subject = "var:pressmeddelande-skickas-till-ort"
+fields = { "tags" = ["geography"] }
+evidence = "This records the delivery town (r506), a geographic location, consistent with the postcode sibling (r507). The field's content supports geography despite AKU's dominant employment theme (r786).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2315\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:pressmeddelande-skickas-till-postnummer"
+fields = { "tags" = ["geography"] }
+evidence = "This records the delivery postcode (r507), a geographic location, consistent with the town sibling (r506). Its content supports geography despite AKU's dominant employment theme (r786).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2314\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2315\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:soksatt-vet-ej-sysselsatta"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "r343 defines an unknown response about search methods, and r284 confirms the dedicated 88='Vet ej' indicator. It remains a component of the methods battery covered by r572. | r343 defines an unknown response about search methods, and r284 confirms the dedicated 88='Vet ej' indicator. It remains a component of the methods battery covered by r572.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:175\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2393\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-arbete-sedan-forra-intervjun"
+fields = { "sets" = ["arbetssokande-utan-arbete"] }
+evidence = "r348 asks whether work was sought continuously since the previous interview. The matching no-work question in r296 supports occurrence rather than a count of search weeks, fitting r571.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1461\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2398\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokande-utan-arbete"
+
+[[statement]]
+kind = "set"
+subject = "var:syssoksatt17"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "r377 and r279 document benefit-only employment-office registration as a component response in the employed search-method battery, covered by r572. | r377 and r279 document benefit-only employment-office registration as a component response in the employed search-method battery, covered by r572.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10322\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2488\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:syssoksatt99"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "Partial nonresponse is explicitly a component of the employed search-method battery (r563, r434), covered by the component-indicator scope in r782. | Partial nonresponse is explicitly a component of the employed search-method battery (r563, r434), covered by the component-indicator scope in r782.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4007\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2498\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:syssokt0"
+fields = { "sets" = ["sokt-annat-arbete"] }
+evidence = "The question concerns whether employed respondents sought other work or an extra job (r580). Its response-status coding (r207, r437) remains part of the other-job-search battery covered by r783.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:12597\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5679\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2515\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/sokt-annat-arbete"
+
+[[statement]]
+kind = "set"
+subject = "var:syssokt9"
+fields = { "sets" = ["sokt-annat-arbete"] }
+evidence = "This explicitly records partial nonresponse to employed respondents' other-job-search question (r586, r442). It remains a response component of the battery covered by r783.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:9461\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2521\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/sokt-annat-arbete"
+
+[[statement]]
+kind = "set"
+subject = "var:uarbsoksatt0"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "The underlying question asks how work was sought (r604). Its operational definition and codes record answered, unknown or partial nonresponse within that battery (r209, r437), fitting r782. | The underlying question asks how work was sought (r604). Its operational definition and codes record answered, unknown or partial nonresponse within that battery (r209, r437), fitting r782.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:12664\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5679\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2610\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:uarbsoksatt17"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "This codes compensation-only employment-agency registration within the search-method battery (r613, r427), alongside the agency-contact component (r605). It fits the battery-component scope of r782. | This codes compensation-only employment-agency registration within the search-method battery (r613, r427), alongside the agency-contact component (r605). It fits the battery-component scope of r782.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10322\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2611\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2619\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:uarbsoksatt88"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "The definition and codes identify a 'don't know' response within the search-method battery (r621, r430). This remains a battery component under r782. | The definition and codes identify a 'don't know' response within the search-method battery (r621, r430). This remains a battery component under r782.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:175\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2627\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:uarbsoksatt99"
+fields = { "sets" = ["arbetssokningssatt"] }
+evidence = "The definition and codes explicitly identify partial nonresponse within the search-method battery for people without work (r624, r434). It remains a battery component under r782. | The definition and codes explicitly identify partial nonresponse within the search-method battery for people without work (r624, r434). It remains a battery component under r782.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:4007\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2630\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbetssokningssatt"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-arbetad-tid-huvudsysslan"
+fields = { "sets" = ["vanligen-arbetad-tid"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. HuVanlTim 2005-2020 is the main-job usual-hours series: member totvanltim = HuVanlTim + BiVanlTim, and member hsvanltim (2021+) also uses agreed hours when usual equals agreed. Pure agreed hours (huoktim) are in overenskommen-arbetstid. | Maintainer-approved Opus audit correction: Duplicate of row 36.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:36\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:41\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2706\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/vanligen-arbetad-tid"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-tid-huvud-aldre"
+fields = { "sets" = ["vanligen-arbetad-tid"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; label 'vanligen arbetad tid', the pre-2005 predecessor of HuVanlTim (the text 'enligt överenskommelse i genomsnitt' is the usual-hours operationalisation, as in member hsvanltim, which uses agreed hours when usual equals agreed). The inclusion's 'föregående mättillfälle' names fgtotvanltim, which has the same agreed-hours wording, so the definition intends these.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:29\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2709\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/vanligen-arbetad-tid"
+
+[[statement]]
+kind = "set"
+subject = "var:vilken-typ-av-anstallning-har-du-nu"
+fields = { "sets" = ["anstallningstyp"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. On candidate list; codes are fast/tidsbegränsad/fast i botten plus two non-employee codes. Peers saansttyp and typ-av-anstallning-huvud-aldre are members. Extra non-employee codes do not make it yrkesställning.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:31\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6933\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:2725\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/anstallningstyp"
